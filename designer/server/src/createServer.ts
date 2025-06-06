@@ -7,6 +7,7 @@ import hapi, {
 } from '@hapi/hapi'
 import inert from '@hapi/inert'
 import Wreck from '@hapi/wreck'
+import qs from 'qs'
 import { ProxyAgent } from 'proxy-agent'
 
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
@@ -24,6 +25,7 @@ import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
 import errorPage from '~/src/plugins/errorPage.js'
 import router from '~/src/plugins/router.js'
+import Stream from 'node:stream'
 
 const logger = createLogger()
 
@@ -128,6 +130,27 @@ export async function createServer() {
       )
 
       return h.redirect(redirectUrl.toString()).permanent().takeover()
+    }
+
+    return h.continue
+  })
+
+  server.ext('onPostAuth', (request: Request, h: ResponseToolkit) => {
+    const supportedRoutes = [
+      '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}'
+    ]
+
+    if (
+      request.method === 'post' &&
+      typeof request.payload === 'object' &&
+      supportedRoutes.includes(request.route.path) &&
+      !(request.payload instanceof Stream) &&
+      !Buffer.isBuffer(request.payload)
+    ) {
+      const payload = request.payload as Record<string, string>
+
+      // @ts-ignore
+      request.payload = qs.parse(payload)
     }
 
     return h.continue

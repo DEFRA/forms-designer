@@ -1,14 +1,21 @@
 import { randomUUID } from 'crypto'
 
-import { OperatorName, getConditionV2, slugSchema } from '@defra/forms-model'
+import {
+  conditionDataSchemaV2,
+  conditionWrapperSchemaV2,
+  getConditionV2,
+  slugSchema
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
-import qs from 'qs'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { redirectWithAnchorOrUrl } from '~/src/lib/redirect-helper.js'
+import {
+  redirectWithAnchorOrUrl,
+  redirectWithErrors
+} from '~/src/lib/redirect-helper.js'
 import {
   createConditionSessionState,
   getConditionSessionState,
@@ -19,40 +26,20 @@ import { editorFormPath } from '~/src/models/links.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_PATH_CONDITION = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}`
-export const ROUTE_PATH_CONDITION_SET_COMPONENT_ID = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId}/set-component`
-export const ROUTE_PATH_CONDITION_SET_OPERATOR = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId}/set-operator`
 
 const errorKey = sessionNames.validationFailure.editorPage
 const notificationKey = sessionNames.successNotification
 
-const idSchema = Joi.string().required() //  .uuid().valid('new').required()
+const idSchema = Joi.string().uuid().allow('new').required()
 const stateIdSchema = Joi.string().optional()
-const operatorSchema = Joi.string()
-  .valid(...Object.values(OperatorName))
-  .required()
 
-export const addConditionSchema = Joi.object()
-  .keys({
-    componentId: idSchema.messages({
-      '*': 'Select a question'
-    }),
-    operator: operatorSchema.messages({
-      '*': 'Select a condition type'
-    }),
-    value: Joi.string().required().messages({
-      '*': 'Select a value'
-    }),
-    addCondition: Joi.boolean().optional()
-  })
-  .options({ stripUnknown: true })
-
-export const schema = addConditionSchema.concat(
-  Joi.object().keys({
-    displayName: Joi.string().required().messages({
-      '*': 'Enter condition name'
-    })
-  })
-)
+// Custom condition wrapper payload schema that
+// only allows conditions, not condition references
+const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
+  items: Joi.array()
+    .items(conditionDataSchemaV2.required())
+    .description('Array of conditions')
+})
 
 /**
  * @param {Yar} yar
@@ -79,34 +66,6 @@ export function buildSessionState(yar, stateId, definition, conditionId) {
     return newState
   }
   return state
-}
-
-/**
- * @param {{ componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, coordinator?: string }} payload
- * @returns {ConditionWrapperV2}
- */
-export function parsePayloadAsQueryString(payload) {
-  const payloadAsQueryStringArray = Object.entries(payload).map(
-    ([key, value]) => {
-      return `${key}=${value}`
-    }
-  )
-
-  const payloadAsQueryString = payloadAsQueryStringArray.join('&')
-  const resAsUnknown = /** @type {unknown} */ (qs.parse(payloadAsQueryString))
-  return /** @type {ConditionWrapperV2} */ (resAsUnknown)
-}
-
-/**
- * Removes a property if it exists (** side-effects **)
- * @param {any} obj
- * @param {string} propName
- */
-export function removePropertyIfExists(obj, propName) {
-  if (obj[propName]) {
-    // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-    delete obj[propName]
-  }
 }
 
 export default [
@@ -181,72 +140,78 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: { componentId?: string, operator?: string, displayName?: string, addCondition?: boolean, removeCondition?: number, coordinator?: string, confirmSelectComponent?: boolean, confirmSelectOperator?: boolean } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId: string }, Payload: ConditionWrapperV2 }>}
    */
   ({
     method: 'POST',
     path: ROUTE_PATH_CONDITION,
     handler(request, h) {
-      const { payload, params, yar } = request
-      const { slug, conditionId, stateId } = params
-      const {
-        coordinator,
-        displayName,
-        addCondition,
-        confirmSelectComponent,
-        confirmSelectOperator,
-        removeCondition
-      } = payload
+      const { params } = request
+      const { slug } = params
 
-      const parsedPayload = parsePayloadAsQueryString(payload)
+      // Save the wrapper...
 
-      if (addCondition) {
-        parsedPayload.items.push(
-          /** @type {ConditionDataV2} */ ({
-            id: randomUUID()
-          })
-        )
-        removePropertyIfExists(parsedPayload, 'addCondition')
-      }
-
-      if (removeCondition) {
-        parsedPayload.items.splice(removeCondition, 1)
-        removePropertyIfExists(parsedPayload, 'removeCondition')
-      }
-
-      if (confirmSelectComponent) {
-        removePropertyIfExists(parsedPayload, 'confirmSelectComponent')
-      }
-
-      if (confirmSelectOperator) {
-        removePropertyIfExists(parsedPayload, 'confirmSelectComponent')
-      }
-
-      const state = getConditionSessionState(yar, stateId)
-      const newState = {
-        ...state,
-        conditionWrapper: {
-          ...state?.conditionWrapper,
-          items: parsedPayload.items,
-          displayName,
-          coordinator
-        }
-      }
-      // @ts-expect-error - dynamic parse so enforcing type is problematic
-      setConditionSessionState(yar, stateId, newState)
-
-      // Redirect POST to GET without resubmit on back button
+      // Redirect to conditions list page
       return h
-        .redirect(editorFormPath(slug, `condition/${conditionId}/${stateId}`))
+        .redirect(editorFormPath(slug, `conditions`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
-      // validate: {
-      //   payload: addConditionSchema,
-      //   failAction: (request, h, error) => {
-      //     return redirectWithErrors(request, h, error, errorKey)
-      //   }
-      // },
+      validate: {
+        payload: conditionWrapperSchema.append({
+          action: Joi.string()
+            .valid(
+              'addCondition',
+              'confirmSelectComponentId',
+              'confirmSelectOperator'
+            )
+            .optional(),
+          removeAction: Joi.number().integer().optional()
+        }),
+        failAction: (request, h, error) => {
+          const { payload, params, yar } = request
+          const { slug, conditionId, stateId } = params
+          const { items } = payload
+
+          if (payload.action || payload.removeAction) {
+            if (payload.action === 'addCondition') {
+              // @ts-expect-error - dynamic parse so enforcing type is problematic
+              items.push(
+                /** @type {ConditionDataV2} */({
+                  id: randomUUID()
+                })
+              )
+            } else if (payload.removeAction) {
+              items.splice(Number(payload.removeAction), 1)
+            }
+
+            const { coordinator, displayName } = payload
+            const state = getConditionSessionState(yar, stateId)
+            const newState = {
+              ...state,
+              conditionWrapper: {
+                ...state?.conditionWrapper,
+                items,
+                displayName,
+                coordinator
+              }
+            }
+
+            // @ts-expect-error - dynamic parse so enforcing type is problematic
+            setConditionSessionState(yar, stateId, newState)
+
+            // Redirect POST to GET without resubmit on back button
+            return h
+              .redirect(
+                editorFormPath(slug, `condition/${conditionId}/${stateId}`)
+              )
+              .code(StatusCodes.SEE_OTHER)
+              .takeover()
+          } else {
+            return redirectWithErrors(request, h, error, errorKey)
+          }
+        }
+      },
       auth: {
         mode: 'required',
         access: {

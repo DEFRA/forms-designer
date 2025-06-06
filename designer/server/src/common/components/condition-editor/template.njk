@@ -38,10 +38,9 @@
           {{ conditionRowHtml | safe }}
               {{ appIconButton({
                 label: "Remove condition",
-                id: 'removeCondition',
                 icon: 'cross',
                 type: 'button',
-                name: 'removeCondition',
+                name: 'removeAction',
                 value: loop.index0,
                 extraClasses: 'govuk-button--warning condition-editor-top-right-button'
               }) }}
@@ -56,11 +55,10 @@
   <div class="form-group">
     {{ appIconButton({
       label: "Add another condition",
-      id: 'addCondition',
       icon: 'plus',
       type: 'button',
-      name: 'addCondition',
-      value: true
+      name: 'action',
+      value: 'addCondition'
     }) }}
   </div>
 

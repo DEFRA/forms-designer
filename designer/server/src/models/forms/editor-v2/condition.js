@@ -75,8 +75,8 @@ export function buildConditionsFields(
         value: 'operator' in item ? item.operator : undefined,
         formGroup: {
           afterInput: {
-            html: `<button class="govuk-button govuk-!-margin-bottom-0" name="confirmSelectOperator" type="submit"
-      value="true">Select</button>`
+            html: `<button class="govuk-button govuk-!-margin-bottom-0" name="action" type="submit"
+      value="confirmSelectOperator">Select</button>`
           }
         },
         ...insertValidationErrors(validation?.formErrors.operator)
