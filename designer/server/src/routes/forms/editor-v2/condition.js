@@ -40,8 +40,20 @@ const stateIdSchema = Joi.string().optional()
 // Custom condition wrapper payload schema that
 // only allows conditions, not condition references
 const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
+  displayName: conditionWrapperSchemaV2.extract('displayName').messages({
+    'string.empty': 'Enter condition name'
+  }),
+  coordinator: conditionWrapperSchemaV2.extract('coordinator').messages({
+    'any.required': 'Choose how you want to combine conditions'
+  }),
   items: Joi.array()
-    .items(conditionDataSchemaV2.required())
+    .items(
+      conditionDataSchemaV2.keys({
+        componentId: conditionDataSchemaV2.extract('componentId').messages({
+          'string.empty': 'Select a question for condition {{../key}}'
+        })
+      })
+    )
     .description('Array of conditions')
 })
 
@@ -225,6 +237,13 @@ export default [
               .code(StatusCodes.SEE_OTHER)
               .takeover()
           } else {
+            // Filter out unwanted schema errors
+            if (Joi.isError(error)) {
+              error.details = error.details.filter((err) => {
+                return err.type !== 'array.includesRequiredUnknowns'
+              })
+            }
+
             return redirectWithErrors(request, h, error, errorKey)
           }
         }
