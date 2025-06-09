@@ -165,7 +165,11 @@ export function convertConditionWrapperFromV2(
         let newCondition: ConditionData | ConditionRefData
 
         if (isConditionDataV2(condition)) {
-          newCondition = convertConditionDataV2(model, condition, coordinator)
+          newCondition = convertConditionDataV2(
+            model,
+            condition,
+            index > 0 ? coordinator : undefined
+          )
         } else {
           newCondition = convertConditionRefDataFromV2(
             model,
