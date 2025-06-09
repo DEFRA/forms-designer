@@ -36,6 +36,9 @@ const notificationKey = sessionNames.successNotification
 
 const idSchema = Joi.string().uuid().allow('new').required()
 const stateIdSchema = Joi.string().optional()
+const componentIdSchema = conditionDataSchemaV2.extract('componentId')
+const operatorSchema = conditionDataSchemaV2.extract('operator')
+const valueSchema = conditionDataSchemaV2.extract('value')
 
 // Custom condition wrapper payload schema that
 // only allows conditions, not condition references
@@ -45,15 +48,25 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
   }),
   items: Joi.array().items(
     conditionDataSchemaV2.keys({
-      componentId: conditionDataSchemaV2.extract('componentId').messages({
+      componentId: componentIdSchema.messages({
         '*': 'Select a question'
       }),
-      operator: conditionDataSchemaV2.extract('operator').messages({
-        '*': 'Select a condition type'
-      }),
-      value: conditionDataSchemaV2.extract('value').messages({
-        '*': 'Enter a condition value'
-      })
+      operator: operatorSchema
+        .when('componentId', {
+          not: componentIdSchema,
+          then: Joi.optional()
+        })
+        .messages({
+          '*': 'Select a condition type'
+        }),
+      value: valueSchema
+        .when('operator', {
+          not: operatorSchema,
+          then: Joi.optional()
+        })
+        .messages({
+          '*': 'Enter a condition value'
+        })
     })
   ),
   displayName: conditionWrapperSchemaV2.extract('displayName').messages({
