@@ -69,6 +69,7 @@ export function buildValueField(
         label: {
           text: 'Enter a value'
         },
+        classes: 'govuk-input--width-10',
         value:
           'value' in item && 'value' in item.value
             ? item.value.value
