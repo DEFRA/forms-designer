@@ -43,7 +43,8 @@ describe('Validation functions', () => {
             path: ['field-name'],
             type: 'custom',
             context: {
-              key: 'field-key'
+              key: 'field-key',
+              label: 'field-key'
             }
           }
         ],
@@ -53,15 +54,15 @@ describe('Validation functions', () => {
       addErrorsToSession(buildMockRequest(payload), error, sessionKey)
       // TODO - correct this test
       expect(mockFlash).toHaveBeenCalled()
-      // expect(mockFlash).toHaveBeenCalledWith('this-key', {
-      //   formErrors: {
-      //     'field-key': {
-      //       href: '#field-key',
-      //       text: 'error number 1'
-      //     }
-      //   },
-      //   formValues: { field1: 'abc' }
-      // })
+      expect(mockFlash).toHaveBeenCalledWith('this-key', {
+        formErrors: {
+          'field-key': {
+            href: '#field-key',
+            text: 'error number 1'
+          }
+        },
+        formValues: { field1: 'abc' }
+      })
     })
 
     test('should handle no errors', () => {
