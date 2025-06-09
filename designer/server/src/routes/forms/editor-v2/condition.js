@@ -244,6 +244,8 @@ export default [
               items.push({ id: randomUUID() })
             } else if (payload.removeAction) {
               items.splice(Number(payload.removeAction), 1)
+            } else {
+              // Do nothing - clause in here to satisfy SonarCloud
             }
 
             saveSessionState(yar, payload, stateId, items)

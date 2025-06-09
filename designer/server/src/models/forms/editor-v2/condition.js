@@ -54,8 +54,8 @@ export function buildValueField(
             ? item.value.itemId
             : undefined,
         items: getListFromComponent(selectedComponent, definition)?.items.map(
-          (item) => {
-            return { text: item.text, value: item.id }
+          (itm) => {
+            return { text: itm.text, value: itm.id }
           }
         ),
         ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
@@ -76,8 +76,29 @@ export function buildValueField(
         ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
       }
     }
+
+    default: {
+      throw new Error(`Invalid condition type ${type}`)
+    }
   }
 }
+
+/**
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @returns { string | undefined }
+ */
+export function getComponentId(item) {
+  return 'componentId' in item ? item.componentId : undefined
+}
+
+/**
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @returns { OperatorName | undefined }
+ */
+export function getOperator(item) {
+  return 'operator' in item ? item.operator : undefined
+}
+
 /**
  * @param {number} idx
  * @param {{ page: Page, number: number, components: ConditionalComponentsDef[], group: boolean }[]} componentItems
@@ -105,7 +126,7 @@ export function buildConditionsFields(
       text: 'Select a question'
     },
     items: componentItems,
-    value: 'componentId' in item ? item.componentId : undefined,
+    value: getComponentId(item),
     ...insertValidationErrors(
       validation?.formErrors[`items[${idx}].componentId`]
     )
@@ -127,12 +148,12 @@ export function buildConditionsFields(
           text: 'Condition type'
         },
         items: [{ text: 'Select a condition type', value: '' }].concat(
-          ...getOperatorNames(selectedComponent?.type).map((value) => ({
-            text: upperFirst(value),
-            value
+          ...getOperatorNames(selectedComponent?.type).map((val) => ({
+            text: upperFirst(val),
+            value: val
           }))
         ),
-        value: 'operator' in item ? item.operator : undefined,
+        value: getOperator(item),
         formGroup: {
           afterInput: {
             html: `<button class="govuk-button govuk-!-margin-bottom-0" name="action" type="submit"
@@ -283,8 +304,7 @@ export function conditionViewModel(
   const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { formValues, formErrors } = validation ?? {}
+  const { formErrors } = validation ?? {}
 
   return {
     backLink: {
@@ -318,6 +338,6 @@ export function conditionViewModel(
  */
 
 /**
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page, OperatorName } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -24,12 +24,14 @@ import {
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
-const patchJsonByType = /** @type {typeof patchJson<Page>} */ (patchJson)
-const postJsonByType = /** @type {typeof postJson<Page>} */ (postJson)
+const patchJsonByPageType = /** @type {typeof patchJson<Page>} */ (patchJson)
+const postJsonByPageType = /** @type {typeof postJson<Page>} */ (postJson)
 const postJsonByDefinitionType =
   /** @type {typeof postJson<FormDefinition>} */ (postJson)
-const putJsonByType = /** @type {typeof putJson<Page>} */ (putJson)
-const delJsonByType = /** @type {typeof delJson<ComponentDef>} */ (delJson)
+const putJsonByPageType = /** @type {typeof putJson<Page>} */ (putJson)
+const delJsonByComponentType = /** @type {typeof delJson<ComponentDef>} */ (
+  delJson
+)
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
@@ -62,7 +64,7 @@ export async function addPageAndFirstQuestion(
   questionDetails,
   pageDetails
 ) {
-  const { body } = await postJsonByType(buildRequestUrl(formId, 'pages'), {
+  const { body } = await postJsonByPageType(buildRequestUrl(formId, 'pages'), {
     payload: {
       title: pageDetails?.title ?? '',
       path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
@@ -88,7 +90,7 @@ export async function addPageAndFirstQuestion(
  * @param {Partial<ComponentDef>} questionDetails
  */
 export async function addQuestion(formId, token, pageId, questionDetails) {
-  const { body } = await postJsonByType(
+  const { body } = await postJsonByPageType(
     buildRequestUrl(formId, `pages/${pageId}/components`),
     {
       payload: {
@@ -142,7 +144,7 @@ export async function updateQuestion(
     isFirstQuestionAndNoPageTitle
   ) {
     // Update page controller and/or page path
-    await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
+    await patchJsonByPageType(buildRequestUrl(formId, `pages/${pageId}`), {
       payload: {
         controller: newControllerType ?? null,
         path: pagePathForCall
@@ -151,7 +153,7 @@ export async function updateQuestion(
     })
   }
 
-  const { body } = await putJsonByType(
+  const { body } = await putJsonByPageType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
     {
       payload: questionDetails,
@@ -204,7 +206,7 @@ export async function insertUpdateOrDeleteGuidance(
 
   if (existingGuidance && (!stringHasValue(guidanceText) || !isExpanded)) {
     // Remove guidance component since the user has blanked out the guidance text now or unchecked the checkbox
-    await delJsonByType(
+    await delJsonByComponentType(
       buildRequestUrl(
         formId,
         `pages/${pageId}/components/${existingGuidance.id}`
@@ -230,12 +232,12 @@ export async function insertUpdateOrDeleteGuidance(
     const guidanceRequestFullUrl = new URL(guidanceRequestUrl, formsEndpoint)
 
     if (existingGuidance) {
-      await putJsonByType(guidanceRequestFullUrl, {
+      await putJsonByPageType(guidanceRequestFullUrl, {
         payload: guidancePayload,
         ...getHeaders(token)
       })
     } else {
-      await postJsonByType(guidanceRequestFullUrl, {
+      await postJsonByPageType(guidanceRequestFullUrl, {
         payload: guidancePayload,
         ...getHeaders(token)
       })
@@ -310,7 +312,7 @@ export async function setPageSettings(
   }
 
   // Update page heading
-  await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
+  await patchJsonByPageType(buildRequestUrl(formId, `pages/${pageId}`), {
     payload: requestPayload,
     ...getHeaders(token)
   })
@@ -366,7 +368,7 @@ export async function setCheckAnswersDeclaration(
  */
 export async function reorderPages(formId, token, payload) {
   // Update page ordering
-  await postJsonByType(buildRequestUrl(formId, `pages/order`), {
+  await postJsonByPageType(buildRequestUrl(formId, `pages/order`), {
     payload,
     ...getHeaders(token)
   })
@@ -397,7 +399,7 @@ export async function migrateDefinitionToV2(formId, token) {
  * @param {FormDefinition} definition
  */
 export async function deletePage(formId, token, pageId, definition) {
-  await delJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
+  await delJsonByComponentType(buildRequestUrl(formId, `pages/${pageId}`), {
     ...getHeaders(token)
   })
   await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
@@ -418,7 +420,7 @@ export async function deleteQuestion(
   questionId,
   definition
 ) {
-  await delJsonByType(
+  await delJsonByComponentType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
     {
       ...getHeaders(token)
@@ -440,15 +442,18 @@ export async function deleteQuestion(
  * @param {ConditionWrapperV2} condition
  */
 export async function addCondition(formId, token, condition) {
-  const postJsonByType =
+  const postJsonByConditionType =
     /** @type {typeof postJson<{ id: string, condition: ConditionWrapperV2, status: 'created' }>} */ (
       postJson
     )
 
-  const { body } = await postJsonByType(buildRequestUrl(formId, 'conditions'), {
-    payload: condition,
-    ...getHeaders(token)
-  })
+  const { body } = await postJsonByConditionType(
+    buildRequestUrl(formId, 'conditions'),
+    {
+      payload: condition,
+      ...getHeaders(token)
+    }
+  )
 
   return body
 }
@@ -460,12 +465,12 @@ export async function addCondition(formId, token, condition) {
  * @param {ConditionWrapperV2} condition
  */
 export async function updateCondition(formId, token, condition) {
-  const putJsonByType =
+  const putJsonByConditionType =
     /** @type {typeof postJson<{ id: string, condition: ConditionWrapperV2, status: 'created' }>} */ (
       putJson
     )
 
-  const { body } = await putJsonByType(
+  const { body } = await putJsonByConditionType(
     buildRequestUrl(formId, `conditions/${condition.id}`),
     {
       payload: condition,
@@ -488,7 +493,7 @@ export async function setPageCondition(formId, token, pageId, conditionName) {
     ? { condition: conditionName }
     : { condition: null }
 
-  await patchJsonByType(buildRequestUrl(formId, `pages/${pageId}`), {
+  await patchJsonByPageType(buildRequestUrl(formId, `pages/${pageId}`), {
     payload,
     ...getHeaders(token)
   })
