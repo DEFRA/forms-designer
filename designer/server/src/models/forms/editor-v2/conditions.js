@@ -33,7 +33,7 @@ export function buildConditionsTable(slug, definition) {
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
-      const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/edit">Edit</a>`
+      const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}">Edit</a>`
       const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
 
       return [
