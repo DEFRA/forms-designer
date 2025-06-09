@@ -184,29 +184,15 @@ export function buildConditionsFields(
       ? `items[${idx}][value][listId]`
       : ''
 
-  const value =
-    'operator' in item && component.value && item.operator.length
-      ? buildValueField(
-          conditionType,
-          idx,
-          item,
-          selectedComponent,
-          definition,
-          validation
-        )
+  // prettier-ignore
+  const value = 'operator' in item && component.value && item.operator.length
+      ? buildValueField(conditionType, idx, item, selectedComponent, definition, validation)
       : undefined
 
-  return {
-    component,
-    operator,
-    value,
-    conditionType,
-    idField,
-    listId,
-    conditionTypeName,
-    listIdName
-  }
+  // prettier-ignore
+  return { component, operator, value, conditionType, idField, listId, conditionTypeName, listIdName}
 }
+
 /**
  * @param {FormDefinition} definition
  * @param { ValidationFailure<FormEditor> | undefined } validation

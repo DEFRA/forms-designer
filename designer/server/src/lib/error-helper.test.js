@@ -52,8 +52,6 @@ describe('Validation functions', () => {
       )
       const payload = { field1: 'abc' }
       addErrorsToSession(buildMockRequest(payload), error, sessionKey)
-      // TODO - correct this test
-      expect(mockFlash).toHaveBeenCalled()
       expect(mockFlash).toHaveBeenCalledWith('this-key', {
         formErrors: {
           'field-key': {

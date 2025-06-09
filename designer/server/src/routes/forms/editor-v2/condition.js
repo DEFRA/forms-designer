@@ -111,6 +111,28 @@ export function saveSessionState(yar, payload, stateId, items) {
   setConditionSessionState(yar, stateId, newState)
 }
 
+/**
+ * Filter out unwanted schema errors
+ * @param { Error | undefined } error
+ */
+export function filterErrors(error) {
+  if (Joi.isError(error)) {
+    error.details = error.details.filter((err) => {
+      return err.type !== 'array.includesRequiredUnknowns'
+    })
+
+    error.details.forEach((err) => {
+      if (err.path.length > 1) {
+        // Must be the a part of a condition item is in error
+        const idx = err.path.at(1)
+        if (typeof idx === 'number') {
+          err.message = `${err.message} for condition ${idx + 1}`
+        }
+      }
+    })
+  }
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string, stateId?: string } }>}
@@ -261,21 +283,7 @@ export default [
             saveSessionState(yar, payload, stateId, items)
 
             // Filter out unwanted schema errors
-            if (Joi.isError(error)) {
-              error.details = error.details.filter((err) => {
-                return err.type !== 'array.includesRequiredUnknowns'
-              })
-
-              error.details.forEach((err) => {
-                if (err.path.length > 1) {
-                  // Must be the a part of a condition item is in error
-                  const idx = err.path.at(1)
-                  if (typeof idx === 'number') {
-                    err.message = `${err.message} for condition ${idx + 1}`
-                  }
-                }
-              })
-            }
+            filterErrors(error)
 
             return redirectWithErrors(request, h, error, errorKey)
           }
