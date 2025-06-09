@@ -64,7 +64,7 @@ export function buildValueField(
 
     case ConditionType.StringValue: {
       return {
-        id: 'value',
+        id: `items[${idx}].value`,
         name: `items[${idx}][value][value]`,
         label: {
           text: 'Enter a value'
