@@ -221,7 +221,7 @@ describe('Editor v2 condition routes', () => {
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
         new Joi.ValidationError(
-          'items[0] must be of type object. items[1] must be of type object. items[2] must be of type object. Select a question. Select a condition type. Enter a condition value. items[3].type is not allowed. Choose how you want to combine conditions',
+          'items[0] must be of type object. items[1] must be of type object. items[2] must be of type object. Select a question. Enter a condition value. items[3].type is not allowed. Choose how you want to combine conditions',
           [],
           undefined
         ),
