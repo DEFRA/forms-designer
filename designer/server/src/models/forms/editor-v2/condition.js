@@ -238,6 +238,7 @@ export function buildConditionEditor(definition, validation, state) {
       text: 'Condition name',
       classes: 'govuk-label--m'
     },
+    classes: 'govuk-input--width-20',
     value: conditionWrapper?.displayName,
     hint: {
       text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
