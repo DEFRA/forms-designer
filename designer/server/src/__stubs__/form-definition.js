@@ -926,7 +926,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
           options: {
             required: true
           },
-          list: 'ukcXCd',
+          list: '3e470333-c2aa-4bd4-bd1a-738819226a3a',
           id: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2'
         }
       ],
@@ -946,7 +946,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
           options: {
             required: true
           },
-          list: 'sdewRT',
+          list: '0e047f83-dbb6-4c82-b709-f9dbaddf8644',
           id: 'f0f67bf7-cdbb-4247-9f3c-8cd919183968'
         }
       ],
