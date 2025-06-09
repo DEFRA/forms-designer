@@ -2,6 +2,7 @@ import { ConditionType } from '@defra/forms-model'
 
 import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
 import {
+  buildConditionEditor,
   buildValueField,
   getComponentId,
   getOperator
@@ -116,6 +117,47 @@ describe('editor-v2 - condition model', () => {
     test('should return undefined if property doesnt exist', () => {
       // @ts-expect-error - force missing property name
       expect(getOperator({ id: '123' })).toBeUndefined()
+    })
+  })
+
+  describe('buildConditionEditor', () => {
+    test('should return fields', () => {
+      const state = {}
+      const res = buildConditionEditor(
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined,
+        state
+      )
+      expect(res.legendText).toBe('Edit condition')
+      expect(res.displayNameField).toEqual({
+        classes: 'govuk-input--width-20',
+        hint: {
+          text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
+        },
+        id: 'displayName',
+        label: {
+          classes: 'govuk-label--m',
+          text: 'Condition name'
+        },
+        name: 'displayName',
+        value: undefined
+      })
+      expect(res.coordinator).toEqual({
+        classes: 'govuk-radios--inline',
+        fieldset: {
+          legend: {
+            classes: 'govuk-fieldset__legend--m',
+            text: 'How do you want to combine these conditions?'
+          }
+        },
+        id: 'coordinator',
+        items: [
+          { text: 'All conditions must be met (AND)', value: 'and' },
+          { text: 'Any condition can be met (OR)', value: 'or' }
+        ],
+        name: 'coordinator',
+        value: undefined
+      })
     })
   })
 })
