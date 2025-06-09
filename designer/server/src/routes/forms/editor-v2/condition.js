@@ -245,14 +245,8 @@ export default [
     options: {
       validate: {
         payload: conditionWrapperSchema.append({
-          action: Joi.string()
-            .valid(
-              'addCondition',
-              'confirmSelectComponentId',
-              'confirmSelectOperator'
-            )
-            .optional(),
-          removeAction: Joi.number().integer().optional()
+          action: Joi.forbidden(),
+          removeAction: Joi.forbidden()
         }),
         failAction: (request, h, error) => {
           // Guard for type safety
