@@ -69,7 +69,8 @@ describe('editor-v2 - condition model', () => {
         },
         id: 'items[2].value',
         name: 'items[2][value][value]',
-        value: 'stringval'
+        value: 'stringval',
+        classes: 'govuk-input--width-10'
       })
     })
 
