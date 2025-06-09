@@ -110,31 +110,10 @@ export function setConditionSessionState(yar, stateId, model) {
 /**
  * @param {Yar} yar
  * @param {string} stateId
- * @param { ConditionSessionState | undefined } model
- */
-export function mergeConditionSessionState(yar, stateId, model) {
-  const state = yar.get(conditionSessionKey(stateId)) ?? {}
-  yar.set(conditionSessionKey(stateId), {
-    ...state,
-    ...model
-  })
-}
-
-/**
- * @param {Yar} yar
- * @param {string} stateId
  * @returns { ConditionSessionState | undefined }
  */
 export function getConditionSessionState(yar, stateId) {
   return yar.get(conditionSessionKey(stateId))
-}
-
-/**
- * @param {Yar} yar
- * @param {string} stateId
- */
-export function clearConditionSessionState(yar, stateId) {
-  yar.set(conditionSessionKey(stateId), undefined)
 }
 
 const componentsSavingLists = [
