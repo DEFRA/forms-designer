@@ -18,6 +18,7 @@ import {
   token
 } from '~/src/lib/__stubs__/editor.js'
 import {
+  addCondition,
   addPageAndFirstQuestion,
   addQuestion,
   deletePage,
@@ -29,6 +30,7 @@ import {
   setCheckAnswersDeclaration,
   setPageCondition,
   setPageSettings,
+  updateCondition,
   updateQuestion
 } from '~/src/lib/editor.js'
 import {
@@ -1136,8 +1138,99 @@ describe('editor.js', () => {
       ).toEqual({})
     })
   })
+
+  const testCondition = /** @type {ConditionWrapperV2} */ ({
+    id: '2764cf2a-0382-43cb-9e7f-48b72644e668',
+    displayName: 'cond1'
+  })
+
+  describe('updateCondition', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/conditions/12345`,
+      formsEndpoint
+    )
+
+    const expectedConditionPayload = {
+      payload: {
+        id: '2764cf2a-0382-43cb-9e7f-48b72644e668',
+        displayName: 'cond1'
+      },
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when putJson succeeds', () => {
+      test('returns response body when successful', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const result = await updateCondition(formId, token, testCondition)
+
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          requestUrl,
+          expectedConditionPayload
+        )
+        expect(result).toEqual({ id: '456' })
+      })
+    })
+
+    describe('when putJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedPutJson.mockRejectedValueOnce(testError)
+
+        await expect(
+          updateCondition(formId, token, testCondition)
+        ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('addCondition', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/conditions/12345`,
+      formsEndpoint
+    )
+
+    const expectedConditionPayload = {
+      payload: {
+        id: '2764cf2a-0382-43cb-9e7f-48b72644e668',
+        displayName: 'cond1'
+      },
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when postJson succeeds', () => {
+      test('returns response body when successful', async () => {
+        mockedPostJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const result = await addCondition(formId, token, testCondition)
+
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          requestUrl,
+          expectedConditionPayload
+        )
+        expect(result).toEqual({ id: '456' })
+      })
+    })
+
+    describe('when postJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedPostJson.mockRejectedValueOnce(testError)
+
+        await expect(
+          addCondition(formId, token, testCondition)
+        ).rejects.toThrow(testError)
+      })
+    })
+  })
 })
 
 /**
- * @import { FormDefinition, Page } from '@defra/forms-model'
+ * @import { ConditionWrapperV2, FormDefinition, Page } from '@defra/forms-model'
  */
