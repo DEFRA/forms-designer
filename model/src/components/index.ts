@@ -20,4 +20,9 @@ export {
   allImageTypes,
   allTabularDataTypes
 } from '~/src/components/file-types.js'
+export {
+  getYesNoList,
+  yesNoListId,
+  yesNoListName
+} from '~/src/components/yes-no-helper.js'
 export { ComponentType } from '~/src/components/enums.js'

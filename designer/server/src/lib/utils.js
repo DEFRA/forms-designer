@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  getYesNoList,
   hasComponents,
   hasListField,
   isFormType
@@ -172,6 +173,11 @@ export function getListFromComponent(component, definition) {
   if (!component) {
     return undefined
   }
+
+  if (component.type === ComponentType.YesNoField) {
+    return getYesNoList()
+  }
+
   const listId = hasListField(component) ? component.list : undefined
 
   if (listId) {
