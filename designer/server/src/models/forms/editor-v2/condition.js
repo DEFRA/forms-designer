@@ -156,7 +156,7 @@ export function buildConditionsFields(
         value: getOperator(item),
         formGroup: {
           afterInput: {
-            html: `<button class="govuk-button govuk-!-margin-bottom-0" name="action" type="submit"
+            html: `<button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-left-3" name="action" type="submit"
       value="confirmSelectOperator">Select</button>`
           }
         },
