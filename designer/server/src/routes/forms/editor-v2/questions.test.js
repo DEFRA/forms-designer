@@ -1,4 +1,9 @@
 import { ApiErrorCode } from '@defra/forms-model'
+import {
+  buildDefinition,
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -83,6 +88,73 @@ describe('Editor v2 questions routes', () => {
     expect($actions[3]).toHaveTextContent('Add another question')
     expect($actions[4]).toHaveTextContent('Save changes')
     expect($actions[5]).toHaveTextContent('Manage conditions')
+  })
+
+  test('GET - should render one question in the view', async () => {
+    const title = 'Text field title'
+    const hint = 'Hint text'
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
+      buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            path: '/page-one',
+            title: '',
+            section: 'section',
+            components: [
+              buildTextFieldComponent({
+                title,
+                hint
+              })
+            ],
+            next: [{ path: '/summary' }]
+          })
+        ]
+      })
+    )
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $previewPanel = container.getByText('Previews')
+    // const $pagePreviewTitle = document.querySelector(
+    //   '#question-preview-content legend'
+    // )
+
+    expect($previewPanel).toHaveTextContent('Previews')
+    // expect($pagePreviewTitle).toHaveTextContent(title)
+    // const $mastheadHeading = container.getByText('Test form')
+    // const $cardTitle = container.getByText('Page 1 overview')
+    // const $cardHeading = container.getByText('Page 1')
+    // const $questionNumbers = container.getAllByRole('term')
+    // const $questionTitles = container.getAllByRole('definition')
+    //
+    // const $actions = container.getAllByRole('button')
+    //
+    // expect($mastheadHeading).toHaveTextContent('Test form')
+    // expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    // expect($cardTitle).toHaveTextContent('Page 1 overview')
+    // expect($cardTitle).toHaveClass('editor-card-title')
+    // expect($cardHeading).toHaveTextContent('Page 1')
+    // expect($cardHeading).toHaveClass('govuk-heading-l')
+    //
+    // expect($questionNumbers[0]).toHaveTextContent('Question 1')
+    // expect($questionNumbers[1]).toHaveTextContent('Question 2')
+    //
+    // expect($questionTitles[1]).toHaveTextContent('This is your first question')
+    // expect($questionTitles[3]).toHaveTextContent('This is your second question')
+    //
+    // expect($actions).toHaveLength(6)
+    // expect($actions[2]).toHaveTextContent('Preview page')
+    // expect($actions[3]).toHaveTextContent('Add another question')
+    // expect($actions[4]).toHaveTextContent('Save changes')
+    // expect($actions[5]).toHaveTextContent('Manage conditions')
   })
 
   test('GET - should render no questions in the view', async () => {

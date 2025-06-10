@@ -1,0 +1,121 @@
+{% from "icon-button/macro.njk" import appIconButton %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+
+<div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
+  <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
+    <dl class="govuk-summary-list">
+      <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+          <div class="govuk-grid-row" id="page-settings-container-1">
+            <div id="card-1">
+              <div class="govuk-summary-card__content">
+                <div class="app-tab-container app-tab-container--title-only">
+                  <div class="editor-card-title">{{ cardTitle }}</div>
+                  {%- include "../../../../views/forms/editor-v2/partials/page-navigation-tabs.njk" -%}
+                </div>
+                <div class="govuk-!-padding-top-3">
+                  <h1 class="govuk-heading-l" id="page-heading">{{ cardCaption }}</h1>
+
+                  {% if errorList | length %}
+                    {{ govukErrorSummary({
+                      titleText: "There is a problem",
+                      errorList: errorList,
+                      classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+                    }) }}
+                  {% endif %}
+                  {% if notification | length %}
+                    {% call govukNotificationBanner({
+                      type: "success"
+                    }) %}
+                      <p class="govuk-notification-banner__heading">{{ notification }}</p>
+                    {% endcall %}
+                  {% endif %}
+                  {% if questionRows | length %}
+                    {{ govukSummaryList({
+                      rows: questionRows,
+                      classes: 'govuk-summary-list__show_final_divider'
+                    })
+                  }}
+                  {% else %}
+                    {{ govukSummaryList({
+                        rows: [{
+                          value: {
+                            text: 'No questions'
+                          }
+                        }]
+                      })
+                    }}
+                  {% endif %}
+                  <div class="govuk-button-group govuk-!-margin-top-6">
+                    {{ appIconButton({
+                      label: "Preview page",
+                      href: previewPageUrl,
+                      id: "preview-page"
+                    }) }}
+
+                    {% if not preventAddQuestion %}
+                      {{ govukButton({
+                        text: 'Add another question',
+                        href: baseUrl + '/question/new/type'
+                      }) }}
+                    {% endif %}
+
+                    <a href="{{ baseUrl }}/delete" class="govuk-link govuk-link--no-visited-state">
+                      Delete page
+                    </a>
+                  </div>
+
+                  {{ govukSkipLink({
+                    text: "Skip to page preview",
+                    href: "#"
+                  }) }}
+
+                  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                  <form class="form" method="post">
+                      {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
+                  </form>
+                  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+                  {% set conditionsContent %}
+                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Current conditions</h2>
+                    {% if hasPageCondition %}
+                      <div class="govuk-!-margin-bottom-3">
+                              <span class="govuk-body">
+                                <span class="govuk-checkboxes__tick" style="color: #00703c; font-weight: bold;">✓</span>
+                                {{ pageConditionDetails.displayName }}
+                              </span>
+                      </div>
+                      {% if pageConditionPresentationString %}
+                        <p class="govuk-body-s govuk-!-margin-bottom-0" style="color: #626a6e;">
+                          {{ pageConditionPresentationString }}
+                        </p>
+                      {% endif %}
+                    {% else %}
+                        <p class="govuk-body govuk-!-margin-bottom-0">No conditions have been added to this page yet.</p>
+                    {% endif %}
+                  {% endset %}
+
+                  <h1 class="govuk-heading-l">Page conditions</h1>
+                  <p class="govuk-body">Control whether this page is shown to users based on their answer to a previous question</p>
+
+                  {{ govukInsetText({
+                    html: conditionsContent
+                  }) }}
+
+                  <a href="{{ baseUrl }}/conditions" class="govuk-button" role="button" draggable="false" data-module="govuk-button">
+                    Manage conditions
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
