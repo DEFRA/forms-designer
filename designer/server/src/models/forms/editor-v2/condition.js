@@ -1,5 +1,4 @@
 import {
-  ComponentType,
   ConditionType,
   getOperatorNames,
   hasComponentsEvenIfNoNext,
@@ -169,11 +168,9 @@ export function buildConditionsFields(
 
   // TODO - enhance to handle date absolute + relative
   // TODO - is there an easier/better way to determine the condition type?
-  const conditionType =
-    hasListField(selectedComponent) ||
-    selectedComponent?.type === ComponentType.YesNoField
-      ? ConditionType.ListItemRef
-      : ConditionType.StringValue
+  const conditionType = hasListField(selectedComponent)
+    ? ConditionType.ListItemRef
+    : ConditionType.StringValue
 
   const listId =
     conditionType === ConditionType.ListItemRef

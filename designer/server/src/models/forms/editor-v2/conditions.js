@@ -84,5 +84,5 @@ export function conditionsViewModel(metadata, definition, notification) {
 }
 
 /**
- * @import { FormMetadata, FormDefinition, RuntimeFormModel } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */

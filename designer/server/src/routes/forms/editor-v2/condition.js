@@ -40,8 +40,17 @@ const componentIdSchema = conditionDataSchemaV2.extract('componentId')
 const operatorSchema = conditionDataSchemaV2.extract('operator')
 const valueSchema = conditionDataSchemaV2.extract('value')
 
-// Custom condition wrapper payload schema that
-// only allows conditions, not condition references
+/**
+ * @type {Joi.ObjectSchema<ConditionWrapperPayload>}
+ * Custom condition wrapper payload schema that
+ * only allows conditions, not condition references.
+ *
+ * There is a dependency chain in the validation of each condition item:
+ * - Condition operator is only required once a componentId has been selected
+ * - Condition value is only required once a valid operator has been selected
+ * Given this, we don't want to surface errors to the user for operator and
+ * value before their dependent fields are valid hence the use of `joi.when` below
+ */
 const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
   coordinator: conditionWrapperSchemaV2.extract('coordinator').messages({
     'any.required': 'Choose how you want to combine conditions'
@@ -54,7 +63,7 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
       operator: operatorSchema
         .when('componentId', {
           not: componentIdSchema,
-          then: Joi.optional()
+          then: Joi.optional() // Only validate the operator if the componentId is valid
         })
         .messages({
           '*': 'Select a condition type'
@@ -62,7 +71,7 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
       value: valueSchema
         .when('operator', {
           not: operatorSchema,
-          then: Joi.optional()
+          then: Joi.optional() // Only validate the value if the operator is valid
         })
         .messages({
           '*': 'Enter a condition value'
