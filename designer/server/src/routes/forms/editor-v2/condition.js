@@ -228,9 +228,11 @@ export default [
       // when the payload is fully valid
 
       // The process here may seem unusual - the failAction handler is used to handle most of the processing
-      // except for when the final 'Save condition' submit button is clicked. When clicking buttons such as
-      // 'Select' or 'Add another condition', we want the payload to fail so that the process flow hits this
-      // section.
+      // when any of the buttons are clicked, except for when the final 'Save condition' submit button is clicked.
+      // When clicking buttons such as 'Select' or 'Add another condition', we want the payload to fail so that
+      // the process flow hits the the failAction handler below.
+      // When clicking the 'Save condition' button, and the payload is valid, the processing hits this section.
+
       const { auth, params, payload } = request
       const { slug, conditionId } = params
       const { token } = auth.credentials
@@ -257,6 +259,8 @@ export default [
           removeAction: Joi.forbidden()
         }),
         failAction: (request, h, error) => {
+          // When the user clicks any button apart form 'Save condition', the processing should hit this section.
+
           // Guard for type safety
           if (
             typeof request.payload !== 'object' ||
