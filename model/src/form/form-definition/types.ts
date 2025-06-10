@@ -37,6 +37,14 @@ export interface Events {
   onSave?: Event
 }
 
+export interface AuthConfig {
+  mode?: 'required' | 'try' | 'none'
+  strategy?: string
+  access?: {
+    scope?: string[]
+  }
+}
+
 export interface PageBase {
   id?: string
   title: string
@@ -44,6 +52,7 @@ export interface PageBase {
   condition?: string
   events?: Events
   view?: string
+  auth?: AuthConfig
 }
 
 export interface RepeatOptions {
