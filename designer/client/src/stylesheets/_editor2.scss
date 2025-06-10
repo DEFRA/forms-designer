@@ -7,6 +7,11 @@
   margin: 0 4px;
 }
 
+.app-table-actions {
+  width: 150px;
+  white-space: nowrap;
+}
+
 .app-condition-applied {
   background-color: govuk-colour("white");
   border-left: 4px solid #00703c;
