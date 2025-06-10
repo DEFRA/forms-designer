@@ -125,18 +125,15 @@ export function saveSessionState(yar, payload, stateId, items) {
 }
 
 /**
- * Filter out unwanted schema errors
+ * Process schema error messages to add a suffix to condition item errors
  * @param { Error | undefined } error
  */
-export function filterErrors(error) {
+export function processErrorMessages(error) {
   if (Joi.isError(error)) {
-    error.details = error.details.filter((err) => {
-      return err.type !== 'array.includesRequiredUnknowns'
-    })
-
     error.details.forEach((err) => {
       if (err.path.length > 1) {
-        // Must be the a part of a condition item is in error
+        // Must be that part of a condition item is in
+        // error so we append a "for condition X" suffix
         const idx = err.path.at(1)
         if (typeof idx === 'number') {
           err.message = `${err.message} for condition ${idx + 1}`
@@ -302,7 +299,7 @@ export default [
             saveSessionState(yar, payload, stateId, items)
 
             // Filter out unwanted schema errors
-            filterErrors(error)
+            processErrorMessages(error)
 
             return redirectWithErrors(request, h, error, errorKey)
           }
