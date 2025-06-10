@@ -29,13 +29,13 @@
 
     {% if (summaryTable.rows | length) %}
       {{ govukTable(summaryTable) }}
-      <div class="govuk-button-group">
-        <a class="govuk-button" href="#">Create new condition</a>
-      </div>
     {% else %}
       <p class="govuk-body govuk-!-margin-top-4">No conditions available to use. Create a new condition.</p>
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     {% endif %}
+    <div class="govuk-button-group">
+      <a class="govuk-button" href="./condition/new">Create new condition</a>
+    </div>
   {% endcall %}
 {% endblock %}
 

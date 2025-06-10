@@ -43,7 +43,8 @@ describe('Validation functions', () => {
             path: ['field-name'],
             type: 'custom',
             context: {
-              key: 'field-key'
+              key: 'field-key',
+              label: 'field-key'
             }
           }
         ],

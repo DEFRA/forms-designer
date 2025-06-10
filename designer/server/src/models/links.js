@@ -11,12 +11,21 @@ export function formOverviewPath(slug) {
 }
 
 /**
+ * Editor form path
+ * @param {string} slug - the form slug
+ * @param {string} path - the path
+ */
+export function editorFormPath(slug, path) {
+  return `${formsLibraryPath}/${slug}/editor-v2/${path}`
+}
+
+/**
  * Path to the editor-v2 pages
  * @param {string} slug - the form slug
- * @param {string | null} page - the form page
+ * @param {string} page - the form page
  */
 export function editorv2Path(slug, page = '') {
-  return `${formsLibraryPath}/${slug}/editor-v2/${page}`
+  return editorFormPath(slug, page)
 }
 
 /**

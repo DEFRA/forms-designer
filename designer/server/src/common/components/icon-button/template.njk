@@ -1,9 +1,35 @@
-<a href="{{ params.href }}" role="button" target="_blank" {% if params.id %} id="{{ params.id }}" {% endif %} draggable="false" class="govuk-button govuk-button--inverse" data-module="govuk-button" data-govuk-button-init="">
-  <span class="icon-wrapper">
-    <!-- Your SVG icon -->
+{% set extraClasses = 'govuk-button--inverse' if not params.extraClasses else params.extraClasses %}
+{% set iconHtml %}
+    {% if not params.icon or params.icon == 'eye' %}
     <svg width="24" height="17" viewBox="0 0 24 17" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M23.42 8.57175L23.4145 8.58481L23.4097 8.59816C23.3429 8.78328 23.238 9.00239 23.0886 9.2573C22.9298 9.52824 22.7228 9.87643 22.4673 10.3023C22.2277 10.7014 21.9331 11.1051 21.5814 11.5128C21.2252 11.9258 20.8204 12.3494 20.3664 12.7835C19.9256 13.205 19.4124 13.6141 18.8247 14.01C18.244 14.4012 17.6245 14.7357 16.9657 15.0134C16.3098 15.29 15.5465 15.5293 14.6726 15.729C13.8178 15.9244 12.9302 16.0145 12.0089 15.9981C11.0758 15.9815 10.1762 15.8904 9.30954 15.7253C8.44417 15.5605 7.70002 15.3321 7.07186 15.045C6.42176 14.7479 5.78632 14.4008 5.1655 14.0035C4.54798 13.6084 4.04112 13.2115 3.63933 12.8147C3.21885 12.3994 2.81352 11.9589 2.42339 11.4929C2.03009 11.023 1.7314 10.6298 1.52201 10.3108C1.30821 9.98506 1.10923 9.64233 0.92516 9.28242C0.730757 8.9023 0.621902 8.67581 0.583944 8.58135C0.571792 8.55111 0.559969 8.52204 0.548485 8.49418L0.556069 8.478C0.680152 8.28917 0.809181 8.00974 0.943944 7.67437C1.06885 7.36354 1.25291 7.0437 1.50227 6.71517C1.77608 6.35442 2.08956 5.93435 2.44256 5.45519C2.77046 5.01009 3.15984 4.59421 3.61254 4.20795C4.08069 3.80851 4.60573 3.39882 5.18832 2.97899C5.74736 2.57613 6.36096 2.23646 7.0305 1.96057C7.70215 1.6838 8.46464 1.45309 9.32031 1.27056C10.1633 1.09076 11.0561 1 12 1C12.9439 1 13.8367 1.09076 14.6797 1.27056C15.5349 1.45299 16.2879 1.68332 16.9417 1.959C17.5985 2.23593 18.2251 2.57814 18.8218 2.9861C19.4309 3.40252 19.9476 3.80621 20.3746 4.19663C20.8036 4.58877 21.2021 5.01376 21.5703 5.47185C21.9486 5.94264 22.2512 6.3486 22.4806 6.6911C22.7091 7.03241 22.9058 7.37151 23.0712 7.70836C23.2466 8.0655 23.3704 8.31228 23.4393 8.44078C23.4466 8.45441 23.4533 8.46723 23.4594 8.47928L23.42 8.57175ZM9.53856 8.98622H12H13.1542L12.3647 8.14422L10.5845 6.24555C11.0023 5.89618 11.459 5.75365 11.9687 5.78563C12.6631 5.82919 13.2545 6.09335 13.762 6.59079C14.2469 7.066 14.5 7.6826 14.5 8.48622C14.5 9.28973 14.2467 9.91814 13.7569 10.4124C13.2531 10.9206 12.6715 11.1717 11.9895 11.1859C11.3247 11.1998 10.7544 10.9573 10.2527 10.4223C9.86397 10.0077 9.62632 9.53328 9.53856 8.98622ZM8.44014 4.76879C7.4897 5.80124 7.01332 7.0475 7.012 8.48028C6.97841 9.95273 7.45622 11.2176 8.44952 12.2392C9.43354 13.2512 10.6222 13.7794 11.9931 13.7984C13.3754 13.8175 14.5714 13.2835 15.5567 12.2326C16.5414 11.1824 17.0295 9.92278 17.012 8.48013C16.9945 7.04689 16.5101 5.80106 15.5599 4.76879C14.6022 3.72848 13.4053 3.19961 12 3.19961C10.5947 3.19961 9.39782 3.72848 8.44014 4.76879Z" fill="#1D70B8" stroke="black"></path>
     </svg>
+    {% endif %}
+    {% if params.icon == 'plus' %}
+    <svg class="govuk-!-margin-right-1" style="position: relative; top: 2px" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M6 1V11" stroke="currentColor" stroke-width="2"></path>
+      <path d="M1 6H11" stroke="currentColor" stroke-width="2"></path>
+    </svg>
+    {% endif %}
+    {% if params.icon == 'cross' %}
+    <svg class="govuk-!-margin-right-1" style="position: relative; top: 2px" width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M10.5 1.5L1.5 10.5" stroke="currentColor" stroke-width="2"></path>
+        <path d="M1.5 1.5L10.5 10.5" stroke="currentColor" stroke-width="2"></path>
+    </svg>
+    {% endif %}
+  {% endset %}
+
+{% if not params.type or params.type === 'link' %}
+<a href="{{ params.href }}" role="button" target="_blank" {% if params.id %} id="{{ params.id }}" {% endif %} draggable="false" class="govuk-button  {{ extraClasses }}" data-module="govuk-button" data-govuk-button-init="">
+  <span class="icon-wrapper">
+    {{ iconHtml | safe }}
   </span>
   <span class="button-text">{{ params.label }}</span>
 </a>
+{% else %}
+<button class="govuk-button {{ extraClasses }}" name="{{ params.name }}" type="submit" value="{{ params.value }}" formaction="{{ params.formaction }}">
+  <span class="icon-wrapper">
+    {{ iconHtml | safe }}
+  </span>
+{{ params.label }}</button>
+{% endif %}

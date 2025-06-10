@@ -1,4 +1,9 @@
-import { ControllerType, hasComponents } from '@defra/forms-model'
+import {
+  ControllerType,
+  hasComponents,
+  hasComponentsEvenIfNoNext,
+  hasConditionSupport
+} from '@defra/forms-model'
 
 import { stringHasValue } from '~/src/lib/utils.js'
 
@@ -81,6 +86,26 @@ export function getFocus(focusStr) {
     pageId,
     button: direction
   }
+}
+
+/**
+ * @param {Page} page
+ * @param {number} index
+ */
+export function withPageNumbers(page, index) {
+  return {
+    page,
+    number: index + 1
+  }
+}
+
+/**
+ * @param {Page} page
+ */
+export function hasConditionSupportForPage(page) {
+  return (
+    hasComponentsEvenIfNoNext(page) && page.components.some(hasConditionSupport)
+  )
 }
 
 /**
