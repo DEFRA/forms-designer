@@ -7,6 +7,7 @@ import {
   type ContentComponentsDef,
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
+import { yesNoListId } from '~/src/components/yes-no-helper.js'
 import {
   type ConditionData,
   type ConditionDataV2,
@@ -67,15 +68,23 @@ const componentIdRefSchema = Joi.ref('/pages', {
 const listIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists.filter((list) => list.id).map((list) => list.id)
+    lists
+      .filter((list) => list.id)
+      .map((list) => list.id)
+      .concat(yesNoListId)
 })
 
 const listItemIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists.flatMap((list) =>
-      list.items.filter((item) => item.id).map((item) => item.id)
-    )
+    lists
+      .flatMap((list) =>
+        list.items.filter((item) => item.id).map((item) => item.id)
+      )
+      .concat([
+        '02900d42-83d1-4c72-a719-c4e8228952fa',
+        'f39000eb-c51b-4019-8f82-bbda0423f04d'
+      ])
 })
 
 const sectionsSchema = Joi.object<Section>()

@@ -2,6 +2,7 @@ import {
   ConditionsModel,
   ControllerType,
   convertConditionWrapperFromV2,
+  getYesNoList,
   hasComponents,
   hasComponentsEvenIfNoNext,
   isConditionWrapperV2
@@ -208,6 +209,8 @@ export function toPresentationStringV2(conditionWrapper, definition) {
  */
 export function toPresentationHtmlV2(conditionWrapper, definition) {
   const { pages, conditions, lists } = definition
+  lists.push(getYesNoList())
+
   const components = pages.flatMap((p) =>
     hasComponentsEvenIfNoNext(p) ? p.components : []
   )
