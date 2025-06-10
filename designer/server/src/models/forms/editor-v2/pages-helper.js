@@ -102,7 +102,7 @@ export function withPageNumbers(page, index) {
 /**
  * @param {Page} page
  */
-export function withConditionSupport(page) {
+export function hasConditionSupportForPage(page) {
   return (
     hasComponentsEvenIfNoNext(page) && page.components.some(hasConditionSupport)
   )

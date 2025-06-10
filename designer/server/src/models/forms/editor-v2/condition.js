@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   ConditionType,
   getOperatorNames,
   hasComponentsEvenIfNoNext,
@@ -17,7 +18,7 @@ import {
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import {
-  withConditionSupport,
+  hasConditionSupportForPage,
   withPageNumbers
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
@@ -55,7 +56,7 @@ export function buildValueField(
             : undefined,
         items: getListFromComponent(selectedComponent, definition)?.items.map(
           (itm) => {
-            return { text: itm.text, value: itm.id }
+            return { text: itm.text, value: itm.id ?? itm.value }
           }
         ),
         ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
@@ -133,7 +134,6 @@ export function buildConditionsFields(
     )
   }
 
-  // TODO - handle REF as well as component
   const selectedComponent =
     'componentId' in item
       ? componentItems
@@ -169,9 +169,11 @@ export function buildConditionsFields(
 
   // TODO - enhance to handle date absolute + relative
   // TODO - is there an easier/better way to determine the condition type?
-  const conditionType = hasListField(selectedComponent)
-    ? ConditionType.ListItemRef
-    : ConditionType.StringValue
+  const conditionType =
+    hasListField(selectedComponent) ||
+    selectedComponent?.type === ComponentType.YesNoField
+      ? ConditionType.ListItemRef
+      : ConditionType.StringValue
 
   const listId =
     conditionType === ConditionType.ListItemRef
@@ -202,7 +204,7 @@ export function buildConditionsFields(
 export function buildConditionEditor(definition, validation, state) {
   const componentItems = definition.pages
     .map(withPageNumbers)
-    .filter(({ page }) => withConditionSupport(page))
+    .filter(({ page }) => hasConditionSupportForPage(page))
     .map(({ page, number }) => {
       const components = hasComponentsEvenIfNoNext(page)
         ? page.components.filter(hasConditionSupport)

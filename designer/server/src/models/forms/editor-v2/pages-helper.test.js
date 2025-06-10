@@ -4,9 +4,9 @@ import {
   constructReorderPage,
   excludeEndPages,
   getFocus,
+  hasConditionSupportForPage,
   orderPages,
   repositionPage,
-  withConditionSupport,
   withPageNumbers
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 
@@ -231,7 +231,7 @@ describe('editor-v2 - page-helper', () => {
           }
         ]
       })
-      expect(withConditionSupport(page)).toBeTruthy()
+      expect(hasConditionSupportForPage(page)).toBeTruthy()
     })
 
     test('should return false if no components', () => {
@@ -242,7 +242,7 @@ describe('editor-v2 - page-helper', () => {
         path: '/path',
         title: 'title'
       })
-      expect(withConditionSupport(page)).toBeFalsy()
+      expect(hasConditionSupportForPage(page)).toBeFalsy()
     })
 
     test('should return false if no condition support', () => {
@@ -257,7 +257,7 @@ describe('editor-v2 - page-helper', () => {
           }
         ]
       })
-      expect(withConditionSupport(page)).toBeFalsy()
+      expect(hasConditionSupportForPage(page)).toBeFalsy()
     })
   })
 })
