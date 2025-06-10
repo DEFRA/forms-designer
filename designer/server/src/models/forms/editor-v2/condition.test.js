@@ -132,7 +132,7 @@ describe('editor-v2 - condition model', () => {
       expect(res.displayNameField).toEqual({
         classes: 'govuk-input--width-20',
         hint: {
-          text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
+          text: 'Condition names help you to identify conditions in your form, for example, ‘Not a farmer’. Users will not see condition names.'
         },
         id: 'displayName',
         label: {
