@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ConditionType,
+  OperatorName,
   getOperatorNames,
   hasComponentsEvenIfNoNext,
   hasConditionSupport,
@@ -17,6 +18,7 @@ import {
   BACK_TO_MANAGE_CONDITIONS,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
+import { relativeDateValueViewModel } from '~/src/models/forms/editor-v2/condition-value.js'
 import {
   hasConditionSupportForPage,
   withPageNumbers
@@ -79,6 +81,10 @@ export function buildValueField(
       }
     }
 
+    case ConditionType.RelativeDate: {
+      return relativeDateValueViewModel(idx, validation)
+    }
+
     default: {
       throw new Error(`Invalid condition type ${type}`)
     }
@@ -99,6 +105,22 @@ export function getComponentId(item) {
  */
 export function getOperator(item) {
   return 'operator' in item ? item.operator : undefined
+}
+
+/**
+ * @param { OperatorName | undefined } operator
+ */
+export function isRelativeDate(operator) {
+  if (!operator) {
+    return false
+  }
+
+  return [
+    OperatorName.IsAtLeast,
+    OperatorName.IsAtMost,
+    OperatorName.IsLessThan,
+    OperatorName.IsMoreThan
+  ].includes(operator)
 }
 
 /**
@@ -141,6 +163,8 @@ export function buildConditionsFields(
           .find((c) => c.id === item.componentId)
       : undefined
 
+  const operatorValue = getOperator(item)
+
   const operator = component.value
     ? {
         id: `items[${idx}].operator`,
@@ -154,7 +178,7 @@ export function buildConditionsFields(
             value: val
           }))
         ),
-        value: getOperator(item),
+        value: operatorValue,
         formGroup: {
           afterInput: {
             html: `<button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-left-3" name="action" type="submit"
@@ -167,13 +191,21 @@ export function buildConditionsFields(
       }
     : undefined
 
-  // TODO - enhance to handle date absolute + relative
-  // TODO - is there an easier/better way to determine the condition type?
-  const conditionType =
-    hasListField(selectedComponent) ||
-    selectedComponent?.type === ComponentType.YesNoField
-      ? ConditionType.ListItemRef
-      : ConditionType.StringValue
+  let conditionType
+
+  if (hasListField(selectedComponent)) {
+    conditionType = ConditionType.ListItemRef
+  } else if (selectedComponent?.type === ComponentType.YesNoField) {
+    conditionType = ConditionType.ListItemRef
+  } else if (
+    (selectedComponent?.type === ComponentType.DatePartsField ||
+      selectedComponent?.type === ComponentType.MonthYearField) &&
+    isRelativeDate(operatorValue)
+  ) {
+    conditionType = ConditionType.RelativeDate
+  } else {
+    conditionType = ConditionType.StringValue
+  }
 
   const listId =
     conditionType === ConditionType.ListItemRef
@@ -328,6 +360,6 @@ export function conditionViewModel(
  */
 
 /**
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page, OperatorName } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

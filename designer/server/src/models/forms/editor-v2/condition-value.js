@@ -7,35 +7,58 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 
 /**
+ * @param {number} idx
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function relativeDateValueViewModel(validation) {
+export function relativeDateValueViewModel(idx, validation) {
   const { formValues, formErrors } = validation ?? {}
 
   // Period text field
   const period = {
-    id: 'period',
-    name: 'period',
+    id: `items[${idx}].value.period`,
+    name: `items[${idx}][value][period]`,
+    label: {
+      text: 'Enter a period'
+    },
+    classes: 'govuk-input--width-10',
     value: formValues?.period,
-    ...insertValidationErrors(formErrors?.period)
+    ...insertValidationErrors(
+      formErrors ? formErrors[`items[${idx}].value.unit`] : undefined
+    )
   }
 
   // Unit select field
   const unit = {
-    id: 'unit',
-    name: 'unit',
+    id: `items[${idx}].value.unit`,
+    name: `items[${idx}][value][unit]`,
     items: dateUnits.map((value) => ({ text: upperFirst(value), value })),
+    fieldset: {
+      legend: {
+        text: 'Select a unit'
+      }
+    },
+    classes: 'govuk-radios--small',
     value: formValues?.unit,
-    ...insertValidationErrors(formErrors?.unit)
+    ...insertValidationErrors(
+      formErrors ? formErrors[`items[${idx}].value.unit`] : undefined
+    )
   }
 
   // Direction select field
   const direction = {
-    id: 'direction',
-    name: 'direction',
+    id: `items[${idx}].value.direction`,
+    name: `items[${idx}][value][direction]`,
     items: dateDirections.map((value) => ({ text: upperFirst(value), value })),
+    fieldset: {
+      legend: {
+        text: 'Select a direction'
+      }
+    },
+    classes: 'govuk-radios--small',
     value: formValues?.direction,
-    ...insertValidationErrors(formErrors?.direction)
+    ...insertValidationErrors(
+      formErrors ? formErrors[`items[${idx}].value.direction`] : undefined
+    )
   }
 
   return {
