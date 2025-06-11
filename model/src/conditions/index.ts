@@ -30,6 +30,9 @@ export {
 
 export {
   convertConditionWrapperFromV2,
+  isConditionBooleanValueDataV2,
+  isConditionListItemRefValueDataV2,
+  isConditionStringValueDataV2,
   isConditionWrapper,
   isConditionWrapperV2,
   type RuntimeFormModel

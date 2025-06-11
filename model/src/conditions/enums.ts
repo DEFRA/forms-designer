@@ -2,6 +2,7 @@ export enum ConditionType {
   Value = 'Value',
   RelativeDate = 'RelativeDate',
   StringValue = 'StringValue',
+  BooleanValue = 'BooleanValue',
   ListItemRef = 'ListItemRef'
 }
 
