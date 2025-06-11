@@ -1,3 +1,4 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
 /**
@@ -5,6 +6,11 @@ import { Question } from '~/src/form/form-editor/preview/question.js'
  * @abstract
  */
 export class FieldsetQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.TextField
+
   get renderInput() {
     return {
       id: this._fieldName,

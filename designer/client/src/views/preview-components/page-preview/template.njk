@@ -1,0 +1,7 @@
+<h1 class="govuk-heading-l {{ params.pageTitle.classes }}">
+  {{ params.pageTitle.text }}
+</h1>
+{% for component in params.components %}
+  {% set model = component.model %}
+  {%- include 'preview-components/' + component.questionType | lower + ".njk" -%}
+{% endfor %}

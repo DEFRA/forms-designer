@@ -1,3 +1,5 @@
+import { ComponentType } from '~/src/components/enums.js'
+
 /**
  * @class Question
  * @classdesc
@@ -9,6 +11,11 @@
  * server side.
  */
 export class Question {
+  /**
+   * @abstract
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.TextField
   static PATH = 'preview-components/'
 
   /**

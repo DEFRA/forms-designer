@@ -1,3 +1,4 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
 const DefaultListConst = {
@@ -27,6 +28,10 @@ export function listsElementToMap(listElements) {
 }
 
 export class ListQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.List
   /**
    * @type {string}
    * @protected

@@ -1,7 +1,12 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
 export class AutocompleteQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.AutocompleteField
   _questionTemplate = Question.PATH + 'autocompletefield.njk'
   /**
    * @type {string}

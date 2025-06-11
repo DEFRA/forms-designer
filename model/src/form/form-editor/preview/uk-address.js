@@ -1,7 +1,12 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
 import { Question } from '~/src/index.js'
 
 export class UkAddressQuestion extends FieldsetQuestion {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.UkAddressField
   _questionTemplate = Question.PATH + 'ukaddressfield.njk'
   _fieldName = 'addressField'
 }
