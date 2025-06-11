@@ -6,6 +6,7 @@ import {
   getFormSpecificNavigation,
   toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
+import { withPageNumbers } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -27,9 +28,9 @@ export function buildConditionsTable(slug, definition) {
     head: [{ text: 'Condition' }, { text: 'Used in' }, { text: 'Actions' }],
     rows: v2Conditions.map((condition) => {
       const usedIn = pages
-        .map((page, index) => ({ page, index }))
+        .map(withPageNumbers)
         .filter(({ page }) => page.condition === condition.id)
-        .map(({ index }) => `Page ${index + 1}`)
+        .map(({ number }) => `Page ${number + 1}`)
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
@@ -41,10 +42,11 @@ export function buildConditionsTable(slug, definition) {
           html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${toPresentationHtmlV2(condition, definition)}</p>`
         },
         {
-          text: usedIn
+          text: usedIn,
+          classes: 'govuk-!-width-one-quarter'
         },
         {
-          html: `${editLink}&nbsp;<span class="app-vertical-divider">|</span>&nbsp;${deleteLink}`
+          html: `<div class="app-table-actions">${editLink}&nbsp;<span class="app-vertical-divider">|</span>&nbsp;${deleteLink}</div>`
         }
       ]
     })
