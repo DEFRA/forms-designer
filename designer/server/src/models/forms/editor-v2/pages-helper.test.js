@@ -1,11 +1,13 @@
-import { ControllerType } from '@defra/forms-model'
+import { ComponentType, ControllerType } from '@defra/forms-model'
 
 import {
   constructReorderPage,
   excludeEndPages,
   getFocus,
+  hasConditionSupportForPage,
   orderPages,
-  repositionPage
+  repositionPage,
+  withPageNumbers
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 
 describe('editor-v2 - page-helper', () => {
@@ -203,6 +205,59 @@ describe('editor-v2 - page-helper', () => {
     test('should return undefined if second param missing', () => {
       const res = getFocus('dir')
       expect(res).toBeUndefined()
+    })
+  })
+
+  describe('withPageNumbers', () => {
+    test('should add page number', () => {
+      const page = /** @type {Page} */ ({
+        id: 'page1',
+        controller: ControllerType.Page
+      })
+      expect(withPageNumbers(page, 2)).toEqual({ page, number: 3 })
+    })
+  })
+
+  describe('withConditionSupport', () => {
+    test('should return true if condition support', () => {
+      const page = /** @type {Page} */ ({
+        id: 'page1',
+        controller: ControllerType.Page,
+        components: [
+          {
+            id: 'q1',
+            title: 'My first question',
+            type: ComponentType.TextField
+          }
+        ]
+      })
+      expect(hasConditionSupportForPage(page)).toBeTruthy()
+    })
+
+    test('should return false if no components', () => {
+      const page = /** @type {Page} */ ({
+        id: 'page1',
+        controller: ControllerType.Summary,
+        components: [],
+        path: '/path',
+        title: 'title'
+      })
+      expect(hasConditionSupportForPage(page)).toBeFalsy()
+    })
+
+    test('should return false if no condition support', () => {
+      const page = /** @type {Page} */ ({
+        id: 'page1',
+        controller: ControllerType.Page,
+        components: [
+          {
+            id: 'q1',
+            title: 'My first question',
+            type: ComponentType.InsetText
+          }
+        ]
+      })
+      expect(hasConditionSupportForPage(page)).toBeFalsy()
     })
   })
 })

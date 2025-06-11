@@ -79,6 +79,10 @@ describe('build error details', () => {
         autoCompleteOptions: {
           text: 'Enter options separated by a colon on item 2',
           href: '#autoCompleteOptions'
+        },
+        unknownKey2: {
+          href: '#unknownKey2',
+          text: 'Enter options separated by a colon'
         }
       })
     })

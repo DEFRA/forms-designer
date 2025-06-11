@@ -2,9 +2,11 @@ import {
   ConditionsModel,
   ControllerType,
   convertConditionWrapperFromV2,
+  getYesNoList,
   hasComponents,
   hasComponentsEvenIfNoNext,
-  isConditionWrapperV2
+  isConditionWrapperV2,
+  yesNoListId
 } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -13,6 +15,7 @@ import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { editorv2Path, formsLibraryPath } from '~/src/models/links.js'
 
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
+export const BACK_TO_MANAGE_CONDITIONS = 'Back to conditions'
 export const SAVE_AND_CONTINUE = 'Save and continue'
 export const SAVE = 'Save'
 export const GOVUK_LABEL__M = 'govuk-label--m'
@@ -207,6 +210,11 @@ export function toPresentationStringV2(conditionWrapper, definition) {
  */
 export function toPresentationHtmlV2(conditionWrapper, definition) {
   const { pages, conditions, lists } = definition
+
+  if (!lists.find((x) => x.id === yesNoListId)) {
+    lists.push(getYesNoList())
+  }
+
   const components = pages.flatMap((p) =>
     hasComponentsEvenIfNoNext(p) ? p.components : []
   )

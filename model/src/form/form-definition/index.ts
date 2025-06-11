@@ -8,6 +8,11 @@ import {
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
 import {
+  yesNoListId,
+  yesNoListNoItemId,
+  yesNoListYesItemId
+} from '~/src/components/yes-no-helper.js'
+import {
   type ConditionData,
   type ConditionDataV2,
   type ConditionFieldData,
@@ -67,15 +72,22 @@ const componentIdRefSchema = Joi.ref('/pages', {
 const listIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists.filter((list) => list.id).map((list) => list.id)
+    lists
+      .filter((list) => list.id)
+      .map((list) => list.id)
+      // To allow YesNo list to be valid even though the virtual list may not exist explicitly in the form definition
+      .concat(yesNoListId)
 })
 
 const listItemIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists.flatMap((list) =>
-      list.items.filter((item) => item.id).map((item) => item.id)
-    )
+    lists
+      .flatMap((list) =>
+        list.items.filter((item) => item.id).map((item) => item.id)
+      )
+      // To allow YesNo list items to be valid even though the virtual list may not exist explicitly in the form definition
+      .concat([yesNoListYesItemId, yesNoListNoItemId])
 })
 
 const sectionsSchema = Joi.object<Section>()
@@ -253,7 +265,7 @@ const conditionSchema = Joi.object<ConditionData>()
       )
   })
 
-const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
+export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   .description('Condition definition')
   .keys({
     id: idSchema.description(
@@ -261,7 +273,6 @@ const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     ),
     componentId: Joi.string()
       .trim()
-      .valid()
       .required()
       .when('/pages', {
         is: Joi.exist(),
@@ -280,6 +291,7 @@ const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
         conditionListItemRefDataSchemaV2,
         relativeDateValueDataSchema
       )
+      .required()
       .description(
         'Value to compare the field against, either fixed or relative date'
       )
@@ -344,13 +356,18 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       .description('Human-readable name for display in the UI'),
     coordinator: Joi.string()
       .optional()
+      .when('items', { is: Joi.array().min(2), then: Joi.required() })
       .description(
         'Logical operator connecting this condition with others (AND, OR)'
       ),
     items: Joi.array<ConditionGroupDataV2>()
       .items(
-        Joi.alternatives().try(conditionDataSchemaV2, conditionRefDataSchemaV2)
+        Joi.alternatives()
+          .try(conditionDataSchemaV2, conditionRefDataSchemaV2)
+          .required()
       )
+      .min(1)
+      .max(15)
       .description('Array of conditions or condition references')
   })
   .description('Condition schema for V2 forms')

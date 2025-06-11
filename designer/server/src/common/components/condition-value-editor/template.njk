@@ -1,0 +1,15 @@
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+
+{% switch params.conditionType %}
+  {% case "StringValue" %}
+    {{ govukInput(params.value) }}
+  {% case "ListItemRef" %}
+    {{ govukRadios(params.value) }}
+  {% case "RelativeDate" %}
+{% endswitch %}
+<input type="hidden" name="{{ params.conditionTypeName }}" value="{{ params.conditionType }}" />
+<input type="hidden" name="{{ params.listIdName }}" value="{{ params.listId }}" />

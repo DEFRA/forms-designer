@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, yesNoListId } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
 
 import {
@@ -173,6 +173,14 @@ describe('utils', () => {
     it('should return undefined component is undefined', () => {
       expect(getListFromComponent(undefined, buildDefinition())).toBeUndefined()
     })
+
+    it('should return yes/no list', () => {
+      const yesNoList = getListFromComponent(
+        /** @type {ComponentDef} */ ({ type: ComponentType.YesNoField }),
+        buildDefinition()
+      )
+      expect(yesNoList?.id).toBe(yesNoListId)
+    })
   })
 
   describe('mapListToAutoCompleteStr', () => {
@@ -288,3 +296,7 @@ describe('utils', () => {
     })
   })
 })
+
+/**
+ * @import { ComponentDef } from '@defra/forms-model'
+ */
