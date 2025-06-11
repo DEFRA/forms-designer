@@ -16,6 +16,20 @@
     backLink: backLink,
     useNewMasthead: true
   }) %}
+
+    {% if conditionEditor.conditionId !== 'new' %}
+      <div class="govuk-summary-card govuk-!-margin-bottom-6 govuk-!-margin-top-6">
+        <div class=" govuk-summary-card__title-wrapper">
+          <div class=" govuk-summary-card__title">Original condition</div>
+        </div>
+
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body govuk-!-font-weight-bold">{{ conditionEditor.displayNameField.value }}</p>
+          <p class="govuk-body">{{ conditionEditor.originalConditionHtml | safe }}</p>
+        </div>
+      </div>
+    {% endif %}
+
     {% call appEditorCard({
       caption: cardCaption,
       classes: 'editor-card-background-very-light-grey',

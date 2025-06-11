@@ -128,7 +128,7 @@ describe('editor-v2 - condition model', () => {
         undefined,
         state
       )
-      expect(res.legendText).toBe('Edit condition')
+      expect(res.legendText).toBe('')
       expect(res.displayNameField).toEqual({
         classes: 'govuk-input--width-20',
         hint: {

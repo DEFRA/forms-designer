@@ -15,7 +15,8 @@ import {
 } from '~/src/lib/utils.js'
 import {
   BACK_TO_MANAGE_CONDITIONS,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
 import {
   hasConditionSupportForPage,
@@ -218,7 +219,7 @@ export function buildConditionEditor(definition, validation, state) {
       }
     })
 
-  const legendText = `${state.id !== 'new' ? 'Edit' : 'Create new'} condition`
+  const legendText = state.id !== 'new' ? '' : 'Create new condition'
   const { conditionWrapper } = state
 
   const conditionFieldsList = (
@@ -266,11 +267,17 @@ export function buildConditionEditor(definition, validation, state) {
     ...insertValidationErrors(validation?.formErrors.coordinator)
   }
 
+  const originalConditionHtml = state.originalConditionWrapper
+    ? toPresentationHtmlV2(state.originalConditionWrapper, definition)
+    : ''
+
   return {
     legendText,
     conditionFieldsList,
     displayNameField,
-    coordinator
+    coordinator,
+    conditionId: state.id,
+    originalConditionHtml
   }
 }
 
