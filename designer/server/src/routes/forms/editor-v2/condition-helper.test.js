@@ -1,6 +1,11 @@
+import { ConditionType, OperatorName } from '@defra/forms-model'
+import {
+  buildDefinition,
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
 import Joi from 'joi'
 
-import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import { getConditionSessionState } from '~/src/lib/session-helper.js'
 import {
   buildSessionState,
@@ -71,10 +76,88 @@ describe('Editor v2 condition helper', () => {
       const res = buildSessionState(mockYar, '12345', buildDefinition(), 'new')
       expect(res).toEqual(state)
     })
+
+    test('should find condition if exists', () => {
+      const componentId = 'farm-type-field'
+      const conditionId = 'cattle-farm-condition'
+      const pageId = 'farm-details-page'
+
+      const testComponent = buildTextFieldComponent({
+        id: componentId,
+        name: 'farmType',
+        title: 'What type of farming do you do?'
+      })
+
+      /** @type {ConditionWrapperV2} */
+      const mockConditionV2 = {
+        id: conditionId,
+        displayName: 'Show if cattle farming',
+        items: [
+          {
+            id: 'cattle-farm-check',
+            componentId,
+            operator: OperatorName.Is,
+            value: {
+              type: ConditionType.StringValue,
+              value: 'cattle'
+            }
+          }
+        ]
+      }
+
+      const state = /** @type {ConditionSessionState} */ ({})
+      jest.mocked(getConditionSessionState).mockReturnValue(state)
+
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            components: [testComponent]
+          })
+        ],
+        conditions: [mockConditionV2]
+      })
+
+      const res = buildSessionState(mockYar, '12345', definition, conditionId)
+      expect(res).toEqual({
+        conditionWrapper: {
+          id: 'cattle-farm-condition',
+          displayName: 'Show if cattle farming',
+          items: [
+            {
+              id: expect.any(String),
+              componentId: 'farm-type-field',
+              operator: 'is',
+              value: {
+                type: 'StringValue',
+                value: 'cattle'
+              }
+            }
+          ]
+        },
+        id: 'cattle-farm-condition',
+        originalConditionWrapper: {
+          id: 'cattle-farm-condition',
+          displayName: 'Show if cattle farming',
+          items: [
+            {
+              id: expect.any(String),
+              componentId: 'farm-type-field',
+              operator: 'is',
+              value: {
+                type: 'StringValue',
+                value: 'cattle'
+              }
+            }
+          ]
+        },
+        stateId: '12345'
+      })
+    })
   })
 })
 
 /**
- * @import { ConditionSessionState } from '@defra/forms-model'
+ * @import { ConditionSessionState, ConditionWrapperV2 } from '@defra/forms-model'
  * @import { Yar} from '@hapi/yar'
  */
