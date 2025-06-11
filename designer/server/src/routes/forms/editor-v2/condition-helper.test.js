@@ -46,11 +46,24 @@ describe('Editor v2 condition helper', () => {
       processErrorMessages(error)
       expect(error.details[0].message).toBe('A Joi error for condition 3')
     })
+
+    test('should not set error if not a number', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'A Joi error',
+          path: ['1', '2'],
+          type: 'error'
+        }
+      ])
+      const error = new Joi.ValidationError('A Joi error', items, {})
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('A Joi error')
+    })
   })
 
   describe('buildSessionState', () => {
     test('should ignore if state already exists', () => {
-      const state = /** @type{ConditionSessionState} */ ({
+      const state = /** @type {ConditionSessionState} */ ({
         id: 'my-state'
       })
       jest.mocked(getConditionSessionState).mockReturnValue(state)
