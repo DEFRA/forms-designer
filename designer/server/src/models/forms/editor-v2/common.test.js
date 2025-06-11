@@ -260,8 +260,8 @@ describe('editor-v2 - model', () => {
         title: 'Types of farming operations',
         type: /** @type {const} */ ('string'),
         items: [
-          { text: 'Cattle farming', value: 'cattle' },
-          { text: 'Crop farming', value: 'crops' }
+          { text: 'Cattle farming', value: 'cattle', id: 'cat1' },
+          { text: 'Crop farming', value: 'crops', id: 'crop2' }
         ]
       }
 
@@ -275,8 +275,9 @@ describe('editor-v2 - model', () => {
             componentId,
             operator: OperatorName.Is,
             value: {
-              type: ConditionType.StringValue,
-              value: 'cattle'
+              type: ConditionType.ListItemRef,
+              itemId: 'cat1',
+              listId: 'farming-types-list'
             }
           }
         ]
