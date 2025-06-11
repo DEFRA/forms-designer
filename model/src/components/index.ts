@@ -23,6 +23,8 @@ export {
 export {
   getYesNoList,
   yesNoListId,
-  yesNoListName
+  yesNoListName,
+  yesNoListNoItemId,
+  yesNoListYesItemId
 } from '~/src/components/yes-no-helper.js'
 export { ComponentType } from '~/src/components/enums.js'
