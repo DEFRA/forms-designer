@@ -179,9 +179,9 @@ describe('editor-v2 - condition model', () => {
       const item = {
         componentId: 'comp1'
       }
-      // @ts-expect-error - complex type
       const res = buildConditionsFields(
         0,
+        // @ts-expect-error - complex type
         componentItems,
         item,
         undefined,
