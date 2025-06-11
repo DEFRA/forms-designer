@@ -8,6 +8,11 @@ import {
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
 import {
+  yesNoListId,
+  yesNoListNoItemId,
+  yesNoListYesItemId
+} from '~/src/components/yes-no-helper.js'
+import {
   type ConditionData,
   type ConditionDataV2,
   type ConditionFieldData,
@@ -67,15 +72,22 @@ const componentIdRefSchema = Joi.ref('/pages', {
 const listIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists.filter((list) => list.id).map((list) => list.id)
+    lists
+      .filter((list) => list.id)
+      .map((list) => list.id)
+      // To allow YesNo list to be valid even though the virtual list may not exist explicitly in the form definition
+      .concat(yesNoListId)
 })
 
 const listItemIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists.flatMap((list) =>
-      list.items.filter((item) => item.id).map((item) => item.id)
-    )
+    lists
+      .flatMap((list) =>
+        list.items.filter((item) => item.id).map((item) => item.id)
+      )
+      // To allow YesNo list items to be valid even though the virtual list may not exist explicitly in the form definition
+      .concat([yesNoListYesItemId, yesNoListNoItemId])
 })
 
 const sectionsSchema = Joi.object<Section>()
