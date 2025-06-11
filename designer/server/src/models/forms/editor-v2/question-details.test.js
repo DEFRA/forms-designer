@@ -1,10 +1,12 @@
 import { ComponentType, Engine } from '@defra/forms-model'
-
 import {
   buildDefinition,
   buildFileUploadComponent,
+  buildList,
+  buildListItem,
   buildQuestionPage
-} from '~/src/__stubs__/form-definition.js'
+} from '@defra/forms-model/stubs'
+
 import { getSelectedFileTypesFromCSVMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   getDetails,
@@ -361,22 +363,22 @@ describe('editor-v2 - question details model', () => {
           })
         ],
         lists: [
-          {
+          buildList({
             title: 'What is your favourite programming language?',
             name: 'XddNUm',
             type: 'string',
             items: [
-              { text: 'JavaScript', value: 'javascript' },
-              { text: 'TypeScript', value: 'typescript' },
-              { text: 'Java', value: 'java' },
-              { text: 'Python', value: 'python' },
-              { text: 'C#', value: 'csharp' },
-              { text: 'Erlang', value: 'erlang' },
-              { text: 'Haskell', value: 'haskell' },
-              { text: 'Elixir', value: 'elixir' }
+              buildListItem({ text: 'JavaScript', value: 'javascript' }),
+              buildListItem({ text: 'TypeScript', value: 'typescript' }),
+              buildListItem({ text: 'Java', value: 'java' }),
+              buildListItem({ text: 'Python', value: 'python' }),
+              buildListItem({ text: 'C#', value: 'csharp' }),
+              buildListItem({ text: 'Erlang', value: 'erlang' }),
+              buildListItem({ text: 'Haskell', value: 'haskell' }),
+              buildListItem({ text: 'Elixir', value: 'elixir' })
             ],
             id: '63ba14e5-9a08-4d16-97d9-fbb35fd5e248'
-          }
+          })
         ],
         engine: Engine.V2
       })
@@ -601,6 +603,18 @@ describe('editor-v2 - question details model', () => {
       expect(result.navigation).toBeDefined()
       expect(result.previewPageUrl).toContain('/test-page')
       expect(result.questionType).toBe(ComponentType.FileUploadField)
+      expect(result.model).toEqual({
+        hint: {
+          classes: '',
+          text: undefined
+        },
+        id: 'inputField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Upload a file'
+        },
+        name: 'inputField'
+      })
     })
 
     test('should handle state with questionType override', () => {
