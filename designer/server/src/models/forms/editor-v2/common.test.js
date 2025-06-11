@@ -295,9 +295,15 @@ describe('editor-v2 - model', () => {
       })
 
       const result = toPresentationStringV2(conditionWithList, definition)
+      const resultHtml = toPresentationHtmlV2(conditionWithList, definition)
 
       expect(typeof result).toBe('string')
       expect(result.length).toBeGreaterThan(0)
+      expect(typeof resultHtml).toBe('string')
+      expect(resultHtml.length).toBeGreaterThan(0)
+      expect(resultHtml).toBe(
+        "'What type of farming do you do?' is 'Cattle farming'"
+      )
     })
   })
 
