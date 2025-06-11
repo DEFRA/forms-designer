@@ -34,9 +34,9 @@ export interface PagePreviewComponent {
 }
 
 export interface PagePreviewPanelMacro {
-  pageTitle: {
+  readonly pageTitle: {
     text: string
     classes: string
   }
-  components: PagePreviewComponent
+  readonly components: PagePreviewComponent[]
 }

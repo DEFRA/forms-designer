@@ -1,3 +1,5 @@
+import { Question } from '~/src/form/form-editor/preview/question.js'
+
 /**
  * @implements {QuestionRenderer}
  */
@@ -156,6 +158,21 @@ export const listElementsStub = {
   list3Id,
   list4Id,
   baseElements: listElementsBase
+}
+
+/**
+ * @param {Partial<BaseSettings>} partialBaseElements
+ * @param {jest.Mock<void, [string, QuestionBaseModel]>} renderMock
+ * @returns {Question}
+ */
+export function buildPreviewShortAnswer(partialBaseElements, renderMock) {
+  return new Question(
+    new QuestionPreviewElements({
+      ...baseElements,
+      ...partialBaseElements
+    }),
+    new QuestionRendererStub(renderMock)
+  )
 }
 
 /**
