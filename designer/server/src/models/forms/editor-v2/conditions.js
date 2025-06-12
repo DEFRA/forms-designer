@@ -30,7 +30,7 @@ export function buildConditionsTable(slug, definition) {
       const usedIn = pages
         .map(withPageNumbers)
         .filter(({ page }) => page.condition === condition.id)
-        .map(({ number }) => `Page ${number + 1}`)
+        .map(({ number }) => `Page ${number}`)
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
