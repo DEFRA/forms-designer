@@ -8,11 +8,7 @@ import {
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
 import {
-  yesNoListId,
-  yesNoListNoItemId,
-  yesNoListYesItemId
-} from '~/src/components/yes-no-helper.js'
-import {
+  type ConditionBooleanValueDataV2,
   type ConditionData,
   type ConditionDataV2,
   type ConditionFieldData,
@@ -72,22 +68,15 @@ const componentIdRefSchema = Joi.ref('/pages', {
 const listIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists
-      .filter((list) => list.id)
-      .map((list) => list.id)
-      // To allow YesNo list to be valid even though the virtual list does not exist explicitly in the form definition
-      .concat(yesNoListId)
+    lists.filter((list) => list.id).map((list) => list.id)
 })
 
 const listItemIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists
-      .flatMap((list) =>
-        list.items.filter((item) => item.id).map((item) => item.id)
-      )
-      // To allow YesNo list items to be valid even though the virtual list does not exist explicitly in the form definition
-      .concat([yesNoListYesItemId, yesNoListNoItemId])
+    lists.flatMap((list) =>
+      list.items.filter((item) => item.id).map((item) => item.id)
+    )
 })
 
 const sectionsSchema = Joi.object<Section>()
@@ -156,6 +145,20 @@ const conditionStringValueDataSchemaV2 =
         .description('Type of the condition value, should be "StringValue"'),
       value: Joi.string()
         .trim()
+        .required()
+        .description('The actual value to compare against')
+    })
+
+const conditionBooleanValueDataSchemaV2 =
+  Joi.object<ConditionBooleanValueDataV2>()
+    .description('Boolean value specification for a condition')
+    .keys({
+      type: Joi.string()
+        .trim()
+        .valid('BooleanValue')
+        .required()
+        .description('Type of the condition value, should be "BooleanValue"'),
+      value: Joi.boolean()
         .required()
         .description('The actual value to compare against')
     })
@@ -288,6 +291,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     value: Joi.alternatives()
       .try(
         conditionStringValueDataSchemaV2,
+        conditionBooleanValueDataSchemaV2,
         conditionListItemRefDataSchemaV2,
         relativeDateValueDataSchema
       )

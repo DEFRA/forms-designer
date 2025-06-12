@@ -22,6 +22,11 @@ export interface ConditionStringValueDataV2 {
   value: string
 }
 
+export interface ConditionBooleanValueDataV2 {
+  type: ConditionType.BooleanValue
+  value: boolean
+}
+
 export interface ConditionListItemRefValueDataV2 {
   type: ConditionType.ListItemRef
   listId: string
@@ -48,14 +53,17 @@ export interface ConditionData {
   coordinator?: Coordinator
 }
 
+export type ConditionValueDataV2 =
+  | ConditionListItemRefValueDataV2
+  | ConditionStringValueDataV2
+  | ConditionBooleanValueDataV2
+  | RelativeDateValueData
+
 export interface ConditionDataV2 {
   id: string
   componentId: string
   operator: OperatorName
-  value:
-    | ConditionListItemRefValueDataV2
-    | ConditionStringValueDataV2
-    | RelativeDateValueData
+  value: ConditionValueDataV2
 }
 
 export interface ConditionRefData {
