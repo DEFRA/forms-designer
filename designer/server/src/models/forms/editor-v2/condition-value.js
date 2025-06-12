@@ -8,6 +8,7 @@ import {
 
 const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
+const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 
 /**
  * @param { ErrorDetails | undefined } formErrors
@@ -62,7 +63,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
         text: 'Units'
       }
     },
-    classes: 'govuk-radios--small',
+    classes: GOVUK_RADIOS_SMALL,
     value: unitValue,
     ...insertDateValidationErrors(formErrors, idx, unitValue)
   }
@@ -81,7 +82,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
         text: 'Direction'
       }
     },
-    classes: 'govuk-radios--small',
+    classes: GOVUK_RADIOS_SMALL,
     value: directionValue,
     ...insertDateValidationErrors(formErrors, idx, directionValue)
   }
@@ -140,7 +141,7 @@ export function buildValueField(
             text: 'Select a value'
           }
         },
-        classes: 'govuk-radios--small',
+        classes: GOVUK_RADIOS_SMALL,
         value:
           'value' in item && 'itemId' in item.value
             ? item.value.itemId
