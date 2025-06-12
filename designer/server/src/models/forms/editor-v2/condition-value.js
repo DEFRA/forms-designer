@@ -7,58 +7,80 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 
 /**
+ * @param { ErrorDetails | undefined } formErrors
  * @param {number} idx
+ * @param { string | undefined } fieldValue
+ */
+export function insertDateValidationErrors(formErrors, idx, fieldValue) {
+  if (fieldValue && fieldValue !== '') {
+    return {}
+  }
+  const formError = formErrors ? formErrors[`items[${idx}].value`] : undefined
+  return {
+    ...(formError && {
+      errorMessage: {
+        text: formError.text
+      }
+    })
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function relativeDateValueViewModel(idx, validation) {
-  const { formValues, formErrors } = validation ?? {}
+export function relativeDateValueViewModel(idx, item, validation) {
+  const { formErrors } = validation ?? {}
 
   // Period text field
+  const periodValue =
+    'value' in item && 'period' in item.value ? item.value.period : undefined
   const period = {
-    id: `items[${idx}].value.period`,
+    id: `items[${idx}].value`,
     name: `items[${idx}][value][period]`,
     label: {
-      text: 'Enter a period'
+      text: 'Period'
     },
     classes: 'govuk-input--width-10',
-    value: formValues?.period,
-    ...insertValidationErrors(
-      formErrors ? formErrors[`items[${idx}].value.unit`] : undefined
-    )
+    value: periodValue,
+    ...insertDateValidationErrors(formErrors, idx, periodValue)
   }
 
   // Unit select field
+  const unitValue =
+    'value' in item && 'unit' in item.value ? item.value.unit : undefined
   const unit = {
     id: `items[${idx}].value.unit`,
     name: `items[${idx}][value][unit]`,
     items: dateUnits.map((value) => ({ text: upperFirst(value), value })),
     fieldset: {
       legend: {
-        text: 'Select a unit'
+        text: 'Units'
       }
     },
     classes: 'govuk-radios--small',
-    value: formValues?.unit,
-    ...insertValidationErrors(
-      formErrors ? formErrors[`items[${idx}].value.unit`] : undefined
-    )
+    value: unitValue,
+    ...insertDateValidationErrors(formErrors, idx, unitValue)
   }
 
   // Direction select field
+  const directionValue =
+    'value' in item && 'direction' in item.value
+      ? item.value.direction
+      : undefined
   const direction = {
     id: `items[${idx}].value.direction`,
     name: `items[${idx}][value][direction]`,
     items: dateDirections.map((value) => ({ text: upperFirst(value), value })),
     fieldset: {
       legend: {
-        text: 'Select a direction'
+        text: 'Direction'
       }
     },
     classes: 'govuk-radios--small',
-    value: formValues?.direction,
-    ...insertValidationErrors(
-      formErrors ? formErrors[`items[${idx}].value.direction`] : undefined
-    )
+    value: directionValue,
+    ...insertDateValidationErrors(formErrors, idx, directionValue)
   }
 
   return {
@@ -90,6 +112,7 @@ export function listItemRefValueViewModel(list, validation) {
 }
 
 /**
- * @import { FormEditor, List } from '@defra/forms-model'
+ * @import { ErrorDetails } from '~/src/common/helpers/types.js'
+ * @import { ConditionDataV2, ConditionRefDataV2, FormEditor, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

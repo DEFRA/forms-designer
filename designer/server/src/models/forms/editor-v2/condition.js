@@ -82,7 +82,7 @@ export function buildValueField(
     }
 
     case ConditionType.RelativeDate: {
-      return relativeDateValueViewModel(idx, validation)
+      return relativeDateValueViewModel(idx, item, validation)
     }
 
     default: {
@@ -149,6 +149,7 @@ export function buildConditionsFields(
     label: {
       text: 'Select a question'
     },
+    classes: 'govuk-input--width-20',
     items: componentItems,
     value: getComponentId(item),
     ...insertValidationErrors(
