@@ -114,7 +114,7 @@ function getConditionals(
   }
 
   return fieldType in customOperators
-    ? customOperators[fieldType as keyof typeof customOperators]
+    ? customOperators[fieldType]
     : defaultOperators
 }
 
