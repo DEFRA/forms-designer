@@ -17,17 +17,21 @@ import {
  */
 export function buildSessionState(yar, stateId, definition, conditionId) {
   const state = getConditionSessionState(yar, stateId)
+  const isNew = conditionId && conditionId !== 'new'
+  const foundCondition = isNew
+    ? getConditionV2(definition, conditionId)
+    : undefined
   if (!state?.id) {
     const newState = {
       id: conditionId,
       stateId,
-      conditionWrapper:
-        conditionId && conditionId !== 'new'
-          ? getConditionV2(definition, conditionId)
-          : /** @type {ConditionWrapperV2} */ ({
-              id: randomUUID(),
-              items: [{ id: randomUUID() }]
-            })
+      conditionWrapper: isNew
+        ? foundCondition
+        : /** @type {ConditionWrapperV2} */ ({
+            id: randomUUID(),
+            items: [{ id: randomUUID() }]
+          }),
+      originalConditionWrapper: foundCondition
     }
     setConditionSessionState(yar, stateId, newState)
     return newState
