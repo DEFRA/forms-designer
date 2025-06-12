@@ -1,8 +1,12 @@
-import { ConditionType } from '@defra/forms-model'
+import { ComponentType, ConditionType } from '@defra/forms-model'
 
-import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
+import {
+  buildDefinition,
+  testFormDefinitionWithMultipleV2Conditions
+} from '~/src/__stubs__/form-definition.js'
 import {
   buildConditionEditor,
+  buildConditionsFields,
   buildValueField,
   getComponentId,
   getOperator
@@ -128,7 +132,7 @@ describe('editor-v2 - condition model', () => {
         undefined,
         state
       )
-      expect(res.legendText).toBe('Edit condition')
+      expect(res.legendText).toBe('')
       expect(res.displayNameField).toEqual({
         classes: 'govuk-input--width-20',
         hint: {
@@ -158,6 +162,34 @@ describe('editor-v2 - condition model', () => {
         name: 'coordinator',
         value: undefined
       })
+    })
+  })
+
+  describe('buildConditionsFields', () => {
+    test('should lookup component', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [{ id: 'comp1', type: ComponentType.RadiosField }],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1'
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.operator?.items).toHaveLength(3)
+      expect(res.operator?.items[1].text).toBe('Is')
+      expect(res.operator?.items[2].text).toBe('Is not')
     })
   })
 })

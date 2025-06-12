@@ -211,8 +211,10 @@ export function toPresentationStringV2(conditionWrapper, definition) {
 export function toPresentationHtmlV2(conditionWrapper, definition) {
   const { pages, conditions, lists } = definition
 
-  if (!lists.find((x) => x.id === yesNoListId)) {
-    lists.push(getYesNoList())
+  // To prevent changes to lists straying into the form definition
+  const listsCopy = structuredClone(lists)
+  if (!listsCopy.find((x) => x.id === yesNoListId)) {
+    listsCopy.push(getYesNoList())
   }
 
   const components = pages.flatMap((p) =>
@@ -225,7 +227,7 @@ export function toPresentationHtmlV2(conditionWrapper, definition) {
 
   /** @type {RuntimeFormModel} */
   const accessors = {
-    getListById: (listId) => lists.find((list) => list.id === listId),
+    getListById: (listId) => listsCopy.find((list) => list.id === listId),
     getComponentById: (componentId) =>
       components.find((component) => component.id === componentId),
     getConditionById: (conditionId) =>
