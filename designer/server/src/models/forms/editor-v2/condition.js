@@ -18,78 +18,12 @@ import {
   BACK_TO_MANAGE_CONDITIONS,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { relativeDateValueViewModel } from '~/src/models/forms/editor-v2/condition-value.js'
+import { buildValueField } from '~/src/models/forms/editor-v2/condition-value.js'
 import {
   hasConditionSupportForPage,
   withPageNumbers
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
-
-/**
- * @param {ConditionType} type
- * @param {number} idx
- * @param { ConditionDataV2 | ConditionRefDataV2 } item
- * @param { ConditionalComponentsDef | undefined } selectedComponent
- * @param {FormDefinition} definition
- * @param { ValidationFailure<FormEditor> | undefined } validation
- */
-export function buildValueField(
-  type,
-  idx,
-  item,
-  selectedComponent,
-  definition,
-  validation
-) {
-  switch (type) {
-    case ConditionType.ListItemRef: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][itemId]`,
-        fieldset: {
-          legend: {
-            text: 'Select a value'
-          }
-        },
-        classes: 'govuk-radios--small',
-        value:
-          'value' in item && 'itemId' in item.value
-            ? item.value.itemId
-            : undefined,
-        items: getListFromComponent(selectedComponent, definition)?.items.map(
-          (itm) => {
-            return { text: itm.text, value: itm.id ?? itm.value }
-          }
-        ),
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
-    }
-
-    case ConditionType.StringValue: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][value]`,
-        label: {
-          text: 'Enter a value'
-        },
-        classes: 'govuk-input--width-10',
-        value:
-          'value' in item && 'value' in item.value
-            ? item.value.value
-            : undefined,
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
-    }
-
-    case ConditionType.RelativeDate: {
-      return relativeDateValueViewModel(idx, item, validation)
-    }
-
-    default: {
-      throw new Error(`Invalid condition type ${type}`)
-    }
-  }
-}
 
 /**
  * @param { ConditionDataV2 | ConditionRefDataV2 } item
@@ -121,6 +55,27 @@ export function isRelativeDate(operator) {
     OperatorName.IsLessThan,
     OperatorName.IsMoreThan
   ].includes(operator)
+}
+
+/**
+ * @param { ConditionalComponentsDef | undefined } selectedComponent
+ * @param { OperatorName | undefined } operatorValue
+ * @returns
+ */
+export function getConditionType(selectedComponent, operatorValue) {
+  if (hasListField(selectedComponent)) {
+    return ConditionType.ListItemRef
+  } else if (selectedComponent?.type === ComponentType.YesNoField) {
+    return ConditionType.ListItemRef
+  } else if (
+    (selectedComponent?.type === ComponentType.DatePartsField ||
+      selectedComponent?.type === ComponentType.MonthYearField) &&
+    isRelativeDate(operatorValue)
+  ) {
+    return ConditionType.RelativeDate
+  } else {
+    return ConditionType.StringValue
+  }
 }
 
 /**
@@ -192,21 +147,7 @@ export function buildConditionsFields(
       }
     : undefined
 
-  let conditionType
-
-  if (hasListField(selectedComponent)) {
-    conditionType = ConditionType.ListItemRef
-  } else if (selectedComponent?.type === ComponentType.YesNoField) {
-    conditionType = ConditionType.ListItemRef
-  } else if (
-    (selectedComponent?.type === ComponentType.DatePartsField ||
-      selectedComponent?.type === ComponentType.MonthYearField) &&
-    isRelativeDate(operatorValue)
-  ) {
-    conditionType = ConditionType.RelativeDate
-  } else {
-    conditionType = ConditionType.StringValue
-  }
+  const conditionType = getConditionType(selectedComponent, operatorValue)
 
   const listId =
     conditionType === ConditionType.ListItemRef

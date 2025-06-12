@@ -1,7 +1,10 @@
-import { DateDirections, DateUnits } from '@defra/forms-model'
+import { ConditionType, DateDirections, DateUnits } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  getListFromComponent,
+  insertValidationErrors
+} from '~/src/lib/utils.js'
 
 const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
@@ -112,7 +115,73 @@ export function listItemRefValueViewModel(list, validation) {
 }
 
 /**
+ * @param {ConditionType} type
+ * @param {number} idx
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @param { ConditionalComponentsDef | undefined } selectedComponent
+ * @param {FormDefinition} definition
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+export function buildValueField(
+  type,
+  idx,
+  item,
+  selectedComponent,
+  definition,
+  validation
+) {
+  switch (type) {
+    case ConditionType.ListItemRef: {
+      return {
+        id: `items[${idx}].value`,
+        name: `items[${idx}][value][itemId]`,
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        classes: 'govuk-radios--small',
+        value:
+          'value' in item && 'itemId' in item.value
+            ? item.value.itemId
+            : undefined,
+        items: getListFromComponent(selectedComponent, definition)?.items.map(
+          (itm) => {
+            return { text: itm.text, value: itm.id ?? itm.value }
+          }
+        ),
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+      }
+    }
+
+    case ConditionType.StringValue: {
+      return {
+        id: `items[${idx}].value`,
+        name: `items[${idx}][value][value]`,
+        label: {
+          text: 'Enter a value'
+        },
+        classes: 'govuk-input--width-10',
+        value:
+          'value' in item && 'value' in item.value
+            ? item.value.value
+            : undefined,
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+      }
+    }
+
+    case ConditionType.RelativeDate: {
+      return relativeDateValueViewModel(idx, item, validation)
+    }
+
+    default: {
+      throw new Error(`Invalid condition type ${type}`)
+    }
+  }
+}
+
+/**
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
- * @import { ConditionDataV2, ConditionRefDataV2, FormEditor, List } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
