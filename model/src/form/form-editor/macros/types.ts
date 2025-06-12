@@ -38,5 +38,9 @@ export interface PagePreviewPanelMacro {
     text: string
     classes: string
   }
+  readonly guidance: {
+    text: string
+    classes: string
+  }
   readonly components: PagePreviewComponent[]
 }

@@ -1,32 +1,49 @@
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
+
 /**
  * @implements {PagePreviewPanelMacro}
  */
 export class PreviewPageController {
+  static PATH = 'preview-controllers/'
+  /**
+   * @type {string}
+   * @protected
+   */
+  _pageTemplate = PreviewPageController.PATH + 'page-controller.njk'
   /**
    * @protected
    * @type {Question[]}
    */
   _components = []
   /**
-   * @protected
    * @type {string}
    */
-  _title = ''
+  #title = ''
   /**
+   *
+   * @type {PageRenderer}
+   */
+  #pageRenderer
+  /**
+   * @type { undefined | 'title' | 'guidance'}
    * @protected
+   */
+  _highlighted = undefined
+  /**
    * @type {string}
    */
-  _titleClass = ''
+  #guidanceText = ''
 
   /**
    * @param {Question[]} components
-   * @param {string} title
-   * @param {string} titleClass
+   * @param {PageOverviewElements} elements
+   * @param {PageRenderer} renderer
    */
-  constructor(components, title = '', titleClass = '') {
+  constructor(components, elements, renderer) {
     this._components = components
-    this._title = title
-    this._titleClass = titleClass
+    this.#title = elements.heading
+    this.#guidanceText = elements.guidance
+    this.#pageRenderer = renderer
   }
 
   /**
@@ -37,6 +54,22 @@ export class PreviewPageController {
       model: component.renderInput,
       questionType: component.componentType
     }))
+  }
+
+  set guidanceText(text) {
+    this.#guidanceText = text
+    this.render()
+  }
+
+  get guidanceText() {
+    return this.#guidanceText
+  }
+
+  get guidance() {
+    return {
+      text: this.#guidanceText,
+      classes: this._highlighted === 'guidance' ? HIGHLIGHT_CLASS : ''
+    }
   }
 
   /**
@@ -51,15 +84,55 @@ export class PreviewPageController {
    * @returns {{ text: string, classes: string }}
    */
   get pageTitle() {
-    const text = this._title.length ? this._title : this._fallBackTitle()
     return {
-      text,
-      classes: this._titleClass
+      text: this.title,
+      classes: this._highlighted === 'title' ? HIGHLIGHT_CLASS : ''
     }
+  }
+
+  render() {
+    this.#pageRenderer.render(this._pageTemplate, this)
+  }
+
+  /**
+   * @returns {string}
+   */
+  get title() {
+    return this.#title.length ? this.#title : this._fallBackTitle()
+  }
+
+  /**
+   * @param {string} value
+   */
+  set title(value) {
+    this.#title = value
+    this.render()
+  }
+
+  highlightTitle() {
+    this.setHightlighted('title')
+  }
+
+  highlightGuidance() {
+    this.setHightlighted('guidance')
+  }
+
+  /**
+   * @param {'title'|'guidance'} highlightSection
+   */
+  setHightlighted(highlightSection) {
+    this._highlighted = highlightSection
+    this.render()
+  }
+
+  clearHighlight() {
+    this._highlighted = undefined
+    this.render()
   }
 }
 
 /**
+ * @import { PageRenderer, PageOverviewElements } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
  */

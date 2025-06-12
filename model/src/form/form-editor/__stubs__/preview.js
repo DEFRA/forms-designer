@@ -35,6 +35,40 @@ export class QuestionRendererStub {
 }
 
 /**
+ * @implements {PageRenderer}
+ */
+export class PageRendererStub {
+  /**
+   * @type {jest.Mock<void, [string, PagePreviewPanelMacro]>}
+   */
+  renderMock
+
+  /**
+   * @param {jest.Mock<void, [string, PagePreviewPanelMacro]>} renderMock
+   */
+  constructor(renderMock) {
+    this.renderMock = renderMock
+  }
+
+  /**
+   * @param {string} pageTemplate
+   * @param {PagePreviewPanelMacro} pagePreviewPanelMacro
+   */
+  render(pageTemplate, pagePreviewPanelMacro) {
+    this.renderMock(pageTemplate, pagePreviewPanelMacro)
+  }
+
+  /**
+   * @returns {string}
+   * @param {string} _questionTemplate
+   * @param {RenderContext} _renderContext
+   */
+  static buildHTML(_questionTemplate, _renderContext) {
+    return '**** BUILT HTML ****'
+  }
+}
+
+/**
  * @implements {ListElements}
  */
 export class QuestionPreviewElements {
@@ -109,6 +143,23 @@ export class AutocompletePreviewElements extends QuestionPreviewElements {
   }
 }
 
+/**
+ * @implements {PageOverviewElements}
+ */
+export class PagePreviewElements {
+  guidance
+  heading
+
+  /**
+   * @param {string} heading
+   * @param {string} guidance
+   */
+  constructor(heading, guidance = '') {
+    this.heading = heading
+    this.guidance = guidance
+  }
+}
+
 export const baseElements = /** @type {BaseSettings} */ ({
   items: [],
   optional: false,
@@ -177,5 +228,6 @@ export function buildPreviewShortAnswer(partialBaseElements, renderMock) {
 
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
+ * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
+ * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer } from  '~/src/form/form-editor/preview/types.js'
  */

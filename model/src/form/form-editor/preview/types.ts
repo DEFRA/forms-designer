@@ -1,3 +1,4 @@
+import { type PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
 import { type AutocompleteQuestion } from '~/src/form/form-editor/preview/autocomplete.js'
 import { type DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { type EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
@@ -71,8 +72,17 @@ export interface QuestionRenderer {
   render(questionTemplate: string, questionBaseModel: QuestionBaseModel): void
 }
 
+export interface PageRenderer {
+  render(pageTemplate: string, pagePreview: PagePreviewPanelMacro): void
+}
+
 export interface ListElements extends QuestionElements {
   afterInputsHTML: string
+}
+
+export interface PageOverviewElements {
+  heading: string
+  guidance: string
 }
 
 export type PreviewQuestion =
