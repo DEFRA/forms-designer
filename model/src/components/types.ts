@@ -296,6 +296,7 @@ export type ConditionalComponentsDef = Exclude<
   ComponentDef,
   | InsetTextComponent
   | ListComponent
+  | MonthYearFieldComponent
   | UkAddressFieldComponent
   | FileUploadFieldComponent
 >

@@ -209,18 +209,9 @@ describe('editor-v2 - condition model', () => {
       )
     })
 
-    test('should return RelativeDate if month year field and operator denotes relative', () => {
-      const component = /** @type {ConditionalComponentsDef} */ ({
-        type: ComponentType.MonthYearField
-      })
-      expect(getConditionType(component, OperatorName.IsAtLeast)).toBe(
-        ConditionType.RelativeDate
-      )
-    })
-
     test('should return StringValue if date field but operator does not denote relative', () => {
       const component = /** @type {ConditionalComponentsDef} */ ({
-        type: ComponentType.MonthYearField
+        type: ComponentType.DatePartsField
       })
       expect(getConditionType(component, OperatorName.Is)).toBe(
         ConditionType.StringValue

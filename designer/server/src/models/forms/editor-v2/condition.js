@@ -69,8 +69,7 @@ export function getConditionType(selectedComponent, operatorValue) {
   } else if (selectedComponent?.type === ComponentType.YesNoField) {
     return ConditionType.ListItemRef
   } else if (
-    (selectedComponent?.type === ComponentType.DatePartsField ||
-      selectedComponent?.type === ComponentType.MonthYearField) &&
+    selectedComponent?.type === ComponentType.DatePartsField &&
     isRelativeDate(operatorValue)
   ) {
     return ConditionType.RelativeDate
