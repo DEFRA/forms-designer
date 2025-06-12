@@ -18,7 +18,6 @@ import {
   formOverviewPath
 } from '~/src/models/links.js'
 
-// Constants
 const BUTTON_SECONDARY_CLASS = 'govuk-button--secondary'
 
 /**
