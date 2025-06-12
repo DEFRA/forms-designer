@@ -49,16 +49,17 @@ describe('Editor v2 pages routes', () => {
     const { container } = await renderResponse(server, options)
 
     const $mainHeading = container.getByRole('heading', { level: 1 })
-
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
-
     const $actions = container.getAllByRole('button')
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
     expect($pageTitles[0]).toHaveTextContent('End pages')
     expect($pageTitles[1]).toHaveTextContent('Check your answers')
-    expect($actions).toHaveLength(3)
+
+    expect($actions).toHaveLength(5)
     expect($actions[2]).toHaveTextContent('Add new page')
+    expect($actions[3]).toHaveTextContent('Upload a form')
+    expect($actions[4]).toHaveTextContent('Download this form')
   })
 
   test('GET - should check correct formData is rendered in the view with multiple pages', async () => {
@@ -129,19 +130,22 @@ describe('Editor v2 pages routes', () => {
     expect(migrateToV2).not.toHaveBeenCalled()
 
     const $mainHeading = container.getByRole('heading', { level: 1 })
-
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
-
     const $actions = container.getAllByRole('button')
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
-    expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
-    expect($pageTitles[1]).toHaveTextContent('Page 2: Page two')
-    expect($pageTitles[2]).toHaveTextContent('End pages')
-    expect($pageTitles[3]).toHaveTextContent('Check your answers')
-    expect($actions).toHaveLength(4)
+
+    expect($pageTitles[0]).toHaveTextContent('2 pages')
+    expect($pageTitles[1]).toHaveTextContent('Page 1: Page one')
+    expect($pageTitles[2]).toHaveTextContent('Page 2: Page two')
+    expect($pageTitles[3]).toHaveTextContent('End pages')
+    expect($pageTitles[4]).toHaveTextContent('Check your answers')
+
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Add new page')
     expect($actions[3]).toHaveTextContent('Re-order pages')
+    expect($actions[4]).toHaveTextContent('Upload a form')
+    expect($actions[5]).toHaveTextContent('Download this form')
   })
 
   test('GET - should redirect to migration to v2 if draft definition schema is v1', async () => {
