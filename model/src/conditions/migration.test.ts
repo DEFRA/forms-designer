@@ -384,12 +384,12 @@ describe('Migration', () => {
           name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
           conditions: [
             {
-              conditionName: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
+              conditionName: 'Test condition',
               conditionDisplayName: 'Test condition',
               coordinator: undefined
             },
             {
-              conditionName: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
+              conditionName: 'Test condition',
               conditionDisplayName: 'Test condition',
               coordinator: Coordinator.OR
             }
