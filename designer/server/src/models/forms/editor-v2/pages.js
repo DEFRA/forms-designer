@@ -187,6 +187,21 @@ export function pagesViewModel(metadata, definition, notification) {
     attributes: null
   }
 
+  const rightSideActions = [
+    {
+      text: 'Upload a form',
+      href: editorv2Path(metadata.slug, 'upload'),
+      classes: 'govuk-button--secondary',
+      attributes: null
+    },
+    {
+      text: 'Download this form',
+      href: `/library/${metadata.slug}/editor-v2/download`,
+      classes: 'govuk-button--secondary',
+      attributes: null
+    }
+  ]
+
   const numOfNonSummaryPages = definition.pages.filter(
     (x) => x.controller !== ControllerType.Summary
   ).length
@@ -207,8 +222,19 @@ export function pagesViewModel(metadata, definition, notification) {
   const pageHeading = 'Add and edit pages'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
+
+  const mappedData = mapPageData(metadata.slug, definition)
+  const regularPages = mappedData.pages.filter(
+    (page) => page.controller !== ControllerType.Summary
+  )
+  const endPages = mappedData.pages.filter(
+    (page) => page.controller === ControllerType.Summary
+  )
+
   const pageListModel = {
-    ...mapPageData(metadata.slug, definition),
+    ...mappedData,
+    regularPages,
+    endPages,
     pageTitle,
     formSlug: metadata.slug,
     previewBaseUrl,
@@ -220,6 +246,7 @@ export function pagesViewModel(metadata, definition, notification) {
       text: pageCaption
     },
     pageActions,
+    rightSideActions,
     notification
   }
 
