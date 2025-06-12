@@ -126,7 +126,7 @@ function convertConditionRefDataFromV2(
   }
 
   return {
-    conditionName: refCondition.id,
+    conditionName: refCondition.displayName,
     conditionDisplayName: refCondition.displayName,
     coordinator
   }
