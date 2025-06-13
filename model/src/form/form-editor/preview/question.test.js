@@ -1,9 +1,14 @@
+import { buildTextFieldComponent } from '~/src/__stubs__/components.js'
 import {
   QuestionPreviewElements,
   QuestionRendererStub,
   baseElements
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { Question } from '~/src/form/form-editor/preview/question.js'
+import {
+  Question,
+  QuestionComponentElements
+} from '~/src/form/form-editor/preview/question.js'
+
 describe('question', () => {
   const renderer = new QuestionRendererStub(jest.fn())
   const questionElements = new QuestionPreviewElements(baseElements)
@@ -73,4 +78,29 @@ describe('question', () => {
       })
     })
   })
+
+  describe('QuestionComponentElements', () => {
+    it('should map a component base to QuestionElements', () => {
+      const textFieldComponent = buildTextFieldComponent({
+        title: 'Form field title',
+        hint: 'Hint text',
+        name: 'FFT',
+        options: {
+          required: false
+        },
+        shortDescription: 'shortDesc'
+      })
+      expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
+        question: 'Form field title',
+        hintText: 'Hint text',
+        optional: true,
+        shortDesc: 'shortDesc',
+        items: []
+      })
+    })
+  })
 })
+
+/**
+ * @import { TextFieldComponent } from '~/src/components/types.js'
+ */

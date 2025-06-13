@@ -1,6 +1,52 @@
 import { ComponentType } from '~/src/components/enums.js'
 
 /**
+ * @implements {QuestionElements}
+ */
+export class QuestionComponentElements {
+  /**
+   * @type {ComponentDef}
+   * @protected
+   */
+  _component
+  /**
+   * @param {ComponentDef} component
+   */
+  constructor(component) {
+    this._component = component
+  }
+
+  /**
+   * @returns {BaseSettings}
+   */
+  get values() {
+    const required = this._component.options.required ?? true
+
+    return {
+      question: this._component.title,
+      hintText: this._component.hint,
+      optional: !required,
+      shortDesc: this._component.shortDescription,
+      items: []
+    }
+  }
+
+  /**
+   * @param {HTMLElement} _element
+   */
+  setPreviewDOM(_element) {
+    throw new Error('Not implemented')
+  }
+
+  /**
+   * @param {string} _value
+   */
+  setPreviewHTML(_value) {
+    throw new Error('Not implemented')
+  }
+}
+
+/**
  * @class Question
  * @classdesc
  * A data object that has access to the underlying data via the QuestionElements object interface
@@ -218,5 +264,6 @@ export class Question {
 
 /**
  * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { ComponentDef } from '~/src/components/types.js'
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
  */
