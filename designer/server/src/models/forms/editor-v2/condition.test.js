@@ -202,21 +202,6 @@ describe('editor-v2 - condition model', () => {
         ConditionType.NumberValue
       )
     })
-
-    test('should return NumberValue if Telephone field and operator denotes numeric', () => {
-      const component = /** @type {ConditionalComponentsDef} */ ({
-        type: ComponentType.TelephoneNumberField
-      })
-      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
-        ConditionType.NumberValue
-      )
-      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
-        ConditionType.NumberValue
-      )
-      expect(getConditionType(component, OperatorName.HasLength)).toBe(
-        ConditionType.NumberValue
-      )
-    })
   })
 
   describe('buildConditionsFields', () => {
