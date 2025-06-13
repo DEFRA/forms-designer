@@ -6,6 +6,10 @@ import { testFormDefinitionWithSummaryOnly } from '~/src/__stubs__/form-definiti
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  flashErrorAndRedirect,
+  isValidFormDefinition
+} from '~/src/routes/forms/editor-v2/upload.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -20,7 +24,7 @@ function createMockFileStream(content, filename) {
   const mockStream = {
     hapi: { filename },
     async *[Symbol.asyncIterator]() {
-      await Promise.resolve()
+      await Promise.resolve() // Satisfy linter requirement
       yield Buffer.from(content)
     }
   }
@@ -295,6 +299,96 @@ describe('Editor v2 upload routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
+    })
+
+    test('should handle Joi validation error for missing formDefinition', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/upload',
+        auth,
+        payload: {}
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
+    })
+  })
+
+  describe('Utility functions', () => {
+    test('isValidFormDefinition should validate form structure correctly', () => {
+      const validForm = {
+        pages: [{ id: 'page1', title: 'Test' }],
+        lists: [],
+        sections: [],
+        conditions: []
+      }
+      expect(isValidFormDefinition(validForm)).toBe(true)
+
+      const invalidForm1 = {
+        lists: [],
+        sections: [],
+        conditions: []
+      }
+      expect(isValidFormDefinition(invalidForm1)).toBe(false)
+
+      const invalidForm2 = {
+        pages: 'not an array',
+        lists: [],
+        sections: [],
+        conditions: []
+      }
+      expect(isValidFormDefinition(invalidForm2)).toBe(false)
+
+      expect(isValidFormDefinition(null)).toBe(false)
+
+      expect(isValidFormDefinition('string')).toBe(false)
+
+      expect(isValidFormDefinition(undefined)).toBe(false)
+
+      expect(isValidFormDefinition({})).toBe(false)
+
+      const invalidForm3 = {
+        pages: null,
+        lists: [],
+        sections: [],
+        conditions: []
+      }
+      expect(isValidFormDefinition(invalidForm3)).toBe(false)
+    })
+
+    test('flashErrorAndRedirect should create proper error response', () => {
+      const mockH = {
+        redirect: jest.fn().mockReturnThis(),
+        code: jest.fn().mockReturnThis()
+      }
+      const mockYar = {
+        flash: jest.fn()
+      }
+      const slug = 'test-form'
+      const errorMessage = 'Test error message'
+
+      const result = flashErrorAndRedirect(mockH, mockYar, slug, errorMessage)
+
+      expect(mockYar.flash).toHaveBeenCalledWith('uploadValidationFailure', {
+        formErrors: {
+          formDefinition: {
+            text: errorMessage,
+            href: '#formDefinition'
+          }
+        },
+        formValues: {}
+      })
+      expect(mockH.redirect).toHaveBeenCalledWith(
+        '/library/test-form/editor-v2/upload'
+      )
+      expect(mockH.code).toHaveBeenCalledWith(StatusCodes.SEE_OTHER)
+      expect(result).toBe(mockH)
     })
   })
 })

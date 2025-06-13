@@ -30,7 +30,7 @@ const SUCCESS_MESSAGE = 'Form uploaded successfully'
  * @param {string} slug
  * @param {string} errorMessage
  */
-function flashErrorAndRedirect(h, yar, slug, errorMessage) {
+export function flashErrorAndRedirect(h, yar, slug, errorMessage) {
   yar.flash(errorKey, {
     formErrors: {
       formDefinition: {
@@ -49,7 +49,7 @@ function flashErrorAndRedirect(h, yar, slug, errorMessage) {
  * Read stream content as string
  * @param {import('stream').Readable} stream
  */
-async function readStreamAsString(stream) {
+export async function readStreamAsString(stream) {
   const chunks = []
   for await (const chunk of stream) {
     chunks.push(chunk)
@@ -61,8 +61,8 @@ async function readStreamAsString(stream) {
  * Validate form definition structure
  * @param {any} definition
  */
-function isValidFormDefinition(definition) {
-  return (
+export function isValidFormDefinition(definition) {
+  return !!(
     definition &&
     typeof definition === 'object' &&
     definition.pages &&
