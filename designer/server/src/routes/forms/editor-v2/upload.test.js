@@ -21,15 +21,17 @@ jest.mock('~/src/lib/forms.js')
  * @param {string} filename - The filename
  */
 function createMockFileStream(content, filename) {
-  const mockStream = {
-    hapi: { filename },
-    async *[Symbol.asyncIterator]() {
-      await Promise.resolve() // Satisfy linter requirement
-      yield Buffer.from(content)
+  const stream = new Readable({
+    read() {
+      this.push(content)
+      this.push(null) // End the stream
     }
-  }
+  })
 
-  return mockStream
+  // @ts-expect-error - hapi property for testing
+  stream.hapi = { filename }
+
+  return stream
 }
 
 describe('Editor v2 upload routes', () => {

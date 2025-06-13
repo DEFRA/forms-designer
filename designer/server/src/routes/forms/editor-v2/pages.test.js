@@ -53,7 +53,7 @@ describe('Editor v2 pages routes', () => {
     const $actions = container.getAllByRole('button')
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
-    expect($pageTitles[0]).toHaveTextContent('Check your answers')
+    expect($pageTitles[0]).toHaveTextContent('End pages')
 
     expect($actions).toHaveLength(5)
     expect($actions[2]).toHaveTextContent('Add new page')
@@ -136,7 +136,7 @@ describe('Editor v2 pages routes', () => {
 
     expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
     expect($pageTitles[1]).toHaveTextContent('Page 2: Page two')
-    expect($pageTitles[2]).toHaveTextContent('Check your answers')
+    expect($pageTitles[2]).toHaveTextContent('End pages')
 
     expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Add new page')
