@@ -34,6 +34,7 @@
     "test:watch": "jest --color --watch"
   },
   "dependencies": {
+    "@joi/date": "^2.1.1",
     "marked": "^15.0.12",
     "nanoid": "^5.0.7",
     "slug": "^11.0.0",

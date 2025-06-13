@@ -1,4 +1,5 @@
-import Joi, { type LanguageMessages } from 'joi'
+import JoiDate from '@joi/date'
+import JoiBase, { type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
@@ -11,10 +12,12 @@ import {
   type ConditionBooleanValueDataV2,
   type ConditionData,
   type ConditionDataV2,
+  type ConditionDateValueDataV2,
   type ConditionFieldData,
   type ConditionGroupData,
   type ConditionGroupDataV2,
   type ConditionListItemRefValueDataV2,
+  type ConditionNumberValueDataV2,
   type ConditionRefData,
   type ConditionRefDataV2,
   type ConditionStringValueDataV2,
@@ -42,6 +45,8 @@ import {
 } from '~/src/form/form-definition/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
+
+const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
 const idSchemaOptional = Joi.string().uuid()
 
@@ -162,6 +167,35 @@ const conditionBooleanValueDataSchemaV2 =
         .required()
         .description('The actual value to compare against')
     })
+
+const conditionNumberValueDataSchemaV2 =
+  Joi.object<ConditionNumberValueDataV2>()
+    .description('Number value specification for a condition')
+    .keys({
+      type: Joi.string()
+        .trim()
+        .valid('NumberValue')
+        .required()
+        .description('Type of the condition value, should be "NumberValue"'),
+      value: Joi.number()
+        .required()
+        .description('The actual value to compare against')
+    })
+
+const conditionDateValueDataSchemaV2 = Joi.object<ConditionDateValueDataV2>()
+  .description('Date value specification for a condition')
+  .keys({
+    type: Joi.string()
+      .trim()
+      .valid('DateValue')
+      .required()
+      .description('Type of the condition value, should be "DateValue"'),
+    value: Joi.date()
+      .format('YYYY-MM-DD')
+      .raw()
+      .required()
+      .description('The actual value to compare against')
+  })
 
 const conditionListItemRefDataSchemaV2 =
   Joi.object<ConditionListItemRefValueDataV2>()
@@ -292,6 +326,8 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       .try(
         conditionStringValueDataSchemaV2,
         conditionBooleanValueDataSchemaV2,
+        conditionNumberValueDataSchemaV2,
+        conditionDateValueDataSchemaV2,
         conditionListItemRefDataSchemaV2,
         relativeDateValueDataSchema
       )

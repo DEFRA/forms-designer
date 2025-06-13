@@ -27,6 +27,16 @@ export interface ConditionBooleanValueDataV2 {
   value: boolean
 }
 
+export interface ConditionNumberValueDataV2 {
+  type: ConditionType.NumberValue
+  value: number
+}
+
+export interface ConditionDateValueDataV2 {
+  type: ConditionType.DateValue
+  value: string
+}
+
 export interface ConditionListItemRefValueDataV2 {
   type: ConditionType.ListItemRef
   listId: string
@@ -57,6 +67,8 @@ export type ConditionValueDataV2 =
   | ConditionListItemRefValueDataV2
   | ConditionStringValueDataV2
   | ConditionBooleanValueDataV2
+  | ConditionNumberValueDataV2
+  | ConditionDateValueDataV2
   | RelativeDateValueData
 
 export interface ConditionDataV2 {
