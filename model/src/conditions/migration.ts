@@ -4,6 +4,7 @@ import {
 } from '~/src/components/types.js'
 import { ConditionType, type Coordinator } from '~/src/conditions/enums.js'
 import {
+  type ConditionBooleanValueDataV2,
   type ConditionData,
   type ConditionDataV2,
   type ConditionListItemRefValueDataV2,
@@ -11,7 +12,7 @@ import {
   type ConditionRefDataV2,
   type ConditionStringValueDataV2,
   type ConditionValueData,
-  type RelativeDateValueData
+  type ConditionValueDataV2
 } from '~/src/conditions/types.js'
 import {
   type ConditionWrapper,
@@ -19,22 +20,22 @@ import {
   type List
 } from '~/src/form/form-definition/types.js'
 
-function isConditionListItemRefValueDataV2(
-  value:
-    | ConditionListItemRefValueDataV2
-    | ConditionStringValueDataV2
-    | RelativeDateValueData
+export function isConditionListItemRefValueDataV2(
+  value: ConditionValueDataV2
 ): value is ConditionListItemRefValueDataV2 {
   return value.type === ConditionType.ListItemRef
 }
 
-function isConditionStringValueDataV2(
-  value:
-    | ConditionListItemRefValueDataV2
-    | ConditionStringValueDataV2
-    | RelativeDateValueData
+export function isConditionStringValueDataV2(
+  value: ConditionValueDataV2
 ): value is ConditionStringValueDataV2 {
   return value.type === ConditionType.StringValue
+}
+
+export function isConditionBooleanValueDataV2(
+  value: ConditionValueDataV2
+): value is ConditionBooleanValueDataV2 {
+  return value.type === ConditionType.BooleanValue
 }
 
 function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
@@ -76,6 +77,16 @@ function createConditionValueDataFromStringValueDataV2(
   }
 }
 
+function createConditionValueDataFromBooleanValueDataV2(
+  value: ConditionBooleanValueDataV2
+): ConditionValueData {
+  return {
+    type: ConditionType.Value,
+    value: value.value.toString(),
+    display: value.value ? 'Yes' : 'No'
+  }
+}
+
 function isConditionDataV2(
   condition: ConditionDataV2 | ConditionRefDataV2
 ): condition is ConditionDataV2 {
@@ -98,6 +109,8 @@ function convertConditionDataV2(
     newValue = createConditionValueDataFromListItemRefV2(condition.value, model)
   } else if (isConditionStringValueDataV2(condition.value)) {
     newValue = createConditionValueDataFromStringValueDataV2(condition.value)
+  } else if (isConditionBooleanValueDataV2(condition.value)) {
+    newValue = createConditionValueDataFromBooleanValueDataV2(condition.value)
   } else {
     newValue = condition.value
   }

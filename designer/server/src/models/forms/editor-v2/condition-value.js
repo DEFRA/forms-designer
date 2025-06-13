@@ -1,4 +1,10 @@
-import { ConditionType, DateDirections, DateUnits } from '@defra/forms-model'
+import {
+  ConditionType,
+  DateDirections,
+  DateUnits,
+  getYesNoList,
+  isConditionBooleanValueDataV2
+} from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
 import {
@@ -127,7 +133,7 @@ export function listItemRefValueViewModel(list, validation) {
 /**
  * @param {ConditionType} type
  * @param {number} idx
- * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @param { ConditionDataV2 } item
  * @param { ConditionalComponentsDef | undefined } selectedComponent
  * @param {FormDefinition} definition
  * @param { ValidationFailure<FormEditor> | undefined } validation
@@ -160,6 +166,26 @@ export function buildValueField(
             return { text: itm.text, value: itm.id ?? itm.value }
           }
         ),
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+      }
+    }
+
+    case ConditionType.BooleanValue: {
+      return {
+        id: `items[${idx}].value`,
+        name: `items[${idx}][value][value]`,
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        classes: 'govuk-radios--small',
+        value: isConditionBooleanValueDataV2(item.value)
+          ? item.value.value.toString()
+          : undefined,
+        items: getYesNoList().items.map((itm) => {
+          return { text: itm.text, value: itm.value.toString() }
+        }),
         ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
       }
     }

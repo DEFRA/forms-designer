@@ -1,6 +1,8 @@
 import { ConditionType, DateDirections, OperatorName } from '@defra/forms-model'
 
+import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
 import {
+  buildValueField,
   insertDateValidationErrors,
   listItemRefValueViewModel,
   relativeDateValueViewModel
@@ -104,6 +106,220 @@ describe('editor-v2 - condition-value', () => {
           value: undefined
         }
       })
+    })
+  })
+
+  describe('buildValueField', () => {
+    test('should return list value field', () => {
+      const listItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          itemId: '689d3f66-88f7-4dc0-b199-841b72393c19'
+        }
+      })
+      const selectedComponent =
+        testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
+      const valueField = buildValueField(
+        ConditionType.ListItemRef,
+        2,
+        listItem,
+        selectedComponent,
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        classes: 'govuk-radios--small',
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        id: 'items[2].value',
+        items: [
+          { text: 'Red', value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7' },
+          { text: 'Blue', value: '689d3f66-88f7-4dc0-b199-841b72393c19' },
+          { text: 'Green', value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171' }
+        ],
+        name: 'items[2][value][itemId]',
+        value: '689d3f66-88f7-4dc0-b199-841b72393c19'
+      })
+    })
+
+    test('should return list value field with undefined value', () => {
+      const listItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const selectedComponent =
+        testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.ListItemRef,
+          2,
+          listItem,
+          selectedComponent,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
+    })
+
+    test('should return string value field', () => {
+      const stringItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: 'stringval'
+        }
+      })
+      const valueField = buildValueField(
+        ConditionType.StringValue,
+        2,
+        stringItem,
+        undefined,
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        label: {
+          text: 'Enter a value'
+        },
+        id: 'items[2].value',
+        name: 'items[2][value][value]',
+        value: 'stringval',
+        classes: 'govuk-input--width-10'
+      })
+    })
+
+    test('should return string value field with undefined value', () => {
+      const stringItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.StringValue,
+          2,
+          stringItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
+    })
+
+    test('should return boolean value field', () => {
+      const booleanItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: true,
+          type: ConditionType.BooleanValue
+        }
+      })
+      const valueField = buildValueField(
+        ConditionType.BooleanValue,
+        2,
+        booleanItem,
+        undefined,
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        id: 'items[2].value',
+        name: 'items[2][value][value]',
+        value: 'true',
+        classes: 'govuk-radios--small',
+        items: [
+          { text: 'Yes', value: 'true' },
+          { text: 'No', value: 'false' }
+        ]
+      })
+    })
+
+    test('should return boolean value field with undefined value', () => {
+      const booleanItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.BooleanValue,
+          2,
+          booleanItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
+    })
+
+    test('should return relative date fields', () => {
+      const dateItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: true
+        }
+      })
+      const valueField =
+        /** @type {{ period: any, unit: any, direction: any }} */ (
+          buildValueField(
+            ConditionType.RelativeDate,
+            2,
+            dateItem,
+            undefined,
+            testFormDefinitionWithMultipleV2Conditions,
+            undefined
+          )
+        )
+      expect(valueField.period).toBeDefined()
+      expect(valueField.unit).toBeDefined()
+      expect(valueField.direction).toBeDefined()
+    })
+
+    test('should throw if invalid field type', () => {
+      const stringItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: 'stringval'
+        }
+      })
+      expect(() =>
+        buildValueField(
+          // @ts-expect-error - enforce invalid type
+          'invalid',
+          2,
+          stringItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      ).toThrow('Invalid condition type invalid')
     })
   })
 })

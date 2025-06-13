@@ -9,6 +9,8 @@
     {{ govukInput(params.value) }}
   {% case "ListItemRef" %}
     {{ govukRadios(params.value) }}
+  {% case "BooleanValue" %}
+    {{ govukRadios(params.value) }}
   {% case "RelativeDate" %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">
