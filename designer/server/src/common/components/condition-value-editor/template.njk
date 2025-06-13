@@ -8,6 +8,7 @@
   {% case "StringValue" %}
     {{ govukInput(params.value) }}
   {% case "ListItemRef" %}
+    {{ govukRadios(params.value) }}
   {% case "BooleanValue" %}
     {{ govukRadios(params.value) }}
   {% case "RelativeDate" %}
