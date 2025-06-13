@@ -308,13 +308,6 @@ export function conditionViewModel(
 }
 
 /**
- * @typedef {object} ConditionPageState
- * @property {string} [selectedComponentId] - The component id
- * @property {string} [selectedOperator] - The operator
- * @property {string} [displayName] - The condition display name
- */
-
-/**
  * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
