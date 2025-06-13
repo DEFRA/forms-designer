@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import {
   Question,
   QuestionComponentElements
@@ -7,7 +8,7 @@ import {
 const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
-  Template: Question.PATH + 'radios.njk',
+  Template: PreviewComponent.PATH + 'radios.njk',
   Input: 'listInput',
   RenderName: 'listInputField'
 }

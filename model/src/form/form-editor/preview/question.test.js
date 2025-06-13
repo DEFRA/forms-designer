@@ -94,6 +94,7 @@ describe('question', () => {
         question: 'Form field title',
         hintText: 'Hint text',
         optional: true,
+        content: '',
         shortDesc: 'shortDesc',
         items: []
       })

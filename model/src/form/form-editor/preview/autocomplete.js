@@ -1,5 +1,6 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
 export class AutocompleteListQuestion extends Question {
@@ -7,7 +8,7 @@ export class AutocompleteListQuestion extends Question {
    * @type {ComponentType}
    */
   componentType = ComponentType.AutocompleteField
-  _questionTemplate = Question.PATH + 'autocompletefield.njk'
+  _questionTemplate = PreviewComponent.PATH + 'autocompletefield.njk'
   /**
    * @type {string}
    * @protected
@@ -29,7 +30,7 @@ export class AutocompleteQuestion extends Question {
    * @type {ComponentType}
    */
   componentType = ComponentType.AutocompleteField
-  _questionTemplate = Question.PATH + 'autocompletefield.njk'
+  _questionTemplate = PreviewComponent.PATH + 'autocompletefield.njk'
   /**
    * @type {string}
    * @protected

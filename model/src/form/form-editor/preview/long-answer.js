@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
 export class LongAnswerQuestion extends Question {
@@ -10,7 +11,7 @@ export class LongAnswerQuestion extends Question {
    * @type {string}
    * @protected
    */
-  _questionTemplate = Question.PATH + 'textarea.njk'
+  _questionTemplate = PreviewComponent.PATH + 'textarea.njk'
   /**
    * @type {string}
    * @protected

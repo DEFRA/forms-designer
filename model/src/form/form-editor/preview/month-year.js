@@ -1,6 +1,6 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
-import { Question } from '~/src/index.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 
 export class MonthYearQuestion extends FieldsetQuestion {
   /**
@@ -11,7 +11,7 @@ export class MonthYearQuestion extends FieldsetQuestion {
    * @type {string}
    * @protected
    */
-  _questionTemplate = Question.PATH + 'monthyearfield.njk'
+  _questionTemplate = PreviewComponent.PATH + 'monthyearfield.njk'
   _fieldName = 'monthYear'
 
   /**
