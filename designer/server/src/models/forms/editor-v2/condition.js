@@ -121,6 +121,13 @@ export function buildConditionsFields(
 
   const operatorValue = getOperator(item)
 
+  const operatorNames = getOperatorNames(selectedComponent?.type).map(
+    (val) => ({
+      text: upperFirst(val),
+      value: val
+    })
+  )
+
   const operator = component.value
     ? {
         id: `items[${idx}].operator`,
@@ -129,12 +136,12 @@ export function buildConditionsFields(
           text: 'Condition type'
         },
         items: [{ text: 'Select a condition type', value: '' }].concat(
-          ...getOperatorNames(selectedComponent?.type).map((val) => ({
-            text: upperFirst(val),
-            value: val
-          }))
+          operatorNames
         ),
-        value: operatorValue,
+        value:
+          operatorValue && operatorNames.find((x) => x.value === operatorValue)
+            ? operatorValue
+            : undefined,
         formGroup: {
           afterInput: {
             html: `<button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-left-3" name="action" type="submit"
@@ -162,7 +169,7 @@ export function buildConditionsFields(
       : ''
 
   // prettier-ignore
-  const value = 'operator' in item && component.value && item.operator.length
+  const value = 'operator' in item && component.value && operator?.value
       ? buildValueField(conditionType, idx, item, selectedComponent, definition, validation)
       : undefined
 
