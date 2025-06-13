@@ -216,7 +216,8 @@ describe('editor-v2 - condition-value', () => {
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
         value: {
-          value: true
+          value: true,
+          type: ConditionType.BooleanValue
         }
       })
       const valueField = buildValueField(
@@ -235,7 +236,7 @@ describe('editor-v2 - condition-value', () => {
         },
         id: 'items[2].value',
         name: 'items[2][value][value]',
-        value: undefined,
+        value: 'true',
         classes: 'govuk-radios--small',
         items: [
           { text: 'Yes', value: 'true' },
