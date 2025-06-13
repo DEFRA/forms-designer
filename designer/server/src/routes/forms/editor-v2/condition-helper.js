@@ -68,10 +68,6 @@ export function saveSessionState(yar, payload, stateId, items) {
  */
 export function processErrorMessages(error) {
   if (Joi.isError(error)) {
-    error.details = error.details.filter((err) => {
-      return err.type !== 'array.includesRequiredUnknowns'
-    })
-
     error.details.forEach((err) => {
       if (err.path.length > 1) {
         // Must be that part of a condition item is in
