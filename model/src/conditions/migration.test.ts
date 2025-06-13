@@ -403,6 +403,119 @@ describe('Migration', () => {
     })
   })
 
+  describe('number conditions', () => {
+    test('convertConditionWrapperFromV2 converts a number condition correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            value: {
+              value: 1,
+              type: ConditionType.NumberValue
+            }
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.NumberField,
+        options: {},
+        schema: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        value: {
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.NumberField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: '1',
+                type: ConditionType.Value,
+                value: '1'
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
+  })
+
+  describe('date conditions', () => {
+    test('convertConditionWrapperFromV2 converts a date condition correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            value: {
+              value: '2001-01-01',
+              type: ConditionType.DateValue
+            }
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.DatePartsField,
+        options: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        value: {
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.DatePartsField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: '2001-01-01',
+                type: ConditionType.Value,
+                value: '2001-01-01'
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
+  })
+
   describe('ref tests for conditions', () => {
     test('convertConditionWrapperFromV2 converts a condition ref correctly', () => {
       const conditionWrapper: ConditionWrapperV2 = {

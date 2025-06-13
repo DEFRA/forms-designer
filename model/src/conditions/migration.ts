@@ -7,7 +7,9 @@ import {
   type ConditionBooleanValueDataV2,
   type ConditionData,
   type ConditionDataV2,
+  type ConditionDateValueDataV2,
   type ConditionListItemRefValueDataV2,
+  type ConditionNumberValueDataV2,
   type ConditionRefData,
   type ConditionRefDataV2,
   type ConditionStringValueDataV2,
@@ -36,6 +38,18 @@ export function isConditionBooleanValueDataV2(
   value: ConditionValueDataV2
 ): value is ConditionBooleanValueDataV2 {
   return value.type === ConditionType.BooleanValue
+}
+
+export function isConditionNumberValueDataV2(
+  value: ConditionValueDataV2
+): value is ConditionNumberValueDataV2 {
+  return value.type === ConditionType.NumberValue
+}
+
+export function isConditionDateValueDataV2(
+  value: ConditionValueDataV2
+): value is ConditionDateValueDataV2 {
+  return value.type === ConditionType.DateValue
 }
 
 function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
@@ -69,6 +83,26 @@ function createConditionValueDataFromListItemRefV2(
 
 function createConditionValueDataFromStringValueDataV2(
   value: ConditionStringValueDataV2
+): ConditionValueData {
+  return {
+    type: ConditionType.Value,
+    value: value.value,
+    display: value.value
+  }
+}
+
+function createConditionValueDataFromNumberValueDataV2(
+  value: ConditionNumberValueDataV2
+): ConditionValueData {
+  return {
+    type: ConditionType.Value,
+    value: value.value.toString(),
+    display: value.value.toString()
+  }
+}
+
+function createConditionValueDataFromDateValueDataV2(
+  value: ConditionDateValueDataV2
 ): ConditionValueData {
   return {
     type: ConditionType.Value,
@@ -111,6 +145,10 @@ function convertConditionDataV2(
     newValue = createConditionValueDataFromStringValueDataV2(condition.value)
   } else if (isConditionBooleanValueDataV2(condition.value)) {
     newValue = createConditionValueDataFromBooleanValueDataV2(condition.value)
+  } else if (isConditionNumberValueDataV2(condition.value)) {
+    newValue = createConditionValueDataFromNumberValueDataV2(condition.value)
+  } else if (isConditionDateValueDataV2(condition.value)) {
+    newValue = createConditionValueDataFromDateValueDataV2(condition.value)
   } else {
     newValue = condition.value
   }
