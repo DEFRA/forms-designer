@@ -81,14 +81,26 @@ function createConditionValueDataFromListItemRefV2(
   }
 }
 
-function createConditionValueDataFromStringValueDataV2(
-  value: ConditionStringValueDataV2
+function createConditionValueDataFromStringOrDateValueDataV2(
+  value: ConditionStringValueDataV2 | ConditionDateValueDataV2
 ): ConditionValueData {
   return {
     type: ConditionType.Value,
     value: value.value,
     display: value.value
   }
+}
+
+function createConditionValueDataFromStringValueDataV2(
+  value: ConditionStringValueDataV2
+): ConditionValueData {
+  return createConditionValueDataFromStringOrDateValueDataV2(value)
+}
+
+function createConditionValueDataFromDateValueDataV2(
+  value: ConditionDateValueDataV2
+): ConditionValueData {
+  return createConditionValueDataFromStringOrDateValueDataV2(value)
 }
 
 function createConditionValueDataFromNumberValueDataV2(
@@ -98,16 +110,6 @@ function createConditionValueDataFromNumberValueDataV2(
     type: ConditionType.Value,
     value: value.value.toString(),
     display: value.value.toString()
-  }
-}
-
-function createConditionValueDataFromDateValueDataV2(
-  value: ConditionDateValueDataV2
-): ConditionValueData {
-  return {
-    type: ConditionType.Value,
-    value: value.value,
-    display: value.value
   }
 }
 
