@@ -2,8 +2,7 @@ import {
   ConditionType,
   DateDirections,
   DateUnits,
-  getYesNoList,
-  isConditionBooleanValueDataV2
+  getYesNoList
 } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
@@ -148,62 +147,25 @@ export function buildValueField(
 ) {
   switch (type) {
     case ConditionType.ListItemRef: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][itemId]`,
-        fieldset: {
-          legend: {
-            text: 'Select a value'
-          }
-        },
-        classes: GOVUK_RADIOS_SMALL,
-        value:
-          'value' in item && 'itemId' in item.value
-            ? item.value.itemId
-            : undefined,
-        items: getListFromComponent(selectedComponent, definition)?.items.map(
-          (itm) => {
-            return { text: itm.text, value: itm.id ?? itm.value }
-          }
-        ),
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
+      return buildListItemValueField(
+        idx,
+        item,
+        selectedComponent,
+        definition,
+        validation
+      )
     }
 
     case ConditionType.BooleanValue: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][value]`,
-        fieldset: {
-          legend: {
-            text: 'Select a value'
-          }
-        },
-        classes: 'govuk-radios--small',
-        value: isConditionBooleanValueDataV2(item.value)
-          ? item.value.value.toString()
-          : undefined,
-        items: getYesNoList().items.map((itm) => {
-          return { text: itm.text, value: itm.value.toString() }
-        }),
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
+      return buildBooleanValueField(idx, item, validation)
     }
 
     case ConditionType.StringValue: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][value]`,
-        label: {
-          text: 'Enter a value'
-        },
-        classes: 'govuk-input--width-10',
-        value:
-          'value' in item && 'value' in item.value
-            ? item.value.value
-            : undefined,
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
+      return buildStringValueField(idx, item, validation)
+    }
+
+    case ConditionType.NumberValue: {
+      return buildNumberValueField(idx, item, validation)
     }
 
     case ConditionType.RelativeDate: {
@@ -213,6 +175,109 @@ export function buildValueField(
     default: {
       throw new Error(`Invalid condition type ${type}`)
     }
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } item
+ * @param { ConditionalComponentsDef | undefined } selectedComponent
+ * @param {FormDefinition} definition
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+function buildListItemValueField(
+  idx,
+  item,
+  selectedComponent,
+  definition,
+  validation
+) {
+  return {
+    id: `items[${idx}].value`,
+    name: `items[${idx}][value][itemId]`,
+    fieldset: {
+      legend: {
+        text: 'Select a value'
+      }
+    },
+    classes: GOVUK_RADIOS_SMALL,
+    value:
+      'value' in item && 'itemId' in item.value ? item.value.itemId : undefined,
+    items: getListFromComponent(selectedComponent, definition)?.items.map(
+      (itm) => {
+        return { text: itm.text, value: itm.id ?? itm.value }
+      }
+    ),
+    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } item
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+function buildBooleanValueField(idx, item, validation) {
+  return {
+    id: `items[${idx}].value`,
+    name: `items[${idx}][value][value]`,
+    fieldset: {
+      legend: {
+        text: 'Select a value'
+      }
+    },
+    classes: 'govuk-radios--small',
+    value:
+      'value' in item && 'value' in item.value
+        ? item.value.value.toString()
+        : undefined,
+    items: getYesNoList().items.map((itm) => {
+      return { text: itm.text, value: itm.value.toString() }
+    }),
+    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } item
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+function buildStringValueField(idx, item, validation) {
+  return {
+    id: `items[${idx}].value`,
+    name: `items[${idx}][value][value]`,
+    label: {
+      text: 'Enter a value'
+    },
+    classes: 'govuk-input--width-10',
+    value:
+      'value' in item && 'value' in item.value ? item.value.value : undefined,
+    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } item
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+function buildNumberValueField(idx, item, validation) {
+  return {
+    id: `items[${idx}].value`,
+    name: `items[${idx}][value][value]`,
+    label: {
+      text: 'Enter a value'
+    },
+    classes: 'govuk-input--width-5',
+    attributes: {
+      inputmode: 'numeric'
+    },
+    value:
+      'value' in item && 'value' in item.value
+        ? item.value.value.toString()
+        : undefined,
+    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
 
