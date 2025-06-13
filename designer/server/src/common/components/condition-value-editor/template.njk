@@ -10,6 +10,17 @@
   {% case "ListItemRef" %}
     {{ govukRadios(params.value) }}
   {% case "RelativeDate" %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukInput(params.value.period) }}
+      </div>
+      <div class="govuk-grid-column-one-quarter">
+        {{ govukRadios(params.value.unit) }}
+      </div>
+      <div class="govuk-grid-column-one-half">
+        {{ govukRadios(params.value.direction) }}
+      </div>
+    </div>
 {% endswitch %}
 <input type="hidden" name="{{ params.conditionTypeName }}" value="{{ params.conditionType }}" />
 <input type="hidden" name="{{ params.listIdName }}" value="{{ params.listId }}" />

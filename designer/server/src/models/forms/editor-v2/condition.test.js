@@ -1,15 +1,17 @@
-import { ComponentType, ConditionType } from '@defra/forms-model'
+import { ComponentType, ConditionType, OperatorName } from '@defra/forms-model'
 
 import {
   buildDefinition,
   testFormDefinitionWithMultipleV2Conditions
 } from '~/src/__stubs__/form-definition.js'
+import { buildValueField } from '~/src/models/forms/editor-v2/condition-value.js'
 import {
   buildConditionEditor,
   buildConditionsFields,
-  buildValueField,
   getComponentId,
-  getOperator
+  getConditionType,
+  getOperator,
+  isRelativeDate
 } from '~/src/models/forms/editor-v2/condition.js'
 
 describe('editor-v2 - condition model', () => {
@@ -165,6 +167,64 @@ describe('editor-v2 - condition model', () => {
     })
   })
 
+  describe('isRelativeDate', () => {
+    test('should return false if no operator', () => {
+      expect(isRelativeDate(undefined)).toBeFalsy()
+    })
+
+    test('should return false if operator but not for relative dates', () => {
+      expect(isRelativeDate(OperatorName.Is)).toBeFalsy()
+    })
+
+    test('should return true if operator is for relative dates', () => {
+      expect(isRelativeDate(OperatorName.IsAtLeast)).toBeTruthy()
+    })
+  })
+
+  describe('getConditionType', () => {
+    test('should return ListItemRef if a list field', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.AutocompleteField
+      })
+      expect(getConditionType(component, undefined)).toBe(
+        ConditionType.ListItemRef
+      )
+    })
+
+    test('should return ListItemRef if YesNo field', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.YesNoField
+      })
+      expect(getConditionType(component, undefined)).toBe(
+        ConditionType.ListItemRef
+      )
+    })
+
+    test('should return RelativeDate if date parts field and operator denotes relative', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.DatePartsField
+      })
+      expect(getConditionType(component, OperatorName.IsAtLeast)).toBe(
+        ConditionType.RelativeDate
+      )
+    })
+
+    test('should return StringValue if date field but operator does not denote relative', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.DatePartsField
+      })
+      expect(getConditionType(component, OperatorName.Is)).toBe(
+        ConditionType.StringValue
+      )
+    })
+
+    test('should return StringValue if missing field', () => {
+      expect(getConditionType(undefined, undefined)).toBe(
+        ConditionType.StringValue
+      )
+    })
+  })
+
   describe('buildConditionsFields', () => {
     test('should lookup component', () => {
       const definition = buildDefinition()
@@ -195,5 +255,5 @@ describe('editor-v2 - condition model', () => {
 })
 
 /**
- * @import { ConditionDataV2 } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2 } from '@defra/forms-model'
  */
