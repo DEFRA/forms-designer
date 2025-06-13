@@ -109,20 +109,5 @@ export function hasConditionSupportForPage(page) {
 }
 
 /**
- * Separate pages by type (regular vs end pages)
- * @param {{ pages: Page[] }} mappedData
- */
-export function separatePagesByType(mappedData) {
-  const regularPages = mappedData.pages.filter(
-    (page) => page.controller !== ControllerType.Summary
-  )
-  const endPages = mappedData.pages.filter(
-    (page) => page.controller === ControllerType.Summary
-  )
-
-  return { regularPages, endPages }
-}
-
-/**
  * @import { Page } from '@defra/forms-model'
  */

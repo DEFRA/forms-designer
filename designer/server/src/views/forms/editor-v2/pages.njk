@@ -27,13 +27,8 @@
 
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-      {% if regularPages | length > 0 %}
-        <h2 class="govuk-heading-m govuk-!-margin-bottom-4">{{ regularPages | length }} page{{ 's' if regularPages | length != 1 else '' }}</h2>
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-bottom-6">
-      {% endif %}
-
       <form class="form">
-          {% for page in regularPages %}
+          {% for page in pages %}
             <div class="govuk-grid-row page-row">
               <div class="govuk-grid-column-full">
               {{ appPagesPanelLeft({
@@ -49,31 +44,12 @@
               </div>
             </div>
           {% endfor %}
-
-          {% if endPages | length > 0 %}
-            {% for page in endPages %}
-              <div class="govuk-grid-row page-row">
-                <div class="govuk-grid-column-full">
-                {{ appPagesPanelLeft({
-                  formName: name,
-                  pageNum: loop.index,
-                  pageId: page.id,
-                  pageTitle: page.title,
-                  pageEditUrl: page.editUrl,
-                  pagePreviewUrl: previewBaseUrl + page.path + "?force",
-                  rows: page.questionRows,
-                  isEndPage: page.isEndPage
-                  }) }}
-                </div>
-              </div>
-            {% endfor %}
-          {% endif %}
       </form>
     </div>
 
     <div class="govuk-grid-column-one-third">
       {% if rightSideActions %}
-        <div class="govuk-!-margin-left-4" style="text-align: right; margin-top: {{ '45px' if regularPages | length > 0 else '20px' }};">
+        <div class="govuk-!-margin-left-4" style="text-align: right; margin-top: 20px;">
           {% for action in rightSideActions %}
             <div style="white-space: nowrap; display: inline-block; min-width: 200px;">
               {{ govukButton({

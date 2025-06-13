@@ -11,7 +11,6 @@ import {
   buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { separatePagesByType } from '~/src/models/forms/editor-v2/pages-helper.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -282,12 +281,9 @@ export function pagesViewModel(metadata, definition, notification) {
 
   const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
   const mappedData = mapPageData(metadata.slug, definition)
-  const { regularPages, endPages } = separatePagesByType(mappedData)
 
   const pageListModel = {
     ...mappedData,
-    regularPages,
-    endPages,
     pageTitle,
     formSlug: metadata.slug,
     previewBaseUrl,
