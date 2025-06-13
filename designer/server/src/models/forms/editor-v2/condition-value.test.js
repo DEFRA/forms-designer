@@ -200,6 +200,31 @@ describe('editor-v2 - condition-value', () => {
       })
     })
 
+    test('should return relative date fields', () => {
+      const dateItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: true
+        }
+      })
+      const valueField =
+        /** @type {{ period: any, unit: any, direction: any }} */ (
+          buildValueField(
+            ConditionType.RelativeDate,
+            2,
+            dateItem,
+            undefined,
+            testFormDefinitionWithMultipleV2Conditions,
+            undefined
+          )
+        )
+      expect(valueField.period).toBeDefined()
+      expect(valueField.unit).toBeDefined()
+      expect(valueField.direction).toBeDefined()
+    })
+
     test('should throw if invalid field type', () => {
       const stringItem = /** @type {ConditionDataV2} */ ({
         id: '1',
