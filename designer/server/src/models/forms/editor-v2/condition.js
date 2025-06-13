@@ -59,6 +59,35 @@ export function isRelativeDate(operator) {
 }
 
 /**
+ * Determine if the condition/operator combination should use NumberValue
+ * NumberValue is used when the operator is HasLength, IsLongerThan or IsShorterThan
+ * or if the component is a NumberField
+ * @param { ConditionalComponentsDef | undefined } component
+ * @param { OperatorName | undefined } operator
+ */
+export function isConditionRequiresNumberValue(component, operator) {
+  if (!operator) {
+    return false
+  }
+
+  if (
+    [
+      OperatorName.HasLength,
+      OperatorName.IsLongerThan,
+      OperatorName.IsShorterThan
+    ].includes(operator)
+  ) {
+    return true
+  }
+
+  if (!component) {
+    return false
+  }
+
+  return component.type === ComponentType.NumberField
+}
+
+/**
  * @param { ConditionalComponentsDef | undefined } selectedComponent
  * @param { OperatorName | undefined } operatorValue
  * @returns
@@ -67,12 +96,14 @@ export function getConditionType(selectedComponent, operatorValue) {
   if (hasListField(selectedComponent)) {
     return ConditionType.ListItemRef
   } else if (selectedComponent?.type === ComponentType.YesNoField) {
-    return ConditionType.ListItemRef
+    return ConditionType.BooleanValue
   } else if (
     selectedComponent?.type === ComponentType.DatePartsField &&
     isRelativeDate(operatorValue)
   ) {
     return ConditionType.RelativeDate
+  } else if (isConditionRequiresNumberValue(selectedComponent, operatorValue)) {
+    return ConditionType.NumberValue
   } else {
     return ConditionType.StringValue
   }

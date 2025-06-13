@@ -106,7 +106,7 @@ describe('editor-v2 - condition model', () => {
         type: ComponentType.YesNoField
       })
       expect(getConditionType(component, undefined)).toBe(
-        ConditionType.ListItemRef
+        ConditionType.BooleanValue
       )
     })
 
@@ -131,6 +131,90 @@ describe('editor-v2 - condition model', () => {
     test('should return StringValue if missing field', () => {
       expect(getConditionType(undefined, undefined)).toBe(
         ConditionType.StringValue
+      )
+    })
+
+    test('should return NumberValue if number field', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.NumberField
+      })
+      expect(getConditionType(component, OperatorName.Is)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsNot)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsAtLeast)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsAtMost)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsLessThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsMoreThan)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Text field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.TextField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Multiline field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.MultilineTextField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Email field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.EmailAddressField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Telephone field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.TelephoneNumberField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
       )
     })
   })

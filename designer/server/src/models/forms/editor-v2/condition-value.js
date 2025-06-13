@@ -2,8 +2,7 @@ import {
   ConditionType,
   DateDirections,
   DateUnits,
-  getYesNoList,
-  isConditionBooleanValueDataV2
+  getYesNoList
 } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
@@ -180,9 +179,10 @@ export function buildValueField(
           }
         },
         classes: 'govuk-radios--small',
-        value: isConditionBooleanValueDataV2(item.value)
-          ? item.value.value.toString()
-          : undefined,
+        value:
+          'value' in item && 'value' in item.value
+            ? item.value.value.toString()
+            : undefined,
         items: getYesNoList().items.map((itm) => {
           return { text: itm.text, value: itm.value.toString() }
         }),
@@ -201,6 +201,25 @@ export function buildValueField(
         value:
           'value' in item && 'value' in item.value
             ? item.value.value
+            : undefined,
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+      }
+    }
+
+    case ConditionType.NumberValue: {
+      return {
+        id: `items[${idx}].value`,
+        name: `items[${idx}][value][value]`,
+        label: {
+          text: 'Enter a value'
+        },
+        classes: 'govuk-input--width-5',
+        attributes: {
+          inputmode: 'numeric'
+        },
+        value:
+          'value' in item && 'value' in item.value
+            ? item.value.value.toString()
             : undefined,
         ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
       }
