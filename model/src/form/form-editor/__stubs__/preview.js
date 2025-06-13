@@ -86,6 +86,11 @@ export class QuestionPreviewElements {
    */
   _shortDesc = ''
   /**
+   * @type {string}
+   * @protected
+   */
+  _content = ''
+  /**
    *
    * @type {ListElement[]}
    * @private
@@ -97,21 +102,26 @@ export class QuestionPreviewElements {
   /**
    * @param {BaseSettings} baseSettings
    */
-  constructor({ question, hintText, optional, shortDesc, items }) {
+  constructor({ question, hintText, optional, shortDesc, items, content }) {
     this._question = question
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
     this._items = items
+    this._content = content
   }
 
+  /**
+   * @returns {BaseSettings}
+   */
   get values() {
     return {
       question: this._question,
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
-      items: this._items
+      items: this._items,
+      content: this._content
     }
   }
 
@@ -165,7 +175,8 @@ export const baseElements = /** @type {BaseSettings} */ ({
   optional: false,
   question: 'Which quest would you like to pick?',
   hintText: 'Choose one adventure that best suits you.',
-  shortDesc: ''
+  shortDesc: '',
+  content: ''
 })
 
 const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'

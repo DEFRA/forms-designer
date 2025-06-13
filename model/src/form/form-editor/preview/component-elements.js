@@ -26,7 +26,8 @@ export class ComponentElements {
       hintText: '',
       optional: !required,
       shortDesc: '',
-      items: []
+      items: [],
+      content: ''
     }
   }
 

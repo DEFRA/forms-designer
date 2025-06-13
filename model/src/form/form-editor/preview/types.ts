@@ -21,6 +21,7 @@ export interface BaseSettings {
   optional: boolean
   shortDesc: string
   items: ListElement[]
+  content: string
 }
 
 export interface DefaultComponent {
@@ -36,6 +37,7 @@ export interface GovukFieldset {
 export interface QuestionBaseModel {
   id?: string
   name?: string
+  content?: string
   label?: DefaultComponent
   hint?: DefaultComponent
   fieldset?: GovukFieldset
