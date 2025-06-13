@@ -263,7 +263,7 @@ export class ListQuestion extends Question {
 
 /**
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
- * @import { SelectionComponentsDef } from '~/src/components/types.js'
+ * @import { SelectionComponentsDef, ListComponentsDef } from '~/src/components/types.js'
  * @import { List, Item } from '~/src/form/form-definition/types.js'
  * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset, BaseSettings, QuestionElements } from '~/src/form/form-editor/preview/types.js'
  */

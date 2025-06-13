@@ -1,9 +1,10 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { ComponentElements } from '~/src/form/form-editor/preview/component-elements.js'
 
 /**
  * @implements {QuestionElements}
  */
-export class QuestionComponentElements {
+export class QuestionComponentElements extends ComponentElements {
   /**
    * @type {FormComponentsDef}
    * @protected
@@ -13,6 +14,7 @@ export class QuestionComponentElements {
    * @param {FormComponentsDef} component
    */
   constructor(component) {
+    super(component)
     this._component = component
   }
 
@@ -21,37 +23,11 @@ export class QuestionComponentElements {
    * @returns {BaseSettings}
    */
   _getValues() {
-    const required = this._component.options.required ?? true
-
     return {
-      question: this._component.title,
+      ...super._getValues(),
       hintText: this._component.hint ?? '',
-      optional: !required,
-      shortDesc: this._component.shortDescription ?? '',
-      items: []
+      shortDesc: this._component.shortDescription ?? ''
     }
-  }
-
-  /**
-   * @returns {BaseSettings}
-   */
-  get values() {
-    const values = this._getValues()
-    return values
-  }
-
-  /**
-   * @param {HTMLElement} _element
-   */
-  setPreviewDOM(_element) {
-    throw new Error('Not implemented')
-  }
-
-  /**
-   * @param {string} _value
-   */
-  setPreviewHTML(_value) {
-    throw new Error('Not implemented')
   }
 }
 
@@ -96,7 +72,7 @@ export class Question {
 
   /**
    * @type {QuestionElements}
-   * @private
+   * @protected
    */
   _htmlElements
 
@@ -273,6 +249,6 @@ export class Question {
 
 /**
  * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { FormComponentsDef } from '~/src/components/types.js'
+ * @import { FormComponentsDef, ContentComponentsDef, ComponentDef } from '~/src/components/types.js'
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
  */

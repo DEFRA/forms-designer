@@ -1,8 +1,8 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
+import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
 import { Question } from '~/src/index.js'
 
-export class SelectQuestion extends ListQuestion {
+export class SelectSortableQuestion extends ListSortableQuestion {
   _questionTemplate = Question.PATH + 'selectfield.njk'
   /**
    * @type {ComponentType}

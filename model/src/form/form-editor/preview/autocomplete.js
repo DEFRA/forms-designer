@@ -2,6 +2,28 @@ import { ComponentType } from '~/src/components/enums.js'
 import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
+export class AutocompleteListQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.AutocompleteField
+  _questionTemplate = Question.PATH + 'autocompletefield.njk'
+  /**
+   * @type {string}
+   * @protected
+   */
+  _fieldName = 'autoCompleteField'
+
+  /**
+   * @returns {Partial<QuestionBaseModel>}
+   */
+  get customRenderFields() {
+    return {
+      items: this._htmlElements.values.items
+    }
+  }
+}
+
 export class AutocompleteQuestion extends Question {
   /**
    * @type {ComponentType}
@@ -18,7 +40,6 @@ export class AutocompleteQuestion extends Question {
    * @private
    */
   _autocompleteList = []
-
   /**
    * @param {AutocompleteElements} autocompleteElements
    * @param {QuestionRenderer} questionRenderer
@@ -68,5 +89,5 @@ export class AutocompleteQuestion extends Question {
 /**
  * @import { ValidationResult } from 'joi'
  * @import { ListElement } from '~/src/form/form-editor/types.js'
- * @import { AutocompleteElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { AutocompleteElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  */
