@@ -1,4 +1,18 @@
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
+import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
+
+/**
+ * @type {QuestionRenderer}
+ */
+const questionRenderer = {
+  /**
+   * @param {string} _questionTemplate
+   * @param {QuestionBaseModel} _questionBaseModel
+   */
+  render(_questionTemplate, _questionBaseModel) {
+    //
+  }
+}
 
 /**
  * @implements {PagePreviewPanelMacro}
@@ -35,12 +49,15 @@ export class PreviewPageController {
   #guidanceText = ''
 
   /**
-   * @param {Question[]} components
+   * @param {ComponentDef[]} components
    * @param {PageOverviewElements} elements
+   * @param {FormDefinition} definition
    * @param {PageRenderer} renderer
    */
-  constructor(components, elements, renderer) {
-    this._components = components
+  constructor(components, elements, definition, renderer) {
+    this._components = components.map(
+      mapComponentToPreviewQuestion(questionRenderer, definition)
+    )
     this.#title = elements.heading
     this.#guidanceText = elements.guidance
     this.#pageRenderer = renderer
@@ -132,7 +149,9 @@ export class PreviewPageController {
 }
 
 /**
- * @import { PageRenderer, PageOverviewElements } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PageOverviewElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
+ * @import { FormDefinition } from '~/src/form/form-definition/types.js'
+ * @import { ComponentDef } from '~/src/components/types.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
  */

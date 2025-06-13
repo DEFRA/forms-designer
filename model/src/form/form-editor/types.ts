@@ -403,7 +403,7 @@ export interface QuestionSessionState {
     radioId?: string
     radioText?: string
     radioHint?: string
-    radioValue?: string | boolean
+    radioValue?: ListValue
     expanded?: boolean
   }
   listItems?: ListItem[]
