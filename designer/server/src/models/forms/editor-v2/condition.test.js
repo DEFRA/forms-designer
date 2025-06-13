@@ -161,6 +161,33 @@ describe('editor-v2 - condition model', () => {
       expect(res.operator?.items[1].text).toBe('Is')
       expect(res.operator?.items[2].text).toBe('Is not')
     })
+
+    test('should blank out the operator if operator value not applicable to component', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [
+            { id: 'comp1', type: ComponentType.RadiosField, value: 'something' }
+          ],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1',
+        operator: 'invalid'
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.operator?.value).toBeUndefined()
+    })
   })
 })
 
