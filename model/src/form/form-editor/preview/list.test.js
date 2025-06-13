@@ -1,8 +1,14 @@
 import {
+  buildList,
+  buildListItem,
+  buildRadiosComponent
+} from '~/src/__stubs__/components.js'
+import {
   QuestionPreviewElements,
   QuestionRendererStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
 import {
+  ListComponentElements,
   ListQuestion,
   listsElementToMap
 } from '~/src/form/form-editor/preview/list.js'
@@ -243,6 +249,78 @@ describe('list', () => {
       preview.updateText(baronListItemId, '')
       expect(preview.list[3].text).toBe('Item text')
       expect(listsElementToMap(undefined)).toEqual(new Map([]))
+    })
+  })
+
+  describe('ListComponentElements', () => {
+    it('should map a component base to ListComponentElements', () => {
+      const listId = '09a829e5-7f75-4a19-a98a-28f7033faafd'
+      const radiosComponent = buildRadiosComponent({
+        title: 'Form field title',
+        hint: 'Hint text',
+        name: 'FFT',
+        options: {
+          required: true
+        },
+        shortDescription: 'shortDesc',
+        list: listId
+      })
+      const listId1 = '5eb1938e-ea77-48b3-9668-ff7ecf85d698'
+      const listId2 = '7c53794d-cca0-49e2-9290-507720edad96'
+      const listId3 = '9fcd3ad3-01b2-48a2-bbd1-0f1be957048c'
+
+      const list = buildList({
+        id: listId,
+        items: [
+          buildListItem({
+            id: listId1,
+            text: 'England',
+            value: 'en',
+            hint: {
+              text: 'hint'
+            }
+          }),
+          buildListItem({
+            id: listId2,
+            text: 'France',
+            value: 'fr'
+          }),
+          buildListItem({
+            id: listId3,
+            text: 'Germany',
+            value: 'de'
+          })
+        ]
+      })
+      expect(new ListComponentElements(radiosComponent, list).values).toEqual({
+        question: 'Form field title',
+        hintText: 'Hint text',
+        optional: false,
+        shortDesc: 'shortDesc',
+        items: [
+          {
+            id: listId1,
+            text: 'England',
+            label: { text: 'England', classes: '' },
+            value: 'en',
+            hint: {
+              text: 'hint'
+            }
+          },
+          {
+            id: listId2,
+            text: 'France',
+            label: { text: 'France', classes: '' },
+            value: 'fr'
+          },
+          {
+            id: listId3,
+            text: 'Germany',
+            label: { text: 'Germany', classes: '' },
+            value: 'de'
+          }
+        ]
+      })
     })
   })
 })

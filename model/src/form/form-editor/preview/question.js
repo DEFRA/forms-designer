@@ -5,18 +5,19 @@ import { ComponentType } from '~/src/components/enums.js'
  */
 export class QuestionComponentElements {
   /**
-   * @type {ComponentDef}
+   * @type {FormComponentsDef}
    * @protected
    */
   _component
   /**
-   * @param {ComponentDef} component
+   * @param {FormComponentsDef} component
    */
   constructor(component) {
     this._component = component
   }
 
   /**
+   * @protected
    * @returns {BaseSettings}
    */
   _getValues() {
@@ -24,9 +25,9 @@ export class QuestionComponentElements {
 
     return {
       question: this._component.title,
-      hintText: this._component.hint,
+      hintText: this._component.hint ?? '',
       optional: !required,
-      shortDesc: this._component.shortDescription,
+      shortDesc: this._component.shortDescription ?? '',
       items: []
     }
   }
@@ -272,6 +273,6 @@ export class Question {
 
 /**
  * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { ComponentDef } from '~/src/components/types.js'
+ * @import { FormComponentsDef } from '~/src/components/types.js'
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
  */
