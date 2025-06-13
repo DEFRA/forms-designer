@@ -26,7 +26,31 @@
   {% endif %}
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-full">
+      {% if pages | length > 0 %}
+        <div class="govuk-grid-row govuk-!-margin-bottom-0">
+          <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0">{{ pages | length }} page{{ 's' if pages | length != 1 else '' }}</h2>
+          </div>
+          <div class="govuk-grid-column-one-half govuk-!-margin-bottom-6">
+            {% if rightSideActions %}
+              <div style="text-align: right; display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 0;">
+                {% for action in rightSideActions %}
+                  {{ govukButton({
+                    text: action.text,
+                    href: action.href,
+                    classes: action.classes + " govuk-!-margin-bottom-0",
+                    attributes: action.attributes + " style='white-space: nowrap; padding: 12px 18px; font-size: 18px; min-width: auto; margin-bottom: 0;'",
+                    element: "a"
+                  }) }}
+                {% endfor %}
+              </div>
+            {% endif %}
+          </div>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-0 govuk-!-margin-bottom-5">
+      {% endif %}
+
       <form class="form">
           {% for page in pages %}
             <div class="govuk-grid-row page-row">
@@ -45,24 +69,6 @@
             </div>
           {% endfor %}
       </form>
-    </div>
-
-    <div class="govuk-grid-column-one-third">
-      {% if rightSideActions %}
-        <div class="govuk-!-margin-left-4" style="text-align: right; margin-top: 20px;">
-          {% for action in rightSideActions %}
-            <div style="white-space: nowrap; display: inline-block; min-width: 200px;">
-              {{ govukButton({
-                text: action.text,
-                href: action.href,
-                classes: action.classes + " govuk-!-margin-bottom-2",
-                attributes: action.attributes + " style='width: 100%; text-align: center; min-width: 200px;'",
-                element: "a"
-              }) }}
-            </div>
-          {% endfor %}
-        </div>
-      {% endif %}
     </div>
   </div>
 {% endcall %}

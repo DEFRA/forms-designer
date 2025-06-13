@@ -53,12 +53,14 @@ describe('Editor v2 pages routes', () => {
     const $actions = container.getAllByRole('button')
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
-    expect($pageTitles[0]).toHaveTextContent('End pages')
+    expect($pageTitles[0]).toHaveTextContent('1 page')
+    expect($pageTitles[1]).toHaveTextContent('End pages')
 
-    expect($actions).toHaveLength(5)
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Add new page')
-    expect($actions[3]).toHaveTextContent('Upload a form')
-    expect($actions[4]).toHaveTextContent('Download this form')
+    expect($actions[3]).toHaveTextContent('Manage conditions')
+    expect($actions[4]).toHaveTextContent('Upload a form')
+    expect($actions[5]).toHaveTextContent('Download this form')
   })
 
   test('GET - should check correct formData is rendered in the view with multiple pages', async () => {
@@ -134,15 +136,17 @@ describe('Editor v2 pages routes', () => {
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
 
-    expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
-    expect($pageTitles[1]).toHaveTextContent('Page 2: Page two')
-    expect($pageTitles[2]).toHaveTextContent('End pages')
+    expect($pageTitles[0]).toHaveTextContent('3 pages')
+    expect($pageTitles[1]).toHaveTextContent('Page 1: Page one')
+    expect($pageTitles[2]).toHaveTextContent('Page 2: Page two')
+    expect($pageTitles[3]).toHaveTextContent('End pages')
 
-    expect($actions).toHaveLength(6)
+    expect($actions).toHaveLength(7)
     expect($actions[2]).toHaveTextContent('Add new page')
     expect($actions[3]).toHaveTextContent('Re-order pages')
-    expect($actions[4]).toHaveTextContent('Upload a form')
-    expect($actions[5]).toHaveTextContent('Download this form')
+    expect($actions[4]).toHaveTextContent('Manage conditions')
+    expect($actions[5]).toHaveTextContent('Upload a form')
+    expect($actions[6]).toHaveTextContent('Download this form')
   })
 
   test('GET - should redirect to migration to v2 if draft definition schema is v1', async () => {

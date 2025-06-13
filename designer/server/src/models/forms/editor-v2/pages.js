@@ -187,11 +187,17 @@ function buildReorderAction(slug) {
 }
 
 /**
- * Build right side actions (upload/download)
+ * Build right side actions (manage conditions, upload/download)
  * @param {string} slug
  */
 function buildRightSideActions(slug) {
   return [
+    {
+      text: 'Manage conditions',
+      href: editorv2Path(slug, 'conditions'),
+      classes: BUTTON_SECONDARY_CLASS,
+      attributes: null
+    },
     {
       text: 'Upload a form',
       href: editorv2Path(slug, 'upload'),
