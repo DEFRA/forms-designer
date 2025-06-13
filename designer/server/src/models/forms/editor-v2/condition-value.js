@@ -13,9 +13,15 @@ const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 /**
  * @param { ErrorDetails | undefined } formErrors
  * @param {number} idx
+ * @param {string} fieldValueName
  * @param { string | undefined } fieldValue
  */
-export function insertDateValidationErrors(formErrors, idx, fieldValue) {
+export function insertDateValidationErrors(
+  formErrors,
+  idx,
+  fieldValueName,
+  fieldValue
+) {
   if (fieldValue && fieldValue !== '') {
     return {}
   }
@@ -23,7 +29,10 @@ export function insertDateValidationErrors(formErrors, idx, fieldValue) {
   return {
     ...(formError && {
       errorMessage: {
-        text: formError.text
+        text: formError.text.replace(
+          'condition value',
+          `condition value ${fieldValueName}`
+        )
       }
     })
   }
@@ -48,7 +57,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: 'govuk-input--width-10',
     value: periodValue,
-    ...insertDateValidationErrors(formErrors, idx, periodValue)
+    ...insertDateValidationErrors(formErrors, idx, 'period', periodValue)
   }
 
   // Unit select field
@@ -65,7 +74,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value: unitValue,
-    ...insertDateValidationErrors(formErrors, idx, unitValue)
+    ...insertDateValidationErrors(formErrors, idx, 'unit', unitValue)
   }
 
   // Direction select field
@@ -84,7 +93,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value: directionValue,
-    ...insertDateValidationErrors(formErrors, idx, directionValue)
+    ...insertDateValidationErrors(formErrors, idx, 'direction', directionValue)
   }
 
   return {
