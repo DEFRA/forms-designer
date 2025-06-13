@@ -138,6 +138,29 @@ describe('editor-v2 - condition-value', () => {
       })
     })
 
+    test('should return list value field with undefined value', () => {
+      const listItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const selectedComponent =
+        testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.ListItemRef,
+          2,
+          listItem,
+          selectedComponent,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
+    })
+
     test('should return string value field', () => {
       const stringItem = /** @type {ConditionDataV2} */ ({
         id: '1',
@@ -164,6 +187,27 @@ describe('editor-v2 - condition-value', () => {
         value: 'stringval',
         classes: 'govuk-input--width-10'
       })
+    })
+
+    test('should return string value field with undefined value', () => {
+      const stringItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.StringValue,
+          2,
+          stringItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
     })
 
     test('should return boolean value field', () => {
@@ -198,6 +242,27 @@ describe('editor-v2 - condition-value', () => {
           { text: 'No', value: 'false' }
         ]
       })
+    })
+
+    test('should return boolean value field with undefined value', () => {
+      const booleanItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.BooleanValue,
+          2,
+          booleanItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
     })
 
     test('should return relative date fields', () => {
