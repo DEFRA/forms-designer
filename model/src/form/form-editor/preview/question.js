@@ -19,7 +19,7 @@ export class QuestionComponentElements {
   /**
    * @returns {BaseSettings}
    */
-  get values() {
+  _getValues() {
     const required = this._component.options.required ?? true
 
     return {
@@ -29,6 +29,14 @@ export class QuestionComponentElements {
       shortDesc: this._component.shortDescription,
       items: []
     }
+  }
+
+  /**
+   * @returns {BaseSettings}
+   */
+  get values() {
+    const values = this._getValues()
+    return values
   }
 
   /**
