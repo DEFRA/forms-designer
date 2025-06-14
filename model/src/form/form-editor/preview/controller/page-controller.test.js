@@ -1,21 +1,47 @@
 import {
   buildList,
   buildListItem,
+  buildMarkdownComponent,
   buildRadiosComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import { buildQuestionPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
+import { PageRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
 import {
   PagePreviewElements,
-  PageRendererStub
-} from '~/src/form/form-editor/__stubs__/preview.js'
-import { PreviewPageController } from '~/src/form/form-editor/preview/controller/page-controller.js'
+  PreviewPageController
+} from '~/src/form/form-editor/preview/controller/page-controller.js'
 
 describe('page-controller', () => {
   afterEach(() => {
     jest.resetAllMocks()
+  })
+
+  describe('PagePreviewElements', () => {
+    it('should map a page to PagePreviewElements', () => {
+      const pageQuestion = buildQuestionPage({
+        title: 'Page title',
+        components: []
+      })
+      const pagePreviewElements = new PagePreviewElements(pageQuestion)
+      expect(pagePreviewElements.heading).toBe('Page title')
+      expect(pagePreviewElements.guidance).toBe('')
+    })
+    it('should map a page  with guidance to PagePreviewElements', () => {
+      const pageQuestion = buildQuestionPage({
+        title: 'Page title',
+        components: [
+          buildMarkdownComponent({
+            content: '# This is a heading'
+          })
+        ]
+      })
+      const pagePreviewElements = new PagePreviewElements(pageQuestion)
+      expect(pagePreviewElements.heading).toBe('Page title')
+      expect(pagePreviewElements.guidance).toBe('# This is a heading')
+    })
   })
   describe('PreviewPageController', () => {
     const pageRenderMock = jest.fn()
@@ -38,18 +64,18 @@ describe('page-controller', () => {
       title: 'List component',
       list: listId
     })
+    const pageTitle = 'Page title'
     const page = buildQuestionPage({
+      title: pageTitle,
       components: [textFieldComponent, listComponent]
     })
-    const pageTitle = 'Page title'
     const formDefinition = buildDefinition({ pages: [page], lists: [list] })
     /**
      *
      * @param {{
      *    definition?: FormDefinition,
      *    components?: ComponentDef[],
-     *    heading?: string;
-     *    guidance?: string
+     *    currentPage?: Page
      * }} partialElements
      * @returns {{
      *  pageElements: PagePreviewElements,
@@ -58,14 +84,13 @@ describe('page-controller', () => {
      * }}
      */
     const buildController = ({
-      heading = pageTitle,
-      guidance = '',
+      currentPage = page,
       definition = formDefinition,
       components = [textFieldComponent, listComponent]
     } = {}) => {
       const pageRenderMock = jest.fn()
       const renderer = new PageRendererStub(pageRenderMock)
-      const pageElements = new PagePreviewElements(heading, guidance)
+      const pageElements = new PagePreviewElements(currentPage)
 
       const pageController = new PreviewPageController(
         components,
@@ -169,7 +194,7 @@ describe('page-controller', () => {
     it('should return the title of the first component should one not exist', () => {
       const pageController = new PreviewPageController(
         [textFieldComponent],
-        new PagePreviewElements(''),
+        new PagePreviewElements(buildQuestionPage({ title: '' })),
         buildDefinition({
           pages: [buildQuestionPage({ components: [textFieldComponent] })]
         }),
@@ -185,6 +210,6 @@ describe('page-controller', () => {
 })
 
 /**
- * @import { FormDefinition } from '~/src/form/form-definition/types.js'
+ * @import { FormDefinition, Page } from '~/src/form/form-definition/types.js'
  * @import { ComponentDef } from '~/src/components/types.js'
  */

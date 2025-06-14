@@ -1,5 +1,7 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
+import { hasComponents } from '~/src/pages/helpers.js'
 
 /**
  * @type {QuestionRenderer}
@@ -11,6 +13,39 @@ const questionRenderer = {
    */
   render(_questionTemplate, _questionBaseModel) {
     //
+  }
+}
+
+/**
+ * @implements {PageOverviewElements}
+ */
+export class PagePreviewElements {
+  /**
+   * @type {Page}
+   * @private
+   */
+  _page
+  /**
+   * @param {Page} page
+   */
+  constructor(page) {
+    this._page = page
+  }
+
+  get heading() {
+    return this._page.title
+  }
+
+  get guidance() {
+    if (!hasComponents(this._page) || !this._page.components.length) {
+      return ''
+    }
+
+    const [possibleGuidanceComponent] = this._page.components
+
+    return possibleGuidanceComponent.type === ComponentType.Markdown
+      ? possibleGuidanceComponent.content
+      : ''
   }
 }
 
@@ -151,7 +186,7 @@ export class PreviewPageController {
 /**
  * @import { PageRenderer, PageOverviewElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
- * @import { FormDefinition } from '~/src/form/form-definition/types.js'
+ * @import { FormDefinition, Page } from '~/src/form/form-definition/types.js'
  * @import { ComponentDef } from '~/src/components/types.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
  */

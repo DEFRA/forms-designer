@@ -2,10 +2,12 @@ import { ComponentType } from '~/src/components/enums.js'
 import { AutocompleteListQuestion } from '~/src/form/form-editor/preview/autocomplete.js'
 import { CheckboxQuestion } from '~/src/form/form-editor/preview/checkbox.js'
 import { ComponentElements } from '~/src/form/form-editor/preview/component-elements.js'
+import { ContentElements } from '~/src/form/form-editor/preview/content.js'
 import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
 import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
+import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
 import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
@@ -19,20 +21,21 @@ import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
 import {
   ListComponentElements,
   QuestionComponentElements,
+  hasContentField,
   hasInputField,
   hasListField,
   hasSelectionFields
 } from '~/src/index.js'
 
 /**
- * @type {Record<ComponentType, typeof Question>}
+ * @type {Record<ComponentType, typeof PreviewComponent>}
  */
 const InputFieldComponentDictionary = {
   [ComponentType.TextField]: ShortAnswerQuestion,
   [ComponentType.Details]: ShortAnswerQuestion,
   [ComponentType.InsetText]: ShortAnswerQuestion,
   [ComponentType.Html]: ShortAnswerQuestion,
-  [ComponentType.Markdown]: ShortAnswerQuestion,
+  [ComponentType.Markdown]: Markdown,
   [ComponentType.List]: ListQuestion,
   [ComponentType.EmailAddressField]: EmailAddressQuestion,
   [ComponentType.NumberField]: NumberOnlyQuestion,
@@ -70,6 +73,8 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
         component.type === ComponentType.YesNoField
       ) {
         questionElements = new QuestionComponentElements(component)
+      } else if (hasContentField(component)) {
+        questionElements = new ContentElements(component)
       } else {
         questionElements = new ComponentElements(component)
       }
@@ -84,6 +89,7 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
 /**
  * @import { QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
+ * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
  * @import { Item, FormDefinition } from '~/src/form/form-definition/types.js'
  * @import { FormComponentsDef, ComponentDef } from '~/src/components/types.js'
  */

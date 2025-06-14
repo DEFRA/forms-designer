@@ -6,6 +6,7 @@ import {
   buildFileUploadComponent,
   buildList,
   buildListItem,
+  buildMarkdownComponent,
   buildMonthYearFieldComponent,
   buildMultilineTextFieldComponent,
   buildNumberFieldComponent,
@@ -25,6 +26,7 @@ import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
 import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
+import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
 import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
@@ -76,6 +78,11 @@ describe('helpers', () => {
         type: 'TextFieldComponent',
         buildComponent: buildTextFieldComponent,
         expected: ShortAnswerQuestion
+      },
+      {
+        type: 'Markdown',
+        buildComponent: buildMarkdownComponent,
+        expected: Markdown
       },
       {
         type: 'EmailAddressFieldComponent',
