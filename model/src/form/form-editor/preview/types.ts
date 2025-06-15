@@ -45,6 +45,7 @@ export interface QuestionBaseModel {
   text?: string
   formGroup?: { afterInputs: { html: string } }
   type?: 'text' | 'number' | 'boolean'
+  classes?: string
 }
 
 export type ListenerRow = [

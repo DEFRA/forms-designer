@@ -1,8 +1,8 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
+import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { hasComponents } from '~/src/pages/helpers.js'
-
 /**
  * @type {QuestionRenderer}
  */
@@ -78,10 +78,6 @@ export class PreviewPageController {
    * @protected
    */
   _highlighted = undefined
-  /**
-   * @type {string}
-   */
-  #guidanceText = ''
 
   /**
    * @param {ComponentDef[]} components
@@ -93,8 +89,8 @@ export class PreviewPageController {
     this._components = components.map(
       mapComponentToPreviewQuestion(questionRenderer, definition)
     )
+
     this.#title = elements.heading
-    this.#guidanceText = elements.guidance
     this.#pageRenderer = renderer
   }
 
@@ -109,18 +105,33 @@ export class PreviewPageController {
   }
 
   set guidanceText(text) {
-    this.#guidanceText = text
+    this._guidanceComponent.content = text
     this.render()
   }
 
   get guidanceText() {
-    return this.#guidanceText
+    return this._guidanceComponent ? this._guidanceComponent.content : ''
+  }
+
+  get guidanceClasses() {
+    return this._guidanceComponent
+      ? this._guidanceComponent.renderInput.classes
+      : ''
+  }
+
+  /**
+   * @returns {undefined|Markdown}
+   * @private
+   */
+  get _guidanceComponent() {
+    const [firstComponent] = this._components
+    return firstComponent instanceof Markdown ? firstComponent : undefined
   }
 
   get guidance() {
     return {
-      text: this.#guidanceText,
-      classes: this._highlighted === 'guidance' ? HIGHLIGHT_CLASS : ''
+      text: this.guidanceText,
+      classes: this.guidanceClasses
     }
   }
 
@@ -166,7 +177,8 @@ export class PreviewPageController {
   }
 
   highlightGuidance() {
-    this.setHightlighted('guidance')
+    this._guidanceComponent?.highlightContent()
+    this.render()
   }
 
   /**
@@ -179,6 +191,7 @@ export class PreviewPageController {
 
   clearHighlight() {
     this._highlighted = undefined
+    this._guidanceComponent?.unHighlightContent()
     this.render()
   }
 }

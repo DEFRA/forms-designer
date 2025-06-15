@@ -18,6 +18,7 @@ describe('markdown', () => {
       expect(res.renderInput).toEqual({
         id: 'markdown',
         name: 'markdown',
+        classes: '',
         content: '<h1>This is a heading</h1>\n'
       })
       expect(res.titleText).toBe('Which quest would you like to pick?')

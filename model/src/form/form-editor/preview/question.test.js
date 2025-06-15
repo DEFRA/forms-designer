@@ -18,6 +18,7 @@ describe('question', () => {
       expect(res.renderInput).toEqual({
         id: 'inputField',
         name: 'inputField',
+        classes: '',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'
@@ -58,6 +59,7 @@ describe('question', () => {
       expect(res.renderInput).toEqual({
         id: 'inputField',
         name: 'inputField',
+        classes: '',
         label: {
           text: 'Question',
           classes: 'govuk-label--l'

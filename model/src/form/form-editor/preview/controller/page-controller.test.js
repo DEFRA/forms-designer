@@ -111,6 +111,7 @@ describe('page-controller', () => {
       const expectedPageComponent = {
         model: {
           id: 'inputField',
+          classes: '',
           name: 'inputField',
           label: {
             classes: 'govuk-label--l',
@@ -177,15 +178,29 @@ describe('page-controller', () => {
     })
 
     it('should render if you change the guidance', () => {
-      const newGuidance = 'Updated Guidance'
-      const { pageController, pageRenderMock } = buildController()
+      const newGuidance = 'This is some NEW guidance'
+      const expectedGuidance = '<p>This is some NEW guidance</p>\n'
+      const guidanceComponent = buildMarkdownComponent({
+        content: 'This is some guidance'
+      })
+      const pageWithGuidance = buildQuestionPage({
+        ...page,
+        components: [guidanceComponent, ...page.components]
+      })
+      const formDefinitionWithGuidance = buildDefinition({
+        ...formDefinition,
+        pages: [pageWithGuidance]
+      })
+      const { pageController, pageRenderMock } = buildController({
+        currentPage: pageWithGuidance,
+        components: pageWithGuidance.components,
+        definition: formDefinitionWithGuidance
+      })
       pageController.highlightGuidance()
       pageController.guidanceText = newGuidance
-      expect(pageController.guidanceText).toBe(newGuidance)
-      expect(pageController.guidance).toEqual({
-        text: newGuidance,
-        classes: 'highlight'
-      })
+      expect(pageController.guidanceText).toBe(expectedGuidance)
+      expect(pageController.components[0].model.content).toBe(expectedGuidance)
+      expect(pageController.guidance.classes).toBe('highlight')
       pageController.clearHighlight()
       expect(pageController.guidance.classes).toBe('')
       expect(pageRenderMock).toHaveBeenCalledTimes(3)

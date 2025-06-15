@@ -15,6 +15,7 @@ describe('Long Answer', () => {
     expect(res.renderInput).toEqual({
       id: 'longAnswerField',
       name: 'longAnswerField',
+      classes: '',
       label: {
         text: 'Which quest would you like to pick?',
         classes: 'govuk-label--l'

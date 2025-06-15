@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 
 /**
  * @abstract
@@ -38,6 +39,11 @@ export class PreviewComponent {
    * @protected
    */
   _htmlElements
+  /**
+   * @type {boolean}
+   * @protected
+   */
+  _highlighted = false
 
   /**
    * @param {QuestionElements} htmlElements
@@ -122,7 +128,8 @@ export class PreviewComponent {
   _renderInput() {
     return {
       id: this._fieldName,
-      name: this._fieldName
+      name: this._fieldName,
+      classes: this._highlighted ? HIGHLIGHT_CLASS : ''
     }
   }
 
@@ -180,6 +187,20 @@ export class PreviewComponent {
   set highlight(value) {
     this._highlight = value
     this.render()
+  }
+
+  /**
+   * no render
+   */
+  highlightContent() {
+    this._highlighted = true
+  }
+
+  /**
+   * no render
+   */
+  unHighlightContent() {
+    this._highlighted = false
   }
 }
 
