@@ -199,7 +199,8 @@ function buildListItemValueField(
   definition,
   validation
 ) {
-  const valueObj = /** @type {ConditionListItemRefValueDataV2} */ (item.value)
+  const valueObj =
+    /** @type { ConditionListItemRefValueDataV2 | undefined } */ (item.value)
 
   return {
     id: `items[${idx}].value`,
@@ -210,7 +211,7 @@ function buildListItemValueField(
       }
     },
     classes: GOVUK_RADIOS_SMALL,
-    value: valueObj.itemId,
+    value: valueObj?.itemId,
     items: getListFromComponent(selectedComponent, definition)?.items.map(
       (itm) => {
         return { text: itm.text, value: itm.id ?? itm.value }
