@@ -201,8 +201,7 @@ describe('editor-v2 - condition-value', () => {
       const stringItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {}
+        operator: 'is'
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -255,8 +254,7 @@ describe('editor-v2 - condition-value', () => {
       const booleanItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {}
+        operator: 'is'
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -307,7 +305,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {}
+        valueType: ConditionType.DateValue
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -357,8 +355,7 @@ describe('editor-v2 - condition-value', () => {
       const numberItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {}
+        operator: 'is'
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -380,7 +377,7 @@ describe('editor-v2 - condition-value', () => {
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
         value: {
-          value: true
+          period: 5
         }
       })
       const valueField =
@@ -400,13 +397,11 @@ describe('editor-v2 - condition-value', () => {
     })
 
     test('should throw if invalid field type', () => {
-      const stringItem = /** @type {ConditionDataV2} */ ({
+      const stringItem = /** @type {unknown} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: 'stringval'
-        }
+        valueType: 'invalid'
       })
       expect(() =>
         buildValueField(

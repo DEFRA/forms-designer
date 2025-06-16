@@ -231,7 +231,7 @@ describe('Editor v2 condition routes', () => {
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
         new Joi.ValidationError(
-          'items[0] must be of type object. items[1] must be of type object. items[2] must be of type object. Select a question. Enter a condition value. items[3].type is not allowed. Choose how you want to combine conditions',
+          'items[0].id must be a valid GUID. Select a question. Enter a condition value',
           [],
           undefined
         ),
@@ -259,10 +259,8 @@ describe('Editor v2 condition routes', () => {
           'items[0].[id]': 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
           'items[0].[componentId]': 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
           'items[0].[operator]': OperatorName.Is,
-          'items[0].[value]': {
-            type: ConditionType.StringValue,
-            value: 'test1'
-          },
+          'items[0].[valueType]': ConditionType.StringValue,
+          'items[0].[value]': 'test1',
           displayName: 'Condition name',
           id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
           coordinator: 'and'
@@ -290,10 +288,8 @@ describe('Editor v2 condition routes', () => {
               componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
               id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
               operator: 'is',
-              value: {
-                type: 'StringValue',
-                value: 'test1'
-              }
+              valueType: 'StringValue',
+              value: 'test1'
             }
           ]
         }
@@ -320,10 +316,8 @@ describe('Editor v2 condition routes', () => {
           'items[0].[id]': 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
           'items[0].[componentId]': 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
           'items[0].[operator]': OperatorName.Is,
-          'items[0].[value]': {
-            type: ConditionType.StringValue,
-            value: 'test1'
-          },
+          'items[0].[valueType]': ConditionType.StringValue,
+          'items[0].[value]': 'test1',
           displayName: 'Condition name',
           id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
           coordinator: 'and'
@@ -351,10 +345,8 @@ describe('Editor v2 condition routes', () => {
               componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
               id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
               operator: 'is',
-              value: {
-                type: 'StringValue',
-                value: 'test1'
-              }
+              valueType: 'StringValue',
+              value: 'test1'
             }
           ]
         }
