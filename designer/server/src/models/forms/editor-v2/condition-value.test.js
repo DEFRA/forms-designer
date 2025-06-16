@@ -275,6 +275,59 @@ describe('editor-v2 - condition-value', () => {
       expect(valueField.value).toBeUndefined()
     })
 
+    test('should return number value field', () => {
+      const numberItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: 1,
+          type: ConditionType.NumberValue
+        }
+      })
+      const valueField = buildValueField(
+        ConditionType.NumberValue,
+        2,
+        numberItem,
+        undefined,
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        label: {
+          text: 'Enter a value'
+        },
+        id: 'items[2].value',
+        name: 'items[2][value][value]',
+        value: '1',
+        classes: 'govuk-input--width-5',
+        attributes: {
+          inputmode: 'numeric'
+        }
+      })
+    })
+
+    test('should return number value field with undefined value', () => {
+      const numberItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.NumberValue,
+          2,
+          numberItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
+    })
+
     test('should return relative date fields', () => {
       const dateItem = /** @type {ConditionDataV2} */ ({
         id: '1',
