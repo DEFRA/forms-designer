@@ -40,7 +40,7 @@ const stateIdSchema = Joi.string().optional()
 const componentIdSchema = conditionDataSchemaV2.extract('componentId')
 const operatorSchema = conditionDataSchemaV2.extract('operator')
 const valueSchema = conditionDataSchemaV2.extract('value')
-const valueTypeSchema = conditionDataSchemaV2.extract('valueType')
+const typeSchema = conditionDataSchemaV2.extract('type')
 
 /**
  * @type {Joi.ObjectSchema<ConditionWrapperPayload>}
@@ -70,7 +70,7 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
         .messages({
           '*': 'Select a condition type'
         }),
-      valueType: valueTypeSchema
+      type: typeSchema
         .when('operator', {
           not: operatorSchema,
           then: Joi.optional() // Only validate the value if the operator is valid

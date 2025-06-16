@@ -271,7 +271,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       .valid(...Object.values(OperatorName))
       .required()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
-    valueType: Joi.string()
+    type: Joi.string()
       .trim()
       .valid(...Object.values(ConditionType))
       .required()
@@ -279,7 +279,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     value: Joi.any()
       .required()
       .description('The actual value to compare against')
-      .when('valueType', {
+      .when('type', {
         switch: [
           { is: ConditionType.BooleanValue, then: Joi.boolean() },
           { is: ConditionType.StringValue, then: Joi.string() },

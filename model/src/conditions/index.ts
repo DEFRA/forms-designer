@@ -34,6 +34,7 @@ export {
   isConditionDateValueDataV2,
   isConditionListItemRefValueDataV2,
   isConditionNumberValueDataV2,
+  isConditionRelativeDateValueDataV2,
   isConditionStringValueDataV2,
   isConditionWrapper,
   isConditionWrapperV2,

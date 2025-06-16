@@ -182,7 +182,7 @@ describe('editor-v2 - model', () => {
           id: 'cattle-farm-check',
           componentId,
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'cattle'
         }
       ]
@@ -217,14 +217,14 @@ describe('editor-v2 - model', () => {
             id: 'organic-farming-check',
             componentId,
             operator: OperatorName.Is,
-            valueType: ConditionType.StringValue,
+            type: ConditionType.StringValue,
             value: 'organic'
           },
           {
             id: 'subsidy-eligibility-check',
             componentId,
             operator: OperatorName.IsNot,
-            valueType: ConditionType.StringValue,
+            type: ConditionType.StringValue,
             value: 'conventional'
           }
         ]
@@ -268,7 +268,7 @@ describe('editor-v2 - model', () => {
             id: 'farming-type-check',
             componentId,
             operator: OperatorName.Is,
-            valueType: ConditionType.ListItemRef,
+            type: ConditionType.ListItemRef,
             value: {
               itemId: 'cat1',
               listId: 'farming-types-list'
@@ -318,7 +318,7 @@ describe('editor-v2 - model', () => {
           id: 'cattle-farm-check',
           componentId,
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'cattle'
         }
       ]

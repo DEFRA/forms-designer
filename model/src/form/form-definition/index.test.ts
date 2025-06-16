@@ -414,7 +414,7 @@ describe('Form definition schema', () => {
         id: '923086db-02d1-4e80-9d7c-ca1b20101de9',
         componentId: 'd8115721-7b71-4587-8a93-6499d3a3f94c',
         operator: OperatorName.Is,
-        valueType: ConditionType.StringValue,
+        type: ConditionType.StringValue,
         value: stringValueConditionData
       }
 
@@ -422,7 +422,7 @@ describe('Form definition schema', () => {
         id: '43c2fc24-de68-4495-80f8-485bc8e5384b',
         componentId: '91c22b37-75a0-4d59-8879-6b9790e694f7',
         operator: OperatorName.IsLessThan,
-        valueType: ConditionType.RelativeDate,
+        type: ConditionType.RelativeDate,
         value: relativeDateConditionData
       }
 
@@ -430,7 +430,7 @@ describe('Form definition schema', () => {
         id: '8a85e45a-c577-4748-a095-3a86d782b336',
         componentId: '69272c34-5acb-42cd-b9fe-38ad58e3a524',
         operator: OperatorName.Is,
-        valueType: ConditionType.ListItemRef,
+        type: ConditionType.ListItemRef,
         value: listItemRefConditionData
       }
 

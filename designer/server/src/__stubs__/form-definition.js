@@ -970,7 +970,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
           id: 'bd071563-1261-4e5c-ab30-05dde59b86f6',
           componentId: '154271c2-79a2-4b59-b535-d210a13dbfe9',
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'bob'
         }
       ]
@@ -983,7 +983,7 @@ export const testFormDefinitionWithMultipleV2Conditions = {
           id: '7ccd81c7-6c44-4de2-9c2b-fc917b7e9f35',
           componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'red'
         }
       ]

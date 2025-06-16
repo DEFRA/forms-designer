@@ -66,7 +66,7 @@ describe('editor-v2 - condition-value', () => {
         id: 'id',
         componentId: 'componentId',
         operator: OperatorName.Is,
-        valueType: ConditionType.RelativeDate,
+        type: ConditionType.RelativeDate,
         value: {
           period: 5,
           unit: 'months',
@@ -175,7 +175,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        valueType: ConditionType.StringValue,
+        type: ConditionType.StringValue,
         value: 'stringval'
       })
       const valueField = buildValueField(
@@ -222,7 +222,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        valueType: ConditionType.BooleanValue,
+        type: ConditionType.BooleanValue,
         value: true
       })
       const valueField = buildValueField(
@@ -275,7 +275,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        valueType: ConditionType.DateValue,
+        type: ConditionType.DateValue,
         value: '2024-02-01'
       })
       const valueField = buildValueField(
@@ -305,7 +305,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        valueType: ConditionType.DateValue
+        type: ConditionType.DateValue
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -326,7 +326,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        valueType: ConditionType.NumberValue,
+        type: ConditionType.NumberValue,
         value: 1
       })
       const valueField = buildValueField(
@@ -401,7 +401,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        valueType: 'invalid'
+        type: 'invalid'
       })
       expect(() =>
         buildValueField(

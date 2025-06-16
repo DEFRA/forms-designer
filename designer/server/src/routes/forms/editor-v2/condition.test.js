@@ -179,7 +179,7 @@ describe('Editor v2 condition routes', () => {
               id: '1',
               componentId: '',
               operator: OperatorName.Is,
-              valueType: ConditionType.StringValue,
+              type: ConditionType.StringValue,
               value: ''
             }
           ]
@@ -194,7 +194,7 @@ describe('Editor v2 condition routes', () => {
           'items[0][id]': '1',
           'items[0][componentId]': '',
           'items[0][operator]': OperatorName.Is,
-          'items[0][valueType]': ConditionType.StringValue,
+          'items[0][type]': ConditionType.StringValue,
           'items[0][value]': ''
         }
       }
@@ -220,7 +220,7 @@ describe('Editor v2 condition routes', () => {
                 id: '1',
                 componentId: '',
                 operator: 'is',
-                valueType: 'StringValue',
+                type: 'StringValue',
                 value: ''
               }
             ]
@@ -259,7 +259,7 @@ describe('Editor v2 condition routes', () => {
           'items[0].[id]': 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
           'items[0].[componentId]': 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
           'items[0].[operator]': OperatorName.Is,
-          'items[0].[valueType]': ConditionType.StringValue,
+          'items[0].[type]': ConditionType.StringValue,
           'items[0].[value]': 'test1',
           displayName: 'Condition name',
           id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
@@ -288,7 +288,7 @@ describe('Editor v2 condition routes', () => {
               componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
               id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
               operator: 'is',
-              valueType: 'StringValue',
+              type: 'StringValue',
               value: 'test1'
             }
           ]
@@ -316,7 +316,7 @@ describe('Editor v2 condition routes', () => {
           'items[0].[id]': 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
           'items[0].[componentId]': 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
           'items[0].[operator]': OperatorName.Is,
-          'items[0].[valueType]': ConditionType.StringValue,
+          'items[0].[type]': ConditionType.StringValue,
           'items[0].[value]': 'test1',
           displayName: 'Condition name',
           id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
@@ -345,7 +345,7 @@ describe('Editor v2 condition routes', () => {
               componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
               id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
               operator: 'is',
-              valueType: 'StringValue',
+              type: 'StringValue',
               value: 'test1'
             }
           ]

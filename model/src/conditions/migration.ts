@@ -20,27 +20,27 @@ import {
 } from '~/src/form/form-definition/types.js'
 
 export function isConditionListItemRefValueDataV2(condition: ConditionDataV2) {
-  return condition.valueType === ConditionType.ListItemRef
+  return condition.type === ConditionType.ListItemRef
 }
 
 export function isConditionStringValueDataV2(condition: ConditionDataV2) {
-  return condition.valueType === ConditionType.StringValue
+  return condition.type === ConditionType.StringValue
 }
 
 export function isConditionBooleanValueDataV2(condition: ConditionDataV2) {
-  return condition.valueType === ConditionType.BooleanValue
+  return condition.type === ConditionType.BooleanValue
 }
 
 export function isConditionNumberValueDataV2(condition: ConditionDataV2) {
-  return condition.valueType === ConditionType.NumberValue
+  return condition.type === ConditionType.NumberValue
 }
 
 export function isConditionDateValueDataV2(condition: ConditionDataV2) {
-  return condition.valueType === ConditionType.DateValue
+  return condition.type === ConditionType.DateValue
 }
 
 export function isConditionRelativeDateValueDataV2(condition: ConditionDataV2) {
-  return condition.valueType === ConditionType.RelativeDate
+  return condition.type === ConditionType.RelativeDate
 }
 
 function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {

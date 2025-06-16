@@ -52,7 +52,7 @@ describe('Editor v2 conditions routes', () => {
         id: 'cattle-farm-check',
         componentId,
         operator: OperatorName.Is,
-        valueType: ConditionType.StringValue,
+        type: ConditionType.StringValue,
         value: 'cattle'
       }
     ]

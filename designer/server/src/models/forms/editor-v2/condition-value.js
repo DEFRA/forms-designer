@@ -2,7 +2,11 @@ import {
   ConditionType,
   DateDirections,
   DateUnits,
-  getYesNoList
+  getYesNoList,
+  isConditionBooleanValueDataV2,
+  isConditionDateValueDataV2,
+  isConditionNumberValueDataV2,
+  isConditionStringValueDataV2
 } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
@@ -19,7 +23,7 @@ const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
  * @param { ErrorDetails | undefined } formErrors
  * @param {number} idx
  * @param {string} fieldValueName
- * @param { string | undefined } fieldValue
+ * @param { string | number | undefined } fieldValue
  */
 export function insertDateValidationErrors(
   formErrors,
@@ -45,15 +49,18 @@ export function insertDateValidationErrors(
 
 /**
  * @param {number} idx
- * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @param { Partial<ConditionDataV2> } item
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function relativeDateValueViewModel(idx, item, validation) {
   const { formErrors } = validation ?? {}
 
+  const valueObj = /** @type { RelativeDateValueDataV2 | undefined } */ (
+    item.value
+  )
+
   // Period text field
-  const periodValue =
-    'value' in item && 'period' in item.value ? item.value.period : undefined
+  const periodValue = valueObj?.period
   const period = {
     id: `items[${idx}].value`,
     name: `items[${idx}][value][period]`,
@@ -66,8 +73,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
   }
 
   // Unit select field
-  const unitValue =
-    'value' in item && 'unit' in item.value ? item.value.unit : undefined
+  const unitValue = valueObj?.unit
   const unit = {
     id: `items[${idx}].value.unit`,
     name: `items[${idx}][value][unit]`,
@@ -83,10 +89,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
   }
 
   // Direction select field
-  const directionValue =
-    'value' in item && 'direction' in item.value
-      ? item.value.direction
-      : undefined
+  const directionValue = valueObj?.direction
   const direction = {
     id: `items[${idx}].value.direction`,
     name: `items[${idx}][value][direction]`,
@@ -196,6 +199,8 @@ function buildListItemValueField(
   definition,
   validation
 ) {
+  const valueObj = /** @type {ConditionListItemRefValueDataV2} */ (item.value)
+
   return {
     id: `items[${idx}].value`,
     name: `items[${idx}][value][itemId]`,
@@ -205,8 +210,7 @@ function buildListItemValueField(
       }
     },
     classes: GOVUK_RADIOS_SMALL,
-    value:
-      'value' in item && 'itemId' in item.value ? item.value.itemId : undefined,
+    value: valueObj.itemId,
     items: getListFromComponent(selectedComponent, definition)?.items.map(
       (itm) => {
         return { text: itm.text, value: itm.id ?? itm.value }
@@ -231,7 +235,10 @@ function buildBooleanValueField(idx, item, validation) {
       }
     },
     classes: GOVUK_RADIOS_SMALL,
-    value: 'value' in item ? item.value.toString() : undefined,
+    value:
+      isConditionBooleanValueDataV2(item) && typeof item.value === 'boolean'
+        ? item.value.toString()
+        : undefined,
     items: getYesNoList().items.map((itm) => {
       return { text: itm.text, value: itm.value.toString() }
     }),
@@ -255,7 +262,7 @@ export function buildDateValueField(idx, item, validation) {
       text: 'Format must be YYYY-MM-DD'
     },
     classes: GOVUK_INPUT_WIDTH_10,
-    value: 'value' in item ? item.value : undefined,
+    value: isConditionDateValueDataV2(item) ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
@@ -273,7 +280,7 @@ function buildStringValueField(idx, item, validation) {
       text: 'Enter a value'
     },
     classes: GOVUK_INPUT_WIDTH_10,
-    value: 'value' in item ? item.value : undefined,
+    value: isConditionStringValueDataV2(item) ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
@@ -294,13 +301,16 @@ function buildNumberValueField(idx, item, validation) {
     attributes: {
       inputmode: 'numeric'
     },
-    value: 'value' in item ? item.value.toString() : undefined,
+    value:
+      isConditionNumberValueDataV2(item) && typeof item.value === 'number'
+        ? item.value.toString()
+        : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
 
 /**
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionListItemRefValueDataV2, FormDefinition, FormEditor, List, RelativeDateValueDataV2 } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

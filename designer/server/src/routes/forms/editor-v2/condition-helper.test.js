@@ -97,10 +97,8 @@ describe('Editor v2 condition helper', () => {
             id: 'cattle-farm-check',
             componentId,
             operator: OperatorName.Is,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'cattle'
-            }
+            type: ConditionType.StringValue,
+            value: 'cattle'
           }
         ]
       }
@@ -128,10 +126,8 @@ describe('Editor v2 condition helper', () => {
               id: expect.any(String),
               componentId: 'farm-type-field',
               operator: 'is',
-              value: {
-                type: 'StringValue',
-                value: 'cattle'
-              }
+              type: 'StringValue',
+              value: 'cattle'
             }
           ]
         },
@@ -144,10 +140,8 @@ describe('Editor v2 condition helper', () => {
               id: expect.any(String),
               componentId: 'farm-type-field',
               operator: 'is',
-              value: {
-                type: 'StringValue',
-                value: 'cattle'
-              }
+              type: 'StringValue',
+              value: 'cattle'
             }
           ]
         },

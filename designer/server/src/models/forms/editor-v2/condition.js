@@ -191,7 +191,7 @@ export function buildConditionsFields(
       ? getListFromComponent(selectedComponent, definition)?.id
       : undefined
 
-  const conditionTypeName = `items[${idx}][valueType]`
+  const conditionTypeName = `items[${idx}][type]`
 
   const listIdName =
     conditionType === ConditionType.ListItemRef

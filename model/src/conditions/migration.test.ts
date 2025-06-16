@@ -36,14 +36,14 @@ describe('Migration', () => {
           id: 'condition1',
           componentId: 'component1',
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'test'
         },
         {
           id: 'condition2',
           componentId: 'component2',
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'test2'
         }
       ]
@@ -63,7 +63,7 @@ describe('Migration', () => {
           id: 'condition1',
           componentId: 'component1',
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'test'
         }
       ]
@@ -116,7 +116,7 @@ describe('Migration', () => {
           id: 'condition1',
           componentId: 'nonExistentComponent',
           operator: OperatorName.Is,
-          valueType: ConditionType.StringValue,
+          type: ConditionType.StringValue,
           value: 'test'
         }
       ]
@@ -139,7 +139,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
-            valueType: ConditionType.ListItemRef,
+            type: ConditionType.ListItemRef,
             value: {
               listId: 'list1',
               itemId: 'item1'
@@ -210,7 +210,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
-            valueType: ConditionType.ListItemRef,
+            type: ConditionType.ListItemRef,
             value: {
               listId: 'nonExistentList',
               itemId: 'item1'
@@ -245,7 +245,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
-            valueType: ConditionType.ListItemRef,
+            type: ConditionType.ListItemRef,
             value: {
               listId: 'list1',
               itemId: 'nonExistentItem'
@@ -290,7 +290,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.IsAfter,
-            valueType: ConditionType.RelativeDate,
+            type: ConditionType.RelativeDate,
             value: {
               period: 7,
               unit: DateUnits.DAYS,
@@ -349,7 +349,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
-            valueType: ConditionType.BooleanValue,
+            type: ConditionType.BooleanValue,
             value: true
           }
         ]
@@ -403,7 +403,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
-            valueType: ConditionType.NumberValue,
+            type: ConditionType.NumberValue,
             value: 1
           }
         ]
@@ -458,7 +458,7 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
-            valueType: ConditionType.DateValue,
+            type: ConditionType.DateValue,
             value: '2001-01-01'
           }
         ]

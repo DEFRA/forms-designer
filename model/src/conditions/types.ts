@@ -59,7 +59,7 @@ export interface ConditionDataV2 {
   id: string
   componentId: string
   operator: OperatorName
-  valueType: ConditionType
+  type: ConditionType
   value: ConditionValueDataV2
 }
 
