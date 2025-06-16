@@ -45,6 +45,33 @@ export function insertDateValidationErrors(
 }
 
 /**
+ * @param {ConditionValueDataV2} value
+ * @param {number} idx
+ */
+export function buildDateItems(value, idx) {
+  return [
+    {
+      label: 'Day',
+      name: `items[${idx}][value][day]`,
+      value: 'day' in value ? value.day : undefined,
+      classes: 'govuk-input--width-2'
+    },
+    {
+      label: 'Month',
+      name: `items[${idx}][value][month]`,
+      value: 'month' in value ? value.month : undefined,
+      classes: 'govuk-input--width-2'
+    },
+    {
+      label: 'Year',
+      name: `items[${idx}][value][year]`,
+      value: 'year' in value ? value.year : undefined,
+      classes: 'govuk-input--width-4'
+    }
+  ]
+}
+
+/**
  * @param {number} idx
  * @param { ConditionDataV2 | ConditionRefDataV2 } item
  * @param {ValidationFailure<FormEditor>} [validation]
@@ -190,6 +217,20 @@ export function buildValueField(
       }
     }
 
+    case ConditionType.DateValue: {
+      return {
+        id: `items[${idx}].[value]`,
+        name: `items[${idx}][value][value]`,
+        fieldset: {
+          legend: {
+            text: 'Enter a date'
+          }
+        },
+        items: buildDateItems(item.value, idx),
+        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+      }
+    }
+
     case ConditionType.StringValue: {
       return {
         id: `items[${idx}].value`,
@@ -218,6 +259,6 @@ export function buildValueField(
 
 /**
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionValueDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
