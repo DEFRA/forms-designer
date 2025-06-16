@@ -64,6 +64,66 @@ describe('Editor v2 condition helper', () => {
       processErrorMessages(error)
       expect(error.details[0].message).toBe('A Joi error')
     })
+
+    test('should modify error message if relative date period', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'Enter a condition value',
+          path: ['1', '2'],
+          type: 'error',
+          context: {
+            key: 'period'
+          }
+        }
+      ])
+      const error = new Joi.ValidationError(
+        'Enter a condition value',
+        items,
+        {}
+      )
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('Enter a condition value period')
+    })
+
+    test('should modify error message if relative date unit', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'Enter a condition value',
+          path: ['1', '2'],
+          type: 'error',
+          context: {
+            key: 'unit'
+          }
+        }
+      ])
+      const error = new Joi.ValidationError(
+        'Enter a condition value',
+        items,
+        {}
+      )
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('Enter a condition value unit')
+    })
+
+    test('should modify error message if relative date direction', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'Enter a condition value',
+          path: ['1', '2'],
+          type: 'error',
+          context: {
+            key: 'direction'
+          }
+        }
+      ])
+      const error = new Joi.ValidationError(
+        'Enter a condition value',
+        items,
+        {}
+      )
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('Enter a condition value direction')
+    })
   })
 
   describe('buildSessionState', () => {
