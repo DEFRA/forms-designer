@@ -1,5 +1,3 @@
-import { Readable } from 'stream'
-
 import { StatusCodes } from 'http-status-codes'
 
 import { testFormDefinitionWithSummaryOnly } from '~/src/__stubs__/form-definition.js'
@@ -8,53 +6,13 @@ import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   flashErrorAndRedirect,
-  isValidFormDefinition
+  isValidFormDefinition,
+  validateFileSelected
 } from '~/src/routes/forms/editor-v2/upload.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
-
-/**
- * Create a mock file stream for testing
- * @param {string} content - The file content
- * @param {string} filename - The filename
- */
-function createMockFileStream(content, filename) {
-  const stream = new Readable({
-    read() {
-      // Push a Buffer so Buffer.concat() in readStreamAsString works
-      this.push(Buffer.from(content, 'utf8'))
-      this.push(null) // End the stream
-    }
-  })
-
-  // @ts-expect-error - hapi property for testing
-  stream.hapi = { filename }
-
-  return stream
-}
-
-/**
- * Build multipart payload for server.inject
- * @param {string} content JSON string content for the file
- * @param {string} filename filename e.g. test-form.json
- */
-function buildMultipartPayload(content, filename) {
-  const boundary = '---------------------------9051914041544843365972754266'
-  const eol = '\r\n'
-  const payload = Buffer.from(
-    `--${boundary}${eol}` +
-      `Content-Disposition: form-data; name="formDefinition"; filename="${filename}"${eol}` +
-      `Content-Type: application/json${eol}${eol}` +
-      content +
-      `${eol}--${boundary}--${eol}`
-  )
-  return {
-    payload,
-    headers: { 'content-type': `multipart/form-data; boundary=${boundary}` }
-  }
-}
 
 describe('Editor v2 upload routes', () => {
   /** @type {Server} */
@@ -123,7 +81,7 @@ describe('Editor v2 upload routes', () => {
   })
 
   describe('POST /library/{slug}/editor-v2/upload', () => {
-    test('should redirect with error when no file is selected', async () => {
+    test('should redirect with error when no file is selected (empty object)', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
       const options = {
@@ -131,7 +89,7 @@ describe('Editor v2 upload routes', () => {
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
         payload: {
-          formDefinition: null
+          formDefinition: {} // Empty object when no file selected
         }
       }
 
@@ -143,19 +101,14 @@ describe('Editor v2 upload routes', () => {
       expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
     })
 
-    test('should redirect with error when file is not JSON', async () => {
+    test('should redirect with error when no formDefinition in payload', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
       const options = {
         method: 'post',
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
-        payload: {
-          formDefinition: createMockFileStream(
-            'not json content',
-            'test-form.txt'
-          )
-        }
+        payload: {} // Missing formDefinition entirely
       }
 
       const {
@@ -166,30 +119,7 @@ describe('Editor v2 upload routes', () => {
       expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
     })
 
-    test('should redirect with error when file contains invalid JSON', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/upload',
-        auth,
-        payload: {
-          formDefinition: createMockFileStream(
-            '{ invalid json }',
-            'test-form.json'
-          )
-        }
-      }
-
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
-    })
-
-    test('should redirect with error when JSON is valid but not a form definition', async () => {
+    test('should redirect with error when form definition is invalid', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
       const invalidFormDefinition = {
@@ -202,10 +132,7 @@ describe('Editor v2 upload routes', () => {
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
         payload: {
-          formDefinition: createMockFileStream(
-            JSON.stringify(invalidFormDefinition),
-            'test-form.json'
-          )
+          formDefinition: invalidFormDefinition
         }
       }
 
@@ -232,10 +159,7 @@ describe('Editor v2 upload routes', () => {
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
         payload: {
-          formDefinition: createMockFileStream(
-            JSON.stringify(invalidFormDefinition),
-            'test-form.json'
-          )
+          formDefinition: invalidFormDefinition
         }
       }
 
@@ -262,10 +186,7 @@ describe('Editor v2 upload routes', () => {
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
         payload: {
-          formDefinition: createMockFileStream(
-            JSON.stringify(invalidFormDefinition),
-            'test-form.json'
-          )
+          formDefinition: invalidFormDefinition
         }
       }
 
@@ -283,17 +204,13 @@ describe('Editor v2 upload routes', () => {
         .mocked(forms.updateDraftFormDefinition)
         .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
 
-      const { payload, headers } = buildMultipartPayload(
-        JSON.stringify(testFormDefinitionWithSummaryOnly),
-        'test-form.json'
-      )
-
       const options = {
         method: 'post',
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
-        payload,
-        headers
+        payload: {
+          formDefinition: testFormDefinitionWithSummaryOnly
+        }
       }
 
       const {
@@ -315,17 +232,13 @@ describe('Editor v2 upload routes', () => {
         .mocked(forms.updateDraftFormDefinition)
         .mockRejectedValueOnce(new Error('Update failed'))
 
-      const { payload, headers } = buildMultipartPayload(
-        JSON.stringify(testFormDefinitionWithSummaryOnly),
-        'test-form.json'
-      )
-
       const options = {
         method: 'post',
         url: '/library/my-form-slug/editor-v2/upload',
         auth,
-        payload,
-        headers
+        payload: {
+          formDefinition: testFormDefinitionWithSummaryOnly
+        }
       }
 
       const {
@@ -340,162 +253,153 @@ describe('Editor v2 upload routes', () => {
         auth.credentials.token
       )
     })
-
-    test('should handle file with no filename property', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-      const stream = new Readable({
-        read() {
-          this.push(Buffer.from('{}', 'utf8'))
-          this.push(null)
-        }
-      })
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/upload',
-        auth,
-        payload: {
-          formDefinition: stream
-        }
-      }
-
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
-    })
-
-    test('should handle file with empty filename', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/upload',
-        auth,
-        payload: {
-          formDefinition: createMockFileStream('{}', '')
-        }
-      }
-
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
-    })
-
-    test('should handle Joi validation error for missing formDefinition', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/upload',
-        auth,
-        payload: {}
-      }
-
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
-    })
   })
 
   describe('Utility functions', () => {
-    test('isValidFormDefinition should validate form structure correctly', () => {
-      const validForm = {
-        pages: [{ id: 'page1', title: 'Test' }],
-        lists: [],
-        sections: [],
-        conditions: []
+    describe('validateFileSelected', () => {
+      const mockHelpers = {
+        error: jest.fn((type) => ({ type, isJoiError: true }))
       }
-      expect(isValidFormDefinition(validForm)).toBe(true)
 
-      const invalidForm1 = {
-        lists: [],
-        sections: [],
-        conditions: []
-      }
-      expect(isValidFormDefinition(invalidForm1)).toBe(false)
-
-      const invalidForm2 = {
-        pages: 'not an array',
-        lists: [],
-        sections: [],
-        conditions: []
-      }
-      expect(isValidFormDefinition(invalidForm2)).toBe(false)
-
-      expect(isValidFormDefinition(null)).toBe(false)
-
-      expect(isValidFormDefinition('string')).toBe(false)
-
-      expect(isValidFormDefinition(undefined)).toBe(false)
-
-      expect(isValidFormDefinition({})).toBe(false)
-
-      const invalidForm3 = {
-        pages: null,
-        lists: [],
-        sections: [],
-        conditions: []
-      }
-      expect(isValidFormDefinition(invalidForm3)).toBe(false)
-    })
-
-    test('isValidFormDefinition should work with testFormDefinitionWithSummaryOnly', () => {
-      expect(isValidFormDefinition(testFormDefinitionWithSummaryOnly)).toBe(
-        true
-      )
-    })
-
-    test('readStreamAsString should work with mock streams', async () => {
-      const { readStreamAsString } = await import(
-        '~/src/routes/forms/editor-v2/upload.js'
-      )
-      const testContent = JSON.stringify(testFormDefinitionWithSummaryOnly)
-      const stream = createMockFileStream(testContent, 'test.json')
-
-      const result = await readStreamAsString(stream)
-      expect(result).toBe(testContent)
-
-      const parsedResult = JSON.parse(result)
-      expect(parsedResult).toEqual(testFormDefinitionWithSummaryOnly)
-    })
-
-    test('flashErrorAndRedirect should create proper error response', () => {
-      const mockH = {
-        redirect: jest.fn().mockReturnThis(),
-        code: jest.fn().mockReturnThis()
-      }
-      const mockYar = {
-        flash: jest.fn()
-      }
-      const slug = 'test-form'
-      const errorMessage = 'Test error message'
-
-      const result = flashErrorAndRedirect(mockH, mockYar, slug, errorMessage)
-
-      expect(mockYar.flash).toHaveBeenCalledWith('uploadValidationFailure', {
-        formErrors: {
-          formDefinition: {
-            text: errorMessage,
-            href: '#formDefinition'
-          }
-        },
-        formValues: {}
+      beforeEach(() => {
+        jest.clearAllMocks()
       })
-      expect(mockH.redirect).toHaveBeenCalledWith(
-        '/library/test-form/editor-v2/upload'
-      )
-      expect(mockH.code).toHaveBeenCalledWith(StatusCodes.SEE_OTHER)
-      expect(result).toBe(mockH)
+
+      test('should return error for empty object (no file selected)', () => {
+        const result = validateFileSelected({}, mockHelpers)
+        expect(mockHelpers.error).toHaveBeenCalledWith('any.required')
+        expect(result).toEqual({ type: 'any.required', isJoiError: true })
+      })
+
+      test('should return parsed object as-is when already valid', () => {
+        const validObject = { pages: [], lists: [] }
+        const result = validateFileSelected(validObject, mockHelpers)
+        expect(result).toBe(validObject)
+        expect(mockHelpers.error).not.toHaveBeenCalled()
+      })
+
+      test('should parse valid JSON string', () => {
+        const jsonString = '{"pages": [], "lists": []}'
+        const result = validateFileSelected(jsonString, mockHelpers)
+        expect(result).toEqual({ pages: [], lists: [] })
+        expect(mockHelpers.error).not.toHaveBeenCalled()
+      })
+
+      test('should parse valid JSON buffer', () => {
+        const jsonBuffer = Buffer.from('{"pages": [], "lists": []}', 'utf8')
+        const result = validateFileSelected(jsonBuffer, mockHelpers)
+        expect(result).toEqual({ pages: [], lists: [] })
+        expect(mockHelpers.error).not.toHaveBeenCalled()
+      })
+
+      test('should return error for invalid JSON string', () => {
+        const invalidJson = '{"invalid": json}'
+        const result = validateFileSelected(invalidJson, mockHelpers)
+        expect(mockHelpers.error).toHaveBeenCalledWith('custom.invalidJson')
+        expect(result).toEqual({ type: 'custom.invalidJson', isJoiError: true })
+      })
+
+      test('should return error for invalid JSON buffer', () => {
+        const invalidJsonBuffer = Buffer.from('not json at all', 'utf8')
+        const result = validateFileSelected(invalidJsonBuffer, mockHelpers)
+        expect(mockHelpers.error).toHaveBeenCalledWith('custom.invalidJson')
+        expect(result).toEqual({ type: 'custom.invalidJson', isJoiError: true })
+      })
+
+      test('should handle non-string, non-buffer, non-object values that are valid JSON', () => {
+        const result = validateFileSelected(123, mockHelpers)
+        // When we pass 123, it gets converted to String(123) = "123", then JSON.parse("123") = 123
+        // Since JSON.parse("123") succeeds, it returns the parsed number
+        expect(result).toBe(123)
+        expect(mockHelpers.error).not.toHaveBeenCalled()
+      })
+
+      test('should handle values that fail JSON parsing', () => {
+        const symbol = Symbol('test')
+        const result = validateFileSelected(symbol, mockHelpers)
+        expect(mockHelpers.error).toHaveBeenCalledWith('custom.invalidJson')
+        expect(result).toEqual({ type: 'custom.invalidJson', isJoiError: true })
+      })
+    })
+
+    describe('isValidFormDefinition', () => {
+      test('should validate form structure correctly', () => {
+        const validForm = {
+          pages: [{ id: 'page1', title: 'Test' }],
+          lists: [],
+          sections: [],
+          conditions: []
+        }
+        expect(isValidFormDefinition(validForm)).toBe(true)
+
+        const invalidForm1 = {
+          lists: [],
+          sections: [],
+          conditions: []
+        }
+        expect(isValidFormDefinition(invalidForm1)).toBe(false)
+
+        const invalidForm2 = {
+          pages: 'not an array',
+          lists: [],
+          sections: [],
+          conditions: []
+        }
+        expect(isValidFormDefinition(invalidForm2)).toBe(false)
+
+        expect(isValidFormDefinition(null)).toBe(false)
+
+        expect(isValidFormDefinition('string')).toBe(false)
+
+        expect(isValidFormDefinition(undefined)).toBe(false)
+
+        expect(isValidFormDefinition({})).toBe(false)
+
+        const invalidForm3 = {
+          pages: null,
+          lists: [],
+          sections: [],
+          conditions: []
+        }
+        expect(isValidFormDefinition(invalidForm3)).toBe(false)
+      })
+
+      test('should work with testFormDefinitionWithSummaryOnly', () => {
+        expect(isValidFormDefinition(testFormDefinitionWithSummaryOnly)).toBe(
+          true
+        )
+      })
+    })
+
+    describe('flashErrorAndRedirect', () => {
+      test('should create proper error response', () => {
+        const mockH = {
+          redirect: jest.fn().mockReturnThis(),
+          code: jest.fn().mockReturnThis()
+        }
+        const mockYar = {
+          flash: jest.fn()
+        }
+        const slug = 'test-form'
+        const errorMessage = 'Test error message'
+
+        const result = flashErrorAndRedirect(mockH, mockYar, slug, errorMessage)
+
+        expect(mockYar.flash).toHaveBeenCalledWith('uploadValidationFailure', {
+          formErrors: {
+            formDefinition: {
+              text: errorMessage,
+              href: '#formDefinition'
+            }
+          },
+          formValues: {}
+        })
+        expect(mockH.redirect).toHaveBeenCalledWith(
+          '/library/test-form/editor-v2/upload'
+        )
+        expect(mockH.code).toHaveBeenCalledWith(StatusCodes.SEE_OTHER)
+        expect(result).toBe(mockH)
+      })
     })
   })
 })

@@ -21,7 +21,6 @@ export function uploadViewModel(metadata, definition, validation) {
   const pageTitle = `${pageHeading} - ${pageCaption}`
 
   return {
-    form: metadata,
     backLink: {
       href: editorv2Path(metadata.slug, 'pages'),
       text: 'Back to pages'
@@ -36,11 +35,7 @@ export function uploadViewModel(metadata, definition, validation) {
     },
     errorList: buildErrorList(validation?.formErrors),
     formErrors: validation?.formErrors,
-    formValues: validation?.formValues,
-    uploadAction: editorv2Path(metadata.slug, 'upload'),
-    downloadAction: `/library/${metadata.slug}/editor-v2/download`,
-    currentFormData: JSON.stringify(definition, null, 2),
-    formSlug: metadata.slug
+    downloadAction: `/library/${metadata.slug}/editor-v2/download`
   }
 }
 

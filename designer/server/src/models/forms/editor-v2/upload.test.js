@@ -11,7 +11,6 @@ describe('upload view model', () => {
       )
 
       expect(result).toEqual({
-        form: testFormMetadata,
         backLink: {
           href: '/library/my-form-slug/editor-v2/pages',
           text: 'Back to pages'
@@ -26,15 +25,7 @@ describe('upload view model', () => {
         },
         errorList: [],
         formErrors: undefined,
-        formValues: undefined,
-        uploadAction: '/library/my-form-slug/editor-v2/upload',
-        downloadAction: '/library/my-form-slug/editor-v2/download',
-        currentFormData: JSON.stringify(
-          testFormDefinitionWithSummaryOnly,
-          null,
-          2
-        ),
-        formSlug: 'my-form-slug'
+        downloadAction: '/library/my-form-slug/editor-v2/download'
       })
     })
 
@@ -64,7 +55,6 @@ describe('upload view model', () => {
         }
       ])
       expect(result.formErrors).toEqual(validation.formErrors)
-      expect(result.formValues).toEqual(validation.formValues)
     })
 
     test('should handle validation object with no formErrors', () => {
@@ -82,7 +72,6 @@ describe('upload view model', () => {
 
       expect(result.errorList).toEqual([])
       expect(result.formErrors).toBeUndefined()
-      expect(result.formValues).toEqual(validation.formValues)
     })
 
     test('should handle empty validation object', () => {
@@ -96,7 +85,6 @@ describe('upload view model', () => {
 
       expect(result.errorList).toEqual([])
       expect(result.formErrors).toBeUndefined()
-      expect(result.formValues).toBeUndefined()
     })
 
     test('should generate correct URLs for different form slugs', () => {
@@ -113,26 +101,8 @@ describe('upload view model', () => {
       expect(result.backLink.href).toBe(
         '/library/my-custom-form/editor-v2/pages'
       )
-      expect(result.uploadAction).toBe(
-        '/library/my-custom-form/editor-v2/upload'
-      )
       expect(result.downloadAction).toBe(
         '/library/my-custom-form/editor-v2/download'
-      )
-      expect(result.formSlug).toBe('my-custom-form')
-    })
-
-    test('should stringify form definition correctly', () => {
-      const result = uploadViewModel(
-        testFormMetadata,
-        testFormDefinitionWithSummaryOnly
-      )
-
-      expect(result.currentFormData).toBe(
-        JSON.stringify(testFormDefinitionWithSummaryOnly, null, 2)
-      )
-      expect(JSON.parse(result.currentFormData)).toEqual(
-        testFormDefinitionWithSummaryOnly
       )
     })
 

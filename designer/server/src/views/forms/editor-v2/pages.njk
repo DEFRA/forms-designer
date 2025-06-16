@@ -30,17 +30,17 @@
       {% if pages | length > 0 %}
         <div class="govuk-grid-row govuk-!-margin-bottom-0">
           <div class="govuk-grid-column-one-half">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0" style="margin-top: 10px;">{{ pages | length }} page{{ 's' if pages | length != 1 else '' }}</h2>
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0 app-pages-header__title">{{ pages | length }} page{{ 's' if pages | length != 1 else '' }}</h2>
           </div>
           <div class="govuk-grid-column-one-half govuk-!-margin-bottom-6">
             {% if rightSideActions %}
-              <div style="text-align: right; display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 0;">
+              <div class="app-pages-header__actions">
                 {% for action in rightSideActions %}
                   {{ govukButton({
                     text: action.text,
                     href: action.href,
-                    classes: action.classes + " govuk-!-margin-bottom-0",
-                    attributes: action.attributes + " style='white-space: nowrap; padding: 12px 18px; font-size: 18px; min-width: auto; margin-bottom: 0;'",
+                    classes: action.classes + " govuk-!-margin-bottom-0 app-pages-header__action-button",
+                    attributes: action.attributes,
                     element: "a"
                   }) }}
                 {% endfor %}

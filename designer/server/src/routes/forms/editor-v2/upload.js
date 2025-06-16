@@ -46,18 +46,6 @@ export function flashErrorAndRedirect(h, yar, slug, errorMessage) {
 }
 
 /**
- * Read stream content as string
- * @param {import('stream').Readable} stream
- */
-export async function readStreamAsString(stream) {
-  const chunks = []
-  for await (const chunk of stream) {
-    chunks.push(chunk)
-  }
-  return Buffer.concat(chunks).toString('utf8')
-}
-
-/**
  * Validate form definition structure
  * @param {any} definition
  */
@@ -68,6 +56,34 @@ export function isValidFormDefinition(definition) {
     definition.pages &&
     Array.isArray(definition.pages)
   )
+}
+
+/**
+ * Custom Joi validator for file upload - ensures a file was selected and is valid JSON
+ * @param {any} value
+ * @param {any} helpers
+ */
+export function validateFileSelected(value, helpers) {
+  if (
+    typeof value === 'object' &&
+    !Buffer.isBuffer(value) &&
+    Object.keys(value).length === 0
+  ) {
+    return helpers.error('any.required')
+  }
+
+  if (typeof value === 'object' && !Buffer.isBuffer(value)) {
+    return value
+  }
+
+  try {
+    const jsonString = Buffer.isBuffer(value)
+      ? value.toString('utf8')
+      : String(value)
+    return JSON.parse(jsonString)
+  } catch {
+    return helpers.error('custom.invalidJson')
+  }
 }
 
 export default [
@@ -117,34 +133,9 @@ export default [
 
       const metadata = await forms.get(slug, token)
       const formId = metadata.id
-      const file = payload.formDefinition
+      const formDefinition = payload.formDefinition
 
-      if (!file?.hapi?.filename) {
-        return flashErrorAndRedirect(h, yar, slug, ERROR_MESSAGES.SELECT_FILE)
-      }
-
-      const fileName = file.hapi.filename
-      if (!fileName?.toLowerCase()?.endsWith('.json')) {
-        return flashErrorAndRedirect(
-          h,
-          yar,
-          slug,
-          ERROR_MESSAGES.INVALID_JSON_FILE
-        )
-      }
-
-      let definition
-      try {
-        const fileContent = await readStreamAsString(file)
-        definition = JSON.parse(fileContent)
-      } catch {
-        return flashErrorAndRedirect(
-          h,
-          yar,
-          slug,
-          ERROR_MESSAGES.INVALID_JSON_FILE
-        )
-      }
+      const definition = formDefinition
 
       if (!isValidFormDefinition(definition)) {
         return flashErrorAndRedirect(
@@ -168,15 +159,19 @@ export default [
       payload: {
         parse: true,
         multipart: {
-          output: 'stream'
+          output: 'data'
         },
         maxBytes: 10 * 1024 * 1024 // 10MB limit
       },
       validate: {
         payload: Joi.object({
-          formDefinition: Joi.any().required().messages({
-            'any.required': ERROR_MESSAGES.SELECT_FILE
-          })
+          formDefinition: Joi.any()
+            .required()
+            .custom(validateFileSelected)
+            .messages({
+              'any.required': ERROR_MESSAGES.SELECT_FILE,
+              'custom.invalidJson': ERROR_MESSAGES.INVALID_JSON_FILE
+            })
         }),
         failAction: (request, h, error) => {
           const { yar, url } = request
@@ -188,6 +183,7 @@ export default [
               formErrors,
               formValues: {}
             })
+            return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
           }
 
           return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
