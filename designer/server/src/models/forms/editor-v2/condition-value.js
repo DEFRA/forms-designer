@@ -188,17 +188,7 @@ export function buildValueField(
     }
 
     case ConditionType.DateValue: {
-      return {
-        id: `items[${idx}].[value]`,
-        name: `items[${idx}][value][value]`,
-        fieldset: {
-          legend: {
-            text: 'Enter a date'
-          }
-        },
-        items: buildDateItems(item.value, idx),
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
+      return buildDateValueField(idx, item, validation)
     }
 
     case ConditionType.StringValue: {
@@ -275,6 +265,28 @@ function buildBooleanValueField(idx, item, validation) {
     items: getYesNoList().items.map((itm) => {
       return { text: itm.text, value: itm.value.toString() }
     }),
+    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } item
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+export function buildDateValueField(idx, item, validation) {
+  return {
+    id: `items[${idx}].[value]`,
+    name: `items[${idx}][value][value]`,
+    label: {
+      text: 'Enter a date'
+    },
+    hint: {
+      text: 'Use YYYY-MM-DD format'
+    },
+    classes: 'govuk-input--width-10',
+    value:
+      'value' in item && 'value' in item.value ? item.value.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
