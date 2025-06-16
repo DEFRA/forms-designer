@@ -282,7 +282,7 @@ export function buildDateValueField(idx, item, validation) {
       text: 'Enter a date'
     },
     hint: {
-      text: 'Use YYYY-MM-DD format'
+      text: 'Format must be YYYY-MM-DD'
     },
     classes: 'govuk-input--width-10',
     value:

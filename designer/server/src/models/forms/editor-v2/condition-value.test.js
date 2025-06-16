@@ -275,6 +275,59 @@ describe('editor-v2 - condition-value', () => {
       expect(valueField.value).toBeUndefined()
     })
 
+    test('should return date value field', () => {
+      const dateItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          value: '2024-02-01',
+          type: ConditionType.DateValue
+        }
+      })
+      const valueField = buildValueField(
+        ConditionType.DateValue,
+        2,
+        dateItem,
+        undefined,
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        label: {
+          text: 'Enter a date'
+        },
+        hint: {
+          text: 'Format must be YYYY-MM-DD'
+        },
+        id: 'items[2].[value]',
+        name: 'items[2][value][value]',
+        value: '2024-02-01',
+        classes: 'govuk-input--width-10'
+      })
+    })
+
+    test('should return date value field with undefined value', () => {
+      const dateItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const valueField = /** @type {{ id: string, value: any }} */ (
+        buildValueField(
+          ConditionType.DateValue,
+          2,
+          dateItem,
+          undefined,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.id).toBeDefined()
+      expect(valueField.value).toBeUndefined()
+    })
+
     test('should return number value field', () => {
       const numberItem = /** @type {ConditionDataV2} */ ({
         id: '1',
