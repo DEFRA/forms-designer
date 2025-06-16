@@ -23,7 +23,8 @@ jest.mock('~/src/lib/forms.js')
 function createMockFileStream(content, filename) {
   const stream = new Readable({
     read() {
-      this.push(content)
+      // Push a Buffer so Buffer.concat() in readStreamAsString works
+      this.push(Buffer.from(content, 'utf8'))
       this.push(null) // End the stream
     }
   })
@@ -32,6 +33,27 @@ function createMockFileStream(content, filename) {
   stream.hapi = { filename }
 
   return stream
+}
+
+/**
+ * Build multipart payload for server.inject
+ * @param {string} content JSON string content for the file
+ * @param {string} filename filename e.g. test-form.json
+ */
+function buildMultipartPayload(content, filename) {
+  const boundary = '---------------------------9051914041544843365972754266'
+  const eol = '\r\n'
+  const payload = Buffer.from(
+    `--${boundary}${eol}` +
+      `Content-Disposition: form-data; name="formDefinition"; filename="${filename}"${eol}` +
+      `Content-Type: application/json${eol}${eol}` +
+      content +
+      `${eol}--${boundary}--${eol}`
+  )
+  return {
+    payload,
+    headers: { 'content-type': `multipart/form-data; boundary=${boundary}` }
+  }
 }
 
 describe('Editor v2 upload routes', () => {
@@ -255,16 +277,79 @@ describe('Editor v2 upload routes', () => {
       expect(headers.location).toBe('/library/my-form-slug/editor-v2/upload')
     })
 
+    test('should upload a valid form definition successfully', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.updateDraftFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
+
+      const { payload, headers } = buildMultipartPayload(
+        JSON.stringify(testFormDefinitionWithSummaryOnly),
+        'test-form.json'
+      )
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/upload',
+        auth,
+        payload,
+        headers
+      }
+
+      const {
+        response: { headers: resHeaders, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(resHeaders.location).toBe('/library/my-form-slug/editor-v2/pages')
+      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
+        testFormMetadata.id,
+        testFormDefinitionWithSummaryOnly,
+        auth.credentials.token
+      )
+    })
+
+    test('should redirect with error when updateDraftFormDefinition fails', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.updateDraftFormDefinition)
+        .mockRejectedValueOnce(new Error('Update failed'))
+
+      const { payload, headers } = buildMultipartPayload(
+        JSON.stringify(testFormDefinitionWithSummaryOnly),
+        'test-form.json'
+      )
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/upload',
+        auth,
+        payload,
+        headers
+      }
+
+      const {
+        response: { headers: resHeaders, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(resHeaders.location).toBe('/library/my-form-slug/editor-v2/upload')
+      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
+        testFormMetadata.id,
+        testFormDefinitionWithSummaryOnly,
+        auth.credentials.token
+      )
+    })
+
     test('should handle file with no filename property', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
       const stream = new Readable({
         read() {
-          this.push('{}')
+          this.push(Buffer.from('{}', 'utf8'))
           this.push(null)
         }
       })
-      // No hapi property at all
 
       const options = {
         method: 'post',
@@ -362,6 +447,26 @@ describe('Editor v2 upload routes', () => {
         conditions: []
       }
       expect(isValidFormDefinition(invalidForm3)).toBe(false)
+    })
+
+    test('isValidFormDefinition should work with testFormDefinitionWithSummaryOnly', () => {
+      expect(isValidFormDefinition(testFormDefinitionWithSummaryOnly)).toBe(
+        true
+      )
+    })
+
+    test('readStreamAsString should work with mock streams', async () => {
+      const { readStreamAsString } = await import(
+        '~/src/routes/forms/editor-v2/upload.js'
+      )
+      const testContent = JSON.stringify(testFormDefinitionWithSummaryOnly)
+      const stream = createMockFileStream(testContent, 'test.json')
+
+      const result = await readStreamAsString(stream)
+      expect(result).toBe(testContent)
+
+      const parsedResult = JSON.parse(result)
+      expect(parsedResult).toEqual(testFormDefinitionWithSummaryOnly)
     })
 
     test('flashErrorAndRedirect should create proper error response', () => {
