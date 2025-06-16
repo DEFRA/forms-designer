@@ -39,8 +39,26 @@ describe('Editor v2 condition helper', () => {
       expect(error).toEqual(errorCopy)
     })
 
+    test('should not set error if number is 0', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'A Joi error',
+          path: [1, 0],
+          type: 'error'
+        }
+      ])
+      const error = new Joi.ValidationError('A Joi error', items, {})
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('A Joi error')
+    })
+
     test('should set error if number', () => {
       const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'A Joi error',
+          path: [1, 2],
+          type: 'error'
+        },
         {
           message: 'A Joi error',
           path: [1, 2],
@@ -49,7 +67,9 @@ describe('Editor v2 condition helper', () => {
       ])
       const error = new Joi.ValidationError('A Joi error', items, {})
       processErrorMessages(error)
-      expect(error.details[0].message).toBe('A Joi error for condition 3')
+      expect(error.details[1].message).toBe(
+        'A Joi error for additional condition 2'
+      )
     })
 
     test('should not set error if not a number', () => {
