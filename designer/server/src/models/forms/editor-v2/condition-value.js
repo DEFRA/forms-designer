@@ -14,7 +14,7 @@ import {
 const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
-
+const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
 /**
  * @param { ErrorDetails | undefined } formErrors
  * @param {number} idx
@@ -60,7 +60,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
     label: {
       text: 'Period'
     },
-    classes: 'govuk-input--width-10',
+    classes: GOVUK_INPUT_WIDTH_10,
     value: periodValue,
     ...insertDateValidationErrors(formErrors, idx, 'period', periodValue)
   }
@@ -160,6 +160,10 @@ export function buildValueField(
       return buildBooleanValueField(idx, item, validation)
     }
 
+    case ConditionType.DateValue: {
+      return buildDateValueField(idx, item, validation)
+    }
+
     case ConditionType.StringValue: {
       return buildStringValueField(idx, item, validation)
     }
@@ -226,7 +230,7 @@ function buildBooleanValueField(idx, item, validation) {
         text: 'Select a value'
       }
     },
-    classes: 'govuk-radios--small',
+    classes: GOVUK_RADIOS_SMALL,
     value:
       'value' in item && 'value' in item.value
         ? item.value.value.toString()
@@ -243,6 +247,28 @@ function buildBooleanValueField(idx, item, validation) {
  * @param { ConditionDataV2 } item
  * @param { ValidationFailure<FormEditor> | undefined } validation
  */
+export function buildDateValueField(idx, item, validation) {
+  return {
+    id: `items[${idx}].[value]`,
+    name: `items[${idx}][value][value]`,
+    label: {
+      text: 'Enter a date'
+    },
+    hint: {
+      text: 'Format must be YYYY-MM-DD'
+    },
+    classes: GOVUK_INPUT_WIDTH_10,
+    value:
+      'value' in item && 'value' in item.value ? item.value.value : undefined,
+    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } item
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
 function buildStringValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
@@ -250,7 +276,7 @@ function buildStringValueField(idx, item, validation) {
     label: {
       text: 'Enter a value'
     },
-    classes: 'govuk-input--width-10',
+    classes: GOVUK_INPUT_WIDTH_10,
     value:
       'value' in item && 'value' in item.value ? item.value.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
@@ -283,6 +309,6 @@ function buildNumberValueField(idx, item, validation) {
 
 /**
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionValueDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

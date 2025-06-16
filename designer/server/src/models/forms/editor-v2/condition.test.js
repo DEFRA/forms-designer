@@ -119,12 +119,12 @@ describe('editor-v2 - condition model', () => {
       )
     })
 
-    test('should return StringValue if date field but operator does not denote relative', () => {
+    test('should return DateValue if date field but operator does not denote relative', () => {
       const component = /** @type {ConditionalComponentsDef} */ ({
         type: ComponentType.DatePartsField
       })
       expect(getConditionType(component, OperatorName.Is)).toBe(
-        ConditionType.StringValue
+        ConditionType.DateValue
       )
     })
 
