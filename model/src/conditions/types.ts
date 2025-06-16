@@ -35,9 +35,6 @@ export interface ConditionNumberValueDataV2 {
 export interface ConditionDateValueDataV2 {
   type: ConditionType.DateValue
   value: string
-  day?: string
-  month?: string
-  year?: string
 }
 
 export interface ConditionListItemRefValueDataV2 {
