@@ -19,29 +19,20 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
+
 /**
- * @param { ErrorDetails | undefined } formErrors
- * @param {number} idx
- * @param {string} fieldValueName
+ * @param { ErrorDetailsItem | undefined } formError
  * @param { string | number | undefined } fieldValue
  */
-export function insertDateValidationErrors(
-  formErrors,
-  idx,
-  fieldValueName,
-  fieldValue
-) {
+export function insertDateValidationErrors(formError, fieldValue) {
   if (fieldValue && fieldValue !== '') {
     return {}
   }
-  const formError = formErrors ? formErrors[`items[${idx}].value`] : undefined
+
   return {
     ...(formError && {
       errorMessage: {
-        text: formError.text.replace(
-          'condition value',
-          `condition value ${fieldValueName}`
-        )
+        text: formError.text
       }
     })
   }
@@ -62,14 +53,17 @@ export function relativeDateValueViewModel(idx, item, validation) {
   // Period text field
   const periodValue = valueObj?.period
   const period = {
-    id: `items[${idx}].value`,
+    id: `items[${idx}].value.period`,
     name: `items[${idx}][value][period]`,
     label: {
       text: 'Period'
     },
     classes: GOVUK_INPUT_WIDTH_10,
     value: periodValue,
-    ...insertDateValidationErrors(formErrors, idx, 'period', periodValue)
+    ...insertDateValidationErrors(
+      formErrors?.[`items[${idx}].value.period`],
+      periodValue
+    )
   }
 
   // Unit select field
@@ -85,7 +79,10 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value: unitValue,
-    ...insertDateValidationErrors(formErrors, idx, 'unit', unitValue)
+    ...insertDateValidationErrors(
+      formErrors?.[`items[${idx}].value.unit`],
+      unitValue
+    )
   }
 
   // Direction select field
@@ -101,7 +98,10 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value: directionValue,
-    ...insertDateValidationErrors(formErrors, idx, 'direction', directionValue)
+    ...insertDateValidationErrors(
+      formErrors?.[`items[${idx}].value.direction`],
+      directionValue
+    )
   }
 
   return {
@@ -203,7 +203,7 @@ function buildListItemValueField(
     /** @type { ConditionListItemRefValueDataV2 | undefined } */ (item.value)
 
   return {
-    id: `items[${idx}].value`,
+    id: `items[${idx}].value.itemId`,
     name: `items[${idx}][value][itemId]`,
     fieldset: {
       legend: {
@@ -254,7 +254,7 @@ function buildBooleanValueField(idx, item, validation) {
  */
 export function buildDateValueField(idx, item, validation) {
   return {
-    id: `items[${idx}].[value]`,
+    id: `items[${idx}].value`,
     name: `items[${idx}][value]`,
     label: {
       text: 'Enter a date'
@@ -311,7 +311,7 @@ function buildNumberValueField(idx, item, validation) {
 }
 
 /**
- * @import { ErrorDetails } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ConditionalComponentsDef, ConditionDataV2, ConditionListItemRefValueDataV2, FormDefinition, FormEditor, List, RelativeDateValueDataV2 } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

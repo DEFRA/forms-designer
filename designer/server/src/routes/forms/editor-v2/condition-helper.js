@@ -70,6 +70,17 @@ export function processErrorMessages(error) {
   if (Joi.isError(error)) {
     error.details.forEach((err) => {
       if (err.path.length > 1) {
+        // Period, unit and direction need extra attention
+        if (err.context?.key === 'period') {
+          err.message = `${err.message} period`
+        }
+        if (err.context?.key === 'unit') {
+          err.message = `${err.message} unit`
+        }
+        if (err.context?.key === 'direction') {
+          err.message = `${err.message} direction`
+        }
+
         // Must be that part of a condition item is in
         // error so we append a "for condition X" suffix
         const idx = err.path.at(1)

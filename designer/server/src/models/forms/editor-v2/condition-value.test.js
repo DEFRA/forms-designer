@@ -10,34 +10,21 @@ import {
 
 describe('editor-v2 - condition-value', () => {
   describe('insertDateValidationErrors', () => {
-    const formsErrors = /** @type {ErrorDetails} */ ({
-      [`items[0].value`]: {
-        value: 'example value',
-        text: 'Error on this field'
-      }
+    const formsError = /** @type {ErrorDetailsItem} */ ({
+      value: 'example value',
+      text: 'Error on this field'
     })
 
     test('should return empty object if field populated', () => {
-      expect(
-        insertDateValidationErrors(
-          formsErrors,
-          0,
-          'fieldValueName',
-          'some value'
-        )
-      ).toEqual({})
+      expect(insertDateValidationErrors(formsError, 'some value')).toEqual({})
     })
 
     test('should return empty object if no error object', () => {
-      expect(
-        insertDateValidationErrors(undefined, 0, 'fieldValueName', '')
-      ).toEqual({})
+      expect(insertDateValidationErrors(undefined, '')).toEqual({})
     })
 
     test('should return error structure if field value undefined', () => {
-      expect(
-        insertDateValidationErrors(formsErrors, 0, 'fieldValueName', '')
-      ).toEqual({
+      expect(insertDateValidationErrors(formsError, '')).toEqual({
         errorMessage: {
           text: 'Error on this field'
         }
@@ -136,7 +123,7 @@ describe('editor-v2 - condition-value', () => {
             text: 'Select a value'
           }
         },
-        id: 'items[2].value',
+        id: 'items[2].value.itemId',
         items: [
           { text: 'Red', value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7' },
           { text: 'Blue', value: '689d3f66-88f7-4dc0-b199-841b72393c19' },
@@ -293,7 +280,7 @@ describe('editor-v2 - condition-value', () => {
         hint: {
           text: 'Format must be YYYY-MM-DD'
         },
-        id: 'items[2].[value]',
+        id: 'items[2].value',
         name: 'items[2][value]',
         value: '2024-02-01',
         classes: 'govuk-input--width-10'
@@ -419,6 +406,6 @@ describe('editor-v2 - condition-value', () => {
 })
 
 /**
- * @import { ErrorDetails } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ConditionDataV2, List } from '@defra/forms-model'
  */

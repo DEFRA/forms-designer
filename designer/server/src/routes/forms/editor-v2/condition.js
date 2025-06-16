@@ -84,7 +84,8 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
           then: Joi.optional() // Only validate the value if the operator is valid
         })
         .messages({
-          '*': 'Enter a condition value'
+          '*': 'Enter a condition value',
+          'date.format': 'Enter a condition value in the correct format'
         })
     })
   ),
@@ -246,7 +247,6 @@ export default [
           } else {
             saveSessionState(yar, payload, stateId, items)
 
-            // Filter out unwanted schema errors
             processErrorMessages(error)
 
             return redirectWithErrors(request, h, error, errorKey)
