@@ -59,6 +59,35 @@ export function isRelativeDate(operator) {
 }
 
 /**
+ * Determine if the condition/operator combination should use NumberValue
+ * NumberValue is used when the operator is HasLength, IsLongerThan or IsShorterThan
+ * or if the component is a NumberField
+ * @param { ConditionalComponentsDef | undefined } component
+ * @param { OperatorName | undefined } operator
+ */
+export function isConditionRequiresNumberValue(component, operator) {
+  if (!operator) {
+    return false
+  }
+
+  if (
+    [
+      OperatorName.HasLength,
+      OperatorName.IsLongerThan,
+      OperatorName.IsShorterThan
+    ].includes(operator)
+  ) {
+    return true
+  }
+
+  if (!component) {
+    return false
+  }
+
+  return component.type === ComponentType.NumberField
+}
+
+/**
  * @param { ConditionalComponentsDef | undefined } selectedComponent
  * @param { OperatorName | undefined } operatorValue
  * @returns
@@ -72,6 +101,8 @@ export function getConditionType(selectedComponent, operatorValue) {
     return isRelativeDate(operatorValue)
       ? ConditionType.RelativeDate
       : ConditionType.DateValue
+  } else if (isConditionRequiresNumberValue(selectedComponent, operatorValue)) {
+    return ConditionType.NumberValue
   } else {
     return ConditionType.StringValue
   }
@@ -305,13 +336,6 @@ export function conditionViewModel(
     conditionEditor: buildConditionEditor(definition, validation, state)
   }
 }
-
-/**
- * @typedef {object} ConditionPageState
- * @property {string} [selectedComponentId] - The component id
- * @property {string} [selectedOperator] - The operator
- * @property {string} [displayName] - The condition display name
- */
 
 /**
  * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
