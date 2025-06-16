@@ -224,17 +224,14 @@ function buildListItemValueField(
 function buildBooleanValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     fieldset: {
       legend: {
         text: 'Select a value'
       }
     },
     classes: GOVUK_RADIOS_SMALL,
-    value:
-      'value' in item && 'value' in item.value
-        ? item.value.value.toString()
-        : undefined,
+    value: 'value' in item ? item.value.toString() : undefined,
     items: getYesNoList().items.map((itm) => {
       return { text: itm.text, value: itm.value.toString() }
     }),
@@ -250,7 +247,7 @@ function buildBooleanValueField(idx, item, validation) {
 export function buildDateValueField(idx, item, validation) {
   return {
     id: `items[${idx}].[value]`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     label: {
       text: 'Enter a date'
     },
@@ -258,8 +255,7 @@ export function buildDateValueField(idx, item, validation) {
       text: 'Format must be YYYY-MM-DD'
     },
     classes: GOVUK_INPUT_WIDTH_10,
-    value:
-      'value' in item && 'value' in item.value ? item.value.value : undefined,
+    value: 'value' in item ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
@@ -272,13 +268,12 @@ export function buildDateValueField(idx, item, validation) {
 function buildStringValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     label: {
       text: 'Enter a value'
     },
     classes: GOVUK_INPUT_WIDTH_10,
-    value:
-      'value' in item && 'value' in item.value ? item.value.value : undefined,
+    value: 'value' in item ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
@@ -291,7 +286,7 @@ function buildStringValueField(idx, item, validation) {
 function buildNumberValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     label: {
       text: 'Enter a value'
     },
@@ -299,16 +294,13 @@ function buildNumberValueField(idx, item, validation) {
     attributes: {
       inputmode: 'numeric'
     },
-    value:
-      'value' in item && 'value' in item.value
-        ? item.value.value.toString()
-        : undefined,
+    value: 'value' in item ? item.value.toString() : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
 
 /**
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionValueDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

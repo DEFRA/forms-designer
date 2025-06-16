@@ -32,10 +32,8 @@ describe('page-conditions model', () => {
         id: 'cattle-farm-check',
         componentId,
         operator: OperatorName.Is,
-        value: {
-          type: ConditionType.StringValue,
-          value: 'cattle'
-        }
+        valueType: ConditionType.StringValue,
+        value: 'cattle'
       }
     ]
   }
@@ -187,10 +185,8 @@ describe('page-conditions model', () => {
             id: 'agroforestry-check',
             componentId,
             operator: OperatorName.Is,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'agroforestry'
-            }
+            valueType: ConditionType.StringValue,
+            value: 'agroforestry'
           }
         ]
       }
@@ -203,10 +199,8 @@ describe('page-conditions model', () => {
             id: 'wildlife-habitat-check',
             componentId,
             operator: OperatorName.Is,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'wildlife-habitat'
-            }
+            valueType: ConditionType.StringValue,
+            value: 'wildlife-habitat'
           }
         ]
       }
@@ -219,10 +213,8 @@ describe('page-conditions model', () => {
             id: 'organic-farming-check',
             componentId,
             operator: OperatorName.Is,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'organic'
-            }
+            valueType: ConditionType.StringValue,
+            value: 'organic'
           }
         ]
       }
@@ -263,10 +255,8 @@ describe('page-conditions model', () => {
             id: 'sfi-eligibility-check',
             componentId,
             operator: OperatorName.Is,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'sustainable-practices'
-            }
+            valueType: ConditionType.StringValue,
+            value: 'sustainable-practices'
           }
         ]
       }
@@ -369,10 +359,8 @@ describe('page-conditions model', () => {
               id: 'water-mgmt-check',
               componentId,
               operator: OperatorName.Is,
-              value: {
-                type: ConditionType.StringValue,
-                value: 'water-intensive'
-              }
+              valueType: ConditionType.StringValue,
+              value: 'water-intensive'
             }
           ]
         },
@@ -384,10 +372,8 @@ describe('page-conditions model', () => {
               id: 'biodiversity-check',
               componentId,
               operator: OperatorName.Is,
-              value: {
-                type: ConditionType.StringValue,
-                value: 'development'
-              }
+              valueType: ConditionType.StringValue,
+              value: 'development'
             }
           ]
         },
@@ -399,10 +385,8 @@ describe('page-conditions model', () => {
               id: 'pesticide-check',
               componentId,
               operator: OperatorName.Is,
-              value: {
-                type: ConditionType.StringValue,
-                value: 'crop-farming'
-              }
+              valueType: ConditionType.StringValue,
+              value: 'crop-farming'
             }
           ]
         }
@@ -614,5 +598,4 @@ describe('page-conditions model', () => {
 
 /**
  * @import { ConditionWrapperV2, ConditionWrapper } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

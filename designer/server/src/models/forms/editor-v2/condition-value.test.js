@@ -66,16 +66,16 @@ describe('editor-v2 - condition-value', () => {
         id: 'id',
         componentId: 'componentId',
         operator: OperatorName.Is,
+        valueType: ConditionType.RelativeDate,
         value: {
-          period: '5',
+          period: 5,
           unit: 'months',
-          direction: DateDirections.FUTURE,
-          type: ConditionType.RelativeDate
+          direction: DateDirections.FUTURE
         }
       })
       const model = relativeDateValueViewModel(0, item, undefined)
       expect(model.period).toBeDefined()
-      expect(model.period.value).toBe('5')
+      expect(model.period.value).toBe(5)
       expect(model.unit).toBeDefined()
       expect(model.unit.value).toBe('months')
       expect(model.direction).toBeDefined()
@@ -175,9 +175,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: 'stringval'
-        }
+        valueType: ConditionType.StringValue,
+        value: 'stringval'
       })
       const valueField = buildValueField(
         ConditionType.StringValue,
@@ -192,7 +191,7 @@ describe('editor-v2 - condition-value', () => {
           text: 'Enter a value'
         },
         id: 'items[2].value',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: 'stringval',
         classes: 'govuk-input--width-10'
       })
@@ -224,10 +223,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: true,
-          type: ConditionType.BooleanValue
-        }
+        valueType: ConditionType.BooleanValue,
+        value: true
       })
       const valueField = buildValueField(
         ConditionType.BooleanValue,
@@ -244,7 +241,7 @@ describe('editor-v2 - condition-value', () => {
           }
         },
         id: 'items[2].value',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: 'true',
         classes: 'govuk-radios--small',
         items: [
@@ -280,10 +277,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: '2024-02-01',
-          type: ConditionType.DateValue
-        }
+        valueType: ConditionType.DateValue,
+        value: '2024-02-01'
       })
       const valueField = buildValueField(
         ConditionType.DateValue,
@@ -301,7 +296,7 @@ describe('editor-v2 - condition-value', () => {
           text: 'Format must be YYYY-MM-DD'
         },
         id: 'items[2].[value]',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: '2024-02-01',
         classes: 'govuk-input--width-10'
       })
@@ -333,10 +328,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: 1,
-          type: ConditionType.NumberValue
-        }
+        valueType: ConditionType.NumberValue,
+        value: 1
       })
       const valueField = buildValueField(
         ConditionType.NumberValue,
@@ -351,7 +344,7 @@ describe('editor-v2 - condition-value', () => {
           text: 'Enter a value'
         },
         id: 'items[2].value',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: '1',
         classes: 'govuk-input--width-5',
         attributes: {

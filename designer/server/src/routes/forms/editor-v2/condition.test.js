@@ -179,7 +179,8 @@ describe('Editor v2 condition routes', () => {
               id: '1',
               componentId: '',
               operator: OperatorName.Is,
-              value: { type: ConditionType.StringValue, value: '' }
+              valueType: ConditionType.StringValue,
+              value: ''
             }
           ]
         }
@@ -190,10 +191,11 @@ describe('Editor v2 condition routes', () => {
         url: '/library/my-form-slug/editor-v2/condition/cond-id/session-id',
         auth,
         payload: {
-          'items[0].id': '1',
-          'items[0].componentId': '',
-          'items[0].operator': OperatorName.Is,
-          'items[0].value': { type: ConditionType.StringValue, value: '' }
+          'items[0][id]': '1',
+          'items[0][componentId]': '',
+          'items[0][operator]': OperatorName.Is,
+          'items[0][valueType]': ConditionType.StringValue,
+          'items[0][value]': ''
         }
       }
 
@@ -213,7 +215,15 @@ describe('Editor v2 condition routes', () => {
             coordinator: undefined,
             displayName: undefined,
             id: 'd9ae6c5a-bc8f-41f4-9c2a-f4081cd210b5',
-            items: ['1', '', 'is', { type: 'StringValue', value: '' }]
+            items: [
+              {
+                id: '1',
+                componentId: '',
+                operator: 'is',
+                valueType: 'StringValue',
+                value: ''
+              }
+            ]
           },
           stateId: 'session-id'
         }
@@ -432,5 +442,4 @@ describe('Editor v2 condition routes', () => {
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { ConditionWrapperV2 } from '@defra/forms-model'
  */

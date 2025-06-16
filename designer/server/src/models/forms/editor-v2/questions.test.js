@@ -52,10 +52,8 @@ describe('editor-v2 - questions model', () => {
           id: 'cattle-farm-check',
           componentId,
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'cattle'
-          }
+          valueType: ConditionType.StringValue,
+          value: 'cattle'
         }
       ]
     }
@@ -184,10 +182,8 @@ describe('editor-v2 - questions model', () => {
               id: 'organic-farm-check',
               componentId,
               operator: OperatorName.Is,
-              value: {
-                type: ConditionType.StringValue,
-                value: 'organic'
-              }
+              valueType: ConditionType.StringValue,
+              value: 'organic'
             }
           ]
         }

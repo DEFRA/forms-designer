@@ -4,17 +4,14 @@ import {
 } from '~/src/components/types.js'
 import { ConditionType, type Coordinator } from '~/src/conditions/enums.js'
 import {
-  type ConditionBooleanValueDataV2,
   type ConditionData,
   type ConditionDataV2,
-  type ConditionDateValueDataV2,
   type ConditionListItemRefValueDataV2,
-  type ConditionNumberValueDataV2,
   type ConditionRefData,
   type ConditionRefDataV2,
-  type ConditionStringValueDataV2,
   type ConditionValueData,
-  type ConditionValueDataV2
+  type RelativeDateValueData,
+  type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
 import {
   type ConditionWrapper,
@@ -22,34 +19,28 @@ import {
   type List
 } from '~/src/form/form-definition/types.js'
 
-export function isConditionListItemRefValueDataV2(
-  value: ConditionValueDataV2
-): value is ConditionListItemRefValueDataV2 {
-  return value.type === ConditionType.ListItemRef
+export function isConditionListItemRefValueDataV2(condition: ConditionDataV2) {
+  return condition.valueType === ConditionType.ListItemRef
 }
 
-export function isConditionStringValueDataV2(
-  value: ConditionValueDataV2
-): value is ConditionStringValueDataV2 {
-  return value.type === ConditionType.StringValue
+export function isConditionStringValueDataV2(condition: ConditionDataV2) {
+  return condition.valueType === ConditionType.StringValue
 }
 
-export function isConditionBooleanValueDataV2(
-  value: ConditionValueDataV2
-): value is ConditionBooleanValueDataV2 {
-  return value.type === ConditionType.BooleanValue
+export function isConditionBooleanValueDataV2(condition: ConditionDataV2) {
+  return condition.valueType === ConditionType.BooleanValue
 }
 
-export function isConditionNumberValueDataV2(
-  value: ConditionValueDataV2
-): value is ConditionNumberValueDataV2 {
-  return value.type === ConditionType.NumberValue
+export function isConditionNumberValueDataV2(condition: ConditionDataV2) {
+  return condition.valueType === ConditionType.NumberValue
 }
 
-export function isConditionDateValueDataV2(
-  value: ConditionValueDataV2
-): value is ConditionDateValueDataV2 {
-  return value.type === ConditionType.DateValue
+export function isConditionDateValueDataV2(condition: ConditionDataV2) {
+  return condition.valueType === ConditionType.DateValue
+}
+
+export function isConditionRelativeDateValueDataV2(condition: ConditionDataV2) {
+  return condition.valueType === ConditionType.RelativeDate
 }
 
 function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
@@ -69,9 +60,10 @@ function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
 }
 
 function createConditionValueDataFromListItemRefV2(
-  value: ConditionListItemRefValueDataV2,
+  condition: ConditionDataV2,
   model: RuntimeFormModel
 ): ConditionValueData {
+  const value = condition.value as ConditionListItemRefValueDataV2
   const refValue = getListItem(model, value.listId, value.itemId)
 
   return {
@@ -82,44 +74,56 @@ function createConditionValueDataFromListItemRefV2(
 }
 
 function createConditionValueDataFromStringOrDateValueDataV2(
-  value: ConditionStringValueDataV2 | ConditionDateValueDataV2
+  condition: ConditionDataV2
 ): ConditionValueData {
   return {
     type: ConditionType.Value,
-    value: value.value,
-    display: value.value
+    value: condition.value as string,
+    display: condition.value as string
   }
 }
 
 function createConditionValueDataFromStringValueDataV2(
-  value: ConditionStringValueDataV2
+  condition: ConditionDataV2
 ): ConditionValueData {
-  return createConditionValueDataFromStringOrDateValueDataV2(value)
+  return createConditionValueDataFromStringOrDateValueDataV2(condition)
 }
 
 function createConditionValueDataFromDateValueDataV2(
-  value: ConditionDateValueDataV2
+  condition: ConditionDataV2
 ): ConditionValueData {
-  return createConditionValueDataFromStringOrDateValueDataV2(value)
+  return createConditionValueDataFromStringOrDateValueDataV2(condition)
+}
+
+function createConditionValueDataFromRelativeDateValueDataV2(
+  condition: ConditionDataV2
+): RelativeDateValueData {
+  const value = condition.value as RelativeDateValueDataV2
+  return {
+    type: ConditionType.RelativeDate,
+    period: value.period.toString(),
+    unit: value.unit,
+    direction: value.direction
+  }
 }
 
 function createConditionValueDataFromNumberValueDataV2(
-  value: ConditionNumberValueDataV2
+  condition: ConditionDataV2
 ): ConditionValueData {
   return {
     type: ConditionType.Value,
-    value: value.value.toString(),
-    display: value.value.toString()
+    value: (condition.value as number).toString(),
+    display: (condition.value as number).toString()
   }
 }
 
 function createConditionValueDataFromBooleanValueDataV2(
-  value: ConditionBooleanValueDataV2
+  condition: ConditionDataV2
 ): ConditionValueData {
   return {
     type: ConditionType.Value,
-    value: value.value.toString(),
-    display: value.value ? 'Yes' : 'No'
+    value: (condition.value as boolean).toString(),
+    display: (condition.value as boolean) ? 'Yes' : 'No'
   }
 }
 
@@ -141,18 +145,20 @@ function convertConditionDataV2(
   }
 
   let newValue
-  if (isConditionListItemRefValueDataV2(condition.value)) {
-    newValue = createConditionValueDataFromListItemRefV2(condition.value, model)
-  } else if (isConditionStringValueDataV2(condition.value)) {
-    newValue = createConditionValueDataFromStringValueDataV2(condition.value)
-  } else if (isConditionBooleanValueDataV2(condition.value)) {
-    newValue = createConditionValueDataFromBooleanValueDataV2(condition.value)
-  } else if (isConditionNumberValueDataV2(condition.value)) {
-    newValue = createConditionValueDataFromNumberValueDataV2(condition.value)
-  } else if (isConditionDateValueDataV2(condition.value)) {
-    newValue = createConditionValueDataFromDateValueDataV2(condition.value)
+  if (isConditionListItemRefValueDataV2(condition)) {
+    newValue = createConditionValueDataFromListItemRefV2(condition, model)
+  } else if (isConditionStringValueDataV2(condition)) {
+    newValue = createConditionValueDataFromStringValueDataV2(condition)
+  } else if (isConditionBooleanValueDataV2(condition)) {
+    newValue = createConditionValueDataFromBooleanValueDataV2(condition)
+  } else if (isConditionNumberValueDataV2(condition)) {
+    newValue = createConditionValueDataFromNumberValueDataV2(condition)
+  } else if (isConditionDateValueDataV2(condition)) {
+    newValue = createConditionValueDataFromDateValueDataV2(condition)
+  } else if (isConditionRelativeDateValueDataV2(condition)) {
+    newValue = createConditionValueDataFromRelativeDateValueDataV2(condition)
   } else {
-    newValue = condition.value
+    throw Error('Unsupported condition type')
   }
 
   return {
