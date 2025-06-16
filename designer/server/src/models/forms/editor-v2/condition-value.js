@@ -14,7 +14,7 @@ import {
 const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
-
+const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
 /**
  * @param { ErrorDetails | undefined } formErrors
  * @param {number} idx
@@ -44,33 +44,6 @@ export function insertDateValidationErrors(
 }
 
 /**
- * @param {ConditionValueDataV2} value
- * @param {number} idx
- */
-export function buildDateItems(value, idx) {
-  return [
-    {
-      label: 'Day',
-      name: `items[${idx}][value][day]`,
-      value: 'day' in value ? value.day : undefined,
-      classes: 'govuk-input--width-2'
-    },
-    {
-      label: 'Month',
-      name: `items[${idx}][value][month]`,
-      value: 'month' in value ? value.month : undefined,
-      classes: 'govuk-input--width-2'
-    },
-    {
-      label: 'Year',
-      name: `items[${idx}][value][year]`,
-      value: 'year' in value ? value.year : undefined,
-      classes: 'govuk-input--width-4'
-    }
-  ]
-}
-
-/**
  * @param {number} idx
  * @param { ConditionDataV2 | ConditionRefDataV2 } item
  * @param {ValidationFailure<FormEditor>} [validation]
@@ -87,7 +60,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
     label: {
       text: 'Period'
     },
-    classes: 'govuk-input--width-10',
+    classes: GOVUK_INPUT_WIDTH_10,
     value: periodValue,
     ...insertDateValidationErrors(formErrors, idx, 'period', periodValue)
   }
@@ -257,7 +230,7 @@ function buildBooleanValueField(idx, item, validation) {
         text: 'Select a value'
       }
     },
-    classes: 'govuk-radios--small',
+    classes: GOVUK_RADIOS_SMALL,
     value:
       'value' in item && 'value' in item.value
         ? item.value.value.toString()
@@ -284,7 +257,7 @@ export function buildDateValueField(idx, item, validation) {
     hint: {
       text: 'Format must be YYYY-MM-DD'
     },
-    classes: 'govuk-input--width-10',
+    classes: GOVUK_INPUT_WIDTH_10,
     value:
       'value' in item && 'value' in item.value ? item.value.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
@@ -303,7 +276,7 @@ function buildStringValueField(idx, item, validation) {
     label: {
       text: 'Enter a value'
     },
-    classes: 'govuk-input--width-10',
+    classes: GOVUK_INPUT_WIDTH_10,
     value:
       'value' in item && 'value' in item.value ? item.value.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
