@@ -2,7 +2,11 @@ import {
   ConditionType,
   DateDirections,
   DateUnits,
-  getYesNoList
+  getYesNoList,
+  isConditionBooleanValueDataV2,
+  isConditionDateValueDataV2,
+  isConditionNumberValueDataV2,
+  isConditionStringValueDataV2
 } from '@defra/forms-model'
 import upperFirst from 'lodash/upperFirst.js'
 
@@ -15,63 +19,77 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
+
 /**
- * @param { ErrorDetails | undefined } formErrors
- * @param {number} idx
- * @param {string} fieldValueName
- * @param { string | undefined } fieldValue
+ * @param { ErrorDetailsItem | undefined } formError
+ * @param { string | number | undefined } fieldValue
  */
-export function insertDateValidationErrors(
-  formErrors,
-  idx,
-  fieldValueName,
-  fieldValue
-) {
+export function insertDateValidationErrors(formError, fieldValue) {
   if (fieldValue && fieldValue !== '') {
     return {}
   }
-  const formError = formErrors ? formErrors[`items[${idx}].value`] : undefined
+
   return {
     ...(formError && {
       errorMessage: {
-        text: formError.text.replace(
-          'condition value',
-          `condition value ${fieldValueName}`
-        )
+        text: formError.text
       }
     })
   }
 }
 
 /**
+ * Builds a unique id for each option in a radio list, such that the first option's id
+ * matches the component's id and subsequent options don't match. This allows the error
+ * anchors (if displayed) to navigate to the first radio item.
+ * @param {string} fieldName
  * @param {number} idx
- * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ * @param {number} idx2
+ */
+export function createSequentialId(fieldName, idx, idx2) {
+  const trailingIndex = idx2 > 0 ? idx2.toString() : ''
+  const fieldNamePart = fieldName.length ? `.${fieldName}` : ''
+  return `items[${idx}].value${fieldNamePart}${trailingIndex}`
+}
+
+/**
+ * @param {number} idx
+ * @param { Partial<ConditionDataV2> } item
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function relativeDateValueViewModel(idx, item, validation) {
   const { formErrors } = validation ?? {}
 
+  const valueObj = /** @type { RelativeDateValueDataV2 | undefined } */ (
+    item.value
+  )
+
   // Period text field
-  const periodValue =
-    'value' in item && 'period' in item.value ? item.value.period : undefined
+  const periodValue = valueObj?.period
   const period = {
-    id: `items[${idx}].value`,
+    id: `items[${idx}].value.period`,
     name: `items[${idx}][value][period]`,
     label: {
       text: 'Period'
     },
     classes: GOVUK_INPUT_WIDTH_10,
     value: periodValue,
-    ...insertDateValidationErrors(formErrors, idx, 'period', periodValue)
+    ...insertDateValidationErrors(
+      formErrors?.[`items[${idx}].value.period`],
+      periodValue
+    )
   }
 
   // Unit select field
-  const unitValue =
-    'value' in item && 'unit' in item.value ? item.value.unit : undefined
+  const unitValue = valueObj?.unit
   const unit = {
     id: `items[${idx}].value.unit`,
     name: `items[${idx}][value][unit]`,
-    items: dateUnits.map((value) => ({ text: upperFirst(value), value })),
+    items: dateUnits.map((value, idx2) => ({
+      text: upperFirst(value),
+      value,
+      id: createSequentialId('unit', idx, idx2)
+    })),
     fieldset: {
       legend: {
         text: 'Units'
@@ -79,18 +97,22 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value: unitValue,
-    ...insertDateValidationErrors(formErrors, idx, 'unit', unitValue)
+    ...insertDateValidationErrors(
+      formErrors?.[`items[${idx}].value.unit`],
+      unitValue
+    )
   }
 
   // Direction select field
-  const directionValue =
-    'value' in item && 'direction' in item.value
-      ? item.value.direction
-      : undefined
+  const directionValue = valueObj?.direction
   const direction = {
     id: `items[${idx}].value.direction`,
     name: `items[${idx}][value][direction]`,
-    items: dateDirections.map((value) => ({ text: upperFirst(value), value })),
+    items: dateDirections.map((value, idx2) => ({
+      text: upperFirst(value),
+      value,
+      id: createSequentialId('direction', idx, idx2)
+    })),
     fieldset: {
       legend: {
         text: 'Direction'
@@ -98,7 +120,10 @@ export function relativeDateValueViewModel(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value: directionValue,
-    ...insertDateValidationErrors(formErrors, idx, 'direction', directionValue)
+    ...insertDateValidationErrors(
+      formErrors?.[`items[${idx}].value.direction`],
+      directionValue
+    )
   }
 
   return {
@@ -196,8 +221,11 @@ function buildListItemValueField(
   definition,
   validation
 ) {
+  const valueObj =
+    /** @type { ConditionListItemRefValueDataV2 | undefined } */ (item.value)
+
   return {
-    id: `items[${idx}].value`,
+    id: `items[${idx}].value.itemId`,
     name: `items[${idx}][value][itemId]`,
     fieldset: {
       legend: {
@@ -205,11 +233,14 @@ function buildListItemValueField(
       }
     },
     classes: GOVUK_RADIOS_SMALL,
-    value:
-      'value' in item && 'itemId' in item.value ? item.value.itemId : undefined,
+    value: valueObj?.itemId,
     items: getListFromComponent(selectedComponent, definition)?.items.map(
-      (itm) => {
-        return { text: itm.text, value: itm.id ?? itm.value }
+      (itm, idx2) => {
+        return {
+          text: itm.text,
+          value: itm.id ?? itm.value,
+          id: createSequentialId('itemId', idx, idx2)
+        }
       }
     ),
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
@@ -224,7 +255,7 @@ function buildListItemValueField(
 function buildBooleanValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     fieldset: {
       legend: {
         text: 'Select a value'
@@ -232,11 +263,15 @@ function buildBooleanValueField(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value:
-      'value' in item && 'value' in item.value
-        ? item.value.value.toString()
+      isConditionBooleanValueDataV2(item) && typeof item.value === 'boolean'
+        ? item.value.toString()
         : undefined,
-    items: getYesNoList().items.map((itm) => {
-      return { text: itm.text, value: itm.value.toString() }
+    items: getYesNoList().items.map((itm, idx2) => {
+      return {
+        text: itm.text,
+        value: itm.value.toString(),
+        id: createSequentialId('', idx, idx2)
+      }
     }),
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
@@ -249,8 +284,8 @@ function buildBooleanValueField(idx, item, validation) {
  */
 export function buildDateValueField(idx, item, validation) {
   return {
-    id: `items[${idx}].[value]`,
-    name: `items[${idx}][value][value]`,
+    id: `items[${idx}].value`,
+    name: `items[${idx}][value]`,
     label: {
       text: 'Enter a date'
     },
@@ -258,8 +293,7 @@ export function buildDateValueField(idx, item, validation) {
       text: 'Format must be YYYY-MM-DD'
     },
     classes: GOVUK_INPUT_WIDTH_10,
-    value:
-      'value' in item && 'value' in item.value ? item.value.value : undefined,
+    value: isConditionDateValueDataV2(item) ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
@@ -272,13 +306,12 @@ export function buildDateValueField(idx, item, validation) {
 function buildStringValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     label: {
       text: 'Enter a value'
     },
     classes: GOVUK_INPUT_WIDTH_10,
-    value:
-      'value' in item && 'value' in item.value ? item.value.value : undefined,
+    value: isConditionStringValueDataV2(item) ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
@@ -291,7 +324,7 @@ function buildStringValueField(idx, item, validation) {
 function buildNumberValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value][value]`,
+    name: `items[${idx}][value]`,
     label: {
       text: 'Enter a value'
     },
@@ -300,15 +333,15 @@ function buildNumberValueField(idx, item, validation) {
       inputmode: 'numeric'
     },
     value:
-      'value' in item && 'value' in item.value
-        ? item.value.value.toString()
+      isConditionNumberValueDataV2(item) && typeof item.value === 'number'
+        ? item.value.toString()
         : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
 
 /**
- * @import { ErrorDetails } from '~/src/common/helpers/types.js'
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionValueDataV2, FormDefinition, FormEditor, List } from '@defra/forms-model'
+ * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionListItemRefValueDataV2, FormDefinition, FormEditor, List, RelativeDateValueDataV2 } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

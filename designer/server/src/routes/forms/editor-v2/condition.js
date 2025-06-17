@@ -40,6 +40,7 @@ const stateIdSchema = Joi.string().optional()
 const componentIdSchema = conditionDataSchemaV2.extract('componentId')
 const operatorSchema = conditionDataSchemaV2.extract('operator')
 const valueSchema = conditionDataSchemaV2.extract('value')
+const typeSchema = conditionDataSchemaV2.extract('type')
 
 /**
  * @type {Joi.ObjectSchema<ConditionWrapperPayload>}
@@ -69,13 +70,22 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
         .messages({
           '*': 'Select a condition type'
         }),
+      type: typeSchema
+        .when('operator', {
+          not: operatorSchema,
+          then: Joi.optional() // Only validate the value if the operator is valid
+        })
+        .messages({
+          '*': 'Enter a condition value type'
+        }),
       value: valueSchema
         .when('operator', {
           not: operatorSchema,
           then: Joi.optional() // Only validate the value if the operator is valid
         })
         .messages({
-          '*': 'Enter a condition value'
+          '*': 'Enter a condition value',
+          'date.format': 'Enter a condition value in the correct format'
         })
     })
   ),
@@ -237,7 +247,6 @@ export default [
           } else {
             saveSessionState(yar, payload, stateId, items)
 
-            // Filter out unwanted schema errors
             processErrorMessages(error)
 
             return redirectWithErrors(request, h, error, errorKey)

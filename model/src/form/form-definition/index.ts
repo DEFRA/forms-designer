@@ -8,22 +8,20 @@ import {
   type ContentComponentsDef,
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
+import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
 import {
-  type ConditionBooleanValueDataV2,
   type ConditionData,
   type ConditionDataV2,
-  type ConditionDateValueDataV2,
   type ConditionFieldData,
   type ConditionGroupData,
   type ConditionGroupDataV2,
   type ConditionListItemRefValueDataV2,
-  type ConditionNumberValueDataV2,
   type ConditionRefData,
   type ConditionRefDataV2,
-  type ConditionStringValueDataV2,
   type ConditionValueData,
   type ConditionsModelData,
-  type RelativeDateValueData
+  type RelativeDateValueData,
+  type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
 import {
   SchemaVersion,
@@ -139,73 +137,10 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
       .description('Human-readable version of the value for display purposes')
   })
 
-const conditionStringValueDataSchemaV2 =
-  Joi.object<ConditionStringValueDataV2>()
-    .description('String value specification for a condition')
-    .keys({
-      type: Joi.string()
-        .trim()
-        .valid('StringValue')
-        .required()
-        .description('Type of the condition value, should be "StringValue"'),
-      value: Joi.string()
-        .trim()
-        .required()
-        .description('The actual value to compare against')
-    })
-
-const conditionBooleanValueDataSchemaV2 =
-  Joi.object<ConditionBooleanValueDataV2>()
-    .description('Boolean value specification for a condition')
-    .keys({
-      type: Joi.string()
-        .trim()
-        .valid('BooleanValue')
-        .required()
-        .description('Type of the condition value, should be "BooleanValue"'),
-      value: Joi.boolean()
-        .required()
-        .description('The actual value to compare against')
-    })
-
-const conditionNumberValueDataSchemaV2 =
-  Joi.object<ConditionNumberValueDataV2>()
-    .description('Number value specification for a condition')
-    .keys({
-      type: Joi.string()
-        .trim()
-        .valid('NumberValue')
-        .required()
-        .description('Type of the condition value, should be "NumberValue"'),
-      value: Joi.number()
-        .required()
-        .description('The actual value to compare against')
-    })
-
-const conditionDateValueDataSchemaV2 = Joi.object<ConditionDateValueDataV2>()
-  .description('Date value specification for a condition')
-  .keys({
-    type: Joi.string()
-      .trim()
-      .valid('DateValue')
-      .required()
-      .description('Type of the condition value, should be "DateValue"'),
-    value: Joi.date()
-      .format('YYYY-MM-DD')
-      .raw()
-      .required()
-      .description('The actual value to compare against')
-  })
-
 const conditionListItemRefDataSchemaV2 =
   Joi.object<ConditionListItemRefValueDataV2>()
     .description('List item ref specification for a condition')
     .keys({
-      type: Joi.string()
-        .trim()
-        .valid('ListItemRef')
-        .required()
-        .description('Type of the condition value, should be "ListItemRef"'),
       listId: Joi.string()
         .trim()
         .required()
@@ -224,14 +159,27 @@ const conditionListItemRefDataSchemaV2 =
         .description('The id of the list item')
     })
 
+const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
+  .description('Relative date specification for date-based conditions')
+  .keys({
+    period: Joi.number()
+      .integer()
+      .positive()
+      .required()
+      .description('Numeric amount of the time period, as a string'),
+    unit: Joi.string()
+      .trim()
+      .required()
+      .description('Time unit (e.g. days, weeks, months, years)'),
+    direction: Joi.string()
+      .trim()
+      .required()
+      .description('Temporal direction, either "past" or "future"')
+  })
+
 const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
-    type: Joi.string()
-      .trim()
-      .valid('RelativeDate')
-      .required()
-      .description('Type of the condition value, should be "RelativeDate"'),
     period: Joi.string()
       .trim()
       .required()
@@ -320,18 +268,36 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       ),
     operator: Joi.string()
       .trim()
+      .valid(...Object.values(OperatorName))
       .required()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
-    value: Joi.alternatives()
-      .try(
-        conditionStringValueDataSchemaV2,
-        conditionBooleanValueDataSchemaV2,
-        conditionNumberValueDataSchemaV2,
-        conditionDateValueDataSchemaV2,
-        conditionListItemRefDataSchemaV2,
-        relativeDateValueDataSchema
-      )
+    type: Joi.string()
+      .trim()
+      .valid(...Object.values(ConditionType))
       .required()
+      .description('Type of the condition value'),
+    value: Joi.any()
+      .required()
+      .description('The actual value to compare against')
+      .when('type', {
+        switch: [
+          { is: ConditionType.BooleanValue, then: Joi.boolean() },
+          { is: ConditionType.StringValue, then: Joi.string() },
+          { is: ConditionType.NumberValue, then: Joi.number() },
+          {
+            is: ConditionType.DateValue,
+            then: Joi.date().format('YYYY-MM-DD').raw()
+          },
+          {
+            is: ConditionType.ListItemRef,
+            then: conditionListItemRefDataSchemaV2
+          },
+          {
+            is: ConditionType.RelativeDate,
+            then: relativeDateValueDataSchemaV2
+          }
+        ]
+      })
       .description(
         'Value to compare the field against, either fixed or relative date'
       )

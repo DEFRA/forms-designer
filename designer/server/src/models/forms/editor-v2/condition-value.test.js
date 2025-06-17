@@ -3,6 +3,7 @@ import { ConditionType, DateDirections, OperatorName } from '@defra/forms-model'
 import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
 import {
   buildValueField,
+  createSequentialId,
   insertDateValidationErrors,
   listItemRefValueViewModel,
   relativeDateValueViewModel
@@ -10,34 +11,21 @@ import {
 
 describe('editor-v2 - condition-value', () => {
   describe('insertDateValidationErrors', () => {
-    const formsErrors = /** @type {ErrorDetails} */ ({
-      [`items[0].value`]: {
-        value: 'example value',
-        text: 'Error on this field'
-      }
+    const formsError = /** @type {ErrorDetailsItem} */ ({
+      value: 'example value',
+      text: 'Error on this field'
     })
 
     test('should return empty object if field populated', () => {
-      expect(
-        insertDateValidationErrors(
-          formsErrors,
-          0,
-          'fieldValueName',
-          'some value'
-        )
-      ).toEqual({})
+      expect(insertDateValidationErrors(formsError, 'some value')).toEqual({})
     })
 
     test('should return empty object if no error object', () => {
-      expect(
-        insertDateValidationErrors(undefined, 0, 'fieldValueName', '')
-      ).toEqual({})
+      expect(insertDateValidationErrors(undefined, '')).toEqual({})
     })
 
     test('should return error structure if field value undefined', () => {
-      expect(
-        insertDateValidationErrors(formsErrors, 0, 'fieldValueName', '')
-      ).toEqual({
+      expect(insertDateValidationErrors(formsError, '')).toEqual({
         errorMessage: {
           text: 'Error on this field'
         }
@@ -66,16 +54,16 @@ describe('editor-v2 - condition-value', () => {
         id: 'id',
         componentId: 'componentId',
         operator: OperatorName.Is,
+        type: ConditionType.RelativeDate,
         value: {
-          period: '5',
+          period: 5,
           unit: 'months',
-          direction: DateDirections.FUTURE,
-          type: ConditionType.RelativeDate
+          direction: DateDirections.FUTURE
         }
       })
       const model = relativeDateValueViewModel(0, item, undefined)
       expect(model.period).toBeDefined()
-      expect(model.period.value).toBe('5')
+      expect(model.period.value).toBe(5)
       expect(model.unit).toBeDefined()
       expect(model.unit.value).toBe('months')
       expect(model.direction).toBeDefined()
@@ -136,11 +124,23 @@ describe('editor-v2 - condition-value', () => {
             text: 'Select a value'
           }
         },
-        id: 'items[2].value',
+        id: 'items[2].value.itemId',
         items: [
-          { text: 'Red', value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7' },
-          { text: 'Blue', value: '689d3f66-88f7-4dc0-b199-841b72393c19' },
-          { text: 'Green', value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171' }
+          {
+            text: 'Red',
+            value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
+            id: 'items[2].value.itemId'
+          },
+          {
+            text: 'Blue',
+            value: '689d3f66-88f7-4dc0-b199-841b72393c19',
+            id: 'items[2].value.itemId1'
+          },
+          {
+            text: 'Green',
+            value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171',
+            id: 'items[2].value.itemId2'
+          }
         ],
         name: 'items[2][value][itemId]',
         value: '689d3f66-88f7-4dc0-b199-841b72393c19'
@@ -175,9 +175,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: 'stringval'
-        }
+        type: ConditionType.StringValue,
+        value: 'stringval'
       })
       const valueField = buildValueField(
         ConditionType.StringValue,
@@ -192,7 +191,7 @@ describe('editor-v2 - condition-value', () => {
           text: 'Enter a value'
         },
         id: 'items[2].value',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: 'stringval',
         classes: 'govuk-input--width-10'
       })
@@ -202,8 +201,7 @@ describe('editor-v2 - condition-value', () => {
       const stringItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {}
+        operator: 'is'
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -224,10 +222,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: true,
-          type: ConditionType.BooleanValue
-        }
+        type: ConditionType.BooleanValue,
+        value: true
       })
       const valueField = buildValueField(
         ConditionType.BooleanValue,
@@ -244,12 +240,12 @@ describe('editor-v2 - condition-value', () => {
           }
         },
         id: 'items[2].value',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: 'true',
         classes: 'govuk-radios--small',
         items: [
-          { text: 'Yes', value: 'true' },
-          { text: 'No', value: 'false' }
+          { text: 'Yes', value: 'true', id: 'items[2].value' },
+          { text: 'No', value: 'false', id: 'items[2].value1' }
         ]
       })
     })
@@ -258,8 +254,7 @@ describe('editor-v2 - condition-value', () => {
       const booleanItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {}
+        operator: 'is'
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -280,10 +275,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: '2024-02-01',
-          type: ConditionType.DateValue
-        }
+        type: ConditionType.DateValue,
+        value: '2024-02-01'
       })
       const valueField = buildValueField(
         ConditionType.DateValue,
@@ -300,8 +293,8 @@ describe('editor-v2 - condition-value', () => {
         hint: {
           text: 'Format must be YYYY-MM-DD'
         },
-        id: 'items[2].[value]',
-        name: 'items[2][value][value]',
+        id: 'items[2].value',
+        name: 'items[2][value]',
         value: '2024-02-01',
         classes: 'govuk-input--width-10'
       })
@@ -312,7 +305,7 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {}
+        type: ConditionType.DateValue
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -333,10 +326,8 @@ describe('editor-v2 - condition-value', () => {
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: 1,
-          type: ConditionType.NumberValue
-        }
+        type: ConditionType.NumberValue,
+        value: 1
       })
       const valueField = buildValueField(
         ConditionType.NumberValue,
@@ -351,7 +342,7 @@ describe('editor-v2 - condition-value', () => {
           text: 'Enter a value'
         },
         id: 'items[2].value',
-        name: 'items[2][value][value]',
+        name: 'items[2][value]',
         value: '1',
         classes: 'govuk-input--width-5',
         attributes: {
@@ -364,8 +355,7 @@ describe('editor-v2 - condition-value', () => {
       const numberItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {}
+        operator: 'is'
       })
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(
@@ -387,7 +377,7 @@ describe('editor-v2 - condition-value', () => {
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
         value: {
-          value: true
+          period: 5
         }
       })
       const valueField =
@@ -407,13 +397,11 @@ describe('editor-v2 - condition-value', () => {
     })
 
     test('should throw if invalid field type', () => {
-      const stringItem = /** @type {ConditionDataV2} */ ({
+      const stringItem = /** @type {unknown} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
-        value: {
-          value: 'stringval'
-        }
+        type: 'invalid'
       })
       expect(() =>
         buildValueField(
@@ -428,9 +416,37 @@ describe('editor-v2 - condition-value', () => {
       ).toThrow('Invalid condition type invalid')
     })
   })
+
+  describe('createSequentialId', () => {
+    test('should create id', () => {
+      expect(createSequentialId('fieldName', 0, 0)).toBe(
+        'items[0].value.fieldName'
+      )
+      expect(createSequentialId('fieldName', 0, 1)).toBe(
+        'items[0].value.fieldName1'
+      )
+      expect(createSequentialId('fieldName', 0, 2)).toBe(
+        'items[0].value.fieldName2'
+      )
+
+      expect(createSequentialId('fieldName', 5, 0)).toBe(
+        'items[5].value.fieldName'
+      )
+      expect(createSequentialId('fieldName', 5, 1)).toBe(
+        'items[5].value.fieldName1'
+      )
+      expect(createSequentialId('fieldName', 5, 2)).toBe(
+        'items[5].value.fieldName2'
+      )
+
+      expect(createSequentialId('', 5, 0)).toBe('items[5].value')
+      expect(createSequentialId('', 5, 1)).toBe('items[5].value1')
+      expect(createSequentialId('', 5, 2)).toBe('items[5].value2')
+    })
+  })
 })
 
 /**
- * @import { ErrorDetails } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ConditionDataV2, List } from '@defra/forms-model'
  */

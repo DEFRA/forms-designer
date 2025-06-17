@@ -17,35 +17,20 @@ export interface ConditionValueData {
   display: string
 }
 
-export interface ConditionStringValueDataV2 {
-  type: ConditionType.StringValue
-  value: string
-}
-
-export interface ConditionBooleanValueDataV2 {
-  type: ConditionType.BooleanValue
-  value: boolean
-}
-
-export interface ConditionNumberValueDataV2 {
-  type: ConditionType.NumberValue
-  value: number
-}
-
-export interface ConditionDateValueDataV2 {
-  type: ConditionType.DateValue
-  value: string
+export interface RelativeDateValueData {
+  type: ConditionType.RelativeDate
+  period: string
+  unit: DateUnits
+  direction: DateDirections
 }
 
 export interface ConditionListItemRefValueDataV2 {
-  type: ConditionType.ListItemRef
   listId: string
   itemId: string
 }
 
-export interface RelativeDateValueData {
-  type: ConditionType.RelativeDate
-  period: string
+export interface RelativeDateValueDataV2 {
+  period: number
   unit: DateUnits
   direction: DateDirections
 }
@@ -65,16 +50,16 @@ export interface ConditionData {
 
 export type ConditionValueDataV2 =
   | ConditionListItemRefValueDataV2
-  | ConditionStringValueDataV2
-  | ConditionBooleanValueDataV2
-  | ConditionNumberValueDataV2
-  | ConditionDateValueDataV2
-  | RelativeDateValueData
+  | RelativeDateValueDataV2
+  | string
+  | boolean
+  | number
 
 export interface ConditionDataV2 {
   id: string
   componentId: string
   operator: OperatorName
+  type: ConditionType
   value: ConditionValueDataV2
 }
 
