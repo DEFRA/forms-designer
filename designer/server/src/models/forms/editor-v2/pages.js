@@ -17,6 +17,8 @@ import {
   formOverviewPath
 } from '~/src/models/links.js'
 
+const BUTTON_SECONDARY_CLASS = 'govuk-button--secondary'
+
 /**
  * @param {Page} page
  * @param {boolean} isEndPage
@@ -157,6 +159,104 @@ export function hideFirstGuidance(page) {
 }
 
 /**
+ * Build initial page actions
+ * @param {string} slug
+ */
+function buildPageActions(slug) {
+  return [
+    {
+      text: 'Add new page',
+      href: editorv2Path(slug, 'page'),
+      classes: 'govuk-button--inverse',
+      attributes: /** @type {string | null} */ (null)
+    }
+  ]
+}
+
+/**
+ * Build reorder action
+ * @param {string} slug
+ */
+function buildReorderAction(slug) {
+  return {
+    text: 'Re-order pages',
+    href: editorv2Path(slug, 'pages-reorder'),
+    classes: BUTTON_SECONDARY_CLASS,
+    attributes: null
+  }
+}
+
+/**
+ * Build right side actions (manage conditions, upload/download)
+ * @param {string} slug
+ */
+function buildRightSideActions(slug) {
+  return [
+    {
+      text: 'Manage conditions',
+      href: editorv2Path(slug, 'conditions'),
+      classes: BUTTON_SECONDARY_CLASS,
+      attributes: null
+    },
+    {
+      text: 'Upload a form',
+      href: editorv2Path(slug, 'upload'),
+      classes: BUTTON_SECONDARY_CLASS,
+      attributes: null
+    },
+    {
+      text: 'Download this form',
+      href: `/library/${slug}/editor-v2/download`,
+      classes: BUTTON_SECONDARY_CLASS,
+      attributes: null
+    }
+  ]
+}
+
+/**
+ * Add conditional actions based on page count
+ * @param {Array<any>} pageActions
+ * @param {number} numOfNonSummaryPages
+ * @param {string} slug
+ * @param {string} previewBaseUrl
+ */
+function addConditionalActions(
+  pageActions,
+  numOfNonSummaryPages,
+  slug,
+  previewBaseUrl
+) {
+  if (numOfNonSummaryPages > 1) {
+    pageActions.push(buildReorderAction(slug))
+  }
+
+  if (numOfNonSummaryPages > 0) {
+    pageActions.push({
+      text: 'Preview form',
+      href: previewBaseUrl,
+      classes: 'govuk-link govuk-link--inverse',
+      attributes: 'target="_blank"'
+    })
+  }
+}
+
+/**
+ * Build page headings and titles
+ * @param {FormMetadata} metadata
+ */
+function buildPageHeadings(metadata) {
+  const pageHeading = 'Add and edit pages'
+  const pageCaption = metadata.title
+  const pageTitle = `${pageHeading} - ${pageCaption}`
+
+  return {
+    pageHeading: { text: pageHeading },
+    pageCaption: { text: pageCaption },
+    pageTitle
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string[]} [notification]
@@ -171,55 +271,33 @@ export function pagesViewModel(metadata, definition, notification) {
   )
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
 
-  const pageActions = [
-    {
-      text: 'Add new page',
-      href: editorv2Path(metadata.slug, 'page'),
-      classes: 'govuk-button--inverse',
-      attributes: /** @type {string | null} */ (null)
-    }
-  ]
-
-  const reorderAction = {
-    text: 'Re-order pages',
-    href: editorv2Path(metadata.slug, 'pages-reorder'),
-    classes: 'govuk-button--secondary',
-    attributes: null
-  }
+  const pageActions = buildPageActions(metadata.slug)
+  const rightSideActions = buildRightSideActions(metadata.slug)
 
   const numOfNonSummaryPages = definition.pages.filter(
     (x) => x.controller !== ControllerType.Summary
   ).length
 
-  if (numOfNonSummaryPages > 1) {
-    pageActions.push(reorderAction)
-  }
+  addConditionalActions(
+    pageActions,
+    numOfNonSummaryPages,
+    metadata.slug,
+    previewBaseUrl
+  )
 
-  if (numOfNonSummaryPages > 0) {
-    pageActions.push({
-      text: 'Preview form',
-      href: previewBaseUrl,
-      classes: 'govuk-link govuk-link--inverse',
-      attributes: 'target="_blank"'
-    })
-  }
+  const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
+  const mappedData = mapPageData(metadata.slug, definition)
 
-  const pageHeading = 'Add and edit pages'
-  const pageCaption = metadata.title
-  const pageTitle = `${pageHeading} - ${pageCaption}`
   const pageListModel = {
-    ...mapPageData(metadata.slug, definition),
+    ...mappedData,
     pageTitle,
     formSlug: metadata.slug,
     previewBaseUrl,
     navigation,
-    pageHeading: {
-      text: pageHeading
-    },
-    pageCaption: {
-      text: pageCaption
-    },
+    pageHeading,
+    pageCaption,
     pageActions,
+    rightSideActions,
     notification
   }
 

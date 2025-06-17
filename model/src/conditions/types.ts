@@ -17,20 +17,20 @@ export interface ConditionValueData {
   display: string
 }
 
-export interface ConditionStringValueDataV2 {
-  type: ConditionType.StringValue
-  value: string
+export interface RelativeDateValueData {
+  type: ConditionType.RelativeDate
+  period: string
+  unit: DateUnits
+  direction: DateDirections
 }
 
 export interface ConditionListItemRefValueDataV2 {
-  type: ConditionType.ListItemRef
   listId: string
   itemId: string
 }
 
-export interface RelativeDateValueData {
-  type: ConditionType.RelativeDate
-  period: string
+export interface RelativeDateValueDataV2 {
+  period: number
   unit: DateUnits
   direction: DateDirections
 }
@@ -48,14 +48,19 @@ export interface ConditionData {
   coordinator?: Coordinator
 }
 
+export type ConditionValueDataV2 =
+  | ConditionListItemRefValueDataV2
+  | RelativeDateValueDataV2
+  | string
+  | boolean
+  | number
+
 export interface ConditionDataV2 {
   id: string
   componentId: string
   operator: OperatorName
-  value:
-    | ConditionListItemRefValueDataV2
-    | ConditionStringValueDataV2
-    | RelativeDateValueData
+  type: ConditionType
+  value: ConditionValueDataV2
 }
 
 export interface ConditionRefData {

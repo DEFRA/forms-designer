@@ -36,19 +36,15 @@ describe('Migration', () => {
           id: 'condition1',
           componentId: 'component1',
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'test'
-          }
+          type: ConditionType.StringValue,
+          value: 'test'
         },
         {
           id: 'condition2',
           componentId: 'component2',
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'test2'
-          }
+          type: ConditionType.StringValue,
+          value: 'test2'
         }
       ]
     }
@@ -67,10 +63,8 @@ describe('Migration', () => {
           id: 'condition1',
           componentId: 'component1',
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'test'
-          }
+          type: ConditionType.StringValue,
+          value: 'test'
         }
       ]
     }
@@ -122,10 +116,8 @@ describe('Migration', () => {
           id: 'condition1',
           componentId: 'nonExistentComponent',
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'test'
-          }
+          type: ConditionType.StringValue,
+          value: 'test'
         }
       ]
     }
@@ -147,8 +139,8 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
             value: {
-              type: ConditionType.ListItemRef,
               listId: 'list1',
               itemId: 'item1'
             }
@@ -218,8 +210,8 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
             value: {
-              type: ConditionType.ListItemRef,
               listId: 'nonExistentList',
               itemId: 'item1'
             }
@@ -253,8 +245,8 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
             value: {
-              type: ConditionType.ListItemRef,
               listId: 'list1',
               itemId: 'nonExistentItem'
             }
@@ -298,9 +290,9 @@ describe('Migration', () => {
             id: 'condition1',
             componentId: 'component1',
             operator: OperatorName.IsAfter,
+            type: ConditionType.RelativeDate,
             value: {
-              type: ConditionType.RelativeDate,
-              period: '7',
+              period: 7,
               unit: DateUnits.DAYS,
               direction: DateDirections.FUTURE
             }
@@ -347,6 +339,169 @@ describe('Migration', () => {
     })
   })
 
+  describe('boolean conditions', () => {
+    test('convertConditionWrapperFromV2 converts a boolean condition correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            type: ConditionType.BooleanValue,
+            value: true
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.YesNoField,
+        options: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        value: {
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.YesNoField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: 'Yes',
+                type: ConditionType.Value,
+                value: 'true'
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
+  })
+
+  describe('number conditions', () => {
+    test('convertConditionWrapperFromV2 converts a number condition correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            type: ConditionType.NumberValue,
+            value: 1
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.NumberField,
+        options: {},
+        schema: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        value: {
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.NumberField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: '1',
+                type: ConditionType.Value,
+                value: '1'
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
+  })
+
+  describe('date conditions', () => {
+    test('convertConditionWrapperFromV2 converts a date condition correctly', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            type: ConditionType.DateValue,
+            value: '2001-01-01'
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.DatePartsField,
+        options: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        value: {
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.DatePartsField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: '2001-01-01',
+                type: ConditionType.Value,
+                value: '2001-01-01'
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
+  })
+
   describe('ref tests for conditions', () => {
     test('convertConditionWrapperFromV2 converts a condition ref correctly', () => {
       const conditionWrapper: ConditionWrapperV2 = {
@@ -384,12 +539,12 @@ describe('Migration', () => {
           name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
           conditions: [
             {
-              conditionName: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
+              conditionName: 'Test condition',
               conditionDisplayName: 'Test condition',
               coordinator: undefined
             },
             {
-              conditionName: '1f7473dd-45b1-4f7e-b9bf-ea4595d6f642',
+              conditionName: 'Test condition',
               conditionDisplayName: 'Test condition',
               coordinator: Coordinator.OR
             }

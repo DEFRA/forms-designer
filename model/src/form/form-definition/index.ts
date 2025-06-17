@@ -1,4 +1,5 @@
-import Joi, { type LanguageMessages } from 'joi'
+import JoiDate from '@joi/date'
+import JoiBase, { type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
@@ -7,11 +8,7 @@ import {
   type ContentComponentsDef,
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
-import {
-  yesNoListId,
-  yesNoListNoItemId,
-  yesNoListYesItemId
-} from '~/src/components/yes-no-helper.js'
+import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
 import {
   type ConditionData,
   type ConditionDataV2,
@@ -21,10 +18,10 @@ import {
   type ConditionListItemRefValueDataV2,
   type ConditionRefData,
   type ConditionRefDataV2,
-  type ConditionStringValueDataV2,
   type ConditionValueData,
   type ConditionsModelData,
-  type RelativeDateValueData
+  type RelativeDateValueData,
+  type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
 import {
   SchemaVersion,
@@ -46,6 +43,8 @@ import {
 } from '~/src/form/form-definition/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
+
+const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
 const idSchemaOptional = Joi.string().uuid()
 
@@ -72,22 +71,15 @@ const componentIdRefSchema = Joi.ref('/pages', {
 const listIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists
-      .filter((list) => list.id)
-      .map((list) => list.id)
-      // To allow YesNo list to be valid even though the virtual list may not exist explicitly in the form definition
-      .concat(yesNoListId)
+    lists.filter((list) => list.id).map((list) => list.id)
 })
 
 const listItemIdRef = Joi.ref('/lists', {
   in: true,
   adjust: (lists: List[]) =>
-    lists
-      .flatMap((list) =>
-        list.items.filter((item) => item.id).map((item) => item.id)
-      )
-      // To allow YesNo list items to be valid even though the virtual list may not exist explicitly in the form definition
-      .concat([yesNoListYesItemId, yesNoListNoItemId])
+    lists.flatMap((list) =>
+      list.items.filter((item) => item.id).map((item) => item.id)
+    )
 })
 
 const sectionsSchema = Joi.object<Section>()
@@ -145,30 +137,10 @@ const conditionValueSchema = Joi.object<ConditionValueData>()
       .description('Human-readable version of the value for display purposes')
   })
 
-const conditionStringValueDataSchemaV2 =
-  Joi.object<ConditionStringValueDataV2>()
-    .description('String value specification for a condition')
-    .keys({
-      type: Joi.string()
-        .trim()
-        .valid('StringValue')
-        .required()
-        .description('Type of the condition value, should be "StringValue"'),
-      value: Joi.string()
-        .trim()
-        .required()
-        .description('The actual value to compare against')
-    })
-
 const conditionListItemRefDataSchemaV2 =
   Joi.object<ConditionListItemRefValueDataV2>()
     .description('List item ref specification for a condition')
     .keys({
-      type: Joi.string()
-        .trim()
-        .valid('ListItemRef')
-        .required()
-        .description('Type of the condition value, should be "ListItemRef"'),
       listId: Joi.string()
         .trim()
         .required()
@@ -186,6 +158,24 @@ const conditionListItemRefDataSchemaV2 =
         .required()
         .description('The id of the list item')
     })
+
+const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
+  .description('Relative date specification for date-based conditions')
+  .keys({
+    period: Joi.number()
+      .integer()
+      .positive()
+      .required()
+      .description('Numeric amount of the time period, as a string'),
+    unit: Joi.string()
+      .trim()
+      .required()
+      .description('Time unit (e.g. days, weeks, months, years)'),
+    direction: Joi.string()
+      .trim()
+      .required()
+      .description('Temporal direction, either "past" or "future"')
+  })
 
 const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
@@ -283,15 +273,36 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       ),
     operator: Joi.string()
       .trim()
+      .valid(...Object.values(OperatorName))
       .required()
       .description('Comparison operator (equals, greaterThan, contains, etc.)'),
-    value: Joi.alternatives()
-      .try(
-        conditionStringValueDataSchemaV2,
-        conditionListItemRefDataSchemaV2,
-        relativeDateValueDataSchema
-      )
+    type: Joi.string()
+      .trim()
+      .valid(...Object.values(ConditionType))
       .required()
+      .description('Type of the condition value'),
+    value: Joi.any()
+      .required()
+      .description('The actual value to compare against')
+      .when('type', {
+        switch: [
+          { is: ConditionType.BooleanValue, then: Joi.boolean() },
+          { is: ConditionType.StringValue, then: Joi.string() },
+          { is: ConditionType.NumberValue, then: Joi.number() },
+          {
+            is: ConditionType.DateValue,
+            then: Joi.date().format('YYYY-MM-DD').raw()
+          },
+          {
+            is: ConditionType.ListItemRef,
+            then: conditionListItemRefDataSchemaV2
+          },
+          {
+            is: ConditionType.RelativeDate,
+            then: relativeDateValueDataSchemaV2
+          }
+        ]
+      })
       .description(
         'Value to compare the field against, either fixed or relative date'
       )

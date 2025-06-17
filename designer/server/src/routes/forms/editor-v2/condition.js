@@ -20,6 +20,7 @@ import {
   createConditionSessionState,
   getConditionSessionState
 } from '~/src/lib/session-helper.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/condition.js'
 import { editorFormPath, editorv2Path } from '~/src/models/links.js'
 import {
@@ -39,6 +40,7 @@ const stateIdSchema = Joi.string().optional()
 const componentIdSchema = conditionDataSchemaV2.extract('componentId')
 const operatorSchema = conditionDataSchemaV2.extract('operator')
 const valueSchema = conditionDataSchemaV2.extract('value')
+const typeSchema = conditionDataSchemaV2.extract('type')
 
 /**
  * @type {Joi.ObjectSchema<ConditionWrapperPayload>}
@@ -68,13 +70,22 @@ const conditionWrapperSchema = conditionWrapperSchemaV2.keys({
         .messages({
           '*': 'Select a condition type'
         }),
+      type: typeSchema
+        .when('operator', {
+          not: operatorSchema,
+          then: Joi.optional() // Only validate the value if the operator is valid
+        })
+        .messages({
+          '*': 'Enter a condition value type'
+        }),
       value: valueSchema
         .when('operator', {
           not: operatorSchema,
           then: Joi.optional() // Only validate the value if the operator is valid
         })
         .messages({
-          '*': 'Enter a condition value'
+          '*': 'Enter a condition value',
+          'date.format': 'Enter a condition value in the correct format'
         })
     })
   ),
@@ -166,7 +177,7 @@ export default [
       // the process flow hits the the failAction handler below.
       // When clicking the 'Save condition' button, and the payload is valid, the processing hits this section.
 
-      const { auth, params, payload } = request
+      const { auth, params, payload, yar } = request
       const { slug, conditionId } = params
       const { token } = auth.credentials
 
@@ -178,6 +189,8 @@ export default [
         payload.id = conditionId
         await updateCondition(metadata.id, token, payload)
       }
+
+      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
       // Redirect to conditions list page
       return h
@@ -234,7 +247,6 @@ export default [
           } else {
             saveSessionState(yar, payload, stateId, items)
 
-            // Filter out unwanted schema errors
             processErrorMessages(error)
 
             return redirectWithErrors(request, h, error, errorKey)

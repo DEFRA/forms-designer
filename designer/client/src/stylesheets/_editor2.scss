@@ -129,6 +129,29 @@
 // Pages
 //
 
+// Pages header layout
+.app-pages-header {
+  &__title {
+    margin-top: 10px;
+  }
+
+  &__actions {
+    text-align: right;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    margin-bottom: 0;
+  }
+
+  &__action-button {
+    white-space: nowrap;
+    padding: 12px 18px;
+    font-size: 18px;
+    min-width: auto;
+    margin-bottom: 0;
+  }
+}
+
 // Manage conditions
 .app-conditions-table {
   .govuk-table__header {

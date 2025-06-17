@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ConditionType,
+  OperatorName,
   getOperatorNames,
   hasComponentsEvenIfNoNext,
   hasConditionSupport,
@@ -15,75 +16,15 @@ import {
 } from '~/src/lib/utils.js'
 import {
   BACK_TO_MANAGE_CONDITIONS,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
+import { buildValueField } from '~/src/models/forms/editor-v2/condition-value.js'
 import {
   hasConditionSupportForPage,
   withPageNumbers
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
-
-/**
- * @param {ConditionType} type
- * @param {number} idx
- * @param { ConditionDataV2 | ConditionRefDataV2 } item
- * @param { ConditionalComponentsDef | undefined } selectedComponent
- * @param {FormDefinition} definition
- * @param { ValidationFailure<FormEditor> | undefined } validation
- */
-export function buildValueField(
-  type,
-  idx,
-  item,
-  selectedComponent,
-  definition,
-  validation
-) {
-  switch (type) {
-    case ConditionType.ListItemRef: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][itemId]`,
-        fieldset: {
-          legend: {
-            text: 'Select a value'
-          }
-        },
-        classes: 'govuk-radios--small',
-        value:
-          'value' in item && 'itemId' in item.value
-            ? item.value.itemId
-            : undefined,
-        items: getListFromComponent(selectedComponent, definition)?.items.map(
-          (itm) => {
-            return { text: itm.text, value: itm.id ?? itm.value }
-          }
-        ),
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
-    }
-
-    case ConditionType.StringValue: {
-      return {
-        id: `items[${idx}].value`,
-        name: `items[${idx}][value][value]`,
-        label: {
-          text: 'Enter a value'
-        },
-        classes: 'govuk-input--width-10',
-        value:
-          'value' in item && 'value' in item.value
-            ? item.value.value
-            : undefined,
-        ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
-      }
-    }
-
-    default: {
-      throw new Error(`Invalid condition type ${type}`)
-    }
-  }
-}
 
 /**
  * @param { ConditionDataV2 | ConditionRefDataV2 } item
@@ -99,6 +40,72 @@ export function getComponentId(item) {
  */
 export function getOperator(item) {
   return 'operator' in item ? item.operator : undefined
+}
+
+/**
+ * @param { OperatorName | undefined } operator
+ */
+export function isRelativeDate(operator) {
+  if (!operator) {
+    return false
+  }
+
+  return [
+    OperatorName.IsAtLeast,
+    OperatorName.IsAtMost,
+    OperatorName.IsLessThan,
+    OperatorName.IsMoreThan
+  ].includes(operator)
+}
+
+/**
+ * Determine if the condition/operator combination should use NumberValue
+ * NumberValue is used when the operator is HasLength, IsLongerThan or IsShorterThan
+ * or if the component is a NumberField
+ * @param { ConditionalComponentsDef | undefined } component
+ * @param { OperatorName | undefined } operator
+ */
+export function isConditionRequiresNumberValue(component, operator) {
+  if (!operator) {
+    return false
+  }
+
+  if (
+    [
+      OperatorName.HasLength,
+      OperatorName.IsLongerThan,
+      OperatorName.IsShorterThan
+    ].includes(operator)
+  ) {
+    return true
+  }
+
+  if (!component) {
+    return false
+  }
+
+  return component.type === ComponentType.NumberField
+}
+
+/**
+ * @param { ConditionalComponentsDef | undefined } selectedComponent
+ * @param { OperatorName | undefined } operatorValue
+ * @returns
+ */
+export function getConditionType(selectedComponent, operatorValue) {
+  if (hasListField(selectedComponent)) {
+    return ConditionType.ListItemRef
+  } else if (selectedComponent?.type === ComponentType.YesNoField) {
+    return ConditionType.BooleanValue
+  } else if (selectedComponent?.type === ComponentType.DatePartsField) {
+    return isRelativeDate(operatorValue)
+      ? ConditionType.RelativeDate
+      : ConditionType.DateValue
+  } else if (isConditionRequiresNumberValue(selectedComponent, operatorValue)) {
+    return ConditionType.NumberValue
+  } else {
+    return ConditionType.StringValue
+  }
 }
 
 /**
@@ -127,6 +134,7 @@ export function buildConditionsFields(
     label: {
       text: 'Select a question'
     },
+    classes: 'govuk-input--width-20',
     items: componentItems,
     value: getComponentId(item),
     ...insertValidationErrors(
@@ -141,6 +149,15 @@ export function buildConditionsFields(
           .find((c) => c.id === item.componentId)
       : undefined
 
+  const operatorValue = getOperator(item)
+
+  const operatorNames = getOperatorNames(selectedComponent?.type).map(
+    (val) => ({
+      text: upperFirst(val),
+      value: val
+    })
+  )
+
   const operator = component.value
     ? {
         id: `items[${idx}].operator`,
@@ -149,12 +166,12 @@ export function buildConditionsFields(
           text: 'Condition type'
         },
         items: [{ text: 'Select a condition type', value: '' }].concat(
-          ...getOperatorNames(selectedComponent?.type).map((val) => ({
-            text: upperFirst(val),
-            value: val
-          }))
+          operatorNames
         ),
-        value: getOperator(item),
+        value:
+          operatorValue && operatorNames.find((x) => x.value === operatorValue)
+            ? operatorValue
+            : undefined,
         formGroup: {
           afterInput: {
             html: `<button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-left-3" name="action" type="submit"
@@ -167,20 +184,14 @@ export function buildConditionsFields(
       }
     : undefined
 
-  // TODO - enhance to handle date absolute + relative
-  // TODO - is there an easier/better way to determine the condition type?
-  const conditionType =
-    hasListField(selectedComponent) ||
-    selectedComponent?.type === ComponentType.YesNoField
-      ? ConditionType.ListItemRef
-      : ConditionType.StringValue
+  const conditionType = getConditionType(selectedComponent, operatorValue)
 
   const listId =
     conditionType === ConditionType.ListItemRef
       ? getListFromComponent(selectedComponent, definition)?.id
       : undefined
 
-  const conditionTypeName = `items[${idx}][value][type]`
+  const conditionTypeName = `items[${idx}][type]`
 
   const listIdName =
     conditionType === ConditionType.ListItemRef
@@ -188,7 +199,7 @@ export function buildConditionsFields(
       : ''
 
   // prettier-ignore
-  const value = 'operator' in item && component.value && item.operator.length
+  const value = 'operator' in item && component.value && operator?.value
       ? buildValueField(conditionType, idx, item, selectedComponent, definition, validation)
       : undefined
 
@@ -218,7 +229,7 @@ export function buildConditionEditor(definition, validation, state) {
       }
     })
 
-  const legendText = `${state.id !== 'new' ? 'Edit' : 'Create new'} condition`
+  const legendText = state.id !== 'new' ? '' : 'Create new condition'
   const { conditionWrapper } = state
 
   const conditionFieldsList = (
@@ -266,11 +277,17 @@ export function buildConditionEditor(definition, validation, state) {
     ...insertValidationErrors(validation?.formErrors.coordinator)
   }
 
+  const originalConditionHtml = state.originalConditionWrapper
+    ? toPresentationHtmlV2(state.originalConditionWrapper, definition)
+    : ''
+
   return {
     legendText,
     conditionFieldsList,
     displayNameField,
-    coordinator
+    coordinator,
+    conditionId: state.id,
+    originalConditionHtml
   }
 }
 
@@ -321,13 +338,6 @@ export function conditionViewModel(
 }
 
 /**
- * @typedef {object} ConditionPageState
- * @property {string} [selectedComponentId] - The component id
- * @property {string} [selectedOperator] - The operator
- * @property {string} [displayName] - The condition display name
- */
-
-/**
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page, OperatorName } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -182,10 +182,8 @@ describe('editor-v2 - model', () => {
           id: 'cattle-farm-check',
           componentId,
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'cattle'
-          }
+          type: ConditionType.StringValue,
+          value: 'cattle'
         }
       ]
     }
@@ -219,19 +217,15 @@ describe('editor-v2 - model', () => {
             id: 'organic-farming-check',
             componentId,
             operator: OperatorName.Is,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'organic'
-            }
+            type: ConditionType.StringValue,
+            value: 'organic'
           },
           {
             id: 'subsidy-eligibility-check',
             componentId,
             operator: OperatorName.IsNot,
-            value: {
-              type: ConditionType.StringValue,
-              value: 'conventional'
-            }
+            type: ConditionType.StringValue,
+            value: 'conventional'
           }
         ]
       }
@@ -260,8 +254,8 @@ describe('editor-v2 - model', () => {
         title: 'Types of farming operations',
         type: /** @type {const} */ ('string'),
         items: [
-          { text: 'Cattle farming', value: 'cattle' },
-          { text: 'Crop farming', value: 'crops' }
+          { text: 'Cattle farming', value: 'cattle', id: 'cat1' },
+          { text: 'Crop farming', value: 'crops', id: 'crop2' }
         ]
       }
 
@@ -274,9 +268,10 @@ describe('editor-v2 - model', () => {
             id: 'farming-type-check',
             componentId,
             operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
             value: {
-              type: ConditionType.StringValue,
-              value: 'cattle'
+              itemId: 'cat1',
+              listId: 'farming-types-list'
             }
           }
         ]
@@ -294,9 +289,15 @@ describe('editor-v2 - model', () => {
       })
 
       const result = toPresentationStringV2(conditionWithList, definition)
+      const resultHtml = toPresentationHtmlV2(conditionWithList, definition)
 
       expect(typeof result).toBe('string')
       expect(result.length).toBeGreaterThan(0)
+      expect(typeof resultHtml).toBe('string')
+      expect(resultHtml.length).toBeGreaterThan(0)
+      expect(resultHtml).toBe(
+        "'What type of farming do you do?' is 'Cattle farming'"
+      )
     })
   })
 
@@ -317,10 +318,8 @@ describe('editor-v2 - model', () => {
           id: 'cattle-farm-check',
           componentId,
           operator: OperatorName.Is,
-          value: {
-            type: ConditionType.StringValue,
-            value: 'cattle'
-          }
+          type: ConditionType.StringValue,
+          value: 'cattle'
         }
       ]
     }

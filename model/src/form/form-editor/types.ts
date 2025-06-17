@@ -416,6 +416,7 @@ export interface ConditionSessionState {
   id?: string
   stateId?: string
   conditionWrapper?: ConditionWrapperV2
+  originalConditionWrapper?: ConditionWrapperV2
 }
 
 export interface GovukFieldItem {

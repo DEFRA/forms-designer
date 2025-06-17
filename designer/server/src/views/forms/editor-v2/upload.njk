@@ -1,0 +1,58 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/file-upload/macro.njk" import govukFileUpload %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "page-body/macro.njk" import appPageBody %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: pageCaption,
+    errorList: errorList,
+    classes: "govuk-grid-column-two-thirds",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+    {{ govukWarningText({
+      text: "Uploading a new form will replace your current form. This action cannot be undone.",
+      iconFallbackText: "Warning"
+    }) }}
+
+    <p class="govuk-body">Before you upload a new form, you should <a href="{{ downloadAction }}" class="govuk-link">download a copy</a> in case you need it again.</p>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {{ govukFileUpload({
+        id: "formDefinition",
+        name: "formDefinition",
+        label: {
+          text: "Choose a form file",
+          classes: "govuk-label--m"
+        },
+        errorMessage: {
+          text: formErrors.formDefinition.text
+        } if formErrors.formDefinition,
+        accept: ".json"
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: "Upload form"
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          href: backLink.href,
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+    </form>
+
+  {% endcall %}
+{% endblock %}

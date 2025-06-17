@@ -1,103 +1,19 @@
-import { ConditionType } from '@defra/forms-model'
+import { ComponentType, ConditionType, OperatorName } from '@defra/forms-model'
 
-import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
+import {
+  buildDefinition,
+  testFormDefinitionWithMultipleV2Conditions
+} from '~/src/__stubs__/form-definition.js'
 import {
   buildConditionEditor,
-  buildValueField,
+  buildConditionsFields,
   getComponentId,
-  getOperator
+  getConditionType,
+  getOperator,
+  isRelativeDate
 } from '~/src/models/forms/editor-v2/condition.js'
 
 describe('editor-v2 - condition model', () => {
-  describe('buildValueField', () => {
-    test('should return list value field', () => {
-      const listItem = /** @type {ConditionDataV2} */ ({
-        id: '1',
-        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {
-          itemId: '689d3f66-88f7-4dc0-b199-841b72393c19'
-        }
-      })
-      const selectedComponent =
-        testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
-      const valueField = buildValueField(
-        ConditionType.ListItemRef,
-        2,
-        listItem,
-        selectedComponent,
-        testFormDefinitionWithMultipleV2Conditions,
-        undefined
-      )
-      expect(valueField).toEqual({
-        classes: 'govuk-radios--small',
-        fieldset: {
-          legend: {
-            text: 'Select a value'
-          }
-        },
-        id: 'items[2].value',
-        items: [
-          { text: 'Red', value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7' },
-          { text: 'Blue', value: '689d3f66-88f7-4dc0-b199-841b72393c19' },
-          { text: 'Green', value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171' }
-        ],
-        name: 'items[2][value][itemId]',
-        value: '689d3f66-88f7-4dc0-b199-841b72393c19'
-      })
-    })
-
-    test('should return string value field', () => {
-      const stringItem = /** @type {ConditionDataV2} */ ({
-        id: '1',
-        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {
-          value: 'stringval'
-        }
-      })
-      const valueField = buildValueField(
-        ConditionType.StringValue,
-        2,
-        stringItem,
-        undefined,
-        testFormDefinitionWithMultipleV2Conditions,
-        undefined
-      )
-      expect(valueField).toEqual({
-        label: {
-          text: 'Enter a value'
-        },
-        id: 'items[2].value',
-        name: 'items[2][value][value]',
-        value: 'stringval',
-        classes: 'govuk-input--width-10'
-      })
-    })
-
-    test('should throw if invalid field type', () => {
-      const stringItem = /** @type {ConditionDataV2} */ ({
-        id: '1',
-        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-        operator: 'is',
-        value: {
-          value: 'stringval'
-        }
-      })
-      expect(() =>
-        buildValueField(
-          // @ts-expect-error - enforce invalid type
-          'invalid',
-          2,
-          stringItem,
-          undefined,
-          testFormDefinitionWithMultipleV2Conditions,
-          undefined
-        )
-      ).toThrow('Invalid condition type invalid')
-    })
-  })
-
   describe('getComponentId', () => {
     test('should return component id if property exists', () => {
       // @ts-expect-error - partial type only
@@ -128,7 +44,7 @@ describe('editor-v2 - condition model', () => {
         undefined,
         state
       )
-      expect(res.legendText).toBe('Edit condition')
+      expect(res.legendText).toBe('')
       expect(res.displayNameField).toEqual({
         classes: 'govuk-input--width-20',
         hint: {
@@ -160,8 +76,190 @@ describe('editor-v2 - condition model', () => {
       })
     })
   })
+
+  describe('isRelativeDate', () => {
+    test('should return false if no operator', () => {
+      expect(isRelativeDate(undefined)).toBeFalsy()
+    })
+
+    test('should return false if operator but not for relative dates', () => {
+      expect(isRelativeDate(OperatorName.Is)).toBeFalsy()
+    })
+
+    test('should return true if operator is for relative dates', () => {
+      expect(isRelativeDate(OperatorName.IsAtLeast)).toBeTruthy()
+    })
+  })
+
+  describe('getConditionType', () => {
+    test('should return ListItemRef if a list field', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.AutocompleteField
+      })
+      expect(getConditionType(component, undefined)).toBe(
+        ConditionType.ListItemRef
+      )
+    })
+
+    test('should return ListItemRef if YesNo field', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.YesNoField
+      })
+      expect(getConditionType(component, undefined)).toBe(
+        ConditionType.BooleanValue
+      )
+    })
+
+    test('should return RelativeDate if date parts field and operator denotes relative', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.DatePartsField
+      })
+      expect(getConditionType(component, OperatorName.IsAtLeast)).toBe(
+        ConditionType.RelativeDate
+      )
+    })
+
+    test('should return DateValue if date field but operator does not denote relative', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.DatePartsField
+      })
+      expect(getConditionType(component, OperatorName.Is)).toBe(
+        ConditionType.DateValue
+      )
+    })
+
+    test('should return StringValue if missing field', () => {
+      expect(getConditionType(undefined, undefined)).toBe(
+        ConditionType.StringValue
+      )
+    })
+
+    test('should return NumberValue if number field', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.NumberField
+      })
+      expect(getConditionType(component, OperatorName.Is)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsNot)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsAtLeast)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsAtMost)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsLessThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsMoreThan)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Text field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.TextField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Multiline field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.MultilineTextField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+
+    test('should return NumberValue if Email field and operator denotes numeric', () => {
+      const component = /** @type {ConditionalComponentsDef} */ ({
+        type: ComponentType.EmailAddressField
+      })
+      expect(getConditionType(component, OperatorName.IsLongerThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.IsShorterThan)).toBe(
+        ConditionType.NumberValue
+      )
+      expect(getConditionType(component, OperatorName.HasLength)).toBe(
+        ConditionType.NumberValue
+      )
+    })
+  })
+
+  describe('buildConditionsFields', () => {
+    test('should lookup component', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [{ id: 'comp1', type: ComponentType.RadiosField }],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1'
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.operator?.items).toHaveLength(3)
+      expect(res.operator?.items[1].text).toBe('Is')
+      expect(res.operator?.items[2].text).toBe('Is not')
+    })
+
+    test('should blank out the operator if operator value not applicable to component', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [
+            { id: 'comp1', type: ComponentType.RadiosField, value: 'something' }
+          ],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1',
+        operator: 'invalid'
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.operator?.value).toBeUndefined()
+    })
+  })
 })
 
 /**
- * @import { ConditionDataV2 } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2 } from '@defra/forms-model'
  */

@@ -49,8 +49,7 @@ import {
   type ConditionDataV2,
   type ConditionListItemRefValueDataV2,
   type ConditionRefDataV2,
-  type ConditionStringValueDataV2,
-  type RelativeDateValueData
+  type RelativeDateValueDataV2
 } from '~/src/index.js'
 
 describe('Form definition schema', () => {
@@ -398,20 +397,15 @@ describe('Form definition schema', () => {
         components: []
       }
 
-      const stringValueConditionData: ConditionStringValueDataV2 = {
-        type: ConditionType.StringValue,
-        value: 'Enrique Chase'
-      }
+      const stringValueConditionData = 'Enrique Chase'
 
-      const relativeDateConditionData: RelativeDateValueData = {
-        type: ConditionType.RelativeDate,
-        period: '7',
+      const relativeDateConditionData: RelativeDateValueDataV2 = {
+        period: 7,
         unit: DateUnits.DAYS,
         direction: DateDirections.FUTURE
       }
 
       const listItemRefConditionData: ConditionListItemRefValueDataV2 = {
-        type: ConditionType.ListItemRef,
         listId: '14ec8ab5-05a0-4b00-b866-d40146077d7a',
         itemId: 'a9dd35af-187e-4027-b8b1-e58a4aab3a82'
       }
@@ -420,6 +414,7 @@ describe('Form definition schema', () => {
         id: '923086db-02d1-4e80-9d7c-ca1b20101de9',
         componentId: 'd8115721-7b71-4587-8a93-6499d3a3f94c',
         operator: OperatorName.Is,
+        type: ConditionType.StringValue,
         value: stringValueConditionData
       }
 
@@ -427,6 +422,7 @@ describe('Form definition schema', () => {
         id: '43c2fc24-de68-4495-80f8-485bc8e5384b',
         componentId: '91c22b37-75a0-4d59-8879-6b9790e694f7',
         operator: OperatorName.IsLessThan,
+        type: ConditionType.RelativeDate,
         value: relativeDateConditionData
       }
 
@@ -434,6 +430,7 @@ describe('Form definition schema', () => {
         id: '8a85e45a-c577-4748-a095-3a86d782b336',
         componentId: '69272c34-5acb-42cd-b9fe-38ad58e3a524',
         operator: OperatorName.Is,
+        type: ConditionType.ListItemRef,
         value: listItemRefConditionData
       }
 

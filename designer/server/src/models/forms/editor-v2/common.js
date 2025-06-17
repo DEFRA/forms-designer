@@ -2,11 +2,9 @@ import {
   ConditionsModel,
   ControllerType,
   convertConditionWrapperFromV2,
-  getYesNoList,
   hasComponents,
   hasComponentsEvenIfNoNext,
-  isConditionWrapperV2,
-  yesNoListId
+  isConditionWrapperV2
 } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -211,10 +209,6 @@ export function toPresentationStringV2(conditionWrapper, definition) {
 export function toPresentationHtmlV2(conditionWrapper, definition) {
   const { pages, conditions, lists } = definition
 
-  if (!lists.find((x) => x.id === yesNoListId)) {
-    lists.push(getYesNoList())
-  }
-
   const components = pages.flatMap((p) =>
     hasComponentsEvenIfNoNext(p) ? p.components : []
   )
@@ -240,5 +234,5 @@ export function toPresentationHtmlV2(conditionWrapper, definition) {
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, Page, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
  */
