@@ -1,6 +1,11 @@
 import { type ComponentType } from '~/src/components/enums.js'
-import { type QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
-import { type GovukField } from '~/src/form/form-editor/types.js'
+import {
+  type DateItem,
+  type GovukField,
+  type ListItemReadonly
+} from '~/src/form/form-editor/types.js'
+import { type DefaultComponent, type GovukFieldset } from '~/src/index.js'
+
 export interface AppPreviewErrorPanelMacroErrorTemplate {
   advancedSettingsErrors: []
   baseErrors: { template: unknown; type: string }[]
@@ -22,6 +27,20 @@ export interface AppPreviewPanelTabsMacro {
   errorTemplates: AppPreviewErrorPanelMacroErrorTemplate
   extraFields: GovukField[]
   basePageFields: GovukField[]
+}
+
+export interface QuestionBaseModel {
+  id?: string
+  name?: string
+  content?: string
+  label?: DefaultComponent
+  hint?: DefaultComponent
+  fieldset?: GovukFieldset
+  readonly items?: ListItemReadonly[] | DateItem[]
+  text?: string
+  formGroup?: { afterInputs: { html: string } }
+  type?: 'text' | 'number' | 'boolean'
+  classes?: string
 }
 
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {
