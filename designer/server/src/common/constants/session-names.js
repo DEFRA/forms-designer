@@ -32,7 +32,8 @@ export const sessionNames = {
     ),
     editorPageConditions: /** @type {const} */ (
       'pageConditionsValidationFailure'
-    )
+    ),
+    upload: /** @type {const} */ ('uploadValidationFailure')
   },
   successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList'),
