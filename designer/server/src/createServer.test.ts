@@ -243,6 +243,7 @@ describe('Server tests', () => {
   describe('leftPadDate', () => {
     test('should perform left pad', () => {
       expect(leftPadDateIfSupplied(undefined)).toBe('')
+      expect(leftPadDateIfSupplied('')).toBe('')
       expect(leftPadDateIfSupplied('0')).toBe('00')
       expect(leftPadDateIfSupplied('1')).toBe('01')
       expect(leftPadDateIfSupplied('9')).toBe('09')
