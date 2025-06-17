@@ -64,12 +64,23 @@ describe('page-controller', () => {
       title: 'List component',
       list: listId
     })
+    const guidanceComponent = buildMarkdownComponent({
+      content: 'This is some guidance'
+    })
     const pageTitle = 'Page title'
     const page = buildQuestionPage({
       title: pageTitle,
       components: [textFieldComponent, listComponent]
     })
+    const pageWithGuidance = buildQuestionPage({
+      title: pageTitle,
+      components: [guidanceComponent, textFieldComponent, listComponent]
+    })
     const formDefinition = buildDefinition({ pages: [page], lists: [list] })
+    const formDefinitionWithGuidance = buildDefinition({
+      pages: [pageWithGuidance],
+      lists: [list]
+    })
     /**
      *
      * @param {{
@@ -177,20 +188,79 @@ describe('page-controller', () => {
       expect(pageRenderMock).toHaveBeenCalledTimes(3)
     })
 
+    it('should show dummy guidance when highlighted with no guidance text', () => {
+      const { pageController } = buildController()
+      expect(pageController.components[0].model.label.text).toBe(
+        'Question title'
+      )
+      expect(pageController.guidanceText).toBe('')
+      pageController.highlightGuidance()
+      const dummyGuidanceComponent = pageController.components[0]
+      expect(dummyGuidanceComponent.model.content).toBe(
+        '<p>Guidance text</p>\n'
+      )
+      expect(dummyGuidanceComponent.model).toEqual({
+        classes: 'highlight',
+        content: '<p>Guidance text</p>\n',
+        id: 'markdown',
+        name: 'markdown'
+      })
+    })
+
+    it('should remove dummy guidance when unhighlighted with no guidance text', () => {
+      const { pageController } = buildController()
+      pageController.highlightGuidance()
+      pageController.clearHighlight()
+      expect(pageController.components[0].model.label.text).toBe(
+        'Question title'
+      )
+    })
+
+    it('should render if you add guidance', () => {
+      const newGuidance = 'This is some NEW guidance'
+      const expectedGuidance = '<p>This is some NEW guidance</p>\n'
+      const { pageController } = buildController()
+      expect(pageController.guidanceText).toBe('')
+      expect(pageController.components[0].model.label.text).toBe(
+        'Question title'
+      )
+      pageController.highlightGuidance()
+      pageController.guidanceText = newGuidance
+      expect(pageController.guidanceText).toBe(newGuidance)
+      expect(pageController.components[0].model.content).toBe(expectedGuidance)
+      expect(pageController.components[0].model.classes).toBe('highlight')
+      expect(pageController.guidance.classes).toBe('highlight')
+      pageController.clearHighlight()
+      expect(pageController.guidanceText).toBe(newGuidance)
+      expect(pageController.components[0].model.name).toBe('markdown')
+    })
+
+    it('should render if guidance is already there', () => {
+      const { pageController } = buildController({
+        currentPage: pageWithGuidance,
+        definition: formDefinitionWithGuidance,
+        components: pageWithGuidance.components
+      })
+      expect(pageController.components[0].model.content).toBe(
+        '<p>This is some guidance</p>\n'
+      )
+    })
+
+    it('should not render if guidance is removed', () => {
+      const { pageController } = buildController({
+        currentPage: pageWithGuidance,
+        definition: formDefinitionWithGuidance,
+        components: pageWithGuidance.components
+      })
+      pageController.guidanceText = ''
+      expect(pageController.components[0].model.label.text).toBe(
+        'Question title'
+      )
+    })
+
     it('should render if you change the guidance', () => {
       const newGuidance = 'This is some NEW guidance'
       const expectedGuidance = '<p>This is some NEW guidance</p>\n'
-      const guidanceComponent = buildMarkdownComponent({
-        content: 'This is some guidance'
-      })
-      const pageWithGuidance = buildQuestionPage({
-        ...page,
-        components: [guidanceComponent, ...page.components]
-      })
-      const formDefinitionWithGuidance = buildDefinition({
-        ...formDefinition,
-        pages: [pageWithGuidance]
-      })
       const { pageController, pageRenderMock } = buildController({
         currentPage: pageWithGuidance,
         components: pageWithGuidance.components,
@@ -198,10 +268,12 @@ describe('page-controller', () => {
       })
       pageController.highlightGuidance()
       pageController.guidanceText = newGuidance
-      expect(pageController.guidanceText).toBe(expectedGuidance)
+      expect(pageController.guidanceText).toBe(newGuidance)
       expect(pageController.components[0].model.content).toBe(expectedGuidance)
+      expect(pageController.components[0].model.classes).toBe('highlight')
       expect(pageController.guidance.classes).toBe('highlight')
       pageController.clearHighlight()
+      expect(pageController.components[0].model.classes).toBe('')
       expect(pageController.guidance.classes).toBe('')
       expect(pageRenderMock).toHaveBeenCalledTimes(3)
     })

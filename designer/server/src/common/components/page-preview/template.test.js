@@ -20,14 +20,23 @@ describe('Pages left panel component', () => {
               text: 'Guidance text',
               classes: 'guidance-classes'
             },
-            components: []
+            components: [
+              {
+                model: {
+                  content: '<p>Some info</p>\n',
+                  id: 'markdown',
+                  name: 'markdown'
+                },
+                questionType: 'Markdown'
+              }
+            ]
           }
         }
       )
 
       $headings = container.getAllByRole('heading')
       // $groups = container.getAllByRole('group')
-      $guidanceText = container.getByText('Guidance text')
+      $guidanceText = container.getByText('Some info')
     })
 
     it('should render page heading', () => {
@@ -36,10 +45,7 @@ describe('Pages left panel component', () => {
     })
 
     it('should render the guidance text', () => {
-      expect($guidanceText).toHaveTextContent('Guidance text')
-      expect($guidanceText).toHaveClass(
-        'govuk-body govuk-!-padding-bottom-4 guidance-classes'
-      )
+      expect($guidanceText).toHaveTextContent('Some info')
     })
   })
 
@@ -54,17 +60,44 @@ describe('Pages left panel component', () => {
               text: 'Favourite movie genre',
               classes: 'dummy-class'
             },
-            guidance: {
-              text: '',
-              classes: ''
-            },
-            components: []
+            components: [
+              {
+                model: {
+                  hint: {
+                    classes: '',
+                    text: ''
+                  },
+                  id: 'inputField',
+                  label: {
+                    classes: 'govuk-label--l',
+                    text: 'What type of farming do you do?'
+                  },
+                  name: 'inputField'
+                },
+                questionType: 'TextField'
+              },
+              {
+                model: {
+                  hint: {
+                    classes: '',
+                    text: ''
+                  },
+                  id: 'inputField',
+                  label: {
+                    classes: 'govuk-label--l',
+                    text: 'How many acres do you have?'
+                  },
+                  name: 'inputField'
+                },
+                questionType: 'TextField'
+              }
+            ]
           }
         }
       )
 
       $headings = container.getAllByRole('heading')
-      $guidanceText = document.querySelector('p.govuk-body')
+      $guidanceText = document.querySelector('.app-prose-scope')
     })
 
     it('should render page heading', () => {
