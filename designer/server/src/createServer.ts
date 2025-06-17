@@ -96,9 +96,14 @@ export function leftPadDateIfSupplied(val?: string) {
 }
 
 /**
+ *
+ * NOTE - *** this method causes side-effects on the payload ***
+ *
  * The GDS 3-part date field is handled but submitting the day/month/year parts as separate fields
  * (under a different array to the other 'condition items') and then piecing together a string date value
- * in the format YYYY-MM-DD
+ * in the format YYYY-MM-DD.
+ * The day/month/year values are then removed from the payload to leave only the 'value' as 'YYYY-MM-DD' for
+ * normal validation (as if simply a text string of YYYY-MM-DD format was supplied in the payload).
  */
 export function handleGdsDateFields(payload: {
   itemAbsDates?: { day?: string; month?: string; year?: string }[]

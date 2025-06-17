@@ -321,5 +321,23 @@ describe('Server tests', () => {
         ]
       })
     })
+
+    test('should ignore completed date fields if no items in the payload', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '7', month: '12', year: '2021' },
+          { day: '22', month: '1', year: '2024' },
+          { day: '02', month: '5', year: '2025' }
+        ],
+        items: [{ value: 'something1' }]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [{ value: '2021-12-07' }]
+      })
+    })
   })
 })
