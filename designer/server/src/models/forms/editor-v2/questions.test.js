@@ -1,7 +1,13 @@
-import { ConditionType, Engine, OperatorName } from '@defra/forms-model'
+import {
+  ComponentType,
+  ConditionType,
+  Engine,
+  OperatorName
+} from '@defra/forms-model'
 import {
   buildDefinition,
   buildFileUploadPage,
+  buildMarkdownComponent,
   buildMetaData,
   buildQuestionPage,
   buildSummaryPage,
@@ -243,7 +249,10 @@ describe('editor-v2 - questions model', () => {
             buildQuestionPage({
               id: pageId,
               title: 'Farm Details',
-              components: [testComponent]
+              components: [
+                buildMarkdownComponent({ content: 'Some info' }),
+                testComponent
+              ]
             }),
             buildSummaryPage()
           ],
@@ -264,6 +273,71 @@ describe('editor-v2 - questions model', () => {
         expect(result).toHaveProperty('pageConditionDetails')
         expect(result).toHaveProperty('pageConditionPresentationString')
         expect(result).toHaveProperty('hasPageCondition')
+        expect(result).toHaveProperty('previewModel')
+        expect(result.previewModel.title).toBe('Farm Details')
+        const components = result.previewModel.components
+        expect(components).toEqual([
+          {
+            model: {
+              content: '<p>Some info</p>\n',
+              id: 'markdown',
+              name: 'markdown'
+            },
+            questionType: 'Markdown'
+          },
+          {
+            model: {
+              hint: {
+                classes: '',
+                text: ''
+              },
+              id: 'inputField',
+              label: {
+                classes: 'govuk-label--l',
+                text: 'What type of farming do you do?'
+              },
+              name: 'inputField'
+            },
+            questionType: 'TextField'
+          }
+        ])
+      })
+
+      it('should include the page title required properties', () => {
+        const definition = buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: pageId,
+              title: '',
+              components: [testComponent]
+            }),
+            buildSummaryPage()
+          ],
+          conditions: [],
+          engine: Engine.V2
+        })
+        const result = questionsViewModel(metadata, definition, pageId)
+        const previewModel = result.previewModel
+        const pageTitle = previewModel.pageTitle
+        expect(pageTitle.text).toBe('What type of farming do you do?')
+        expect(pageTitle.classes).toBe('')
+        expect(previewModel.components).toEqual([
+          {
+            model: {
+              hint: {
+                classes: '',
+                text: ''
+              },
+              id: 'inputField',
+              label: {
+                classes: 'govuk-label--l',
+                text: 'What type of farming do you do?'
+              },
+              name: 'inputField'
+            },
+            questionType: ComponentType.TextField
+          }
+        ])
       })
     })
   })

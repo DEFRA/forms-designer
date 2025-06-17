@@ -2,6 +2,8 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
+  // PagePreviewElements,
+  PreviewPageController,
   hasComponents,
   isFormType,
   showRepeaterSettings
@@ -302,6 +304,37 @@ function buildViewModelData(metadata, pageIdx, pageId) {
   return { baseUrl, pageHeading, cardTitle, formTitle, formPath }
 }
 
+// function getComponentModel(_component) {
+//   return {}
+// }
+
+// /**
+//  * @param {ComponentDef[]} components
+//  */
+// function getPageComponents(components) {
+//   return components.map(component => )
+// }
+
+/**
+ * @param {Page} page
+ * @param {FormDefinition} definition
+ * @returns {PreviewPageController}
+ */
+function getPreviewModel(page, definition) {
+  const components = hasComponents(page) ? page.components : []
+
+  return new PreviewPageController(
+    components,
+    { heading: page.title, guidance: '' },
+    definition,
+    {
+      render(_a, _b) {
+        //
+      }
+    }
+  )
+}
+
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
@@ -355,6 +388,7 @@ export function questionsViewModel(
         validation
       )
     },
+    previewModel: getPreviewModel(page, definition),
     cardTitle,
     cardCaption: pageHeading,
     navigation,
