@@ -287,16 +287,33 @@ describe('editor-v2 - condition-value', () => {
         undefined
       )
       expect(valueField).toEqual({
-        label: {
-          text: 'Enter a date'
-        },
-        hint: {
-          text: 'Format must be YYYY-MM-DD'
+        fieldset: {
+          legend: {
+            text: 'Enter a date'
+          }
         },
         id: 'items[2].value',
         name: 'items[2][value]',
-        value: '2024-02-01',
-        classes: 'govuk-input--width-10'
+        items: [
+          {
+            classes: 'govuk-input--width-2',
+            label: 'Day',
+            name: 'itemAbsDates[2][day]',
+            value: '01'
+          },
+          {
+            classes: 'govuk-input--width-2',
+            label: 'Month',
+            name: 'itemAbsDates[2][month]',
+            value: '02'
+          },
+          {
+            classes: 'govuk-input--width-4',
+            label: 'Year',
+            name: 'itemAbsDates[2][year]',
+            value: '2024'
+          }
+        ]
       })
     })
 

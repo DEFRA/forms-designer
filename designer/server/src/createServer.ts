@@ -101,7 +101,8 @@ export function leftPadDateIfSupplied(val?: string) {
  * in the format YYYY-MM-DD
  */
 export function handleGdsDateFields(payload: {
-  itemAbsDates?: { day?: string; month?: string; year?: string }
+  itemAbsDates?: { day?: string; month?: string; year?: string }[]
+  items: []
 }) {
   const multipartDateFields = payload.itemAbsDates as
     | { day?: string; month?: string; year?: string }[]
@@ -109,9 +110,11 @@ export function handleGdsDateFields(payload: {
   if (multipartDateFields) {
     for (let i = 0; i < multipartDateFields.length; i++) {
       const item = multipartDateFields[i]
-      // @ts-expect-error - dynamic parsing
-      payload.items[i].value =
-        `${item.year}-${leftPadDateIfSupplied(item.month)}-${leftPadDateIfSupplied(item.day)}`
+      if (payload.items[i]) {
+        // @ts-expect-error - dynamic parsing
+        payload.items[i].value =
+          `${item.year}-${leftPadDateIfSupplied(item.month)}-${leftPadDateIfSupplied(item.day)}`
+      }
     }
     delete payload.itemAbsDates
   }
@@ -179,6 +182,7 @@ export async function createServer() {
       // @ts-expect-error - dynamic parsing
       request.payload = qs.parse(payload)
 
+      // @ts-expect-error - dynamic parsing
       handleGdsDateFields(request.payload)
     }
 
