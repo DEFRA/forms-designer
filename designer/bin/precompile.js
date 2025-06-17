@@ -2,8 +2,10 @@ import nunjucks from 'nunjucks'
 import fs from 'fs'
 const { precompile, Environment } = nunjucks
 import { minify_sync } from 'terser'
+import { markdownToHtml as markdown } from '@defra/forms-model'
 
 const env = new Environment([])
+env.addFilter('markdown', markdown)
 
 /**
  * @param {string} cmdpath

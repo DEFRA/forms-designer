@@ -11,6 +11,7 @@ import {
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -191,6 +192,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
+        content: '',
         optional: true,
         shortDesc: 'Short answer',
         items: []
@@ -202,6 +204,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
+        content: '',
         optional: false,
         shortDesc: '',
         items: []
@@ -412,6 +415,14 @@ describe('preview', () => {
         previewElements
       )
       expect(previewModel).toBeInstanceOf(RadioSortableQuestion)
+    })
+
+    it('should get SelectSortable', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.SelectField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(SelectSortableQuestion)
     })
   })
 

@@ -26,6 +26,8 @@ import {
 jest.mock('~/src/javascripts/preview/nunjucks.js')
 jest.mock('~/src/views/preview-components/autocompletefield.njk', () => '')
 jest.mock('~/src/views/preview-components/ukaddressfield.njk', () => '')
+jest.mock('~/src/views/preview-components/markdown.njk', () => '')
+jest.mock('~/src/views/preview-components/selectfield.njk', () => '')
 jest.mock('~/src/views/preview-components/telephonenumberfield.njk', () => '')
 jest.mock('~/src/views/preview-components/emailaddressfield.njk', () => '')
 jest.mock('~/src/views/preview-components/inset.njk', () => '')

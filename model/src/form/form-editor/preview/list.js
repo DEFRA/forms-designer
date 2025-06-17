@@ -1,9 +1,14 @@
-import { Question } from '~/src/form/form-editor/preview/question.js'
+import { ComponentType } from '~/src/components/enums.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
+import {
+  Question,
+  QuestionComponentElements
+} from '~/src/form/form-editor/preview/question.js'
 
 const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
-  Template: Question.PATH + 'radios.njk',
+  Template: PreviewComponent.PATH + 'radios.njk',
   Input: 'listInput',
   RenderName: 'listInputField'
 }
@@ -26,7 +31,59 @@ export function listsElementToMap(listElements) {
   return new Map(entries)
 }
 
+/**
+ * @param {Item} item
+ * @returns {ListElement}
+ */
+export function listItemToListElement(item) {
+  return {
+    text: item.text,
+    label: {
+      text: item.text,
+      classes: ''
+    },
+    value: item.value,
+    id: item.id ?? '',
+    hint: item.hint
+  }
+}
+
+/**
+ * @implements {QuestionElements}
+ */
+export class ListComponentElements extends QuestionComponentElements {
+  /**
+   * @type {List}
+   * @protected
+   */
+  _list
+
+  /**
+   * @param {SelectionComponentsDef} component
+   * @param {List} list
+   */
+  constructor(component, list) {
+    super(component)
+    this._list = list
+  }
+
+  /**
+   * @returns {BaseSettings}
+   * @protected
+   */
+  _getValues() {
+    return {
+      ...super._getValues(),
+      items: this._list.items.map(listItemToListElement)
+    }
+  }
+}
+
 export class ListQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.List
   /**
    * @type {string}
    * @protected
@@ -207,5 +264,7 @@ export class ListQuestion extends Question {
 
 /**
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
- * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset } from '~/src/form/form-editor/preview/types.js'
+ * @import { SelectionComponentsDef, ListComponentsDef } from '~/src/components/types.js'
+ * @import { List, Item } from '~/src/form/form-definition/types.js'
+ * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset, BaseSettings, QuestionElements } from '~/src/form/form-editor/preview/types.js'
  */

@@ -1,6 +1,11 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
-import { Question } from '~/src/index.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 
 export class RadioSortableQuestion extends ListSortableQuestion {
-  _questionTemplate = Question.PATH + 'radios.njk'
+  _questionTemplate = PreviewComponent.PATH + 'radios.njk'
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.RadiosField
 }

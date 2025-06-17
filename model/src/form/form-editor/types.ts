@@ -357,13 +357,15 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'jsEnabled'
 >
 
+type ListValue = string | boolean | number
+
 export interface ListItem {
   id?: string
   text?: string
   hint?: {
     text: string
   }
-  value?: string | boolean
+  value?: ListValue
 }
 
 export interface ListLabel {
@@ -374,7 +376,7 @@ export interface ListLabel {
 export interface ListElement extends ListItem {
   readonly id: string
   text: string
-  value: string | boolean
+  value: ListValue
   label?: ListLabel
 }
 
@@ -385,7 +387,7 @@ export interface ReadonlyHint {
 export interface ListItemReadonly extends ListElement {
   readonly text: string
   readonly hint?: ReadonlyHint
-  readonly value: string | boolean
+  readonly value: ListValue
   readonly label?: ListLabel
 }
 
@@ -401,7 +403,7 @@ export interface QuestionSessionState {
     radioId?: string
     radioText?: string
     radioHint?: string
-    radioValue?: string | boolean
+    radioValue?: ListValue
     expanded?: boolean
   }
   listItems?: ListItem[]
