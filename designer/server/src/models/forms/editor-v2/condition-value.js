@@ -39,6 +39,15 @@ export function insertDateValidationErrors(formError, fieldValue) {
 }
 
 /**
+ * @param {string} fieldName
+ * @param {number} idx
+ * @param {number} idx2
+ */
+export function createSequentialId(fieldName, idx, idx2) {
+  return `items[${idx}].value.${fieldName}${idx2 > 0 ? idx2 : ''}`
+}
+
+/**
  * @param {number} idx
  * @param { Partial<ConditionDataV2> } item
  * @param {ValidationFailure<FormEditor>} [validation]
@@ -71,7 +80,11 @@ export function relativeDateValueViewModel(idx, item, validation) {
   const unit = {
     id: `items[${idx}].value.unit`,
     name: `items[${idx}][value][unit]`,
-    items: dateUnits.map((value) => ({ text: upperFirst(value), value })),
+    items: dateUnits.map((value, idx2) => ({
+      text: upperFirst(value),
+      value,
+      id: createSequentialId('unit', idx, idx2)
+    })),
     fieldset: {
       legend: {
         text: 'Units'
@@ -90,7 +103,11 @@ export function relativeDateValueViewModel(idx, item, validation) {
   const direction = {
     id: `items[${idx}].value.direction`,
     name: `items[${idx}][value][direction]`,
-    items: dateDirections.map((value) => ({ text: upperFirst(value), value })),
+    items: dateDirections.map((value, idx2) => ({
+      text: upperFirst(value),
+      value,
+      id: createSequentialId('direction', idx, idx2)
+    })),
     fieldset: {
       legend: {
         text: 'Direction'
@@ -213,8 +230,12 @@ function buildListItemValueField(
     classes: GOVUK_RADIOS_SMALL,
     value: valueObj?.itemId,
     items: getListFromComponent(selectedComponent, definition)?.items.map(
-      (itm) => {
-        return { text: itm.text, value: itm.id ?? itm.value }
+      (itm, idx2) => {
+        return {
+          text: itm.text,
+          value: itm.id ?? itm.value,
+          id: createSequentialId('itemId', idx, idx2)
+        }
       }
     ),
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
@@ -240,8 +261,12 @@ function buildBooleanValueField(idx, item, validation) {
       isConditionBooleanValueDataV2(item) && typeof item.value === 'boolean'
         ? item.value.toString()
         : undefined,
-    items: getYesNoList().items.map((itm) => {
-      return { text: itm.text, value: itm.value.toString() }
+    items: getYesNoList().items.map((itm, idx2) => {
+      return {
+        text: itm.text,
+        value: itm.value.toString(),
+        id: createSequentialId('', idx, idx2)
+      }
     }),
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
