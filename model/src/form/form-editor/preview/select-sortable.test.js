@@ -13,8 +13,8 @@ describe('SelectSortableQuestion', () => {
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const checkbox = new SelectSortableQuestion(elements, renderer)
-    expect(checkbox.renderInput).toEqual({
+    const select = new SelectSortableQuestion(elements, renderer)
+    expect(select.renderInput).toEqual({
       id: 'inputField',
       name: 'inputField',
       label: {
@@ -70,8 +70,8 @@ describe('SelectSortableQuestion', () => {
       new QuestionPreviewElements(baseElementsWithNoItems)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const checkbox = new SelectSortableQuestion(elements, renderer)
-    expect(checkbox.renderInput).toEqual({
+    const select = new SelectSortableQuestion(elements, renderer)
+    expect(select.renderInput).toEqual({
       id: 'inputField',
       name: 'inputField',
       label: {
