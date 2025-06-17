@@ -438,6 +438,7 @@ describe('preview', () => {
     ]
 
     const expectedQuestionModel = /** @type {QuestionBaseModel} */ ({
+      classes: '',
       hint: {
         classes: '',
         text: ''
@@ -496,6 +497,7 @@ describe('preview', () => {
         ComponentType.TextField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        classes: '',
         hint: {
           classes: '',
           text: ''
@@ -706,6 +708,7 @@ describe('preview', () => {
         ComponentType.EmailAddressField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        classes: '',
         hint: {
           classes: '',
           text: ''
@@ -751,6 +754,7 @@ describe('preview', () => {
         ComponentType.TelephoneNumberField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        classes: '',
         hint: {
           classes: '',
           text: ''

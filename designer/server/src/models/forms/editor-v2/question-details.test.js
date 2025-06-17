@@ -604,6 +604,7 @@ describe('editor-v2 - question details model', () => {
       expect(result.previewPageUrl).toContain('/test-page')
       expect(result.questionType).toBe(ComponentType.FileUploadField)
       expect(result.model).toEqual({
+        classes: '',
         hint: {
           classes: '',
           text: undefined
