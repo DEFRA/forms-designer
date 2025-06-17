@@ -3,13 +3,13 @@ import {
   CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
-  ListQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
   NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -198,7 +198,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     SelectField: (questionElements) => {
-      return new ListQuestion(questionElements, emptyRender)
+      return new SelectSortableQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements

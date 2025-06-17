@@ -391,7 +391,8 @@ export function getQuestionFieldList(questionType) {
   }
   if (
     questionType === ComponentType.RadiosField ||
-    questionType === ComponentType.CheckboxesField
+    questionType === ComponentType.CheckboxesField ||
+    questionType === ComponentType.SelectField
   ) {
     return radiosOrCheckboxesFields
   }

@@ -10,6 +10,7 @@ import {
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -204,6 +205,18 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return radio
+    },
+    /**
+     * @returns {SelectSortableQuestion}
+     */
+    SelectField: () => {
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const nunjucksRenderer = new NunjucksRenderer(elements)
+      const select = new SelectSortableQuestion(elements, nunjucksRenderer)
+      const listeners = new ListSortableEventListeners(select, elements, [])
+      listeners.setupListeners()
+
+      return select
     },
     /**
      * @returns {CheckboxSortableQuestion}
