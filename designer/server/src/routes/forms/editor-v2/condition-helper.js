@@ -84,8 +84,8 @@ export function processErrorMessages(error) {
         // Must be that part of a condition item is in
         // error so we append a "for condition X" suffix
         const idx = err.path.at(1)
-        if (typeof idx === 'number') {
-          err.message = `${err.message} for condition ${idx + 1}`
+        if (typeof idx === 'number' && idx > 0) {
+          err.message = `${err.message} for additional condition ${idx}`
         }
       }
     })

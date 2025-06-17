@@ -39,8 +39,26 @@ describe('Editor v2 condition helper', () => {
       expect(error).toEqual(errorCopy)
     })
 
+    test('should not set error if number is 0', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'A Joi error',
+          path: [1, 0],
+          type: 'error'
+        }
+      ])
+      const error = new Joi.ValidationError('A Joi error', items, {})
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('A Joi error')
+    })
+
     test('should set error if number', () => {
       const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'A Joi error',
+          path: [1, 2],
+          type: 'error'
+        },
         {
           message: 'A Joi error',
           path: [1, 2],
@@ -49,7 +67,9 @@ describe('Editor v2 condition helper', () => {
       ])
       const error = new Joi.ValidationError('A Joi error', items, {})
       processErrorMessages(error)
-      expect(error.details[0].message).toBe('A Joi error for condition 3')
+      expect(error.details[1].message).toBe(
+        'A Joi error for additional condition 2'
+      )
     })
 
     test('should not set error if not a number', () => {
@@ -63,6 +83,66 @@ describe('Editor v2 condition helper', () => {
       const error = new Joi.ValidationError('A Joi error', items, {})
       processErrorMessages(error)
       expect(error.details[0].message).toBe('A Joi error')
+    })
+
+    test('should modify error message if relative date period', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'Enter a condition value',
+          path: ['1', '2'],
+          type: 'error',
+          context: {
+            key: 'period'
+          }
+        }
+      ])
+      const error = new Joi.ValidationError(
+        'Enter a condition value',
+        items,
+        {}
+      )
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('Enter a condition value period')
+    })
+
+    test('should modify error message if relative date unit', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'Enter a condition value',
+          path: ['1', '2'],
+          type: 'error',
+          context: {
+            key: 'unit'
+          }
+        }
+      ])
+      const error = new Joi.ValidationError(
+        'Enter a condition value',
+        items,
+        {}
+      )
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('Enter a condition value unit')
+    })
+
+    test('should modify error message if relative date direction', () => {
+      const items = /** @type {Joi.ValidationErrorItem[]} */ ([
+        {
+          message: 'Enter a condition value',
+          path: ['1', '2'],
+          type: 'error',
+          context: {
+            key: 'direction'
+          }
+        }
+      ])
+      const error = new Joi.ValidationError(
+        'Enter a condition value',
+        items,
+        {}
+      )
+      processErrorMessages(error)
+      expect(error.details[0].message).toBe('Enter a condition value direction')
     })
   })
 
