@@ -3,6 +3,7 @@ import { ConditionType, DateDirections, OperatorName } from '@defra/forms-model'
 import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
 import {
   buildValueField,
+  createSequentialId,
   insertDateValidationErrors,
   listItemRefValueViewModel,
   relativeDateValueViewModel
@@ -125,9 +126,21 @@ describe('editor-v2 - condition-value', () => {
         },
         id: 'items[2].value.itemId',
         items: [
-          { text: 'Red', value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7' },
-          { text: 'Blue', value: '689d3f66-88f7-4dc0-b199-841b72393c19' },
-          { text: 'Green', value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171' }
+          {
+            text: 'Red',
+            value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
+            id: 'items[2].value.itemId'
+          },
+          {
+            text: 'Blue',
+            value: '689d3f66-88f7-4dc0-b199-841b72393c19',
+            id: 'items[2].value.itemId1'
+          },
+          {
+            text: 'Green',
+            value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171',
+            id: 'items[2].value.itemId2'
+          }
         ],
         name: 'items[2][value][itemId]',
         value: '689d3f66-88f7-4dc0-b199-841b72393c19'
@@ -231,8 +244,8 @@ describe('editor-v2 - condition-value', () => {
         value: 'true',
         classes: 'govuk-radios--small',
         items: [
-          { text: 'Yes', value: 'true' },
-          { text: 'No', value: 'false' }
+          { text: 'Yes', value: 'true', id: 'items[2].value' },
+          { text: 'No', value: 'false', id: 'items[2].value1' }
         ]
       })
     })
@@ -401,6 +414,34 @@ describe('editor-v2 - condition-value', () => {
           undefined
         )
       ).toThrow('Invalid condition type invalid')
+    })
+  })
+
+  describe('createSequentialId', () => {
+    test('should create id', () => {
+      expect(createSequentialId('fieldName', 0, 0)).toBe(
+        'items[0].value.fieldName'
+      )
+      expect(createSequentialId('fieldName', 0, 1)).toBe(
+        'items[0].value.fieldName1'
+      )
+      expect(createSequentialId('fieldName', 0, 2)).toBe(
+        'items[0].value.fieldName2'
+      )
+
+      expect(createSequentialId('fieldName', 5, 0)).toBe(
+        'items[5].value.fieldName'
+      )
+      expect(createSequentialId('fieldName', 5, 1)).toBe(
+        'items[5].value.fieldName1'
+      )
+      expect(createSequentialId('fieldName', 5, 2)).toBe(
+        'items[5].value.fieldName2'
+      )
+
+      expect(createSequentialId('', 5, 0)).toBe('items[5].value')
+      expect(createSequentialId('', 5, 1)).toBe('items[5].value1')
+      expect(createSequentialId('', 5, 2)).toBe('items[5].value2')
     })
   })
 })

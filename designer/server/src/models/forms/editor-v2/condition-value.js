@@ -44,7 +44,9 @@ export function insertDateValidationErrors(formError, fieldValue) {
  * @param {number} idx2
  */
 export function createSequentialId(fieldName, idx, idx2) {
-  return `items[${idx}].value.${fieldName}${idx2 > 0 ? idx2 : ''}`
+  const trailingIndex = idx2 > 0 ? idx2.toString() : ''
+  const fieldNamePart = fieldName.length ? `.${fieldName}` : ''
+  return `items[${idx}].value${fieldNamePart}${trailingIndex}`
 }
 
 /**
