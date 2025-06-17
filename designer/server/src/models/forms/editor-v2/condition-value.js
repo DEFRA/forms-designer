@@ -39,6 +39,9 @@ export function insertDateValidationErrors(formError, fieldValue) {
 }
 
 /**
+ * Builds a unique id for each option in a radio list, such that the first option's id
+ * matches the component's id and subsequent options don't match. This allows the error
+ * anchors (if displayed) to navigate to the first radio item.
  * @param {string} fieldName
  * @param {number} idx
  * @param {number} idx2
