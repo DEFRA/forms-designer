@@ -91,6 +91,32 @@ const serverOptions = (): ServerOptions => {
   }
 }
 
+export function leftPadDateIfSupplied(val?: string) {
+  return val ? val.padStart(2, '0') : ''
+}
+
+/**
+ * The GDS 3-part date field is handled but submitting the day/month/year parts as separate fields
+ * (under a different array to the other 'condition items') and then piecing together a string date value
+ * in the format YYYY-MM-DD
+ */
+export function handleGdsDateFields(payload: {
+  itemAbsDates?: { day?: string; month?: string; year?: string }
+}) {
+  const multipartDateFields = payload.itemAbsDates as
+    | { day?: string; month?: string; year?: string }[]
+    | undefined
+  if (multipartDateFields) {
+    for (let i = 0; i < multipartDateFields.length; i++) {
+      const item = multipartDateFields[i]
+      // @ts-expect-error - dynamic parsing
+      payload.items[i].value =
+        `${item.year}-${leftPadDateIfSupplied(item.month)}-${leftPadDateIfSupplied(item.day)}`
+    }
+    delete payload.itemAbsDates
+  }
+}
+
 export async function createServer() {
   const server = hapi.server(serverOptions())
 
@@ -152,6 +178,8 @@ export async function createServer() {
 
       // @ts-expect-error - dynamic parsing
       request.payload = qs.parse(payload)
+
+      handleGdsDateFields(request.payload)
     }
 
     return h.continue
