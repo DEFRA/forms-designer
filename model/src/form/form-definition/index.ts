@@ -1,5 +1,6 @@
 import JoiDate from '@joi/date'
 import JoiBase, { type LanguageMessages } from 'joi'
+import { DateTime } from 'luxon'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
@@ -44,7 +45,116 @@ import {
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
-const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
+const isValidArrayPayload = (value) => {
+  if (Array.isArray(value) && value.length === 3) {
+    return true
+  }
+
+  return false
+}
+
+const extension = (joi) => {
+  const daySchema = joi.number().min(1).max(31)
+  const monthSchema = joi.number().min(1).max(12)
+  const yearSchema = joi.number().min(1000).max(3000)
+  const partsSchema = joi
+    .array()
+    .ordered(
+      daySchema.required(),
+      monthSchema.required(),
+      yearSchema.required()
+    )
+    .length(3)
+  const emptyString = joi.string().trim().valid('').required()
+  const emptyPayload = joi
+    .array()
+    .items(emptyString, emptyString, emptyString)
+    .length(3)
+
+  return {
+    base: joi.date(),
+    type: 'dateParts',
+    messages: {
+      'dateParts.base': '{{#label}} must be a real date',
+      'dateParts.day.required': '{{#label}} must include a day',
+      'dateParts.month.required': '{{#label}} must include a month',
+      'dateParts.year.required': '{{#label}} must include a year'
+    },
+    prepare(value, helpers) {
+      if (!isValidArrayPayload(value)) {
+        return { value }
+      }
+
+      // Treat three empty strings as
+      // empty and let the base type handle it
+      const { error } = emptyPayload.validate(value)
+      const isEmpty = !error
+
+      if (isEmpty) {
+        return { value: undefined }
+      }
+
+      return { value }
+    },
+    coerce: {
+      from: 'object',
+      method: function (value, helpers) {
+        if (value instanceof Date || !isValidArrayPayload(value)) {
+          return { value }
+        }
+
+        const { error, value: coerced } = partsSchema.validate(value, {
+          abortEarly: false
+        })
+
+        if (error) {
+          const errors = helpers.errorsArray()
+
+          error.details.forEach((err) => {
+            if (err.type === 'number.base') {
+              switch (err.context.key) {
+                case 0:
+                  errors.push(
+                    helpers.error('dateParts.day.required', err.context)
+                  )
+                  break
+                case 1:
+                  errors.push(
+                    helpers.error('dateParts.month.required', err.context)
+                  )
+                  break
+                case 2:
+                  errors.push(
+                    helpers.error('dateParts.year.required', err.context)
+                  )
+                  break
+                default:
+                  break
+              }
+            } else {
+              errors.push(helpers.error(err.type, err.context))
+            }
+          })
+
+          return {
+            value: coerced,
+            errors
+          }
+        }
+
+        const date = DateTime.local(coerced[2], coerced[1], coerced[0])
+        if (!date.isValid) {
+          return { value: coerced, errors: helpers.error('date.base') }
+        }
+
+        return { value: date.toFormat('yyyy-MM-dd') }
+        // return { value: date.toJSDate() }
+      }
+    }
+  }
+}
+
+const Joi = JoiBase.extend(JoiDate, extension) as JoiBase.Root
 
 const idSchemaOptional = Joi.string().uuid()
 
@@ -286,7 +396,8 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
           { is: ConditionType.NumberValue, then: Joi.number() },
           {
             is: ConditionType.DateValue,
-            then: Joi.date().format('YYYY-MM-DD').raw()
+            // @ts-expect-error - IGNORE this
+            then: Joi.dateParts().format('YYYY-MM-DD')
           },
           {
             is: ConditionType.ListItemRef,

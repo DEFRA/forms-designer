@@ -286,20 +286,23 @@ export function buildDateItems(value, idx) {
   )
   return [
     {
+      id: `items[${idx}].day`,
       label: 'Day',
-      name: `itemAbsDates[${idx}][day]`,
+      name: `items[${idx}][value]`,
       value: day,
       classes: 'govuk-input--width-2'
     },
     {
+      id: `items[${idx}].month`,
       label: 'Month',
-      name: `itemAbsDates[${idx}][month]`,
+      name: `items[${idx}][value]`,
       value: month,
       classes: 'govuk-input--width-2'
     },
     {
+      id: `items[${idx}].year`,
       label: 'Year',
-      name: `itemAbsDates[${idx}][year]`,
+      name: `items[${idx}][value]`,
       value: year,
       classes: 'govuk-input--width-4'
     }
@@ -314,7 +317,7 @@ export function buildDateItems(value, idx) {
 export function buildDateValueField(idx, item, validation) {
   return {
     id: `items[${idx}].value`,
-    name: `items[${idx}][value]`,
+    // name: `items[${idx}][value]`,
     fieldset: {
       legend: {
         text: 'Enter a date'

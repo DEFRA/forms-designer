@@ -188,7 +188,7 @@ export async function createServer() {
       request.payload = qs.parse(payload)
 
       // @ts-expect-error - dynamic parsing
-      handleGdsDateFields(request.payload)
+      // handleGdsDateFields(request.payload)
     }
 
     return h.continue
