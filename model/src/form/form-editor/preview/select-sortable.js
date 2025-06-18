@@ -5,7 +5,7 @@ export class SelectSortableQuestion extends ListSortableQuestion {
   _questionTemplate = Question.PATH + 'selectfield.njk'
 
   get renderInput() {
-    const afterInput =
+    const afterInputs =
       /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
         this.list.length
           ? {}
@@ -24,8 +24,8 @@ export class SelectSortableQuestion extends ListSortableQuestion {
       hint: this.hint,
       label: this.label,
       items: this.list,
-      classes: this.list.length ? undefined : 'govuk-visually-hidden',
-      ...afterInput
+      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      ...afterInputs
     }
   }
 }

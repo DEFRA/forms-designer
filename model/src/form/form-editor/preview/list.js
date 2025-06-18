@@ -66,8 +66,8 @@ export class ListQuestion extends Question {
    *  classes?: string
    * }}
    */
-  get renderInput() {
-    const afterInput =
+  get renderInputs() {
+    const afterInputs =
       /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
         this.list.length
           ? {}
@@ -86,8 +86,8 @@ export class ListQuestion extends Question {
       fieldset: this.fieldSet,
       hint: this.hint,
       items: this.list,
-      classes: this.list.length ? undefined : 'govuk-visually-hidden',
-      ...afterInput
+      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      ...afterInputs
     }
   }
 
