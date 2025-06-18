@@ -1,4 +1,5 @@
 export { markdownToHtml as markdown } from '@defra/forms-model'
+export { addBlankSelectOption } from '~/src/common/nunjucks/filters/add-blank-select-option.js'
 export { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
 export { formatDate } from '~/src/common/nunjucks/filters/format-date.js'
 export { formatJSON } from '~/src/common/nunjucks/filters/format-json.js'

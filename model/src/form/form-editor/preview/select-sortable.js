@@ -21,11 +21,10 @@ export class SelectSortableQuestion extends ListSortableQuestion {
     return {
       id: this._fieldName,
       name: this._fieldName,
-      attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       hint: this.hint,
       label: this.label,
       items: this.list,
-      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      classes: this.list.length ? undefined : 'govuk-visually-hidden',
       ...afterInput
     }
   }

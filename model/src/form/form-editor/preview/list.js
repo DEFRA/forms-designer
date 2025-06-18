@@ -63,16 +63,17 @@ export class ListQuestion extends Question {
    *  fieldset?: GovukFieldset;
    *  id: string;
    *  items: ListItemReadonly[]
+   *  classes?: string
    * }}
    */
   get renderInput() {
-    const afterInputs =
+    const afterInput =
       /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
         this.list.length
           ? {}
           : {
               formGroup: {
-                afterInputs: {
+                afterInput: {
                   html: this._listElements.afterInputsHTML
                 }
               }
@@ -85,7 +86,8 @@ export class ListQuestion extends Question {
       fieldset: this.fieldSet,
       hint: this.hint,
       items: this.list,
-      ...afterInputs
+      classes: this.list.length ? undefined : 'govuk-visually-hidden',
+      ...afterInput
     }
   }
 

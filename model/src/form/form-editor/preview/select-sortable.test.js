@@ -25,10 +25,6 @@ describe('SelectSortableQuestion', () => {
         text: 'Choose one adventure that best suits you.',
         classes: ''
       },
-      classes: '',
-      attributes: {
-        'data-module': 'govuk-accessible-autocomplete'
-      },
       items: [
         {
           label: { text: 'Treasure Hunting', classes: '' },
@@ -87,9 +83,6 @@ describe('SelectSortableQuestion', () => {
         afterInput: {
           html: '<div class="govuk-inset-text">No items added yet.</div>'
         }
-      },
-      attributes: {
-        'data-module': 'govuk-accessible-autocomplete'
       },
       items: []
     })
