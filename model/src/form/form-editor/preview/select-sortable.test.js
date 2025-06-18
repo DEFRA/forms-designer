@@ -85,9 +85,6 @@ describe('SelectSortableQuestion', () => {
           html: '<div class="govuk-inset-text">No items added yet.</div>'
         }
       },
-      attributes: {
-        'data-module': 'govuk-accessible-autocomplete'
-      },
       items: []
     })
   })
