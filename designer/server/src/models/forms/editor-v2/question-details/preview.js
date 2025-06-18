@@ -81,6 +81,11 @@ export class QuestionPreviewElements {
    */
   _shortDesc = ''
   /**
+   * @type {string}
+   * @protected
+   */
+  _content = ''
+  /**
    *
    * @type {ListElement[]}
    * @private
@@ -123,7 +128,8 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
-      items: this._items
+      items: this._items,
+      content: this._content
     }
   }
 

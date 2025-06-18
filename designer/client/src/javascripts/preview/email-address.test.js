@@ -18,6 +18,7 @@ describe('email', () => {
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'emailAddressField',
+        classes: '',
         name: 'emailAddressField',
         label: {
           text: 'Which quest would you like to pick?',

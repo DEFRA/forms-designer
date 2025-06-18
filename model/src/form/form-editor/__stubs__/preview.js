@@ -1,3 +1,5 @@
+import { Question } from '~/src/form/form-editor/preview/question.js'
+
 /**
  * @implements {QuestionRenderer}
  */
@@ -33,6 +35,40 @@ export class QuestionRendererStub {
 }
 
 /**
+ * @implements {PageRenderer}
+ */
+export class PageRendererStub {
+  /**
+   * @type {jest.Mock<void, [string, PagePreviewPanelMacro]>}
+   */
+  renderMock
+
+  /**
+   * @param {jest.Mock<void, [string, PagePreviewPanelMacro]>} renderMock
+   */
+  constructor(renderMock) {
+    this.renderMock = renderMock
+  }
+
+  /**
+   * @param {string} pageTemplate
+   * @param {PagePreviewPanelMacro} pagePreviewPanelMacro
+   */
+  render(pageTemplate, pagePreviewPanelMacro) {
+    this.renderMock(pageTemplate, pagePreviewPanelMacro)
+  }
+
+  /**
+   * @returns {string}
+   * @param {string} _questionTemplate
+   * @param {RenderContext} _renderContext
+   */
+  static buildHTML(_questionTemplate, _renderContext) {
+    return '**** BUILT HTML ****'
+  }
+}
+
+/**
  * @implements {ListElements}
  */
 export class QuestionPreviewElements {
@@ -50,6 +86,11 @@ export class QuestionPreviewElements {
    */
   _shortDesc = ''
   /**
+   * @type {string}
+   * @protected
+   */
+  _content = ''
+  /**
    *
    * @type {ListElement[]}
    * @private
@@ -61,21 +102,26 @@ export class QuestionPreviewElements {
   /**
    * @param {BaseSettings} baseSettings
    */
-  constructor({ question, hintText, optional, shortDesc, items }) {
+  constructor({ question, hintText, optional, shortDesc, items, content }) {
     this._question = question
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
     this._items = items
+    this._content = content
   }
 
+  /**
+   * @returns {BaseSettings}
+   */
   get values() {
     return {
       question: this._question,
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
-      items: this._items
+      items: this._items,
+      content: this._content
     }
   }
 
@@ -107,12 +153,30 @@ export class AutocompletePreviewElements extends QuestionPreviewElements {
   }
 }
 
+/**
+ * @implements {PageOverviewElements}
+ */
+export class PagePreviewElements {
+  guidance
+  heading
+
+  /**
+   * @param {string} heading
+   * @param {string} guidance
+   */
+  constructor(heading, guidance = '') {
+    this.heading = heading
+    this.guidance = guidance
+  }
+}
+
 export const baseElements = /** @type {BaseSettings} */ ({
   items: [],
   optional: false,
   question: 'Which quest would you like to pick?',
   hintText: 'Choose one adventure that best suits you.',
-  shortDesc: ''
+  shortDesc: '',
+  content: ''
 })
 
 const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
@@ -159,6 +223,22 @@ export const listElementsStub = {
 }
 
 /**
+ * @param {Partial<BaseSettings>} partialBaseElements
+ * @param {jest.Mock<void, [string, QuestionBaseModel]>} renderMock
+ * @returns {Question}
+ */
+export function buildPreviewShortAnswer(partialBaseElements, renderMock) {
+  return new Question(
+    new QuestionPreviewElements({
+      ...baseElements,
+      ...partialBaseElements
+    }),
+    new QuestionRendererStub(renderMock)
+  )
+}
+
+/**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements } from  '~/src/form/form-editor/preview/types.js'
+ * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
+ * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer } from  '~/src/form/form-editor/preview/types.js'
  */

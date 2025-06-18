@@ -16,6 +16,7 @@ describe('email', () => {
       expect(res.renderInput).toEqual({
         id: 'emailAddressField',
         name: 'emailAddressField',
+        classes: '',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'

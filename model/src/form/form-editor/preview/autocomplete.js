@@ -1,19 +1,36 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
 
-export class AutocompleteQuestion extends Question {
-  _questionTemplate = Question.PATH + 'autocompletefield.njk'
+export class AutocompleteListQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.AutocompleteField
+  _questionTemplate = PreviewComponent.PATH + 'autocompletefield.njk'
   /**
    * @type {string}
    * @protected
    */
   _fieldName = 'autoCompleteField'
+
+  /**
+   * @returns {Partial<QuestionBaseModel>}
+   */
+  get customRenderFields() {
+    return {
+      items: this._htmlElements.values.items
+    }
+  }
+}
+
+export class AutocompleteQuestion extends AutocompleteListQuestion {
   /**
    * @type {ListElement[]}
    * @private
    */
   _autocompleteList = []
-
   /**
    * @param {AutocompleteElements} autocompleteElements
    * @param {QuestionRenderer} questionRenderer
@@ -63,5 +80,5 @@ export class AutocompleteQuestion extends Question {
 /**
  * @import { ValidationResult } from 'joi'
  * @import { ListElement } from '~/src/form/form-editor/types.js'
- * @import { AutocompleteElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { AutocompleteElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  */
