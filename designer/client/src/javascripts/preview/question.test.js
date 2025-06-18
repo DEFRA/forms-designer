@@ -78,6 +78,7 @@ describe('question', () => {
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: 'inputField',
+        classes: '',
         name: 'inputField',
         label: {
           text: 'Which quest would you like to pick?',
@@ -122,6 +123,7 @@ describe('question', () => {
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
         id: 'inputField',
+        classes: '',
         name: 'inputField',
         label: {
           text: 'Question',

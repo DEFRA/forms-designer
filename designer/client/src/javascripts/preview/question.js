@@ -72,7 +72,8 @@ export class QuestionDomElements {
       optional,
       question,
       shortDesc,
-      items: []
+      items: [],
+      content: ''
     })
   }
 

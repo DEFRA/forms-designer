@@ -1,3 +1,7 @@
+import {
+  type PagePreviewPanelMacro,
+  type QuestionBaseModel
+} from '~/src/form/form-editor/macros/types.js'
 import { type AutocompleteQuestion } from '~/src/form/form-editor/preview/autocomplete.js'
 import { type DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { type EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
@@ -8,18 +12,15 @@ import { type Question } from '~/src/form/form-editor/preview/question.js'
 import { type RadioSortableQuestion } from '~/src/form/form-editor/preview/radio-sortable.js'
 import { type ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
 import { type UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
-import {
-  type DateItem,
-  type ListElement,
-  type ListItemReadonly
-} from '~/src/form/form-editor/types.js'
-
+import { type ListElement } from '~/src/form/form-editor/types.js'
+export { type QuestionBaseModel } from '~/src/form/form-editor/macros/types.js'
 export interface BaseSettings {
   question: string
   hintText: string
   optional: boolean
   shortDesc: string
   items: ListElement[]
+  content: string
 }
 
 export interface DefaultComponent {
@@ -30,18 +31,6 @@ export interface DefaultComponent {
 
 export interface GovukFieldset {
   legend: DefaultComponent
-}
-
-export interface QuestionBaseModel {
-  id?: string
-  name?: string
-  label?: DefaultComponent
-  hint?: DefaultComponent
-  fieldset?: GovukFieldset
-  readonly items?: ListItemReadonly[] | DateItem[]
-  text?: string
-  formGroup?: { afterInputs: { html: string } }
-  type?: 'text' | 'number' | 'boolean'
 }
 
 export type ListenerRow = [
@@ -71,8 +60,17 @@ export interface QuestionRenderer {
   render(questionTemplate: string, questionBaseModel: QuestionBaseModel): void
 }
 
+export interface PageRenderer {
+  render(pageTemplate: string, pagePreview: PagePreviewPanelMacro): void
+}
+
 export interface ListElements extends QuestionElements {
   afterInputsHTML: string
+}
+
+export interface PageOverviewElements {
+  heading: string
+  guidance: string
 }
 
 export type PreviewQuestion =

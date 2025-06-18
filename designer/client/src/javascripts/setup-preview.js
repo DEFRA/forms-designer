@@ -10,6 +10,7 @@ import {
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -48,6 +49,21 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return question
+    },
+    Html: () => {
+      return SetupPreview.Question()
+    },
+    InsetText: () => {
+      return SetupPreview.Question()
+    },
+    Details: () => {
+      return SetupPreview.Question()
+    },
+    List: () => {
+      return SetupPreview.Question()
+    },
+    Markdown: () => {
+      return SetupPreview.Question()
     },
     /**
      * @returns {ShortAnswerQuestion}
@@ -242,6 +258,25 @@ export const SetupPreview =
       const elements = new ListSortableQuestionElements(NunjucksRenderer)
       const nunjucksRenderer = new NunjucksRenderer(elements)
       const listSortable = new ListSortableQuestion(elements, nunjucksRenderer)
+      const listeners = new ListSortableEventListeners(
+        listSortable,
+        elements,
+        []
+      )
+      listeners.setupListeners()
+
+      return listSortable
+    },
+    /**
+     * @returns {SelectSortableQuestion}
+     */
+    SelectField: () => {
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const nunjucksRenderer = new NunjucksRenderer(elements)
+      const listSortable = new SelectSortableQuestion(
+        elements,
+        nunjucksRenderer
+      )
       const listeners = new ListSortableEventListeners(
         listSortable,
         elements,

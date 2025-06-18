@@ -11,6 +11,7 @@ import {
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -191,6 +192,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
+        content: '',
         optional: true,
         shortDesc: 'Short answer',
         items: []
@@ -202,6 +204,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
+        content: '',
         optional: false,
         shortDesc: '',
         items: []
@@ -413,6 +416,14 @@ describe('preview', () => {
       )
       expect(previewModel).toBeInstanceOf(RadioSortableQuestion)
     })
+
+    it('should get SelectSortable', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.SelectField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(SelectSortableQuestion)
+    })
   })
 
   describe('getPreviewModel', () => {
@@ -427,6 +438,7 @@ describe('preview', () => {
     ]
 
     const expectedQuestionModel = /** @type {QuestionBaseModel} */ ({
+      classes: '',
       hint: {
         classes: '',
         text: ''
@@ -485,6 +497,7 @@ describe('preview', () => {
         ComponentType.TextField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        classes: '',
         hint: {
           classes: '',
           text: ''
@@ -544,7 +557,25 @@ describe('preview', () => {
         ComponentType.SelectField
       )
 
-      expect(previewModel).toEqual({ ...listModelBase, ...formGroupBase })
+      expect(previewModel).toEqual({
+        id: 'inputField',
+        name: 'inputField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        items: [],
+        classes: 'govuk-visually-hidden',
+        formGroup: {
+          afterInput: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        }
+      })
     })
 
     it('should get NumberField', () => {
@@ -695,6 +726,7 @@ describe('preview', () => {
         ComponentType.EmailAddressField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        classes: '',
         hint: {
           classes: '',
           text: ''
@@ -740,6 +772,7 @@ describe('preview', () => {
         ComponentType.TelephoneNumberField
       )
       const expectedBaseModel = /** @type {QuestionBaseModel} */ ({
+        classes: '',
         hint: {
           classes: '',
           text: ''
