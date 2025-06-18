@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { SelectSortableQuestion } from '~/src/index.js'
+import { SelectQuestion } from '~/src/index.js'
 
 describe('SelectSortableQuestion', () => {
   it('should create class with items', () => {
@@ -13,7 +13,7 @@ describe('SelectSortableQuestion', () => {
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const select = new SelectSortableQuestion(elements, renderer)
+    const select = new SelectQuestion(elements, renderer)
     expect(select.renderInput).toEqual({
       id: 'inputField',
       name: 'inputField',
@@ -66,7 +66,7 @@ describe('SelectSortableQuestion', () => {
       new QuestionPreviewElements(baseElementsWithNoItems)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const select = new SelectSortableQuestion(elements, renderer)
+    const select = new SelectQuestion(elements, renderer)
     expect(select.renderInput).toEqual({
       id: 'inputField',
       name: 'inputField',

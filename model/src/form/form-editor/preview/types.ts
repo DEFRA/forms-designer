@@ -6,7 +6,7 @@ import { type LongAnswerQuestion } from '~/src/form/form-editor/preview/long-ans
 import { type PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 import { type Question } from '~/src/form/form-editor/preview/question.js'
 import { type RadioSortableQuestion } from '~/src/form/form-editor/preview/radio-sortable.js'
-import { type SelectSortableQuestion } from '~/src/form/form-editor/preview/select-sortable.js'
+import { type SelectQuestion } from '~/src/form/form-editor/preview/select.js'
 import { type ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
 import { type UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
 import {
@@ -84,7 +84,7 @@ export type PreviewQuestion =
   | PhoneNumberQuestion
   | Question
   | RadioSortableQuestion
-  | SelectSortableQuestion
+  | SelectQuestion
   | ShortAnswerQuestion
   | UkAddressQuestion
   | AutocompleteQuestion

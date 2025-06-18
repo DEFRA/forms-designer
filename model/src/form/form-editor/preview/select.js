@@ -1,7 +1,7 @@
 import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
 import { Question } from '~/src/index.js'
 
-export class SelectSortableQuestion extends ListSortableQuestion {
+export class SelectQuestion extends ListSortableQuestion {
   _questionTemplate = Question.PATH + 'selectfield.njk'
 
   get renderInput() {
@@ -24,7 +24,7 @@ export class SelectSortableQuestion extends ListSortableQuestion {
       hint: this.hint,
       label: this.label,
       items: this.list,
-      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      classes: this.list.length ? undefined : 'govuk-visually-hidden',
       ...afterInputs
     }
   }
