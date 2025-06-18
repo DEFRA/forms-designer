@@ -8,4 +8,29 @@ export class SelectSortableQuestion extends ListSortableQuestion {
    * @type {ComponentType}
    */
   componentType = ComponentType.SelectField
+
+  get renderInput() {
+    const afterInput =
+      /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
+        this.list.length
+          ? {}
+          : {
+              formGroup: {
+                afterInput: {
+                  html: this._listElements.afterInputsHTML
+                }
+              }
+            }
+      )
+
+    return {
+      id: this._fieldName,
+      name: this._fieldName,
+      hint: this.hint,
+      label: this.label,
+      items: this.list,
+      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      ...afterInput
+    }
+  }
 }
