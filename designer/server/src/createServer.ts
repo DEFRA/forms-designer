@@ -106,18 +106,18 @@ export function leftPadDateIfSupplied(val?: string) {
  * normal validation (as if simply a text string of YYYY-MM-DD format was supplied in the payload).
  */
 export function handleGdsDateFields(payload: {
-  itemAbsDates?: { day?: string; month?: string; year?: string }[]
+  itemAbsDates?: { day?: string; month?: string; year?: string; idx?: string }[]
   items: []
 }) {
   const multipartDateFields = payload.itemAbsDates as
-    | { day?: string; month?: string; year?: string }[]
+    | { day?: string; month?: string; year?: string; idx?: number }[]
     | undefined
   if (multipartDateFields) {
-    for (let i = 0; i < multipartDateFields.length; i++) {
-      const item = multipartDateFields[i]
-      if (payload.items[i]) {
+    for (const item of multipartDateFields) {
+      const dateIdx = item.idx ?? 0
+      if (payload.items[dateIdx]) {
         // @ts-expect-error - dynamic parsing
-        payload.items[i].value =
+        payload.items[dateIdx].value =
           `${item.year}-${leftPadDateIfSupplied(item.month)}-${leftPadDateIfSupplied(item.day)}`
       }
     }

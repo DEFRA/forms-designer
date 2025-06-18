@@ -256,9 +256,9 @@ describe('Server tests', () => {
     test('should handle empty date fields', () => {
       const payload = {
         itemAbsDates: [
-          { day: '', month: '', year: '' },
-          { day: '', month: '', year: '' },
-          { day: '', month: '', year: '' }
+          { day: '', month: '', year: '', idx: '0' },
+          { day: '', month: '', year: '', idx: '1' },
+          { day: '', month: '', year: '', idx: '2' }
         ],
         items: [
           { value: 'something1' },
@@ -278,9 +278,9 @@ describe('Server tests', () => {
     test('should handle partial date fields', () => {
       const payload = {
         itemAbsDates: [
-          { day: '', month: '12', year: '2021' },
-          { day: '22', month: '', year: '2024' },
-          { day: '', month: '5', year: '' }
+          { day: '', month: '12', year: '2021', idx: '0' },
+          { day: '22', month: '', year: '2024', idx: '1' },
+          { day: '', month: '5', year: '', idx: '2' }
         ],
         items: [
           { value: 'something1' },
@@ -300,9 +300,9 @@ describe('Server tests', () => {
     test('should handle completed date fields', () => {
       const payload = {
         itemAbsDates: [
-          { day: '7', month: '12', year: '2021' },
-          { day: '22', month: '1', year: '2024' },
-          { day: '02', month: '5', year: '2025' }
+          { day: '7', month: '12', year: '2021', idx: '0' },
+          { day: '22', month: '1', year: '2024', idx: '1' },
+          { day: '02', month: '5', year: '2025', idx: '2' }
         ],
         items: [
           { value: 'something1' },
@@ -323,12 +323,37 @@ describe('Server tests', () => {
       })
     })
 
+    test('should handle sparse date fields', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '7', month: '12', year: '2021', idx: '0' },
+          { day: '02', month: '5', year: '2025', idx: '2' }
+        ],
+        items: [
+          { value: 'datesomething1' },
+          { value: 'string-something2' },
+          { value: 'datesomething3' }
+        ]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [
+          { value: '2021-12-07' },
+          { value: 'string-something2' },
+          { value: '2025-05-02' }
+        ]
+      })
+    })
+
     test('should ignore completed date fields if no items in the payload', () => {
       const payload = {
         itemAbsDates: [
-          { day: '7', month: '12', year: '2021' },
-          { day: '22', month: '1', year: '2024' },
-          { day: '02', month: '5', year: '2025' }
+          { day: '7', month: '12', year: '2021', idx: '0' },
+          { day: '22', month: '1', year: '2024', idx: '1' },
+          { day: '02', month: '5', year: '2025', idx: '2' }
         ],
         items: [{ value: 'something1' }]
       } as unknown as {

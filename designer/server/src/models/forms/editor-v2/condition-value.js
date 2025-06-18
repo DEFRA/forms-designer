@@ -313,18 +313,24 @@ export function buildDateItems(value, idx) {
  */
 export function buildDateValueField(idx, item, validation) {
   return {
-    id: `items[${idx}].value`,
-    name: `items[${idx}][value]`,
-    fieldset: {
-      legend: {
-        text: 'Enter a date'
-      }
+    dateField: {
+      id: `items[${idx}].value`,
+      name: `items[${idx}][value]`,
+      fieldset: {
+        legend: {
+          text: 'Enter a date'
+        }
+      },
+      items: buildDateItems(
+        typeof item.value === 'string' ? item.value : undefined,
+        idx
+      ),
+      ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
     },
-    items: buildDateItems(
-      typeof item.value === 'string' ? item.value : undefined,
-      idx
-    ),
-    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+    indexField: {
+      name: `itemAbsDates[${idx}][idx]`,
+      value: `${idx}`
+    }
   }
 }
 
