@@ -557,7 +557,25 @@ describe('preview', () => {
         ComponentType.SelectField
       )
 
-      expect(previewModel).toEqual({ ...listModelBase, ...formGroupBase })
+      expect(previewModel).toEqual({
+        id: 'inputField',
+        name: 'inputField',
+        label: {
+          classes: 'govuk-label--l',
+          text: 'Short answer (optional)'
+        },
+        hint: {
+          classes: '',
+          text: ''
+        },
+        items: [],
+        classes: 'govuk-visually-hidden',
+        formGroup: {
+          afterInput: {
+            html: '<div class="govuk-inset-text">No items added yet.</div>'
+          }
+        }
+      })
     })
 
     it('should get NumberField', () => {
