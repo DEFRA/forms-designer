@@ -547,9 +547,6 @@ describe('preview', () => {
       expect(previewModel).toEqual({
         id: 'inputField',
         name: 'inputField',
-        attributes: {
-          'data-module': 'govuk-accessible-autocomplete'
-        },
         label: {
           classes: 'govuk-label--l',
           text: 'Short answer (optional)'
