@@ -50,6 +50,21 @@ export const SetupPreview =
 
       return question
     },
+    Html: () => {
+      return SetupPreview.Question()
+    },
+    InsetText: () => {
+      return SetupPreview.Question()
+    },
+    Details: () => {
+      return SetupPreview.Question()
+    },
+    List: () => {
+      return SetupPreview.Question()
+    },
+    Markdown: () => {
+      return SetupPreview.Question()
+    },
     /**
      * @returns {ShortAnswerQuestion}
      */
