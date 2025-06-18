@@ -21,7 +21,6 @@ export class SelectSortableQuestion extends ListSortableQuestion {
     return {
       id: this._fieldName,
       name: this._fieldName,
-      attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       hint: this.hint,
       label: this.label,
       items: this.list,

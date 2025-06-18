@@ -26,9 +26,6 @@ describe('SelectSortableQuestion', () => {
         classes: ''
       },
       classes: '',
-      attributes: {
-        'data-module': 'govuk-accessible-autocomplete'
-      },
       items: [
         {
           label: { text: 'Treasure Hunting', classes: '' },
