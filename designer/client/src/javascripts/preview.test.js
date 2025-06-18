@@ -8,7 +8,7 @@ import {
   NumberOnlyQuestion,
   Question,
   RadioSortableQuestion,
-  SelectQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   YesNoQuestion
@@ -77,7 +77,7 @@ describe('preview', () => {
     it('should setup preview for Selectfield', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.SelectField)
-      expect(res).toBeInstanceOf(SelectQuestion)
+      expect(res).toBeInstanceOf(SelectSortableQuestion)
     })
 
     it('should setup preview for AutoCompleteField', () => {

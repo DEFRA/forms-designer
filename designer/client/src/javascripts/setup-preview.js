@@ -10,7 +10,7 @@ import {
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
-  SelectQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -35,7 +35,6 @@ import {
   RadioSortableEventListeners,
   RadioSortableQuestionElements
 } from '~/src/javascripts/preview/radio-sortable.js'
-import { SelectDomElements } from '~/src/javascripts/preview/select'
 
 export const SetupPreview =
   /** @type {Record<ComponentType|'Question'|'ListSortable', () => PreviewQuestion>} */ ({
@@ -208,13 +207,13 @@ export const SetupPreview =
       return radio
     },
     /**
-     * @returns {SelectQuestion}
+     * @returns {SelectSortableQuestion}
      */
     SelectField: () => {
-      const elements = new SelectDomElements(NunjucksRenderer)
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
       const nunjucksRenderer = new NunjucksRenderer(elements)
-      const select = new SelectQuestion(elements, nunjucksRenderer)
-      const listeners = new EventListeners(select, elements)
+      const select = new SelectSortableQuestion(elements, nunjucksRenderer)
+      const listeners = new ListSortableEventListeners(select, elements, [])
       listeners.setupListeners()
 
       return select

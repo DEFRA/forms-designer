@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { SelectQuestion } from '~/src/index.js'
+import { SelectSortableQuestion } from '~/src/index.js'
 
 describe('SelectSortableQuestion', () => {
   it('should create class with items', () => {
@@ -13,7 +13,7 @@ describe('SelectSortableQuestion', () => {
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const select = new SelectQuestion(elements, renderer)
+    const select = new SelectSortableQuestion(elements, renderer)
     expect(select.renderInput).toEqual({
       id: 'inputField',
       name: 'inputField',
@@ -24,6 +24,10 @@ describe('SelectSortableQuestion', () => {
       hint: {
         text: 'Choose one adventure that best suits you.',
         classes: ''
+      },
+      classes: '',
+      attributes: {
+        'data-module': 'govuk-accessible-autocomplete'
       },
       items: [
         {
@@ -66,7 +70,7 @@ describe('SelectSortableQuestion', () => {
       new QuestionPreviewElements(baseElementsWithNoItems)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const select = new SelectQuestion(elements, renderer)
+    const select = new SelectSortableQuestion(elements, renderer)
     expect(select.renderInput).toEqual({
       id: 'inputField',
       name: 'inputField',
@@ -83,6 +87,9 @@ describe('SelectSortableQuestion', () => {
         afterInput: {
           html: '<div class="govuk-inset-text">No items added yet.</div>'
         }
+      },
+      attributes: {
+        'data-module': 'govuk-accessible-autocomplete'
       },
       items: []
     })

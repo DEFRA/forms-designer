@@ -60,11 +60,9 @@ export class ListQuestion extends Question {
    *  formGroup?: {afterInputs: {html: string}};
    *  hint: DefaultComponent;
    *  name: string;
-   *  label: DefaultComponent;
    *  fieldset?: GovukFieldset;
    *  id: string;
    *  items: ListItemReadonly[]
-   *  classes?: string
    * }}
    */
   get renderInput() {
@@ -86,7 +84,6 @@ export class ListQuestion extends Question {
       name: this.listRenderName,
       fieldset: this.fieldSet,
       hint: this.hint,
-      label: this.label,
       items: this.list,
       ...afterInputs
     }

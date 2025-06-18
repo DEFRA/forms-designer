@@ -9,7 +9,7 @@ import {
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
-  SelectQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -198,7 +198,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     SelectField: (questionElements) => {
-      return new SelectQuestion(questionElements, emptyRender)
+      return new SelectSortableQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements

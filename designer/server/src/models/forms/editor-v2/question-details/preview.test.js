@@ -456,7 +456,7 @@ describe('preview', () => {
 
     const formGroupBase = {
       formGroup: {
-        afterInput: {
+        afterInputs: {
           html: '<div class="govuk-inset-text">No items added yet.</div>'
         }
       }
@@ -547,6 +547,9 @@ describe('preview', () => {
       expect(previewModel).toEqual({
         id: 'inputField',
         name: 'inputField',
+        attributes: {
+          'data-module': 'govuk-accessible-autocomplete'
+        },
         label: {
           classes: 'govuk-label--l',
           text: 'Short answer (optional)'
@@ -678,8 +681,7 @@ describe('preview', () => {
         ...listModelBase,
         ...formGroupBase,
         id: 'checkboxField',
-        name: 'checkboxField',
-        classes: 'govuk-visually-hidden'
+        name: 'checkboxField'
       })
     })
 
@@ -779,11 +781,7 @@ describe('preview', () => {
         {},
         ComponentType.RadiosField
       )
-      expect(previewModel).toEqual({
-        ...listModelBase,
-        ...formGroupBase,
-        classes: 'govuk-visually-hidden'
-      })
+      expect(previewModel).toEqual({ ...listModelBase, ...formGroupBase })
     })
 
     it('should get RadioSortable with list items', () => {
