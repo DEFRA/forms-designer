@@ -57,7 +57,7 @@ export function createJoiError(fieldName, message) {
         message,
         path: [fieldName],
         type: 'custom',
-        context: { key: fieldName }
+        context: { key: fieldName, label: fieldName }
       }
     ],
     {}
