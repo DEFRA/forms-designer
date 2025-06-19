@@ -180,11 +180,6 @@ const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
 const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
-    type: Joi.string()
-      .trim()
-      .valid('RelativeDate')
-      .required()
-      .description('Type of the condition value, should be "RelativeDate"'),
     period: Joi.string()
       .trim()
       .required()

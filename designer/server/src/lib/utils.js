@@ -122,7 +122,8 @@ export function getComponentFromDefinition(definition, pageId, questionId) {
 export const componentsSavingLists = [
   ComponentType.AutocompleteField,
   ComponentType.CheckboxesField,
-  ComponentType.RadiosField
+  ComponentType.RadiosField,
+  ComponentType.SelectField
 ]
 
 /**

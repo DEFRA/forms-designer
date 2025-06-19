@@ -8,6 +8,7 @@ import {
   NumberOnlyQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   YesNoQuestion
@@ -34,6 +35,7 @@ jest.mock('~/src/views/preview-components/inset.njk', () => '')
 jest.mock('~/src/views/preview-components/textfield.njk', () => '')
 jest.mock('~/src/views/preview-components/textarea.njk', () => '')
 jest.mock('~/src/views/preview-components/radios.njk', () => '')
+jest.mock('~/src/views/preview-components/selectfield.njk', () => '')
 jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
 jest.mock('~/src/views/preview-components/date-input.njk', () => '')
 jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
@@ -72,6 +74,12 @@ describe('preview', () => {
       document.body.innerHTML = list1HTML
       const res = setupPreview(ComponentType.CheckboxesField)
       expect(res).toBeInstanceOf(CheckboxSortableQuestion)
+    })
+
+    it('should setup preview for Selectfield', () => {
+      document.body.innerHTML = list1HTML
+      const res = setupPreview(ComponentType.SelectField)
+      expect(res).toBeInstanceOf(SelectSortableQuestion)
     })
 
     it('should setup preview for AutoCompleteField', () => {

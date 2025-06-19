@@ -118,7 +118,8 @@ export function getConditionSessionState(yar, stateId) {
 
 const componentsSavingLists = [
   ComponentType.CheckboxesField,
-  ComponentType.RadiosField
+  ComponentType.RadiosField,
+  ComponentType.SelectField
 ]
 
 /**

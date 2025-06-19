@@ -54,7 +54,7 @@ const preSchema = Joi.object()
     'list-items': questionDetailsFullSchema.listItemCountSchema.when(
       'questionType',
       {
-        is: Joi.string().valid('CheckboxesField', 'RadiosField'),
+        is: Joi.string().valid('CheckboxesField', 'RadiosField', 'SelectField'),
         then: Joi.when('enhancedAction', {
           is: Joi.exist(),
           then: Joi.number().optional(),

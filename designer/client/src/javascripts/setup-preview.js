@@ -222,6 +222,18 @@ export const SetupPreview =
       return radio
     },
     /**
+     * @returns {SelectSortableQuestion}
+     */
+    SelectField: () => {
+      const elements = new ListSortableQuestionElements(NunjucksRenderer)
+      const nunjucksRenderer = new NunjucksRenderer(elements)
+      const select = new SelectSortableQuestion(elements, nunjucksRenderer)
+      const listeners = new ListSortableEventListeners(select, elements, [])
+      listeners.setupListeners()
+
+      return select
+    },
+    /**
      * @returns {CheckboxSortableQuestion}
      */
     CheckboxesField: () => {
@@ -258,25 +270,6 @@ export const SetupPreview =
       const elements = new ListSortableQuestionElements(NunjucksRenderer)
       const nunjucksRenderer = new NunjucksRenderer(elements)
       const listSortable = new ListSortableQuestion(elements, nunjucksRenderer)
-      const listeners = new ListSortableEventListeners(
-        listSortable,
-        elements,
-        []
-      )
-      listeners.setupListeners()
-
-      return listSortable
-    },
-    /**
-     * @returns {SelectSortableQuestion}
-     */
-    SelectField: () => {
-      const elements = new ListSortableQuestionElements(NunjucksRenderer)
-      const nunjucksRenderer = new NunjucksRenderer(elements)
-      const listSortable = new SelectSortableQuestion(
-        elements,
-        nunjucksRenderer
-      )
       const listeners = new ListSortableEventListeners(
         listSortable,
         elements,

@@ -8,7 +8,12 @@ export const enhancedFieldsPerComponentType =
     YesNoField: [],
     DatePartsField: [],
     MonthYearField: [],
-    SelectField: [],
+    SelectField: [
+      QuestionEnhancedFields.RadioId,
+      QuestionEnhancedFields.RadioText,
+      QuestionEnhancedFields.RadioHint,
+      QuestionEnhancedFields.RadioValue
+    ],
     AutocompleteField: [],
     RadiosField: [
       QuestionEnhancedFields.RadioId,
