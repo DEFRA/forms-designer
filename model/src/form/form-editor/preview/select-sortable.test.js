@@ -28,6 +28,11 @@ describe('SelectSortableQuestion', () => {
       classes: '',
       items: [
         {
+          id: '',
+          text: ' ',
+          value: ''
+        },
+        {
           label: { text: 'Treasure Hunting', classes: '' },
           text: 'Treasure Hunting',
           value: 'Treasure Hunting',
