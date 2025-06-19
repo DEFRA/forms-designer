@@ -3,7 +3,6 @@ import {
   DateDirections,
   DateUnits,
   getYesNoList,
-  isConditionBooleanValueDataV2,
   isConditionDateValueDataV2,
   isConditionNumberValueDataV2,
   isConditionStringValueDataV2
@@ -263,8 +262,9 @@ function buildBooleanValueField(idx, item, validation) {
     },
     classes: GOVUK_RADIOS_SMALL,
     value:
-      isConditionBooleanValueDataV2(item) && typeof item.value === 'boolean'
-        ? item.value.toString()
+      item.value &&
+      (typeof item.value === 'boolean' || typeof item.value === 'string')
+        ? `${item.value}`
         : undefined,
     items: getYesNoList().items.map((itm, idx2) => {
       return {
