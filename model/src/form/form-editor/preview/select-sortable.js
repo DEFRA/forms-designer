@@ -1,8 +1,9 @@
 import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
-import { ComponentType, Question } from '~/src/index.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
+import { ComponentType } from '~/src/index.js'
 
 export class SelectSortableQuestion extends ListSortableQuestion {
-  _questionTemplate = Question.PATH + 'selectfield.njk'
+  _questionTemplate = PreviewComponent.PATH + 'selectfield.njk'
 
   /**
    * @type {ComponentType}

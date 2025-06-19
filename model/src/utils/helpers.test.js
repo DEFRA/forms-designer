@@ -1,4 +1,4 @@
-import { slugify } from '~/src/utils/helpers.js'
+import { addBlankSelectOption, slugify } from '~/src/utils/helpers.js'
 
 describe('Helpers', () => {
   describe('slugify', () => {
@@ -45,6 +45,61 @@ describe('Helpers', () => {
 
       // Skip trim, e.g. path formatting "as you type"
       expect(slugify(title, { trim: false })).toBe(slug)
+    })
+  })
+
+  describe('#addBlankSelectOption', () => {
+    test('should add blank option', () => {
+      const elem = {
+        name: 'select',
+        items: [{ id: '12345', text: 'Option 1', value: 'opt1' }]
+      }
+      expect(addBlankSelectOption(elem)).toEqual({
+        name: 'select',
+        items: [
+          { id: '__0__', text: '', value: '' },
+          { id: '12345', text: 'Option 1', value: 'opt1' }
+        ]
+      })
+    })
+
+    test('should ignore if already has blank option', () => {
+      const elem = {
+        name: 'select',
+        items: [
+          { id: '__0__', text: '', value: '' },
+          { id: '12345', text: 'Option 1', value: 'opt1' }
+        ]
+      }
+      expect(addBlankSelectOption(elem)).toEqual({
+        name: 'select',
+        items: [
+          { id: '__0__', text: '', value: '' },
+          { id: '12345', text: 'Option 1', value: 'opt1' }
+        ]
+      })
+    })
+
+    test('should handle zero options', () => {
+      const elem = {
+        name: 'select',
+        items: []
+      }
+      expect(addBlankSelectOption(elem)).toEqual({
+        name: 'select',
+        items: []
+      })
+    })
+
+    test('should handle missing options', () => {
+      const elem = {
+        name: 'select',
+        items: undefined
+      }
+      expect(addBlankSelectOption(elem)).toEqual({
+        name: 'select',
+        items: undefined
+      })
     })
   })
 })
