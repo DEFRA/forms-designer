@@ -122,9 +122,7 @@ export const privacyNoticeUrlSchema = Joi.string()
 export const notificationEmailAddressSchema = Joi.string()
   .email()
   .trim()
-  .description(
-    'Email address to receive form submission notifications.Can be any domain'
-  )
+  .description('Email address to receive form submission notifications')
 
 export const authoredAtSchema = Joi.date()
   .iso()
