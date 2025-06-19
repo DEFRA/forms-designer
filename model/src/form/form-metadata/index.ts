@@ -120,7 +120,7 @@ export const privacyNoticeUrlSchema = Joi.string()
   .description('URL to the privacy notice for this form')
 
 export const notificationEmailAddressSchema = Joi.string()
-  .email({ tlds: { allow: ['uk'] } })
+  .email()
   .trim()
   .description(
     'Email address to receive form submission notifications.Can be any domain'
