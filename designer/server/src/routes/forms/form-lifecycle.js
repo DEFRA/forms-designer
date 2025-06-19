@@ -5,10 +5,12 @@ import * as notifications from '~/src/common/constants/notifications.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
 
+const logger = createLogger()
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
 export default [
@@ -60,6 +62,10 @@ export default [
       try {
         await forms.makeDraftFormLive(form.id, token)
 
+        logger.info(
+          `[formPublished] Form '${form.slug}' (${form.title}) successfully made live - formId: ${form.id}`
+        )
+
         yar.flash(
           sessionNames.successNotification,
           notifications.FORM_LIVE_CREATED
@@ -71,10 +77,23 @@ export default [
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
         ) {
+          logger.info(
+            `[formPublishValidationFailed] Form '${form.slug}' failed validation checks for publishing - ${err.message} - formId: ${form.id}`
+          )
+
           yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
 
           return h.redirect(`${formOverviewPath(form.slug)}/make-draft-live`)
         }
+
+        const error =
+          err instanceof Error
+            ? err
+            : new Error('Unknown error during form publishing')
+        logger.error(
+          error,
+          `[formPublishFailed] Unexpected error while making form '${form.slug}' live - ${error.message} - formId: ${form.id}`
+        )
 
         throw err
       }
@@ -101,14 +120,31 @@ export default [
       const { slug } = request.params
 
       const form = await forms.get(slug, token)
-      await forms.createDraft(form.id, token)
 
-      yar.flash(
-        sessionNames.successNotification,
-        notifications.FORM_DRAFT_CREATED
-      )
+      try {
+        await forms.createDraft(form.id, token)
 
-      return h.redirect(formOverviewPath(slug))
+        logger.info(
+          `[draftCreated] Draft successfully created from live form '${slug}' - formId: ${form.id}`
+        )
+
+        yar.flash(
+          sessionNames.successNotification,
+          notifications.FORM_DRAFT_CREATED
+        )
+
+        return h.redirect(formOverviewPath(slug))
+      } catch (err) {
+        const error =
+          err instanceof Error
+            ? err
+            : new Error('Unknown error during draft creation')
+        logger.error(
+          error,
+          `[draftCreationFailed] Failed to create draft from live form '${slug}' - ${error.message} - formId: ${form.id}`
+        )
+        throw err
+      }
     },
     options: {
       auth: {
@@ -171,6 +207,10 @@ export default [
         // Deleting a draft also deletes the form itself (as long as the form hasn't gone live).
         await forms.deleteForm(form.id, token)
 
+        logger.info(
+          `[formDeleted] Form '${form.slug}' (${form.title}) successfully deleted - formId: ${form.id}`
+        )
+
         yar.flash(
           sessionNames.successNotification,
           notifications.FORM_DELETED_DRAFT
@@ -182,6 +222,10 @@ export default [
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.BAD_REQUEST.valueOf()
         ) {
+          logger.info(
+            `[formDeleteValidationFailed] Form '${form.slug}' failed validation checks for deletion - ${err.message} - formId: ${form.id}`
+          )
+
           const errorList = buildSimpleErrorList([err.message])
 
           return h.view(
@@ -193,6 +237,15 @@ export default [
             )
           )
         }
+
+        const error =
+          err instanceof Error
+            ? err
+            : new Error('Unknown error during form deletion')
+        logger.error(
+          error,
+          `[formDeleteFailed] Unexpected error while deleting form '${form.slug}' - ${error.message} - formId: ${form.id}`
+        )
 
         throw err
       }

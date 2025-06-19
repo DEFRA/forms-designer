@@ -77,7 +77,14 @@ export default [
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (err) {
-          request.logger.error(err, 'Designer Server PUT /api/{id}/data error')
+          const error =
+            err instanceof Error
+              ? err
+              : new Error('Unknown error in API data update')
+          request.logger.error(
+            error,
+            `[apiUpdateFailed] Designer Server PUT /api/${id}/data error - ${error.message}`
+          )
           return h
             .response({ ok: false, err })
             .code(StatusCodes.INTERNAL_SERVER_ERROR)

@@ -3,6 +3,7 @@ import {
   type ResponseToolkit,
   type ServerRegisterPluginObject
 } from '@hapi/hapi'
+import { StatusCodes } from 'http-status-codes'
 
 import { errorViewModel } from '~/src/models/errors.js'
 
@@ -28,6 +29,16 @@ export default {
           // processing the request
           const statusCode = response.output.statusCode
           const errorMessage = errorCodes.get(statusCode)
+
+          if (statusCode === StatusCodes.NOT_FOUND.valueOf()) {
+            request.logger.info(
+              `[notFound] Request for non-existent resource: ${request.method.toUpperCase()} ${request.url.pathname}`
+            )
+
+            return h
+              .view('404', errorViewModel('Page not found'))
+              .code(statusCode)
+          }
 
           request.logger.error(
             {

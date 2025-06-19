@@ -10,6 +10,8 @@ chdir(import.meta.dirname)
 import('~/src/server.js')
   .then((server) => server.listen())
   .catch((error: unknown) => {
-    logger.error(error)
-    process.exitCode = 1
+    const err =
+      error instanceof Error ? error : new Error('Unknown startup error')
+    logger.error(err, `[serverStartup] Server failed to start: ${err.message}`)
+    throw error
   })
