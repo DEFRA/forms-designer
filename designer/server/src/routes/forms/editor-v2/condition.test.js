@@ -510,6 +510,77 @@ describe('Editor v2 condition routes', () => {
         }
       )
     })
+
+    test('POST - should error on main save if error with something other than duplicate display name', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(getConditionSessionState).mockReturnValue({
+        id: '88389bae-b6e5-4781-8d07-970809064726',
+        stateId: 'session-id',
+        conditionWrapper: {
+          id: 'd9ae6c5a-bc8f-41f4-9c2a-f4081cd210b5',
+          displayName: '',
+          items: []
+        }
+      })
+      const cause = [
+        {
+          id: FormDefinitionError.UniqueListId,
+          detail: { path: ['lists', 1], pos: 1, dupePos: 0 },
+          message: '"lists[1]" contains a duplicate value',
+          type: FormDefinitionErrorType.Unique
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"lists[1]" contains a duplicate value', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      jest.mocked(addCondition).mockRejectedValueOnce(boomErr)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/condition/new/session-id',
+        auth,
+        payload: {
+          'items[0].[id]': 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
+          'items[0].[componentId]': 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
+          'items[0].[operator]': OperatorName.Is,
+          'items[0].[type]': ConditionType.StringValue,
+          'items[0].[value]': 'test1',
+          displayName: 'Condition name',
+          id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
+          coordinator: 'and'
+        }
+      }
+
+      const {
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+      expect(updateCondition).not.toHaveBeenCalled()
+      expect(addCondition).toHaveBeenCalledWith(
+        testFormMetadata.id,
+        expect.any(String),
+        {
+          coordinator: 'and',
+          displayName: 'Condition name',
+          id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
+          items: [
+            {
+              componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
+              id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
+              operator: 'is',
+              type: 'StringValue',
+              value: 'test1'
+            }
+          ]
+        }
+      )
+    })
   })
 })
 
