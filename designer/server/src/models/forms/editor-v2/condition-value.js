@@ -3,7 +3,6 @@ import {
   DateDirections,
   DateUnits,
   getYesNoList,
-  isConditionDateValueDataV2,
   isConditionNumberValueDataV2,
   isConditionStringValueDataV2
 } from '@defra/forms-model'
@@ -278,23 +277,60 @@ function buildBooleanValueField(idx, item, validation) {
 }
 
 /**
+ * @param { string | undefined } value
+ * @param {number} idx
+ */
+export function buildDateItems(value, idx) {
+  const [year, month, day] = (typeof value === 'string' ? value : '--').split(
+    '-'
+  )
+  return [
+    {
+      label: 'Day',
+      name: `itemAbsDates[${idx}][day]`,
+      value: day,
+      classes: 'govuk-input--width-2'
+    },
+    {
+      label: 'Month',
+      name: `itemAbsDates[${idx}][month]`,
+      value: month,
+      classes: 'govuk-input--width-2'
+    },
+    {
+      label: 'Year',
+      name: `itemAbsDates[${idx}][year]`,
+      value: year,
+      classes: 'govuk-input--width-4'
+    }
+  ]
+}
+
+/**
  * @param {number} idx
  * @param { ConditionDataV2 } item
  * @param { ValidationFailure<FormEditor> | undefined } validation
  */
 export function buildDateValueField(idx, item, validation) {
   return {
-    id: `items[${idx}].value`,
-    name: `items[${idx}][value]`,
-    label: {
-      text: 'Enter a date'
+    dateField: {
+      id: `items[${idx}].value`,
+      name: `items[${idx}][value]`,
+      fieldset: {
+        legend: {
+          text: 'Enter a date'
+        }
+      },
+      items: buildDateItems(
+        typeof item.value === 'string' ? item.value : undefined,
+        idx
+      ),
+      ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
     },
-    hint: {
-      text: 'Format must be YYYY-MM-DD'
-    },
-    classes: GOVUK_INPUT_WIDTH_10,
-    value: isConditionDateValueDataV2(item) ? item.value : undefined,
-    ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+    indexField: {
+      name: `itemAbsDates[${idx}][idx]`,
+      value: `${idx}`
+    }
   }
 }
 
@@ -341,7 +377,7 @@ function buildNumberValueField(idx, item, validation) {
 }
 
 /**
- * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ConditionalComponentsDef, ConditionDataV2, ConditionListItemRefValueDataV2, FormDefinition, FormEditor, List, RelativeDateValueDataV2 } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -91,6 +91,40 @@ const serverOptions = (): ServerOptions => {
   }
 }
 
+export function leftPadDateIfSupplied(val?: string) {
+  return val ? val.padStart(2, '0') : ''
+}
+
+/**
+ *
+ * NOTE - *** this method causes side-effects on the payload ***
+ *
+ * The GDS 3-part date field is handled by submitting the day/month/year parts as separate fields
+ * (under a different array to the other 'condition items') and then piecing together a string date value
+ * in the format YYYY-MM-DD.
+ * The day/month/year values are then removed from the payload to leave only the 'value' as 'YYYY-MM-DD' for
+ * normal validation (as if simply a text string of YYYY-MM-DD format was supplied in the payload).
+ */
+export function handleGdsDateFields(payload: {
+  itemAbsDates?: { day?: string; month?: string; year?: string; idx?: string }[]
+  items: []
+}) {
+  const multipartDateFields = payload.itemAbsDates as
+    | { day?: string; month?: string; year?: string; idx?: number }[]
+    | undefined
+  if (multipartDateFields) {
+    for (const item of multipartDateFields) {
+      const dateIdx = item.idx ?? 0
+      if (payload.items[dateIdx]) {
+        // @ts-expect-error - dynamic parsing
+        payload.items[dateIdx].value =
+          `${item.year}-${leftPadDateIfSupplied(item.month)}-${leftPadDateIfSupplied(item.day)}`
+      }
+    }
+    delete payload.itemAbsDates
+  }
+}
+
 export async function createServer() {
   const server = hapi.server(serverOptions())
 
@@ -152,6 +186,9 @@ export async function createServer() {
 
       // @ts-expect-error - dynamic parsing
       request.payload = qs.parse(payload)
+
+      // @ts-expect-error - dynamic parsing
+      handleGdsDateFields(request.payload)
     }
 
     return h.continue
