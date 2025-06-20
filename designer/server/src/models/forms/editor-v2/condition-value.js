@@ -332,9 +332,7 @@ function buildNumberValueField(idx, item, validation) {
     attributes: {
       inputmode: 'numeric'
     },
-    value: isConditionNumberValueDataV2(item) // && typeof item.value === 'number'
-      ? item.value
-      : undefined,
+    value: isConditionNumberValueDataV2(item) ? item.value : undefined,
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
