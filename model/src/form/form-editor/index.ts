@@ -54,7 +54,8 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.YesNoField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
-    ComponentType.AutocompleteField
+    ComponentType.AutocompleteField,
+    ComponentType.SelectField
   )
   .description('The specific component type to use for this question')
 
@@ -76,7 +77,8 @@ export const listSubSchema = Joi.string()
     ComponentType.YesNoField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
-    ComponentType.AutocompleteField
+    ComponentType.AutocompleteField,
+    ComponentType.SelectField
   )
   .description('Subtype for date-related questions')
 

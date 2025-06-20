@@ -3,13 +3,13 @@ import {
   CheckboxSortableQuestion,
   DateInputQuestion,
   EmailAddressQuestion,
-  ListQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
   NumberOnlyQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
+  SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
@@ -81,6 +81,11 @@ export class QuestionPreviewElements {
    */
   _shortDesc = ''
   /**
+   * @type {string}
+   * @protected
+   */
+  _content = ''
+  /**
    *
    * @type {ListElement[]}
    * @private
@@ -123,7 +128,8 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
-      items: this._items
+      items: this._items,
+      content: this._content
     }
   }
 
@@ -198,7 +204,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     SelectField: (questionElements) => {
-      return new ListQuestion(questionElements, emptyRender)
+      return new SelectSortableQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements

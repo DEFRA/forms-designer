@@ -217,13 +217,46 @@ describe('editor-v2 - condition-value', () => {
       expect(valueField.value).toBeUndefined()
     })
 
-    test('should return boolean value field', () => {
+    test('should return boolean value field (boolean)', () => {
       const booleanItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
         type: ConditionType.BooleanValue,
         value: true
+      })
+      const valueField = buildValueField(
+        ConditionType.BooleanValue,
+        2,
+        booleanItem,
+        undefined,
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        id: 'items[2].value',
+        name: 'items[2][value]',
+        value: 'true',
+        classes: 'govuk-radios--small',
+        items: [
+          { text: 'Yes', value: 'true', id: 'items[2].value' },
+          { text: 'No', value: 'false', id: 'items[2].value1' }
+        ]
+      })
+    })
+
+    test('should return boolean value field (string)', () => {
+      const booleanItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        type: ConditionType.BooleanValue,
+        value: 'true'
       })
       const valueField = buildValueField(
         ConditionType.BooleanValue,

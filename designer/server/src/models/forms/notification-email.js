@@ -24,7 +24,7 @@ export function notificationEmailViewModel(metadata, validation) {
       },
       value: formValues?.notificationEmail ?? metadata.notificationEmail,
       hint: {
-        text: 'Used to send submitted forms for processing. Emails must end with ‘.gov.uk’ or ‘.org.uk’, like name@example.gov.uk or name@example.org.uk'
+        text: 'Used to send submitted forms for processing'
       }
     },
     buttonText: 'Save and continue'

@@ -15,6 +15,7 @@ describe('phone number', () => {
       expect(res.renderInput).toEqual({
         id: 'phoneNumberField',
         name: 'phoneNumberField',
+        classes: '',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'
