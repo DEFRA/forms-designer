@@ -73,7 +73,10 @@ export const customOperators = {
     ...relativeDateOperators
   },
   [ComponentType.TextField]: withDefaults(textFieldOperators),
-  [ComponentType.MultilineTextField]: withDefaults(textFieldOperators),
+  [ComponentType.MultilineTextField]: {
+    [OperatorName.IsLongerThan]: lengthIs(Operator.IsMoreThan),
+    [OperatorName.IsShorterThan]: lengthIs(Operator.IsLessThan)
+  },
   [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
   [ComponentType.TelephoneNumberField]: defaultOperators,
   [ComponentType.SelectField]: defaultOperators,

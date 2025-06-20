@@ -399,7 +399,7 @@ describe('editor-v2 - condition-value', () => {
         },
         id: 'items[2].value',
         name: 'items[2][value]',
-        value: '1',
+        value: 1,
         classes: 'govuk-input--width-5',
         attributes: {
           inputmode: 'numeric'
