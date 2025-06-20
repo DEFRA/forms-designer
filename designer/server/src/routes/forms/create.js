@@ -1,4 +1,5 @@
 import {
+  getErrorMessage,
   organisationSchema,
   slugify,
   teamEmailSchema,
@@ -114,12 +115,21 @@ export default [
       const { title } = payload
       const { token } = auth.credentials
       const slug = slugify(title)
-      const form = await forms
-        .get(slug, token)
-        .catch((err) => logger.error(err))
 
-      if (form) {
+      try {
+        await forms.get(slug, token)
+
+        logger.info(
+          `[formAlreadyExists] Form with slug '${slug}' already exists - title: '${title}'`
+        )
         return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
+      } catch (err) {
+        if (!(err instanceof Error && err.message.includes('404'))) {
+          logger.error(
+            err,
+            `[formExistenceCheckFailed] Failed to check if form exists for slug: ${slug} - ${getErrorMessage(err)}`
+          )
+        }
       }
 
       // Update form metadata, redirect to next step

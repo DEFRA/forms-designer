@@ -3,6 +3,7 @@ import {
   type ResponseToolkit,
   type ServerRegisterPluginObject
 } from '@hapi/hapi'
+import { StatusCodes } from 'http-status-codes'
 
 import { errorViewModel } from '~/src/models/errors.js'
 
@@ -29,7 +30,19 @@ export default {
           const statusCode = response.output.statusCode
           const errorMessage = errorCodes.get(statusCode)
 
-          request.logger.error(
+          if (statusCode === StatusCodes.NOT_FOUND.valueOf()) {
+            request.logger.info(
+              `[notFound] Request for non-existent resource: ${request.method.toUpperCase()} ${request.url.pathname}`
+            )
+
+            return h
+              .view('404', errorViewModel('Page not found'))
+              .code(statusCode)
+          }
+
+          const logLevel =
+            statusCode === StatusCodes.NOT_FOUND.valueOf() ? 'info' : 'error'
+          request.logger[logLevel](
             {
               statusCode,
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -37,7 +50,9 @@ export default {
               message: response.message,
               stack_trace: response.stack
             },
-            'Unhandled error found'
+            statusCode === StatusCodes.NOT_FOUND.valueOf()
+              ? 'Resource not found'
+              : 'Unhandled error found'
           )
 
           if (errorMessage) {

@@ -117,7 +117,9 @@ export default [
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.GONE.valueOf()
         ) {
-          logger.error(`File download link expired for file ID ${fileId}`)
+          logger.info(
+            `[fileExpired] File download link expired for file ID ${fileId}`
+          )
 
           const pageTitle = 'The link has expired'
 
@@ -128,8 +130,8 @@ export default [
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
         ) {
-          logger.error(
-            `Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key.`
+          logger.info(
+            `[fileAuthFailed] Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key.`
           )
           const validation = {
             formErrors: {
