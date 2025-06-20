@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -6,8 +7,8 @@ import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 
 /**
- * @template T
- * @param { Request | Request<{ Payload: T }> } request
+ * @template T, S
+ * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
  */
@@ -18,8 +19,8 @@ export function addErrorsToSession(request, error, flashKey) {
 }
 
 /**
- * @template T
- * @param { Request | Request<{ Payload: T }> } request
+ * @template T, S
+ * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {unknown} formValues
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
@@ -83,7 +84,44 @@ export function dispatchToPageTitle(request, h, path) {
 }
 
 /**
- * @import { FormEditor } from '@defra/forms-model'
+ * Returns true if the err is an InvalidFormDefinitionError
+ * @param {Error} err
+ */
+export function isInvalidFormError(err) {
+  if (Boom.isBoom(err)) {
+    const data = err.data
+
+    if (data?.error === 'InvalidFormDefinitionError') {
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * Returns true if the err is an InvalidFormDefinitionError of `type`
+ * @param {unknown} err
+ * @param {FormDefinitionError} type
+ */
+export function isInvalidFormErrorType(err, type) {
+  if (Boom.isBoom(err) && isInvalidFormError(err)) {
+    const cause = err.cause
+
+    if (Array.isArray(cause)) {
+      const detail = cause[0]
+
+      if (detail?.id === type) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
+/**
+ * @import { FormDefinitionError, FormEditor } from '@defra/forms-model'
  * @import { Request, ResponseToolkit } from '@hapi/hapi'
  * @import { ValidationSessionKey, Yar } from '@hapi/yar'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
