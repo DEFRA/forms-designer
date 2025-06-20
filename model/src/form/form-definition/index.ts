@@ -824,6 +824,7 @@ export const listSchema = Joi.object<List>()
       is: 'string',
       then: Joi.array()
         .items(stringListItemSchema)
+        .unique('id')
         .unique('text')
         .unique('value')
         .messages({
@@ -833,6 +834,7 @@ export const listSchema = Joi.object<List>()
         .description('Array of items with string values'),
       otherwise: Joi.array()
         .items(numberListItemSchema)
+        .unique('id')
         .unique('text')
         .unique('value')
         .description('Array of items with numeric values')
