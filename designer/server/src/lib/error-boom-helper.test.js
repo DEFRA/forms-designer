@@ -37,6 +37,10 @@ describe('Boom error helper', () => {
     test('should return false for other Boom errors', () => {
       expect(isInvalidFormError(Boom.notFound())).toBe(false)
     })
+
+    test('should return false for non Boom errors', () => {
+      expect(isInvalidFormError(new Error())).toBe(false)
+    })
   })
 
   describe('isInvalidFormErrorType', () => {
@@ -90,8 +94,40 @@ describe('Boom error helper', () => {
       ).toBe(false)
     })
 
+    test('should return false for if error cause is not an array', () => {
+      const cause = undefined
+
+      const boomErr = Boom.boomify(
+        new Error('"conditions[1]" contains a duplicate value', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      expect(
+        isInvalidFormErrorType(
+          boomErr,
+          FormDefinitionError.UniqueConditionDisplayName
+        )
+      ).toBe(false)
+    })
+
     test('should return false for other Boom errors', () => {
-      expect(isInvalidFormError(Boom.notFound())).toBe(false)
+      expect(
+        isInvalidFormErrorType(
+          Boom.notFound(),
+          FormDefinitionError.UniqueConditionDisplayName
+        )
+      ).toBe(false)
+    })
+
+    test('should return false for non Boom errors', () => {
+      expect(
+        isInvalidFormErrorType(
+          new Error(),
+          FormDefinitionError.UniqueConditionDisplayName
+        )
+      ).toBe(false)
     })
   })
 })
