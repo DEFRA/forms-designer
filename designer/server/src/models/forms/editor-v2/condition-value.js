@@ -3,7 +3,6 @@ import {
   DateDirections,
   DateUnits,
   getYesNoList,
-  isConditionBooleanValueDataV2,
   isConditionNumberValueDataV2,
   isConditionStringValueDataV2
 } from '@defra/forms-model'
