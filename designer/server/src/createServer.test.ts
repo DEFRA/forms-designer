@@ -1,6 +1,10 @@
 import { type Server } from '@hapi/hapi'
 import { StatusCodes } from 'http-status-codes'
 
+import {
+  handleGdsDateFields,
+  leftPadDateIfSupplied
+} from '~/src/createServer.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -233,6 +237,133 @@ describe('Server tests', () => {
       const { statusCode } = await server.inject(options)
 
       expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine since it's not a redirect
+    })
+  })
+
+  describe('leftPadDate', () => {
+    test('should perform left pad', () => {
+      expect(leftPadDateIfSupplied(undefined)).toBe('')
+      expect(leftPadDateIfSupplied('')).toBe('')
+      expect(leftPadDateIfSupplied('0')).toBe('00')
+      expect(leftPadDateIfSupplied('1')).toBe('01')
+      expect(leftPadDateIfSupplied('9')).toBe('09')
+      expect(leftPadDateIfSupplied('10')).toBe('10')
+      expect(leftPadDateIfSupplied('99')).toBe('99')
+    })
+  })
+
+  describe('handleGdsDateFields', () => {
+    test('should handle empty date fields', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '', month: '', year: '', idx: '0' },
+          { day: '', month: '', year: '', idx: '1' },
+          { day: '', month: '', year: '', idx: '2' }
+        ],
+        items: [
+          { value: 'something1' },
+          { value: 'something2' },
+          { value: 'something3' }
+        ]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [{ value: '--' }, { value: '--' }, { value: '--' }]
+      })
+    })
+
+    test('should handle partial date fields', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '', month: '12', year: '2021', idx: '0' },
+          { day: '22', month: '', year: '2024', idx: '1' },
+          { day: '', month: '5', year: '', idx: '2' }
+        ],
+        items: [
+          { value: 'something1' },
+          { value: 'something2' },
+          { value: 'something3' }
+        ]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [{ value: '2021-12-' }, { value: '2024--22' }, { value: '-05-' }]
+      })
+    })
+
+    test('should handle completed date fields', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '7', month: '12', year: '2021', idx: '0' },
+          { day: '22', month: '1', year: '2024', idx: '1' },
+          { day: '02', month: '5', year: '2025', idx: '2' }
+        ],
+        items: [
+          { value: 'something1' },
+          { value: 'something2' },
+          { value: 'something3' }
+        ]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [
+          { value: '2021-12-07' },
+          { value: '2024-01-22' },
+          { value: '2025-05-02' }
+        ]
+      })
+    })
+
+    test('should handle sparse date fields', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '7', month: '12', year: '2021', idx: '0' },
+          { day: '02', month: '5', year: '2025', idx: '2' }
+        ],
+        items: [
+          { value: 'datesomething1' },
+          { value: 'string-something2' },
+          { value: 'datesomething3' }
+        ]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [
+          { value: '2021-12-07' },
+          { value: 'string-something2' },
+          { value: '2025-05-02' }
+        ]
+      })
+    })
+
+    test('should ignore completed date fields if no items in the payload', () => {
+      const payload = {
+        itemAbsDates: [
+          { day: '7', month: '12', year: '2021', idx: '0' },
+          { day: '22', month: '1', year: '2024', idx: '1' },
+          { day: '02', month: '5', year: '2025', idx: '2' }
+        ],
+        items: [{ value: 'something1' }]
+      } as unknown as {
+        itemAbsDates?: { day?: string; month?: string; year?: string }[]
+        items: []
+      }
+      handleGdsDateFields(payload)
+      expect(payload).toEqual({
+        items: [{ value: '2021-12-07' }]
+      })
     })
   })
 })

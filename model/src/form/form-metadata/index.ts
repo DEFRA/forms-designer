@@ -120,12 +120,9 @@ export const privacyNoticeUrlSchema = Joi.string()
   .description('URL to the privacy notice for this form')
 
 export const notificationEmailAddressSchema = Joi.string()
-  .email({ tlds: { allow: ['uk'] } })
+  .email()
   .trim()
-  .pattern(/\.gov\.uk$|\.org\.uk$/)
-  .description(
-    'Email address to receive form submission notifications, must be a .gov.uk or .org.uk address'
-  )
+  .description('Email address to receive form submission notifications')
 
 export const authoredAtSchema = Joi.date()
   .iso()

@@ -324,6 +324,11 @@ export function getFieldValue(
   const validationResult = validation?.formValues[fieldName]
 
   if (validationResult || validationResult === '') {
+    if (fieldName === 'autoCompleteOptions') {
+      return mapListToAutoCompleteStr(
+        /** @type {List} */ ({ items: validationResult })
+      )
+    }
     return validationResult
   }
 
@@ -391,7 +396,8 @@ export function getQuestionFieldList(questionType) {
   }
   if (
     questionType === ComponentType.RadiosField ||
-    questionType === ComponentType.CheckboxesField
+    questionType === ComponentType.CheckboxesField ||
+    questionType === ComponentType.SelectField
   ) {
     return radiosOrCheckboxesFields
   }
@@ -480,6 +486,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

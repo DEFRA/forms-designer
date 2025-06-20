@@ -53,6 +53,10 @@ export const QuestionTypeDescriptions =
     {
       type: ComponentType.AutocompleteField,
       description: 'List: autocomplete'
+    },
+    {
+      type: ComponentType.SelectField,
+      description: 'List: select'
     }
   ])
 

@@ -25,17 +25,7 @@ export class AutocompleteListQuestion extends Question {
   }
 }
 
-export class AutocompleteQuestion extends Question {
-  /**
-   * @type {ComponentType}
-   */
-  componentType = ComponentType.AutocompleteField
-  _questionTemplate = PreviewComponent.PATH + 'autocompletefield.njk'
-  /**
-   * @type {string}
-   * @protected
-   */
-  _fieldName = 'autoCompleteField'
+export class AutocompleteQuestion extends AutocompleteListQuestion {
   /**
    * @type {ListElement[]}
    * @private

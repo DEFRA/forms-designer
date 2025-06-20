@@ -128,6 +128,50 @@ describe('editor-v2 - advanced settings fields model', () => {
         )
       ).toEqual(expectedArray)
     })
+
+    test('should handle reconstructing autocomplete textarea during error condition', () => {
+      const expectedResult = {
+        id: 'autoCompleteOptions',
+        name: 'autoCompleteOptions',
+        idPrefix: 'autoCompleteOptions',
+        label: {
+          text: 'Add each option on a new line',
+          classes: 'govuk-label--s',
+          isPageHeading: false
+        },
+        hint: {
+          text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)'
+        },
+        value: 'Red:red\r\nGreen:green\r\nBlue:blue',
+        customTemplate: 'auto-complete-options'
+      }
+      const validationInError = {
+        formValues: {
+          question: 'My autocomplete question',
+          hint: '',
+          shortDescription: 'Autocomplete',
+          autoCompleteOptions: [
+            { text: 'Red', value: 'red' },
+            { text: 'Green', value: 'green' },
+            { text: 'Blue', value: 'blue' }
+          ]
+        },
+        formErrors: {},
+        questionType: 'Autocomplete'
+      }
+      const res = getFieldList(
+        /** @type {InputFieldsComponentsDef} */ ({
+          options: { required: true }
+        }),
+        ComponentType.AutocompleteField,
+        // @ts-expect-error - types do not need to match for this test
+        validationInError,
+        buildDefinition()
+      )
+
+      const autoCompleteRes = res.find((x) => x.name === 'autoCompleteOptions')
+      expect(autoCompleteRes).toEqual(expectedResult)
+    })
   })
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
@@ -421,5 +465,6 @@ describe('editor-v2 - advanced settings fields model', () => {
 })
 
 /**
- * @import { InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { FormEditor, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

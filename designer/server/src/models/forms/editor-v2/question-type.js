@@ -117,6 +117,13 @@ const listSubItems = [
       text: 'A list of options revealed to users as they type'
     },
     value: ComponentType.AutocompleteField
+  },
+  {
+    text: 'Select',
+    hint: {
+      text: 'A drop-down list for users to select one answer'
+    },
+    value: ComponentType.SelectField
   }
 ]
 

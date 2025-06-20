@@ -180,11 +180,6 @@ const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
 const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
-    type: Joi.string()
-      .trim()
-      .valid('RelativeDate')
-      .required()
-      .description('Type of the condition value, should be "RelativeDate"'),
     period: Joi.string()
       .trim()
       .required()
@@ -829,6 +824,7 @@ export const listSchema = Joi.object<List>()
       is: 'string',
       then: Joi.array()
         .items(stringListItemSchema)
+        .unique('id')
         .unique('text')
         .unique('value')
         .messages({
@@ -838,6 +834,7 @@ export const listSchema = Joi.object<List>()
         .description('Array of items with string values'),
       otherwise: Joi.array()
         .items(numberListItemSchema)
+        .unique('id')
         .unique('text')
         .unique('value')
         .description('Array of items with numeric values')

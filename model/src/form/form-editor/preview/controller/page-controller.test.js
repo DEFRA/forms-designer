@@ -190,7 +190,7 @@ describe('page-controller', () => {
 
     it('should show dummy guidance when highlighted with no guidance text', () => {
       const { pageController } = buildController()
-      expect(pageController.components[0].model.label.text).toBe(
+      expect(pageController.components[0].model.label?.text).toBe(
         'Question title'
       )
       expect(pageController.guidanceText).toBe('')
@@ -211,7 +211,7 @@ describe('page-controller', () => {
       const { pageController } = buildController()
       pageController.highlightGuidance()
       pageController.clearHighlight()
-      expect(pageController.components[0].model.label.text).toBe(
+      expect(pageController.components[0].model.label?.text).toBe(
         'Question title'
       )
     })
@@ -221,7 +221,7 @@ describe('page-controller', () => {
       const expectedGuidance = '<p>This is some NEW guidance</p>\n'
       const { pageController } = buildController()
       expect(pageController.guidanceText).toBe('')
-      expect(pageController.components[0].model.label.text).toBe(
+      expect(pageController.components[0].model.label?.text).toBe(
         'Question title'
       )
       pageController.highlightGuidance()
@@ -253,7 +253,7 @@ describe('page-controller', () => {
         components: pageWithGuidance.components
       })
       pageController.guidanceText = ''
-      expect(pageController.components[0].model.label.text).toBe(
+      expect(pageController.components[0]?.model?.label?.text).toBe(
         'Question title'
       )
     })

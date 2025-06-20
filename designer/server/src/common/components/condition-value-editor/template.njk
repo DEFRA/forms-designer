@@ -2,6 +2,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 
 {% switch params.conditionType %}
@@ -14,7 +15,8 @@
   {% case "BooleanValue" %}
     {{ govukRadios(params.value) }}
   {% case "DateValue" %}
-    {{ govukInput(params.value) }}
+    {{ govukDateInput(params.value.dateField) }}
+    <input type="hidden" name="{{ params.value.indexField.name  }}" value="{{ params.value.indexField.value }}" />
   {% case "RelativeDate" %}
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter">

@@ -57,7 +57,7 @@ export function createJoiError(fieldName, message) {
         message,
         path: [fieldName],
         type: 'custom',
-        context: { key: fieldName }
+        context: { key: fieldName, label: fieldName }
       }
     ],
     {}
@@ -94,5 +94,43 @@ export function checkBoomError(boomError, errorKey, fieldName = 'general') {
 }
 
 /**
+ * Returns true if the err is an InvalidFormDefinitionError
+ * @param {Error} err
+ */
+export function isInvalidFormError(err) {
+  if (Boom.isBoom(err)) {
+    const data = err.data
+
+    if (data?.error === 'InvalidFormDefinitionError') {
+      return true
+    }
+  }
+
+  return false
+}
+
+/**
+ * Returns true if the err is an InvalidFormDefinitionError of `type`
+ * @param {unknown} err
+ * @param {FormDefinitionError} type
+ */
+export function isInvalidFormErrorType(err, type) {
+  if (Boom.isBoom(err) && isInvalidFormError(err)) {
+    const cause = err.cause
+
+    if (Array.isArray(cause)) {
+      const detail = cause[0]
+
+      if (detail?.id === type) {
+        return true
+      }
+    }
+  }
+
+  return false
+}
+
+/**
  * @import { ValidationSessionKey } from '@hapi/yar'
+ * @import { FormDefinitionError } from '@defra/forms-model'
  */

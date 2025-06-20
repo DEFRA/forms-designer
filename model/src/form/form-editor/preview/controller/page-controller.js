@@ -49,6 +49,7 @@ export class PagePreviewElements {
       : ''
   }
 }
+
 /**
  * @implements {PagePreviewPanelMacro}
  */
@@ -117,13 +118,20 @@ export class PreviewPageController {
     this._guidanceComponent =
       PreviewPageController.getOrCreateGuidanceComponent(firstQuestion)
     this._guidanceText = elements.guidance
-    this._components =
-      firstQuestion instanceof Markdown || firstQuestion === undefined
-        ? questions
-        : [firstQuestion, ...questions]
-
+    this._components = this.#constructComponents(firstQuestion, questions)
     this.#title = elements.heading
     this.#pageRenderer = renderer
+  }
+
+  /**
+   * @param { Question | Markdown | undefined} firstQuestion
+   * @param {Question[]} questions
+   * @returns {Question[]}
+   */
+  #constructComponents(firstQuestion, questions) {
+    return firstQuestion instanceof Markdown || firstQuestion === undefined
+      ? questions
+      : [firstQuestion, ...questions]
   }
 
   /**
