@@ -6,8 +6,8 @@ import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 
 /**
- * @template T
- * @param { Request | Request<{ Payload: T }> } request
+ * @template T, S
+ * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
  */
@@ -18,8 +18,8 @@ export function addErrorsToSession(request, error, flashKey) {
 }
 
 /**
- * @template T
- * @param { Request | Request<{ Payload: T }> } request
+ * @template T, S
+ * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {unknown} formValues
  * @param {Error} [error]
  * @param {ValidationSessionKey} [flashKey]
