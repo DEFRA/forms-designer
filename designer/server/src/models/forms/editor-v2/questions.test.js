@@ -275,6 +275,7 @@ describe('editor-v2 - questions model', () => {
         expect(components).toEqual([
           {
             model: {
+              classes: '',
               content: '<p>Some info</p>\n',
               id: 'markdown',
               name: 'markdown'
@@ -283,6 +284,7 @@ describe('editor-v2 - questions model', () => {
           },
           {
             model: {
+              classes: '',
               hint: {
                 classes: '',
                 text: ''
@@ -320,6 +322,7 @@ describe('editor-v2 - questions model', () => {
         expect(previewModel.components).toEqual([
           {
             model: {
+              classes: '',
               hint: {
                 classes: '',
                 text: ''

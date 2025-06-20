@@ -304,35 +304,21 @@ function buildViewModelData(metadata, pageIdx, pageId) {
   return { baseUrl, pageHeading, cardTitle, formTitle, formPath }
 }
 
-// function getComponentModel(_component) {
-//   return {}
-// }
-
-// /**
-//  * @param {ComponentDef[]} components
-//  */
-// function getPageComponents(components) {
-//   return components.map(component => )
-// }
-
 /**
  * @param {Page} page
  * @param {FormDefinition} definition
+ * @param {string} guidance
  * @returns {PreviewPageController}
  */
-function getPreviewModel(page, definition) {
+function getPreviewModel(page, definition, guidance) {
   const components = hasComponents(page) ? page.components : []
+  const elements = { heading: page.title, guidance }
 
-  return new PreviewPageController(
-    components,
-    { heading: page.title, guidance: '' },
-    definition,
-    {
-      render(_a, _b) {
-        //
-      }
+  return new PreviewPageController(components, elements, definition, {
+    render(_a, _b) {
+      //
     }
-  )
+  })
 }
 
 /**
@@ -377,18 +363,17 @@ export function questionsViewModel(
     'Editor'
   )
   const conditionDetails = getPageConditionDetails(definition, pageId)
+  const fields = questionsFields(
+    page,
+    pageHeadingSettings,
+    repeaterSettings,
+    validation
+  )
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
-    fields: {
-      ...questionsFields(
-        page,
-        pageHeadingSettings,
-        repeaterSettings,
-        validation
-      )
-    },
-    previewModel: getPreviewModel(page, definition),
+    fields,
+    previewModel: getPreviewModel(page, definition, fields.guidanceText.value),
     cardTitle,
     cardCaption: pageHeading,
     navigation,
