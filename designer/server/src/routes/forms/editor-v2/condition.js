@@ -2,6 +2,7 @@ import { randomUUID } from 'crypto'
 import Stream from 'node:stream'
 
 import {
+  FormDefinitionError,
   conditionDataSchemaV2,
   conditionWrapperSchemaV2,
   slugSchema
@@ -13,7 +14,11 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { addCondition, updateCondition } from '~/src/lib/editor.js'
-import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
+import {
+  getValidationErrorsFromSession,
+  isInvalidFormErrorType
+} from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
@@ -32,7 +37,7 @@ import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_PATH_CONDITION = `/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}`
 
-const errorKey = sessionNames.validationFailure.editorPage
+const errorKey = sessionNames.validationFailure.editorCondition
 const notificationKey = sessionNames.successNotification
 
 const idSchema = Joi.string().uuid().allow('new').required()
@@ -183,19 +188,37 @@ export default [
 
       const metadata = await forms.get(slug, token)
 
-      if (conditionId === 'new') {
-        await addCondition(metadata.id, token, payload)
-      } else {
-        payload.id = conditionId
-        await updateCondition(metadata.id, token, payload)
+      try {
+        if (conditionId === 'new') {
+          await addCondition(metadata.id, token, payload)
+        } else {
+          payload.id = conditionId
+          await updateCondition(metadata.id, token, payload)
+        }
+
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+        // Redirect to conditions list page
+        return h
+          .redirect(editorFormPath(slug, `conditions`))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        if (
+          isInvalidFormErrorType(
+            err,
+            FormDefinitionError.UniqueConditionDisplayName
+          )
+        ) {
+          const joiErr = createJoiError(
+            'displayName',
+            'Duplicate condition name'
+          )
+
+          return redirectWithErrors(request, h, joiErr, errorKey, '#')
+        }
+
+        throw err
       }
-
-      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
-
-      // Redirect to conditions list page
-      return h
-        .redirect(editorFormPath(slug, `conditions`))
-        .code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {

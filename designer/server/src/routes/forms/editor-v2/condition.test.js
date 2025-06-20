@@ -163,7 +163,7 @@ describe('Editor v2 condition routes', () => {
           [],
           undefined
         ),
-        'pageValidationFailure'
+        'conditionValidationFailure'
       )
     })
 
@@ -235,7 +235,7 @@ describe('Editor v2 condition routes', () => {
           [],
           undefined
         ),
-        'pageValidationFailure'
+        'conditionValidationFailure'
       )
     })
 
