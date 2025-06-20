@@ -1,5 +1,6 @@
 import { chdir } from 'node:process'
 
+import { getErrorMessage } from '~/src/common/helpers/error-utils.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 
 const logger = createLogger()
@@ -10,8 +11,9 @@ chdir(import.meta.dirname)
 import('~/src/server.js')
   .then((server) => server.listen())
   .catch((error: unknown) => {
-    const err =
-      error instanceof Error ? error : new Error('Unknown startup error')
-    logger.error(err, `[serverStartup] Server failed to start: ${err.message}`)
+    logger.error(
+      error,
+      `[serverStartup] Server failed to start: ${getErrorMessage(error)}`
+    )
     throw error
   })

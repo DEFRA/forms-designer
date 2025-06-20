@@ -5,6 +5,7 @@ import * as notifications from '~/src/common/constants/notifications.js'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
+import { getErrorMessage } from '~/src/common/helpers/error-utils.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
@@ -86,13 +87,9 @@ export default [
           return h.redirect(`${formOverviewPath(form.slug)}/make-draft-live`)
         }
 
-        const error =
-          err instanceof Error
-            ? err
-            : new Error('Unknown error during form publishing')
         logger.error(
-          error,
-          `[formPublishFailed] Unexpected error while making form '${form.slug}' live - ${error.message} - formId: ${form.id}`
+          err,
+          `[formPublishFailed] Unexpected error while making form '${form.slug}' live - ${getErrorMessage(err)} - formId: ${form.id}`
         )
 
         throw err
@@ -135,13 +132,9 @@ export default [
 
         return h.redirect(formOverviewPath(slug))
       } catch (err) {
-        const error =
-          err instanceof Error
-            ? err
-            : new Error('Unknown error during draft creation')
         logger.error(
-          error,
-          `[draftCreationFailed] Failed to create draft from live form '${slug}' - ${error.message} - formId: ${form.id}`
+          err,
+          `[draftCreationFailed] Failed to create draft from live form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
         )
         throw err
       }
@@ -238,13 +231,9 @@ export default [
           )
         }
 
-        const error =
-          err instanceof Error
-            ? err
-            : new Error('Unknown error during form deletion')
         logger.error(
-          error,
-          `[formDeleteFailed] Unexpected error while deleting form '${form.slug}' - ${error.message} - formId: ${form.id}`
+          err,
+          `[formDeleteFailed] Unexpected error while deleting form '${form.slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
         )
 
         throw err

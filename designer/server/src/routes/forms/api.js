@@ -5,6 +5,7 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
+import { getErrorMessage } from '~/src/common/helpers/error-utils.js'
 import * as forms from '~/src/lib/forms.js'
 
 export default [
@@ -77,13 +78,9 @@ export default [
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (err) {
-          const error =
-            err instanceof Error
-              ? err
-              : new Error('Unknown error in API data update')
           request.logger.error(
-            error,
-            `[apiUpdateFailed] Designer Server PUT /api/${id}/data error - ${error.message}`
+            err,
+            `[apiUpdateFailed] Designer Server PUT /api/${id}/data error - ${getErrorMessage(err)}`
           )
           return h
             .response({ ok: false, err })

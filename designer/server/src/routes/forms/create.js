@@ -12,6 +12,7 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
+import { getErrorMessage } from '~/src/common/helpers/error-utils.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
@@ -124,13 +125,9 @@ export default [
         return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
       } catch (err) {
         if (!(err instanceof Error && err.message.includes('404'))) {
-          const error =
-            err instanceof Error
-              ? err
-              : new Error('Unknown error during form existence check')
           logger.error(
-            error,
-            `[formExistenceCheckFailed] Failed to check if form exists for slug: ${slug} - ${error.message}`
+            err,
+            `[formExistenceCheckFailed] Failed to check if form exists for slug: ${slug} - ${getErrorMessage(err)}`
           )
         }
       }
