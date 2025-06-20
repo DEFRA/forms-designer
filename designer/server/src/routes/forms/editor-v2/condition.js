@@ -14,11 +14,11 @@ import Joi from 'joi'
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { addCondition, updateCondition } from '~/src/lib/editor.js'
-import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import {
-  getValidationErrorsFromSession,
+  createJoiError,
   isInvalidFormErrorType
-} from '~/src/lib/error-helper.js'
+} from '~/src/lib/error-boom-helper.js'
+import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {

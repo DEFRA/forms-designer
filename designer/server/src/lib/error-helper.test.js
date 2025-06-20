@@ -1,15 +1,8 @@
-import {
-  FormDefinitionError,
-  FormDefinitionErrorType
-} from '@defra/forms-model'
-import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import {
   addErrorsToSession,
-  getValidationErrorsFromSession,
-  isInvalidFormError,
-  isInvalidFormErrorType
+  getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 
 const mockFlash = jest.fn()
@@ -93,75 +86,6 @@ describe('Validation functions', () => {
       const payload = { field1: 'abc' }
       getValidationErrorsFromSession(buildMockRequest(payload).yar, sessionKey)
       expect(mockFlash).toHaveBeenCalledWith('this-key')
-    })
-  })
-
-  describe('isInvalidFormError', () => {
-    test('should return true for InvalidFormDefinitionError', () => {
-      const boomErr = Boom.boomify(new Error(), {
-        data: { error: 'InvalidFormDefinitionError' }
-      })
-      expect(isInvalidFormError(boomErr)).toBe(true)
-    })
-
-    test('should return false for other Boom errors', () => {
-      expect(isInvalidFormError(Boom.notFound())).toBe(false)
-    })
-  })
-
-  describe('isInvalidFormErrorType', () => {
-    test('should return true for InvalidFormDefinitionError of type UniqueConditionDisplayName', () => {
-      const cause = [
-        {
-          id: FormDefinitionError.UniqueConditionDisplayName,
-          detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
-          message: '"conditions[1]" contains a duplicate value',
-          type: FormDefinitionErrorType.Unique
-        }
-      ]
-
-      const boomErr = Boom.boomify(
-        new Error('"conditions[1]" contains a duplicate value', { cause }),
-        {
-          data: { error: 'InvalidFormDefinitionError' }
-        }
-      )
-
-      expect(
-        isInvalidFormErrorType(
-          boomErr,
-          FormDefinitionError.UniqueConditionDisplayName
-        )
-      ).toBe(true)
-    })
-
-    test('should return false for other type of FormDefinitionError', () => {
-      const cause = [
-        {
-          id: FormDefinitionError.UniqueListId,
-          detail: { path: ['lists', 1], pos: 1, dupePos: 0 },
-          message: '"lists[1]" contains a duplicate value',
-          type: FormDefinitionErrorType.Unique
-        }
-      ]
-
-      const boomErr = Boom.boomify(
-        new Error('"lists[1]" contains a duplicate value', { cause }),
-        {
-          data: { error: 'InvalidFormDefinitionError' }
-        }
-      )
-
-      expect(
-        isInvalidFormErrorType(
-          boomErr,
-          FormDefinitionError.UniqueConditionDisplayName
-        )
-      ).toBe(false)
-    })
-
-    test('should return false for other Boom errors', () => {
-      expect(isInvalidFormError(Boom.notFound())).toBe(false)
     })
   })
 })

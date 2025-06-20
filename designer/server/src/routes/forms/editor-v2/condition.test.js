@@ -1,5 +1,12 @@
-import { ConditionType, Engine, OperatorName } from '@defra/forms-model'
+import {
+  ConditionType,
+  Engine,
+  FormDefinitionError,
+  FormDefinitionErrorType,
+  OperatorName
+} from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -428,6 +435,80 @@ describe('Editor v2 condition routes', () => {
         }
       )
       expect(addErrorsToSession).not.toHaveBeenCalled()
+    })
+
+    test('POST - should error on main save if duplicate display name', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(getConditionSessionState).mockReturnValue({
+        id: '88389bae-b6e5-4781-8d07-970809064726',
+        stateId: 'session-id',
+        conditionWrapper: {
+          id: 'd9ae6c5a-bc8f-41f4-9c2a-f4081cd210b5',
+          displayName: '',
+          items: []
+        }
+      })
+      const cause = [
+        {
+          id: FormDefinitionError.UniqueConditionDisplayName,
+          detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
+          message: '"conditions[1]" contains a duplicate value',
+          type: FormDefinitionErrorType.Unique
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"conditions[1]" contains a duplicate value', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      jest.mocked(addCondition).mockRejectedValueOnce(boomErr)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/condition/new/session-id',
+        auth,
+        payload: {
+          'items[0].[id]': 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
+          'items[0].[componentId]': 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
+          'items[0].[operator]': OperatorName.Is,
+          'items[0].[type]': ConditionType.StringValue,
+          'items[0].[value]': 'test1',
+          displayName: 'Condition name',
+          id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
+          coordinator: 'and'
+        }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe(
+        '/library/my-form-slug/editor-v2/condition/new/session-id#'
+      )
+      expect(updateCondition).not.toHaveBeenCalled()
+      expect(addCondition).toHaveBeenCalledWith(
+        testFormMetadata.id,
+        expect.any(String),
+        {
+          coordinator: 'and',
+          displayName: 'Condition name',
+          id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
+          items: [
+            {
+              componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
+              id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
+              operator: 'is',
+              type: 'StringValue',
+              value: 'test1'
+            }
+          ]
+        }
+      )
     })
   })
 })
