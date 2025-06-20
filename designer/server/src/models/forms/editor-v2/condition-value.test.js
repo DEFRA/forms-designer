@@ -16,16 +16,12 @@ describe('editor-v2 - condition-value', () => {
       text: 'Error on this field'
     })
 
-    test('should return empty object if field populated', () => {
-      expect(insertDateValidationErrors(formsError, 'some value')).toEqual({})
-    })
-
     test('should return empty object if no error object', () => {
-      expect(insertDateValidationErrors(undefined, '')).toEqual({})
+      expect(insertDateValidationErrors(undefined)).toEqual({})
     })
 
     test('should return error structure if field value undefined', () => {
-      expect(insertDateValidationErrors(formsError, '')).toEqual({
+      expect(insertDateValidationErrors(formsError)).toEqual({
         errorMessage: {
           text: 'Error on this field'
         }
