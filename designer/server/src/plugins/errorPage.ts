@@ -40,7 +40,9 @@ export default {
               .code(statusCode)
           }
 
-          request.logger.error(
+          const logLevel =
+            statusCode === StatusCodes.NOT_FOUND.valueOf() ? 'info' : 'error'
+          request.logger[logLevel](
             {
               statusCode,
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -48,7 +50,9 @@ export default {
               message: response.message,
               stack_trace: response.stack
             },
-            'Unhandled error found'
+            statusCode === StatusCodes.NOT_FOUND.valueOf()
+              ? 'Resource not found'
+              : 'Unhandled error found'
           )
 
           if (errorMessage) {
