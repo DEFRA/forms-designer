@@ -338,7 +338,7 @@ function buildNumberValueField(idx, item, validation) {
 }
 
 /**
- * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ConditionalComponentsDef, ConditionDataV2, ConditionListItemRefValueDataV2, FormDefinition, FormEditor, List, RelativeDateValueDataV2 } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
