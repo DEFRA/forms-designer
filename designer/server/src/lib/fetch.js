@@ -19,7 +19,8 @@ export async function request(method, url, options) {
     let err
 
     if ('message' in body && typeof body.message === 'string' && body.message) {
-      err = new Error(body.message)
+      const cause = 'cause' in body ? body.cause : undefined
+      err = new Error(body.message, { cause })
     } else {
       err = new Error(`HTTP status code ${statusCode}`)
     }
