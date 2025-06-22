@@ -1,0 +1,101 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container app-width-container--wide">
+    {{ govukBackLink(backLink) }}
+  </div>
+{% endblock %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% call appPageBody({
+      errorList: errorList,
+      heading: pageHeading,
+      description: pageDescription,
+      classes: pageClasses,
+      useNewMasthead: true
+    }) %}
+
+      {{ govukTextarea({
+        label: {
+          text: field.label.text,
+          classes: "govuk-label--l",
+          isPageHeading: true
+        },
+        hint: {
+          text: field.hint.text
+        },
+        id: field.id,
+        name: field.name,
+        rows: field.rows,
+        value: field.value,
+        errorMessage: {
+          text: formErrors[field.name].text
+        } if formErrors[field.name]
+      }) }}
+
+      {{ govukDetails({
+        summaryText: examplesContent.title,
+        html: '
+          <h3 class="govuk-heading-s">Good examples:</h3>
+          <ul class="govuk-list govuk-list--bullet">
+            <li><strong>Dog breeding license application:</strong><br>I need a form to register dog breeders. Collect owner details, business address, number of dogs, and breeding experience. Show additional questions about premises only if they breed more than 5 dogs.</li>
+            <li><strong>Planning application:</strong><br>Create a planning application form. Need property address, applicant details, project description, and file uploads for plans. Include yes/no questions about listed buildings and conservation areas.</li>
+            <li><strong>Dangerous dogs registration:</strong><br>Create a form to register dangerous dogs. Need owner details, dog breed and description, insurance details, and vet information. Include conditional questions about previous incidents only if the owner has had dogs before.</li>
+          </ul>
+          <h3 class="govuk-heading-s">Tips for better results:</h3>
+          <ul class="govuk-list govuk-list--bullet">
+            <li>Mention any conditional logic (show X if Y is selected)</li>
+            <li>Specify required vs optional fields</li>
+            <li>Include validation requirements (email format, number ranges, etc.)</li>
+            <li>Mention any lists of options (dropdowns, radio buttons)</li>
+            <li>Describe the purpose and who will use the form</li>
+            <li>Include any specific formatting or layout preferences</li>
+          </ul>
+        '
+      }) }}
+
+      <div id="form-buttons" class="govuk-button-group">
+        {{ govukButton({
+          text: buttonText,
+          classes: "govuk-button--primary",
+          attributes: { id: "generate-form-btn" }
+        }) }}
+
+        {{ govukButton({
+          text: alternativeAction.text,
+          href: alternativeAction.href,
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+
+    {% endcall %}
+  </form>
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    
+    .ai-spinner {
+      animation: spin 1s linear infinite !important;
+    }
+    
+    .loading-state {
+      pointer-events: none;
+      opacity: 0.6;
+    }
+  </style>
+  <script type="module" src="{{ getAssetPath("ai-form-creation.js") }}"></script>
+{% endblock %} 
