@@ -25,6 +25,17 @@ export interface Config {
   submissionUrl: string
   serviceName: string
   serviceVersion?: string
+  ai?: {
+    claude: {
+      apiKey: string
+      model: string
+      maxTokens: number
+      temperature: number
+    }
+    maxRetries: number
+    maxSelfRefinements: number
+    enabled: boolean
+  }
   log: {
     enabled: boolean
     level: LevelWithSilent
@@ -167,10 +178,28 @@ const schema = joi.object<Config>({
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
   }),
+<<<<<<< HEAD
   awsRegion: joi.string().default('eu-west-2'),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
   featureFlagUseEntitlementApi: joi.boolean().default(false)
+=======
+  ai: joi
+    .object({
+      claude: joi
+        .object({
+          apiKey: joi.string().required(),
+          model: joi.string().default('claude-3-5-sonnet-20241022'),
+          maxTokens: joi.number().integer().default(8000),
+          temperature: joi.number().min(0).max(1).default(0.1)
+        })
+        .required(),
+      maxRetries: joi.number().integer().default(3),
+      maxSelfRefinements: joi.number().integer().default(2),
+      enabled: joi.boolean().default(false)
+    })
+    .optional()
+>>>>>>> 92d15596 (WIP: AI form gen POC)
 })
 
 // Validate config
@@ -219,7 +248,20 @@ const result = schema.validate(
     awsRegion: process.env.AWS_REGION,
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
-    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API
+    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
+    ai: process.env.CLAUDE_API_KEY
+      ? {
+          claude: {
+            apiKey: process.env.CLAUDE_API_KEY,
+            model: process.env.CLAUDE_MODEL,
+            maxTokens: process.env.CLAUDE_MAX_TOKENS,
+            temperature: process.env.CLAUDE_TEMPERATURE
+          },
+          maxRetries: process.env.AI_MAX_RETRIES,
+          maxSelfRefinements: process.env.AI_MAX_SELF_REFINEMENTS,
+          enabled: process.env.AI_ENABLED
+        }
+      : undefined
   },
   { abortEarly: false }
 )

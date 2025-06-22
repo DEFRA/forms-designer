@@ -1,0 +1,163 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "heading/macro.njk" import appHeading %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container app-width-container--wide">
+    {{ govukBackLink(backLink) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+      
+      {% if isRegenerated %}
+        {{ govukNotificationBanner({
+          text: "Your form has been regenerated based on your feedback.",
+          type: "success"
+        }) }}
+      {% endif %}
+
+      {{ appHeading(pageHeading) }}
+      
+      {% if pageDescription %}
+        <p class="govuk-body-l">{{ pageDescription }}</p>
+      {% endif %}
+
+      <!-- Form Stats -->
+      <div class="govuk-summary-card">
+        <div class="govuk-summary-card__title-wrapper">
+          <h2 class="govuk-summary-card__title">Generated Form Summary</h2>
+        </div>
+        <div class="govuk-summary-card__content">
+          <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Pages</dt>
+              <dd class="govuk-summary-list__value">{{ stats.pageCount }}</dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Questions</dt>
+              <dd class="govuk-summary-list__value">{{ stats.componentCount }}</dd>
+            </div>
+            {% if stats.conditionCount > 0 %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Conditions</dt>
+              <dd class="govuk-summary-list__value">{{ stats.conditionCount }}</dd>
+            </div>
+            {% endif %}
+            {% if stats.listCount > 0 %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">Lists</dt>
+              <dd class="govuk-summary-list__value">{{ stats.listCount }}</dd>
+            </div>
+            {% endif %}
+          </dl>
+        </div>
+      </div>
+
+      <!-- Form Preview -->
+      {% if formDefinition %}
+        {{ govukDetails({
+          summaryText: "Preview form structure",
+          html: "<pre><code>" + (formDefinition | dump(2)) + "</code></pre>"
+        }) }}
+      {% endif %}
+
+      <!-- Action Form -->
+      <form method="post">
+        <div class="govuk-form-group{% if formErrors.action %} govuk-form-group--error{% endif %}">
+          {% if formErrors.action %}
+            <p id="action-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span>
+              {{ formErrors.action.text }}
+            </p>
+          {% endif %}
+
+          {{ govukRadios({
+            name: "action",
+            fieldset: {
+              legend: {
+                text: "What would you like to do with this form?",
+                isPageHeading: false,
+                classes: "govuk-fieldset__legend--m"
+              }
+            },
+            errorMessage: formErrors.action,
+            items: [
+              {
+                value: "approve",
+                text: "Use this form",
+                hint: {
+                  text: "Create the form and start using the editor to make any final changes"
+                }
+              },
+              {
+                value: "regenerate",
+                text: "Regenerate with feedback",
+                hint: {
+                  text: "Provide feedback to improve the form generation"
+                },
+                conditional: {
+                  html: govukTextarea({
+                    name: "feedback",
+                    id: "feedback",
+                    label: {
+                      text: "How would you like the form to be different?",
+                      classes: "govuk-label--s"
+                    },
+                    hint: {
+                      text: "Describe what changes you'd like AI to make to improve the form"
+                    },
+                    value: formValues.feedback if formValues,
+                    errorMessage: formErrors.feedback
+                  })
+                }
+              },
+              {
+                value: "edit-manually",
+                text: "Start with manual editor",
+                hint: {
+                  text: "Create the form and go straight to the manual editor"
+                }
+              }
+            ],
+            value: formValues.action if formValues
+          }) }}
+        </div>
+
+        {{ govukButton({
+          text: "Continue"
+        }) }}
+      </form>
+
+    </div>
+    
+    <div class="govuk-grid-column-one-third">
+      <!-- Original Description -->
+      <div class="govuk-inset-text">
+        <h3 class="govuk-heading-s">Your original description</h3>
+        <p class="govuk-body-s">{{ originalDescription }}</p>
+      </div>
+
+      <!-- Form Preview Panel -->
+      <div class="govuk-panel" style="background-color: #f8f8f8; border: 1px solid #b1b4b6; padding: 20px; margin-top: 20px;">
+        <h3 class="govuk-heading-s">Form Preview</h3>
+        <p class="govuk-body-s" style="color: #626a6e;">
+          Form Preview can be here
+        </p>
+        <p class="govuk-body-xs" style="color: #626a6e; margin-top: 15px;">
+          This panel will show an interactive preview of your generated form (not in the POC).
+        </p>
+      </div>
+    </div>
+  </div>
+  </div>
+{% endblock %} 

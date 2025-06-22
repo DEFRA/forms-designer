@@ -25,6 +25,7 @@ import { requestTracing } from '~/src/common/helpers/request-tracing.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
+import { aiServicePlugin } from '~/src/plugins/ai-service.js'
 import errorPage from '~/src/plugins/errorPage.js'
 import router from '~/src/plugins/router.js'
 
@@ -207,6 +208,7 @@ export async function createServer() {
 
   await server.register(sessionCookie)
   await server.register(nunjucks.plugin)
+  await server.register(aiServicePlugin)
   await server.register(router)
   await server.register(requestLogger)
   await server.register(requestTracing)

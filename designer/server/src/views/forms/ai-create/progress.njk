@@ -1,0 +1,212 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set pageTitle = "Generating your form..." %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container app-width-container--wide">
+    {{ govukBackLink({
+      text: "Back",
+      href: "/create/ai-describe"
+    }) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+        
+        <div id="progress-container">
+          <div class="govuk-panel govuk-panel--confirmation" style="background-color: #f3f2f1; border: 2px solid #b1b4b6;">
+            <div class="govuk-panel__body">
+              <div id="loading-spinner" class="ai-loading-spinner">
+                <div class="govuk-loader"></div>
+              </div>
+              <div id="progress-message" class="govuk-body-l">
+                Analyzing your form requirements...
+              </div>
+              <div class="govuk-body-s govuk-!-margin-top-3" style="color: #626a6e;">
+                This typically takes 30-60 seconds
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="error-container" class="govuk-error-summary" style="display: none;">
+          <div role="alert" aria-labelledby="error-summary-title" tabindex="-1">
+            <h2 class="govuk-error-summary__title" id="error-summary-title">
+              There was a problem generating your form
+            </h2>
+            <div class="govuk-error-summary__body">
+              <ul class="govuk-list govuk-error-summary__list">
+                <li>
+                  <span id="error-message">An unexpected error occurred</span>
+                </li>
+              </ul>
+            </div>
+            <div class="govuk-button-group govuk-!-margin-top-4">
+              <a href="/create/ai-describe" class="govuk-button">Try again</a>
+              <a href="/create/method" class="govuk-button govuk-button--secondary">Choose different method</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-inset-text govuk-!-margin-top-6">
+          <h2 class="govuk-heading-s">Your form description</h2>
+          <p class="govuk-body-s">{{ formDescription or 'AI is processing your form requirements...' }}</p>
+        </div>
+
+        {{ govukDetails({
+          summaryText: "What's happening?",
+          html: '
+            <p class="govuk-body">Our AI is analysing your form description and creating:</p>
+            <ul class="govuk-list govuk-list--bullet">
+              <li>Form pages and navigation</li>
+              <li>Input fields and validation rules</li>
+              <li>Lists of options where needed</li>
+              <li>Conditional logic for smart forms</li>
+            </ul>
+            <p class="govuk-body">This typically takes 30-60 seconds. You\'ll be able to review and edit the generated form before saving.</p>
+          '
+        }) }}
+      </div>
+    </div>
+  </div>
+
+<style>
+.ai-loading-spinner {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.govuk-loader {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #1d70b8;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
+<script>
+  // AI progress polling functionality
+  class AIProgressPoller {
+    constructor(jobId) {
+      this.jobId = jobId
+      this.pollInterval = 2000 // Poll every 2 seconds
+      this.maxAttempts = 150 // 5 minutes max (150 * 2s)
+      this.attempts = 0
+      this.progressMessage = document.getElementById('progress-message')
+      this.errorContainer = document.getElementById('error-container')
+      this.errorMessage = document.getElementById('error-message')
+      this.progressContainer = document.getElementById('progress-container')
+    }
+
+    async startPolling() {
+      console.log('🔄 Starting AI progress polling for job:', this.jobId)
+      this.pollForStatus()
+    }
+
+    async pollForStatus() {
+      try {
+        this.attempts++
+        console.log(`📡 Polling attempt ${this.attempts}/${this.maxAttempts}`)
+
+        const response = await fetch(`/api/ai/generate/status/${this.jobId}`)
+        
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error('Generation job not found')
+          }
+          throw new Error(`Server error: ${response.status}`)
+        }
+
+        const status = await response.json()
+        console.log('📊 Job status:', status)
+
+        this.updateUI(status)
+
+        if (status.status === 'completed') {
+          console.log('✅ Job completed successfully')
+          setTimeout(() => {
+            window.location.href = '/create/ai-review'
+          }, 1000)
+          return
+        }
+
+        if (status.status === 'failed') {
+          console.log('❌ Job failed:', status.error)
+          this.showError(status.message || 'Form generation failed')
+          return
+        }
+
+        // Continue polling if still processing
+        if (status.status === 'processing' && this.attempts < this.maxAttempts) {
+          setTimeout(() => this.pollForStatus(), this.pollInterval)
+        } else if (this.attempts >= this.maxAttempts) {
+          console.log('⏰ Polling timeout reached')
+          this.showError('Generation is taking longer than expected. Please try again.')
+        }
+
+      } catch (error) {
+        console.error('💥 Polling error:', error)
+        
+        if (this.attempts < this.maxAttempts) {
+          // Retry with exponential backoff
+          const delay = Math.min(this.pollInterval * Math.pow(1.5, this.attempts - 1), 10000)
+          setTimeout(() => this.pollForStatus(), delay)
+        } else {
+          this.showError('Unable to check generation status. Please try again.')
+        }
+      }
+    }
+
+    updateUI(status) {
+      // Update progress message
+      if (status.message) {
+        this.progressMessage.textContent = status.message
+      }
+
+      // Keep loading spinner visible
+      const spinner = document.getElementById('loading-spinner')
+      if (spinner) {
+        spinner.style.display = 'flex'
+      }
+    }
+
+    showError(message) {
+      this.progressContainer.style.display = 'none'
+      this.errorContainer.style.display = 'block'
+      this.errorMessage.textContent = message
+      
+      // Focus error for screen readers
+      this.errorContainer.focus()
+    }
+  }
+
+  // Start polling when page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    const jobId = '{{ jobId }}'
+    if (jobId) {
+      const poller = new AIProgressPoller(jobId)
+      poller.startPolling()
+    } else {
+      console.error('No job ID provided')
+      window.location.href = '/create/ai-describe'
+    }
+  })
+</script>
+{% endblock %} 

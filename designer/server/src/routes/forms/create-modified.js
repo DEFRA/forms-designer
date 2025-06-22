@@ -1,6 +1,4 @@
 import {
-  Scopes,
-  getErrorMessage,
   organisationSchema,
   slugify,
   teamEmailSchema,
@@ -11,6 +9,7 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -18,6 +17,7 @@ import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
+import { ROUTE_PATH_CREATE_METHOD } from '~/src/routes/forms/ai-create/method.js'
 
 const logger = createLogger()
 
@@ -59,7 +59,7 @@ export default [
       yar.clear(sessionNames.create)
       yar.clear(sessionNames.validationFailure.createForm)
 
-      // Redirect to first step
+      // Redirect to first step (now method selection)
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     },
     options: {
@@ -67,7 +67,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
@@ -98,13 +98,14 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
   }),
 
   /**
+   * Modified title POST to redirect to organisation first (not method selection)
    * @satisfies {ServerRoute<{ Payload: Pick<FormMetadataInput, 'title'> }>}
    */
   ({
@@ -115,38 +116,24 @@ export default [
       const { title } = payload
       const { token } = auth.credentials
       const slug = slugify(title)
+      const form = await forms
+        .get(slug, token)
+        .catch((err) => logger.error(err))
 
-      try {
-        await forms.get(slug, token)
-
-        logger.info(
-          `[formAlreadyExists] Form with slug '${slug}' already exists - title: '${title}'`
-        )
+      if (form) {
         return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
-      } catch (err) {
-        if (
-          Boom.isBoom(err) &&
-          err.output.statusCode === StatusCodes.NOT_FOUND.valueOf()
-        ) {
-          logger.info(
-            `[formExistenceCheck] Form with slug '${slug}' does not exist (expected for new form creation)`
-          )
-        } else {
-          logger.error(
-            err,
-            `[formExistenceCheckFailed] Failed to check if form exists for slug: ${slug} - ${getErrorMessage(err)}`
-          )
-        }
       }
 
-      // Update form metadata, redirect to method selection
+      // Update form metadata, redirect to organisation first (not method selection)
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         title: payload.title
       })
 
-      // Redirect POST to method selection
-      return h.redirect('/create/method').code(StatusCodes.SEE_OTHER)
+      // Redirect to organisation first to collect all required metadata
+      return h
+        .redirect(ROUTE_PATH_CREATE_ORGANISATION)
+        .code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -159,7 +146,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
@@ -190,7 +177,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
@@ -225,7 +212,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
@@ -256,54 +243,33 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
   }),
 
   /**
+   * Modified team POST to redirect to method selection (not create form immediately)
    * @satisfies {ServerRoute<{ Payload: FormMetadataInput }>}
    */
   ({
     method: 'POST',
     path: ROUTE_PATH_CREATE_TEAM,
     async handler(request, h) {
-      const { auth, payload, yar } = request
-      const { token } = auth.credentials
+      const { payload, yar } = request
 
-      // Update form metadata
+      // Update form metadata with team details
+      const createData = yar.get(sessionNames.create)
       yar.set(sessionNames.create, {
-        ...yar.get(sessionNames.create),
+        ...createData,
         teamName: payload.teamName,
-        teamEmail: payload.teamEmail
+        teamEmail: payload.teamEmail,
+        organisation: payload.organisation // Make sure organisation is also saved
       })
 
-      try {
-        // Create the form
-        const result = await forms.create(payload, token)
-
-        // Clear form metadata
-        yar.clear(sessionNames.create)
-
-        /**
-         * Redirect POST to GET without resubmit on back button
-         */
-        return h
-          .redirect(formOverviewPath(result.slug))
-          .code(StatusCodes.SEE_OTHER)
-      } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-        if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
-          return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
-        }
-
-        return Boom.internal(
-          new Error('Failed to create new form', {
-            cause: err
-          })
-        )
-      }
+      // Now redirect to method selection since we have all required metadata
+      return h.redirect(ROUTE_PATH_CREATE_METHOD).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
@@ -314,7 +280,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${scopes.SCOPE_WRITE}`]
         }
       }
     }
@@ -368,9 +334,3 @@ export function redirectWithErrors(
   // Redirect POST to GET without resubmit on back button
   return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
-
-/**
- * @import { FormMetadataInput } from '@defra/forms-model'
- * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
- * @import { ValidationSessionKey } from '@hapi/yar'
- */

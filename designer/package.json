@@ -33,6 +33,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-sns": "^3.848.0",
+    "@anthropic-ai/sdk": "^0.54.0",
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.4",

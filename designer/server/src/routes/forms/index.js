@@ -1,8 +1,13 @@
+import aiClearCache from '~/src/routes/forms/ai-create/clear-cache.js'
+import aiCreateMethod from '~/src/routes/forms/ai-create/method.js'
+import aiCreateDescribe from '~/src/routes/forms/ai-create/describe.js'
+import aiCreateReview from '~/src/routes/forms/ai-create/review.js'
+import aiCreateProgress from '~/src/routes/forms/ai-create/progress.js'
 import api from '~/src/routes/forms/api.js'
 import contactEmail from '~/src/routes/forms/contact/email.js'
 import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
-import create from '~/src/routes/forms/create.js'
+import create from '~/src/routes/forms/create-modified.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
@@ -33,6 +38,11 @@ import submissionGuidance from '~/src/routes/forms/submission-guidance.js'
 export default [
   api,
   create,
+  aiClearCache,
+  aiCreateMethod,
+  aiCreateDescribe,
+  aiCreateReview,
+  aiCreateProgress,
   edit,
   editorMigrate,
   editorGuidance,

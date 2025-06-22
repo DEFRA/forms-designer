@@ -40,5 +40,6 @@ export const sessionNames = {
   },
   successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList'),
-  logoutHint: /** @type {const} */ ('logoutHint')
+  logoutHint: /** @type {const} */ ('logoutHint'),
+  FORM_METADATA: /** @type {const} */ ('formMetadata')
 }

@@ -1,0 +1,115 @@
+{% extends "layouts/page.njk" %}
+
+{% set pageTitle = "How do you want to create your form?" %}
+
+{% block content %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">{{ pageTitle }}</h1>
+    <p class="govuk-body-l">Choose the method that works best for you.</p>
+
+    <form method="post" novalidate>
+      <div class="govuk-radios govuk-radios--large" data-module="govuk-radios">
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="method-ai" name="method" type="radio" value="ai-assisted">
+          <label class="govuk-label govuk-radios__label govuk-label--s" for="method-ai">
+            AI-assisted creation (Recommended)
+          </label>
+          <div id="method-ai-hint" class="govuk-hint govuk-radios__hint">
+            Describe your form requirements and our AI will generate the structure for you. You can review and edit before saving.
+          </div>
+          <div class="govuk-radios__conditional" id="conditional-method-ai">
+            <div class="govuk-inset-text">
+              <h3 class="govuk-heading-s">Perfect for:</h3>
+              <ul class="govuk-list govuk-list--bullet">
+                <li>Quick form creation from descriptions</li>
+                <li>Complex forms with validation and conditional logic</li>
+                <li>Getting started with best practice form structures</li>
+                <li>Forms with multiple pages and sections</li>
+              </ul>
+              <p class="govuk-body-s">
+                <strong>Time:</strong> Usually takes 30-60 seconds to generate
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="method-manual" name="method" type="radio" value="manual">
+          <label class="govuk-label govuk-radios__label govuk-label--s" for="method-manual">
+            Manual creation
+          </label>
+          <div id="method-manual-hint" class="govuk-hint govuk-radios__hint">
+            Build your form step by step using our visual editor. Full control over every aspect of your form.
+          </div>
+          <div class="govuk-radios__conditional" id="conditional-method-manual">
+            <div class="govuk-inset-text">
+              <h3 class="govuk-heading-s">Perfect for:</h3>
+              <ul class="govuk-list govuk-list--bullet">
+                <li>Simple forms with just a few fields</li>
+                <li>Precise control over form layout and behavior</li>
+                <li>Learning how forms are structured</li>
+                <li>Forms with very specific or unusual requirements</li>
+              </ul>
+              <p class="govuk-body-s">
+                <strong>Time:</strong> Depends on complexity, typically 5-30 minutes
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="govuk-button-group">
+        <button type="submit" class="govuk-button" data-module="govuk-button">
+          Continue
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <div class="govuk-grid-column-one-third">
+    <div class="govuk-panel" style="background-color: #f8f8f8; border: 1px solid #b1b4b6; padding: 20px;">
+      <h2 class="govuk-heading-s">New to form building?</h2>
+      <p class="govuk-body-s">Try AI-assisted creation first. You can always switch to manual editing after the AI generates your initial form structure.</p>
+      
+      <h3 class="govuk-heading-s govuk-!-margin-top-4">Need help?</h3>
+      <ul class="govuk-list govuk-body-s">
+        <li><a href="#" class="govuk-link">Form building guide</a></li>
+        <li><a href="#" class="govuk-link">Best practices</a></li>
+        <li><a href="#" class="govuk-link">Examples and templates</a></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Auto-expand conditional content when radio selected
+  document.addEventListener('DOMContentLoaded', function() {
+    const radios = document.querySelectorAll('input[name="method"]')
+    
+    radios.forEach(radio => {
+      radio.addEventListener('change', function() {
+        // Hide all conditional content first
+        document.querySelectorAll('.govuk-radios__conditional').forEach(conditional => {
+          conditional.style.display = 'none'
+        })
+        
+        // Show conditional content for selected option
+        if (this.checked) {
+          const conditionalId = `conditional-${this.id}`
+          const conditional = document.getElementById(conditionalId)
+          if (conditional) {
+            conditional.style.display = 'block'
+          }
+        }
+      })
+    })
+
+    // Initialize display on page load
+    const checkedRadio = document.querySelector('input[name="method"]:checked')
+    if (checkedRadio) {
+      checkedRadio.dispatchEvent(new Event('change'))
+    }
+  })
+</script>
+{% endblock %} 
