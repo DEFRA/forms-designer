@@ -15,6 +15,7 @@ import {
 } from '@defra/forms-model/stubs'
 
 import {
+  getPreviewModel,
   hasUnderlyingHeadingData,
   questionsViewModel
 } from '~/src/models/forms/editor-v2/questions.js'
@@ -338,6 +339,20 @@ describe('editor-v2 - questions model', () => {
           }
         ])
       })
+    })
+  })
+
+  describe('getPreviewModel', () => {
+    it('should get preview model with empty components', () => {
+      const page = buildQuestionPage({
+        title: 'Page title',
+        components: []
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const previewModel = getPreviewModel(page, definition)
+      expect(previewModel.pageTitle.text).toBe('Page title')
     })
   })
 })
