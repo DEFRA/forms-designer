@@ -307,10 +307,10 @@ function buildViewModelData(metadata, pageIdx, pageId) {
 /**
  * @param {Page} page
  * @param {FormDefinition} definition
- * @param {string} guidance
+ * @param {string} [guidance]
  * @returns {PreviewPageController}
  */
-function getPreviewModel(page, definition, guidance) {
+function getPreviewModel(page, definition, guidance = '') {
   const components = hasComponents(page) ? page.components : []
   const elements = { heading: page.title, guidance }
 

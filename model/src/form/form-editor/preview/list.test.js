@@ -20,6 +20,7 @@ describe('list', () => {
     question: 'Which quest would you like to pick?',
     hintText: 'Choose one adventure that best suits you.',
     shortDesc: '',
+    largeTitle: true,
     content: ''
   })
   const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
@@ -297,6 +298,7 @@ describe('list', () => {
         question: 'Form field title',
         hintText: 'Hint text',
         optional: false,
+        largeTitle: true,
         content: '',
         shortDesc: 'shortDesc',
         items: [

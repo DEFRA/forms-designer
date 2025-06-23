@@ -291,7 +291,7 @@ describe('editor-v2 - questions model', () => {
               },
               id: 'inputField',
               label: {
-                classes: 'govuk-label--l',
+                classes: 'govuk-label--m',
                 text: 'What type of farming do you do?'
               },
               name: 'inputField'
@@ -317,7 +317,7 @@ describe('editor-v2 - questions model', () => {
         const result = questionsViewModel(metadata, definition, pageId)
         const previewModel = result.previewModel
         const pageTitle = previewModel.pageTitle
-        expect(pageTitle.text).toBe('What type of farming do you do?')
+        expect(pageTitle.text).toBe('')
         expect(pageTitle.classes).toBe('')
         expect(previewModel.components).toEqual([
           {

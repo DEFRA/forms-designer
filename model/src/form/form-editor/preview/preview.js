@@ -44,13 +44,18 @@ export class PreviewComponent {
    * @protected
    */
   _highlighted = false
+  /**
+   * @type {boolean}
+   * @protected
+   */
+  _largeTitle = true
 
   /**
    * @param {QuestionElements} htmlElements
    * @param {QuestionRenderer} questionRenderer
    */
   constructor(htmlElements, questionRenderer) {
-    const { question, optional } = htmlElements.values
+    const { question, optional, largeTitle = true } = htmlElements.values
 
     /**
      * @type {QuestionElements}
@@ -73,6 +78,7 @@ export class PreviewComponent {
      * @protected
      */
     this._questionRenderer = questionRenderer
+    this._largeTitle = largeTitle
   }
 
   /**
@@ -94,9 +100,11 @@ export class PreviewComponent {
    * @type {DefaultComponent}
    */
   get label() {
+    const titleClass = this._largeTitle ? 'govuk-label--l' : 'govuk-label--m'
+
     return {
       text: this.titleText,
-      classes: 'govuk-label--l' + this.getHighlight('question')
+      classes: titleClass + this.getHighlight('question')
     }
   }
 
@@ -105,10 +113,14 @@ export class PreviewComponent {
    * @type {GovukFieldset}
    */
   get fieldSet() {
+    const titleClass = this._largeTitle
+      ? 'govuk-fieldset__legend--l'
+      : 'govuk-fieldset__legend--m'
+
     return {
       legend: {
         text: this.titleText,
-        classes: 'govuk-fieldset__legend--l' + this.getHighlight('question')
+        classes: titleClass + this.getHighlight('question')
       }
     }
   }

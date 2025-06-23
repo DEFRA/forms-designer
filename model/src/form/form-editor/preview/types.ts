@@ -16,6 +16,7 @@ import { type UkAddressQuestion } from '~/src/form/form-editor/preview/uk-addres
 import { type ListElement } from '~/src/form/form-editor/types.js'
 export { type QuestionBaseModel } from '~/src/form/form-editor/macros/types.js'
 export interface BaseSettings {
+  largeTitle: boolean
   question: string
   hintText: string
   optional: boolean

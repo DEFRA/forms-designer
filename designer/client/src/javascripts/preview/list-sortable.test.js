@@ -97,6 +97,7 @@ describe('list-sortable', () => {
         hintText: 'Choose one adventure that best suits you.',
         optional: false,
         shortDesc: 'your quest',
+        largeTitle: true,
         content: '',
         items: expectedList
       })

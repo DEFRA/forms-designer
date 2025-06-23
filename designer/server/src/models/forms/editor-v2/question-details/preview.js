@@ -86,6 +86,11 @@ export class QuestionPreviewElements {
    */
   _content = ''
   /**
+   * @type {boolean}
+   * @private
+   */
+  _largeTitle = true
+  /**
    *
    * @type {ListElement[]}
    * @private
@@ -128,6 +133,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      largeTitle: this._largeTitle,
       items: this._items,
       content: this._content
     }

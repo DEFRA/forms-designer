@@ -193,6 +193,7 @@ describe('preview', () => {
         question: 'Short answer',
         hintText: '',
         content: '',
+        largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
         items: []
@@ -204,6 +205,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
+        largeTitle: true,
         content: '',
         optional: false,
         shortDesc: '',

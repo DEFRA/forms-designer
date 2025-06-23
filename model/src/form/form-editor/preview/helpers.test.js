@@ -133,7 +133,8 @@ describe('helpers', () => {
       const question = buildComponent(componentContent)
       const mapQuestion = mapComponentToPreviewQuestion(
         renderer,
-        definition
+        definition,
+        false
       )(question)
       expect(mapQuestion).toBeInstanceOf(expected)
       expect(mapQuestion.titleText).toBe('What is your answer?')
@@ -166,7 +167,8 @@ describe('helpers', () => {
         const question = buildComponent(listComponentContent)
         const mapQuestion = mapComponentToPreviewQuestion(
           renderer,
-          definition
+          definition,
+          false
         )(question)
         expect(mapQuestion).toBeInstanceOf(expected)
         expect(mapQuestion.titleText).toBe('What is your answer?')

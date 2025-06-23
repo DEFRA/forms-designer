@@ -96,19 +96,28 @@ export class QuestionPreviewElements {
    * @private
    */
   _items = []
-
+  _largeTitle = true
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
    * @param {BaseSettings} baseSettings
    */
-  constructor({ question, hintText, optional, shortDesc, items, content }) {
+  constructor({
+    question,
+    hintText,
+    optional,
+    shortDesc,
+    items,
+    content,
+    largeTitle = true
+  }) {
     this._question = question
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
     this._items = items
     this._content = content
+    this._largeTitle = largeTitle
   }
 
   /**
@@ -121,7 +130,8 @@ export class QuestionPreviewElements {
       optional: this._optional,
       shortDesc: this._shortDesc,
       items: this._items,
-      content: this._content
+      content: this._content,
+      largeTitle: this._largeTitle
     }
   }
 
@@ -176,7 +186,8 @@ export const baseElements = /** @type {BaseSettings} */ ({
   question: 'Which quest would you like to pick?',
   hintText: 'Choose one adventure that best suits you.',
   shortDesc: '',
-  content: ''
+  content: '',
+  largeTitle: true
 })
 
 const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'

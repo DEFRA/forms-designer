@@ -149,6 +149,7 @@ describe('list', () => {
         question: 'Which quest would you like to pick?',
         hintText: 'Choose one adventure that best suits you.',
         optional: false,
+        largeTitle: true,
         shortDesc: 'your quest',
         content: '',
         items: expectedList

@@ -8,10 +8,17 @@ export class ComponentElements {
    */
   _component
   /**
-   * @param {ComponentDef} component
+   * @type {boolean}
+   * @private
    */
-  constructor(component) {
+  _largeTitle = true
+  /**
+   * @param {ComponentDef} component
+   * @param {boolean} [largeTitle]
+   */
+  constructor(component, largeTitle = true) {
     this._component = component
+    this._largeTitle = largeTitle
   }
 
   /**
@@ -27,7 +34,8 @@ export class ComponentElements {
       optional: !required,
       shortDesc: '',
       items: [],
-      content: ''
+      content: '',
+      largeTitle: this._largeTitle
     }
   }
 

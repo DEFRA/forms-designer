@@ -55,9 +55,14 @@ const InputFieldComponentDictionary = {
 /**
  * @param {QuestionRenderer} questionRenderer
  * @param {FormDefinition} definition
+ * @param {boolean} hasTitle
  * @returns {(component: ComponentDef) => Question}
  */
-export function mapComponentToPreviewQuestion(questionRenderer, definition) {
+export function mapComponentToPreviewQuestion(
+  questionRenderer,
+  definition,
+  hasTitle
+) {
   return /** @type {(component: ComponentDef) => Question} */ (
     (component) => {
       /**
@@ -67,16 +72,16 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
 
       if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
-        questionElements = new ListComponentElements(component, list)
+        questionElements = new ListComponentElements(component, list, !hasTitle)
       } else if (
         hasInputField(component) ||
         component.type === ComponentType.YesNoField
       ) {
-        questionElements = new QuestionComponentElements(component)
+        questionElements = new QuestionComponentElements(component, !hasTitle)
       } else if (hasContentField(component)) {
-        questionElements = new ContentElements(component)
+        questionElements = new ContentElements(component, !hasTitle)
       } else {
-        questionElements = new ComponentElements(component)
+        questionElements = new ComponentElements(component, !hasTitle)
       }
 
       const QuestionConstructor = InputFieldComponentDictionary[component.type]

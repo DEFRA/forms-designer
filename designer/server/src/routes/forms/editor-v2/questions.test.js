@@ -67,7 +67,6 @@ describe('Editor v2 questions routes', () => {
     const $cardHeading = container.getByText('Page 1')
     const $questionNumbers = container.getAllByRole('term')
     const $questionTitles = container.getAllByRole('definition')
-    const $previewPanel = container.getByText('Previews')
 
     const $actions = container.getAllByRole('button')
 
@@ -125,9 +124,12 @@ describe('Editor v2 questions routes', () => {
 
     const $previewPanel = container.getByText('Previews')
     const $headings = container.getAllByRole('heading', { level: 1 })
+    const $previewTitle = container.getAllByText(title)
 
     expect($previewPanel).toHaveTextContent('Previews')
-    expect($headings[4]).toHaveTextContent(title)
+    expect($headings[4]).toHaveTextContent('')
+    expect($previewTitle[1]).toHaveTextContent(title)
+    expect($previewTitle[1]).toHaveClass('govuk-label govuk-label--l')
   })
 
   test('GET - should render no questions in the view', async () => {
