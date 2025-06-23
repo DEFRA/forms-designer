@@ -845,10 +845,6 @@ export const listSchema = Joi.object<List>()
         .items(stringListItemSchema)
         .unique('text')
         .unique('value')
-        .messages({
-          'array.unique':
-            'Each item must have a unique identifier - enter a different identifier for this item.'
-        })
         .description('Array of items with string values'),
       otherwise: Joi.array()
         .items(numberListItemSchema)
