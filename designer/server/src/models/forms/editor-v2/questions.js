@@ -2,7 +2,6 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  // PagePreviewElements,
   PreviewPageController,
   hasComponents,
   isFormType,
