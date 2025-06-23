@@ -757,7 +757,7 @@ export const pagePayloadSchemaV2 = pageSchemaV2
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
   .keys({
-    id: idSchema.description('Unique identifier for the list item'),
+    id: idSchemaOptional.description('Unique identifier for the list item'),
     text: Joi.string()
       .trim()
       .allow('')
@@ -808,6 +808,18 @@ const numberListItemSchema = baseListItemSchema
   })
   .description('List item with numeric value')
 
+const stringListItemSchemaV2 = stringListItemSchema
+  .append({
+    id: idSchema.description('Unique identifier for the list item')
+  })
+  .description('List item with string value')
+
+const numberListItemSchemaV2 = numberListItemSchema
+  .append({
+    id: idSchema.description('Unique identifier for the list item')
+  })
+  .description('List item with string value')
+
 export const listSchema = Joi.object<List>()
   .description('Reusable list of options for select components')
   .keys({
@@ -829,7 +841,6 @@ export const listSchema = Joi.object<List>()
       is: 'string',
       then: Joi.array()
         .items(stringListItemSchema)
-        .unique('id')
         .unique('text')
         .unique('value')
         .messages({
@@ -839,7 +850,6 @@ export const listSchema = Joi.object<List>()
         .description('Array of items with string values'),
       otherwise: Joi.array()
         .items(numberListItemSchema)
-        .unique('id')
         .unique('text')
         .unique('value')
         .description('Array of items with numeric values')
@@ -851,7 +861,22 @@ export const listSchema = Joi.object<List>()
  */
 export const listSchemaV2 = listSchema
   .keys({
-    id: idSchema.description('Unique identifier for the list')
+    id: idSchema.description('Unique identifier for the list'),
+    items: Joi.when('type', {
+      is: 'string',
+      then: Joi.array()
+        .items(stringListItemSchemaV2)
+        .unique('id')
+        .unique('text')
+        .unique('value')
+        .description('Array of items with string values'),
+      otherwise: Joi.array()
+        .items(numberListItemSchemaV2)
+        .unique('id')
+        .unique('text')
+        .unique('value')
+        .description('Array of items with numeric values')
+    })
   })
   .description('List schema for V2 forms')
 
