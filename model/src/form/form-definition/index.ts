@@ -368,9 +368,11 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       ),
     items: Joi.array<ConditionGroupDataV2>()
       .items(
-        Joi.alternatives()
-          .try(conditionDataSchemaV2, conditionRefDataSchemaV2)
-          .required()
+        Joi.alternatives().conditional('.componentId', {
+          is: Joi.exist(),
+          then: conditionDataSchemaV2,
+          otherwise: conditionRefDataSchemaV2
+        })
       )
       .min(1)
       .max(15)
