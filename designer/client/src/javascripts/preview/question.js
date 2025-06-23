@@ -1,3 +1,5 @@
+import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
+
 /**
  * @class QuestionDomElements
  * @classdesc
@@ -8,10 +10,9 @@
  * returns the values
  * @implements {QuestionElements}
  */
-export class QuestionDomElements {
-  static WRAPPER_ID = 'question-preview-inner'
-
+export class QuestionDomElements extends DomElements {
   constructor() {
+    super()
     const questionEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('question')
     )
@@ -23,12 +24,6 @@ export class QuestionDomElements {
     )
     const shortDescEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('shortDescription')
-    )
-    const previewEl = /** @type {HTMLElement | null} */ (
-      document.getElementById('question-preview-content')
-    )
-    const previewInnerEl = /** @type {HTMLElement | null} */ (
-      previewEl?.querySelector(`#${QuestionDomElements.WRAPPER_ID}`) ?? null
     )
 
     /**
@@ -47,14 +42,6 @@ export class QuestionDomElements {
      * @type {HTMLInputElement|null}
      */
     this.shortDesc = shortDescEl
-    /**
-     * @type {HTMLElement|null}
-     */
-    this.preview = previewEl
-    /**
-     * @type {HTMLElement|null}
-     */
-    this.previewInner = previewInnerEl
   }
 
   /**
@@ -85,61 +72,17 @@ export class QuestionDomElements {
   get values() {
     return this.constructValues()
   }
-
-  /**
-   * @param {HTMLElement} node
-   * @returns {HTMLDivElement}
-   * @private
-   */
-  _wrapNode(node) {
-    const wrapper = document.createElement('div')
-    wrapper.id = QuestionDomElements.WRAPPER_ID
-    wrapper.appendChild(node)
-    return wrapper
-  }
-
-  /**
-   * @param {string} html
-   * @returns {string}
-   * @private
-   */
-  _wrapHTML(html) {
-    return `<div id="question-preview-inner">${html}</div>`
-  }
-
-  /**
-   * @param {string} value
-   */
-  setPreviewHTML(value) {
-    if (this.preview) {
-      this.preview.innerHTML = this._wrapHTML(value)
-    }
-  }
-
-  /**
-   * @param {HTMLElement} element
-   */
-  setPreviewDOM(element) {
-    if (this.preview) {
-      const container = /** @type {HTMLElement} */ (this.previewInner)
-      const newContainer = /** @type {HTMLDivElement} */ (
-        this._wrapNode(element)
-      )
-      this.preview.replaceChild(newContainer, container)
-      this.previewInner = newContainer
-    }
-  }
 }
 
 /**
- * @class EventListeners
+ * @class QuestionEventListeners
  * @classdesc
  * This class is responsible for setting up the event listeners on the DOM and for
  * orchestrating the resulting actions.  It has direct access to the DOM elements through
  * the QuestionDomElements class and to the model renderer Question class.  It is not
  * responsible for the rendering.
  */
-export class EventListeners {
+export class QuestionEventListeners {
   /**
    * @param {Question} question
    * @param {QuestionDomElements} baseElements
