@@ -75,14 +75,14 @@ export class QuestionDomElements extends DomElements {
 }
 
 /**
- * @class QuestionEventListeners
+ * @class EventListeners
  * @classdesc
  * This class is responsible for setting up the event listeners on the DOM and for
  * orchestrating the resulting actions.  It has direct access to the DOM elements through
  * the QuestionDomElements class and to the model renderer Question class.  It is not
  * responsible for the rendering.
  */
-export class QuestionEventListeners {
+export class EventListeners {
   /**
    * @param {Question} question
    * @param {QuestionDomElements} baseElements
