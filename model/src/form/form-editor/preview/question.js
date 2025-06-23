@@ -14,8 +14,8 @@ export class QuestionComponentElements extends ComponentElements {
   /**
    * @param {FormComponentsDef} component
    */
-  constructor(component) {
-    super(component)
+  constructor(component, largeTitle = true) {
+    super(component, largeTitle)
     this._component = component
   }
 

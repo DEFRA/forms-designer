@@ -73,6 +73,7 @@ export class QuestionDomElements {
       question,
       shortDesc,
       items: [],
+      largeTitle: true,
       content: ''
     })
   }

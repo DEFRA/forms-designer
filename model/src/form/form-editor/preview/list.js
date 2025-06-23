@@ -61,9 +61,10 @@ export class ListComponentElements extends QuestionComponentElements {
   /**
    * @param {SelectionComponentsDef} component
    * @param {List} list
+   * @param {boolean} largeTitle
    */
-  constructor(component, list) {
-    super(component)
+  constructor(component, list, largeTitle = true) {
+    super(component, largeTitle)
     this._list = list
   }
 

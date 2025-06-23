@@ -95,12 +95,6 @@ export class PreviewPageController {
    * @protected
    */
   _guidanceComponent
-
-  /**
-   * @type {boolean}
-   * @private
-   */
-  _showGuidance = false
   /**
    * @param {ComponentDef[]} components
    * @param {PageOverviewElements} elements
@@ -109,7 +103,11 @@ export class PreviewPageController {
    */
   constructor(components, elements, definition, renderer) {
     const questions = components.map(
-      mapComponentToPreviewQuestion(questionRenderer, definition)
+      mapComponentToPreviewQuestion(
+        questionRenderer,
+        definition,
+        elements.heading.length > 0
+      )
     )
     const firstQuestion = /** @type { Markdown | undefined | Question }  */ (
       questions.shift()
@@ -119,8 +117,9 @@ export class PreviewPageController {
       PreviewPageController.getOrCreateGuidanceComponent(firstQuestion)
     this._guidanceText = elements.guidance
     this._components = this.#constructComponents(firstQuestion, questions)
-    this.#title = elements.heading
+
     this.#pageRenderer = renderer
+    this.#title = elements.heading
   }
 
   /**
@@ -181,14 +180,6 @@ export class PreviewPageController {
   }
 
   /**
-   * @private
-   * @returns {string}
-   */
-  _fallBackTitle() {
-    return this._components[0]?.question ?? ''
-  }
-
-  /**
    * @returns {{ text: string, classes: string }}
    */
   get pageTitle() {
@@ -206,7 +197,7 @@ export class PreviewPageController {
    * @returns {string}
    */
   get title() {
-    return this.#title.length ? this.#title : this._fallBackTitle()
+    return this.#title
   }
 
   /**

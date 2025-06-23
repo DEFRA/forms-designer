@@ -1,4 +1,9 @@
 import { ApiErrorCode } from '@defra/forms-model'
+import {
+  buildDefinition,
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -83,6 +88,48 @@ describe('Editor v2 questions routes', () => {
     expect($actions[3]).toHaveTextContent('Add another question')
     expect($actions[4]).toHaveTextContent('Save changes')
     expect($actions[5]).toHaveTextContent('Manage conditions')
+  })
+
+  test('GET - should render one question in the view', async () => {
+    const title = 'Text field title'
+    const hint = 'Hint text'
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
+      buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            path: '/page-one',
+            title: '',
+            section: 'section',
+            components: [
+              buildTextFieldComponent({
+                title,
+                hint
+              })
+            ],
+            next: [{ path: '/summary' }]
+          })
+        ]
+      })
+    )
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $previewPanel = container.getByText('Previews')
+    const $headings = container.getAllByRole('heading', { level: 1 })
+    const $previewTitle = container.getAllByText(title)
+
+    expect($previewPanel).toHaveTextContent('Previews')
+    expect($headings[4]).toHaveTextContent('')
+    expect($previewTitle[1]).toHaveTextContent(title)
+    expect($previewTitle[1]).toHaveClass('govuk-label govuk-label--l')
   })
 
   test('GET - should render no questions in the view', async () => {

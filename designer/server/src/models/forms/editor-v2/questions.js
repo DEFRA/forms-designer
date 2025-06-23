@@ -2,6 +2,7 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
+  PreviewPageController,
   hasComponents,
   isFormType,
   showRepeaterSettings
@@ -303,6 +304,29 @@ function buildViewModelData(metadata, pageIdx, pageId) {
 }
 
 /**
+ * @param {Page} page
+ * @param {FormDefinition} definition
+ * @param {string} [guidance]
+ * @returns {PreviewPageController}
+ */
+export function getPreviewModel(page, definition, guidance = '') {
+  const components = hasComponents(page) ? page.components : []
+  const elements = { heading: page.title, guidance }
+
+  return new PreviewPageController(components, elements, definition, {
+    /**
+     * @param {string} _a
+     * @param {PagePreviewPanelMacro} _b
+     * @returns {never}
+     */
+    render(_a, _b) {
+      // Server Side Render shouldn't use render
+      throw new Error('Not implemented')
+    }
+  })
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -344,17 +368,17 @@ export function questionsViewModel(
     'Editor'
   )
   const conditionDetails = getPageConditionDetails(definition, pageId)
+  const fields = questionsFields(
+    page,
+    pageHeadingSettings,
+    repeaterSettings,
+    validation
+  )
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
-    fields: {
-      ...questionsFields(
-        page,
-        pageHeadingSettings,
-        repeaterSettings,
-        validation
-      )
-    },
+    fields,
+    previewModel: getPreviewModel(page, definition, fields.guidanceText.value),
     cardTitle,
     cardCaption: pageHeading,
     navigation,
@@ -382,6 +406,6 @@ export function questionsViewModel(
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

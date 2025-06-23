@@ -152,6 +152,7 @@ describe('Editor v2 question details routes', () => {
     const $cardTitle = container.getByText('Question 1')
     const $cardCaption = container.getByText('Page 1')
     const $cardHeading = container.getByText('Edit question 1')
+    const $previewHeading = container.getByText('This is your first field')
 
     const $actions = container.getAllByRole('button')
 
@@ -163,6 +164,9 @@ describe('Editor v2 question details routes', () => {
     expect($cardCaption).toHaveClass('govuk-caption-l')
     expect($cardHeading).toHaveTextContent('Edit question 1')
     expect($cardHeading).toHaveClass('govuk-heading-l')
+    expect($previewHeading).toHaveTextContent('This is your first field')
+    expect($previewHeading).toBeInstanceOf(HTMLLabelElement)
+    expect($previewHeading.getAttribute('for')).toBe('inputField')
 
     expect($actions).toHaveLength(5)
     expect($actions[2]).toHaveTextContent('Preview error messages')

@@ -82,20 +82,36 @@ describe('question', () => {
   })
 
   describe('QuestionComponentElements', () => {
+    const textFieldComponent = buildTextFieldComponent({
+      title: 'Form field title',
+      hint: 'Hint text',
+      name: 'FFT',
+      options: {
+        required: false
+      },
+      shortDescription: 'shortDesc'
+    })
+
     it('should map a component base to QuestionElements', () => {
-      const textFieldComponent = buildTextFieldComponent({
-        title: 'Form field title',
-        hint: 'Hint text',
-        name: 'FFT',
-        options: {
-          required: false
-        },
-        shortDescription: 'shortDesc'
-      })
       expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
         optional: true,
+        largeTitle: true,
+        content: '',
+        shortDesc: 'shortDesc',
+        items: []
+      })
+    })
+
+    it('should map a component base to QuestionElements with a small title', () => {
+      expect(
+        new QuestionComponentElements(textFieldComponent, false).values
+      ).toEqual({
+        question: 'Form field title',
+        hintText: 'Hint text',
+        optional: true,
+        largeTitle: false,
         content: '',
         shortDesc: 'shortDesc',
         items: []

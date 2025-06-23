@@ -125,7 +125,7 @@ describe('page-controller', () => {
           classes: '',
           name: 'inputField',
           label: {
-            classes: 'govuk-label--l',
+            classes: 'govuk-label--m',
             text: 'Question title'
           },
           hint: {
@@ -141,7 +141,7 @@ describe('page-controller', () => {
           name: 'listInputField',
           fieldset: {
             legend: {
-              classes: 'govuk-fieldset__legend--l',
+              classes: 'govuk-fieldset__legend--m',
               text: 'List component'
             }
           },
@@ -278,7 +278,7 @@ describe('page-controller', () => {
       expect(pageRenderMock).toHaveBeenCalledTimes(3)
     })
 
-    it('should return the title of the first component should one not exist', () => {
+    it('should return an empty title should one not exist', () => {
       const pageController = new PreviewPageController(
         [textFieldComponent],
         new PagePreviewElements(buildQuestionPage({ title: '' })),
@@ -289,7 +289,7 @@ describe('page-controller', () => {
       )
 
       expect(pageController.pageTitle).toEqual({
-        text: 'Question title',
+        text: '',
         classes: ''
       })
     })
