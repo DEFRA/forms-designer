@@ -314,8 +314,14 @@ export function getPreviewModel(page, definition, guidance = '') {
   const elements = { heading: page.title, guidance }
 
   return new PreviewPageController(components, elements, definition, {
+    /**
+     * @param {string} _a
+     * @param {PagePreviewPanelMacro} _b
+     * @returns {never}
+     */
     render(_a, _b) {
-      //
+      // Server Side Render shouldn't use render
+      throw new Error('Not implemented')
     }
   })
 }
@@ -400,6 +406,6 @@ export function questionsViewModel(
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

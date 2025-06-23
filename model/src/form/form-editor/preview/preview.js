@@ -55,7 +55,7 @@ export class PreviewComponent {
    * @param {QuestionRenderer} questionRenderer
    */
   constructor(htmlElements, questionRenderer) {
-    const { question, optional, largeTitle = true } = htmlElements.values
+    const { question, optional, largeTitle } = htmlElements.values
 
     /**
      * @type {QuestionElements}

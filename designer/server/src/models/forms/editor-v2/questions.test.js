@@ -346,13 +346,25 @@ describe('editor-v2 - questions model', () => {
     it('should get preview model with empty components', () => {
       const page = buildQuestionPage({
         title: 'Page title',
-        components: []
+        components: undefined
       })
       const definition = buildDefinition({
         pages: [page]
       })
       const previewModel = getPreviewModel(page, definition)
       expect(previewModel.pageTitle.text).toBe('Page title')
+    })
+
+    it('render should fail', () => {
+      const page = buildQuestionPage({
+        title: 'Page title',
+        components: undefined
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const previewModel = getPreviewModel(page, definition)
+      expect(() => previewModel.render()).toThrow('Not implemented')
     })
   })
 })
