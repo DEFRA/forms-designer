@@ -1,4 +1,4 @@
-import { formDefinitionSchema } from '@defra/forms-model'
+import { formDefinitionSchema, getErrorMessage } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -77,7 +77,10 @@ export default [
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
         } catch (err) {
-          request.logger.error(err, 'Designer Server PUT /api/{id}/data error')
+          request.logger.error(
+            err,
+            `[apiUpdateFailed] Designer Server PUT /api/${id}/data error - ${getErrorMessage(err)}`
+          )
           return h
             .response({ ok: false, err })
             .code(StatusCodes.INTERNAL_SERVER_ERROR)
