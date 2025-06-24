@@ -1,17 +1,39 @@
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
-import {
-  FormGeneratorService,
-  FormGenerationError
-} from '~/src/services/ai/form-generator.js'
-import {
-  AIFormValidator,
-  FormValidationError
-} from '~/src/services/ai/form-validator.js'
-import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
+import { FormValidationError } from '~/src/services/ai/form-validator.js'
 
-const logger = createLogger()
+/**
+ * @typedef {object} AIServiceConfig
+ * @property {number} [maxRetries] - Maximum number of retries for form generation
+ * @property {number} [maxSelfRefinements] - Maximum number of self-refinements
+ */
+
+/**
+ * @typedef {object} ValidationError
+ * @property {string} type - The type of validation error
+ * @property {string} message - The error message
+ */
+
+/**
+ * @typedef {object} GenerationResult
+ * @property {boolean} success - Whether the form generation was successful
+ * @property {object} formDefinition - The generated form definition
+ * @property {number} attempts - The number of attempts made
+ * @property {number} refinements - The number of refinements made
+ * @property {object} metadata - Additional metadata about the generation
+ */
+
+/**
+ * @typedef {object} RefinementResult
+ * @property {object} formDefinition - The refined form definition
+ * @property {number} refinements - The number of refinements made
+ */
 
 export class AIAgentError extends Error {
+  /**
+   * @param {string} message
+   * @param {number} attempts
+   * @param {Error | null} lastError
+   */
   constructor(message, attempts = 0, lastError = null) {
     super(message)
     this.name = 'AIAgentError'
@@ -22,7 +44,7 @@ export class AIAgentError extends Error {
 
 export class AIFormAgent {
   /**
-   * @param {Object} config
+   * @param {AIServiceConfig} config
    * @param {FormGeneratorService} formGenerator
    * @param {AIFormValidator} validator
    * @param {PromptBuilder} promptBuilder
@@ -40,9 +62,9 @@ export class AIFormAgent {
   /**
    * Generate a form with agentic self-refinement
    * @param {string} description
-   * @param {Object} preferences
+   * @param {object} preferences
    * @param {string} sessionId
-   * @returns {Promise<Object>}
+   * @returns {Promise<GenerationResult>}
    */
   async generateFormWithRefinement(description, preferences = {}, sessionId) {
     let attempts = 0
@@ -51,31 +73,20 @@ export class AIFormAgent {
 
     while (attempts < this.maxRetries) {
       try {
-        this.logger.info('Starting form generation attempt', {
-          attempt: attempts + 1,
-          maxRetries: this.maxRetries,
-          sessionId
-        })
+        this.logger.info('Starting form generation attempt')
 
-        // Generate initial form
         const generationResult = await this.formGenerator.generateForm(
           description,
-          preferences,
-          sessionId
+          preferences
         )
 
         currentDefinition = generationResult.formDefinition
 
-        // Validate the generated form
         const validationResult =
-          await this.validator.validateFormIntegrity(currentDefinition)
+          this.validator.validateFormIntegrity(currentDefinition)
 
         if (validationResult.isValid) {
-          this.logger.info('Form generation successful', {
-            attempt: attempts + 1,
-            sessionId,
-            pageCount: currentDefinition.pages?.length ?? 0
-          })
+          this.logger.info('Form generation successful')
 
           return {
             success: true,
@@ -91,17 +102,12 @@ export class AIFormAgent {
           }
         }
 
-        // If validation failed, attempt self-refinement
-        this.logger.warn('Form validation failed, attempting refinement', {
-          attempt: attempts + 1,
-          errorCount: validationResult.errors.length,
-          sessionId
-        })
+        this.logger.warn('Form validation failed, attempting refinement')
 
         const refinedDefinition = await this.performSelfRefinement(
           description,
           currentDefinition,
-          validationResult.errors,
+          /** @type {ValidationError[]} */ (validationResult.errors),
           sessionId
         )
 
@@ -124,22 +130,17 @@ export class AIFormAgent {
         attempts++
         lastError = new FormValidationError(
           'Validation failed after refinement',
-          validationResult.errors
+          /** @type {ValidationError[]} */ (validationResult.errors)
         )
       } catch (error) {
         attempts++
-        lastError = error
-        this.logger.error('Form generation attempt failed', {
-          attempt: attempts,
-          error: error.message,
-          sessionId
-        })
+        lastError = error instanceof Error ? error : new Error(String(error))
+        this.logger.error('Form generation attempt failed', error)
 
         if (attempts >= this.maxRetries) {
           break
         }
 
-        // Exponential backoff before retry
         await this.delay(Math.pow(2, attempts) * 1000)
       }
     }
@@ -154,54 +155,42 @@ export class AIFormAgent {
   /**
    * Perform self-refinement using validation feedback
    * @param {string} originalDescription
-   * @param {Object} formDefinition
-   * @param {Array} validationErrors
-   * @param {string} sessionId
-   * @returns {Promise<Object|null>}
+   * @param {object} formDefinition
+   * @param {ValidationError[]} validationErrors
+   * @param {string} _sessionId
+   * @returns {Promise<RefinementResult|null>}
    */
   async performSelfRefinement(
     originalDescription,
     formDefinition,
     validationErrors,
-    sessionId
+    _sessionId
   ) {
     let refinements = 0
     let currentDefinition = formDefinition
 
     while (refinements < this.maxSelfRefinements) {
       try {
-        this.logger.info('Starting self-refinement', {
-          refinement: refinements + 1,
-          maxRefinements: this.maxSelfRefinements,
-          errorCount: validationErrors.length,
-          sessionId
-        })
+        this.logger.info('Starting self-refinement')
 
-        // Build refinement prompt with validation feedback
         const refinementPrompt = this.buildRefinementPrompt(
           originalDescription,
           currentDefinition,
           validationErrors
         )
 
-        // Generate refined form
         const refinementResult = await this.formGenerator.generateForm(
           refinementPrompt,
-          { isRefinement: true },
-          sessionId
+          { isRefinement: true }
         )
 
         currentDefinition = refinementResult.formDefinition
 
-        // Validate refined form
         const validationResult =
-          await this.validator.validateFormIntegrity(currentDefinition)
+          this.validator.validateFormIntegrity(currentDefinition)
 
         if (validationResult.isValid) {
-          this.logger.info('Self-refinement successful', {
-            refinements: refinements + 1,
-            sessionId
-          })
+          this.logger.info('Self-refinement successful')
 
           return {
             formDefinition: currentDefinition,
@@ -209,32 +198,21 @@ export class AIFormAgent {
           }
         }
 
-        // Check if we're making progress (fewer errors)
         if (validationResult.errors.length >= validationErrors.length) {
-          this.logger.warn('Refinement not improving validation', {
-            previousErrors: validationErrors.length,
-            currentErrors: validationResult.errors.length,
-            refinement: refinements + 1,
-            sessionId
-          })
+          this.logger.warn('Refinement not improving validation')
         }
 
-        validationErrors = validationResult.errors
+        validationErrors = /** @type {ValidationError[]} */ (
+          validationResult.errors
+        )
         refinements++
       } catch (error) {
-        this.logger.error('Self-refinement failed', {
-          refinement: refinements + 1,
-          error: error.message,
-          sessionId
-        })
+        this.logger.error('Self-refinement failed', error)
         break
       }
     }
 
-    this.logger.warn('Self-refinement exhausted without success', {
-      maxRefinements: this.maxSelfRefinements,
-      sessionId
-    })
+    this.logger.warn('Self-refinement exhausted without success')
 
     return null
   }
@@ -242,8 +220,8 @@ export class AIFormAgent {
   /**
    * Build a refinement prompt that addresses validation errors
    * @param {string} originalDescription
-   * @param {Object} formDefinition
-   * @param {Array} validationErrors
+   * @param {object} formDefinition
+   * @param {ValidationError[]} validationErrors
    * @returns {string}
    */
   buildRefinementPrompt(originalDescription, formDefinition, validationErrors) {
@@ -275,24 +253,23 @@ Generate ONLY the corrected JSON - no explanations.`
   }
 
   /**
-   * Summarize validation errors for human-readable feedback
-   * @param {Array} validationErrors
+   * Summarise validation errors for human-readable feedback
+   * @param {ValidationError[]} validationErrors
    * @returns {string}
    */
   summarizeValidationErrors(validationErrors) {
+    /** @type {Record<string, ValidationError[]>} */
     const errorsByType = {}
 
     for (const error of validationErrors) {
-      if (!errorsByType[error.type]) {
-        errorsByType[error.type] = []
-      }
+      errorsByType[error.type] ??= []
       errorsByType[error.type].push(error)
     }
 
     const summary = []
     for (const [type, errors] of Object.entries(errorsByType)) {
       summary.push(`${type.toUpperCase()}: ${errors.length} error(s)`)
-      errors.slice(0, 3).forEach((error) => {
+      errors.slice(0, 3).forEach((/** @type {ValidationError} */ error) => {
         summary.push(`  - ${error.message}`)
       })
       if (errors.length > 3) {
@@ -322,3 +299,9 @@ Generate ONLY the corrected JSON - no explanations.`
     }
   }
 }
+
+/**
+ * @import { FormGeneratorService } from '~/src/services/ai/form-generator.js'
+ * @import { AIFormValidator } from '~/src/services/ai/form-validator.js'
+ * @import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
+ */
