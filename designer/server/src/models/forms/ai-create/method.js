@@ -27,7 +27,9 @@ import { ROUTE_PATH_CREATE_TITLE } from '~/src/routes/forms/create.js'
  * @param {FormValidation} [validation]
  */
 export function methodViewModel(metadata, validation) {
-  const pageTitle = 'How would you like to create your form?'
+  const pageTitle = 'Choose creation method'
+  const bannerHeading = 'Choose creation method'
+  const mainHeading = 'How would you like to create your form?'
   const { formValues, formErrors } = validation ?? {}
 
   return {
@@ -36,7 +38,7 @@ export function methodViewModel(metadata, validation) {
     },
     pageTitle,
     pageHeading: {
-      text: pageTitle,
+      text: bannerHeading,
       size: 'large'
     },
     pageDescription: `You're creating: "${metadata.title}"`,
@@ -47,7 +49,7 @@ export function methodViewModel(metadata, validation) {
       id: 'creationMethod',
       name: 'creationMethod',
       legend: {
-        text: pageTitle
+        text: mainHeading
       },
       items: [
         {

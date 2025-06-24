@@ -5,7 +5,7 @@ import { createLogger } from '~/src/common/helpers/logging/logger.js'
 export class FormValidationError extends Error {
   /**
    * @param {string} message
-   * @param {Array<Object>} errors
+   * @param {Array<object>} errors
    */
   constructor(message, errors = []) {
     super(message)
@@ -26,7 +26,7 @@ export class AIFormValidator {
   /**
    * Validates form definition using the existing Joi schema
    * @param {any} formDefinition
-   * @returns {{isValid: boolean, errors: Array<Object>}}
+   * @returns {{isValid: boolean, errors: Array<object>}} - The validation result
    */
   validateFormIntegrity(formDefinition) {
     try {

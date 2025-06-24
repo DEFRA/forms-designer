@@ -32,7 +32,7 @@
                 Analyzing your form requirements...
               </div>
               <div class="govuk-body-s govuk-!-margin-top-3" style="color: #626a6e;">
-                This typically takes 30-60 seconds
+                This typically takes 1-3 minutes
               </div>
             </div>
           </div>
@@ -72,7 +72,7 @@
               <li>Lists of options where needed</li>
               <li>Conditional logic for smart forms</li>
             </ul>
-            <p class="govuk-body">This typically takes 30-60 seconds. You\'ll be able to review and edit the generated form before saving.</p>
+            <p class="govuk-body">This typically takes 1-3 minutes. You\'ll be able to review and edit the generated form before saving.</p>
           '
         }) }}
       </div>
@@ -102,12 +102,11 @@
 </style>
 
 <script>
-  // AI progress polling functionality
   class AIProgressPoller {
     constructor(jobId) {
       this.jobId = jobId
       this.pollInterval = 2000 // Poll every 2 seconds
-      this.maxAttempts = 150 // 5 minutes max (150 * 2s)
+      this.maxAttempts = 300 // 10 minutes max (300 * 2s)
       this.attempts = 0
       this.progressMessage = document.getElementById('progress-message')
       this.errorContainer = document.getElementById('error-container')
@@ -153,7 +152,6 @@
           return
         }
 
-        // Continue polling if still processing
         if (status.status === 'processing' && this.attempts < this.maxAttempts) {
           setTimeout(() => this.pollForStatus(), this.pollInterval)
         } else if (this.attempts >= this.maxAttempts) {
@@ -165,7 +163,6 @@
         console.error('💥 Polling error:', error)
         
         if (this.attempts < this.maxAttempts) {
-          // Retry with exponential backoff
           const delay = Math.min(this.pollInterval * Math.pow(1.5, this.attempts - 1), 10000)
           setTimeout(() => this.pollForStatus(), delay)
         } else {
@@ -175,12 +172,10 @@
     }
 
     updateUI(status) {
-      // Update progress message
       if (status.message) {
         this.progressMessage.textContent = status.message
       }
 
-      // Keep loading spinner visible
       const spinner = document.getElementById('loading-spinner')
       if (spinner) {
         spinner.style.display = 'flex'
@@ -192,12 +187,10 @@
       this.errorContainer.style.display = 'block'
       this.errorMessage.textContent = message
       
-      // Focus error for screen readers
       this.errorContainer.focus()
     }
   }
 
-  // Start polling when page loads
   document.addEventListener('DOMContentLoaded', function() {
     const jobId = '{{ jobId }}'
     if (jobId) {

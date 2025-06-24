@@ -1,9 +1,3 @@
-/**
- * AI Form Creation JavaScript
- * Handles form submission, loading states, and timeouts for AI-powered form generation
- */
-
-// Following file-upload.js pattern for initialization
 export function initAIFormCreation() {
   const form = document.querySelector('form')
   const generateButton = document.getElementById('generate-form-btn')
@@ -17,7 +11,6 @@ export function initAIFormCreation() {
   const buttonElement = /** @type {HTMLButtonElement} */ (generateButton)
   let isSubmitting = false
 
-  // Character counter setup (using the correct ID)
   const textarea = document.getElementById('formDescription')
   const charCount = document.getElementById('char-count')
   if (textarea && charCount) {
@@ -60,7 +53,6 @@ export function initAIFormCreation() {
  * @param {HTMLButtonElement} generateButton - The generate button
  */
 function handleStandardSubmission(formElement, generateButton) {
-  // Just disable button to prevent double submission
   setTimeout(() => {
     generateButton.disabled = true
   }, 100)
@@ -80,7 +72,6 @@ function handleAjaxSubmission(
   generateButton,
   errorSummary
 ) {
-  // Prevent default and start AJAX
   event.preventDefault()
 
   const formData = new FormData(formElement)

@@ -30,5 +30,3 @@
  * @property {function(string): Promise<any>} get - Get cached value
  * @property {function(string, any, number): Promise<void>} set - Set cached value with TTL
  */
-
-export {}

@@ -44,6 +44,30 @@ declare module '@hapi/hapi' {
     state: StateCache
   }
 
+  interface ServerApplicationState {
+    aiService?: {
+      getJobStatus: (jobId: string) => Promise<unknown>
+      generateForm: (
+        description: string,
+        preferences: unknown,
+        sessionId: string
+      ) => Promise<unknown>
+      generateFormInBackground: (
+        jobId: string,
+        description: string,
+        title: string,
+        yar: unknown
+      ) => Promise<void>
+      components: {
+        tempFormManager: {
+          getTempForm: (sessionId: string) => Promise<unknown>
+          storeTempForm: (sessionId: string, tempForm: unknown) => Promise<void>
+          deleteTempForm: (sessionId: string) => Promise<void>
+        }
+      }
+    }
+  }
+
   interface AuthArtifacts {
     token_type: 'Bearer'
     scope: string
@@ -118,6 +142,15 @@ declare module '@hapi/yar' {
   type ValidationSession = (typeof sessionNames)['validationFailure']
   export type ValidationSessionKey = ValidationSession[keyof ValidationSession]
 
+  // Extended form metadata for AI creation flow
+  interface ExtendedFormMetadataInput extends FormMetadataInput {
+    creationMethod?: 'ai-assisted' | 'manual'
+    formDescription?: string
+    preferences?: unknown
+    aiJobId?: string
+    aiFormDefinition?: unknown
+  }
+
   interface Yar {
     /**
      * Get temporary string values from the session
@@ -179,9 +212,9 @@ declare module '@hapi/yar' {
     flash(type: ErrorListKey): ErrorDetailsItem[]
 
     /**
-     * Get form metadata from the session
+     * Get form metadata from the session (now supports extended properties for AI flow)
      */
-    get(type: CreateKey): Partial<FormMetadataInput> | undefined
+    get(type: CreateKey): Partial<ExtendedFormMetadataInput> | undefined
 
     /**
      * Get enhanced action state from the session
@@ -189,9 +222,9 @@ declare module '@hapi/yar' {
     get(type: QuestionSessionStateKey): QuestionSessionState | undefined
 
     /**
-     * Set form metadata on the session
+     * Set form metadata on the session (now supports extended properties for AI flow)
      */
-    set<Schema = FormMetadataInput>(
+    set<Schema = ExtendedFormMetadataInput>(
       type: CreateKey,
       metadata: Partial<Schema>
     ): Partial<Schema>

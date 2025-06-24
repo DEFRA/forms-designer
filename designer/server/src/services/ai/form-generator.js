@@ -2,19 +2,27 @@ import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
 import {
   ResponseParser,
-  ParseError,
   ValidationError
 } from '~/src/services/ai/response-parser.js'
-import { AIProviderError } from '~/src/services/ai/providers/claude-provider.js'
+
+/**
+ * @typedef {object} ValidationDetail
+ * @property {string[]} [path] - The path to the validation error
+ * @property {string} message - The error message
+ */
+
+/**
+ * @typedef {import('./providers/ai-provider-interface.js').FormPreferences} FormPreferences
+ */
 
 const logger = createLogger()
 
 export class FormGenerationError extends Error {
   /**
    * @param {string} message
-   * @param {Error} cause
+   * @param {Error | undefined} cause
    */
-  constructor(message, cause = null) {
+  constructor(message, cause = undefined) {
     super(message)
     this.name = 'FormGenerationError'
     this.cause = cause
@@ -23,8 +31,8 @@ export class FormGenerationError extends Error {
 
 export class FormGeneratorService {
   /**
-   * @param {Object} aiProvider
-   * @param {Object} validator
+   * @param {IAIProvider} aiProvider
+   * @param {AIFormValidator} validator
    */
   constructor(aiProvider, validator) {
     this.aiProvider = aiProvider
@@ -35,107 +43,124 @@ export class FormGeneratorService {
   }
 
   /**
+   * @param {unknown} error
+   * @returns {string}
+   */
+  extractErrorDetails(error) {
+    if (
+      error &&
+      typeof error === 'object' &&
+      'details' in error &&
+      Array.isArray(error.details)
+    ) {
+      return error.details
+        .map(
+          (/** @type {ValidationDetail} */ d) =>
+            `- ${d.path?.join('.') ?? 'unknown'}: ${d.message}`
+        )
+        .join('\n')
+    }
+
+    if (error instanceof Error) {
+      return error.message
+    }
+
+    return typeof error === 'string' ? error : 'Unknown error occurred'
+  }
+
+  /**
+   * @param {FormPreferences} preferences
+   * @param {unknown} lastError
+   * @returns {FormPreferences}
+   */
+  enhancePreferencesWithError(preferences, lastError) {
+    const errorDetails = this.extractErrorDetails(lastError)
+    return {
+      ...preferences,
+      refinementContext: `Previous attempt failed: ${errorDetails}`
+    }
+  }
+
+  /**
    * @param {string} description
-   * @param {Object} preferences
+   * @param {FormPreferences} preferences
+   * @returns {Promise<object>}
    */
   async generateForm(description, preferences = {}) {
-    logger.info('🎬 FormGeneratorService.generateForm() started', {
-      descriptionLength: description?.length || 'undefined',
-      preferencesKeys: Object.keys(preferences || {}),
-      maxRetries: this.maxRetries
-    })
+    logger.info('FormGeneratorService.generateForm() started')
 
     let lastError = null
 
     for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
       try {
-        logger.info(`🔄 Form generation attempt ${attempt}`, {
-          description: description.substring(0, 100) + '...',
-          preferences,
-          isRetry: attempt > 1
-        })
+        logger.info(`Form generation attempt ${attempt}`)
 
-        // Build prompt with error context if retrying
-        logger.info('🏗️  Building prompt...')
-        let prompt
-        if (attempt === 1) {
-          prompt = this.promptBuilder.buildFormGenerationPrompt(
-            description,
-            preferences
-          )
-        } else {
-          // Include detailed validation errors for refinement
-          const errorDetails = lastError.details
-            ? lastError.details
-                .map((d) => `- ${d.path?.join('.') || 'unknown'}: ${d.message}`)
-                .join('\n')
-            : lastError.message
+        logger.info(
+          'Using agentic approach - AI will autonomously plan and generate form'
+        )
 
-          console.log(
-            '🔧 REFINEMENT ATTEMPT - Adding error context:',
-            errorDetails
-          )
+        const enhancedPreferences =
+          attempt > 1 && lastError
+            ? this.enhancePreferencesWithError(preferences, lastError)
+            : preferences
 
-          prompt =
-            this.promptBuilder.buildFormGenerationPrompt(
-              description,
-              preferences
-            ) +
-            `\n\nIMPORTANT: The previous attempt failed validation. Fix these specific errors:\n${errorDetails}\n\nPay special attention to UUID format requirements - ALL "id" fields must be proper UUIDs like "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d", not descriptive names.`
+        if (attempt > 1) {
+          logger.info('Adding refinement context to preferences')
         }
 
-        logger.info('✅ Prompt built successfully', {
-          promptLength: prompt?.length || 'undefined',
-          hasPrompt: !!prompt
-        })
-
-        // Generate with AI
-        logger.info('🤖 Calling AI provider...')
+        logger.info('Calling AI provider with agentic approach')
         const startTime = Date.now()
-        const aiResponse = await this.aiProvider.generate(prompt)
+        const aiResponse = await this.aiProvider.generateFormAgentic(
+          description,
+          '',
+          enhancedPreferences
+        )
         const duration = Date.now() - startTime
 
-        logger.info('✅ AI provider responded', {
-          duration: `${duration}ms`,
-          hasResponse: !!aiResponse,
-          hasContent: !!aiResponse?.content,
-          contentLength: aiResponse?.content?.length || 'undefined'
+        logger.info('AI provider responded', {
+          duration: `${duration}ms`
         })
 
-        // Debug: Log the AI response content
-        console.log('🤖 AI RESPONSE DEBUG:')
-        console.log('Response object:', aiResponse)
-        console.log('Response content:', aiResponse?.content)
-        console.log('Content type:', typeof aiResponse?.content)
-        console.log('================')
+        if (aiResponse.formDefinition) {
+          const formDefinition = aiResponse.formDefinition
+          const summary = this.responseParser.extractFormSummary(formDefinition)
 
-        // Parse and validate
-        logger.info('📝 Parsing form definition...')
+          logger.info('Form generation successful')
+
+          return {
+            formDefinition,
+            summary,
+            metadata: {
+              aiGenerated: true,
+              generatedAt: new Date(),
+              tokensUsed: aiResponse.usage,
+              attempts: attempt,
+              agenticApproach: aiResponse.agenticApproach,
+              conversationTurns: aiResponse.conversationTurns,
+              refinementAttempts: aiResponse.refinementAttempts
+            }
+          }
+        }
+
+        // Fallback: parse from content (for backwards compatibility)
+        logger.info('Parsing form definition from content')
         const formDefinition = this.responseParser.parseFormDefinition(
           aiResponse.content
         )
-        logger.info('✅ Form definition parsed', {
-          hasFormDefinition: !!formDefinition,
-          pageCount: formDefinition?.pages?.length || 'undefined'
-        })
+        logger.info('Form definition parsed')
 
-        // Additional custom validation
         const customValidation =
-          await this.validator.validateFormIntegrity(formDefinition)
+          this.validator.validateFormIntegrity(formDefinition)
         if (!customValidation.isValid) {
           throw new ValidationError(
             'Form integrity validation failed',
-            customValidation.errors
+            undefined
           )
         }
 
         const summary = this.responseParser.extractFormSummary(formDefinition)
 
-        logger.info('Form generation successful', {
-          attempt,
-          summary,
-          tokensUsed: aiResponse.usage
-        })
+        logger.info('Form generation successful')
 
         return {
           formDefinition,
@@ -149,38 +174,31 @@ export class FormGeneratorService {
         }
       } catch (error) {
         lastError = error
-        logger.warn(`Form generation attempt ${attempt} failed`, {
-          error: error.message,
-          type: error.constructor.name
-        })
+        logger.warn('Form generation attempt failed', error)
 
         if (attempt === this.maxRetries) {
           break
         }
 
-        // Don't retry certain types of errors
-        if (error instanceof AIProviderError && error.statusCode === 429) {
-          // Rate limit - don't retry immediately
+        if (error instanceof Error && error.message.includes('rate limit')) {
           break
         }
       }
     }
 
-    logger.error('Form generation failed after all attempts', {
-      maxRetries: this.maxRetries,
-      lastError: lastError?.message
-    })
+    const errorMessage = this.extractErrorDetails(lastError)
+    logger.error('Form generation failed after all attempts')
 
     throw new FormGenerationError(
-      `Failed to generate valid form after ${this.maxRetries} attempts: ${lastError?.message}`,
-      lastError
+      `Failed to generate valid form after ${this.maxRetries} attempts: ${errorMessage}`,
+      lastError instanceof Error ? lastError : undefined
     )
   }
 
   /**
    * @param {string} originalDescription
    * @param {string} feedback
-   * @param {Object} previousDefinition
+   * @param {object} previousDefinition
    */
   async regenerateForm(originalDescription, feedback, previousDefinition) {
     try {
@@ -196,17 +214,17 @@ export class FormGeneratorService {
       )
 
       const customValidation =
-        await this.validator.validateFormIntegrity(formDefinition)
+        this.validator.validateFormIntegrity(formDefinition)
       if (!customValidation.isValid) {
         throw new ValidationError(
           'Regenerated form integrity validation failed',
-          customValidation.errors
+          undefined
         )
       }
 
       const summary = this.responseParser.extractFormSummary(formDefinition)
 
-      logger.info('Form regeneration successful', { summary })
+      logger.info('Form regeneration successful')
 
       return {
         formDefinition,
@@ -219,11 +237,17 @@ export class FormGeneratorService {
         }
       }
     } catch (error) {
-      logger.error('Form regeneration failed', { error: error.message })
+      const errorMessage = this.extractErrorDetails(error)
+      logger.error('Form regeneration failed', error)
       throw new FormGenerationError(
-        `Failed to regenerate form: ${error.message}`,
-        error
+        `Failed to regenerate form: ${errorMessage}`,
+        error instanceof Error ? error : undefined
       )
     }
   }
 }
+
+/**
+ * @import { IAIProvider } from '~/src/services/ai/providers/ai-provider-interface.js'
+ * @import { AIFormValidator } from '~/src/services/ai/form-validator.js'
+ */

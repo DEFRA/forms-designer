@@ -92,13 +92,11 @@ export default [
       const { formDescription, preferences } = /** @type {any} */ (payload)
 
       try {
-        // Get AI service
         const aiService = /** @type {any} */ (server.app).aiService
         if (!aiService) {
           throw new Error('AI service not available')
         }
 
-        // Update session with description
         const createData = yar.get(sessionNames.create)
         yar.set(sessionNames.create, {
           ...createData,
@@ -106,21 +104,7 @@ export default [
           preferences
         })
 
-        logger.info('Starting AI form generation', {
-          userId: /** @type {any} */ (request.auth.credentials.user)?.id,
-          descriptionLength: formDescription.length
-        })
-
-        // Generate unique job ID for background processing
         const jobId = `job-${crypto.randomUUID()}`
-
-        logger.info('🚀 Starting AI form generation job', {
-          jobId,
-          userId: /** @type {any} */ (request.auth.credentials.user)?.id,
-          title: createData?.title
-        })
-
-        // Store job ID in session immediately
         yar.set(sessionNames.create, {
           ...createData,
           formDescription,
@@ -128,21 +112,21 @@ export default [
           aiJobId: jobId
         })
 
-        // Start background generation using setImmediate (truly fire-and-forget)
         setImmediate(() => {
+          const userId = /** @type {any} */ (request.auth.credentials.user)?.id
           aiService
             .generateFormInBackground(
               jobId,
               formDescription,
               createData?.title,
-              yar
+              yar,
+              userId
             )
             .catch((/** @type {any} */ error) => {
               logger.error('Background AI generation failed', { jobId, error })
             })
         })
 
-        // Redirect to progress page immediately
         return h.redirect('/create/ai-progress').code(StatusCodes.SEE_OTHER)
       } catch (error) {
         logger.error('AI form generation failed', {
@@ -150,7 +134,6 @@ export default [
           error: error instanceof Error ? error.message : String(error)
         })
 
-        // Handle different error types
         if (error instanceof Error && error.name === 'FormGenerationError') {
           yar.flash(sessionNames.validationFailure.createForm, {
             formErrors: {
@@ -213,7 +196,7 @@ export default [
         }
       },
       timeout: {
-        server: 300000 // 5 minutes for Claude Opus 4 generation with tool calling
+        server: 600000 // 10 minutes for AI form generation with agentic workflow and validation refinement
       }
     }
   }

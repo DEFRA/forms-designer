@@ -1,37 +1,17 @@
 import { ComponentType, ConditionType, OperatorName } from '@defra/forms-model'
 
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
-
-const logger = createLogger()
-
 export class PromptBuilder {
   /**
    * @param {string} description
-   * @param {Object} preferences
+   * @param {object} preferences
    * @param {string} [preferences.complexity]
    * @param {number} [preferences.maxPages]
    * @param {boolean} [preferences.includeConditionals]
    */
   buildFormGenerationPrompt(description, preferences = {}) {
-    logger.info(
-      '🏗️  PromptBuilder.buildFormGenerationPrompt() called for TOOL CALLING',
-      {
-        descriptionLength: description.length,
-        preferencesKeys: Object.keys(preferences),
-        complexity: preferences.complexity ?? 'medium',
-        maxPages: preferences.maxPages ?? 10
-      }
-    )
-
     const componentTypes = Object.values(ComponentType).join(', ')
     const operatorNames = Object.values(OperatorName).join(', ')
     const conditionTypes = Object.values(ConditionType).join(', ')
-
-    logger.info('📋 Form schema components loaded for tool calling', {
-      componentTypesCount: Object.values(ComponentType).length,
-      operatorNamesCount: Object.values(OperatorName).length,
-      conditionTypesCount: Object.values(ConditionType).length
-    })
 
     const finalPrompt = `
 Create a complete UK government digital service form based on this user description:
@@ -241,19 +221,13 @@ COMPLETE WORKING EXAMPLE - DOG BREEDING LICENSE FORM:
 
 Generate a professional, user-friendly form that meets these requirements.`
 
-    logger.info('✅ Tool calling prompt generation completed', {
-      promptLength: finalPrompt.length,
-      hasDescription: !!description,
-      hasPreferences: Object.keys(preferences).length > 0
-    })
-
     return finalPrompt
   }
 
   /**
    * @param {string} originalDescription
    * @param {string} feedback
-   * @param {Object} previousDefinition
+   * @param {object} previousDefinition
    */
   buildRegenerationPrompt(originalDescription, feedback, previousDefinition) {
     return `
