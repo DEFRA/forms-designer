@@ -23,7 +23,6 @@ export class TempFormManager {
       expiresAt: new Date(Date.now() + this.defaultTTL * 1000)
     }
 
-    // Use Hapi server cache with TTL
     await this.server.methods.state.set(
       sessionId,
       key,
@@ -31,10 +30,7 @@ export class TempFormManager {
       this.defaultTTL * 1000
     )
 
-    logger.info('Temporary form stored', {
-      sessionId: sessionId.substring(0, 8) + '...',
-      pages: formData.formDefinition?.pages?.length ?? 0
-    })
+    logger.info('Temporary form stored', sessionId)
 
     return data
   }
@@ -47,9 +43,7 @@ export class TempFormManager {
     const dataString = await this.server.methods.state.get(sessionId, key)
 
     if (!dataString) {
-      logger.warn('Temporary form not found', {
-        sessionId: sessionId.substring(0, 8) + '...'
-      })
+      logger.warn('Temporary form not found', sessionId)
       return null
     }
 
@@ -59,17 +53,13 @@ export class TempFormManager {
       // Check if expired
       if (new Date() > new Date(data.expiresAt)) {
         await this.deleteTempForm(sessionId)
-        logger.warn('Temporary form expired', {
-          sessionId: sessionId.substring(0, 8) + '...'
-        })
+        logger.warn('Temporary form expired', sessionId)
         return null
       }
 
       return data
     } catch (error) {
-      logger.error('Failed to parse temporary form data', {
-        error: error instanceof Error ? error.message : String(error)
-      })
+      logger.error('Failed to parse temporary form data', error)
       await this.deleteTempForm(sessionId)
       return null
     }
@@ -98,9 +88,7 @@ export class TempFormManager {
     const key = this.getTempFormKey(sessionId)
     await this.server.methods.state.drop(sessionId, key)
 
-    logger.info('Temporary form deleted', {
-      sessionId: sessionId.substring(0, 8) + '...'
-    })
+    logger.info('Temporary form deleted', sessionId)
   }
 
   /**
@@ -108,11 +96,5 @@ export class TempFormManager {
    */
   getTempFormKey(sessionId) {
     return `temp-form:${sessionId}`
-  }
-
-  cleanExpiredForms() {
-    // This would be called by a scheduled job
-    logger.info('Cleaning expired temporary forms')
-    // Hapi cache handles TTL expiration automatically
   }
 }

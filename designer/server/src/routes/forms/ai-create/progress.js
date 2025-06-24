@@ -1,4 +1,5 @@
 import Joi from 'joi'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 
@@ -11,10 +12,14 @@ export default [
   {
     method: 'GET',
     path: '/create/ai-progress',
-    handler: (request, h) => {
+    /**
+     * @param {Request} request
+     * @param {ResponseToolkit} h
+     */
+    handler(request, h) {
       const { yar } = request
       const sessionKey = sessionNames.create
-      const createSession = yar.get(sessionKey) || {}
+      const createSession = yar.get(sessionKey) ?? {}
 
       if (!createSession.aiJobId) {
         return h.redirect('/create/ai-describe').code(302)
@@ -41,12 +46,16 @@ export default [
         })
       }
     },
-    handler: async (request, h) => {
+    /**
+     * @param {Request} request
+     * @param {ResponseToolkit} h
+     */
+    async handler(request, h) {
       const { jobId } = request.params
 
       try {
         const aiService = request.server.app.aiService
-        const jobStatus = await aiService.getJobStatus(jobId)
+        const jobStatus = await aiService?.getJobStatus(jobId)
 
         if (!jobStatus) {
           return h
@@ -63,10 +72,14 @@ export default [
         return h
           .response({
             error: 'Failed to get status',
-            message: error.message
+            message: error instanceof Error ? error.message : String(error)
           })
           .code(500)
       }
     }
   }
 ]
+
+/**
+ * @import { Request, ResponseToolkit } from '@hapi/hapi'
+ */

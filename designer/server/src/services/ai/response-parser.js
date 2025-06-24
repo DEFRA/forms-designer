@@ -5,6 +5,9 @@ import { createLogger } from '~/src/common/helpers/logging/logger.js'
 const logger = createLogger()
 
 export class ParseError extends Error {
+  /**
+   * @param {string} message
+   */
   constructor(message) {
     super(message)
     this.name = 'ParseError'
@@ -14,7 +17,7 @@ export class ParseError extends Error {
 export class ValidationError extends Error {
   /**
    * @param {string} message
-   * @param {Array} details
+   * @param {import('joi').ValidationErrorItem[]} details
    */
   constructor(message, details = []) {
     super(message)
@@ -23,121 +26,159 @@ export class ValidationError extends Error {
   }
 }
 
+/**
+ * @typedef {object} FormDefinition
+ * @property {string} [engine] - The engine of the form
+ * @property {string} [schema] - The schema of the form
+ * @property {Array<object>} [pages] - The pages of the form
+ * @property {Array<object>} [conditions] - The conditions of the form
+ * @property {Array<object>} [lists] - The lists of the form
+ * @property {Array<object>} [sections] - The sections of the form
+ */
+
 export class ResponseParser {
   /**
-   * @param {string} aiResponse
+   * Parse AI response and extract form definition JSON
+   *
+   * NOTE: This method includes temporary workarounds for agentic workflow issues:
+   * - Adds missing engine: 'V2' field for V2 forms
+   * - Converts list name references to list ID references
+   *
+   * These should be removed once root causes are fixed in the model schema and AI prompts.
+   * @param {string} aiResponse - The AI response containing JSON
+   * @returns {import('@defra/forms-model').FormDefinition} - Parsed and validated form definition
    */
   parseFormDefinition(aiResponse) {
-    logger.info('🔍 ResponseParser.parseFormDefinition() called', {
-      responseLength: aiResponse?.length || 'undefined',
-      responseStart: aiResponse?.substring(0, 200) + '...' || 'no content'
-    })
-
-    // Debug: Show the full AI response
-    console.log('📄 FULL AI RESPONSE:')
-    console.log('Response Length:', aiResponse?.length || 'undefined')
-    console.log('Response Content:', aiResponse || 'no content')
-    console.log('======================')
-
     try {
-      // Extract JSON from response (in case AI adds extra text)
-      logger.info('🔎 Extracting JSON from AI response...')
-      const jsonMatch = aiResponse.match(/\{[\s\S]*\}/)
+      logger.info('Extracting JSON from AI response')
+      const jsonRegex = /\{[\s\S]*\}/
+      const jsonMatch = jsonRegex.exec(aiResponse)
       if (!jsonMatch) {
-        logger.error('❌ No JSON found in AI response', {
-          fullResponse: aiResponse
-        })
+        logger.error('No JSON found in AI response', aiResponse)
         throw new ParseError('No JSON found in AI response')
       }
 
       const jsonString = jsonMatch[0]
-      logger.info('✅ JSON extracted successfully', {
-        jsonLength: jsonString.length,
-        jsonStart: jsonString.substring(0, 300) + '...'
-      })
+      logger.info('JSON extracted successfully', jsonString)
 
-      logger.info('🔄 Parsing JSON...')
+      logger.info('Parsing JSON')
       const parsedForm = JSON.parse(jsonString)
-      logger.info('✅ JSON parsed successfully', {
-        hasEngine: !!parsedForm.engine,
-        hasSchema: !!parsedForm.schema,
-        hasPages: !!parsedForm.pages,
-        pageCount: parsedForm.pages?.length || 'undefined',
-        topLevelKeys: Object.keys(parsedForm)
-      })
 
-      // Validate against schema
-      logger.info('🔍 Validating against formDefinitionV2Schema...')
+      // TODO: Remove this manual parsing once core issues are fixed:
+      //
+      // ISSUE 1: Schema Default Problem
+      // - formDefinitionV2Schema inherits engine default of 'V1' from base schema
+      // - AI generates forms with schema:2 but engine field defaults to 'V1' during validation
+      // - Should be fixed by updating formDefinitionV2Schema to default engine: 'V2'
+      //
+      // ISSUE 2: List Reference Format
+      // - V2 requires component.list to reference list.id (UUID)
+      // - AI sometimes generates component.list referencing list.name (string)
+      // - This is due to training data inconsistencies and should be fixed by improving AI prompts
+      //
+      // ISSUE 3: Coordinator Case Sensitivity
+      // - AI sometimes generates condition.coordinator as "AND"/"OR" instead of "and"/"or"
+      // - System expects lowercase values as per Coordinator enum
+      // - Should be fixed by improving AI prompts to specify lowercase values
+      //
+      // ISSUE 4: Agentic Validation Too Permissive
+      // - Joi schema validation applies defaults/transforms that mask real issues
+      // - AI thinks form is valid when it will actually fail at forms manager
+      // - Should be fixed by stricter validation in agentic workflow
 
-      // Debug: Log the exact structure being validated
-      console.log('🔍 FORM STRUCTURE DEBUG BEFORE VALIDATION:')
-      console.log('Pages count:', parsedForm.pages?.length)
-      if (parsedForm.pages?.[1]) {
-        console.log('Page 1 exists:', !!parsedForm.pages[1])
-        console.log('Page 1 ID:', parsedForm.pages[1].id)
-        console.log(
-          'Page 1 components count:',
-          parsedForm.pages[1].components?.length
-        )
-        if (parsedForm.pages[1].components?.[0]) {
-          console.log(
-            'Page 1 Component 0 exists:',
-            !!parsedForm.pages[1].components[0]
-          )
-          console.log(
-            'Page 1 Component 0 ID:',
-            parsedForm.pages[1].components[0].id
-          )
-          console.log(
-            'Page 1 Component 0 structure:',
-            JSON.stringify(parsedForm.pages[1].components[0], null, 2)
-          )
-        } else {
-          console.log('Page 1 Component 0 does NOT exist')
-        }
-      } else {
-        console.log('Page 1 does NOT exist')
+      // FIX 1: Ensure V2 forms have correct engine field
+      if (parsedForm.schema === 2 && !parsedForm.engine) {
+        parsedForm.engine = 'V2'
+        logger.info('Added missing engine field: V2 (temporary workaround)')
       }
+
+      // FIX 2: Convert list name references to list ID references in V2 forms
+      if (parsedForm.schema === 2 && parsedForm.lists && parsedForm.pages) {
+        logger.info('Processing V2 list references (temporary workaround)')
+
+        // Create a map of list names to list IDs
+        /** @type {Record<string, string>} */
+        const listNameToIdMap = {}
+        parsedForm.lists.forEach(
+          /** @param {any} list */ (list) => {
+            if (list.name && list.id) {
+              listNameToIdMap[list.name] = list.id
+            }
+          }
+        )
+
+        // Update component list references from names to IDs
+        let fixedReferences = 0
+        parsedForm.pages.forEach(
+          /** @param {any} page */ (page) => {
+            if (page.components) {
+              page.components.forEach(
+                /** @param {any} component */ (component) => {
+                  if (component.list && listNameToIdMap[component.list]) {
+                    const oldListRef = component.list
+                    component.list = listNameToIdMap[component.list]
+                    fixedReferences++
+                    logger.info(
+                      `Fixed list reference: ${oldListRef} → ${component.list}`
+                    )
+                  }
+                }
+              )
+            }
+          }
+        )
+
+        if (fixedReferences > 0) {
+          logger.info(
+            `Fixed ${fixedReferences} list references (temporary workaround)`
+          )
+        }
+      }
+
+      // FIX 3: Normalize coordinator values from uppercase to lowercase
+      if (parsedForm.conditions && Array.isArray(parsedForm.conditions)) {
+        logger.info(
+          'Processing condition coordinator values (temporary workaround)'
+        )
+
+        let fixedCoordinators = 0
+        parsedForm.conditions.forEach(
+          /** @param {any} condition */ (condition) => {
+            if (condition.coordinator) {
+              if (condition.coordinator === 'AND') {
+                condition.coordinator = 'and'
+                fixedCoordinators++
+                logger.info('Fixed coordinator: AND → and')
+              } else if (condition.coordinator === 'OR') {
+                condition.coordinator = 'or'
+                fixedCoordinators++
+                logger.info('Fixed coordinator: OR → or')
+              }
+            }
+          }
+        )
+
+        if (fixedCoordinators > 0) {
+          logger.info(
+            `Fixed ${fixedCoordinators} coordinator values (temporary workaround)`
+          )
+        }
+      }
+
+      logger.info('Validating against formDefinitionV2Schema')
 
       const { error, value } = formDefinitionV2Schema.validate(parsedForm)
       if (error) {
-        logger.error('💥 VALIDATION FAILED - Full details:', {
-          errorMessage: error.message,
-          errorDetails: error.details,
-          errorCount: error.details?.length || 0,
-          fullError: JSON.stringify(error, null, 2),
-          firstErrorPath: error.details?.[0]?.path?.join('.') || 'unknown',
-          firstErrorMessage: error.details?.[0]?.message || 'unknown',
-          parsedFormStructure: {
-            engine: parsedForm.engine,
-            schema: parsedForm.schema,
-            hasPages: !!parsedForm.pages,
-            pagesCount: parsedForm.pages?.length,
-            hasConditions: !!parsedForm.conditions,
-            hasLists: !!parsedForm.lists,
-            hasSections: !!parsedForm.sections
-          }
-        })
+        logger.error('Validation failed', error)
 
-        // Log first few validation errors with console.log for immediate visibility
-        console.log('🚨 DETAILED VALIDATION ERRORS:')
-        error.details?.slice(0, 5).forEach((detail, index) => {
+        error.details.slice(0, 5).forEach((detail, index) => {
           const errorInfo = {
             errorNumber: index + 1,
-            path: detail.path?.join('.') || 'root',
+            path: detail.path.join('.'),
             message: detail.message,
-            value: detail.value,
             type: detail.type
           }
-          console.log(`❌ Validation Error ${index + 1}:`, errorInfo)
-          logger.error(`Validation Error ${index + 1}:`, errorInfo)
-        })
-
-        // Also log the full error structure
-        console.log('🔍 Full Error Details Object:', {
-          message: error.message,
-          detailsCount: error.details?.length || 0,
-          firstFewDetails: error.details?.slice(0, 3)
+          logger.error(`Validation Error ${index + 1}`, errorInfo)
         })
 
         throw new ValidationError(
@@ -146,13 +187,7 @@ export class ResponseParser {
         )
       }
 
-      logger.info('✅ Schema validation passed!')
-
-      logger.info('AI form successfully parsed and validated', {
-        pages: value.pages?.length ?? 0,
-        components: this.countComponents(value),
-        conditions: value.conditions?.length ?? 0
-      })
+      logger.info('AI form successfully parsed and validated', value)
 
       return value
     } catch (error) {
@@ -160,25 +195,41 @@ export class ResponseParser {
         throw error
       }
 
-      logger.error('Failed to parse AI response', { error: error.message })
-      throw new ParseError(`Failed to parse AI response: ${error.message}`)
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      logger.error('Failed to parse AI response', { error: errorMessage })
+      throw new ParseError(`Failed to parse AI response: ${errorMessage}`)
     }
   }
 
   /**
-   * @param {Object} formDefinition
+   * @param {import('@defra/forms-model').FormDefinition} formDefinition
+   * @returns {number}
    */
   countComponents(formDefinition) {
-    return (
-      formDefinition.pages?.reduce(
-        (total, page) => total + (page.components?.length ?? 0),
-        0
-      ) ?? 0
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    if (!formDefinition.pages) {
+      return 0
+    }
+
+    return formDefinition.pages.reduce(
+      /**
+       * @param {number} total
+       * @param {object} page
+       * @returns {number}
+       */
+      (total, page) => {
+        if (!('components' in page) || !Array.isArray(page.components)) {
+          return total
+        }
+        return total + page.components.length
+      },
+      0
     )
   }
 
   /**
-   * @param {Object} formDefinition
+   * @param {FormDefinition | any} formDefinition - Form definition (conditions and lists may be undefined)
    */
   extractFormSummary(formDefinition) {
     const pages = formDefinition.pages ?? []
@@ -192,11 +243,23 @@ export class ResponseParser {
       conditionCount: conditions,
       listCount: lists,
       hasConditionalLogic: conditions > 0,
-      formFlow: pages.map((page) => ({
-        title: page.title,
-        path: page.path,
-        componentCount: page.components?.length ?? 0
-      }))
+      formFlow: pages.map(
+        /**
+         * @param {object} page
+         */
+        (page) => ({
+          title: 'title' in page ? page.title : '',
+          path: 'path' in page ? page.path : '',
+          componentCount:
+            'components' in page && Array.isArray(page.components)
+              ? page.components.length
+              : 0
+        })
+      )
     }
   }
 }
+
+/**
+ * @import { FormDefinition }  from '@defra/forms-model'
+ */
