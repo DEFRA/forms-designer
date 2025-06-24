@@ -178,5 +178,5 @@ export class PagePreviewListeners {
 }
 
 /**
- * @import { PageOverviewElements, PreviewPageController } from '@defra/forms-model'
+ * @import { PageOverviewElements, PreviewPageController, DomElementsBase } from '@defra/forms-model'
  */

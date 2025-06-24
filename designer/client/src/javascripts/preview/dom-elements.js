@@ -1,3 +1,6 @@
+/**
+ * @implements {DomElementsBase}
+ */
 export class DomElements {
   static WRAPPER_ID = 'question-preview-inner'
   /**
@@ -60,3 +63,7 @@ export class DomElements {
     }
   }
 }
+
+/**
+ * @import { DomElementsBase } from '@defra/forms-model'
+ */
