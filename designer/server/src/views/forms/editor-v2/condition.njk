@@ -36,8 +36,8 @@
           <div class=" govuk-summary-card__title">Original condition</div>
         </div>
         <div class="govuk-summary-card__content">
-          <p class="govuk-body govuk-!-font-weight-bold">{{ conditionEditor.displayNameField.value }}</p>
-          <p class="govuk-body">{{ conditionEditor.originalConditionHtml | safe }}</p>
+          <p class="govuk-body govuk-!-font-weight-bold">{{ conditionEditor.originalCondition.name }}</p>
+          <p class="govuk-body">{{ conditionEditor.originalCondition.html | safe }}</p>
         </div>
       </div>
     {% endif %}

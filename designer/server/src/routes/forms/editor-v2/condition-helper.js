@@ -30,8 +30,7 @@ export function buildSessionState(yar, stateId, definition, conditionId) {
         : /** @type {ConditionWrapperV2} */ ({
             id: randomUUID(),
             items: [{ id: randomUUID() }]
-          }),
-      originalConditionWrapper: foundCondition
+          })
     }
     setConditionSessionState(yar, stateId, newState)
     return newState

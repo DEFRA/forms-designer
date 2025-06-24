@@ -277,8 +277,13 @@ export function buildConditionEditor(definition, validation, state) {
     ...insertValidationErrors(validation?.formErrors.coordinator)
   }
 
-  const originalConditionHtml = state.originalConditionWrapper
-    ? toPresentationHtmlV2(state.originalConditionWrapper, definition)
+  const originalCondition = /** @type { ConditionWrapperV2 | undefined } */ (
+    definition.conditions.find((x) =>
+      'id' in x ? x.id === state.id : undefined
+    )
+  )
+  const originalConditionHtml = originalCondition
+    ? toPresentationHtmlV2(originalCondition, definition)
     : ''
 
   return {
@@ -287,7 +292,10 @@ export function buildConditionEditor(definition, validation, state) {
     displayNameField,
     coordinator,
     conditionId: state.id,
-    originalConditionHtml
+    originalCondition: {
+      name: originalCondition?.displayName,
+      html: originalConditionHtml
+    }
   }
 }
 
@@ -338,6 +346,6 @@ export function conditionViewModel(
 }
 
 /**
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, ConditionWrapperV2, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
