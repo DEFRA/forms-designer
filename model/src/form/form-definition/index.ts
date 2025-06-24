@@ -180,6 +180,11 @@ const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
 const relativeDateValueDataSchema = Joi.object<RelativeDateValueData>()
   .description('Relative date specification for date-based conditions')
   .keys({
+    type: Joi.string()
+      .trim()
+      .valid('RelativeDate')
+      .required()
+      .description('Type of the condition value, should be "RelativeDate"'),
     period: Joi.string()
       .trim()
       .required()
@@ -368,9 +373,11 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       ),
     items: Joi.array<ConditionGroupDataV2>()
       .items(
-        Joi.alternatives()
-          .try(conditionDataSchemaV2, conditionRefDataSchemaV2)
-          .required()
+        Joi.alternatives().conditional('.componentId', {
+          is: Joi.exist(),
+          then: conditionDataSchemaV2,
+          otherwise: conditionRefDataSchemaV2
+        })
       )
       .min(1)
       .max(15)
@@ -827,10 +834,6 @@ export const listSchema = Joi.object<List>()
         .unique('id')
         .unique('text')
         .unique('value')
-        .messages({
-          'array.unique':
-            'Each item must have a unique identifier - enter a different identifier for this item.'
-        })
         .description('Array of items with string values'),
       otherwise: Joi.array()
         .items(numberListItemSchema)

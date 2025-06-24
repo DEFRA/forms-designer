@@ -124,7 +124,14 @@ export default [
         )
         return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
       } catch (err) {
-        if (!(err instanceof Error && err.message.includes('404'))) {
+        if (
+          Boom.isBoom(err) &&
+          err.output.statusCode === StatusCodes.NOT_FOUND.valueOf()
+        ) {
+          logger.info(
+            `[formExistenceCheck] Form with slug '${slug}' does not exist (expected for new form creation)`
+          )
+        } else {
           logger.error(
             err,
             `[formExistenceCheckFailed] Failed to check if form exists for slug: ${slug} - ${getErrorMessage(err)}`
