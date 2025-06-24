@@ -209,11 +209,9 @@ export function buildConditionsFields(
 
 /**
  * @param {FormDefinition} definition
- * @param { ValidationFailure<FormEditor> | undefined } validation
- * @param {ConditionSessionState} state
  */
-export function buildConditionEditor(definition, validation, state) {
-  const componentItems = definition.pages
+export function getComponentItems(definition) {
+  return definition.pages
     .map(withPageNumbers)
     .filter(({ page }) => hasConditionSupportForPage(page))
     .map(({ page, number }) => {
@@ -228,7 +226,15 @@ export function buildConditionEditor(definition, validation, state) {
         group: components.length > 1
       }
     })
+}
 
+/**
+ * @param {FormDefinition} definition
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ * @param {ConditionSessionState} state
+ */
+export function buildConditionEditor(definition, validation, state) {
+  const componentItems = getComponentItems(definition)
   const legendText = state.id !== 'new' ? '' : 'Create new condition'
   const { conditionWrapper } = state
 

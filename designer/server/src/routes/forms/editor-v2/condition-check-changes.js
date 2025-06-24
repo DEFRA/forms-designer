@@ -1,6 +1,5 @@
-import { FormDefinitionError, slugSchema } from '@defra/forms-model'
+import { FormDefinitionError } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
-import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -17,11 +16,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/condition-check-changes
 import { editorFormPath } from '~/src/models/links.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
-export const ROUTE_PATH_CONDITION = `/library/{slug}/editor-v2/condition-check-changes/{conditionId}/{stateId?}`
-
-const idSchema = Joi.string().uuid().allow('new').required()
-const stateIdSchema = Joi.string().optional()
-
+const ROUTE_PATH_CONDITION_CHANGES = `/library/{slug}/editor-v2/condition-check-changes/{conditionId}/{stateId?}`
 const errorKey = sessionNames.validationFailure.editorCondition
 
 export default [
@@ -30,7 +25,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_PATH_CONDITION,
+    path: ROUTE_PATH_CONDITION_CHANGES,
     async handler(request, h) {
       const { yar } = request
       const { params, auth } = request
@@ -66,13 +61,6 @@ export default [
           entity: 'user',
           scope: [`+${scopes.SCOPE_WRITE}`]
         }
-      },
-      validate: {
-        params: Joi.object().keys({
-          slug: slugSchema,
-          conditionId: idSchema.optional(),
-          stateId: stateIdSchema
-        })
       }
     }
   }),
@@ -81,7 +69,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: ROUTE_PATH_CONDITION,
+    path: ROUTE_PATH_CONDITION_CHANGES,
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug, conditionId, stateId } = params
