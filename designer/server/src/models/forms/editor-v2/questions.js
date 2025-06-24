@@ -379,6 +379,10 @@ export function questionsViewModel(
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields,
     previewModel: getPreviewModel(page, definition, fields.guidanceText.value),
+    preview: {
+      page: JSON.stringify(page),
+      definition: JSON.stringify(definition)
+    },
     cardTitle,
     cardCaption: pageHeading,
     navigation,

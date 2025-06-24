@@ -10,9 +10,8 @@ import { pageHeadingAndGuidanceHTML } from '~/src/javascripts/preview/__stubs__/
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
 import { setupPageController } from '~/src/javascripts/preview/page-controller/setup-page-controller.js'
 
-jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
-
 jest.mock('~/src/javascripts/preview/nunjucks.js')
+jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
 jest.mock('~/src/views/preview-components/autocompletefield.njk', () => '')
 jest.mock('~/src/views/preview-components/ukaddressfield.njk', () => '')
 jest.mock('~/src/views/preview-components/markdown.njk', () => '')
@@ -28,7 +27,9 @@ jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
 jest.mock('~/src/views/preview-components/date-input.njk', () => '')
 jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
 jest.mock('~/src/views/preview-components/fileuploadfield.njk', () => '')
-
+jest.mock('~/src/views/page-preview-component/template.njk', () => '')
+jest.mock('~/src/views/page-preview-component/macro.njk', () => '')
+jest.mock('~/src/views/preview-controllers/page-controller.njk', () => '')
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('setup-page-controller', () => {
@@ -53,7 +54,7 @@ describe('setup-page-controller', () => {
     document.body.innerHTML =
       pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
 
-    const pageController = setupPageController(components, page, definition)
+    const pageController = setupPageController(page, definition)
     expect(pageController).toBeInstanceOf(PreviewPageController)
   })
 })

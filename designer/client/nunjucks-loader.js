@@ -15,10 +15,15 @@ env.addFilter('markdown', markdown)
  */
 export default function (source) {
   // @ts-expect-error
-  const name = path.basename(this.resourcePath)
+  const resourcePath = /** @type {string} */ (this.resourcePath)
+  const pathArray = resourcePath.split(path.sep)
+  const paths = [pathArray.pop()]
+  paths.unshift(pathArray.pop())
+
+  const name = paths.join('/')
 
   return precompileString(source, {
     env,
-    name: 'preview-components/' + name
+    name
   })
 }

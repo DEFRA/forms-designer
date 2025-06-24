@@ -47,6 +47,12 @@ export default /** @type {Configuration} */ ({
         './javascripts/preview.js'
       ]
     },
+    pagePreview: {
+      import: [
+        // Nunjucks rendered application
+        './javascripts/preview/page-controller/setup-page-controller.js'
+      ]
+    },
     'pages-reorder': {
       import: ['./javascripts/pages-reorder.js']
     }

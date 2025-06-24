@@ -94,7 +94,7 @@ export class NunjucksPageRenderer {
    * @param {PagePreviewPanelMacro} pagePreviewPanelMacro
    */
   render(questionTemplate, pagePreviewPanelMacro) {
-    this._renderBase.render(questionTemplate, pagePreviewPanelMacro)
+    this._renderBase.render(questionTemplate, { params: pagePreviewPanelMacro })
   }
 }
 

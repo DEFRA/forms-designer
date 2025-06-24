@@ -2,7 +2,7 @@
  * @implements {DomElementsBase}
  */
 export class DomElements {
-  static WRAPPER_ID = 'question-preview-inner'
+  static WRAPPER_ID = 'preview-panel-inner'
   /**
    * @type {HTMLElement|null}
    */
@@ -13,7 +13,7 @@ export class DomElements {
   previewInner = null
 
   constructor() {
-    const previewEl = document.getElementById('question-preview-content')
+    const previewEl = document.getElementById('preview-panel-content')
     this.preview = previewEl
     this.previewInner =
       previewEl?.querySelector(`#${DomElements.WRAPPER_ID}`) ?? null
@@ -37,7 +37,7 @@ export class DomElements {
    * @private
    */
   _wrapHTML(html) {
-    return `<div id="question-preview-inner">${html}</div>`
+    return `<div id="preview-panel-inner">${html}</div>`
   }
 
   /**

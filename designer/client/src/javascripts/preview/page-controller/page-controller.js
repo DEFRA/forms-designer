@@ -4,7 +4,7 @@ import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
  * @implements {PageOverviewElements}
  */
 export class PagePreviewDomElements extends DomElements {
-  static WRAPPER_ID = 'question-preview-inner'
+  static WRAPPER_ID = 'page-preview-inner'
 
   /**
    * @type {HTMLInputElement|null}
@@ -118,7 +118,6 @@ export class PagePreviewListeners {
   constructor(pageController, baseElements) {
     this._pageController = pageController
     this._baseElements = baseElements
-    this._setListeners()
   }
 
   /**
@@ -165,6 +164,11 @@ export class PagePreviewListeners {
         htmlInputElement.addEventListener(listenerType, eventListener)
       }
     }
+  }
+
+  initListeners() {
+    this._setListeners()
+    this._pageController.render()
   }
 
   clearListeners() {

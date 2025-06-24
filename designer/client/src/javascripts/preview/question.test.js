@@ -36,7 +36,7 @@ describe('question', () => {
       const html = '<div id="preview">123</div>'
       res.setPreviewHTML(html)
       expect(res.preview?.innerHTML).toBe(
-        `<div id="question-preview-inner">${html}</div>`
+        `<div id="preview-panel-inner">${html}</div>`
       )
     })
 
@@ -57,7 +57,7 @@ describe('question', () => {
 
       res.setPreviewDOM(el)
       expect(res.preview?.innerHTML).toBe(
-        `<div id="question-preview-inner"><div class="preview"><span>123</span></div></div>`
+        `<div id="preview-panel-inner"><div class="preview"><span>123</span></div></div>`
       )
     })
 

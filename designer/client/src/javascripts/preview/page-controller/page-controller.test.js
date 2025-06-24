@@ -78,6 +78,7 @@ describe('page-controller', () => {
         pageController,
         pagePreviewElements
       )
+      pageListeners.initListeners()
     })
 
     afterEach(() => {
@@ -96,7 +97,7 @@ describe('page-controller', () => {
       expect(pageController.guidance.classes).toBe('highlight')
       pagePreviewElements.guidanceElement.blur()
       expect(pageController.guidance.classes).toBe('')
-      expect(pageRendererCb).toHaveBeenCalledTimes(2)
+      expect(pageRendererCb).toHaveBeenCalledTimes(3)
     })
 
     it('should highlight title', () => {
@@ -107,7 +108,7 @@ describe('page-controller', () => {
       expect(pageController.pageTitle.classes).toBe('highlight')
       pagePreviewElements.headingElement.blur()
       expect(pageController.pageTitle.classes).toBe('')
-      expect(pageRendererCb).toHaveBeenCalledTimes(2)
+      expect(pageRendererCb).toHaveBeenCalledTimes(3)
     })
 
     it('should change the title', () => {
@@ -117,7 +118,7 @@ describe('page-controller', () => {
       pagePreviewElements.headingElement.value = 'New title'
       pagePreviewElements.headingElement.dispatchEvent(inputEvent)
       expect(pageController.pageTitle.text).toBe('New title')
-      expect(pageRendererCb).toHaveBeenCalledTimes(1)
+      expect(pageRendererCb).toHaveBeenCalledTimes(2)
     })
 
     it('should change the guidance', () => {
@@ -127,7 +128,7 @@ describe('page-controller', () => {
       pagePreviewElements.guidanceElement.value = 'New guidance'
       pagePreviewElements.guidanceElement.dispatchEvent(inputEvent)
       expect(pageController.guidance.text).toBe('New guidance')
-      expect(pageRendererCb).toHaveBeenCalledTimes(1)
+      expect(pageRendererCb).toHaveBeenCalledTimes(2)
     })
   })
 })
