@@ -61,7 +61,6 @@ export interface QuestionRenderContext {
 }
 
 export type RenderContext = QuestionRenderContext | PagePreviewPanelMacro
-export type ModelContext = QuestionBaseModel | PagePreviewPanelMacro
 
 export interface HTMLBuilder {
   buildHTML(questionTemplate: string, renderContext: RenderContext): string
