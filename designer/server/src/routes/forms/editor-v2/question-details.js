@@ -1,4 +1,8 @@
-import { ComponentType, questionDetailsFullSchema } from '@defra/forms-model'
+import {
+  ComponentType,
+  FormDefinitionError,
+  questionDetailsFullSchema
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -9,7 +13,12 @@ import {
   addQuestion,
   updateQuestion
 } from '~/src/lib/editor.js'
-import { checkBoomError } from '~/src/lib/error-boom-helper.js'
+import {
+  DEFAULT_FIELD_NAME,
+  checkBoomError,
+  createJoiError,
+  isInvalidFormErrorType
+} from '~/src/lib/error-boom-helper.js'
 import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
@@ -433,6 +442,17 @@ export default [
           .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
+        if (
+          isInvalidFormErrorType(err, FormDefinitionError.UniqueListItemValue)
+        ) {
+          const error = createJoiError(
+            DEFAULT_FIELD_NAME,
+            'Each item must have a unique identifier - enter a different identifier for this item.'
+          )
+
+          return redirectWithErrors(request, h, error, errorKey, '#')
+        }
+
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
           return redirectWithErrors(request, h, error, errorKey, '#')
