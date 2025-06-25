@@ -64,12 +64,18 @@ export function createJoiError(fieldName, message) {
   )
 }
 
+export const DEFAULT_FIELD_NAME = 'general'
+
 /**
  * @param {Boom.Boom<{ message: string, statusCode: number, custom?: { errorCode?: string } }>} boomError
  * @param {ValidationSessionKey} errorKey
  * @param {string} [fieldName]
  */
-export function checkBoomError(boomError, errorKey, fieldName = 'general') {
+export function checkBoomError(
+  boomError,
+  errorKey,
+  fieldName = DEFAULT_FIELD_NAME
+) {
   if (!Boom.isBoom(boomError)) {
     return undefined
   }
