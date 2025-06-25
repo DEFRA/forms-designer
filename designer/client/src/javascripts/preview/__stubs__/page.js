@@ -1,4 +1,11 @@
 export const pageHeadingAndGuidanceHTML = `
+<div>
+<div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="pageHeadingAndGuidance" name="pageHeadingAndGuidance" type="checkbox" value="true" checked="">
+      <label class="govuk-label govuk-checkboxes__label" for="pageHeadingAndGuidance">
+        Add a page heading, guidance or both
+      </label>
+    </div>
 <div class="govuk-checkboxes__conditional" id="conditional-pageHeadingAndGuidance">
       <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="pageHeading">
@@ -59,5 +66,6 @@ export const pageHeadingAndGuidanceHTML = `
 
   </div>
 </details>
+    </div>
     </div>
 `

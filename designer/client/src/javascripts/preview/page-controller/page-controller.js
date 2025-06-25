@@ -14,6 +14,11 @@ export class PagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   guidanceElement = null
+  /**
+   *
+   * @type {HTMLInputElement|null}
+   */
+  addPageHeadingElement = null
 
   constructor() {
     super()
@@ -22,6 +27,9 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.guidanceElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('guidanceText')
+    )
+    this.addPageHeadingElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('pageHeadingAndGuidance')
     )
   }
 
@@ -32,6 +40,10 @@ export class PagePreviewDomElements extends DomElements {
   get heading() {
     return this.headingElement?.value ?? ''
   }
+
+  get addHeading() {
+    return this.addPageHeadingElement?.checked ?? false
+  }
 }
 
 /**
@@ -41,6 +53,15 @@ export class PagePreviewDomElements extends DomElements {
 function getTargetValue(inputEvent) {
   const target = /** @type {HTMLInputElement} */ (inputEvent.target)
   return target.value
+}
+
+/**
+ * @param {InputEvent} inputEvent
+ * @returns {boolean}
+ */
+function getTargetChecked(inputEvent) {
+  const target = /** @type {HTMLInputElement} */ (inputEvent.target)
+  return target.checked
 }
 
 export class PagePreviewListeners {
@@ -56,6 +77,16 @@ export class PagePreviewListeners {
   _baseElements
 
   _listeners = {
+    addPageHeadingElement: {
+      click: {
+        /**
+         * @param {InputEvent} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          this._pageController.showTitle = getTargetChecked(inputEvent)
+        }
+      }
+    },
     heading: {
       input: {
         /**
@@ -150,6 +181,11 @@ export class PagePreviewListeners {
         this._baseElements.guidanceElement,
         this._listeners.guidance.blur,
         'blur'
+      ],
+      [
+        this._baseElements.addPageHeadingElement,
+        this._listeners.addPageHeadingElement.click,
+        'click'
       ]
     ]
   }

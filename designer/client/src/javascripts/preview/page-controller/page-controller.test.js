@@ -32,6 +32,7 @@ describe('page-controller', () => {
       const pagePreviewElements = new PagePreviewDomElements()
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.heading).toBe('')
+      expect(pagePreviewElements.addHeading).toBe(false)
     })
   })
   describe('PagePreviewListeners', () => {
