@@ -1,4 +1,10 @@
-import { formDefinitionV2Schema } from '@defra/forms-model'
+import {
+  ComponentType,
+  ComponentTypes,
+  formDefinitionV2Schema,
+  hasFormField,
+  hasListField
+} from '@defra/forms-model'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 
@@ -64,39 +70,23 @@ export class ResponseParser {
       logger.info('Parsing JSON')
       const parsedForm = JSON.parse(jsonString)
 
-      // TODO: Remove this manual parsing once core issues are fixed:
-      //
-      // ISSUE 1: Schema Default Problem
-      // - formDefinitionV2Schema inherits engine default of 'V1' from base schema
-      // - AI generates forms with schema:2 but engine field defaults to 'V1' during validation
-      // - Should be fixed by updating formDefinitionV2Schema to default engine: 'V2'
-      //
-      // ISSUE 2: List Reference Format
-      // - V2 requires component.list to reference list.id (UUID)
-      // - AI sometimes generates component.list referencing list.name (string)
-      // - This is due to training data inconsistencies and should be fixed by improving AI prompts
-      //
-      // ISSUE 3: Coordinator Case Sensitivity
-      // - AI sometimes generates condition.coordinator as "AND"/"OR" instead of "and"/"or"
-      // - System expects lowercase values as per Coordinator enum
-      // - Should be fixed by improving AI prompts to specify lowercase values
-      //
-      // ISSUE 4: Agentic Validation Too Permissive
-      // - Joi schema validation applies defaults/transforms that mask real issues
-      // - AI thinks form is valid when it will actually fail at forms manager
-      // - Should be fixed by stricter validation in agentic workflow
-
-      // FIX 1: Ensure V2 forms have correct engine field
-      if (parsedForm.schema === 2 && !parsedForm.engine) {
-        parsedForm.engine = 'V2'
-        logger.info('Added missing engine field: V2 (temporary workaround)')
+      // Fix engine field for V2 forms (schema 2 should always use engine V2)
+      if (parsedForm.schema === 2) {
+        if (!parsedForm.engine) {
+          parsedForm.engine = 'V2'
+          logger.info('Added missing engine field: V2 (temporary workaround)')
+        } else if (parsedForm.engine !== 'V2') {
+          const oldEngine = parsedForm.engine
+          parsedForm.engine = 'V2'
+          logger.info(
+            `Fixed incorrect engine field: ${oldEngine} → V2 (temporary workaround)`
+          )
+        }
       }
 
-      // FIX 2: Convert list name references to list ID references in V2 forms
       if (parsedForm.schema === 2 && parsedForm.lists && parsedForm.pages) {
         logger.info('Processing V2 list references (temporary workaround)')
 
-        // Create a map of list names to list IDs
         /** @type {Record<string, string>} */
         const listNameToIdMap = {}
         parsedForm.lists.forEach(
@@ -107,7 +97,6 @@ export class ResponseParser {
           }
         )
 
-        // Update component list references from names to IDs
         let fixedReferences = 0
         parsedForm.pages.forEach(
           /** @param {any} page */ (page) => {
@@ -135,7 +124,6 @@ export class ResponseParser {
         }
       }
 
-      // FIX 3: Normalize coordinator values from uppercase to lowercase
       if (parsedForm.conditions && Array.isArray(parsedForm.conditions)) {
         logger.info(
           'Processing condition coordinator values (temporary workaround)'
@@ -164,6 +152,14 @@ export class ResponseParser {
           )
         }
       }
+
+      this.generateMissingGuids(parsedForm)
+
+      this.fixEmptyComponentTitles(parsedForm)
+
+      this.fixInvalidComponentTypes(parsedForm)
+
+      this.fixMissingListReferences(parsedForm)
 
       logger.info('Validating against formDefinitionV2Schema')
 
@@ -229,6 +225,242 @@ export class ResponseParser {
   }
 
   /**
+   * Generate UUIDs for missing ID fields - CONSERVATIVE approach for referential integrity
+   * @param {any} formDefinition
+   */
+  generateMissingGuids(formDefinition) {
+    let fixedGuids = 0
+
+    const isValidUuid = (/** @type {string} */ uuid) => {
+      if (!uuid || typeof uuid !== 'string') return false
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      return uuidRegex.test(uuid)
+    }
+
+    if (formDefinition.pages && Array.isArray(formDefinition.pages)) {
+      formDefinition.pages.forEach(
+        /** @param {any} page */ (page) => {
+          if (!page.id || !isValidUuid(page.id)) {
+            const oldValue = page.id
+            page.id = this.generateUuid()
+            fixedGuids++
+            if (oldValue) {
+              logger.info(`Fixed invalid page ID: ${oldValue} → ${page.id}`)
+            } else {
+              logger.info(`Generated missing page ID: ${page.id}`)
+            }
+          }
+        }
+      )
+    }
+
+    if (fixedGuids > 0) {
+      logger.info(`Fixed ${fixedGuids} page UUIDs`)
+    }
+  }
+
+  /**
+   * Fix empty or missing component titles
+   * @param {any} formDefinition
+   */
+  fixEmptyComponentTitles(formDefinition) {
+    let fixedTitles = 0
+
+    if (formDefinition.pages && Array.isArray(formDefinition.pages)) {
+      formDefinition.pages.forEach(
+        /** @param {any} page */ (page) => {
+          if (page.components && Array.isArray(page.components)) {
+            page.components.forEach(
+              /** @param {any} component */ (component) => {
+                if (!component.title || component.title.trim() === '') {
+                  const componentType = component.type ?? 'Component'
+                  const componentName = component.name ?? 'field'
+                  component.title = this.generateComponentTitle(
+                    componentType,
+                    componentName
+                  )
+                  fixedTitles++
+                  logger.info(`Fixed empty component title: ${component.title}`)
+                }
+              }
+            )
+          }
+        }
+      )
+    }
+
+    if (fixedTitles > 0) {
+      logger.info(`Fixed ${fixedTitles} empty component titles (automatic fix)`)
+    }
+  }
+
+  /**
+   * Fix invalid component types (common AI mistakes)
+   * @param {any} formDefinition
+   */
+  fixInvalidComponentTypes(formDefinition) {
+    let fixedTypes = 0
+
+    const componentTypeFixMap = {
+      EmailField: 'EmailAddressField',
+      PhoneField: 'TelephoneNumberField',
+      TextAreaField: 'MultilineTextField',
+      DropdownField: 'SelectField',
+      RadioField: 'RadiosField',
+      CheckboxField: 'CheckboxesField'
+    }
+
+    if (formDefinition.pages && Array.isArray(formDefinition.pages)) {
+      formDefinition.pages.forEach(
+        /** @param {any} page */ (page) => {
+          if (page.components && Array.isArray(page.components)) {
+            page.components.forEach(
+              /** @param {any} component */ (component) => {
+                if (
+                  component.type &&
+                  typeof component.type === 'string' &&
+                  component.type in componentTypeFixMap
+                ) {
+                  const oldType = component.type
+                  const fixedType = /** @type {string} */ (
+                    componentTypeFixMap[
+                      /** @type {keyof typeof componentTypeFixMap} */ (
+                        component.type
+                      )
+                    ]
+                  )
+                  component.type = fixedType
+                  fixedTypes++
+                  logger.info(
+                    `Fixed invalid component type: ${oldType} → ${component.type}`
+                  )
+                }
+              }
+            )
+          }
+        }
+      )
+    }
+
+    if (fixedTypes > 0) {
+      logger.info(`Fixed ${fixedTypes} invalid component types (automatic fix)`)
+    }
+  }
+
+  /**
+   * Fix missing list references for list-based components
+   * @param {any} formDefinition
+   */
+  fixMissingListReferences(formDefinition) {
+    let fixedReferences = 0
+
+    if (!formDefinition.pages || !formDefinition.lists) {
+      return
+    }
+
+    const listBasedComponents = Object.values(ComponentType).filter((type) => {
+      const mockComponent = { type }
+      return hasListField(mockComponent)
+    })
+
+    formDefinition.pages.forEach(
+      /** @param {any} page */ (page) => {
+        if (page.components && Array.isArray(page.components)) {
+          page.components.forEach(
+            /** @param {any} component */ (component) => {
+              if (
+                listBasedComponents.includes(component.type) &&
+                !component.list
+              ) {
+                if (formDefinition.lists.length > 0) {
+                  component.list = formDefinition.lists[0].id
+                  fixedReferences++
+                  logger.info(
+                    `Fixed missing list reference for ${component.type}: ${component.list}`
+                  )
+                } else {
+                  const defaultList = this.createDefaultList(component)
+                  formDefinition.lists.push(defaultList)
+                  component.list = defaultList.id
+                  fixedReferences++
+                  logger.info(
+                    `Created default list for ${component.type}: ${defaultList.id}`
+                  )
+                }
+              }
+            }
+          )
+        }
+      }
+    )
+
+    if (fixedReferences > 0) {
+      logger.info(
+        `Fixed ${fixedReferences} missing list references (automatic fix)`
+      )
+    }
+  }
+
+  /**
+   * Generate a UUID v4
+   * @returns {string}
+   */
+  generateUuid() {
+    return crypto.randomUUID()
+  }
+
+  /**
+   * Generate a meaningful component title
+   * @param {string} componentType
+   * @param {string} componentName
+   * @returns {string}
+   */
+  generateComponentTitle(componentType, componentName) {
+    const componentDef = ComponentTypes.find(
+      (def) => def.name === componentType
+    )
+    const baseTitle = componentDef?.title ?? 'Input field'
+    const formattedName = componentName
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, (str) => str.toUpperCase())
+      .trim()
+
+    return formattedName !== 'field'
+      ? `${baseTitle} for ${formattedName.toLowerCase()}`
+      : baseTitle
+  }
+
+  /**
+   * Create a default list for a component
+   * @param {any} component
+   * @returns {any}
+   */
+  createDefaultList(component) {
+    const listId = this.generateUuid()
+    const componentName = component.name ?? 'option'
+
+    return {
+      id: listId,
+      name: `${componentName}List`,
+      title: `${this.generateComponentTitle(component.type, componentName)} options`,
+      type: 'string',
+      items: [
+        {
+          id: this.generateUuid(),
+          text: 'Option 1',
+          value: 'option1'
+        },
+        {
+          id: this.generateUuid(),
+          text: 'Option 2',
+          value: 'option2'
+        }
+      ]
+    }
+  }
+
+  /**
    * @param {FormDefinition | any} formDefinition - Form definition (conditions and lists may be undefined)
    */
   extractFormSummary(formDefinition) {
@@ -257,6 +489,98 @@ export class ResponseParser {
         })
       )
     }
+  }
+
+  /**
+   * Validate GDS compliance for the form (relaxed for AI generation success)
+   * @param {any} formDefinition - The form definition to validate
+   * @returns {{ isValid: boolean, errors: string[] }} - Validation result
+   */
+  validateGDSCompliance(formDefinition) {
+    /** @type {string[]} */
+    const errors = []
+
+    if (!formDefinition.pages || !Array.isArray(formDefinition.pages)) {
+      return { isValid: true, errors: [] }
+    }
+
+    formDefinition.pages.forEach(
+      /**
+       * @param {any} page
+       * @param {number} _pageIndex
+       */
+      (page, _pageIndex) => {
+        if (!page.components || !Array.isArray(page.components)) {
+          return
+        }
+
+        const inputComponents = page.components.filter(
+          /** @param {any} component */ (component) => {
+            return hasFormField(component)
+          }
+        )
+
+        if (inputComponents.length > 4) {
+          const hasRelatedFields = this.checkForRelatedFields(inputComponents)
+
+          if (!hasRelatedFields) {
+            errors.push(
+              `Page "${page.title ?? page.path}" has ${inputComponents.length} input fields that don't appear to be related. Consider splitting into separate pages for better user experience.`
+            )
+          }
+        }
+
+        page.components.forEach(
+          /** @param {any} component */ (component) => {
+            if (component.title?.includes('*')) {
+              errors.push(
+                `Component "${component.title}" contains asterisk (*). Remove asterisks and use options.required instead.`
+              )
+            }
+          }
+        )
+      }
+    )
+
+    if (errors.length > 0) {
+      logger.debug('GDS compliance violations found:', errors)
+    }
+
+    return {
+      isValid: errors.length === 0,
+      errors
+    }
+  }
+
+  /**
+   * Check if multiple input fields are legitimately related per GDS exceptions
+   * @param {any[]} inputComponents - Array of input components
+   * @returns {boolean} - True if fields appear to be related
+   */
+  checkForRelatedFields(inputComponents) {
+    const fieldNames = inputComponents.map(
+      (comp) => comp.name?.toLowerCase() ?? comp.title?.toLowerCase() ?? ''
+    )
+
+    const relatedPatterns = [
+      // Name components
+      ['first', 'last', 'middle', 'given', 'family', 'surname'],
+      // Address components
+      ['address', 'street', 'city', 'town', 'postcode', 'county'],
+      // Date components
+      ['day', 'month', 'year', 'date'],
+      // Contact details (when essential)
+      ['email', 'phone', 'telephone', 'mobile'],
+      // Passport/ID details
+      ['passport', 'number', 'expiry', 'issue']
+    ]
+
+    return relatedPatterns.some((pattern) => {
+      const matches = fieldNames.filter((name) =>
+        pattern.some((keyword) => name.includes(keyword))
+      )
+      return matches.length >= Math.min(inputComponents.length * 0.6, 2)
+    })
   }
 }
 

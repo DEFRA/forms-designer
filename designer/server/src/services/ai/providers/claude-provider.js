@@ -1,10 +1,11 @@
+import { randomUUID } from 'crypto'
 import fs from 'fs'
 import path from 'path'
 
 import Anthropic from '@anthropic-ai/sdk'
-import { ComponentType, ConditionType, Coordinator } from '@defra/forms-model'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
 
 const logger = createLogger()
 
@@ -32,7 +33,9 @@ export class ClaudeProvider {
       baseURL: this.baseUrl
     })
 
-    // Load the actual JSON schemas and store as instance variables
+    // Initialize prompt builder
+    this.promptBuilder = new PromptBuilder()
+
     try {
       this.schemas = {
         formDefinitionV2: JSON.parse(
@@ -72,7 +75,6 @@ export class ClaudeProvider {
           )
         )
       }
-      logger.info('Successfully loaded V2 JSON schemas for AI validation')
     } catch (error) {
       logger.error('Failed to load V2 JSON schemas', error)
       throw new Error(
@@ -82,32 +84,17 @@ export class ClaudeProvider {
   }
 
   loadFormDefinitionJsonSchema() {
-    // eslint-disable-next-line no-console
-    console.log('🔧 DEBUG: loadFormDefinitionJsonSchema started')
-
     try {
       const schemaPath = path.resolve(
         process.cwd(),
         '../../../model/schemas/form-definition-v2-schema.json'
       )
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Schema path:', schemaPath)
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Current working directory:', process.cwd())
-
       if (!fs.existsSync(schemaPath)) {
-        // eslint-disable-next-line no-console
-        console.log('🔧 DEBUG: ERROR - Schema file not found at:', schemaPath)
         throw new Error(`Schema file not found at: ${schemaPath}`)
       }
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Schema file exists, reading...')
-
       const schemaContent = fs.readFileSync(schemaPath, 'utf8')
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Schema content length:', schemaContent.length)
 
       const parsedSchema = JSON.parse(schemaContent)
 
@@ -134,18 +121,8 @@ export class ClaudeProvider {
         }
       }
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Schema parsed and simplified')
-      // eslint-disable-next-line no-console
-      console.log(
-        '🔧 DEBUG: Simplified schema content length:',
-        JSON.stringify(parsedSchema).length
-      )
-
       return parsedSchema
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: ERROR in loadFormDefinitionJsonSchema:', error)
       logger.error('Failed to load form definition schema', error)
       throw new Error(
         `Schema loading failed: ${error instanceof Error ? error.message : String(error)}`
@@ -154,9 +131,6 @@ export class ClaudeProvider {
   }
 
   loadIndividualSchema(/** @type {string} */ schemaFileName) {
-    // eslint-disable-next-line no-console
-    console.log('🔧 DEBUG: loadIndividualSchema started for:', schemaFileName)
-
     try {
       const schemaPath = path.resolve(
         process.cwd(),
@@ -170,18 +144,8 @@ export class ClaudeProvider {
       const schemaContent = fs.readFileSync(schemaPath, 'utf8')
       const parsedSchema = JSON.parse(schemaContent)
 
-      // eslint-disable-next-line no-console
-      console.log(
-        '🔧 DEBUG: Individual schema loaded:',
-        schemaFileName,
-        'size:',
-        JSON.stringify(parsedSchema).length
-      )
-
       return parsedSchema
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: ERROR in loadIndividualSchema:', error)
       logger.error(`Failed to load ${schemaFileName}`, error)
       throw new Error(
         `Schema loading failed for ${schemaFileName}: ${error instanceof Error ? error.message : String(error)}`
@@ -190,29 +154,18 @@ export class ClaudeProvider {
   }
 
   createAgenticTools() {
-    // eslint-disable-next-line no-console
-    console.log('🔧 DEBUG: createAgenticTools started')
-
-    let _formSchema, _componentSchema, _pageSchema, _listSchema
-
-    try {
-      _formSchema = this.loadFormDefinitionJsonSchema()
-      _componentSchema = this.loadIndividualSchema('component-schema-v2.json')
-      _pageSchema = this.loadIndividualSchema('page-schema-v2.json')
-      _listSchema = this.loadIndividualSchema('list-schema-v2.json')
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: All schemas loaded successfully')
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: ERROR loading schemas:', error)
-      throw error
-    }
+    const formSchema = this.loadFormDefinitionJsonSchema()
+    const componentSchema = this.loadIndividualSchema(
+      'component-schema-v2.json'
+    )
+    const pageSchema = this.loadIndividualSchema('page-schema-v2.json')
+    const listSchema = this.loadIndividualSchema('list-schema-v2.json')
 
     return [
       {
-        name: 'analyze_form_requirements',
+        name: 'analyse_form_requirements',
         description:
-          'Analyze user requirements and create a structured plan for form generation. Use this first to understand what type of form is needed.',
+          'Analyse user requirements and create a structured plan for form generation. Use this first to understand what type of form is needed.',
         input_schema: {
           type: 'object',
           properties: {
@@ -261,7 +214,7 @@ export class ClaudeProvider {
             },
             pages_structure: {
               type: 'array',
-              items: _pageSchema
+              items: pageSchema
             }
           },
           required: ['form_metadata', 'pages_structure']
@@ -276,7 +229,7 @@ export class ClaudeProvider {
           properties: {
             lists: {
               type: 'array',
-              items: _listSchema,
+              items: listSchema,
               description: 'Array of list definitions for form components'
             }
           },
@@ -296,7 +249,7 @@ export class ClaudeProvider {
             },
             components: {
               type: 'array',
-              items: _componentSchema
+              items: componentSchema
             }
           },
           required: ['page_path', 'components']
@@ -314,7 +267,7 @@ export class ClaudeProvider {
               enum: ['structure', 'logic', 'accessibility', 'usability'],
               description: 'Type of validation to perform'
             },
-            current_form: _formSchema,
+            current_form: formSchema,
             issues_found: {
               type: 'array',
               items: {
@@ -371,130 +324,31 @@ export class ClaudeProvider {
         }
       },
       {
-        name: 'finalize_form_definition',
+        name: 'finalise_form_definition',
         description:
           'Generate the final complete FormDefinitionV2 JSON structure. Use this only when you are satisfied with the form design.',
-        input_schema: _formSchema
+        input_schema: formSchema
       }
     ]
   }
 
   /**
-   * @param {string} prompt
-   * @param {string} sessionId
-   * @param {import('./ai-provider-interface.js').FormPreferences} preferences
+   * Generate form using Claude's agentic workflow
+   * @param {string} description - The form description
+   * @param {string} _title - The form title
+   * @param {Function} updateProgress - Progress callback function
+   * @returns {Promise<any>} - The generated form definition
    */
-  async generateFormAgentic(prompt, sessionId, preferences = {}) {
-    // eslint-disable-next-line no-console
-    console.log('🔧 DEBUG: generateFormAgentic started')
-    // eslint-disable-next-line no-console
-    console.log('🔧 DEBUG: prompt:', prompt)
-
+  async generateFormAgentic(description, _title, updateProgress) {
     try {
-      const cacheKey = `claude-agentic-${Buffer.from(prompt).toString('base64').slice(0, 50)}`
+      const systemPrompt = this.promptBuilder.buildSystemPrompt()
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Cache key:', cacheKey)
+      const userMessage = `Create a form based on this description: ${description}
 
-      // Temporarily disable cache to avoid stale data issues during debugging
-      // const cached = await this.cache.get(cacheKey)
-      // if (cached) {
-      //   console.log('🔧 DEBUG: Using cached result')
-      //   logger.info('Using cached agentic form generation result')
-      //   return cached
-      // }
+Start by analyzing the requirements using the analyse_form_requirements tool.`
 
-      // eslint-disable-next-line no-console
-      console.log(
-        '🔧 DEBUG: Generating fresh form (cache disabled for debugging)'
-      )
-
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Creating agentic tools')
       const tools = this.createAgenticTools()
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Tools created, count:', tools.length)
 
-      const systemPrompt = `You are an expert UK government form designer AI with autonomous decision-making capabilities.
-
-🚨 CRITICAL V2 FORM VALIDATION RULES 🚨:
-
-## VALID COMPONENT TYPES (use EXACTLY these):
-${Object.values(ComponentType)
-  .map((type) => `- "${type}"`)
-  .join('\n')}
-
-## VALID CONDITION TYPES:
-${Object.values(ConditionType)
-  .map((type) => `- "${type}"`)
-  .join('\n')}
-
-## VALID COORDINATORS:
-${Object.values(Coordinator)
-  .map((coord) => `- "${coord}" (lowercase!)`)
-  .join('\n')}
-
-🎯 CRITICAL VALIDATION REQUIREMENTS:
-1. **Engine Field**: ALWAYS include "engine": "V2" at root level
-2. **Schema Field**: ALWAYS include "schema": 2 
-3. **UUID Fields**: ALL "id" fields MUST be valid UUID v4 format (8-4-4-4-12 hex digits)
-4. **Component Types**: Use ONLY exact types above (NO "DateField" - use "DatePartsField"!)
-5. **Component Names**: Must be valid JavaScript identifiers (letters only)
-6. **Component Titles**: Must never be empty - provide meaningful titles
-7. **List References**: Components with "list" property MUST reference list.id (UUID), NOT list.name
-8. **Condition Types**: Use specific types based on value:
-   - Boolean values → "BooleanValue" 
-   - String values → "StringValue"
-   - Number values → "NumberValue"
-   - Date values → "DateValue"
-   - List selections → "ListItemRef"
-9. **Coordinator Values**: Use lowercase "and"/"or" NOT uppercase "AND"/"OR"
-
-🔧 EXAMPLES OF CORRECT STRUCTURES:
-
-Component with List Reference (CORRECT):
-{
-  "id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
-  "type": "RadiosField",
-  "name": "dogBreed",
-  "title": "What breed is your dog?",
-  "list": "f47ac10b-58cc-4372-a567-0e02b2c3d479",
-  "options": {"required": true},
-  "schema": {}
-}
-
-Condition with Boolean Value (CORRECT):
-{
-  "id": "condition-uuid",
-  "componentId": "component-uuid",
-  "operator": "is",
-  "type": "BooleanValue",
-  "value": true
-}
-
-Condition Wrapper (CORRECT):
-{
-  "id": "wrapper-uuid",
-  "displayName": "Skip if no incidents",
-  "coordinator": "and",
-  "items": [...]
-}
-
-When generating forms, these rules will be validated before finalization.`
-
-      // Build the user message
-      let userMessage = `Create a form based on this description: ${prompt}
-
-Start by analyzing the requirements using the analyze_form_requirements tool.`
-
-      if (preferences.refinementContext) {
-        userMessage += `\n\nIMPORTANT: The previous attempt failed. ${preferences.refinementContext}`
-      }
-
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Starting conversation loop')
-
-      // Initialize conversation
       const messages = /** @type {any[]} */ ([
         {
           role: 'user',
@@ -508,14 +362,14 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
       let totalOutputTokens = 0
       let conversationTurn = 0
       let refinementAttempts = 0
-      const maxTurns = 20 // Allow more turns for validation refinement
-      const maxRefinements = 5 // Maximum refinement attempts
+      const maxTurns = 30
+      const maxRefinements = 10
 
-      // Multi-turn conversation loop
+      // Track which steps we've completed to avoid duplicate progress updates
+      const completedSteps = new Set()
+
       while (conversationTurn < maxTurns && !formDefinition) {
         conversationTurn++
-        // eslint-disable-next-line no-console
-        console.log(`🔧 DEBUG: Conversation turn ${conversationTurn}`)
 
         try {
           const response = await this.client.messages.create({
@@ -527,13 +381,9 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
             tools
           })
 
-          // eslint-disable-next-line no-console
-          console.log(`🔧 DEBUG: Turn ${conversationTurn} response received`)
-
           totalInputTokens += response.usage.input_tokens
           totalOutputTokens += response.usage.output_tokens
 
-          // Add assistant's response to conversation
           messages.push({
             role: 'assistant',
             content: response.content
@@ -543,36 +393,19 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
             /** @param {any} block */ (block) => block.type === 'tool_use'
           )
 
-          // eslint-disable-next-line no-console
-          console.log(
-            `🔧 DEBUG: Turn ${conversationTurn} - Tool uses found:`,
-            toolUses.length
-          )
-
           if (toolUses.length === 0) {
-            // eslint-disable-next-line no-console
-            console.log('🔧 DEBUG: No tool uses found, prompting to continue')
-
-            // Prompt AI to continue with next step
             messages.push({
               role: 'user',
               content:
-                'Please continue with the next step in your workflow. If you have completed the analysis, proceed to generate_form_structure. When you have fully designed the form, call finalize_form_definition.'
+                'Please continue with the next step in your workflow. If you have completed the analysis, proceed to generate_form_structure. When you have fully designed the form, call finalise_form_definition.'
             })
             continue
           }
 
-          // Process each tool use (usually just one per turn)
           const toolResults = /** @type {any[]} */ ([])
 
           for (const toolUse of toolUses) {
             if (toolUse.type === 'tool_use') {
-              // eslint-disable-next-line no-console
-              console.log(
-                `🔧 DEBUG: Turn ${conversationTurn} - Processing tool:`,
-                toolUse.name
-              )
-
               const stepNumber = workflowSteps.length + 1
               const workflowStep = /** @type {any} */ ({
                 tool: toolUse.name,
@@ -592,27 +425,89 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
               )
               logger.info(`AI Tool Input - ${toolUse.name}: ${inputSummary}`)
 
-              // Check if this is the finalize tool
-              if (toolUse.name === 'finalize_form_definition') {
-                // eslint-disable-next-line no-console
-                console.log(
-                  '🔧 DEBUG: Found finalize_form_definition - validating form...'
-                )
+              // Update progress based on actual AI workflow steps
+              switch (toolUse.name) {
+                case 'analyse_form_requirements':
+                  if (!completedSteps.has('analysis')) {
+                    await updateProgress(
+                      'analysis',
+                      'Analysing your form requirements...',
+                      { step: stepNumber }
+                    )
+                    completedSteps.add('analysis')
+                  }
+                  break
+                case 'generate_form_structure':
+                  if (!completedSteps.has('design')) {
+                    await updateProgress(
+                      'design',
+                      'Designing form structure and pages...',
+                      { step: stepNumber }
+                    )
+                    completedSteps.add('design')
+                  }
+                  break
+                case 'design_form_lists':
+                  if (!completedSteps.has('lists')) {
+                    await updateProgress(
+                      'lists',
+                      'Creating dropdown and selection lists...',
+                      { step: stepNumber }
+                    )
+                    completedSteps.add('lists')
+                  }
+                  break
+                case 'design_form_components':
+                  if (!completedSteps.has('components')) {
+                    await updateProgress(
+                      'components',
+                      'Adding form fields and components...',
+                      { step: stepNumber }
+                    )
+                    completedSteps.add('components')
+                  }
+                  break
+                case 'validate_form_logic':
+                  if (!completedSteps.has('validation')) {
+                    await updateProgress(
+                      'validation',
+                      'Validating form logic and flow...',
+                      { step: stepNumber }
+                    )
+                    completedSteps.add('validation')
+                  }
+                  break
+                case 'refine_form_design':
+                  // Don't mark as completed since we might refine multiple times
+                  await updateProgress(
+                    'refinement',
+                    'Refining form design...',
+                    { step: stepNumber, refinement: refinementAttempts + 1 }
+                  )
+                  break
+                case 'finalise_form_definition':
+                  await updateProgress(
+                    'finalising',
+                    'Finalising and validating your form...',
+                    { step: stepNumber }
+                  )
+                  break
+              }
 
+              if (toolUse.name === 'finalise_form_definition') {
                 const candidateForm = toolUse.input
+                const formData = /** @type {any} */ (candidateForm)
 
-                // Validate the form using the same validation logic as FormGeneratorService
+                // Fix invalid UUIDs before validation to prevent refinement loops
+                this.fixInvalidUuids(formData)
+
                 const validationResult =
                   await this.validateFormDefinition(candidateForm)
 
                 if (validationResult.isValid) {
-                  // eslint-disable-next-line no-console
-                  console.log(
-                    '🔧 DEBUG: Form validation passed - workflow complete!'
-                  )
-                  // Use the VALIDATED and CLEANED form definition (with unknown properties stripped)
                   formDefinition =
                     validationResult.validatedForm ?? candidateForm
+
                   logger.info(
                     'AI Workflow Complete - Form definition finalized and validated'
                   )
@@ -627,17 +522,16 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
 
                   break
                 } else {
-                  // eslint-disable-next-line no-console
-                  console.log(
-                    '🔧 DEBUG: Form validation failed, prompting refinement...'
+                  logger.warn(
+                    `Form validation failed with ${validationResult.errors.length} errors, triggering refinement`
                   )
 
                   if (refinementAttempts >= maxRefinements) {
-                    // eslint-disable-next-line no-console
-                    console.log(
-                      '🔧 DEBUG: Max refinement attempts reached, accepting current form'
-                    )
                     formDefinition = candidateForm
+
+                    logger.warn(
+                      'Maximum refinement attempts reached - accepting form with potential validation warnings'
+                    )
 
                     toolResults.push({
                       tool_use_id: toolUse.id,
@@ -649,17 +543,19 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
                   }
 
                   refinementAttempts++
+
+                  logger.info(
+                    `Starting refinement attempt ${refinementAttempts}/${maxRefinements}`
+                  )
+
                   const errorDetails = this.formatValidationErrors(
                     validationResult.errors
                   )
 
-                  // eslint-disable-next-line no-console
-                  console.log('🔧 DEBUG: Validation errors:', errorDetails)
-
                   toolResults.push({
                     tool_use_id: toolUse.id,
                     type: 'tool_result',
-                    content: `Form validation failed with the following errors:\n\n${errorDetails}\n\nPlease use the refine_form_design tool to fix these validation errors. Pay special attention to:\n- Missing or empty component titles\n- Missing list references for SelectField/RadiosField/CheckboxesField components\n- Missing or invalid UUIDs (must be proper UUID v4 format)\n- Ensure all lists referenced by components exist in the form's lists array`
+                    content: `Form validation failed with the following errors:\n\n${errorDetails}\n\nPlease use the refine_form_design tool to fix these validation errors. Pay special attention to:\n- Missing or empty component titles\n- Missing list references for SelectField/RadiosField/CheckboxesField/AutocompleteField components\n- Missing or invalid UUIDs (must be proper UUID v4 format)\n- Ensure all lists referenced by components exist in the form's lists array`
                   })
                 }
               } else {
@@ -667,7 +563,7 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
                 let toolResult = ''
 
                 switch (toolUse.name) {
-                  case 'analyze_form_requirements': {
+                  case 'analyse_form_requirements': {
                     const input = /** @type {any} */ (toolUse.input)
                     toolResult = `Analysis complete. You assessed this as a ${input.complexity_assessment} form. Next step: Call generate_form_structure to plan the pages and flow.`
                     break
@@ -696,13 +592,13 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
                     if (issues > 0) {
                       toolResult = `Validation found ${issues} issues. Next step: Call refine_form_design to fix these issues.`
                     } else {
-                      toolResult = `Validation passed with no issues found. Next step: Call finalize_form_definition to complete the form.`
+                      toolResult = `Validation passed with no issues found. Next step: Call finalise_form_definition to complete the form.`
                     }
                     break
                   }
                   case 'refine_form_design': {
                     toolResult =
-                      'Refinements applied successfully. Next step: Call finalize_form_definition to complete and validate the form.'
+                      'Refinements applied successfully. Next step: Call finalise_form_definition to complete and validate the form.'
                     break
                   }
                   default: {
@@ -720,12 +616,10 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
             }
           }
 
-          // If we found the final form definition, break out of the loop
           if (formDefinition) {
             break
           }
 
-          // Add tool results back to conversation to continue the flow
           if (toolResults.length > 0) {
             messages.push({
               role: 'user',
@@ -733,43 +627,28 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
             })
           }
         } catch (error) {
-          // eslint-disable-next-line no-console
-          console.log(
-            `🔧 DEBUG: Error in turn ${conversationTurn}:`,
-            error instanceof Error ? error.message : String(error)
-          )
+          logger.error(`Error in turn ${conversationTurn}:`, error)
           throw error
         }
       }
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Conversation loop completed')
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Total turns:', conversationTurn)
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Refinement attempts:', refinementAttempts)
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: formDefinition exists:', !!formDefinition)
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: workflowSteps count:', workflowSteps.length)
-
       if (!formDefinition) {
-        // eslint-disable-next-line no-console
-        console.log(
-          `🔧 DEBUG: ERROR - No final form definition after ${conversationTurn} turns`
-        )
-        // eslint-disable-next-line no-console
-        console.log(
-          '🔧 DEBUG: Tools used:',
-          workflowSteps.map((s) => s.tool)
-        )
-        throw new Error(
-          `Form generation incomplete after ${conversationTurn} conversation turns - finalize_form_definition not called`
-        )
-      }
+        const lastFinalisationStep = workflowSteps
+          .slice()
+          .reverse()
+          .find((step) => step.tool === 'finalise_form_definition')
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Building final result')
+        if (lastFinalisationStep?.input) {
+          formDefinition = lastFinalisationStep.input
+          logger.warn(
+            `Form generation reached max turns (${conversationTurn}), accepting last candidate form with potential validation errors`
+          )
+        } else {
+          throw new Error(
+            `Unable to generate a valid form after ${conversationTurn} attempts. The form requirements may be too complex or contain conflicting constraints.`
+          )
+        }
+      }
 
       const result = {
         content: JSON.stringify(formDefinition, null, 2),
@@ -785,38 +664,12 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
         refinementAttempts
       }
 
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: Final form definition structure:')
-      // eslint-disable-next-line no-console
-      console.log(
-        '🔧 DEBUG: Form definition keys:',
-        Object.keys(formDefinition)
-      )
-
       if (typeof formDefinition === 'object') {
         const formDef = /** @type {any} */ (formDefinition)
-        // eslint-disable-next-line no-console
-        console.log(
-          '🔧 DEBUG: Form definition pages count:',
-          formDef.pages?.length
-        )
-        // eslint-disable-next-line no-console
-        console.log('🔧 DEBUG: Form definition has name:', 'name' in formDef)
-        // eslint-disable-next-line no-console
-        console.log(
-          '🔧 DEBUG: Form definition has schema:',
-          'schema' in formDef
-        )
-        // eslint-disable-next-line no-console
-        console.log(
-          '🔧 DEBUG: Form definition has engine:',
-          'engine' in formDef
-        )
+        logger.info('Form definition pages count:', formDef.pages?.length)
+        logger.info('Form definition has name:', 'name' in formDef)
       }
 
-      await this.cache.set(cacheKey, result, 3600)
-
-      // Log comprehensive workflow summary
       logger.info('=== AI AGENTIC WORKFLOW COMPLETE ===')
       logger.info(`Total autonomous steps: ${workflowSteps.length}`)
       logger.info(`Conversation turns: ${conversationTurn}`)
@@ -828,7 +681,6 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
         `Token usage - Input: ${result.usage.inputTokens}, Output: ${result.usage.outputTokens}, Total: ${Number(result.usage.inputTokens) + Number(result.usage.outputTokens)}`
       )
 
-      // Log form generation results
       const pageCount =
         /** @type {any} */ (result.formDefinition).pages?.length ?? 0
       const totalComponents =
@@ -840,16 +692,9 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
       logger.info(
         `Generated form - Pages: ${pageCount}, Components: ${totalComponents}`
       )
-      logger.info('Agentic form generation completed successfully')
-
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: generateFormAgentic completed successfully')
 
       return result
     } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log('🔧 DEBUG: ERROR in generateFormAgentic:', error)
-
       logger.error('Agentic form generation failed', error)
       throw error
     }
@@ -864,7 +709,7 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
   summarizeToolInput(toolName, input) {
     try {
       switch (toolName) {
-        case 'analyze_form_requirements':
+        case 'analyse_form_requirements':
           return `Analysis: ${input.complexity_assessment ?? 'unknown'} complexity`
         case 'generate_form_structure':
           return `Structure: ${input.pages_structure?.length ?? 0} pages`
@@ -876,7 +721,7 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
           return `Validation: ${input.validation_type} check`
         case 'refine_form_design':
           return `Refinement: ${input.refinement_type}`
-        case 'finalize_form_definition': {
+        case 'finalise_form_definition': {
           const pageCount = input.pages?.length ?? 0
           const componentCount =
             input.pages?.reduce(
@@ -918,10 +763,9 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
     try {
       const { formDefinitionV2Schema } = await import('@defra/forms-model')
 
-      // Use EXACT same validation options as forms manager API (/api/{id}/data route)
       const result = formDefinitionV2Schema.validate(formDefinition, {
         abortEarly: false,
-        stripUnknown: true // CRITICAL: Strip unknown properties like forms manager does
+        stripUnknown: true
       })
 
       if (result.error) {
@@ -935,9 +779,9 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
         return { isValid: false, errors }
       }
 
-      // Return both validation result AND the cleaned/validated form
       return { isValid: true, errors: [], validatedForm: result.value }
     } catch (error) {
+      logger.error('Form validation error:', error)
       return {
         isValid: false,
         errors: [
@@ -964,6 +808,81 @@ Start by analyzing the requirements using the analyze_form_requirements tool.`
         return `${index + 1}. ${error.message}`
       })
       .join('\n')
+  }
+
+  /**
+   * Fix invalid UUIDs to prevent validation loops
+   * @param {any} formData
+   */
+  fixInvalidUuids(formData) {
+    let fixedCount = 0
+
+    const isValidUuid = (/** @type {string} */ uuid) => {
+      if (!uuid || typeof uuid !== 'string') return false
+      const uuidRegex =
+        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+      return uuidRegex.test(uuid)
+    }
+
+    const fixOrGenerateUuid = (
+      /** @type {any} */ obj,
+      /** @type {string} */ key,
+      /** @type {string} */ description
+    ) => {
+      if (!obj[key] || !isValidUuid(obj[key])) {
+        const oldValue = obj[key]
+        obj[key] = randomUUID()
+        fixedCount++
+        logger.debug(
+          oldValue
+            ? `Fixed invalid ${description}: ${oldValue} → ${obj[key]}`
+            : `Generated missing ${description}: ${obj[key]}`
+        )
+      }
+    }
+
+    if (formData.pages && Array.isArray(formData.pages)) {
+      formData.pages.forEach(
+        /** @param {any} page */ (page) => {
+          if (page && typeof page === 'object') {
+            fixOrGenerateUuid(page, 'id', 'page ID')
+          }
+        }
+      )
+    }
+
+    const hasConditions =
+      formData.conditions &&
+      Array.isArray(formData.conditions) &&
+      formData.conditions.length > 0
+
+    if (!hasConditions && formData.pages && Array.isArray(formData.pages)) {
+      formData.pages.forEach(
+        /** @param {any} page */ (page) => {
+          if (page?.components && Array.isArray(page.components)) {
+            page.components.forEach(
+              /** @param {any} component */ (component) => {
+                if (component && typeof component === 'object') {
+                  fixOrGenerateUuid(component, 'id', 'component ID')
+                }
+              }
+            )
+          }
+        }
+      )
+    }
+
+    if (fixedCount > 0) {
+      logger.info(
+        `Pre-validated and fixed ${fixedCount} UUIDs to prevent validation loops`
+      )
+    }
+
+    if (hasConditions) {
+      logger.debug(
+        'Form has conditions - component IDs preserved for referential integrity'
+      )
+    }
   }
 }
 

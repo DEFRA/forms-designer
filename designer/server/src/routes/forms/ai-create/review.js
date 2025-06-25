@@ -307,30 +307,6 @@ export default [
               request.auth.credentials.token
             )
 
-            logger.info('Empty form created successfully')
-
-            logger.info('Updating draft form definition')
-
-            // eslint-disable-next-line no-console
-            console.log(
-              '🔧 DEBUG: Form definition being sent to forms manager:'
-            )
-
-            // eslint-disable-next-line no-console
-            console.log(JSON.stringify(formDefinition, null, 2))
-
-            // eslint-disable-next-line no-console
-            console.log(
-              '🔧 DEBUG: Form definition keys:',
-              Object.keys(formDefinition)
-            )
-
-            // eslint-disable-next-line no-console
-            console.log(
-              '🔧 DEBUG: Form definition type:',
-              typeof formDefinition
-            )
-
             try {
               await forms.updateDraftFormDefinition(
                 newForm.id,
@@ -356,13 +332,6 @@ export default [
                 formsManagerError
               )
 
-              // eslint-disable-next-line no-console
-              console.log(
-                '🔧 DEBUG: Forms manager error details:',
-                formsManagerError
-              )
-
-              // Clean up the empty form we created since we couldn't populate it
               try {
                 await forms.deleteForm(
                   newForm.id,
@@ -373,10 +342,8 @@ export default [
                 logger.warn('Could not clean up empty form', cleanupError)
               }
 
-              // DON'T delete the temp form or clear session - let user try again
               logger.info('Preserving temp form and session for user to retry')
 
-              // Show user a helpful error message
               return h
                 .view('forms/ai-create/review', {
                   backLink: {

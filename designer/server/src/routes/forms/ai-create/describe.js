@@ -123,16 +123,16 @@ export default [
               userId
             )
             .catch((/** @type {any} */ error) => {
-              logger.error('Background AI generation failed', { jobId, error })
+              logger.error(
+                error,
+                `Background AI generation failed for job ${jobId}`
+              )
             })
         })
 
         return h.redirect('/create/ai-progress').code(StatusCodes.SEE_OTHER)
       } catch (error) {
-        logger.error('AI form generation failed', {
-          userId: /** @type {any} */ (request.auth.credentials.user)?.id,
-          error: error instanceof Error ? error.message : String(error)
-        })
+        logger.error(error, 'AI form generation failed')
 
         if (error instanceof Error && error.name === 'FormGenerationError') {
           yar.flash(sessionNames.validationFailure.createForm, {

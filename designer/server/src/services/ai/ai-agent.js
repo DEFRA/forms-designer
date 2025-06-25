@@ -14,6 +14,13 @@ import { FormValidationError } from '~/src/services/ai/form-validator.js'
  */
 
 /**
+ * @typedef {object} FormGenerationResult
+ * @property {object} formDefinition - The generated form definition
+ * @property {object} summary - Summary of the form
+ * @property {object} metadata - Additional metadata about the generation
+ */
+
+/**
  * @typedef {object} GenerationResult
  * @property {boolean} success - Whether the form generation was successful
  * @property {object} formDefinition - The generated form definition
@@ -181,7 +188,7 @@ export class AIFormAgent {
 
         const refinementResult = await this.formGenerator.generateForm(
           refinementPrompt,
-          { isRefinement: true }
+          { refinementContext: 'self-refinement' }
         )
 
         currentDefinition = refinementResult.formDefinition
