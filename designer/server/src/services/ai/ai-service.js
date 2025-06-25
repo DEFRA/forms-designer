@@ -4,7 +4,6 @@ import { FormGeneratorService } from '~/src/services/ai/form-generator.js'
 import { AIFormValidator } from '~/src/services/ai/form-validator.js'
 import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
 import { ClaudeProvider } from '~/src/services/ai/providers/claude-provider.js'
-import { TokenBucketRateLimiter } from '~/src/services/ai/rate-limiter.js'
 import { ResponseParser } from '~/src/services/ai/response-parser.js'
 import { TempFormManager } from '~/src/services/session/temp-form-manager.js'
 
@@ -26,6 +25,8 @@ export class AIService {
     /** @type {any} */
     this.components = {}
     this.logger = createLogger()
+    /** @type {any} */
+    this.server = null
   }
 
   /**
@@ -34,38 +35,7 @@ export class AIService {
    */
   initialize(config, server) {
     try {
-      this.logger.info('Initializing AI service')
-
-      this.components.rateLimiter = new TokenBucketRateLimiter({
-        capacity: 10,
-        refillRate: 1,
-        tokensPerRequest: 1
-      })
-
-      const cache = {
-        /**
-         * @param {string} key
-         */
-        async get(key) {
-          const data = await server.methods.state.get('ai-cache', key)
-          return data ? JSON.parse(data) : null
-        },
-        /**
-         * @param {string} key
-         * @param {any} value
-         * @param {number} ttlSeconds
-         */
-        async set(key, value, ttlSeconds) {
-          return await server.methods.state.set(
-            'ai-cache',
-            key,
-            JSON.stringify(value),
-            ttlSeconds * 1000
-          )
-        }
-      }
-
-      this.logger.info('AI provider config check')
+      this.server = server
 
       if (!config.claude) {
         this.logger.error('Claude configuration missing from config.claude')
@@ -77,9 +47,7 @@ export class AIService {
         throw new Error('Claude API key is required but not provided')
       }
 
-      this.logger.info('Creating Claude provider')
-
-      this.components.aiProvider = new ClaudeProvider(config.claude, cache)
+      this.components.aiProvider = new ClaudeProvider(config.claude, null)
 
       this.components.promptBuilder = new PromptBuilder()
       this.components.responseParser = new ResponseParser()
@@ -99,7 +67,6 @@ export class AIService {
       )
 
       this.isInitialized = true
-      this.logger.info('AI service initialised successfully')
     } catch (error) {
       this.logger.error('Failed to initialise AI service', error)
       throw new AIServiceError(
@@ -108,21 +75,13 @@ export class AIService {
     }
   }
 
-  clearCache() {
-    try {
-      this.logger.info('Clearing AI cache')
-      this.logger.info('AI cache cleared successfully')
-    } catch (error) {
-      this.logger.error('Failed to clear AI cache', error)
-    }
-  }
-
   /**
    * @param {string} description
    * @param {object} preferences
    * @param {string} sessionId
+   * @param {Function} [updateProgress] - Optional progress callback
    */
-  async generateForm(description, preferences = {}, sessionId) {
+  async generateForm(description, preferences = {}, sessionId, updateProgress) {
     this.logger.info('AIService.generateForm() called')
 
     if (!this.isInitialized) {
@@ -138,7 +97,8 @@ export class AIService {
       this.logger.info('Calling agentic form generator directly')
       const result = await this.components.formGenerator.generateForm(
         description,
-        preferences
+        preferences,
+        updateProgress
       )
       this.logger.info('Agentic form generation completed')
 
@@ -180,22 +140,68 @@ export class AIService {
     try {
       await this.setJobStatus(jobId, {
         status: 'processing',
-        message: 'Analysing your form requirements...',
-        startTime: new Date().toISOString()
+        message: 'Starting form generation...',
+        startTime: new Date().toISOString(),
+        step: 'starting'
       })
 
       this.logger.info('Background AI generation started')
 
+      // Create progress callback that tracks real AI workflow steps
+      const updateProgress = async (
+        /** @type {string} */ step,
+        /** @type {string} */ message,
+        /** @type {object} */ details = {}
+      ) => {
+        // Map AI workflow steps to user-friendly progress
+        let displayMessage = message
+        let progressStep = step
+
+        if (step === 'ai_generation') {
+          displayMessage = 'Creating your form with AI...'
+          progressStep = 'generation'
+        } else if (step === 'analysis') {
+          displayMessage = 'Analysing your form requirements...'
+          progressStep = 'analysis'
+        } else if (step === 'design') {
+          displayMessage = 'Designing form structure and pages...'
+          progressStep = 'design'
+        } else if (step === 'lists') {
+          displayMessage = 'Creating dropdown and selection lists...'
+          progressStep = 'lists'
+        } else if (step === 'components') {
+          displayMessage = 'Adding form fields and components...'
+          progressStep = 'components'
+        } else if (step === 'validation') {
+          displayMessage = 'Validating form logic and flow...'
+          progressStep = 'validation'
+        } else if (step === 'refinement') {
+          displayMessage = 'Refining form structure and validation...'
+          progressStep = 'refinement'
+        } else if (step === 'finalising') {
+          displayMessage = 'Finalising and validating your form...'
+          progressStep = 'finalising'
+        }
+
+        await this.setJobStatus(jobId, {
+          status: 'processing',
+          message: displayMessage,
+          step: progressStep,
+          ...details
+        })
+      }
+
+      const result = await this.generateForm(
+        description,
+        {},
+        '',
+        updateProgress
+      )
+
       await this.setJobStatus(jobId, {
         status: 'processing',
-        message: 'Generating form structure with AI...'
-      })
-
-      const result = await this.generateForm(description, {}, '')
-
-      await this.setJobStatus(jobId, {
-        status: 'processing',
-        message: 'Finalising your form'
+        message: 'Finalising your form...',
+        step: 'finalising'
       })
 
       const sessionKey = 'create'
@@ -231,17 +237,45 @@ export class AIService {
     } catch (error) {
       this.logger.error('Background AI generation failed', error)
 
-      const errorMessage =
-        error instanceof Error ? error.message : 'Form generation failed'
-      const errorType =
-        error instanceof Error ? error.constructor.name : 'Unknown'
+      // Create user-friendly error message
+      let userMessage =
+        'We encountered an issue while generating your form. Please try again with a simpler description or contact support if the problem persists.'
+
+      if (error instanceof Error) {
+        if (
+          error.message.includes(
+            'too complex or contain conflicting constraints'
+          )
+        ) {
+          userMessage =
+            'Your form description appears to be too complex. Please try breaking it down into simpler requirements or contact support for assistance.'
+        } else if (
+          error.message.includes('conversation turns') ||
+          error.message.includes('refinement')
+        ) {
+          userMessage =
+            'The form generation took longer than expected. Please try again with a more specific description.'
+        } else if (
+          error.message.includes('API') ||
+          error.message.includes('network')
+        ) {
+          userMessage =
+            'There was a temporary connection issue. Please try again in a few moments.'
+        } else if (
+          error.message.includes('validation') ||
+          error.message.includes('GDS')
+        ) {
+          userMessage =
+            'We had trouble creating a form that meets government standards. Please try again with clearer requirements.'
+        }
+      }
 
       await this.setJobStatus(jobId, {
         status: 'failed',
-        message: errorMessage,
+        message: userMessage,
         error: {
-          message: errorMessage,
-          type: errorType
+          message: userMessage,
+          type: 'generation_error'
         },
         failedTime: new Date().toISOString()
       })
@@ -251,7 +285,7 @@ export class AIService {
   }
 
   /**
-   * Set job status in cache
+   * Set job status in cache (using Hapi cache with Redis backend)
    * @param {string} jobId - Job identifier
    * @param {object} status - Status object
    */
@@ -259,16 +293,23 @@ export class AIService {
     const cacheKey = `ai_job_status:${jobId}`
     const ttl = 1800 // 30 minutes
 
-    const cache = this.components.aiProvider.cache ?? this.components.cache
-
-    const existing = (await /** @type {any} */ (cache).get(cacheKey)) ?? {}
+    const existingString = await this.server.methods.state.get(
+      'ai-cache',
+      cacheKey
+    )
+    const parsedExisting = existingString ? JSON.parse(existingString) : {}
     const updatedStatus = {
-      ...existing,
+      ...parsedExisting,
       ...status,
       lastUpdated: new Date().toISOString()
     }
 
-    await /** @type {any} */ (cache).set(cacheKey, updatedStatus, ttl)
+    await this.server.methods.state.set(
+      'ai-cache',
+      cacheKey,
+      JSON.stringify(updatedStatus),
+      ttl * 1000
+    )
     this.logger.debug('Job status updated')
   }
 
@@ -279,8 +320,8 @@ export class AIService {
    */
   async getJobStatus(jobId) {
     const cacheKey = `ai_job_status:${jobId}`
-    const cache = this.components.aiProvider.cache ?? this.components.cache
-    return await /** @type {any} */ (cache).get(cacheKey)
+    const data = await this.server.methods.state.get('ai-cache', cacheKey)
+    return data ? JSON.parse(data) : null
   }
 }
 
