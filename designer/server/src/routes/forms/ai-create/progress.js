@@ -68,7 +68,7 @@ export default [
 
         return jobStatus
       } catch (error) {
-        logger.error('Failed to get job status', { jobId, error })
+        logger.error(error, `Failed to get job status for job ${jobId}`)
         return h
           .response({
             error: 'Failed to get status',

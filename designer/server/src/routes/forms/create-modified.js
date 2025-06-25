@@ -5,7 +5,6 @@ import {
   teamNameSchema,
   titleSchema
 } from '@defra/forms-model'
-import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -15,9 +14,8 @@ import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
-import { formOverviewPath } from '~/src/models/links.js'
-import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 import { ROUTE_PATH_CREATE_METHOD } from '~/src/routes/forms/ai-create/method.js'
+import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
 
 const logger = createLogger()
 
@@ -55,11 +53,9 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Clear previous form data
       yar.clear(sessionNames.create)
       yar.clear(sessionNames.validationFailure.createForm)
 
-      // Redirect to first step (now method selection)
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     },
     options: {
@@ -82,7 +78,6 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
       const validation = yar
         .flash(sessionNames.validationFailure.createForm)
@@ -124,13 +119,11 @@ export default [
         return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
       }
 
-      // Update form metadata, redirect to organisation first (not method selection)
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         title: payload.title
       })
 
-      // Redirect to organisation first to collect all required metadata
       return h
         .redirect(ROUTE_PATH_CREATE_ORGANISATION)
         .code(StatusCodes.SEE_OTHER)
@@ -161,7 +154,6 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
       const validation = yar
         .flash(sessionNames.validationFailure.createForm)
@@ -192,13 +184,11 @@ export default [
     handler(request, h) {
       const { payload, yar } = request
 
-      // Update form metadata, redirect to next step
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         organisation: payload.organisation
       })
 
-      // Redirect POST to GET without resubmit on back button
       return h.redirect(ROUTE_PATH_CREATE_TEAM).code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -227,7 +217,6 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
       const validation = yar
         .flash(sessionNames.validationFailure.createForm)
@@ -256,19 +245,17 @@ export default [
   ({
     method: 'POST',
     path: ROUTE_PATH_CREATE_TEAM,
-    async handler(request, h) {
+    handler(request, h) {
       const { payload, yar } = request
 
-      // Update form metadata with team details
       const createData = yar.get(sessionNames.create)
       yar.set(sessionNames.create, {
         ...createData,
         teamName: payload.teamName,
         teamEmail: payload.teamEmail,
-        organisation: payload.organisation // Make sure organisation is also saved
+        organisation: payload.organisation
       })
 
-      // Now redirect to method selection since we have all required metadata
       return h.redirect(ROUTE_PATH_CREATE_METHOD).code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -321,7 +308,6 @@ export function redirectWithErrors(
       formValues: payload
     })
 
-    // Optionally redirect to errors on previous steps
     if (redirectToPreviousStep) {
       if ('title' in formErrors) {
         redirectTo = '/create/title'
@@ -331,6 +317,12 @@ export function redirectWithErrors(
     }
   }
 
-  // Redirect POST to GET without resubmit on back button
   return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
+
+/**
+ * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ValidationSessionKey } from '@hapi/yar'
+ * @import { FormMetadataInput } from '@defra/forms-model'
+ * @import { Request, ResponseToolkit } from '@hapi/hapi'
+ */
