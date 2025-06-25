@@ -1,0 +1,92 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "condition-editor/macro.njk" import appConditionEditor %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    description: pageDescription,
+    caption: pageCaption,
+    actions: pageActions,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+    <div class="app-tab-container govuk-!-margin-bottom-8">
+      <a href="../../conditions" class="editor-card-title app-tab-link">All conditions</a>
+      <nav class="app-page-navigation">
+        <ul class="app-page-navigation__list">
+          <li class="app-page-navigation__item--current">
+            <a class="app-page-navigation__link editor-card-title" aria-current="page">
+              Check changes
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <h2 class="govuk-heading-m ">Check your changes before saving</h2>
+
+    {% if warningItems | length %}
+      <div class="govuk-warning-text">
+        <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+        <strong class="govuk-warning-text__text">
+          <span class="govuk-visually-hidden">Warning</span>
+          Changes to this condition will affect the following pages:
+          <ul class="govuk-list govuk-list--bullet">
+          {% for item in warningItems %}
+            <li><strong>{{ item }}</strong></li>
+          {% endfor %}
+          </ul>
+        </strong>
+      </div>
+    {% endif %}
+
+    <div class="govuk-summary-card govuk-!-margin-bottom-6 govuk-!-margin-top-6">
+      <div class=" govuk-summary-card__title-wrapper">
+        <div class=" govuk-summary-card__title govuk-tag govuk-tag--grey">Original condition</div>
+      </div>
+      <div class="govuk-summary-card__content">
+        <p class="govuk-body govuk-!-font-weight-bold">{{ originalCondition.name }}</p>
+        <p class="govuk-body">{{ originalCondition.html | safe }}</p>
+      </div>
+    </div>
+
+    <div class="govuk-summary-card govuk-!-margin-bottom-6 govuk-!-margin-top-6">
+      <div class=" govuk-summary-card__title-wrapper">
+        <div class=" govuk-summary-card__title govuk-tag govuk-tag--green">New condition</div>
+      </div>
+      <div class="govuk-summary-card__content">
+        <p class="govuk-body govuk-!-font-weight-bold">{{ newCondition.name }}</p>
+        <p class="govuk-body">{{ newCondition.html | safe }}</p>
+      </div>
+    </div>
+
+    <form class="form" method="post">
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+        {{ govukButton({
+          text: 'Continue editing',
+          classes: 'govuk-button--secondary',
+          href: continueEditingPath
+        }) }}
+
+        <a href="../../conditions" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
+      </div>
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

@@ -212,19 +212,6 @@ describe('Editor v2 condition helper', () => {
           ]
         },
         id: 'cattle-farm-condition',
-        originalConditionWrapper: {
-          id: 'cattle-farm-condition',
-          displayName: 'Show if cattle farming',
-          items: [
-            {
-              id: expect.any(String),
-              componentId: 'farm-type-field',
-              operator: 'is',
-              type: 'StringValue',
-              value: 'cattle'
-            }
-          ]
-        },
         stateId: '12345'
       })
     })

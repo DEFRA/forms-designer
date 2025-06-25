@@ -246,7 +246,7 @@ describe('Editor v2 condition routes', () => {
       )
     })
 
-    test('POST - should handle valid final POST for update condition', async () => {
+    test('POST - should handle valid final POST and forward to check changes', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest.mocked(getConditionSessionState).mockReturnValue({
         id: '88389bae-b6e5-4781-8d07-970809064726',
@@ -279,27 +279,9 @@ describe('Editor v2 condition routes', () => {
       } = await renderResponse(server, options)
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe(
-        '/library/my-form-slug/editor-v2/conditions'
-      )
       expect(addCondition).not.toHaveBeenCalled()
-      expect(updateCondition).toHaveBeenCalledWith(
-        testFormMetadata.id,
-        expect.any(String),
-        {
-          coordinator: 'and',
-          displayName: 'Condition name',
-          id: '317507f2-9ab3-4b9b-b9f2-0be678b22c3f',
-          items: [
-            {
-              componentId: 'e890bd3f-f7f8-406c-b55f-a4ade2456acb',
-              id: 'd16363fc-9d53-41a1-a49c-427ca9f49f8f',
-              operator: 'is',
-              type: 'StringValue',
-              value: 'test1'
-            }
-          ]
-        }
+      expect(headers.location).toBe(
+        '/library/my-form-slug/editor-v2/condition-check-changes/317507f2-9ab3-4b9b-b9f2-0be678b22c3f/session-id'
       )
     })
 

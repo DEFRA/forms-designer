@@ -13,7 +13,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { addCondition, updateCondition } from '~/src/lib/editor.js'
+import { addCondition } from '~/src/lib/editor.js'
 import {
   createJoiError,
   isInvalidFormErrorType
@@ -183,18 +183,29 @@ export default [
       // When clicking the 'Save condition' button, and the payload is valid, the processing hits this section.
 
       const { auth, params, payload, yar } = request
-      const { slug, conditionId } = params
+      const { slug, conditionId, stateId } = params
       const { token } = auth.credentials
+      const { items = [] } = payload
 
       const metadata = await forms.get(slug, token)
 
+      if (conditionId !== 'new') {
+        saveSessionState(yar, payload, stateId, items)
+
+        // Redirect user to 'check changes' screen
+        return h
+          .redirect(
+            editorFormPath(
+              slug,
+              `condition-check-changes/${conditionId}/${stateId}`
+            )
+          )
+          .code(StatusCodes.SEE_OTHER)
+          .takeover()
+      }
+
       try {
-        if (conditionId === 'new') {
-          await addCondition(metadata.id, token, payload)
-        } else {
-          payload.id = conditionId
-          await updateCondition(metadata.id, token, payload)
-        }
+        await addCondition(metadata.id, token, payload)
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
