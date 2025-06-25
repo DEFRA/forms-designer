@@ -1,4 +1,5 @@
 import {
+  buildDateComponent,
   buildList,
   buildListItem,
   buildMarkdownComponent,
@@ -280,9 +281,12 @@ describe('page-controller', () => {
       const component = buildTextFieldComponent({
         title: 'Main title'
       })
+      const dateInputComponent = buildDateComponent({
+        title: 'Main title'
+      })
       const pageWithNoTitle = buildQuestionPage({
         title: '',
-        components: [component]
+        components: [dateInputComponent]
       })
       const pageWithSameTitle = buildQuestionPage({
         title: 'Main title',
@@ -303,6 +307,9 @@ describe('page-controller', () => {
         expect(pageController.components[0].model.label?.classes).toBe(
           'govuk-label--m'
         )
+        expect(
+          pageController.components[1].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--m')
       })
 
       it('should be small if add page heading is selected', () => {
@@ -313,9 +320,9 @@ describe('page-controller', () => {
         })
         pageController.showTitle = true
 
-        expect(pageController.components[0].model.label?.classes).toBe(
-          'govuk-label--m'
-        )
+        expect(
+          pageController.components[0].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--m')
       })
 
       it('should be large if add page heading is deselected and one component', () => {
@@ -325,10 +332,9 @@ describe('page-controller', () => {
           definition: formDefinition1
         })
         pageController.showTitle = false
-
-        expect(pageController.components[0].model.label?.classes).toBe(
-          'govuk-label--l'
-        )
+        expect(
+          pageController.components[0].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--l')
       })
 
       it('should be small if title is highlighted', () => {
@@ -339,9 +345,9 @@ describe('page-controller', () => {
         })
         pageController.highlightTitle()
 
-        expect(pageController.components[0].model.label?.classes).toBe(
-          'govuk-label--m'
-        )
+        expect(
+          pageController.components[0].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--m')
       })
 
       it('should be large if page heading is same as component title', () => {
