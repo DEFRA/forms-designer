@@ -445,12 +445,12 @@ export default [
         if (
           isInvalidFormErrorType(err, FormDefinitionError.UniqueListItemValue)
         ) {
-          const error = createJoiError(
+          const joiErr = createJoiError(
             DEFAULT_FIELD_NAME,
             'Each item must have a unique identifier - enter a different identifier for this item.'
           )
 
-          return redirectWithErrors(request, h, error, errorKey, '#')
+          return redirectWithErrors(request, h, joiErr, errorKey, '#')
         }
 
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
