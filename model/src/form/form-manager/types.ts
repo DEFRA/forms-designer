@@ -194,6 +194,6 @@ export type FormDefinitionErrorCause =
   | {
       id: FormDefinitionError
       type: FormDefinitionErrorType.Type
-      message: string /*  */
+      message: string
       detail: Context | undefined
     }
