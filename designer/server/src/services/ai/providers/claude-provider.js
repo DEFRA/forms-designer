@@ -1,11 +1,12 @@
-import { randomUUID } from 'crypto'
 import fs from 'fs'
 import path from 'path'
 
 import Anthropic from '@anthropic-ai/sdk'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { AIFormValidator } from '~/src/services/ai/form-validator.js'
 import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
+import { ResponseParser } from '~/src/services/ai/response-parser.js'
 
 const logger = createLogger()
 
@@ -22,6 +23,7 @@ export class ClaudeProvider {
     this.model = claudeConfig.model ?? 'claude-3-5-sonnet-20241022'
     this.maxTokens = claudeConfig.maxTokens ?? 8000
     this.temperature = claudeConfig.temperature ?? 0.1
+    this.useDirectGeneration = claudeConfig.useDirectGeneration ?? false
     this.cache = cache
 
     if (!this.apiKey) {
@@ -33,54 +35,10 @@ export class ClaudeProvider {
       baseURL: this.baseUrl
     })
 
-    // Initialize prompt builder
+    // Initialize prompt builder and validation services
     this.promptBuilder = new PromptBuilder()
-
-    try {
-      this.schemas = {
-        formDefinitionV2: JSON.parse(
-          fs.readFileSync(
-            path.join(
-              process.cwd(),
-              '../../../model/schemas/form-definition-v2-schema.json'
-            ),
-            'utf8'
-          )
-        ),
-        componentV2: JSON.parse(
-          fs.readFileSync(
-            path.join(
-              process.cwd(),
-              '../../../model/schemas/component-schema-v2.json'
-            ),
-            'utf8'
-          )
-        ),
-        listV2: JSON.parse(
-          fs.readFileSync(
-            path.join(
-              process.cwd(),
-              '../../../model/schemas/list-schema-v2.json'
-            ),
-            'utf8'
-          )
-        ),
-        pageV2: JSON.parse(
-          fs.readFileSync(
-            path.join(
-              process.cwd(),
-              '../../../model/schemas/page-schema-v2.json'
-            ),
-            'utf8'
-          )
-        )
-      }
-    } catch (error) {
-      logger.error('Failed to load V2 JSON schemas', error)
-      throw new Error(
-        `Schema loading failed: ${error instanceof Error ? error.message : String(error)}`
-      )
-    }
+    this.responseParser = new ResponseParser()
+    this.formValidator = new AIFormValidator()
   }
 
   loadFormDefinitionJsonSchema() {
@@ -333,6 +291,235 @@ export class ClaudeProvider {
   }
 
   /**
+   * Basic generate method for simple prompts
+   * @param {string} prompt - The prompt to send to Claude
+   * @returns {Promise<{content: string, usage: object}>}
+   */
+  async generate(prompt) {
+    try {
+      const response = await this.client.messages.create({
+        model: this.model,
+        max_tokens: this.maxTokens,
+        temperature: this.temperature,
+        messages: [
+          {
+            role: 'user',
+            content: prompt
+          }
+        ]
+      })
+
+      const firstContent = response.content[0]
+      if (firstContent.type !== 'text') {
+        throw new Error('No valid text content found in AI response')
+      }
+
+      return {
+        content: firstContent.text,
+        usage: {
+          inputTokens: response.usage.input_tokens,
+          outputTokens: response.usage.output_tokens
+        }
+      }
+    } catch (error) {
+      logger.error('Basic generation failed:', error)
+      throw error
+    }
+  }
+
+  /**
+   * Generate form using direct single-shot approach
+   * @param {string} description - The form description
+   * @param {string} _title - The form title
+   * @param {Function} updateProgress - Progress callback function
+   * @returns {Promise<any>} - The generated form definition
+   */
+  async generateFormDirect(description, _title, updateProgress) {
+    try {
+      await updateProgress('generation', 'Creating your form with AI...', {
+        step: 1
+      })
+
+      const userPrompt = this.promptBuilder.buildFormGenerationPrompt(
+        description,
+        {
+          complexity: 'medium',
+          maxPages: 10,
+          includeConditionals: true
+        }
+      )
+
+      const systemPrompt = this.promptBuilder.buildSystemPrompt()
+
+      let response = await this.client.messages.create({
+        model: this.model,
+        max_tokens: this.maxTokens,
+        temperature: this.temperature,
+        system: systemPrompt,
+        messages: [
+          {
+            role: 'user',
+            content: userPrompt
+          }
+        ]
+      })
+
+      await updateProgress('processing', 'Processing and validating form...', {
+        step: 2
+      })
+
+      let formDefinition = null
+      let refinementAttempts = 0
+      const maxRefinements = 10
+
+      while (refinementAttempts < maxRefinements && !formDefinition) {
+        try {
+          const firstContent = response.content[0]
+          if (firstContent.type !== 'text') {
+            throw new Error('No valid text content found in AI response')
+          }
+
+          const candidateForm = this.responseParser.parseFormDefinition(
+            firstContent.text
+          )
+
+          const validationResult =
+            this.formValidator.validateFormIntegrity(candidateForm)
+
+          if (validationResult.isValid) {
+            formDefinition = candidateForm
+            logger.info('Direct form generation completed successfully')
+            break
+          } else {
+            logger.warn(
+              `Direct generation validation failed with ${validationResult.errors.length} errors, attempting refinement`
+            )
+
+            if (refinementAttempts >= maxRefinements - 1) {
+              // Accept form on last attempt
+              formDefinition = candidateForm
+              logger.warn(
+                'Direct generation: accepting form with validation warnings after max refinements'
+              )
+              break
+            }
+
+            refinementAttempts++
+            logger.info(
+              `Direct generation refinement attempt ${refinementAttempts}/${maxRefinements}`
+            )
+
+            // Create refinement prompt
+            const errorDetails = this.formatValidationErrors(
+              validationResult.errors
+            )
+            const refinementPrompt = `The generated form has validation errors. Please fix them and generate a corrected FormDefinitionV2.
+
+VALIDATION ERRORS:
+${errorDetails}
+
+ORIGINAL FORM:
+${JSON.stringify(candidateForm, null, 2)}
+
+Generate ONLY the corrected JSON - no explanations.`
+
+            // Get refined version from Claude
+            response = await this.client.messages.create({
+              model: this.model,
+              max_tokens: this.maxTokens,
+              temperature: this.temperature,
+              system: this.promptBuilder.buildSystemPrompt(),
+              messages: [
+                {
+                  role: 'user',
+                  content: refinementPrompt
+                }
+              ]
+            })
+
+            await updateProgress(
+              'refinement',
+              `Refining form design (attempt ${refinementAttempts})...`,
+              { step: 3, refinement: refinementAttempts }
+            )
+          }
+        } catch (error) {
+          if (
+            error instanceof Error &&
+            error.name === 'ValidationError' &&
+            refinementAttempts < maxRefinements - 1
+          ) {
+            refinementAttempts++
+            logger.warn(
+              `Direct generation: schema validation failed, attempting refinement ${refinementAttempts}/${maxRefinements}`
+            )
+
+            const refinementPrompt = `The generated form failed schema validation. Please fix the errors and generate a corrected FormDefinitionV2.
+
+ERROR: ${error.message}
+
+REQUIREMENTS:
+- Must be valid FormDefinitionV2 JSON
+- All UUIDs must be valid v4 format (no invalid characters like 'g', 'h', 'i')
+- All required fields must be present
+- Component titles cannot be empty
+- List references must be valid
+
+Generate ONLY the corrected JSON - no explanations.
+
+Original request: ${description}`
+
+            response = await this.client.messages.create({
+              model: this.model,
+              max_tokens: this.maxTokens,
+              temperature: this.temperature,
+              system: this.promptBuilder.buildSystemPrompt(),
+              messages: [
+                {
+                  role: 'user',
+                  content: refinementPrompt
+                }
+              ]
+            })
+
+            await updateProgress(
+              'refinement',
+              `Fixing schema validation errors (attempt ${refinementAttempts})...`,
+              { step: 3, refinement: refinementAttempts }
+            )
+          } else {
+            throw error
+          }
+        }
+      }
+
+      if (!formDefinition) {
+        throw new Error(
+          'Failed to generate valid form after all refinement attempts'
+        )
+      }
+
+      return {
+        content: JSON.stringify(formDefinition, null, 2),
+        formDefinition,
+        usage: {
+          inputTokens: response.usage.input_tokens,
+          outputTokens: response.usage.output_tokens
+        },
+        model: this.model,
+        directApproach: true,
+        conversationTurns: 1,
+        refinementAttempts
+      }
+    } catch (error) {
+      const errorMessage =
+        error instanceof Error ? error.message : String(error)
+      logger.error('Direct generation failed:', errorMessage)
+      throw error
+    }
+  }
+
+  /**
    * Generate form using Claude's agentic workflow
    * @param {string} description - The form description
    * @param {string} _title - The form title
@@ -365,9 +552,9 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
       const maxTurns = 30
       const maxRefinements = 10
 
-      // Track which steps we've completed to avoid duplicate progress updates
       const completedSteps = new Set()
 
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
       while (conversationTurn < maxTurns && !formDefinition) {
         conversationTurn++
 
@@ -495,18 +682,19 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
               }
 
               if (toolUse.name === 'finalise_form_definition') {
-                const candidateForm = toolUse.input
-                const formData = /** @type {any} */ (candidateForm)
+                const rawForm = toolUse.input
 
-                // Fix invalid UUIDs before validation to prevent refinement loops
-                this.fixInvalidUuids(formData)
+                // Apply ResponseParser fixes for consistency with direct route
+                // Convert to JSON string first, then parse through ResponseParser
+                const jsonString = JSON.stringify(rawForm, null, 2)
+                const candidateForm =
+                  this.responseParser.parseFormDefinition(jsonString)
 
                 const validationResult =
-                  await this.validateFormDefinition(candidateForm)
+                  this.formValidator.validateFormIntegrity(candidateForm)
 
                 if (validationResult.isValid) {
-                  formDefinition =
-                    validationResult.validatedForm ?? candidateForm
+                  formDefinition = candidateForm
 
                   logger.info(
                     'AI Workflow Complete - Form definition finalized and validated'
@@ -740,61 +928,6 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
   }
 
   /**
-   * @param {string} prompt
-   */
-  validatePrompt(prompt) {
-    if (!prompt || typeof prompt !== 'string') {
-      return false
-    }
-
-    if (prompt.length < 10 || prompt.length > 50000) {
-      return false
-    }
-
-    return true
-  }
-
-  /**
-   * Validates form definition using the EXACT same logic as forms manager API
-   * @param {any} formDefinition
-   * @returns {Promise<{isValid: boolean, errors: Array<any>, validatedForm?: any}>}
-   */
-  async validateFormDefinition(formDefinition) {
-    try {
-      const { formDefinitionV2Schema } = await import('@defra/forms-model')
-
-      const result = formDefinitionV2Schema.validate(formDefinition, {
-        abortEarly: false,
-        stripUnknown: true
-      })
-
-      if (result.error) {
-        const errors = result.error.details.map((detail) => ({
-          type: 'schema_error',
-          path: detail.path.join('.'),
-          message: detail.message,
-          value: detail.context?.value
-        }))
-
-        return { isValid: false, errors }
-      }
-
-      return { isValid: true, errors: [], validatedForm: result.value }
-    } catch (error) {
-      logger.error('Form validation error:', error)
-      return {
-        isValid: false,
-        errors: [
-          {
-            type: 'validation_error',
-            message: error instanceof Error ? error.message : String(error)
-          }
-        ]
-      }
-    }
-  }
-
-  /**
    * Formats validation errors for Claude to understand and fix
    * @param {Array<any>} errors
    * @returns {string}
@@ -808,81 +941,6 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
         return `${index + 1}. ${error.message}`
       })
       .join('\n')
-  }
-
-  /**
-   * Fix invalid UUIDs to prevent validation loops
-   * @param {any} formData
-   */
-  fixInvalidUuids(formData) {
-    let fixedCount = 0
-
-    const isValidUuid = (/** @type {string} */ uuid) => {
-      if (!uuid || typeof uuid !== 'string') return false
-      const uuidRegex =
-        /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
-      return uuidRegex.test(uuid)
-    }
-
-    const fixOrGenerateUuid = (
-      /** @type {any} */ obj,
-      /** @type {string} */ key,
-      /** @type {string} */ description
-    ) => {
-      if (!obj[key] || !isValidUuid(obj[key])) {
-        const oldValue = obj[key]
-        obj[key] = randomUUID()
-        fixedCount++
-        logger.debug(
-          oldValue
-            ? `Fixed invalid ${description}: ${oldValue} → ${obj[key]}`
-            : `Generated missing ${description}: ${obj[key]}`
-        )
-      }
-    }
-
-    if (formData.pages && Array.isArray(formData.pages)) {
-      formData.pages.forEach(
-        /** @param {any} page */ (page) => {
-          if (page && typeof page === 'object') {
-            fixOrGenerateUuid(page, 'id', 'page ID')
-          }
-        }
-      )
-    }
-
-    const hasConditions =
-      formData.conditions &&
-      Array.isArray(formData.conditions) &&
-      formData.conditions.length > 0
-
-    if (!hasConditions && formData.pages && Array.isArray(formData.pages)) {
-      formData.pages.forEach(
-        /** @param {any} page */ (page) => {
-          if (page?.components && Array.isArray(page.components)) {
-            page.components.forEach(
-              /** @param {any} component */ (component) => {
-                if (component && typeof component === 'object') {
-                  fixOrGenerateUuid(component, 'id', 'component ID')
-                }
-              }
-            )
-          }
-        }
-      )
-    }
-
-    if (fixedCount > 0) {
-      logger.info(
-        `Pre-validated and fixed ${fixedCount} UUIDs to prevent validation loops`
-      )
-    }
-
-    if (hasConditions) {
-      logger.debug(
-        'Form has conditions - component IDs preserved for referential integrity'
-      )
-    }
   }
 }
 

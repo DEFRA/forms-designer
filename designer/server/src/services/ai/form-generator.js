@@ -77,17 +77,26 @@ export class FormGeneratorService {
     logger.info('FormGeneratorService.generateForm() started')
 
     try {
-      // Update progress for AI generation
       if (updateProgress) {
         await updateProgress('ai_generation', 'Generating form with AI...', {})
       }
 
       const startTime = Date.now()
-      const aiResponse = await this.aiProvider.generateFormAgentic(
-        description,
-        '',
-        _preferences
-      )
+
+      const progressCallback = updateProgress ?? (() => Promise.resolve())
+
+      const aiResponse = this.aiProvider.useDirectGeneration
+        ? await this.aiProvider.generateFormDirect(
+            description,
+            '',
+            progressCallback
+          )
+        : await this.aiProvider.generateFormAgentic(
+            description,
+            '',
+            progressCallback
+          )
+
       const duration = Date.now() - startTime
 
       logger.info('AI provider responded', {
@@ -96,6 +105,7 @@ export class FormGeneratorService {
 
       if (aiResponse.formDefinition) {
         const formDefinition = aiResponse.formDefinition
+
         const gdsValidation =
           this.responseParser.validateGDSCompliance(formDefinition)
 
@@ -161,57 +171,6 @@ export class FormGeneratorService {
 
       throw new FormGenerationError(
         `Failed to generate valid form: ${errorMessage}`,
-        error instanceof Error ? error : undefined
-      )
-    }
-  }
-
-  /**
-   * @param {string} originalDescription
-   * @param {string} feedback
-   * @param {object} previousDefinition
-   */
-  async regenerateForm(originalDescription, feedback, previousDefinition) {
-    try {
-      const prompt = this.promptBuilder.buildRegenerationPrompt(
-        originalDescription,
-        feedback,
-        previousDefinition
-      )
-
-      const aiResponse = await this.aiProvider.generate(prompt)
-      const formDefinition = this.responseParser.parseFormDefinition(
-        aiResponse.content
-      )
-
-      const customValidation =
-        this.validator.validateFormIntegrity(formDefinition)
-      if (!customValidation.isValid) {
-        throw new ValidationError(
-          'Regenerated form integrity validation failed',
-          undefined
-        )
-      }
-
-      const summary = this.responseParser.extractFormSummary(formDefinition)
-
-      logger.info('Form regeneration successful')
-
-      return {
-        formDefinition,
-        summary,
-        metadata: {
-          aiGenerated: true,
-          regenerated: true,
-          generatedAt: new Date(),
-          originalFeedback: feedback
-        }
-      }
-    } catch (error) {
-      const errorMessage = this.extractErrorDetails(error)
-      logger.error('Form regeneration failed', error)
-      throw new FormGenerationError(
-        `Failed to regenerate form: ${errorMessage}`,
         error instanceof Error ? error : undefined
       )
     }
