@@ -60,13 +60,12 @@ describe('setup-page-controller', () => {
   })
 
   it('should handle pages without components', () => {
-    document.body.innerHTML =
-      pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+    document.body.innerHTML = '<p>missing content</p>'
 
     const page2 = buildSummaryPage({ title: 'Summary page' })
-    const definition2 = buildDefinition({ pages: [page] })
+    const definition2 = buildDefinition({ pages: [page2] })
     const pageController = setupPageController(page2, definition2)
     expect(pageController).toBeInstanceOf(PreviewPageController)
-    expect(pageController.title).toBe('Summary page')
+    expect(pageController.title).toBe('')
   })
 })
