@@ -429,7 +429,7 @@ Generate a professional, user-friendly form that meets these requirements.`
    * @param {object} previousDefinition
    */
   buildRegenerationPrompt(originalDescription, feedback, previousDefinition) {
-    return `
+    const regenerationPrompt = `
 Modify this existing form based on user feedback:
 
 ORIGINAL DESCRIPTION:
@@ -449,6 +449,8 @@ REQUIREMENTS:
 5. Keep all cross-references valid after changes
 
 Generate an improved form that addresses the user's feedback while maintaining professional quality.`
+
+    return regenerationPrompt
   }
 
   buildSystemPrompt() {

@@ -1,3 +1,4 @@
+import { randomUUID } from 'node:crypto'
 import Stream from 'node:stream'
 
 import { StatusCodes } from 'http-status-codes'
@@ -256,18 +257,14 @@ export default [
           return h.redirect('/create')
         }
 
-        logger.info('Getting AI service from server.app')
         const aiService = request.server.app.aiService
         if (!aiService) {
           logger.error('AI service not available on server.app')
           throw new Error('AI service not available')
         }
-        logger.info('AI service found successfully')
 
         switch (action) {
           case 'approve': {
-            logger.info('Processing APPROVE action')
-
             const tempForm =
               await aiService.components.tempFormManager.getTempForm(
                 request.yar.id
@@ -410,11 +407,69 @@ export default [
           case 'regenerate': {
             logger.info('Processing REGENERATE action')
 
-            await aiService.generateForm(feedback ?? '', {}, request.yar.id)
+            const tempForm =
+              await aiService.components.tempFormManager.getTempForm(
+                request.yar.id
+              )
 
-            logger.info('AI form regenerated')
+            if (
+              !tempForm ||
+              typeof tempForm !== 'object' ||
+              !('formDefinition' in tempForm) ||
+              !tempForm.formDefinition
+            ) {
+              logger.warn(
+                'No temp form found for regeneration, redirecting to describe'
+              )
+              return h.redirect('/create/ai-describe')
+            }
 
-            return h.redirect(ROUTE_PATH_CREATE_AI_REVIEW + '?regenerated=true')
+            const jobId = `job-${randomUUID()}`
+
+            const typedTempForm =
+              /** @type {{formDefinition: object, description?: string}} */ (
+                tempForm
+              )
+
+            yar.set(sessionNames.create, {
+              ...metadata,
+              formDescription: metadata.formDescription,
+              aiJobId: jobId,
+              regenerationFeedback: feedback,
+              regenerationContext: {
+                originalDescription:
+                  typedTempForm.description ?? metadata.formDescription,
+                currentFormDefinition: typedTempForm.formDefinition,
+                userFeedback: feedback
+              }
+            })
+
+            setImmediate(() => {
+              const userId = request.auth.credentials.user?.id ?? undefined
+
+              aiService
+                .regenerateFormInBackground(
+                  jobId,
+                  typedTempForm.description ?? metadata.formDescription ?? '',
+                  feedback ?? '',
+                  typedTempForm.formDefinition,
+                  metadata.title ?? 'AI Form',
+                  yar,
+                  userId
+                )
+                .catch((/** @type {any} */ error) => {
+                  logger.error(
+                    error,
+                    `Background AI regeneration failed for job ${jobId}`
+                  )
+                })
+            })
+
+            logger.info(
+              'AI form regeneration started in background with proper context'
+            )
+
+            return h.redirect('/create/ai-progress').code(StatusCodes.SEE_OTHER)
           }
 
           case 'edit-manually': {
@@ -459,7 +514,6 @@ export default [
                   formsManagerError
                 )
 
-                // Clean up the empty form we created since we couldn't populate it
                 try {
                   await forms.deleteForm(
                     draftForm.id,

@@ -31,6 +31,7 @@ export interface Config {
       model: string
       maxTokens: number
       temperature: number
+      useDirectGeneration?: boolean
     }
     maxRetries: number
     maxSelfRefinements: number
@@ -191,7 +192,8 @@ const schema = joi.object<Config>({
           apiKey: joi.string().required(),
           model: joi.string().default('claude-3-5-sonnet-20241022'),
           maxTokens: joi.number().integer().default(8000),
-          temperature: joi.number().min(0).max(1).default(0.1)
+          temperature: joi.number().min(0).max(1).default(0.1),
+          useDirectGeneration: joi.boolean().default(false)
         })
         .required(),
       maxRetries: joi.number().integer().default(3),
@@ -255,7 +257,8 @@ const result = schema.validate(
             apiKey: process.env.CLAUDE_API_KEY,
             model: process.env.CLAUDE_MODEL,
             maxTokens: process.env.CLAUDE_MAX_TOKENS,
-            temperature: process.env.CLAUDE_TEMPERATURE
+            temperature: process.env.CLAUDE_TEMPERATURE,
+            useDirectGeneration: process.env.CLAUDE_USE_DIRECT_GENERATION
           },
           maxRetries: process.env.AI_MAX_RETRIES,
           maxSelfRefinements: process.env.AI_MAX_SELF_REFINEMENTS,
@@ -266,10 +269,8 @@ const result = schema.validate(
   { abortEarly: false }
 )
 
-// Throw if config is invalid
 if (result.error) {
   throw new Error(`The server config is invalid. ${result.error.message}`)
 }
 
-// Use the joi validated value
 export default result.value

@@ -58,6 +58,15 @@ declare module '@hapi/hapi' {
         title: string,
         yar: unknown
       ) => Promise<void>
+      regenerateFormInBackground: (
+        jobId: string,
+        originalDescription: string,
+        feedback: string,
+        currentFormDefinition: object,
+        title: string,
+        yar: unknown,
+        userId?: string
+      ) => Promise<void>
       components: {
         tempFormManager: {
           getTempForm: (sessionId: string) => Promise<unknown>
