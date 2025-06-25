@@ -2,6 +2,8 @@
  * @interface IAIProvider
  */
 export class IAIProvider {
+  /** @type {boolean} */
+  useDirectGeneration = false
   /**
    * @abstract
    * @param {string} _prompt
@@ -13,21 +15,23 @@ export class IAIProvider {
 
   /**
    * @abstract
-   * @param {string} _prompt
-   * @param {string} _sessionId
-   * @param {FormPreferences} _preferences
+   * @param {string} _description
+   * @param {string} _title
+   * @param {Function} _updateProgress
    * @returns {Promise<AgenticAIResponse>}
    */
-  generateFormAgentic(_prompt, _sessionId, _preferences) {
+  generateFormAgentic(_description, _title, _updateProgress) {
     throw new Error('Method must be implemented')
   }
 
   /**
    * @abstract
-   * @param {string} _prompt
-   * @returns {boolean}
+   * @param {string} _description
+   * @param {string} _title
+   * @param {Function} _updateProgress
+   * @returns {Promise<AgenticAIResponse>}
    */
-  validatePrompt(_prompt) {
+  generateFormDirect(_description, _title, _updateProgress) {
     throw new Error('Method must be implemented')
   }
 }

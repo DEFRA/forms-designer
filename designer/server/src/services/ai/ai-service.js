@@ -82,19 +82,13 @@ export class AIService {
    * @param {Function} [updateProgress] - Optional progress callback
    */
   async generateForm(description, preferences = {}, sessionId, updateProgress) {
-    this.logger.info('AIService.generateForm() called')
-
     if (!this.isInitialized) {
       this.logger.error('AI service not initialised')
       throw new AIServiceError('AI service not initialised')
     }
-
-    this.logger.info('Components check')
+    this.logger.info('Starting AI form generation flow')
 
     try {
-      this.logger.info('Starting AI form generation flow')
-
-      this.logger.info('Calling agentic form generator directly')
       const result = await this.components.formGenerator.generateForm(
         description,
         preferences,
@@ -129,59 +123,113 @@ export class AIService {
   }
 
   /**
-   * Generate form in background as a job
+   * Regenerate form in background with feedback and context
    * @param {string} jobId - Unique job identifier
-   * @param {string} description - Form description
+   * @param {string} originalDescription - Original form description
+   * @param {string} feedback - User feedback for regeneration
+   * @param {object} currentFormDefinition - Current form definition
    * @param {string} title - Form title
    * @param {Yar} yar - Session manager
    * @param {string} [userId] - User ID for usage tracking
    */
-  async generateFormInBackground(jobId, description, title, yar, userId) {
+  async regenerateFormInBackground(
+    jobId,
+    originalDescription,
+    feedback,
+    currentFormDefinition,
+    title,
+    yar,
+    userId
+  ) {
+    const regenerationPrompt =
+      this.components.promptBuilder.buildRegenerationPrompt(
+        originalDescription,
+        feedback,
+        currentFormDefinition
+      )
+
+    return this._runFormGenerationJob(
+      jobId,
+      regenerationPrompt,
+      title,
+      yar,
+      userId,
+      {
+        startMessage: 'Starting form regeneration with your feedback...',
+        completedMessage:
+          'Form regenerated successfully based on your feedback!',
+        errorType: 'regeneration_error',
+        defaultErrorMessage:
+          'We encountered an issue while applying your feedback. Please try again with different feedback or contact support if the problem persists.',
+        loggerContext: 'regeneration',
+        progressMapping: {
+          analysis: 'Analysing your feedback and current form...',
+          generation: 'Applying your feedback to improve the form...',
+          processing: 'Processing and validating changes...',
+          refinement: 'Refining form based on your feedback...',
+          finalising: 'Finalising your improved form...'
+        }
+      }
+    )
+  }
+
+  /**
+   * Shared background job logic for both generation and regeneration
+   * @param {string} jobId - Unique job identifier
+   * @param {string} description - Form description or regeneration prompt
+   * @param {string} title - Form title
+   * @param {Yar} yar - Session manager
+   * @param {string} [userId] - User ID for usage tracking
+   * @param {object} [options] - Customization options
+   */
+  async _runFormGenerationJob(
+    jobId,
+    description,
+    title,
+    yar,
+    userId,
+    options = {}
+  ) {
+    const startMessage =
+      /** @type {any} */ (options).startMessage ?? 'Starting form generation...'
+    const completedMessage =
+      /** @type {any} */ (options).completedMessage ??
+      'Form generated successfully!'
+    const errorType =
+      /** @type {any} */ (options).errorType ?? 'generation_error'
+    const defaultErrorMessage =
+      /** @type {any} */ (options).defaultErrorMessage ??
+      'We encountered an issue while generating your form. Please try again with a simpler description or contact support if the problem persists.'
+    const loggerContext =
+      /** @type {any} */ (options).loggerContext ?? 'generation'
+    const progressMapping = /** @type {any} */ (options).progressMapping ?? {
+      ai_generation: 'Creating your form with AI...',
+      analysis: 'Analysing your form requirements...',
+      design: 'Designing form structure and pages...',
+      lists: 'Creating dropdown and selection lists...',
+      components: 'Adding form fields and components...',
+      validation: 'Validating form logic and flow...',
+      refinement: 'Refining form structure and validation...',
+      finalising: 'Finalising and validating your form...'
+    }
+
     try {
       await this.setJobStatus(jobId, {
         status: 'processing',
-        message: 'Starting form generation...',
+        message: startMessage,
         startTime: new Date().toISOString(),
         step: 'starting'
       })
 
-      this.logger.info('Background AI generation started')
+      this.logger.info(`Background AI ${loggerContext} started`)
 
-      // Create progress callback that tracks real AI workflow steps
       const updateProgress = async (
         /** @type {string} */ step,
         /** @type {string} */ message,
         /** @type {object} */ details = {}
       ) => {
-        // Map AI workflow steps to user-friendly progress
-        let displayMessage = message
-        let progressStep = step
-
-        if (step === 'ai_generation') {
-          displayMessage = 'Creating your form with AI...'
-          progressStep = 'generation'
-        } else if (step === 'analysis') {
-          displayMessage = 'Analysing your form requirements...'
-          progressStep = 'analysis'
-        } else if (step === 'design') {
-          displayMessage = 'Designing form structure and pages...'
-          progressStep = 'design'
-        } else if (step === 'lists') {
-          displayMessage = 'Creating dropdown and selection lists...'
-          progressStep = 'lists'
-        } else if (step === 'components') {
-          displayMessage = 'Adding form fields and components...'
-          progressStep = 'components'
-        } else if (step === 'validation') {
-          displayMessage = 'Validating form logic and flow...'
-          progressStep = 'validation'
-        } else if (step === 'refinement') {
-          displayMessage = 'Refining form structure and validation...'
-          progressStep = 'refinement'
-        } else if (step === 'finalising') {
-          displayMessage = 'Finalising and validating your form...'
-          progressStep = 'finalising'
-        }
+        const displayMessage = progressMapping[step] ?? message
+        const progressStep = step === 'ai_generation' ? 'generation' : step
 
         await this.setJobStatus(jobId, {
           status: 'processing',
@@ -200,7 +248,7 @@ export class AIService {
 
       await this.setJobStatus(jobId, {
         status: 'processing',
-        message: 'Finalising your form...',
+        message: progressMapping.finalising,
         step: 'finalising'
       })
 
@@ -211,7 +259,7 @@ export class AIService {
 
       await this.setJobStatus(jobId, {
         status: 'completed',
-        message: 'Form generated successfully!',
+        message: completedMessage,
         completedTime: new Date().toISOString(),
         result: {
           formDefinition: result.formDefinition,
@@ -227,19 +275,17 @@ export class AIService {
         }
       })
 
-      this.logger.info('Background AI generation completed')
+      this.logger.info(`Background AI ${loggerContext} completed`)
 
       if (userId) {
         this.logger.info(
-          `AI usage for user ${userId} - Form generation completed`
+          `AI usage for user ${userId} - Form ${loggerContext} completed`
         )
       }
-    } catch (error) {
-      this.logger.error('Background AI generation failed', error)
+    } catch (/** @type {any} */ error) {
+      this.logger.error(`Background AI ${loggerContext} failed`, error)
 
-      // Create user-friendly error message
-      let userMessage =
-        'We encountered an issue while generating your form. Please try again with a simpler description or contact support if the problem persists.'
+      let userMessage = defaultErrorMessage
 
       if (error instanceof Error) {
         if (
@@ -275,7 +321,7 @@ export class AIService {
         message: userMessage,
         error: {
           message: userMessage,
-          type: 'generation_error'
+          type: errorType
         },
         failedTime: new Date().toISOString()
       })
@@ -285,7 +331,19 @@ export class AIService {
   }
 
   /**
-   * Set job status in cache (using Hapi cache with Redis backend)
+   * Generate form in background as a job
+   * @param {string} jobId - Unique job identifier
+   * @param {string} description - Form description
+   * @param {string} title - Form title
+   * @param {Yar} yar - Session manager
+   * @param {string} [userId] - User ID for usage tracking
+   */
+  async generateFormInBackground(jobId, description, title, yar, userId) {
+    return this._runFormGenerationJob(jobId, description, title, yar, userId)
+  }
+
+  /**
+   * Set job status in cache
    * @param {string} jobId - Job identifier
    * @param {object} status - Status object
    */

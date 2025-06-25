@@ -109,13 +109,6 @@
                   html: govukTextarea({
                     name: "feedback",
                     id: "feedback",
-                    label: {
-                      text: "How would you like the form to be different?",
-                      classes: "govuk-label--s"
-                    },
-                    hint: {
-                      text: "Describe what changes you'd like AI to make to improve the form"
-                    },
                     value: formValues.feedback if formValues,
                     errorMessage: formErrors.feedback
                   })
