@@ -97,7 +97,6 @@ describe('question', () => {
         question: 'Form field title',
         hintText: 'Hint text',
         optional: true,
-        largeTitle: true,
         content: '',
         shortDesc: 'shortDesc',
         items: []
@@ -105,13 +104,10 @@ describe('question', () => {
     })
 
     it('should map a component base to QuestionElements with a small title', () => {
-      expect(
-        new QuestionComponentElements(textFieldComponent, false).values
-      ).toEqual({
+      expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
         optional: true,
-        largeTitle: false,
         content: '',
         shortDesc: 'shortDesc',
         items: []

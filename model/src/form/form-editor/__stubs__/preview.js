@@ -96,28 +96,18 @@ export class QuestionPreviewElements {
    * @private
    */
   _items = []
-  _largeTitle = true
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
    * @param {BaseSettings} baseSettings
    */
-  constructor({
-    question,
-    hintText,
-    optional,
-    shortDesc,
-    items,
-    content,
-    largeTitle = true
-  }) {
+  constructor({ question, hintText, optional, shortDesc, items, content }) {
     this._question = question
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
     this._items = items
     this._content = content
-    this._largeTitle = largeTitle
   }
 
   /**
@@ -130,8 +120,7 @@ export class QuestionPreviewElements {
       optional: this._optional,
       shortDesc: this._shortDesc,
       items: this._items,
-      content: this._content,
-      largeTitle: this._largeTitle
+      content: this._content
     }
   }
 

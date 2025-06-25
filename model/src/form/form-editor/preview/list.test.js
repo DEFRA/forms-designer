@@ -298,7 +298,6 @@ describe('list', () => {
         question: 'Form field title',
         hintText: 'Hint text',
         optional: false,
-        largeTitle: true,
         content: '',
         shortDesc: 'shortDesc',
         items: [

@@ -70,6 +70,7 @@ describe('page-controller', () => {
     const pageRendererCb = jest.fn()
     const renderer = new PageRendererStub(pageRendererCb)
     const inputEvent = new InputEvent('input', { bubbles: true })
+    const changeEvent = new InputEvent('change', { bubbles: true })
 
     beforeEach(() => {
       jest.clearAllMocks()
@@ -127,6 +128,19 @@ describe('page-controller', () => {
       pagePreviewElements.headingElement.dispatchEvent(inputEvent)
       expect(pageController.pageTitle.text).toBe('New title')
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
+    })
+
+    it('should change showTitle', () => {
+      if (!pagePreviewElements.addPageHeadingElement) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.addPageHeadingElement.checked = true
+      pagePreviewElements.addPageHeadingElement.dispatchEvent(changeEvent)
+      expect(pageController.showTitle).toBe(true)
+      pagePreviewElements.addPageHeadingElement.checked = false
+      pagePreviewElements.addPageHeadingElement.dispatchEvent(changeEvent)
+      expect(pageController.showTitle).toBe(false)
+      expect(pageRendererCb).toHaveBeenCalledTimes(3)
     })
 
     it('should change the guidance', () => {

@@ -126,7 +126,7 @@ describe('page-controller', () => {
      *    definition?: FormDefinition,
      *    components?: ComponentDef[],
      *    currentPage?: Page,
-     *    pageElements?: PagePreviewElements
+     *    pageElementsInput?: PagePreviewElements
      * }} partialElements
      * @returns {{
      *  pageElements: PagePreviewElements,
@@ -276,6 +276,88 @@ describe('page-controller', () => {
       expect(pageController.components[0].model.name).toBe('markdown')
     })
 
+    describe('component title size', () => {
+      const component = buildTextFieldComponent({
+        title: 'Main title'
+      })
+      const pageWithNoTitle = buildQuestionPage({
+        title: '',
+        components: [component]
+      })
+      const pageWithSameTitle = buildQuestionPage({
+        title: 'Main title',
+        components: [component]
+      })
+      const pageWithDifferentTitle = buildQuestionPage({
+        title: 'Different title',
+        components: [component]
+      })
+      const formDefinition1 = buildDefinition({
+        pages: [pageWithNoTitle, pageWithSameTitle, pageWithDifferentTitle]
+      })
+
+      it('should be small if there are more than one component', () => {
+        const { pageController } = buildController()
+        pageController.showTitle = false
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--m'
+        )
+      })
+
+      it('should be small if add page heading is selected', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithNoTitle,
+          components: pageWithNoTitle.components,
+          definition: formDefinition1
+        })
+        pageController.showTitle = true
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--m'
+        )
+      })
+
+      it('should be large if add page heading is deselected and one component', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithNoTitle,
+          components: pageWithNoTitle.components,
+          definition: formDefinition1
+        })
+        pageController.showTitle = false
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--l'
+        )
+      })
+
+      it('should be small if title is highlighted', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithNoTitle,
+          components: pageWithNoTitle.components,
+          definition: formDefinition1
+        })
+        pageController.highlightTitle()
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--m'
+        )
+      })
+
+      it('should be large if page heading is same as component title', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithSameTitle,
+          components: pageWithSameTitle.components,
+          definition: formDefinition1
+        })
+        pageController.showTitle = true
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--l'
+        )
+      })
+    })
+
     it('should render if guidance is already there', () => {
       const { pageController } = buildController({
         currentPage: pageWithGuidance,
@@ -355,6 +437,27 @@ describe('page-controller', () => {
         text: '',
         classes: ''
       })
+    })
+
+    it('should show if title and first title are the same', () => {
+      const sameTitle = 'Both have same title'
+      const component = buildTextFieldComponent({
+        title: sameTitle
+      })
+      const page1 = buildQuestionPage({
+        title: sameTitle,
+        components: [component]
+      })
+      const definition = buildDefinition({
+        pages: [page1]
+      })
+      const { pageController } = buildController({
+        components: page1.components,
+        currentPage: page1,
+        definition
+      })
+      expect(pageController.titleAndFirstTitleSame).toBe(true)
+      expect(pageController.title).toBe('')
     })
 
     it('should toggle title and guidance should showTitle be set', () => {

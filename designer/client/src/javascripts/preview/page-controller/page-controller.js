@@ -56,11 +56,11 @@ function getTargetValue(inputEvent) {
 }
 
 /**
- * @param {InputEvent} inputEvent
+ * @param {Event} changeEvent
  * @returns {boolean}
  */
-function getTargetChecked(inputEvent) {
-  const target = /** @type {HTMLInputElement} */ (inputEvent.target)
+function getTargetChecked(changeEvent) {
+  const target = /** @type {HTMLInputElement} */ (changeEvent.target)
   return target.checked
 }
 
@@ -78,9 +78,9 @@ export class PagePreviewListeners {
 
   _listeners = {
     addPageHeadingElement: {
-      click: {
+      change: {
         /**
-         * @param {InputEvent} inputEvent
+         * @param {Event} inputEvent
          */
         handleEvent: (inputEvent) => {
           this._pageController.showTitle = getTargetChecked(inputEvent)
@@ -184,8 +184,8 @@ export class PagePreviewListeners {
       ],
       [
         this._baseElements.addPageHeadingElement,
-        this._listeners.addPageHeadingElement.click,
-        'click'
+        this._listeners.addPageHeadingElement.change,
+        'change'
       ]
     ]
   }
