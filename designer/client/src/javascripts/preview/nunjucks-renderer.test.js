@@ -110,5 +110,5 @@ describe('nunjucks-renderer', () => {
 })
 
 /**
- * @import { QuestionBaseModel, BaseSettings, QuestionElements, PageRenderContext, PagePreviewPanelMacro } from '@defra/forms-model'
+ * @import { DomElementsBase, QuestionBaseModel, BaseSettings, QuestionElements, PageRenderContext, PagePreviewPanelMacro } from '@defra/forms-model'
  */
