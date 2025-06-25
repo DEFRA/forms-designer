@@ -17,7 +17,7 @@ import {
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('page-controller', () => {
-  describe('PagePreviewHTMLElements', () => {
+  describe('PagePreviewDomElements', () => {
     it('should instantiate', () => {
       document.body.innerHTML =
         pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
@@ -25,6 +25,13 @@ describe('page-controller', () => {
       const pagePreviewElements = new PagePreviewDomElements()
       expect(pagePreviewElements.heading).toBe('Where do you live?')
       expect(pagePreviewElements.guidance).toBe('Guidance text')
+    })
+
+    it('should handle missing details', () => {
+      document.body.innerHTML = '<p>missing form</p>'
+      const pagePreviewElements = new PagePreviewDomElements()
+      expect(pagePreviewElements.guidance).toBe('')
+      expect(pagePreviewElements.heading).toBe('')
     })
   })
   describe('PagePreviewListeners', () => {
@@ -129,6 +136,25 @@ describe('page-controller', () => {
       pagePreviewElements.guidanceElement.dispatchEvent(inputEvent)
       expect(pageController.guidance.text).toBe('New guidance')
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
+    })
+
+    it('should handle missing details', () => {
+      document.body.innerHTML = '<p>missing form</p>'
+      pagePreviewElements = new PagePreviewDomElements()
+      const pageController2 = new PreviewPageController(
+        components,
+        pagePreviewElements,
+        definition,
+        renderer
+      )
+      const listener = new PagePreviewListeners(
+        pageController2,
+        pagePreviewElements
+      )
+      listener.initListeners()
+      listener.clearListeners()
+      expect(pagePreviewElements.guidance).toBe('')
+      expect(pagePreviewElements.heading).toBe('')
     })
   })
 })

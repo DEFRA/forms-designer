@@ -3,6 +3,7 @@ import {
   buildDefinition,
   buildMarkdownComponent,
   buildQuestionPage,
+  buildSummaryPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
@@ -56,5 +57,16 @@ describe('setup-page-controller', () => {
 
     const pageController = setupPageController(page, definition)
     expect(pageController).toBeInstanceOf(PreviewPageController)
+  })
+
+  it('should handle pages without components', () => {
+    document.body.innerHTML =
+      pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+
+    const page2 = buildSummaryPage({ title: 'Summary page' })
+    const definition2 = buildDefinition({ pages: [page] })
+    const pageController = setupPageController(page2, definition2)
+    expect(pageController).toBeInstanceOf(PreviewPageController)
+    expect(pageController.title).toBe('Summary page')
   })
 })

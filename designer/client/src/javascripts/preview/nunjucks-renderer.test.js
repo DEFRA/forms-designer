@@ -1,4 +1,7 @@
-import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
+import {
+  NunjucksPageRenderer,
+  NunjucksRenderer
+} from '~/src/javascripts/preview/nunjucks-renderer.js'
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
 
 jest.mock('~/src/views/preview-components/inset.njk', () => '')
@@ -13,6 +16,11 @@ describe('nunjucks-renderer', () => {
     id: 'f17b7481-60d8-4538-b54a-d3c9f84c986f',
     name: 'AbbcE',
     text: 'Question'
+  })
+  const params = /** @type {PagePreviewPanelMacro} */ ({
+    guidance: { classes: '', text: '' },
+    pageTitle: { classes: '', text: '' },
+    components: []
   })
 
   const mockSetPreviewHTML = jest.fn()
@@ -48,6 +56,28 @@ describe('nunjucks-renderer', () => {
       mockSetPreviewDOM(element)
     }
   }
+
+  /**
+   * @implements {DomElementsBase}
+   */
+  class PagePreviewMock {
+    guidance = 'guidance text'
+    heading = 'heading'
+
+    /**
+     * @param {string} value
+     */
+    setPreviewHTML(value) {
+      mockSetPreviewHTML(value)
+    }
+
+    /**
+     * @param {HTMLElement} element
+     */
+    setPreviewDOM(element) {
+      mockSetPreviewDOM(element)
+    }
+  }
   /**
    * @type {QuestionElements}
    */
@@ -60,9 +90,25 @@ describe('nunjucks-renderer', () => {
       expect(NJK.render).toHaveBeenCalledWith(template, { model })
       expect(mockSetPreviewHTML).toHaveBeenCalledWith('*** rendered ***')
     })
+
+    it('should build the html', () => {
+      const renderedHTML = NunjucksRenderer.buildHTML('example.njk', { model })
+      expect(renderedHTML).toBe('*** rendered ***')
+    })
+  })
+
+  describe('NunjucksPageRenderer', () => {
+    it('should render', () => {
+      const pagePreviewStub = new PagePreviewMock()
+      const template = 'example.njk'
+      const renderer = new NunjucksPageRenderer(pagePreviewStub)
+      renderer.render(template, params)
+      expect(NJK.render).toHaveBeenCalledWith(template, { params })
+      expect(mockSetPreviewHTML).toHaveBeenCalledWith('*** rendered ***')
+    })
   })
 })
 
 /**
- * @import { QuestionBaseModel, BaseSettings, QuestionElements } from '@defra/forms-model'
+ * @import { QuestionBaseModel, BaseSettings, QuestionElements, PageRenderContext, PagePreviewPanelMacro } from '@defra/forms-model'
  */

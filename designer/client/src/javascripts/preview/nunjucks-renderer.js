@@ -64,7 +64,7 @@ export class NunjucksRenderer {
 
   /**
    * @param {string} questionTemplate
-   * @param {RenderContext} renderContext
+   * @param {QuestionRenderContext} renderContext
    * @returns {string}
    */
   static buildHTML(questionTemplate, renderContext) {
@@ -83,7 +83,7 @@ export class NunjucksPageRenderer {
   _renderBase
 
   /**
-   * @param {PagePreviewDomElements} pagePreviewDomElements
+   * @param {DomElementsBase} pagePreviewDomElements
    */
   constructor(pagePreviewDomElements) {
     this._renderBase = new NunjucksRendererBase(pagePreviewDomElements)
