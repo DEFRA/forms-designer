@@ -87,6 +87,7 @@ export interface ListElements extends QuestionElements {
 export interface PageOverviewElements {
   heading: string
   guidance: string
+  addHeading: boolean
 }
 
 export type PreviewQuestion =

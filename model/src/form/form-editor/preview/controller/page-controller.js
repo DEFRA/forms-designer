@@ -26,6 +26,7 @@ export class PagePreviewElements {
    * @private
    */
   _page
+
   /**
    * @param {Page} page
    */
@@ -47,6 +48,10 @@ export class PagePreviewElements {
     return possibleGuidanceComponent.type === ComponentType.Markdown
       ? possibleGuidanceComponent.content
       : ''
+  }
+
+  get addHeading() {
+    return this._page.title.length > 0
   }
 }
 
@@ -96,6 +101,11 @@ export class PreviewPageController {
    */
   _guidanceComponent
   /**
+   * @type {boolean}
+   * @private
+   */
+  _showTitle = true
+  /**
    * @param {ComponentDef[]} components
    * @param {PageOverviewElements} elements
    * @param {FormDefinition} definition
@@ -117,6 +127,7 @@ export class PreviewPageController {
       PreviewPageController.getOrCreateGuidanceComponent(firstQuestion)
     this._guidanceText = elements.guidance
     this._components = this.#constructComponents(firstQuestion, questions)
+    this._showTitle = elements.addHeading
 
     this.#pageRenderer = renderer
     this.#title = elements.heading
@@ -169,7 +180,23 @@ export class PreviewPageController {
   }
 
   get guidanceText() {
+    if (!this._showTitle) {
+      return ''
+    }
     return this._guidanceText
+  }
+
+  /**
+   *
+   * @param {boolean} showTitle
+   */
+  set showTitle(showTitle) {
+    this._showTitle = showTitle
+    this.render()
+  }
+
+  get showTitle() {
+    return this._showTitle
   }
 
   get guidance() {
@@ -197,7 +224,13 @@ export class PreviewPageController {
    * @returns {string}
    */
   get title() {
-    return this.#title
+    if (!this._showTitle) {
+      return ''
+    }
+    if (this.#title.length) {
+      return this.#title
+    }
+    return 'Page heading'
   }
 
   /**

@@ -169,14 +169,17 @@ export class AutocompletePreviewElements extends QuestionPreviewElements {
 export class PagePreviewElements {
   guidance
   heading
+  addHeading
 
   /**
    * @param {string} heading
    * @param {string} guidance
+   * @param {boolean} [addHeading]
    */
-  constructor(heading, guidance = '') {
+  constructor(heading, guidance = '', addHeading = undefined) {
     this.heading = heading
     this.guidance = guidance
+    this.addHeading = addHeading ?? heading.length > 0
   }
 }
 
