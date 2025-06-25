@@ -2,6 +2,8 @@ import {
   ApiErrorCode,
   ComponentType,
   ControllerType,
+  FormDefinitionError,
+  FormDefinitionErrorType,
   hasComponents
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
@@ -19,7 +21,10 @@ import {
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
-import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
+import {
+  buildBoom409,
+  buildInvalidFormDefinitionError
+} from '~/src/lib/__stubs__/editor.js'
 import {
   addPageAndFirstQuestion,
   addQuestion,
@@ -677,6 +682,57 @@ describe('Editor v2 question details routes', () => {
       expect.anything(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError('Some other boom error', [], undefined),
+      'questionDetailsValidationFailure'
+    )
+  })
+
+  test('POST - should error if is an InvalidFormErrorType of type UniqueListItemValue from API', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionTextField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(updateQuestion).mockImplementationOnce(() => {
+      throw buildInvalidFormDefinitionError(
+        '"items[1]" contains a duplicate value',
+        [
+          {
+            id: FormDefinitionError.UniqueListItemValue,
+            detail: { path: ['items', 1], pos: 1, dupePos: 0 },
+            message: '"items[1]" contains a duplicate value',
+            type: FormDefinitionErrorType.Unique
+          }
+        ]
+      )
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: 'Short desc',
+        questionType: 'TextField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'Each item must have a unique identifier - enter a different identifier for this item.',
+        [],
+        undefined
+      ),
       'questionDetailsValidationFailure'
     )
   })
