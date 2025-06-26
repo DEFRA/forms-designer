@@ -1,6 +1,5 @@
-{% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "editor-card/macro.njk" import appEditorCard %}
-{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
 
 {% set radioIdIdx = 0 %}
 {% set radioTextIdx = 1 %}
@@ -15,11 +14,26 @@
       <circle cx="12" cy="12" r="11" fill="currentColor"></circle>
       <path d="M6 8h12M6 12h12M6 16h12" stroke="white" stroke-width="2" stroke-linecap="round"></path>
     </svg>
-    List items
+    List items <a class="govuk-body govuk-link govuk-link--no-visited-state pull-right" href="{{ editListAsTextUrl }}">Edit list as text</a>
   </h2>
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
 
-
+<details class="govuk-details">
+  <summary class="govuk-details__summary">
+    <span class="govuk-details__summary-text">
+      Date source: Manual options entry
+    </span>
+  </summary>
+  <div class="govuk-details__text">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full" style="background-color: #fff">
+        <span class="govuk-label govuk-!-display-inline-block">Re-usable list:</span>
+        {{ govukSelect(reusableList) }}
+        <a href="" onClick="return hideEditDeleteLinks()" class="govuk-button govuk-!-display-inline-block govuk-!-margin-bottom-0">Set</a>
+      </div>
+    </div>
+  </div>
+</details>
   {% if state.isReordering %}
     <ol class="app-reorderable-list" id="options-container">
     {% if state.listItems | length %}
@@ -158,3 +172,12 @@
   {% endif %}
 </div>
 {% endif %}
+
+<script>
+  function hideEditDeleteLinks() {
+    const listContainer = document.getElementById('options-container')
+    const links = listContainer.querySelectorAll('a.govuk-link')
+    links.forEach(x => x.style.display = 'none')
+    return false
+  }
+</script>

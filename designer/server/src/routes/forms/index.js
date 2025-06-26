@@ -8,6 +8,7 @@ import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answe
 import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
+import editorEditListAsText from '~/src/routes/forms/editor-v2/edit-list-as-text.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
@@ -45,6 +46,7 @@ export default [
   editorCheckAnswersSettings,
   editorCondition,
   editorConditions,
+  editorEditListAsText,
   editorError,
   editorUpload,
   editorDownload,

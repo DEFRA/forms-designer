@@ -225,7 +225,10 @@ export function overrideFormValuesForEnhancedAction(validation, state) {
  */
 export function getListDetails(state, questionFields) {
   const listItems = state?.listItems ?? []
-  const foundIdx = listItems.findIndex((x) => x.id === state?.editRow?.radioId)
+  const foundIdx =
+    typeof listItems !== 'string'
+      ? listItems.findIndex((x) => x.id === state?.editRow?.radioId)
+      : -1
   const rowNum = foundIdx > -1 ? foundIdx + 1 : listItems.length + 1
   const listName = 'list' in questionFields ? questionFields.list : ''
   return {
@@ -284,6 +287,20 @@ export function questionDetailsViewModel(
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
 
+  const reusableListItems = /** @type {ListItem[]} */ (
+    definition.lists.map((list) => ({ text: list.title, value: list.id }))
+  )
+  const reusableList = {
+    name: 'reusableList',
+    id: 'reusableList',
+    items: [/** @type {ListItem} */ ({ text: '', value: '' })].concat(
+      reusableListItems
+    ),
+    formGroup: {
+      classes: 'govuk-!-display-inline-block'
+    }
+  }
+
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -315,11 +332,13 @@ export function questionDetailsViewModel(
     deleteUrl,
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
-      getFieldComponentType(field)
+      getFieldComponentType(field),
+    editListAsTextUrl: `${urlPageBase}/question/${questionId}/edit-list/${stateId}`,
+    reusableList
   }
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, ListItem, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

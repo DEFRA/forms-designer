@@ -128,6 +128,7 @@ export const ListAction = {
   DoneReordering: 'done-reordering',
   Delete: 'delete',
   Edit: 'edit',
+  EditListAsText: 'edit-list-as-text',
   Cancel: 'cancel'
 }
 

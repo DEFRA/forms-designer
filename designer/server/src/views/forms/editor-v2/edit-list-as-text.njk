@@ -1,0 +1,53 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  backLink: backLink,
+  useNewMasthead: true
+}) %}
+
+  {% call appEditorCard({
+    title: cardTitle,
+    heading: cardHeading,
+    caption: cardCaption,
+    notification: notification,
+    errorList: errorList
+  }) %}
+
+    <form class="form" method="post">
+
+      <h2 class="govuk-heading-m">Question xx: Create and edit your list of options</h2>
+
+      {{ govukTextarea(listAsText) }}
+
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        {{ govukButton({
+          text: 'Apply'
+        }) }}
+
+        <a href="{{ backLink.href }}" class="govuk-link govuk-link--no-visited-state">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+    {% endcall %}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

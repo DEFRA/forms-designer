@@ -20,7 +20,7 @@ import {
   getComponentsOnPageFromDefinition,
   getHeaders,
   getListFromComponent,
-  mapListToAutoCompleteStr,
+  mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
 
@@ -183,7 +183,7 @@ describe('utils', () => {
     })
   })
 
-  describe('mapListToAutoCompleteStr', () => {
+  describe('mapListToTextareaStr', () => {
     it('should map a list to an autocomplete string', () => {
       const list = buildList({
         items: [
@@ -201,7 +201,7 @@ describe('utils', () => {
           })
         ]
       })
-      expect(mapListToAutoCompleteStr(list)).toEqual(
+      expect(mapListToTextareaStr(list.items)).toEqual(
         'JavaScript:javascript\r\n' +
           'TypeScript:typescript\r\n' +
           'Haskell:haskell'
@@ -209,7 +209,7 @@ describe('utils', () => {
     })
 
     it('should return an empty string for undefined', () => {
-      expect(mapListToAutoCompleteStr(undefined)).toBe('')
+      expect(mapListToTextareaStr(undefined)).toBe('')
     })
   })
 

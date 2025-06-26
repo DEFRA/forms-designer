@@ -14,7 +14,7 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
+import { buildListFromDetails, matchLists, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
@@ -118,6 +118,16 @@ export async function saveList(
     listItems ?? [],
     definition
   )
+
+  // compare lists - one from state, one from definition
+  const listId =
+    'list' in questionDetails && questionDetails.list !== ''
+      ? questionDetails.list
+      : undefined
+  const { /* additions, edits, unchanged, deletions, */ listItemsWithIds } =
+    matchLists(definition, listId, listItems)
+
+  listMapped.items = listItemsWithIds
 
   const { list, status } = await upsertList(
     formId,

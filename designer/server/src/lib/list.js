@@ -1,4 +1,4 @@
-import { randomId } from '@defra/forms-model'
+import { ConditionType, randomId } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -170,5 +170,120 @@ export async function removeUniquelyMappedListsFromPage(
 }
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
+ * @param {FormDefinition} definition
+ * @param { string | undefined } listRef
+ * @param { Item[] | undefined } listItems
+ */
+export function matchLists(definition, listRef, listItems) {
+  /**
+   * @param {Item[]} listItems
+   * @param {Item} item
+   */
+  function populateExistingId(listItems, item) {
+    const found =
+      listItems.find((i) => i.value === item.value) ??
+      listItems.find((i) => i.text === item.text)
+    return {
+      id: found?.id,
+      text: item.text,
+      value: item.value
+    }
+  }
+
+  const existingList = definition.lists.find((x) => x.id === listRef)
+  const existingListItems = existingList?.items ?? []
+
+  // TODO - add hint text into the match
+  const existingListMapped = existingListItems.map((x) => ({
+    text: x.text,
+    value: x.value
+  }))
+  const incomingListMapped =
+    listItems?.map((x) => ({ text: x.text, value: x.value })) ?? []
+
+  const existingListValues = existingListMapped.map((x) => x.value)
+  const incomingListValues = incomingListMapped.map((x) => x.value)
+
+  const additions = /** @type {Item[]} */ (
+    incomingListMapped.filter((x) => !existingListValues.includes(x.value))
+  )
+
+  const unchanged = /** @type {Item[]} */ (
+    existingListItems.filter((x) => {
+      const found = incomingListMapped.find((i) => i.value === x.value)
+      return found && found.text === x.text ? found : undefined
+    })
+  )
+
+  const edits = /** @type {Item[]} */ (
+    incomingListMapped.filter((x) => {
+      const found = existingListMapped.find((i) => i.value === x.value)
+      return found && found.text !== x.text ? found : undefined
+    })
+  )
+
+  const deletions = /** @type {Item[]} */ (
+    existingListMapped
+      .filter((x) => !incomingListValues.includes(x.value))
+      .map((x) => populateExistingId(existingListItems, x))
+  )
+
+  const listItemsWithIds = /** @type {Item[]} */ (
+    listItems?.map((x) => populateExistingId(existingListItems, x))
+  )
+
+  return { additions, edits, unchanged, deletions, listItemsWithIds }
+}
+
+/**
+ * @param {FormDefinition} definition
+ * @param {Item[]} listItems
+ * @param {string} listName
+ */
+export function usedInConditions(definition, listItems, listName) {
+  const conditions = /** @type {ConditionWrapperV2[]} */ (definition.conditions)
+  if (conditions.length === 0) {
+    return []
+  }
+
+  const listItemIds = listItems
+    .map((item) => item.id)
+    .filter((x) => x !== undefined)
+
+  /*
+  const listRefConditions = conditions
+    .filter(cond =>
+      cond.items.some(item =>
+        'type' in item ? item.type === ConditionType.ListItemRef &&
+          // @ts-expect-error - itemId takes some unnecessary coercing of types to satisfy tslint
+          listItemIds.includes(item.value.itemId): false))
+  */
+
+  // TODO - write this better
+  const breakableConditions = conditions.filter((cond) =>
+    cond.items.some((item) =>
+      'type' in item ? item.type === ConditionType.ListItemRef : false
+    )
+  )
+
+  const brokenConditions = []
+  const listRows = definition.lists.find((x) => x.id === listName)?.items
+  for (const itemId of listItemIds) {
+    for (const condition of breakableConditions) {
+      // @ts-expect-error - itemId takes some unnecessary coercing of types to satisfy tslint
+      if (condition.items.some((item) => item.value.itemId === itemId)) {
+        brokenConditions.push({
+          displayName: condition.displayName,
+          itemId,
+          entryText: listRows?.find((x) => x.id === itemId)?.text
+        })
+      }
+    }
+  }
+
+  return brokenConditions
+}
+
+/**
+ * @import { ConditionWrapperV2, FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
  */

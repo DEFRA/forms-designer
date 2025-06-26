@@ -12,7 +12,7 @@ import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
 import {
   getListFromComponent,
   insertValidationErrors,
-  mapListToAutoCompleteStr
+  mapListToTextareaStr
 } from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
@@ -118,7 +118,8 @@ export const baseSchema = Joi.object().keys({
       otherwise: Joi.forbidden()
     }
   ),
-  jsEnabled: questionDetailsFullSchema.jsEnabledSchema
+  jsEnabled: questionDetailsFullSchema.jsEnabledSchema,
+  reusableList: Joi.string().optional().allow('')
 })
 
 /**
@@ -325,9 +326,7 @@ export function getFieldValue(
 
   if (validationResult || validationResult === '') {
     if (fieldName === 'autoCompleteOptions') {
-      return mapListToAutoCompleteStr(
-        /** @type {List} */ ({ items: validationResult })
-      )
+      return mapListToTextareaStr(/** @type {Item[]} */ (validationResult))
     }
     return validationResult
   }
@@ -342,8 +341,8 @@ export function getFieldValue(
     case 'shortDescription':
       return questionFields?.shortDescription
     case 'autoCompleteOptions':
-      return mapListToAutoCompleteStr(
-        getListFromComponent(questionFields, definition)
+      return mapListToTextareaStr(
+        getListFromComponent(questionFields, definition)?.items
       )
   }
   return undefined
@@ -486,6 +485,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
