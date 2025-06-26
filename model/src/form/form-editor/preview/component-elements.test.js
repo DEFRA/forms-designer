@@ -3,8 +3,10 @@ import { ComponentElements } from '~/src/form/form-editor/preview/component-elem
 
 describe('component-elements', () => {
   it('should instantiate', () => {
-    const elements = new ComponentElements(buildTextFieldComponent(), false)
-    expect(elements.values.largeTitle).toBe(false)
+    const elements = new ComponentElements(
+      buildTextFieldComponent({ title: 'Component title' })
+    )
+    expect(elements.values.question).toBe('Component title')
   })
 
   it('should cover unhappy path', () => {

@@ -16,7 +16,6 @@ import { type UkAddressQuestion } from '~/src/form/form-editor/preview/uk-addres
 import { type ListElement } from '~/src/form/form-editor/types.js'
 export { type QuestionBaseModel } from '~/src/form/form-editor/macros/types.js'
 export interface BaseSettings {
-  largeTitle: boolean
   question: string
   hintText: string
   optional: boolean
@@ -41,18 +40,30 @@ export type ListenerRow = [
   keyof HTMLElementEventMap
 ]
 
-export interface QuestionElements {
-  readonly values: BaseSettings
+export interface DomElementsBase {
+  readonly values?: BaseSettings
+  autocompleteOptions?: string
   setPreviewHTML(value: string): void
   setPreviewDOM(element: HTMLElement): void
 }
+
+export interface QuestionElements extends DomElementsBase {
+  readonly values: BaseSettings
+}
+
 export interface AutocompleteElements extends QuestionElements {
   autocompleteOptions: string
 }
 
-export interface RenderContext {
+export interface QuestionRenderContext {
   model: QuestionBaseModel
 }
+
+export interface PageRenderContext {
+  params: PagePreviewPanelMacro
+}
+
+export type RenderContext = QuestionRenderContext | PageRenderContext
 
 export interface HTMLBuilder {
   buildHTML(questionTemplate: string, renderContext: RenderContext): string
@@ -66,6 +77,8 @@ export interface PageRenderer {
   render(pageTemplate: string, pagePreview: PagePreviewPanelMacro): void
 }
 
+export type Renderer = QuestionRenderer | PageRenderer
+
 export interface ListElements extends QuestionElements {
   afterInputsHTML: string
 }
@@ -73,6 +86,7 @@ export interface ListElements extends QuestionElements {
 export interface PageOverviewElements {
   heading: string
   guidance: string
+  addHeading: boolean
 }
 
 export type PreviewQuestion =

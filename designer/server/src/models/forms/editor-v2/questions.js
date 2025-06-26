@@ -311,7 +311,11 @@ function buildViewModelData(metadata, pageIdx, pageId) {
  */
 export function getPreviewModel(page, definition, guidance = '') {
   const components = hasComponents(page) ? page.components : []
-  const elements = { heading: page.title, guidance }
+  const elements = {
+    heading: page.title,
+    guidance,
+    addHeading: page.title.length > 0
+  }
 
   return new PreviewPageController(components, elements, definition, {
     /**
@@ -379,6 +383,10 @@ export function questionsViewModel(
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields,
     previewModel: getPreviewModel(page, definition, fields.guidanceText.value),
+    preview: {
+      page: JSON.stringify(page),
+      definition: JSON.stringify(definition)
+    },
     cardTitle,
     cardCaption: pageHeading,
     navigation,

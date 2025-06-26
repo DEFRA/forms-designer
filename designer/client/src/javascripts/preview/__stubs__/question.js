@@ -310,7 +310,7 @@ export const questionDetailsLeftPanelHTML =
   questionDetailsLeftPanelBuilder(listItemsHTML)
 
 export const questionDetailsPreviewHTML =
-  '<div class="border-left-container-shorttext" id="question-preview-content"><div id="question-preview-inner"></div></div>'
+  '<div class="border-left-container-shorttext" id="preview-panel-content"><div id="preview-panel-inner"></div></div>'
 
 /**
  *
@@ -358,7 +358,7 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
 
         <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview">
           <!-- Page Preview Content -->
-          <div class="border-left-container-shorttext" id="question-preview-content">
+          <div class="border-left-container-shorttext" id="preview-panel-content">
             <div class="govuk-form-group">
               <fieldset class="govuk-fieldset" aria-describedby="radioInputField-hint">
                 <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">Question title</legend>

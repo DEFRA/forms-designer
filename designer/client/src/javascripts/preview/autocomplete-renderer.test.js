@@ -74,8 +74,8 @@ describe('nunjucks-renderer', () => {
   const questionElementMock = new QuestionElementMock()
   describe('AutocompleteRenderer', () => {
     document.body.innerHTML = `
-      <div class="border-left-container-shorttext" id="question-preview-content">
-          <div id="question-preview-inner">
+      <div class="border-left-container-shorttext" id="preview-panel-content">
+          <div id="preview-panel-inner">
             <div class="govuk-form-group">
               <label class="govuk-label" for="autoCompleteField">
                 Start typing to select an option

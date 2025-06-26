@@ -26,6 +26,7 @@ export class PagePreviewElements {
    * @private
    */
   _page
+
   /**
    * @param {Page} page
    */
@@ -47,6 +48,10 @@ export class PagePreviewElements {
     return possibleGuidanceComponent.type === ComponentType.Markdown
       ? possibleGuidanceComponent.content
       : ''
+  }
+
+  get addHeading() {
+    return this._page.title.length > 0
   }
 }
 
@@ -96,6 +101,11 @@ export class PreviewPageController {
    */
   _guidanceComponent
   /**
+   * @type {boolean}
+   * @private
+   */
+  _showTitle = true
+  /**
    * @param {ComponentDef[]} components
    * @param {PageOverviewElements} elements
    * @param {FormDefinition} definition
@@ -103,11 +113,7 @@ export class PreviewPageController {
    */
   constructor(components, elements, definition, renderer) {
     const questions = components.map(
-      mapComponentToPreviewQuestion(
-        questionRenderer,
-        definition,
-        elements.heading.length > 0
-      )
+      mapComponentToPreviewQuestion(questionRenderer, definition)
     )
     const firstQuestion = /** @type { Markdown | undefined | Question }  */ (
       questions.shift()
@@ -117,6 +123,7 @@ export class PreviewPageController {
       PreviewPageController.getOrCreateGuidanceComponent(firstQuestion)
     this._guidanceText = elements.guidance
     this._components = this.#constructComponents(firstQuestion, questions)
+    this._showTitle = elements.addHeading
 
     this.#pageRenderer = renderer
     this.#title = elements.heading
@@ -156,10 +163,67 @@ export class PreviewPageController {
       ...this._components
     ])
 
-    return componentsWithGuidance.map((component) => ({
-      model: component.renderInput,
-      questionType: component.componentType
-    }))
+    return componentsWithGuidance.map((component) => {
+      return {
+        model: this._overrideComponentHeading(component),
+        questionType: component.componentType
+      }
+    })
+  }
+
+  /**
+   * @returns {boolean}
+   */
+  get showLargeTitle() {
+    const componentsLength =
+      this._components.length + this._guidanceComponents.length
+
+    if (componentsLength > 1 || this._highlighted === 'title') {
+      return false
+    }
+    // |_ one component and title not highlighted
+    if (this.#title.trim() === this._components[0].question.trim()) {
+      return true
+    }
+    // titles not the same
+
+    return !this._showTitle // add page heading deselected?
+  }
+
+  /**
+   * @param {PreviewComponent} component
+   * @returns {QuestionBaseModel}
+   */
+  _overrideComponentHeading(component) {
+    const largeTitle = this.showLargeTitle
+
+    const fieldset = component.renderInput.fieldset
+      ? {
+          fieldset: {
+            legend: {
+              ...component.renderInput.fieldset.legend,
+              classes: largeTitle
+                ? 'govuk-fieldset__legend--l'
+                : 'govuk-fieldset__legend--m'
+            }
+          }
+        }
+      : {}
+
+    const label = component.renderInput.label
+      ? {
+          label: {
+            ...component.renderInput.label,
+            classes: largeTitle ? 'govuk-label--l' : 'govuk-label--m'
+          }
+        }
+      : {}
+
+    return {
+      ...component.renderInput,
+      ...fieldset,
+      ...label
+    }
   }
 
   set guidanceText(text) {
@@ -169,7 +233,23 @@ export class PreviewPageController {
   }
 
   get guidanceText() {
+    if (!this._showTitle) {
+      return ''
+    }
     return this._guidanceText
+  }
+
+  /**
+   *
+   * @param {boolean} showTitle
+   */
+  set showTitle(showTitle) {
+    this._showTitle = showTitle
+    this.render()
+  }
+
+  get showTitle() {
+    return this._showTitle
   }
 
   get guidance() {
@@ -194,10 +274,28 @@ export class PreviewPageController {
   }
 
   /**
+   * @returns {boolean}
+   */
+  get titleAndFirstTitleSame() {
+    return (
+      this._components.length > 0 &&
+      this.#title.trim() === this._components[0].question.trim() &&
+      this.components.length === 1 &&
+      this._highlighted !== 'title'
+    )
+  }
+
+  /**
    * @returns {string}
    */
   get title() {
-    return this.#title
+    if (!this._showTitle || this.titleAndFirstTitleSame) {
+      return ''
+    }
+    if (this.#title.length) {
+      return this.#title
+    }
+    return 'Page heading'
   }
 
   /**
@@ -269,6 +367,7 @@ export class PreviewPageController {
 /**
  * @import { PageRenderer, PageOverviewElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
+ * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
  * @import { FormDefinition, Page } from '~/src/form/form-definition/types.js'
  * @import { ComponentDef, MarkdownComponent } from '~/src/components/types.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'

@@ -1,23 +1,34 @@
 // @ts-expect-error no types set for accessible autocomplete
 import accessibleAutocomplete from 'accessible-autocomplete'
 
-import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
+import { NunjucksRendererBase } from '~/src/javascripts/preview/nunjucks-renderer.js'
 
 /**
  * @implements {QuestionRenderer}
  */
-export class AutocompleteRenderer extends NunjucksRenderer {
+export class AutocompleteRenderer {
+  /**
+   * @type {NunjucksRendererBase}
+   * @protected
+   */
+  _renderBase
+  /**
+   * @param {QuestionElements} questionElements
+   */
+  constructor(questionElements) {
+    this._renderBase = new NunjucksRendererBase(questionElements)
+  }
+
   /**
    * @param {string} questionTemplate
    * @param {QuestionBaseModel} questionBaseModel
-   * @protected
    */
-  _render(questionTemplate, questionBaseModel) {
+  render(questionTemplate, questionBaseModel) {
     /**
      * @type {RenderContext}
      */
     const renderContext = { model: questionBaseModel }
-    const html = NunjucksRenderer.buildHTML(questionTemplate, renderContext)
+    const html = NunjucksRendererBase.buildHTML(questionTemplate, renderContext)
     const autoCompletePreviewContainer = /** @type {HTMLDivElement} */ (
       document.createElement('div')
     )
@@ -36,10 +47,10 @@ export class AutocompleteRenderer extends NunjucksRenderer {
       autoCompletePreviewContainer.firstElementChild
     )
 
-    this._questionElements.setPreviewDOM(innerEL)
+    this._renderBase.questionElements.setPreviewDOM(innerEL)
   }
 }
 
 /**
- * @import { QuestionRenderer, QuestionBaseModel, RenderContext } from '@defra/forms-model'
+ * @import { QuestionRenderer, QuestionBaseModel, RenderContext, QuestionElements } from '@defra/forms-model'
  */

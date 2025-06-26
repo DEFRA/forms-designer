@@ -15,10 +15,23 @@ env.addFilter('markdown', markdown)
  */
 export default function (source) {
   // @ts-expect-error
-  const name = path.basename(this.resourcePath)
+  const resourcePath = /** @type {string} */ (this.resourcePath)
+  // here we're splitting the path e.g. .../preview-components/autocompletefield.njk
+  const pathArray = resourcePath.split(path.sep)
+  // ['preview-components', 'autocompletefield.njk']
+  // Next we pop the nth term of the sequence and start a new sequence with this as a_1
+  const paths = [pathArray.pop()]
+  // pathArray = [...,'preview-components'], paths = ['autocompletefield.njk']
+  // Then we pop n_{-1} and prepend this to the paths sequence
+  paths.unshift(pathArray.pop())
+  // pathArray = [..., 'preview-components'], paths = ['preview-components','autocompletefield.njk']
+
+  // Finally we return the sequence as a path
+  const name = paths.join('/')
+  // name = 'preview-components/autocompletefield.njk'
 
   return precompileString(source, {
     env,
-    name: 'preview-components/' + name
+    name
   })
 }

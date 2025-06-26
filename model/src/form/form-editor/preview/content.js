@@ -12,10 +12,9 @@ export class ContentElements extends ComponentElements {
   _component
   /**
    * @param {Exclude<ContentComponentsDef, ListComponent>} component
-   * @param {boolean} largeTitle
    */
-  constructor(component, largeTitle = true) {
-    super(component, largeTitle)
+  constructor(component) {
+    super(component)
     this._component = component
   }
 

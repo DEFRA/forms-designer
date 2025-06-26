@@ -1,3 +1,43 @@
+export class NunjucksRendererBase {
+  /**
+   * @type {jest.Mock<void, [string, RenderContext]>}
+   */
+  _renderMock = jest.fn()
+  /**
+   * @type {DomElementsBase}
+   * @protected
+   */
+  _questionElements
+
+  /**
+   * @param {DomElementsBase} questionElements
+   */
+  constructor(questionElements) {
+    this._questionElements = questionElements
+  }
+
+  /**
+   * @param {string} questionTemplate
+   * @param {RenderContext} renderContext
+   */
+  render(questionTemplate, renderContext) {
+    this._renderMock(questionTemplate, renderContext)
+  }
+
+  get questionElements() {
+    return this._questionElements
+  }
+
+  /**
+   * @param {string} _questionTemplate
+   * @param {RenderContext} _renderContext
+   * @returns {string}
+   */
+  static buildHTML(_questionTemplate, _renderContext) {
+    return '**** BUILT HTML ****'
+  }
+}
+
 /**
  * @implements {QuestionRenderer}
  */
@@ -17,14 +57,31 @@ export class NunjucksRenderer {
 
   /**
    * @returns {string}
-   * @param {string} _questionTemplate
-   * @param {RenderContext} _renderContext
+   * @param {string} questionTemplate
+   * @param {RenderContext} renderContext
    */
-  static buildHTML(_questionTemplate, _renderContext) {
-    return '**** BUILT HTML ****'
+  static buildHTML(questionTemplate, renderContext) {
+    return NunjucksRendererBase.buildHTML(questionTemplate, renderContext)
   }
 }
 
 /**
- * @import { QuestionRenderer, QuestionElements, QuestionBaseModel, RenderContext } from '@defra/forms-model'
+ * @implements {PageRenderer}
+ */
+export class NunjucksPageRenderer {
+  /**
+   * @type {jest.Mock<void, [string, PagePreviewPanelMacro]>}
+   */
+  _renderMock = jest.fn()
+
+  /**
+   * @param {string} questionTemplate
+   * @param {PagePreviewPanelMacro} pagePreviewPanelMacro
+   */
+  render(questionTemplate, pagePreviewPanelMacro) {
+    this._renderMock(questionTemplate, pagePreviewPanelMacro)
+  }
+}
+/**
+ * @import { QuestionRenderer, QuestionElements, QuestionBaseModel, RenderContext, PageRenderer, PagePreviewPanelMacro, DomElementsBase } from '@defra/forms-model'
  */

@@ -1,4 +1,5 @@
 import {
+  buildDateComponent,
   buildList,
   buildListItem,
   buildMarkdownComponent,
@@ -14,6 +15,30 @@ import {
   PreviewPageController
 } from '~/src/form/form-editor/preview/controller/page-controller.js'
 
+/**
+ * Overrides the default to
+ */
+class PagePreviewElementsWithHeading extends PagePreviewElements {
+  /**
+   * @type {boolean}
+   * @private
+   */
+  _addHeading
+
+  /**
+   * @param {Page} page
+   * @param {boolean} addHeading
+   */
+  constructor(page, addHeading) {
+    super(page)
+    this._addHeading = addHeading
+  }
+
+  get addHeading() {
+    return this._addHeading
+  }
+}
+
 describe('page-controller', () => {
   afterEach(() => {
     jest.resetAllMocks()
@@ -28,7 +53,20 @@ describe('page-controller', () => {
       const pagePreviewElements = new PagePreviewElements(pageQuestion)
       expect(pagePreviewElements.heading).toBe('Page title')
       expect(pagePreviewElements.guidance).toBe('')
+      expect(pagePreviewElements.addHeading).toBe(true)
     })
+
+    it('should map an empty page to PagePreviewElements', () => {
+      const pageQuestion = buildQuestionPage({
+        title: '',
+        components: []
+      })
+      const pagePreviewElements = new PagePreviewElements(pageQuestion)
+      expect(pagePreviewElements.heading).toBe('')
+      expect(pagePreviewElements.guidance).toBe('')
+      expect(pagePreviewElements.addHeading).toBe(false)
+    })
+
     it('should map a page  with guidance to PagePreviewElements', () => {
       const pageQuestion = buildQuestionPage({
         title: 'Page title',
@@ -43,6 +81,7 @@ describe('page-controller', () => {
       expect(pagePreviewElements.guidance).toBe('# This is a heading')
     })
   })
+
   describe('PreviewPageController', () => {
     const pageRenderMock = jest.fn()
     const renderer = new PageRendererStub(pageRenderMock)
@@ -81,12 +120,14 @@ describe('page-controller', () => {
       pages: [pageWithGuidance],
       lists: [list]
     })
+
     /**
      *
      * @param {{
      *    definition?: FormDefinition,
      *    components?: ComponentDef[],
-     *    currentPage?: Page
+     *    currentPage?: Page,
+     *    pageElementsInput?: PagePreviewElements
      * }} partialElements
      * @returns {{
      *  pageElements: PagePreviewElements,
@@ -97,12 +138,13 @@ describe('page-controller', () => {
     const buildController = ({
       currentPage = page,
       definition = formDefinition,
-      components = [textFieldComponent, listComponent]
+      components = [textFieldComponent, listComponent],
+      pageElementsInput = undefined
     } = {}) => {
       const pageRenderMock = jest.fn()
       const renderer = new PageRendererStub(pageRenderMock)
-      const pageElements = new PagePreviewElements(currentPage)
-
+      const pageElements =
+        pageElementsInput ?? new PagePreviewElements(currentPage)
       const pageController = new PreviewPageController(
         components,
         pageElements,
@@ -235,6 +277,93 @@ describe('page-controller', () => {
       expect(pageController.components[0].model.name).toBe('markdown')
     })
 
+    describe('component title size', () => {
+      const component = buildTextFieldComponent({
+        title: 'Main title'
+      })
+      const dateInputComponent = buildDateComponent({
+        title: 'Main title'
+      })
+      const pageWithNoTitle = buildQuestionPage({
+        title: '',
+        components: [dateInputComponent]
+      })
+      const pageWithSameTitle = buildQuestionPage({
+        title: 'Main title',
+        components: [component]
+      })
+      const pageWithDifferentTitle = buildQuestionPage({
+        title: 'Different title',
+        components: [component]
+      })
+      const formDefinition1 = buildDefinition({
+        pages: [pageWithNoTitle, pageWithSameTitle, pageWithDifferentTitle]
+      })
+
+      it('should be small if there are more than one component', () => {
+        const { pageController } = buildController()
+        pageController.showTitle = false
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--m'
+        )
+        expect(
+          pageController.components[1].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--m')
+      })
+
+      it('should be small if add page heading is selected', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithNoTitle,
+          components: pageWithNoTitle.components,
+          definition: formDefinition1
+        })
+        pageController.showTitle = true
+
+        expect(
+          pageController.components[0].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--m')
+      })
+
+      it('should be large if add page heading is deselected and one component', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithNoTitle,
+          components: pageWithNoTitle.components,
+          definition: formDefinition1
+        })
+        pageController.showTitle = false
+        expect(
+          pageController.components[0].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--l')
+      })
+
+      it('should be small if title is highlighted', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithNoTitle,
+          components: pageWithNoTitle.components,
+          definition: formDefinition1
+        })
+        pageController.highlightTitle()
+
+        expect(
+          pageController.components[0].model.fieldset?.legend.classes
+        ).toBe('govuk-fieldset__legend--m')
+      })
+
+      it('should be large if page heading is same as component title', () => {
+        const { pageController } = buildController({
+          currentPage: pageWithSameTitle,
+          components: pageWithSameTitle.components,
+          definition: formDefinition1
+        })
+        pageController.showTitle = true
+
+        expect(pageController.components[0].model.label?.classes).toBe(
+          'govuk-label--l'
+        )
+      })
+    })
+
     it('should render if guidance is already there', () => {
       const { pageController } = buildController({
         currentPage: pageWithGuidance,
@@ -289,6 +418,93 @@ describe('page-controller', () => {
       )
 
       expect(pageController.pageTitle).toEqual({
+        text: '',
+        classes: ''
+      })
+    })
+
+    it('should hide title and guidance should addHeading be switched off', () => {
+      const elements = new PagePreviewElementsWithHeading(
+        pageWithGuidance,
+        false
+      )
+      const { pageController } = buildController({
+        currentPage: pageWithGuidance,
+        definition: formDefinitionWithGuidance,
+        components: pageWithGuidance.components,
+        pageElementsInput: elements
+      })
+
+      expect(pageController.pageTitle).toEqual({
+        text: '',
+        classes: ''
+      })
+      expect(pageController.guidance).toEqual({
+        text: '',
+        classes: ''
+      })
+    })
+
+    it('should show if title and first title are the same', () => {
+      const sameTitle = 'Both have same title'
+      const component = buildTextFieldComponent({
+        title: sameTitle
+      })
+      const page1 = buildQuestionPage({
+        title: sameTitle,
+        components: [component]
+      })
+      const definition = buildDefinition({
+        pages: [page1]
+      })
+      const { pageController } = buildController({
+        components: page1.components,
+        currentPage: page1,
+        definition
+      })
+      expect(pageController.titleAndFirstTitleSame).toBe(true)
+      expect(pageController.title).toBe('')
+    })
+
+    it('should toggle title and guidance should showTitle be set', () => {
+      const elements = new PagePreviewElementsWithHeading(
+        pageWithGuidance,
+        false
+      )
+      const { pageController, pageRenderMock } = buildController({
+        currentPage: pageWithGuidance,
+        definition: formDefinitionWithGuidance,
+        components: pageWithGuidance.components,
+        pageElementsInput: elements
+      })
+
+      expect(pageController.showTitle).toBe(false)
+      pageController.showTitle = true
+      expect(pageController.showTitle).toBe(true)
+      expect(pageController.title).toBe(pageTitle)
+      pageController.showTitle = false
+      expect(pageController.title).toBe('')
+      expect(pageRenderMock).toHaveBeenCalledTimes(2)
+    })
+
+    it('should show title and guidance should addHeading be switched on', () => {
+      const elements = new PagePreviewElementsWithHeading(
+        buildQuestionPage({ title: '' }),
+        true
+      )
+      const pageController = new PreviewPageController(
+        [textFieldComponent],
+        elements,
+        buildDefinition({
+          pages: [buildQuestionPage({ components: [textFieldComponent] })]
+        }),
+        renderer
+      )
+      expect(pageController.pageTitle).toEqual({
+        text: 'Page heading',
+        classes: ''
+      })
+      expect(pageController.guidance).toEqual({
         text: '',
         classes: ''
       })
