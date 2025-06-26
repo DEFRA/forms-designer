@@ -10,7 +10,8 @@ import {
 import {
   type Page,
   type PageFileUpload,
-  type PageQuestion
+  type PageQuestion,
+  type PageSummary
 } from '~/src/form/form-definition/types.js'
 import { ComponentType, ControllerType } from '~/src/index.js'
 import { ControllerTypes } from '~/src/pages/controller-types.js'
@@ -350,13 +351,13 @@ describe('helpers', () => {
 
     it('should return page title from first component if not set on page', () => {
       const page: PageQuestion = {
-        title: 'My page title',
+        title: '',
         path: '/empty-page',
         components,
         next: [],
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
       }
-      expect(getPageTitle(page)).toBe('My page title')
+      expect(getPageTitle(page)).toBe('My first component')
     })
 
     it('should return unknown title if no components and no page title set', () => {
@@ -366,6 +367,16 @@ describe('helpers', () => {
         components: [],
         next: [],
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getPageTitle(page)).toBe('Page title unknown')
+    })
+
+    it('should return unknown title if components missing and no page title set', () => {
+      const page: PageSummary = {
+        title: '',
+        path: '/empty-page',
+        id: '0f711e08-3801-444d-8e37-a88867c48f04',
+        controller: ControllerType.Summary
       }
       expect(getPageTitle(page)).toBe('Page title unknown')
     })
