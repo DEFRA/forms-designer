@@ -193,6 +193,11 @@ export function matchLists(definition, listRef, listItems) {
   const existingList = definition.lists.find((x) => x.id === listRef)
   const existingListItems = existingList?.items ?? []
 
+  const listItemsWithIds = /** @type {Item[]} */ (
+    listItems?.map((x) => populateExistingId(existingListItems, x))
+  )
+
+  /*
   // TODO - add hint text into the match
   const existingListMapped = existingListItems.map((x) => ({
     text: x.text,
@@ -204,35 +209,24 @@ export function matchLists(definition, listRef, listItems) {
   const existingListValues = existingListMapped.map((x) => x.value)
   const incomingListValues = incomingListMapped.map((x) => x.value)
 
-  const additions = /** @type {Item[]} */ (
-    incomingListMapped.filter((x) => !existingListValues.includes(x.value))
+  const additions = incomingListMapped.filter((x) => !existingListValues.includes(x.value)
   )
 
-  const unchanged = /** @type {Item[]} */ (
-    existingListItems.filter((x) => {
+  const unchanged = existingListItems.filter((x) => {
       const found = incomingListMapped.find((i) => i.value === x.value)
       return found && found.text === x.text ? found : undefined
     })
-  )
 
-  const edits = /** @type {Item[]} */ (
-    incomingListMapped.filter((x) => {
+  const edits = incomingListMapped.filter((x) => {
       const found = existingListMapped.find((i) => i.value === x.value)
       return found && found.text !== x.text ? found : undefined
     })
-  )
 
-  const deletions = /** @type {Item[]} */ (
-    existingListMapped
+  const deletions = existingListMapped
       .filter((x) => !incomingListValues.includes(x.value))
       .map((x) => populateExistingId(existingListItems, x))
-  )
-
-  const listItemsWithIds = /** @type {Item[]} */ (
-    listItems?.map((x) => populateExistingId(existingListItems, x))
-  )
-
-  return { additions, edits, unchanged, deletions, listItemsWithIds }
+  */
+  return { /* additions, edits, unchanged, deletions, */ listItemsWithIds }
 }
 
 /**
