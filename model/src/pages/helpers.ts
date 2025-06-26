@@ -163,7 +163,13 @@ export function getPageTitle(page: Page) {
   if (page.title !== '') {
     return page.title
   }
-  return hasComponents(page) && page.components.length > 0
-    ? page.components[0].title
-    : 'Page title unknown'
+  if (hasComponents(page) && page.components.length > 0) {
+    const firstComp = page.components.find(
+      (c) => c.type !== ComponentType.Markdown
+    )
+    if (firstComp) {
+      return firstComp.title
+    }
+  }
+  return 'Page title unknown'
 }
