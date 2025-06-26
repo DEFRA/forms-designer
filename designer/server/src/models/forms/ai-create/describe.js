@@ -25,8 +25,17 @@ import { ROUTE_PATH_CREATE_METHOD } from '~/src/routes/forms/ai-create/method.js
 /**
  * @param {FormMetadata} metadata
  * @param {FormValidation} [validation]
+ * @param {string} [successMessage]
+ * @param {string} [errorMessage]
+ * @param {object} [gdsAnalysis]
  */
-export function describeViewModel(metadata, validation) {
+export function describeViewModel(
+  metadata,
+  validation,
+  successMessage,
+  errorMessage,
+  gdsAnalysis
+) {
   const pageTitle = 'Describe the form you want to create'
   const { formValues, formErrors } = validation ?? {}
 
@@ -43,6 +52,9 @@ export function describeViewModel(metadata, validation) {
     errorList: buildErrorList(formErrors, ['formDescription']),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    successMessage,
+    errorMessage,
+    gdsAnalysis,
     field: {
       id: 'formDescription',
       name: 'formDescription',

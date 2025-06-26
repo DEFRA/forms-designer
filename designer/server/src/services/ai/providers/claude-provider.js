@@ -532,7 +532,7 @@ Original request: ${description}`
 
       const userMessage = `Create a form based on this description: ${description}
 
-Start by analyzing the requirements using the analyse_form_requirements tool.`
+Start by analysing the requirements using the analyse_form_requirements tool.`
 
       const tools = this.createAgenticTools()
 
@@ -684,8 +684,6 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
               if (toolUse.name === 'finalise_form_definition') {
                 const rawForm = toolUse.input
 
-                // Apply ResponseParser fixes for consistency with direct route
-                // Convert to JSON string first, then parse through ResponseParser
                 const jsonString = JSON.stringify(rawForm, null, 2)
                 const candidateForm =
                   this.responseParser.parseFormDefinition(jsonString)
@@ -700,7 +698,6 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
                     'AI Workflow Complete - Form definition finalized and validated'
                   )
 
-                  // Add successful result
                   toolResults.push({
                     tool_use_id: toolUse.id,
                     type: 'tool_result',
@@ -747,7 +744,6 @@ Start by analyzing the requirements using the analyse_form_requirements tool.`
                   })
                 }
               } else {
-                // For other tools, provide encouraging feedback to continue
                 let toolResult = ''
 
                 switch (toolUse.name) {

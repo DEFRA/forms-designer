@@ -331,6 +331,135 @@ export class AIService {
   }
 
   /**
+   * Analyze form description against GDS guidelines and provide feedback
+   * @param {string} description - Form description to analyze
+   * @returns {Promise<{isGood: boolean, feedback: Array<{issue: string, suggestion: string}>, overallScore: number}>}
+   */
+  async analyzeFormDescription(description) {
+    if (!this.isInitialized) {
+      throw new AIServiceError('AI service not initialised')
+    }
+
+    try {
+      const analysisPrompt =
+        this.components.promptBuilder.buildGDSAnalysisPrompt(description)
+
+      const response = await this.components.aiProvider.generate(analysisPrompt)
+
+      const jsonMatch = /\{[\s\S]*\}/.exec(response.content)
+      if (!jsonMatch) {
+        throw new Error('Invalid response format from AI analysis')
+      }
+
+      const analysis = JSON.parse(jsonMatch[0])
+
+      if (
+        typeof analysis.isGood !== 'boolean' ||
+        typeof analysis.overallScore !== 'number' ||
+        !Array.isArray(analysis.feedback)
+      ) {
+        throw new Error('Invalid analysis response structure')
+      }
+
+      this.logger.info('Form description analysis completed', {
+        score: analysis.overallScore,
+        issuesFound: analysis.feedback.length
+      })
+
+      return analysis
+    } catch (error) {
+      this.logger.error('Form description analysis failed', error)
+
+      return {
+        isGood: true,
+        overallScore: 7,
+        feedback: []
+      }
+    }
+  }
+
+  /**
+   * Analyze and refine form description in a single call (for server-side efficiency)
+   * @param {string} description - Form description to analyze and refine
+   * @returns {Promise<{analysis: {isGood: boolean, feedback: Array<{issue: string, suggestion: string}>, overallScore: number}, refinedDescription: string}>}
+   */
+  async analyseAndRefineDescription(description) {
+    if (!this.isInitialized) {
+      throw new AIServiceError('AI service not initialised')
+    }
+
+    try {
+      const analysis = await this.analyzeFormDescription(description)
+
+      let refinedDescription = description
+      if (analysis.feedback.length > 0) {
+        refinedDescription = await this.refineFormDescription(
+          description,
+          analysis.feedback
+        )
+      }
+
+      this.logger.info('Form description analyzed and refined', {
+        score: analysis.overallScore,
+        issuesFound: analysis.feedback.length,
+        wasRefined: refinedDescription !== description
+      })
+
+      return {
+        analysis,
+        refinedDescription
+      }
+    } catch (error) {
+      this.logger.error(
+        'Form description analysis and refinement failed',
+        error
+      )
+
+      return {
+        analysis: {
+          isGood: true,
+          overallScore: 7,
+          feedback: []
+        },
+        refinedDescription: description
+      }
+    }
+  }
+
+  /**
+   * Refine form description based on GDS feedback
+   * @param {string} description - Original form description
+   * @param {Array<{issue: string, suggestion: string}>} feedback - GDS feedback items
+   * @returns {Promise<string>} Refined description
+   */
+  async refineFormDescription(description, feedback) {
+    if (!this.isInitialized) {
+      throw new AIServiceError('AI service not initialised')
+    }
+
+    try {
+      const refinementPrompt =
+        this.components.promptBuilder.buildDescriptionRefinementPrompt(
+          description,
+          feedback
+        )
+
+      const response =
+        await this.components.aiProvider.generate(refinementPrompt)
+
+      const refinedDescription = response.content.trim()
+
+      this.logger.info('Form description refined successfully')
+
+      return refinedDescription
+    } catch (error) {
+      this.logger.error('Form description refinement failed', error)
+
+      return description
+    }
+  }
+
+  /**
    * Generate form in background as a job
    * @param {string} jobId - Unique job identifier
    * @param {string} description - Form description

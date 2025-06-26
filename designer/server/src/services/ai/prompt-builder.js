@@ -453,6 +453,115 @@ Generate an improved form that addresses the user's feedback while maintaining p
     return regenerationPrompt
   }
 
+  /**
+   * Build GDS analysis prompt for form descriptions
+   * @param {string} description - Form description to analyze
+   * @returns {string} Analysis prompt
+   */
+  buildGDSAnalysisPrompt(description) {
+    return `Analyze this form description against UK Government Digital Service (GDS) guidelines and best practices. Provide specific, actionable feedback to help the user create better forms.
+
+FORM DESCRIPTION TO ANALYZE:
+"${description}"
+
+GDS GUIDELINES TO CHECK AGAINST:
+
+**RULE #1 - ONE QUESTION PER PAGE (MANDATORY):**
+- Forms should ask one question per page for better user experience
+- The ONLY exception is first name + last name together (and only if truly necessary)
+- Check if description suggests multiple questions on same page
+
+**RULE #2 - ESSENTIAL QUESTIONS ONLY:**
+- Only ask for information you actually need
+- Question every question - is this really necessary?
+- Avoid replicating paper forms without review
+
+**RULE #3 - CLEAR PURPOSE & USER-FOCUSED:**
+- Description should clearly state what the form is for and who will use it
+- Think about the user's journey, not internal processes
+- Use plain English, avoid jargon
+
+**RULE #4 - LOGICAL FLOW:**
+- Questions should follow a logical order
+- Start with eligibility questions first
+- Progress through related topics logically
+- End with summary page
+
+**RULE #5 - CONTACT METHOD RESTRICTION:**
+- Choose ONE contact method that's most appropriate for the service
+- NEVER ask for multiple contact methods (phone AND email) unless essential
+- If both needed, justify why and ask on separate pages
+
+**RULE #6 - SPECIFIC REQUIREMENTS:**
+- Be specific about field types, validation, lists needed
+- Mention any conditional logic requirements clearly
+- Specify file upload requirements if needed
+
+**RULE #7 - ACCESSIBILITY & STANDARDS:**
+- Follow UK government content style guide
+- Ensure inclusive design principles
+- Consider all users' needs
+
+ANALYSIS REQUIREMENTS:
+- Give an overall score from 1-10 (10 = excellent, follows all GDS guidelines)
+- Identify specific issues with the description (if any)
+- Provide actionable suggestions for improvement
+- Focus on helping users create better, more accessible forms
+- Be constructive and helpful
+- If the description is good, acknowledge it and only suggest minor improvements if any
+
+RESPONSE FORMAT (JSON only):
+{
+  "isGood": boolean (true if score >= 7),
+  "overallScore": number (1-10),
+  "feedback": [
+    {
+      "issue": "Specific problem found in the description",
+      "suggestion": "Clear, actionable advice on how to improve this"
+    }
+  ]
+}
+
+Be helpful and constructive. Praise good practices and gently guide users toward GDS compliance.`
+  }
+
+  /**
+   * Build prompt for refining form descriptions based on GDS feedback
+   * @param {string} description - Original form description
+   * @param {Array<{issue: string, suggestion: string}>} feedback - GDS feedback items
+   * @returns {string} Refinement prompt
+   */
+  buildDescriptionRefinementPrompt(description, feedback) {
+    const feedbackText = feedback
+      .map((item) => `Issue: ${item.issue}\nSuggestion: ${item.suggestion}`)
+      .join('\n\n')
+
+    return `You are a GDS (Government Digital Service) expert helping to improve form descriptions. 
+
+ORIGINAL DESCRIPTION:
+"${description}"
+
+GDS FEEDBACK TO ADDRESS:
+${feedbackText}
+
+TASK:
+Rewrite the form description to address all the feedback points while:
+1. Keeping the core intent and requirements from the original
+2. Following GDS best practices
+3. Being specific about field types, validation, and structure
+4. Mentioning conditional logic clearly
+5. Using plain English and avoiding jargon
+
+GUIDELINES:
+- Stick as closely as possible to the original description
+- Only make changes needed to address the specific feedback
+- Keep the same form purpose and key requirements
+- Make the description more specific and GDS-compliant
+- Don't add unnecessary complexity
+
+Return ONLY the improved description, no other text or explanation.`
+  }
+
   buildSystemPrompt() {
     return `You are an expert UK government digital service form designer. You specialize in creating accessible, user-friendly forms that comply with government design standards and the DEFRA forms v2 schema.
 
