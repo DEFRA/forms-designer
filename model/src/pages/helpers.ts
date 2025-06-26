@@ -153,3 +153,17 @@ export function omitFileUploadComponent(page: Page | undefined): boolean {
   }
   return false
 }
+
+/**
+ * Gets page title, or title of first question (if no page title set)
+ * @param {Page} page
+ * @returns {string}
+ */
+export function getPageTitle(page: Page) {
+  if (page.title !== '') {
+    return page.title
+  }
+  return hasComponents(page) && page.components.length > 0
+    ? page.components[0].title
+    : 'Page title unknown'
+}
