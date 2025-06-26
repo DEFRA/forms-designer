@@ -340,6 +340,13 @@ export class ClaudeProvider {
         step: 1
       })
 
+      const formSchema = this.loadFormDefinitionJsonSchema()
+      const componentSchema = this.loadIndividualSchema(
+        'component-schema-v2.json'
+      )
+      const pageSchema = this.loadIndividualSchema('page-schema-v2.json')
+      const listSchema = this.loadIndividualSchema('list-schema-v2.json')
+
       const userPrompt = this.promptBuilder.buildFormGenerationPrompt(
         description,
         {
@@ -349,7 +356,30 @@ export class ClaudeProvider {
         }
       )
 
-      const systemPrompt = this.promptBuilder.buildSystemPrompt()
+      const systemPrompt = `${this.promptBuilder.buildSystemPrompt()}
+
+## V2 SCHEMA VALIDATION REQUIREMENTS:
+
+You must generate forms that validate against these exact V2 schemas:
+
+**Form Definition Schema:**
+${JSON.stringify(formSchema, null, 2)}
+
+**Component Schema:**
+${JSON.stringify(componentSchema, null, 2)}
+
+**Page Schema:**
+${JSON.stringify(pageSchema, null, 2)}
+
+**List Schema:**
+${JSON.stringify(listSchema, null, 2)}
+
+CRITICAL: Follow these schemas exactly. Pay special attention to:
+- RelativeDate conditions use "period" (number), "unit", "direction" 
+- All "id" fields must be valid UUID v4 format
+- Component "name" fields must be valid JavaScript identifiers
+- List-based components must reference existing lists
+- All cross-references must be valid`
 
       let response = await this.client.messages.create({
         model: this.model,
@@ -379,16 +409,17 @@ export class ClaudeProvider {
             throw new Error('No valid text content found in AI response')
           }
 
-          const candidateForm = this.responseParser.parseFormDefinition(
-            firstContent.text
-          )
+          const jsonString = firstContent.text
+
+          const candidateForm =
+            this.responseParser.parseFormDefinition(jsonString)
 
           const validationResult =
             this.formValidator.validateFormIntegrity(candidateForm)
 
           if (validationResult.isValid) {
             formDefinition = candidateForm
-            logger.info('Direct form generation completed successfully')
+            logger.info('Direct generation: form validation passed')
             break
           } else {
             logger.warn(
@@ -396,7 +427,6 @@ export class ClaudeProvider {
             )
 
             if (refinementAttempts >= maxRefinements - 1) {
-              // Accept form on last attempt
               formDefinition = candidateForm
               logger.warn(
                 'Direct generation: accepting form with validation warnings after max refinements'
@@ -409,17 +439,19 @@ export class ClaudeProvider {
               `Direct generation refinement attempt ${refinementAttempts}/${maxRefinements}`
             )
 
-            // Create refinement prompt
             const errorDetails = this.formatValidationErrors(
               validationResult.errors
             )
+
             const refinementPrompt = `The generated form has validation errors. Please fix them and generate a corrected FormDefinitionV2.
 
 VALIDATION ERRORS:
 ${errorDetails}
 
-ORIGINAL FORM:
+PROCESSED FORM THAT FAILED VALIDATION:
 ${JSON.stringify(candidateForm, null, 2)}
+
+IMPORTANT: The above form has already been processed with automatic fixes (UUIDs generated, component titles fixed, etc.). Your task is to fix the remaining validation errors while preserving all existing valid structure.
 
 Generate ONLY the corrected JSON - no explanations.`
 
@@ -740,7 +772,7 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
                   toolResults.push({
                     tool_use_id: toolUse.id,
                     type: 'tool_result',
-                    content: `Form validation failed with the following errors:\n\n${errorDetails}\n\nPlease use the refine_form_design tool to fix these validation errors. Pay special attention to:\n- Missing or empty component titles\n- Missing list references for SelectField/RadiosField/CheckboxesField/AutocompleteField components\n- Missing or invalid UUIDs (must be proper UUID v4 format)\n- Ensure all lists referenced by components exist in the form's lists array`
+                    content: `Form validation failed with the following errors:\n\n${errorDetails}\n\nPROCESSED FORM THAT FAILED VALIDATION:\n${JSON.stringify(candidateForm, null, 2)}\n\nIMPORTANT: The above form has already been processed with automatic fixes (UUIDs generated, component titles fixed, etc.). Please use the refine_form_design tool to fix the remaining validation errors while preserving all existing valid structure. Pay special attention to:\n- Missing or empty component titles\n- Missing list references for SelectField/RadiosField/CheckboxesField/AutocompleteField components\n- Missing or invalid UUIDs (must be proper UUID v4 format)\n- Ensure all lists referenced by components exist in the form's lists array`
                   })
                 }
               } else {
@@ -931,10 +963,59 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
   formatValidationErrors(errors) {
     return errors
       .map((error, index) => {
+        let formattedError = `${index + 1}. `
+
         if (error.path) {
-          return `${index + 1}. Path: ${error.path} - ${error.message}`
+          const pathStr = Array.isArray(error.path)
+            ? error.path.join('.')
+            : String(error.path)
+          formattedError += `Path: ${pathStr} - `
         }
-        return `${index + 1}. ${error.message}`
+
+        formattedError += String(error.message ?? 'Unknown validation error')
+
+        if (error.type) {
+          switch (error.type) {
+            case 'duplicate_id_error':
+              formattedError += ` (CRITICAL: DUPLICATE ID WILL BREAK FORM AT RUNTIME)`
+              break
+            case 'any.required':
+              formattedError += ` (REQUIRED FIELD MISSING)`
+              break
+            case 'string.empty':
+              formattedError += ` (FIELD CANNOT BE EMPTY)`
+              break
+            case 'string.uuid':
+              formattedError += ` (MUST BE VALID UUID v4 FORMAT)`
+              break
+            case 'any.only':
+              formattedError += ` (INVALID VALUE - CHECK ALLOWED VALUES)`
+              break
+            case 'array.unique':
+              formattedError += ` (DUPLICATE VALUES NOT ALLOWED)`
+              break
+          }
+        }
+
+        if (error.type === 'duplicate_id_error') {
+          formattedError += ` → FIX: Generate completely unique UUIDs for all elements. Change one of the duplicate IDs to a new UUID.`
+        } else if (error.path) {
+          const pathStr = Array.isArray(error.path)
+            ? error.path.join('.')
+            : String(error.path)
+          if (pathStr.includes('components') && pathStr.includes('title')) {
+            formattedError += ` → FIX: Add a meaningful title for this component`
+          } else if (
+            pathStr.includes('components') &&
+            pathStr.includes('list')
+          ) {
+            formattedError += ` → FIX: Reference an existing list ID from the lists array`
+          } else if (pathStr.includes('id')) {
+            formattedError += ` → FIX: Generate a valid UUID v4 (e.g., "123e4567-e89b-12d3-a456-426614174000")`
+          }
+        }
+
+        return formattedError
       })
       .join('\n')
   }

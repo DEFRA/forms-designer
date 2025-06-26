@@ -70,6 +70,8 @@ export function initAIFormCreation() {
       )
 
       evaluateDescriptionInput.value = description
+
+      showEvaluateLoadingState(evaluateButtonElement)
     })
   }
 }
@@ -144,6 +146,65 @@ function showError(message, errorSummary) {
     errorSummary.focus()
     errorSummary.scrollIntoView({ behavior: 'smooth', block: 'center' })
   }
+}
+
+/**
+ * Show loading state for the evaluate button and create analysis panel
+ * @param {HTMLButtonElement} evaluateButton - The evaluate button element
+ */
+function showEvaluateLoadingState(evaluateButton) {
+  evaluateButton.disabled = true
+  evaluateButton.textContent = 'Analysing...'
+
+  showAnalysisLoadingPanel()
+}
+
+/**
+ * Show the analysis loading panel
+ */
+function showAnalysisLoadingPanel() {
+  const rightColumn = document.querySelector(
+    '.govuk-grid-column-one-half-from-desktop:last-child'
+  )
+  if (!rightColumn) return
+
+  const existingPanel = rightColumn.querySelector('.app-feedback-panel')
+  if (existingPanel) {
+    existingPanel.remove()
+  }
+
+  const loadingPanel = document.createElement('div')
+  loadingPanel.className = 'app-feedback-panel'
+  loadingPanel.innerHTML = `
+    <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
+      <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
+        <dl class="govuk-summary-list">
+          <div class="govuk-summary-list__row">
+            <dd class="govuk-summary-list__value">
+              <div class="govuk-grid-row" id="page-settings-container-1">
+                <div id="card-1">
+                  <div class="govuk-summary-card__content">
+                    <div class="editor-card-title">GDS Compliance Analysis</div>
+                                         <div class="govuk-!-padding-top-3">
+                       <span class="govuk-caption-l">AI Analysis</span>
+                       <p class="govuk-body">
+                         Analysing your form description against GDS guidelines...
+                       </p>
+                       <div class="govuk-body-s govuk-!-margin-top-3" style="color: #626a6e;">
+                         This usually takes a few seconds
+                       </div>
+                     </div>
+                  </div>
+                </div>
+              </div>
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  `
+
+  rightColumn.appendChild(loadingPanel)
 }
 
 function safeInit() {

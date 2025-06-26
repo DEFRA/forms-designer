@@ -57,12 +57,19 @@ export default [
      * @param {ResponseToolkit} h
      */
     handler(request, h) {
-      const { yar } = request
+      const { yar, query } = request
 
       // Check prerequisites
       const createData = /** @type {any} */ (yar.get(sessionNames.create))
       if (!createData?.title || createData.creationMethod !== 'ai-assisted') {
         return h.redirect('/create/method').temporary()
+      }
+
+      if (query.hide === 'feedback') {
+        yar.clear('gdsAnalysis')
+        return h
+          .redirect(ROUTE_PATH_CREATE_AI_DESCRIBE)
+          .code(StatusCodes.SEE_OTHER)
       }
 
       const validation = yar

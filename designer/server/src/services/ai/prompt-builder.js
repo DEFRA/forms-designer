@@ -38,9 +38,9 @@ PREFERENCES:
 - Each page must contain exactly ONE question or ONE piece of information
 - The ONLY exception is first name + last name together (and only if truly necessary)
 - Examples of VIOLATIONS to avoid:
-  * Name + email + phone on same page ❌
-  * Address + contact details on same page ❌
-  * Multiple personal details on same page ❌
+  * Name + email + phone on same page
+  * Address + contact details on same page
+  * Multiple personal details on same page
 
 **RULE #2 - CONTACT METHOD RESTRICTION:**
 - NEVER ask for multiple contact methods (phone AND email)
@@ -65,6 +65,191 @@ PREFERENCES:
 AVAILABLE COMPONENT TYPES: ${componentTypes}
 AVAILABLE OPERATORS FOR CONDITIONS: ${operatorNames}
 AVAILABLE CONDITION TYPES: ${conditionTypes}
+
+## V2 SCHEMA REQUIREMENTS (CRITICAL - FOLLOW EXACTLY):
+
+**FORM DEFINITION V2 STRUCTURE:**
+{
+  "engine": "V2",           // ← REQUIRED: Must be "V2"
+  "schema": 2,              // ← REQUIRED: Must be number 2
+  "pages": [...],           // ← Array of page objects
+  "sections": [...],        // ← Array of section objects  
+  "lists": [...],           // ← Array of list objects (optional)
+  "conditions": [...]       // ← Array of condition objects (optional)
+}
+
+**V2 CONDITION STRUCTURE EXAMPLES (CRITICAL - FOLLOW EXACTLY):**
+
+**RelativeDate Condition (for date comparisons):**
+{
+  "id": "condition-uuid",
+  "componentId": "date-component-uuid", 
+  "operator": "is before",
+  "type": "RelativeDate",
+  "value": {
+    "period": 16,               // ← NUMBER (not string, not "timeValue")
+    "unit": "years",            // ← "days", "weeks", "months", "years"  
+    "direction": "in the past"  // ← "in the past" or "in the future" (EXACT enum values)
+  }
+}
+
+**BooleanValue Condition (for Yes/No fields):**
+{
+  "id": "condition-uuid",
+  "componentId": "yesno-component-uuid",
+  "operator": "is", 
+  "type": "BooleanValue",
+  "value": true            // ← boolean true/false
+}
+
+**StringValue Condition (for text fields):**
+{
+  "id": "condition-uuid", 
+  "componentId": "text-component-uuid",
+  "operator": "is",
+  "type": "StringValue", 
+  "value": "some text"     // ← string value
+}
+
+**NumberValue Condition (for number fields):**
+{
+  "id": "condition-uuid",
+  "componentId": "number-component-uuid", 
+  "operator": "is",
+  "type": "NumberValue",
+  "value": 42              // ← number value
+}
+
+**DateValue Condition (for absolute dates):**
+{
+  "id": "condition-uuid",
+  "componentId": "date-component-uuid",
+  "operator": "is",
+  "type": "DateValue", 
+  "value": "2024-01-15"    // ← ISO date string YYYY-MM-DD
+}
+
+**ListItemRef Condition (for list-based components):**
+{
+  "id": "condition-uuid",
+  "componentId": "list-component-uuid",
+  "operator": "is",
+  "type": "ListItemRef",
+  "value": {
+    "listId": "list-uuid",     // ← References lists[].id
+    "itemId": "item-uuid"      // ← References lists[].items[].id
+  }
+}
+
+**CONDITION WRAPPER STRUCTURE:**
+{
+  "id": "condition-wrapper-uuid",
+  "displayName": "Readable condition name",
+  "coordinator": "and",          // ← REQUIRED if multiple items: "and" or "or"
+  "items": [
+    // ... condition objects above
+  ]
+}
+
+**V2 COMPONENT STRUCTURE EXAMPLES:**
+
+**Basic Input Component:**
+{
+  "id": "component-uuid",
+  "type": "TextField",
+  "name": "fieldName",         // ← Valid JS identifier (letters only)
+  "title": "What is your name?",
+  "hint": "Enter your full name",
+  "options": { 
+    "required": true           // ← Use this instead of asterisks
+  },
+  "schema": {}                 // ← Always include empty schema object
+}
+
+**List-Based Component:**
+{
+  "id": "component-uuid", 
+  "type": "RadiosField",
+  "name": "fieldName",
+  "title": "What is your choice?",
+  "list": "list-uuid",         // ← REQUIRED: References lists[].id
+  "options": { "required": true },
+  "schema": {}
+}
+
+**File Upload Component:**
+{
+  "id": "component-uuid",
+  "type": "FileUploadField", 
+  "name": "fieldName",
+  "title": "Upload your document",
+  "options": {
+    "required": true,
+    "accept": "application/pdf,image/jpeg,image/png"
+  },
+  "schema": {}
+}
+
+**Content Component (Markdown):**
+{
+  "id": "component-uuid",
+  "type": "Markdown",
+  "content": "## Your markdown content here",
+  "options": {},
+  "schema": {}
+  // ← NOTE: Content components don't need "name" or "title"
+}
+
+**V2 PAGE STRUCTURE:**
+{
+  "id": "page-uuid",
+  "title": "What is your question?",    // ← Must be a question
+  "path": "/page-path",               // ← Unique path starting with /
+  "section": "sectionName",           // ← Must reference sections[].name
+  "controller": "PageController",     // ← Optional: special controllers
+  "condition": "condition-uuid",      // ← Optional: references conditions[].id
+  "components": [...],                // ← Array of component objects
+  "next": [                          // ← Navigation rules
+    {"path": "/next-page"},
+    {"path": "/conditional-page", "condition": "condition-uuid"}
+  ]
+}
+
+**V2 LIST STRUCTURE:**
+{
+  "id": "list-uuid",
+  "name": "listName",                 // ← Unique identifier
+  "title": "List display title", 
+  "type": "string",                   // ← "string" or "number"
+  "items": [
+    {
+      "id": "item-uuid",
+      "text": "Display text",
+      "value": "internal-value"
+    }
+  ]
+}
+
+**V2 SECTION STRUCTURE:**
+{
+  "name": "sectionName",              // ← Referenced by pages[].section
+  "title": "Section Display Title"
+}
+
+**CRITICAL V2 VALIDATION RULES:**
+- RelativeDate conditions use "period" (number), "unit", "direction" - NOT "timePeriod", "timeValue"
+- RelativeDate direction must be EXACTLY "in the past" or "in the future" (not "past"/"future")
+- All "id" fields must be valid UUID v4 format
+- **CRITICAL: ALL IDs MUST BE UNIQUE** - No duplicate IDs across pages, components, conditions, condition items, lists, list items
+- Component "name" fields must be valid JavaScript identifiers (letters only, no numbers/symbols)
+- List-based components (RadiosField, CheckboxesField, SelectField, AutocompleteField) MUST have "list" property
+- FileUploadField components MUST be on pages with "controller": "FileUploadPageController"
+- Summary pages MUST use "controller": "SummaryPageController"
+- Every page must reference an existing section via "section" field
+- Condition wrappers with multiple items MUST have "coordinator" field
+- All cross-references must be valid (componentId → components[].id, listId → lists[].id, etc.)
+- Component types that support conditions: TextField, EmailAddressField, NumberField, DatePartsField, YesNoField, RadiosField, CheckboxesField, SelectField, AutocompleteField
+- **CONDITIONAL PAGE FLOW LOGIC**: When a page asks a question, conditions should be applied to the NEXT pages in navigation, not the current page asking the question
 
 COMPONENT USAGE GUIDELINES:
 - **Input Fields**: TextField, EmailAddressField, NumberField, DatePartsField, MonthYearField, MultilineTextField, TelephoneNumberField, UkAddressField
@@ -156,6 +341,32 @@ CRITICAL VALIDATION REQUIREMENTS:
 - NEVER use undefined, null, empty string, or descriptive names for id fields
 - Each UUID must be completely unique across the entire form definition
 - UUID examples: "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d", "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c"
+
+## CRITICAL ID UNIQUENESS REQUIREMENT:
+**DUPLICATE IDs WILL BREAK THE FORM AT RUNTIME!**
+- Every single ID in the form must be unique across ALL elements
+- Check for duplicates between: pages, components, conditions, condition items, lists, list items
+- Example of BROKEN form (duplicate ID causes runtime errors)
+- Forms engine error: "ConditionField param 'type' must support conditions" often indicates duplicate IDs
+- ALWAYS generate completely unique UUIDs for every single ID field
+
+## CONDITIONAL NAVIGATION LOGIC:
+**CRITICAL: Apply conditions to the CORRECT pages in the flow**
+
+**CORRECT conditional flow pattern:**
+Page A asks "Do you own a dog?" (component: ownsDog)
+- Page B shows "You cannot use this service" (condition: ownsDog = false)
+- Page C shows "What is your dog's name?" (condition: ownsDog = true)
+
+**WRONG pattern (condition on wrong page):**
+Page A asks "Do you own a dog?" but condition is applied incorrectly
+
+**Key rules:**
+- Conditions reference components from PREVIOUS pages in the flow
+- Apply conditions to DESTINATION pages, not the page with the question
+- If Page A asks a question, the condition goes on Pages B/C/D that follow
+- Navigation: use "condition" field in next array
+- Page condition: use "condition" field on pages that should only show conditionally
 
 ## PERFECT GDS COMPLIANCE EXAMPLE - DEMONSTRATES CORRECT "ONE QUESTION PER PAGE":
 

@@ -100,16 +100,7 @@
           '
         }) }}
 
-        <div id="form-buttons" class="govuk-button-group">
-          <form method="post" action="/create/ai-describe/evaluate" style="display: inline;">
-            <input type="hidden" name="formDescription" id="evaluate-description" value="">
-            {{ govukButton({
-              text: "Evaluate my description",
-              classes: "govuk-button--secondary",
-              attributes: { id: "evaluate-btn", type: "submit" }
-            }) }}
-          </form>
-
+        <div class="govuk-button-group">
           {{ govukButton({
             text: buttonText,
             classes: "govuk-button--primary",
@@ -122,6 +113,15 @@
             classes: "govuk-button--secondary"
           }) }}
         </div>
+      </form>
+
+      <form method="post" action="/create/ai-describe/evaluate" class="govuk-!-margin-top-3">
+        <input type="hidden" name="formDescription" id="evaluate-description" value="">
+        {{ govukButton({
+          text: "Evaluate my description",
+          classes: "govuk-button--secondary",
+          attributes: { id: "evaluate-btn", type: "submit" }
+        }) }}
       </form>
     {% endcall %}
   </div>
@@ -162,14 +162,14 @@
                   classes: "govuk-button--primary"
                 }) }}
 
-                <a href="/create/ai-describe" class="govuk-button govuk-button--secondary">
+                <a href="/create/ai-describe?hide=feedback" class="govuk-button govuk-button--secondary">
                   Hide feedback
                 </a>
               </div>
             </form>
           {% else %}
             <p class="govuk-body">Your description looks good! No specific improvements needed.</p>
-            <a href="/create/ai-describe" class="govuk-button govuk-button--secondary">
+            <a href="/create/ai-describe?hide=feedback" class="govuk-button govuk-button--secondary">
               Hide feedback
             </a>
           {% endif %}
