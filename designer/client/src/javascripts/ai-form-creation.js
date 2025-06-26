@@ -1,6 +1,7 @@
 export function initAIFormCreation() {
-  const form = document.querySelector('form')
+  const form = document.getElementById('describe-form')
   const generateButton = document.getElementById('generate-form-btn')
+  const evaluateButton = document.getElementById('evaluate-btn')
   const errorSummary = document.getElementById('js-error-summary')
 
   if (!form || !generateButton) {
@@ -8,27 +9,28 @@ export function initAIFormCreation() {
   }
 
   const formElement = /** @type {HTMLFormElement} */ (form)
-  const buttonElement = /** @type {HTMLButtonElement} */ (generateButton)
+  const generateButtonElement = /** @type {HTMLButtonElement} */ (
+    generateButton
+  )
+  const evaluateButtonElement = /** @type {HTMLButtonElement} */ (
+    evaluateButton
+  )
   let isSubmitting = false
 
-  const textarea = document.getElementById('formDescription')
+  const textarea = /** @type {HTMLTextAreaElement} */ (
+    document.getElementById('formDescription')
+  )
   const charCount = document.getElementById('char-count')
-  if (textarea && charCount) {
-    const textareaElement = /** @type {HTMLTextAreaElement} */ (textarea)
-    textareaElement.addEventListener('input', function () {
-      charCount.textContent = String(textareaElement.value.length)
+  if (charCount) {
+    textarea.addEventListener('input', function () {
+      charCount.textContent = String(textarea.value.length)
     })
   }
 
-  buttonElement.addEventListener('click', (event) => {
-    const formData = new FormData(formElement)
-    const description = formData.get('formDescription')
+  generateButtonElement.addEventListener('click', (event) => {
+    const description = textarea.value.trim()
 
-    if (
-      !description ||
-      typeof description !== 'string' ||
-      description.trim().length < 10
-    ) {
+    if (!description || description.length < 10) {
       event.preventDefault()
       showError('Enter a description of at least 10 characters', errorSummary)
       return
@@ -40,11 +42,36 @@ export function initAIFormCreation() {
     }
 
     isSubmitting = true
-
-    handleStandardSubmission(formElement, buttonElement)
-
-    handleAjaxSubmission(event, formElement, buttonElement, errorSummary)
+    handleStandardSubmission(formElement, generateButtonElement)
+    handleAjaxSubmission(
+      event,
+      formElement,
+      generateButtonElement,
+      errorSummary
+    )
   })
+
+  const evaluateForm = evaluateButtonElement.closest('form')
+  if (evaluateForm) {
+    evaluateForm.addEventListener('submit', (event) => {
+      const description = textarea.value.trim()
+
+      if (!description || description.length < 10) {
+        event.preventDefault()
+        showError(
+          'Enter a description of at least 10 characters before evaluating',
+          errorSummary
+        )
+        return
+      }
+
+      const evaluateDescriptionInput = /** @type {HTMLInputElement} */ (
+        document.getElementById('evaluate-description')
+      )
+
+      evaluateDescriptionInput.value = description
+    })
+  }
 }
 
 /**
@@ -79,18 +106,11 @@ function handleAjaxSubmission(
   fetch(formElement.action, {
     method: 'POST',
     body: formData,
-    redirect: 'manual'
+    redirect: 'follow'
   })
     .then((response) => {
-      if (
-        response.type === 'opaqueredirect' ||
-        response.status === 302 ||
-        response.status === 301
-      ) {
-        window.location.href = '/create/ai-progress'
-        return 'redirect'
-      } else if (response.ok) {
-        window.location.href = '/create/ai-progress'
+      if (response.ok) {
+        window.location.href = response.url || '/create/ai-feedback'
         return 'success'
       } else {
         throw new Error(`Server error: ${response.status}`)

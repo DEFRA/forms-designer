@@ -12,6 +12,9 @@ const logger = createLogger()
 
 export const ROUTE_PATH_CREATE_AI_DESCRIBE = '/create/ai-describe'
 export const ROUTE_PATH_CREATE_AI_REVIEW = '/create/ai-review'
+export const ROUTE_PATH_CREATE_AI_APPLY_SUGGESTIONS =
+  '/create/ai-describe/apply-suggestions'
+export const ROUTE_PATH_CREATE_AI_EVALUATE = '/create/ai-describe/evaluate'
 
 const formDescriptionSchema = Joi.object().keys({
   formDescription: Joi.string().trim().min(20).max(5000).required().messages({
@@ -30,6 +33,15 @@ const formDescriptionSchema = Joi.object().keys({
       includeConditionals: Joi.boolean().default(true)
     })
     .default({})
+})
+
+const evaluateDescriptionSchema = Joi.object().keys({
+  formDescription: Joi.string().trim().min(10).max(5000).required().messages({
+    'string.empty': 'Enter a description to evaluate',
+    'string.min': 'Description must be at least 10 characters to evaluate',
+    'string.max': 'Description must be 5000 characters or less',
+    'any.required': 'Enter a description to evaluate'
+  })
 })
 
 export default [
@@ -57,11 +69,18 @@ export default [
         .flash(sessionNames.validationFailure.createForm)
         .at(0)
 
+      const successMessage = yar.flash('success').at(0)
+      const errorMessage = yar.flash('error').at(0)
+      const gdsAnalysis = yar.get('gdsAnalysis')
+
       return h.view(
         'forms/ai-create/describe',
         describeModel.describeViewModel(
           createData,
-          /** @type {any} */ (validation)
+          /** @type {any} */ (validation),
+          successMessage,
+          errorMessage,
+          gdsAnalysis
         )
       )
     },
@@ -197,6 +216,144 @@ export default [
       },
       timeout: {
         server: 600000 // 10 minutes for AI form generation with agentic workflow and validation refinement
+      }
+    }
+  },
+
+  /**
+   * POST /create/ai-describe/apply-suggestions
+   * @satisfies {ServerRoute}
+   */
+  {
+    method: 'POST',
+    path: ROUTE_PATH_CREATE_AI_APPLY_SUGGESTIONS,
+    /**
+     * @param {Request} request
+     * @param {ResponseToolkit} h
+     */
+    handler(request, h) {
+      const { payload, yar } = request
+      const { refinedDescription } = /** @type {any} */ (payload)
+
+      try {
+        const createData = yar.get(sessionNames.create) ?? {}
+        createData.formDescription = refinedDescription
+        yar.set(sessionNames.create, createData)
+
+        yar.clear('gdsAnalysis')
+
+        yar.flash(
+          'success',
+          'Your description has been refined based on GDS guidelines'
+        )
+
+        return h
+          .redirect(ROUTE_PATH_CREATE_AI_DESCRIBE)
+          .code(StatusCodes.SEE_OTHER)
+      } catch (error) {
+        logger.error(error, 'Failed to apply suggestions')
+
+        yar.flash('error', 'Unable to apply suggestions. Please try again.')
+        return h
+          .redirect(ROUTE_PATH_CREATE_AI_DESCRIBE)
+          .code(StatusCodes.SEE_OTHER)
+      }
+    },
+    options: {
+      validate: {
+        payload: Joi.object().keys({
+          refinedDescription: Joi.string().trim().min(20).max(5000).required()
+        })
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  },
+
+  /**
+   * POST /create/ai-describe/evaluate
+   * @satisfies {ServerRoute}
+   */
+  {
+    method: 'POST',
+    path: ROUTE_PATH_CREATE_AI_EVALUATE,
+    /**
+     * @param {Request} request
+     * @param {ResponseToolkit} h
+     */
+    async handler(request, h) {
+      const { payload, yar, server } = request
+      const { formDescription } = /** @type {any} */ (payload)
+
+      try {
+        const aiService = /** @type {any} */ (server.app).aiService
+        if (!aiService) {
+          throw new Error('AI service not available')
+        }
+
+        const result =
+          await aiService.analyseAndRefineDescription(formDescription)
+
+        yar.set('gdsAnalysis', {
+          analysis: result.analysis,
+          refinedDescription: result.refinedDescription,
+          originalDescription: formDescription
+        })
+
+        const createData = yar.get(sessionNames.create) ?? {}
+        createData.formDescription = formDescription
+        yar.set(sessionNames.create, createData)
+
+        return h
+          .redirect(ROUTE_PATH_CREATE_AI_DESCRIBE)
+          .code(StatusCodes.SEE_OTHER)
+      } catch (error) {
+        logger.error(error, 'GDS analysis failed')
+
+        yar.flash(
+          'error',
+          'Unable to analyze your description. Please try again.'
+        )
+        return h
+          .redirect(ROUTE_PATH_CREATE_AI_DESCRIBE)
+          .code(StatusCodes.SEE_OTHER)
+      }
+    },
+    options: {
+      validate: {
+        payload: evaluateDescriptionSchema,
+        /**
+         * @param {Request} request
+         * @param {ResponseToolkit} h
+         * @param {Error} error
+         */
+        failAction: (request, h, error) => {
+          const { yar } = request
+          const formErrors = buildErrorDetails(/** @type {any} */ (error))
+
+          yar.flash(
+            'error',
+            Object.values(formErrors)
+              .map((e) => e.text)
+              .join(', ')
+          )
+          return h
+            .redirect(ROUTE_PATH_CREATE_AI_DESCRIBE)
+            .code(StatusCodes.SEE_OTHER)
+            .takeover()
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
       }
     }
   }
