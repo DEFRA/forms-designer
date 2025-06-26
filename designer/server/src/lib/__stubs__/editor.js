@@ -33,6 +33,21 @@ export const baseOptions = {
 
 /**
  * @param { string | undefined } message
+ * @param { FormDefinitionErrorCause[] } cause
+ */
+export function buildInvalidFormDefinitionError(message, cause) {
+  return Boom.boomify(new Error(message, { cause }), {
+    statusCode: 400,
+    data: {
+      message,
+      statusCode: 400,
+      error: 'InvalidFormDefinitionError'
+    }
+  })
+}
+
+/**
+ * @param { string | undefined } message
  * @param { ApiErrorCode | undefined } [errorCode]
  */
 export function buildBoom409(message, errorCode) {
@@ -45,6 +60,6 @@ export function buildBoom409(message, errorCode) {
 }
 
 /**
- * @import { ApiErrorCode } from '@defra/forms-model'
+ * @import { ApiErrorCode, FormDefinitionErrorCause } from '@defra/forms-model'
  * @import { IncomingMessage } from 'node:http'
  */
