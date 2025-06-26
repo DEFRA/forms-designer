@@ -30,29 +30,33 @@ export class AIFormValidator {
    */
   validateFormIntegrity(formDefinition) {
     try {
-      // Use the existing formDefinitionV2Schema which already handles:
-      // - Schema validation
-      // - Referential integrity (componentIdRefSchema, conditionIdRef, listIdRef)
-      // - Uniqueness constraints
-      // - Business logic rules
+      // First check for duplicate IDs which cause runtime errors
+      const duplicateIdErrors = this.checkForDuplicateIds(formDefinition)
+
       const { error } = formDefinitionV2Schema.validate(formDefinition, {
         abortEarly: false
       })
 
+      const allErrors = [...duplicateIdErrors]
+
       if (error) {
-        const errors = error.details.map((detail) => ({
+        const schemaErrors = error.details.map((detail) => ({
           type: 'schema_error',
           path: detail.path.join('.'),
           message: detail.message,
           value: detail.context?.value
         }))
+        allErrors.push(...schemaErrors)
+      }
 
+      if (allErrors.length > 0) {
         this.logger.warn('Form validation failed', {
-          errorCount: errors.length,
+          errorCount: allErrors.length,
+          duplicateIdErrors: duplicateIdErrors.length,
           formName: formDefinition.name
         })
 
-        return { isValid: false, errors }
+        return { isValid: false, errors: allErrors }
       }
 
       this.logger.debug('Form validation passed', {
@@ -76,6 +80,131 @@ export class AIFormValidator {
         ]
       }
     }
+  }
+
+  /**
+   * Check for duplicate IDs across all form elements
+   * @param {any} formDefinition
+   * @returns {Array<object>} Array of duplicate ID errors
+   */
+  checkForDuplicateIds(formDefinition) {
+    const allIds = new Map() // Map of ID -> array of locations where it's used
+    const errors = []
+
+    // Helper to add ID and track its location
+    const addId = (
+      /** @type {string} */ id,
+      /** @type {string} */ location
+    ) => {
+      if (!id) return
+      if (!allIds.has(id)) {
+        allIds.set(id, [])
+      }
+      allIds.get(id).push(location)
+    }
+
+    // Collect all IDs from different parts of the form
+    try {
+      // Page IDs
+      if (formDefinition.pages) {
+        formDefinition.pages.forEach(
+          (/** @type {any} */ page, /** @type {number} */ pageIndex) => {
+            if (page.id) {
+              addId(page.id, `pages[${pageIndex}].id`)
+            }
+
+            // Component IDs
+            if (page.components) {
+              page.components.forEach(
+                (
+                  /** @type {any} */ component,
+                  /** @type {number} */ componentIndex
+                ) => {
+                  if (component.id) {
+                    addId(
+                      component.id,
+                      `pages[${pageIndex}].components[${componentIndex}].id`
+                    )
+                  }
+                }
+              )
+            }
+          }
+        )
+      }
+
+      // List IDs and List Item IDs
+      if (formDefinition.lists) {
+        formDefinition.lists.forEach(
+          (/** @type {any} */ list, /** @type {number} */ listIndex) => {
+            if (list.id) {
+              addId(list.id, `lists[${listIndex}].id`)
+            }
+
+            if (list.items) {
+              list.items.forEach(
+                (/** @type {any} */ item, /** @type {number} */ itemIndex) => {
+                  if (item.id) {
+                    addId(item.id, `lists[${listIndex}].items[${itemIndex}].id`)
+                  }
+                }
+              )
+            }
+          }
+        )
+      }
+
+      // Condition IDs and Condition Item IDs
+      if (formDefinition.conditions) {
+        formDefinition.conditions.forEach(
+          (
+            /** @type {any} */ condition,
+            /** @type {number} */ conditionIndex
+          ) => {
+            if (condition.id) {
+              addId(condition.id, `conditions[${conditionIndex}].id`)
+            }
+
+            if (condition.items) {
+              condition.items.forEach(
+                (/** @type {any} */ item, /** @type {number} */ itemIndex) => {
+                  if (item.id) {
+                    addId(
+                      item.id,
+                      `conditions[${conditionIndex}].items[${itemIndex}].id`
+                    )
+                  }
+                }
+              )
+            }
+          }
+        )
+      }
+
+      // Check for duplicates
+      for (const [id, locations] of allIds.entries()) {
+        if (locations.length > 1) {
+          errors.push({
+            type: 'duplicate_id_error',
+            path: locations.join(', '),
+            message: `Duplicate ID "${id}" found in multiple locations: ${locations.join(', ')}. All IDs must be unique across the entire form definition.`,
+            value: id,
+            locations
+          })
+        }
+      }
+    } catch (error) {
+      this.logger.error('Error checking for duplicate IDs', {
+        error: error instanceof Error ? error.message : String(error)
+      })
+
+      errors.push({
+        type: 'duplicate_check_error',
+        message: `Failed to check for duplicate IDs: ${error instanceof Error ? error.message : String(error)}`
+      })
+    }
+
+    return errors
   }
 
   /**

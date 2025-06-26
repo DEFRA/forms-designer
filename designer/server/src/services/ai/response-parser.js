@@ -1,10 +1,10 @@
 import {
   ComponentType,
   ComponentTypes,
-  formDefinitionV2Schema,
   hasFormField,
   hasListField
 } from '@defra/forms-model'
+import { v4 as uuidv4 } from 'uuid'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 
@@ -161,31 +161,13 @@ export class ResponseParser {
 
       this.fixMissingListReferences(parsedForm)
 
-      logger.info('Validating against formDefinitionV2Schema')
+      this.fixComponentNamePatterns(parsedForm)
 
-      const { error, value } = formDefinitionV2Schema.validate(parsedForm)
-      if (error) {
-        logger.error('Validation failed', error)
+      logger.info(
+        'Form parsed and auto-fixes applied, returning for validation by caller'
+      )
 
-        error.details.slice(0, 5).forEach((detail, index) => {
-          const errorInfo = {
-            errorNumber: index + 1,
-            path: detail.path.join('.'),
-            message: detail.message,
-            type: detail.type
-          }
-          logger.error(`Validation Error ${index + 1}`, errorInfo)
-        })
-
-        throw new ValidationError(
-          'Generated form failed schema validation',
-          error.details
-        )
-      }
-
-      logger.info('AI form successfully parsed and validated', value)
-
-      return value
+      return parsedForm
     } catch (error) {
       if (error instanceof ParseError || error instanceof ValidationError) {
         throw error
@@ -407,7 +389,7 @@ export class ResponseParser {
    * @returns {string}
    */
   generateUuid() {
-    return crypto.randomUUID()
+    return uuidv4()
   }
 
   /**
@@ -581,6 +563,71 @@ export class ResponseParser {
       )
       return matches.length >= Math.min(inputComponents.length * 0.6, 2)
     })
+  }
+
+  /**
+   * Fix component names that contain numbers/special characters
+   * @param {any} formDefinition
+   */
+  fixComponentNamePatterns(formDefinition) {
+    let fixedNames = 0
+
+    if (formDefinition.pages && Array.isArray(formDefinition.pages)) {
+      formDefinition.pages.forEach(
+        /** @param {any} page */ (page) => {
+          if (page.components && Array.isArray(page.components)) {
+            page.components.forEach(
+              /** @param {any} component */ (component) => {
+                if (
+                  component.name &&
+                  (component.name.includes('1') ||
+                    component.name.includes('2') ||
+                    component.name.includes('3') ||
+                    component.name.includes('4') ||
+                    component.name.includes('5') ||
+                    component.name.includes('6') ||
+                    component.name.includes('7') ||
+                    component.name.includes('8') ||
+                    component.name.includes('9') ||
+                    component.name.includes('0') ||
+                    !/^[a-zA-Z]+$/.test(component.name))
+                ) {
+                  const oldName = component.name
+                  component.name = this.generateValidComponentName(
+                    component.name
+                  )
+                  fixedNames++
+                  logger.info(
+                    `Fixed invalid component name: ${oldName} → ${component.name}`
+                  )
+                }
+              }
+            )
+          }
+        }
+      )
+    }
+
+    if (fixedNames > 0) {
+      logger.info(`Fixed ${fixedNames} invalid component names (automatic fix)`)
+    }
+  }
+
+  /**
+   * Generate a valid component name that matches the required pattern
+   * @param {string} originalName
+   * @returns {string}
+   */
+  generateValidComponentName(originalName) {
+    let cleanName = originalName.replace(/[^a-zA-Z]/g, '')
+
+    if (cleanName.length < 2) {
+      cleanName = 'field'
+    }
+
+    cleanName = cleanName.charAt(0).toLowerCase() + cleanName.slice(1)
+
+    return cleanName
   }
 }
 
