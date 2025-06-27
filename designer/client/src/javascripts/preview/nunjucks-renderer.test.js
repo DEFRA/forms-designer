@@ -1,6 +1,7 @@
+import { NunjucksPageRenderer } from '~/src/javascripts/preview/nunjucks-page-renderer.js'
 import {
-  NunjucksPageRenderer,
-  NunjucksRenderer
+  NunjucksRenderer,
+  NunjucksRendererBase
 } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
 
@@ -99,9 +100,11 @@ describe('nunjucks-renderer', () => {
 
   describe('NunjucksPageRenderer', () => {
     it('should render', () => {
-      const pagePreviewStub = new PagePreviewMock()
+      const nunjucksRendererBase = new NunjucksRendererBase(
+        new PagePreviewMock()
+      )
       const template = 'example.njk'
-      const renderer = new NunjucksPageRenderer(pagePreviewStub)
+      const renderer = new NunjucksPageRenderer(nunjucksRendererBase)
       renderer.render(template, params)
       expect(NJK.render).toHaveBeenCalledWith(template, { params })
       expect(mockSetPreviewHTML).toHaveBeenCalledWith('*** rendered ***')

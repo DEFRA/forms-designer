@@ -1,6 +1,9 @@
 import { NJK } from '~/src/javascripts/preview/nunjucks.js'
 import '~/src/views/preview-components/inset.njk'
 
+/**
+ * @implements {RenderBase}
+ */
 export class NunjucksRendererBase {
   /**
    * @type {DomElementsBase}
@@ -22,10 +25,6 @@ export class NunjucksRendererBase {
   render(questionTemplate, renderContext) {
     const html = NunjucksRendererBase.buildHTML(questionTemplate, renderContext)
     this._questionElements.setPreviewHTML(html)
-  }
-
-  get questionElements() {
-    return this._questionElements
   }
 
   /**
@@ -73,32 +72,6 @@ export class NunjucksRenderer {
 }
 
 /**
- * @implements {PageRenderer}
- */
-export class NunjucksPageRenderer {
-  /**
-   * @type {NunjucksRendererBase}
-   * @private
-   */
-  _renderBase
-
-  /**
-   * @param {DomElementsBase} pagePreviewDomElements
-   */
-  constructor(pagePreviewDomElements) {
-    this._renderBase = new NunjucksRendererBase(pagePreviewDomElements)
-  }
-
-  /**
-   * @param {string} questionTemplate
-   * @param {PagePreviewPanelMacro} pagePreviewPanelMacro
-   */
-  render(questionTemplate, pagePreviewPanelMacro) {
-    this._renderBase.render(questionTemplate, { params: pagePreviewPanelMacro })
-  }
-}
-
-/**
- * @import { QuestionRenderer, QuestionElements, QuestionBaseModel, RenderContext, Renderer, PageRenderer, PagePreviewPanelMacro, DomElementsBase, QuestionRenderContext } from '@defra/forms-model'
+ * @import { QuestionRenderer, QuestionElements, QuestionBaseModel, RenderContext, Renderer, PageRenderer, PagePreviewPanelMacro, DomElementsBase, QuestionRenderContext, RenderBase } from '@defra/forms-model'
  * @import { PagePreviewDomElements } from '~/src/javascripts/preview/page-controller/page-controller.js'
  */

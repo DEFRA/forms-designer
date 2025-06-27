@@ -1,6 +1,9 @@
 import { PreviewPageController } from '@defra/forms-model'
 import {
+  buildAutoCompleteComponent,
   buildDefinition,
+  buildList,
+  buildListItem,
   buildMarkdownComponent,
   buildQuestionPage,
   buildSummaryPage,
@@ -70,5 +73,36 @@ describe('setup-page-controller', () => {
     const pageController = setupPageController(page2, definition2)
     expect(pageController).toBeInstanceOf(PreviewPageController)
     expect(pageController.title).toBe('')
+  })
+
+  it('should handle autocomplete components', () => {
+    document.body.innerHTML =
+      pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+    const listId = 'feaa6e19-414d-4633-9c8c-1135bc84f1f2'
+    const list = buildList({
+      id: listId,
+      items: [
+        buildListItem({
+          text: 'Item 1'
+        }),
+        buildListItem({
+          text: 'Item 2'
+        })
+      ]
+    })
+    const autocompleteComponent = buildAutoCompleteComponent({
+      list: listId
+    })
+    const page2 = buildQuestionPage({
+      components: [autocompleteComponent]
+    })
+    const definition2 = buildDefinition({
+      pages: [page],
+      lists: [list]
+    })
+    const pageController = setupPageController(page2, definition2)
+    expect(pageController.components[1].model.attributes).toEqual({
+      'data-module': 'govuk-accessible-autocomplete'
+    })
   })
 })
