@@ -89,16 +89,7 @@ export function listsViewModel(metadata, definition, notification) {
       return {
         title: list.title,
         id: list.id,
-        usedIn: [
-          {
-            key: { text: used.length ? 'Used in' : '' },
-            value: {
-              text: used.length
-                ? used.join(', ')
-                : 'Not used in any questions or conditions'
-            }
-          }
-        ],
+        usedIn: used.length ? used.join(', ') : 'No questions or conditions',
         editUrl: `${baseUrl}/${list.id}`,
         deleteUrl: `${baseUrl}/${list.id}/delete`
       }

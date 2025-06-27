@@ -4,7 +4,7 @@
 {% from "pages-panel-left/macro.njk" import appPagesPanelLeft %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
-{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -42,39 +42,17 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop">
       <form class="form">
+      <table class="govuk-table">
+        <tbody class="govuk-table__body">
+          
           {% for list in lists %}
-            <div class="govuk-grid-row page-row">
-              <div class="govuk-grid-column-full">
-              {% set cardClass = "pages-panel-left-end" if list.usedIn | length else "pages-panel-left-end-hide-declaration" %}
-            {{ govukSummaryList({
-              card: {
-                title: {
-                  text: "List " + loop.index + ": " + list.title
-                },
-                actions: {
-                  items: [
-                    {
-                      href: list.editUrl,
-                      text: "Edit",
-                      visuallyHiddenText: visuallyHiddenText,
-                      classes: 'govuk-link--no-visited-state'
-                    },
-                    {
-                      href: list.deleteUrl,
-                      text: "Delete",
-                      visuallyHiddenText: visuallyHiddenText,
-                      attributes: 'target="_blank"',
-                      classes: 'govuk-link--no-visited-state'
-                    }
-                  ]
-                },
-                classes: cardClass
-              },
-              rows: list.usedIn
-            }) }}
-              </div>
-            </div>
+            <tr class="govuk-table__row">
+              <td class="govuk-table__cell"><span class="govuk-!-font-weight-bold">{{ list.title }}</span><p>Used in: {{ list.usedIn }}</p></td>
+              <td class="govuk-table__cell"><a href="{{ list.editUrl }}" class="govuk-link govuk-link--no-visited-state">Edit</a>&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;<a href="{{ list.deleteUrl }}" class="govuk-link govuk-link--no-visited-state">Delete</a></td>
+            </tr>
           {% endfor %}
+          </tbody>
+          </table>
       </form>
     </div>
   </div>
