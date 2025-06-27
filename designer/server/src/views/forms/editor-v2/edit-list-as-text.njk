@@ -4,6 +4,7 @@
 {% from "editor-card/macro.njk" import appEditorCard %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -28,13 +29,18 @@
 
     <form class="form" method="post">
 
-      <h2 class="govuk-heading-m">Question xx: Create and edit your list of options</h2>
+      <h2 class="govuk-heading-m">Create and edit your list of options</h2>
+
+      {% if showTitle %}
+        {{ govukInput(listTitle) }}
+      {% endif %}
 
       {{ govukTextarea(listAsText) }}
 
       <div class="govuk-button-group govuk-!-margin-top-6">
+        {% set buttonText = 'Save' if showTitle else 'Apply' %}
         {{ govukButton({
-          text: 'Apply'
+          text: buttonText
         }) }}
 
         <a href="{{ backLink.href }}" class="govuk-link govuk-link--no-visited-state">

@@ -21,7 +21,7 @@
 <details class="govuk-details">
   <summary class="govuk-details__summary">
     <span class="govuk-details__summary-text">
-      Date source: Manual options entry
+      Date source: <span id="datasourceName">Manual entry of options</span>
     </span>
   </summary>
   <div class="govuk-details__text">
@@ -178,6 +178,10 @@
     const listContainer = document.getElementById('options-container')
     const links = listContainer.querySelectorAll('a.govuk-link')
     links.forEach(x => x.style.display = 'none')
+    const select = document.getElementById('reusableList')
+    const selectedValue = select.options[select.selectedIndex].text
+    const dsName = document.getElementById('datasourceName')
+    dsName.textContent = selectedValue
     return false
   }
 </script>

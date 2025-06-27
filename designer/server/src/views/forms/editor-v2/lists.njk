@@ -1,0 +1,86 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "pages-panel-left/macro.njk" import appPagesPanelLeft %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+{% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full",
+  backLink: backLink
+}) %}
+
+  {% if notification | length %}
+    {% call govukNotificationBanner({
+        type: "success"
+      }) %}
+    <p class="govuk-notification-banner__heading">{{ notification }}</p>
+    {% endcall %}
+  {% endif %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {% if lists | length > 0 %}
+        <div class="govuk-grid-row govuk-!-margin-bottom-0">
+          <div class="govuk-grid-column-one-half">
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0 app-pages-header__title">{{ lists | length }} list{{ 's' if lists | length != 1 else '' }}</h2>
+          </div>
+        </div>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-0 govuk-!-margin-bottom-5">
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop">
+      <form class="form">
+          {% for list in lists %}
+            <div class="govuk-grid-row page-row">
+              <div class="govuk-grid-column-full">
+              {% set cardClass = "pages-panel-left-end" if list.usedIn | length else "pages-panel-left-end-hide-declaration" %}
+            {{ govukSummaryList({
+              card: {
+                title: {
+                  text: "List " + loop.index + ": " + list.title
+                },
+                actions: {
+                  items: [
+                    {
+                      href: list.editUrl,
+                      text: "Edit",
+                      visuallyHiddenText: visuallyHiddenText,
+                      classes: 'govuk-link--no-visited-state'
+                    },
+                    {
+                      href: list.deleteUrl,
+                      text: "Delete",
+                      visuallyHiddenText: visuallyHiddenText,
+                      attributes: 'target="_blank"',
+                      classes: 'govuk-link--no-visited-state'
+                    }
+                  ]
+                },
+                classes: cardClass
+              },
+              rows: list.usedIn
+            }) }}
+              </div>
+            </div>
+          {% endfor %}
+      </form>
+    </div>
+  </div>
+{% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

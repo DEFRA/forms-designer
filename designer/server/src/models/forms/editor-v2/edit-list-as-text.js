@@ -8,21 +8,23 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * Model to represent confirmation page dialog for a given form.
- * @param { QuestionSessionState | undefined } state
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
- * @param {string} pageId
- * @param {string} questionId
- * @param {string} stateId
+ * @param { ListItem[] } listItems
+ * @param {{ backText: string, backUrl: string }} backLink
+ * @param {boolean} showTitle
+ * @param { string | undefined } listTitleValue
+ * @param {string[]} [notification]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function editListAsTextViewModel(
-  state,
   metadata,
   definition,
-  pageId,
-  questionId,
-  stateId,
+  listItems,
+  backLink,
+  showTitle,
+  listTitleValue,
+  notification,
   validation
 ) {
   const formPath = formOverviewPath(metadata.slug)
@@ -44,17 +46,28 @@ export function editListAsTextViewModel(
       text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb). For hint text, add the hint text after a further colon (e.g. English:en-gb:This is my hint text)'
     },
     rows: 15,
-    value: mapListToTextareaStr(state?.listItems),
+    value: mapListToTextareaStr(listItems),
     ...insertValidationErrors(validation?.formErrors.listAsText)
+  }
+
+  const listTitle = {
+    name: 'listTitle',
+    id: 'listTitle',
+    label: {
+      text: 'List title',
+      classes: 'govuk-label--s'
+    },
+    hint: {
+      text: 'For easily identifying the list in the list management screens'
+    },
+    value: listTitleValue,
+    ...insertValidationErrors(validation?.formErrors.listTitle)
   }
 
   return {
     backLink: {
-      href: editorv2Path(
-        metadata.slug,
-        `page/${pageId}/question/${questionId}/details/${stateId}`
-      ),
-      text: 'Back to edit question'
+      href: editorv2Path(metadata.slug, backLink.backUrl),
+      text: backLink.backText
     },
     pageTitle: metadata.title,
     useNewMasthead: true,
@@ -64,11 +77,14 @@ export function editListAsTextViewModel(
       size: 'large'
     },
     listAsText,
-    errorList: buildErrorList(validation?.formErrors)
+    errorList: buildErrorList(validation?.formErrors),
+    notification,
+    showTitle,
+    listTitle
   }
 }
 
 /**
- * @import { FormDefinition, FormEditor, FormMetadata, List, QuestionSessionState } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditor, FormMetadata, ListItem } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

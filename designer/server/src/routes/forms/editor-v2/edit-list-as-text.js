@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 
-import { questionDetailsFullSchema } from '@defra/forms-model'
+import { questionDetailsFullSchema, randomId } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -8,20 +8,23 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { matchLists, usedInConditions } from '~/src/lib/list.js'
+import { matchLists, upsertList, usedInConditions } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { getComponentFromDefinition } from '~/src/lib/utils.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/edit-list-as-text.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
-const ROUTE_FULL_PATH_PAGE = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/edit-list/{stateId}`
+const ROUTE_FULL_PATH_FROM_QUESTION = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/edit-list/{stateId}`
+const ROUTE_FULL_PATH_FROM_CENTRAL = `/library/{slug}/editor-v2/list/{listId}`
 
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
+const notificationKey = sessionNames.successNotification
 
 const schema = Joi.object().keys({
   listAsText: questionDetailsFullSchema.autoCompleteOptionsSchema.messages({
@@ -34,13 +37,19 @@ const schema = Joi.object().keys({
   })
 })
 
+const schemaManagement = schema.keys({
+  listTitle: Joi.string().trim().required().messages({
+    '*': 'Enter a title for the list'
+  })
+})
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId: string } }>}
    */
   ({
     method: 'GET',
-    path: ROUTE_FULL_PATH_PAGE,
+    path: ROUTE_FULL_PATH_FROM_QUESTION,
     async handler(request, h) {
       const { params, auth, yar } = request
       const { token } = auth.credentials
@@ -50,15 +59,72 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
+      const state = getQuestionSessionState(yar, stateId)
+
       return h.view(
         'forms/editor-v2/edit-list-as-text',
         viewModel.editListAsTextViewModel(
-          getQuestionSessionState(yar, stateId),
           metadata,
           definition,
-          pageId,
-          questionId,
-          stateId,
+          state?.listItems ?? [],
+          {
+            backText: 'Back to edit question',
+            backUrl: `page/${pageId}/question/${questionId}/details/${stateId}`
+          },
+          false,
+          '',
+          undefined,
+          validation
+        )
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string, listId: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_FULL_PATH_FROM_CENTRAL,
+    async handler(request, h) {
+      const { params, auth, yar } = request
+      const { token } = auth.credentials
+      const { slug, listId } = params
+
+      const { metadata, definition } = await getForm(slug, token)
+
+      const list = definition.lists.find((x) => x.id === listId)
+
+      const validation = getValidationErrorsFromSession(yar, errorKey)
+
+      const notification = /** @type {string[] | undefined} */ (
+        yar.flash(notificationKey).at(0)
+      )
+
+      return h.view(
+        'forms/editor-v2/edit-list-as-text',
+        viewModel.editListAsTextViewModel(
+          metadata,
+          definition,
+          /** @type {ListItem[]} */ (
+            validation?.formValues.listAsText ?? list?.items
+          ),
+          {
+            backText: 'Back to lists',
+            backUrl: 'lists'
+          },
+          true,
+          validation?.formValues.listTitle ?? list?.title,
+          notification,
           validation
         )
       )
@@ -79,7 +145,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: ROUTE_FULL_PATH_PAGE,
+    path: ROUTE_FULL_PATH_FROM_QUESTION,
     async handler(request, h) {
       const { yar, params, payload, auth } = request
       const { slug, pageId, questionId, stateId } = params
@@ -151,10 +217,84 @@ export default [
         }
       }
     }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string, listId: string }, Payload: { listAsText?: Item[] | string, listTitle?: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH_FROM_CENTRAL,
+    async handler(request, h) {
+      const { yar, params, payload, auth } = request
+      const { slug, listId } = params
+      const { listAsText, listTitle } = payload
+      const { token } = auth.credentials
+
+      const { metadata, definition } = await getForm(slug, token)
+
+      /** @type {List} */
+      let listForSaving
+
+      if (listId !== 'new') {
+        const list = definition.lists.find((x) => x.id === listId)
+
+        const { deletions, listItemsWithIds } = matchLists(
+          definition,
+          listId,
+          /** @type {Item[]} */ (listAsText)
+        )
+
+        listForSaving = /** @type {List} */ ({
+          ...list,
+          title: listTitle,
+          items: listItemsWithIds
+        })
+
+        const conditions = usedInConditions(definition, deletions, listId)
+        if (conditions.length) {
+          const error = createJoiError(
+            'listAsText',
+            `'${conditions[0].entryText}' has been deleted or edited but is referenced in condition '${conditions[0].displayName}'`
+          )
+          return redirectWithErrors(request, h, error, errorKey, '#')
+        }
+      } else {
+        const name = randomId()
+        listForSaving = {
+          name,
+          title: `List for common use ${name}`,
+          type: 'string',
+          items: /** @type {Item[]} */ (listAsText)
+        }
+      }
+
+      // Save list
+      await upsertList(metadata.id, definition, token, listForSaving)
+
+      yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+      return h.redirect(editorv2Path(slug, 'lists')).code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        payload: schemaManagement,
+        failAction: (request, h, error) => {
+          return redirectWithErrors(request, h, error, errorKey, '#')
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
   })
 ]
 
 /**
- * @import { Item } from '@defra/forms-model'
+ * @import { Item, List, ListItem } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

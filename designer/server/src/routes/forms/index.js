@@ -12,6 +12,7 @@ import editorEditListAsText from '~/src/routes/forms/editor-v2/edit-list-as-text
 import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
+import editorLists from '~/src/routes/forms/editor-v2/lists.js'
 import editorMigrate from '~/src/routes/forms/editor-v2/migrate.js'
 import editorPage from '~/src/routes/forms/editor-v2/page.js'
 import editorPagesReorder from '~/src/routes/forms/editor-v2/pages-reorder.js'
@@ -34,6 +35,7 @@ export default [
   edit,
   editorMigrate,
   editorGuidance,
+  editorLists,
   editorPages,
   editorPagesReorder,
   editorPage,

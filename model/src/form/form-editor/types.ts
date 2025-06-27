@@ -270,6 +270,16 @@ export interface FormEditor {
    * Relative date direction for conditions
    */
   direction: DateDirections
+
+  /**
+   * List contents as a string with newlines
+   */
+  listAsText: string
+
+  /**
+   * Title of the list
+   */
+  listTitle: string
 }
 
 export type FormEditorInputPage = Pick<
