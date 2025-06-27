@@ -15,6 +15,7 @@ import {
 } from '@defra/forms-model/stubs'
 
 import {
+  dummyRenderer,
   getPreviewModel,
   hasUnderlyingHeadingData,
   questionsViewModel
@@ -271,7 +272,7 @@ describe('editor-v2 - questions model', () => {
         expect(result).toHaveProperty('pageConditionPresentationString')
         expect(result).toHaveProperty('hasPageCondition')
         expect(result).toHaveProperty('previewModel')
-        expect(result.previewModel.title).toBe('Farm Details')
+        expect(result.previewModel.pageTitle.text).toBe('Farm Details')
         const components = result.previewModel.components
         expect(components).toEqual([
           {
@@ -354,17 +355,17 @@ describe('editor-v2 - questions model', () => {
       const previewModel = getPreviewModel(page, definition)
       expect(previewModel.pageTitle.text).toBe('Page title')
     })
+  })
 
+  describe('dummyRenderer', () => {
     it('render should fail', () => {
-      const page = buildQuestionPage({
-        title: 'Page title',
-        components: undefined
-      })
-      const definition = buildDefinition({
-        pages: [page]
-      })
-      const previewModel = getPreviewModel(page, definition)
-      expect(() => previewModel.render()).toThrow('Not implemented')
+      expect(() =>
+        dummyRenderer.render('text', {
+          pageTitle: { text: '', classes: '' },
+          components: [],
+          guidance: { text: '', classes: '' }
+        })
+      ).toThrow('Not implemented')
     })
   })
 })

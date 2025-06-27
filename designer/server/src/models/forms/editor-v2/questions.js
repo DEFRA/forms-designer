@@ -303,11 +303,23 @@ function buildViewModelData(metadata, pageIdx, pageId) {
   return { baseUrl, pageHeading, cardTitle, formTitle, formPath }
 }
 
+export const dummyRenderer = {
+  /**
+   * @param {string} _a
+   * @param {PagePreviewPanelMacro} _b
+   * @returns {never}
+   */
+  render(_a, _b) {
+    // Server Side Render shouldn't use render
+    throw new Error('Not implemented')
+  }
+}
+
 /**
  * @param {Page} page
  * @param {FormDefinition} definition
  * @param {string} [guidance]
- * @returns {PreviewPageController}
+ * @returns {PagePreviewPanelMacro}
  */
 export function getPreviewModel(page, definition, guidance = '') {
   const components = hasComponents(page) ? page.components : []
@@ -317,17 +329,18 @@ export function getPreviewModel(page, definition, guidance = '') {
     addHeading: page.title.length > 0
   }
 
-  return new PreviewPageController(components, elements, definition, {
-    /**
-     * @param {string} _a
-     * @param {PagePreviewPanelMacro} _b
-     * @returns {never}
-     */
-    render(_a, _b) {
-      // Server Side Render shouldn't use render
-      throw new Error('Not implemented')
-    }
-  })
+  const previewPageController = new PreviewPageController(
+    components,
+    elements,
+    definition,
+    dummyRenderer
+  )
+
+  return {
+    pageTitle: previewPageController.pageTitle,
+    components: previewPageController.components,
+    guidance: previewPageController.guidance
+  }
 }
 
 /**
@@ -378,11 +391,15 @@ export function questionsViewModel(
     repeaterSettings,
     validation
   )
+  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields,
-    previewModel: getPreviewModel(page, definition, fields.guidanceText.value),
+    previewModel: {
+      ...getPreviewModel(page, definition, fields.guidanceText.value),
+      previewPageUrl
+    },
     preview: {
       page: JSON.stringify(page),
       definition: JSON.stringify(definition)
@@ -402,7 +419,7 @@ export function questionsViewModel(
       (comp) => comp.type === ComponentType.FileUploadField
     ),
     notification,
-    previewPageUrl: `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`,
+    previewPageUrl,
     pageCondition: conditionDetails.pageCondition,
     pageConditionDetails: conditionDetails.pageConditionDetails,
     pageConditionPresentationString:
