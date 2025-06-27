@@ -173,6 +173,7 @@ export async function removeUniquelyMappedListsFromPage(
  * @param {FormDefinition} definition
  * @param { string | undefined } listRef
  * @param { Item[] | undefined } listItems
+ * @returns {{ additions: Item[], deletions: Item[], listItemsWithIds: Item[] }}
  */
 export function matchLists(definition, listRef, listItems) {
   /**
@@ -186,7 +187,7 @@ export function matchLists(definition, listRef, listItems) {
     return {
       id: found?.id,
       text: item.text,
-      value: item.value
+      value: found?.id
     }
   }
 
@@ -205,12 +206,26 @@ export function matchLists(definition, listRef, listItems) {
   const incomingListMapped =
     listItems?.map((x) => ({ text: x.text, value: x.value })) ?? []
 
+  const existingListValues = existingListMapped.map((x) => x.value)
   const incomingListValues = incomingListMapped.map((x) => x.value)
 
-  const deletions = existingListMapped
-    .filter((x) => !incomingListValues.includes(x.value))
-    .map((x) => populateExistingId(existingListItems, x))
-  return { deletions, listItemsWithIds }
+  const additions = /** @type {Item[]} */ (
+    incomingListMapped
+      .filter((x) => !existingListValues.includes(x.value))
+      .map((y) => ({
+        id: undefined,
+        text: y.text,
+        value: y.value.toString()
+      }))
+  )
+
+  const deletions = /** @type {Item[]} */ (
+    existingListMapped
+      .filter((x) => !incomingListValues.includes(x.value))
+      .map((x) => populateExistingId(existingListItems, x))
+  )
+
+  return { additions, deletions, listItemsWithIds }
 }
 
 /**

@@ -160,7 +160,7 @@ export default [
         questionId
       )
       const listName = component && 'list' in component ? component.list : ''
-      const { deletions, listItemsWithIds } = matchLists(
+      const { additions, deletions, listItemsWithIds } = matchLists(
         definition,
         listName,
         /** @type {Item[]} */ (listAsText)
@@ -179,11 +179,43 @@ export default [
 
       const conditions = usedInConditions(definition, deletions, listName)
       if (conditions.length) {
-        const error = createJoiError(
-          'listAsText',
-          `'${conditions[0].entryText}' has been deleted or edited but is referenced in condition '${conditions[0].displayName}'`
-        )
-        return redirectWithErrors(request, h, error, errorKey, '#')
+        setQuestionSessionState(yar, stateId, {
+          ...state,
+          listConflicts: /** @type {ListConflicts} */ ({
+            critical: conditions.map((cond) => {
+              return {
+                conflictItem: {
+                  id: cond.itemId,
+                  text: cond.entryText ?? ''
+                },
+                conditionName: cond.displayName,
+                linkableItems: deletions
+                  .concat(additions)
+                  .filter((x) => x.text !== cond.entryText)
+              }
+            }),
+            other: additions.map((addit) => {
+              return {
+                conflictItem: {
+                  id: addit.id,
+                  text: addit.text
+                },
+                linkableItems: [
+                  /** @type {Item} */ ({
+                    text: 'Add as new item',
+                    value: 'add-new'
+                  }),
+                  /** @type {Item} */ ({
+                    text: 'Covered by conflict above',
+                    value: 'covered-above'
+                  })
+                ].concat(deletions.filter((x) => x.text !== addit.text))
+              }
+            })
+          })
+        })
+        const { pathname } = request.url
+        return h.redirect(`${pathname}/resolve`)
       }
 
       return h
@@ -295,6 +327,6 @@ export default [
 ]
 
 /**
- * @import { Item, List, ListItem } from '@defra/forms-model'
+ * @import { Item, List, ListConflicts, ListItem } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
