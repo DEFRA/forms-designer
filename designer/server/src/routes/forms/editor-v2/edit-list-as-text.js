@@ -200,22 +200,13 @@ export default [
                   id: addit.id,
                   text: addit.text
                 },
-                linkableItems: [
-                  /** @type {Item} */ ({
-                    text: 'Add as new item',
-                    value: 'add-new'
-                  }),
-                  /** @type {Item} */ ({
-                    text: 'Covered by conflict above',
-                    value: 'covered-above'
-                  })
-                ].concat(deletions.filter((x) => x.text !== addit.text))
+                linkableItems: deletions.filter((x) => x.text !== addit.text)
               }
             })
           })
         })
         const { pathname } = request.url
-        return h.redirect(`${pathname}/resolve`)
+        return h.redirect(`${pathname}/resolve-critical`)
       }
 
       return h

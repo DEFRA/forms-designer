@@ -417,7 +417,7 @@ export interface ListConflict {
   }
   conditionName: string
   linkableItems: {
-    id: string | undefined
+    id?: string
     text: string
     value: string | number | boolean
   }[]

@@ -1,14 +1,18 @@
 import { StatusCodes } from 'http-status-codes'
+import { validate as isValidUUID } from 'uuid'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { getQuestionSessionState } from '~/src/lib/session-helper.js'
-import * as viewModel from '~/src/models/forms/editor-v2/edit-list-resolve.js'
+import {
+  getQuestionSessionState,
+  setQuestionSessionState
+} from '~/src/lib/session-helper.js'
+import * as viewModel from '~/src/models/forms/editor-v2/edit-list-resolve-critical.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
-const ROUTE_FULL_PATH_FROM_QUESTION_RESOLVE = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/edit-list/{stateId}/resolve`
+const ROUTE_FULL_PATH_FROM_QUESTION_RESOLVE = `/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/edit-list/{stateId}/resolve-critical`
 
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
@@ -31,19 +35,18 @@ export default [
       const state = getQuestionSessionState(yar, stateId)
 
       return h.view(
-        'forms/editor-v2/edit-list-resolve',
-        viewModel.editListResolveViewModel(
+        'forms/editor-v2/edit-list-resolve-critical',
+        viewModel.editListResolveCriticalViewModel(
           metadata,
           definition,
           state?.listConflicts ??
             /** @type {ListConflicts} */ ({
               critical: [],
-              other: [],
-              deletions: []
+              other: []
             }),
           {
-            backText: 'Back to edit question',
-            backUrl: `page/${pageId}/question/${questionId}/details/${stateId}`
+            backText: 'Back to edit list',
+            backUrl: `page/${pageId}/question/${questionId}/edit-list/${stateId}`
           },
           undefined,
           validation
@@ -62,44 +65,46 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId: string }, Payload: { originalItem: string[], otherItem?: string[] } }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId: string }, Payload: { originalItem: string[] } }>}
    */
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH_FROM_QUESTION_RESOLVE,
-    async handler(request, h) {
-      const { yar, params, payload, auth } = request
+    handler(request, h) {
+      const { yar, params, payload } = request
       const { slug, pageId, questionId, stateId } = params
       const { originalItem } = payload
-      const { token } = auth.credentials
-
-      const { definition } = await getForm(slug, token)
 
       const state = getQuestionSessionState(yar, stateId)
 
-      // eslint-disable-next-line no-console
-      console.log('state conflicts', state?.listConflicts)
-      // eslint-disable-next-line no-console
-      console.log('def name', definition.name)
-      // eslint-disable-next-line no-console
-      console.log('originalItem', originalItem)
+      // TODO - handle an array of posted values
+      /** @type { ListItem | undefined } */
+      let item
+      const listItems = state?.listItems
+      if (typeof originalItem === 'string') {
+        if (!isValidUUID(originalItem)) {
+          // Apply new item to conflict
+          const conflict = state?.listConflicts?.critical[0].conflictItem
+          item = listItems?.find((x) => x.id === conflict?.id)
+        } else {
+          item = listItems?.find((x) => x.id === originalItem)
+        }
 
-      /*
-      setQuestionSessionState(yar, stateId, {
-        ...state,
-        listItems: listItemsWithIds.map((item) => {
-          return {
-            ...item,
-            id: item.id ?? randomUUID()
-          }
-        })
-      })
-      */
+        if (item) {
+          item.value = originalItem
+          item.text = originalItem
+
+          setQuestionSessionState(yar, stateId, {
+            ...state,
+            listItems
+          })
+        }
+      }
       return h
         .redirect(
           editorv2Path(
             slug,
-            `page/${pageId}/question/${questionId}/edit-list/${stateId}`
+            `page/${pageId}/question/${questionId}/edit-list/${stateId}/resolve-other`
           )
         )
         .code(StatusCodes.SEE_OTHER)
@@ -117,6 +122,6 @@ export default [
 ]
 
 /**
- * @import { ListConflicts } from '@defra/forms-model'
+ * @import { ListConflicts, ListItem } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

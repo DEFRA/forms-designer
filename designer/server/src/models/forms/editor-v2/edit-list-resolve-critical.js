@@ -11,7 +11,7 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
  * @param {string[]} [notification]
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function editListResolveViewModel(
+export function editListResolveCriticalViewModel(
   metadata,
   definition,
   listConflicts,

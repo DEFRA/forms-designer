@@ -1,0 +1,82 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+  backLink: backLink,
+  useNewMasthead: true
+}) %}
+
+  {% call appEditorCard({
+    title: cardTitle,
+    heading: cardHeading,
+    caption: cardCaption,
+    notification: notification,
+    errorList: errorList
+  }) %}
+
+    <form class="form" method="post">
+
+      <h2 class="govuk-heading-l">Resolve conflicts in your list options</h2>
+
+      <p>Choose an original item that is being superseded by the new item</p>
+
+      <h2 class="govuk-heading-m">Critical conflicts</h2>
+
+      <table class="govuk-table app-conditions-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Conflicting original entry</th>
+            <th scope="col" class="govuk-table__header">New item</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for criticalConflict in conflicts.critical %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell"><span class="govuk-!-font-weight-bold">{{ criticalConflict.conflictItem.text }}</span>
+            <p>Used in: Condition named '{{ criticalConflict.conditionName }}'</p></td>
+            <td class="govuk-table__cell govuk-!-width-one-quarter">
+              {{ govukSelect({
+                id: "originalItem",
+                name: "originalItem",
+                items: criticalConflict.linkableItems
+                })
+              }}
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        {{ govukButton({
+          text: 'Apply'
+        }) }}
+
+        <a href="{{ backLink.href }}" class="govuk-link govuk-link--no-visited-state">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+    {% endcall %}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

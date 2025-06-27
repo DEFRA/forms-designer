@@ -29,40 +29,12 @@
 
     <form class="form" method="post">
 
-      <h2 class="govuk-heading-l">Resolve conflicts in your list options</h2>
+      <h2 class="govuk-heading-l">Check additions in your list options</h2>
 
       <p>Choose an original item to update to the new entry, or select 'Add as new item' the conflict is not critical and you genuinely want to add a new entry</p>
 
-      <h2 class="govuk-heading-m">Critical conflicts</h2>
-
-      <table class="govuk-table app-conditions-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Conflicting original entry</th>
-            <th scope="col" class="govuk-table__header">New item</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          {% for criticalConflict in conflicts.critical %}
-          <tr class="govuk-table__row">
-            <td class="govuk-table__cell"><span class="govuk-!-font-weight-bold">{{ criticalConflict.conflictItem.text }}</span>
-            <p>Used in: Condition named '{{ criticalConflict.conditionName }}'</p></td>
-            <td class="govuk-table__cell govuk-!-width-one-quarter">
-              {{ govukSelect({
-                id: "originalItem",
-                name: "originalItem",
-                items: criticalConflict.linkableItems
-                })
-              }}
-              </div>
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-
       <h2 class="govuk-heading-m">Are these new items?</h2>
-      <p>Select 'Add new item' for new items, otherwise chose the appropriate deleted entry that this item links to</p>
+      <p>Select 'Add new item' for new items, otherwise chose the appropriate deleted entry that this item has superseded</p>
 
       <table class="govuk-table app-conditions-table">
         <thead class="govuk-table__head">
