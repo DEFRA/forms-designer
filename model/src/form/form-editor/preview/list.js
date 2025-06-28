@@ -138,6 +138,7 @@ export class ListQuestion extends Question {
   }
 
   /**
+   * @protected
    * @returns {{
    *  formGroup?: {afterInputs: {html: string}};
    *  hint: DefaultComponent;
@@ -147,7 +148,7 @@ export class ListQuestion extends Question {
    *  items: ListItemReadonly[]
    * }}
    */
-  get renderInput() {
+  _renderInput() {
     const afterInputs =
       /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
         this.list.length
@@ -169,6 +170,20 @@ export class ListQuestion extends Question {
       items: this.list,
       ...afterInputs
     }
+  }
+
+  /**
+   * @returns {{
+   *  formGroup?: {afterInputs: {html: string}};
+   *  hint: DefaultComponent;
+   *  name: string;
+   *  fieldset?: GovukFieldset;
+   *  id: string;
+   *  items: ListItemReadonly[]
+   * }}
+   */
+  get renderInput() {
+    return this._renderInput()
   }
 
   /**
