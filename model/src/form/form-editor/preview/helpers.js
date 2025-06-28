@@ -5,7 +5,10 @@ import { ComponentElements } from '~/src/form/form-editor/preview/component-elem
 import { ContentElements } from '~/src/form/form-editor/preview/content.js'
 import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
-import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
+import {
+  ListQuestion,
+  SelectComponentElements
+} from '~/src/form/form-editor/preview/list.js'
 import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
@@ -65,7 +68,13 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
        */
       let questionElements
 
-      if (hasSelectionFields(component) && hasListField(component)) {
+      if (
+        component.type === ComponentType.AutocompleteField ||
+        component.type === ComponentType.SelectField
+      ) {
+        const list = findDefinitionListFromComponent(component, definition)
+        questionElements = new SelectComponentElements(component, list)
+      } else if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new ListComponentElements(component, list)
       } else if (

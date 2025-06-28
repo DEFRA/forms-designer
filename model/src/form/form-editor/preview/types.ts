@@ -22,6 +22,7 @@ export interface BaseSettings {
   shortDesc: string
   items: ListElement[]
   content: string
+  attributes?: Record<string, string>
 }
 
 export interface DefaultComponent {
@@ -53,6 +54,10 @@ export interface QuestionElements extends DomElementsBase {
 
 export interface AutocompleteElements extends QuestionElements {
   autocompleteOptions: string
+}
+
+export interface RenderBase {
+  render(questionTemplate: string, renderContext: RenderContext): void
 }
 
 export interface QuestionRenderContext {

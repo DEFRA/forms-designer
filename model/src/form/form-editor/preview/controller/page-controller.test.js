@@ -4,6 +4,7 @@ import {
   buildListItem,
   buildMarkdownComponent,
   buildRadiosComponent,
+  buildSelectFieldComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
@@ -106,14 +107,25 @@ describe('page-controller', () => {
     const guidanceComponent = buildMarkdownComponent({
       content: 'This is some guidance'
     })
+
+    const selectComponent = buildSelectFieldComponent({
+      id: 'd46c9ba0-f5d6-47ab-aa6b-f60b64306e5f',
+      title: 'Select component',
+      list: listId
+    })
     const pageTitle = 'Page title'
     const page = buildQuestionPage({
       title: pageTitle,
-      components: [textFieldComponent, listComponent]
+      components: [textFieldComponent, listComponent, selectComponent]
     })
     const pageWithGuidance = buildQuestionPage({
       title: pageTitle,
-      components: [guidanceComponent, textFieldComponent, listComponent]
+      components: [
+        guidanceComponent,
+        textFieldComponent,
+        listComponent,
+        selectComponent
+      ]
     })
     const formDefinition = buildDefinition({ pages: [page], lists: [list] })
     const formDefinitionWithGuidance = buildDefinition({
@@ -138,7 +150,7 @@ describe('page-controller', () => {
     const buildController = ({
       currentPage = page,
       definition = formDefinition,
-      components = [textFieldComponent, listComponent],
+      components = page.components,
       pageElementsInput = undefined
     } = {}) => {
       const pageRenderMock = jest.fn()
@@ -206,13 +218,53 @@ describe('page-controller', () => {
         },
         questionType: ComponentType.RadiosField
       }
+      expect(pageController.components).toHaveLength(3)
+      const expectedSelectComponent = {
+        model: {
+          classes: '',
+          label: {
+            classes: 'govuk-label--m',
+            text: 'Select component'
+          },
+          hint: {
+            classes: '',
+            text: ''
+          },
+          id: 'selectInput',
+          items: [
+            {
+              hint: undefined,
+              id: 'da310b6e-2513-4d14-a7a1-63a93231891d',
+              label: {
+                classes: '',
+                text: ''
+              },
+              text: '',
+              value: ''
+            },
+            {
+              hint: undefined,
+              id: '',
+              label: {
+                classes: '',
+                text: 'List item 1'
+              },
+              text: 'List item 1',
+              value: 'list-item-1'
+            }
+          ],
+          name: 'selectInput'
+        },
+        questionType: 'SelectField'
+      }
       expect(pageController.pageTitle).toEqual({
         text: pageTitle,
         classes: ''
       })
       expect(pageController.components).toEqual([
         expectedPageComponent,
-        expectedListComponent
+        expectedListComponent,
+        expectedSelectComponent
       ])
     })
 

@@ -33,6 +33,7 @@ export interface QuestionBaseModel {
   id?: string
   name?: string
   content?: string
+  attributes?: Record<string, string>
   label?: DefaultComponent
   hint?: DefaultComponent
   fieldset?: GovukFieldset

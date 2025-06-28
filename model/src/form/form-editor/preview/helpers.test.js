@@ -146,12 +146,65 @@ describe('helpers', () => {
       expect(mapQuestion.titleText).toBe('What is your answer?')
     })
 
+    it('should map Autocomplete component', () => {
+      const question = buildAutoCompleteComponent(listComponentContent)
+      const mapQuestion = mapComponentToPreviewQuestion(
+        renderer,
+        definition
+      )(question)
+
+      expect(mapQuestion).toBeInstanceOf(AutocompleteListQuestion)
+      expect(mapQuestion.titleText).toBe('What is your answer?')
+      expect(mapQuestion.renderInput.items?.[0]).toEqual({
+        hint: undefined,
+        id: 'da310b6e-2513-4d14-a7a1-63a93231891d',
+        text: '',
+        value: ''
+      })
+      expect(mapQuestion.renderInput.items?.[1]).toEqual({
+        hint: undefined,
+        id: listItemId1,
+        label: {
+          classes: '',
+          text: 'Item a'
+        },
+        text: 'Item a',
+        value: 'item-a'
+      })
+    })
+
+    it('should map SelectField component', () => {
+      const question = buildSelectFieldComponent(listComponentContent)
+      const mapQuestion = mapComponentToPreviewQuestion(
+        renderer,
+        definition
+      )(question)
+
+      expect(mapQuestion).toBeInstanceOf(SelectQuestion)
+      expect(mapQuestion.titleText).toBe('What is your answer?')
+      expect(mapQuestion.renderInput.items?.[0]).toEqual({
+        hint: undefined,
+        id: 'da310b6e-2513-4d14-a7a1-63a93231891d',
+        label: {
+          classes: '',
+          text: ''
+        },
+        text: '',
+        value: ''
+      })
+      expect(mapQuestion.renderInput.items?.[1]).toEqual({
+        hint: undefined,
+        id: listItemId1,
+        label: {
+          classes: '',
+          text: 'Item a'
+        },
+        text: 'Item a',
+        value: 'item-a'
+      })
+    })
+
     it.each([
-      {
-        type: 'Autocomplete',
-        buildComponent: buildAutoCompleteComponent,
-        expected: AutocompleteListQuestion
-      },
       {
         type: 'CheckboxesFieldComponent',
         buildComponent: buildCheckboxComponent,
@@ -161,11 +214,6 @@ describe('helpers', () => {
         type: 'RadiosFieldComponent',
         buildComponent: buildRadiosComponent,
         expected: RadioQuestion
-      },
-      {
-        type: 'SelectFieldComponent',
-        buildComponent: buildSelectFieldComponent,
-        expected: SelectQuestion
       }
     ])(
       'should map list component type $type',

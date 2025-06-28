@@ -17,9 +17,15 @@ import '~/src/views/preview-components/emailaddressfield.njk'
 import '~/src/views/page-preview-component/template.njk'
 import '~/src/views/page-preview-component/macro.njk'
 import '~/src/views/preview-controllers/page-controller.njk'
-import { PreviewPageController, hasComponents } from '@defra/forms-model'
+import {
+  ComponentType,
+  PreviewPageController,
+  hasComponents
+} from '@defra/forms-model'
 
-import { NunjucksPageRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
+import { AutocompleteRendererBase } from '~/src/javascripts/preview/autocomplete-renderer.js'
+import { NunjucksPageRenderer } from '~/src/javascripts/preview/nunjucks-page-renderer.js'
+import { NunjucksRendererBase } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import {
   PagePreviewDomElements,
   PagePreviewListeners
@@ -32,9 +38,18 @@ import {
  */
 export function setupPageController(page, definition) {
   const elements = new PagePreviewDomElements()
-  const components = hasComponents(page) ? page.components : []
+  const components = /** @type {ComponentDef[]} */ (
+    hasComponents(page) ? page.components : []
+  )
 
-  const renderer = new NunjucksPageRenderer(elements)
+  const hasAutocomplete = components.some(
+    (component) => component.type === ComponentType.AutocompleteField
+  )
+  const nunjucksRenderBase = hasAutocomplete
+    ? new AutocompleteRendererBase(elements)
+    : new NunjucksRendererBase(elements)
+
+  const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
   const previewPageController = new PreviewPageController(
     components,
     elements,
