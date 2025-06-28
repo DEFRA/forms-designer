@@ -8,4 +8,15 @@ export class SelectQuestion extends ListQuestion {
    * @type {ComponentType}
    */
   componentType = ComponentType.SelectField
+
+  /**
+   * @returns {ListItemReadonly[]}
+   */
+  get list() {
+    return this._getList()
+  }
 }
+
+/**
+ * @import { ListItemReadonly } from '~/src/form/form-editor/types.js'
+ */
