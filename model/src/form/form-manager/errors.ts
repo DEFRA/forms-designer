@@ -1,6 +1,10 @@
 import type Joi from 'joi'
 
-import { FormDefinitionErrorType, formDefinitionErrors, type FormDefinitionError } from '~/src/form/form-manager/types.js'
+import {
+  FormDefinitionErrorType,
+  formDefinitionErrors,
+  type FormDefinitionError
+} from '~/src/form/form-manager/types.js'
 
 /**
  * Checks and applies an `errorType` and also an `errorCode` for known errors
