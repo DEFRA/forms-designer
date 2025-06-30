@@ -6,7 +6,7 @@ import {
   type PageQuestion,
   type PageRepeat
 } from '~/src/form/form-definition/types.js'
-import { ComponentType } from '~/src/index.js'
+import { ComponentType, hasFormField } from '~/src/index.js'
 import {
   ControllerNames,
   ControllerTypes
@@ -163,10 +163,9 @@ export function getPageTitle(page: Page) {
   if (page.title !== '') {
     return page.title
   }
-  if (hasComponents(page) && page.components.length > 0) {
-    const firstComp = page.components.find(
-      (c) => c.type !== ComponentType.Markdown
-    )
+
+  if (hasComponentsEvenIfNoNext(page)) {
+    const firstComp = page.components.find(hasFormField)
     if (firstComp) {
       return firstComp.title
     }
