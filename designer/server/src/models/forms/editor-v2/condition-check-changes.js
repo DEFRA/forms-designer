@@ -1,3 +1,5 @@
+import { getPageTitle } from '@defra/forms-model'
+
 import {
   getFormSpecificNavigation,
   toPresentationHtmlV2
@@ -16,7 +18,7 @@ export function getImpactedPages(definition, conditionId) {
     .map((page) => ({
       pageNum:
         definition.pages.findIndex((innerPage) => innerPage.id === page.id) + 1,
-      pageTitle: page.title
+      pageTitle: getPageTitle(page)
     }))
     .map((x) => `Page ${x.pageNum}: ${x.pageTitle}`)
 }
@@ -79,5 +81,5 @@ export function conditionCheckChangesViewModel(
 }
 
 /**
- * @import { ConditionSessionState, FormMetadata, FormDefinition, ConditionWrapperV2 } from '@defra/forms-model'
+ * @import { ConditionSessionState, FormMetadata, FormDefinition, ConditionWrapperV2, Page } from '@defra/forms-model'
  */

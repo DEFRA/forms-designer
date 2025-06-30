@@ -1,5 +1,6 @@
 import {
   buildCheckboxComponent,
+  buildMarkdownComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import {
@@ -10,13 +11,15 @@ import {
 import {
   type Page,
   type PageFileUpload,
-  type PageQuestion
+  type PageQuestion,
+  type PageSummary
 } from '~/src/form/form-definition/types.js'
 import { ComponentType, ControllerType } from '~/src/index.js'
 import { ControllerTypes } from '~/src/pages/controller-types.js'
 import {
   controllerNameFromPath,
   getPageDefaults,
+  getPageTitle,
   hasComponents,
   hasComponentsEvenIfNoNext,
   hasFormComponents,
@@ -322,4 +325,101 @@ describe('helpers', () => {
       expect(omitFileUploadComponent(undefined)).toBe(false)
     })
   })
+
+  describe('getPageTitle', () => {
+    const components = /** @type {ComponentDef[]} */ [
+      buildTextFieldComponent({
+        id: 'comp1',
+        name: 'comp1',
+        title: 'My first component'
+      }),
+      buildTextFieldComponent({
+        id: 'comp2',
+        name: 'comp2',
+        title: 'My second component'
+      })
+    ]
+
+    const componentsWithGuidance = /** @type {ComponentDef[]} */ [
+      buildMarkdownComponent(),
+      buildTextFieldComponent({
+        id: 'comp1',
+        name: 'comp1',
+        title: 'My first component'
+      }),
+      buildTextFieldComponent({
+        id: 'comp2',
+        name: 'comp2',
+        title: 'My second component'
+      })
+    ]
+    it('should return page title if set on page', () => {
+      const page: PageQuestion = {
+        title: 'My page title',
+        path: '/empty-page',
+        components,
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getPageTitle(page)).toBe('My page title')
+    })
+
+    it('should return page title from first component if not set on page', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components,
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getPageTitle(page)).toBe('My first component')
+    })
+
+    it('should return page title from first non-markdown component if not set on page', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components: componentsWithGuidance,
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getPageTitle(page)).toBe('My first component')
+    })
+
+    it('should return unknown title if no components and no page title set', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components: [],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getPageTitle(page)).toBe('Page title unknown')
+    })
+
+    it('should return unknown title if components missing and no page title set', () => {
+      const page: PageSummary = {
+        title: '',
+        path: '/empty-page',
+        id: '0f711e08-3801-444d-8e37-a88867c48f04',
+        controller: ControllerType.Summary
+      }
+      expect(getPageTitle(page)).toBe('Page title unknown')
+    })
+
+    it('should return unknown title if no non-guidance component and no page title set', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components: [buildMarkdownComponent()],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getPageTitle(page)).toBe('Page title unknown')
+    })
+  })
 })
+
+/**
+ * @import { ComponentDef } from '@defra/forms-model'
+ */
