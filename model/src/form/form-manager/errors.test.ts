@@ -1,11 +1,9 @@
-import { type ValidationError } from 'joi'
-
 import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
 import * as schema from '~/src/form/form-definition/index.js'
+import { getErrors } from '~/src/form/form-manager/errors.js'
 import {
   FormDefinitionError,
-  FormDefinitionErrorType,
-  type FormDefinitionErrorCause
+  FormDefinitionErrorType
 } from '~/src/form/form-manager/types.js'
 import {
   buildDefinition,
@@ -17,54 +15,6 @@ import {
 } from '~/src/stubs.js'
 
 const formDefinitionV2Schema = schema.formDefinitionV2Schema
-
-/**
- * Get the error causes from a form definition joi validation error
- * @returns {FormDefinitionErrorCause[]}
- */
-function getCauses(validationError: ValidationError | undefined) {
-  return (
-    validationError?.details.map((detail) => {
-      if (
-        detail.context?.errorType === FormDefinitionErrorType.Unique &&
-        detail.context.errorCode
-      ) {
-        return {
-          id: /** @type {FormDefinitionError} */ detail.context.errorCode,
-          type: FormDefinitionErrorType.Unique,
-          message: detail.message,
-          detail: {
-            path: detail.path,
-            pos: detail.context.pos,
-            dupePos: detail.context.dupePos
-          }
-        }
-      }
-
-      if (
-        detail.context?.errorType === FormDefinitionErrorType.Ref &&
-        detail.context.errorCode
-      ) {
-        return {
-          id: /** @type {FormDefinitionError} */ detail.context.errorCode,
-          type: FormDefinitionErrorType.Ref,
-          message: detail.message,
-          detail: {
-            path: detail.path
-          }
-        }
-      }
-
-      // Catch all others
-      return {
-        id: FormDefinitionError.Other,
-        type: FormDefinitionErrorType.Type,
-        message: detail.message,
-        detail: detail.context
-      }
-    }) ?? []
-  )
-}
 
 const pageId1 = '73cf34ee-f53a-4159-9eef-b0286fd81934'
 const pageId2 = '5262b5a2-ace3-4297-9a29-0e100b42e24c'
@@ -87,9 +37,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniquePageId,
             detail: { path: ['pages', 1], pos: 1, dupePos: 0 },
@@ -111,9 +61,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniquePagePath,
             detail: { path: ['pages', 1], pos: 1, dupePos: 0 },
@@ -150,9 +100,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniquePageComponentId,
             detail: { path: ['pages', 0, 'components', 1], pos: 1, dupePos: 0 },
@@ -187,9 +137,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniquePageComponentName,
             detail: { path: ['pages', 0, 'components', 1], pos: 1, dupePos: 0 },
@@ -218,9 +168,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueSectionName,
             detail: { path: ['sections', 1], pos: 1, dupePos: 0 },
@@ -242,9 +192,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueSectionTitle,
             detail: { path: ['sections', 1], pos: 1, dupePos: 0 },
@@ -293,9 +243,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueConditionId,
             detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
@@ -349,9 +299,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueConditionDisplayName,
             detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
@@ -382,9 +332,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueListId,
             detail: { path: ['lists', 1], pos: 1, dupePos: 0 },
@@ -406,9 +356,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueListName,
             detail: { path: ['lists', 1], pos: 1, dupePos: 0 },
@@ -430,9 +380,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueListTitle,
             detail: { path: ['lists', 1], pos: 1, dupePos: 0 },
@@ -467,9 +417,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueListItemId,
             detail: { path: ['lists', 0, 'items', 1], pos: 1, dupePos: 0 },
@@ -495,9 +445,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueListItemText,
             detail: { path: ['lists', 0, 'items', 1], pos: 1, dupePos: 0 },
@@ -523,9 +473,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.UniqueListItemValue,
             detail: { path: ['lists', 0, 'items', 1], pos: 1, dupePos: 0 },
@@ -553,9 +503,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.RefPageCondition,
             detail: { path: ['pages', 0, 'condition'] },
@@ -596,9 +546,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.RefConditionComponentId,
             detail: { path: ['conditions', 0, 'items', 0, 'componentId'] },
@@ -656,9 +606,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.RefConditionListId,
             detail: { path: ['conditions', 0, 'items', 0, 'value', 'listId'] },
@@ -733,9 +683,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.RefConditionItemId,
             detail: { path: ['conditions', 0, 'items', 0, 'value', 'itemId'] },
@@ -825,9 +775,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.RefConditionConditionId,
             detail: { path: ['conditions', 1, 'items', 0, 'conditionId'] },
@@ -863,9 +813,9 @@ describe('validation errors', () => {
 
         expect(error).toBeDefined()
 
-        const causes = getCauses(error)
+        const errors = getErrors(error)
 
-        expect(causes).toEqual([
+        expect(errors).toEqual([
           {
             id: FormDefinitionError.RefPageComponentList,
             detail: { path: ['pages', 0, 'components', 0, 'list'] },
