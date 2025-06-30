@@ -209,6 +209,26 @@ export default [
         return h.redirect(`${pathname}/resolve-critical`)
       }
 
+      if (additions.length && deletions.length) {
+        setQuestionSessionState(yar, stateId, {
+          ...state,
+          listConflicts: /** @type {ListConflicts} */ ({
+            critical: /** @type {ListConflict[]} */ ([]),
+            other: additions.map((addit) => {
+              return {
+                conflictItem: {
+                  id: addit.id,
+                  text: addit.text
+                },
+                linkableItems: deletions.filter((x) => x.text !== addit.text)
+              }
+            })
+          })
+        })
+        const { pathname } = request.url
+        return h.redirect(`${pathname}/resolve-other`)
+      }
+
       return h
         .redirect(
           editorv2Path(
@@ -318,6 +338,6 @@ export default [
 ]
 
 /**
- * @import { Item, List, ListConflicts, ListItem } from '@defra/forms-model'
+ * @import { Item, List, ListConflict, ListConflicts, ListItem } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
