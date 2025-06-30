@@ -9,7 +9,7 @@ export const checkError = (
   err: Joi.ErrorReport,
   formErrors: FormDefinitionError[]
 ) => {
-  if (!err.local.errorType) {
+  if (err.local.errorType) {
     return
   }
 
