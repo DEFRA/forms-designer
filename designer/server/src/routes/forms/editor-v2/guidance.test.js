@@ -52,8 +52,9 @@ describe('Editor v2 guidance routes', () => {
 
     expect($mainHeadings[0]).toHaveTextContent('Test form')
     expect($mainHeadings[1]).toHaveTextContent('Edit guidance page')
-    expect($actions).toHaveLength(3)
+    expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save')
+    expect($actions[3]).toHaveTextContent('Manage conditions')
   })
 
   test('POST - should error if missing mandatory fields', async () => {
