@@ -93,22 +93,25 @@ export default [
 
       const state = getQuestionSessionState(yar, stateId)
 
-      // TODO - handle an array of otherItem(s)
-      /** @type { ListItem | undefined } */
-      let item
+      // console.log('otherItem', otherItem)
+      const otherItems = typeof otherItem === 'string' ? [otherItem] : otherItem
+      // console.log('otherItems', otherItems)
+
       const listItems = state?.listItems
-      if (typeof otherItem === 'string') {
-        if (!isValidUUID(otherItem)) {
+      for (const otherItemItem of otherItems) {
+        /** @type { ListItem | undefined } */
+        let item
+        if (!isValidUUID(otherItemItem)) {
           // Apply new item to conflict
           const conflict = state?.listConflicts?.other[0].conflictItem
           item = listItems?.find((x) => x.id === conflict?.id)
         } else {
-          item = listItems?.find((x) => x.id === otherItem)
+          item = listItems?.find((x) => x.id === otherItemItem)
         }
 
         if (item) {
-          item.value = otherItem
-          item.text = otherItem
+          item.value = otherItemItem
+          item.text = otherItemItem
 
           setQuestionSessionState(yar, stateId, {
             ...state,
