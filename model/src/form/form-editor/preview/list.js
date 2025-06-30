@@ -140,7 +140,7 @@ export class ListQuestion extends Question {
   /**
    * @protected
    * @returns {{
-   *  formGroup?: {afterInputs: {html: string}};
+   *  formGroup?: FormGroupAfterInput;
    *  hint: DefaultComponent;
    *  name: string;
    *  fieldset?: GovukFieldset;
@@ -149,18 +149,17 @@ export class ListQuestion extends Question {
    * }}
    */
   _renderInput() {
-    const afterInputs =
-      /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
-        this.list.length
-          ? {}
-          : {
-              formGroup: {
-                afterInputs: {
-                  html: this._listElements.afterInputsHTML
-                }
+    const afterInputs = /** @type {{ formGroup?: FormGroupAfterInput }} */ (
+      this.list.length
+        ? {}
+        : {
+            formGroup: {
+              afterInputs: {
+                html: this._listElements.afterInputsHTML
               }
             }
-      )
+          }
+    )
 
     return {
       id: this.listRenderId,
@@ -174,7 +173,7 @@ export class ListQuestion extends Question {
 
   /**
    * @returns {{
-   *  formGroup?: {afterInputs: {html: string}};
+   *  formGroup?: FormGroupAfterInput;
    *  hint: DefaultComponent;
    *  name: string;
    *  fieldset?: GovukFieldset;
@@ -323,5 +322,6 @@ export class ListQuestion extends Question {
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
  * @import { SelectionComponentsDef, ListComponentsDef } from '~/src/components/types.js'
  * @import { List, Item } from '~/src/form/form-definition/types.js'
+ * @import { FormGroupAfterInput }  from '~/src/form/form-editor/macros/types.js'
  * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset, BaseSettings, QuestionElements } from '~/src/form/form-editor/preview/types.js'
  */

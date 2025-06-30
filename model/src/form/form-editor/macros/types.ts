@@ -29,6 +29,10 @@ export interface AppPreviewPanelTabsMacro {
   basePageFields: GovukField[]
 }
 
+export type FormGroupAfterInput =
+  | { afterInputs: { html: string } }
+  | { afterInput: { html: string } }
+
 export interface QuestionBaseModel {
   id?: string
   name?: string
@@ -39,7 +43,7 @@ export interface QuestionBaseModel {
   fieldset?: GovukFieldset
   readonly items?: ListItemReadonly[] | DateItem[]
   text?: string
-  formGroup?: { afterInputs: { html: string } }
+  formGroup?: FormGroupAfterInput
   type?: 'text' | 'number' | 'boolean'
   classes?: string
 }

@@ -19,10 +19,8 @@ export class AutocompleteRendererBase extends NunjucksRendererBase {
       '[data-module="govuk-accessible-autocomplete"]'
     )
     Array.from(autoCompleteFields).forEach((autoCompleteField) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
       accessibleAutocomplete.enhanceSelectElement({
         defaultValue: '',
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         selectElement: autoCompleteField
       })
     })
