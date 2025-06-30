@@ -17,17 +17,18 @@ export class SelectSortableQuestion extends ListSortableQuestion {
   componentType = ComponentType.SelectField
 
   get renderInput() {
-    const afterInput = /** @type {{ formGroup?: FormGroupAfterInput }} */ (
-      this.list.length
-        ? {}
-        : {
-            formGroup: {
-              afterInput: {
-                html: this._listElements.afterInputsHTML
+    const afterInput =
+      /** @type {{ formGroup?: { afterInput: { html: string }} }} */ (
+        this.list.length
+          ? {}
+          : {
+              formGroup: {
+                afterInput: {
+                  html: this._listElements.afterInputsHTML
+                }
               }
             }
-          }
-    )
+      )
 
     return {
       id: this._fieldName,
