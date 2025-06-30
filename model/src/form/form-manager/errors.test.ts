@@ -22,46 +22,48 @@ const formDefinitionV2Schema = schema.formDefinitionV2Schema
  * Get the error causes from a form definition joi validation error
  * @returns {FormDefinitionErrorCause[]}
  */
-function getCauses(validationError: ValidationError) {
-  return validationError.details.map((detail) => {
-    if (
-      detail.context?.errorType === FormDefinitionErrorType.Unique &&
-      detail.context.errorCode
-    ) {
-      return {
-        id: /** @type {FormDefinitionError} */ detail.context.errorCode,
-        type: FormDefinitionErrorType.Unique,
-        message: detail.message,
-        detail: {
-          path: detail.path,
-          pos: detail.context.pos,
-          dupePos: detail.context.dupePos
+function getCauses(validationError: ValidationError | undefined) {
+  return (
+    validationError?.details.map((detail) => {
+      if (
+        detail.context?.errorType === FormDefinitionErrorType.Unique &&
+        detail.context.errorCode
+      ) {
+        return {
+          id: /** @type {FormDefinitionError} */ detail.context.errorCode,
+          type: FormDefinitionErrorType.Unique,
+          message: detail.message,
+          detail: {
+            path: detail.path,
+            pos: detail.context.pos,
+            dupePos: detail.context.dupePos
+          }
         }
       }
-    }
 
-    if (
-      detail.context?.errorType === FormDefinitionErrorType.Ref &&
-      detail.context.errorCode
-    ) {
-      return {
-        id: /** @type {FormDefinitionError} */ detail.context.errorCode,
-        type: FormDefinitionErrorType.Ref,
-        message: detail.message,
-        detail: {
-          path: detail.path
+      if (
+        detail.context?.errorType === FormDefinitionErrorType.Ref &&
+        detail.context.errorCode
+      ) {
+        return {
+          id: /** @type {FormDefinitionError} */ detail.context.errorCode,
+          type: FormDefinitionErrorType.Ref,
+          message: detail.message,
+          detail: {
+            path: detail.path
+          }
         }
       }
-    }
 
-    // Catch all others
-    return {
-      id: FormDefinitionError.Other,
-      type: FormDefinitionErrorType.Type,
-      message: detail.message,
-      detail: detail.context
-    }
-  })
+      // Catch all others
+      return {
+        id: FormDefinitionError.Other,
+        type: FormDefinitionErrorType.Type,
+        message: detail.message,
+        detail: detail.context
+      }
+    }) ?? []
+  )
 }
 
 const pageId1 = '73cf34ee-f53a-4159-9eef-b0286fd81934'
