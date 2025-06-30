@@ -111,6 +111,15 @@ export class Question extends PreviewComponent {
     this._hintText = value
     this.render()
   }
+
+  set shortDescription(value) {
+    this._shortDescription = value
+    this.render()
+  }
+
+  get shortDescription() {
+    return this._shortDescription
+  }
 }
 
 /**
