@@ -79,6 +79,31 @@ export class ListComponentElements extends QuestionComponentElements {
   }
 }
 
+/**
+ * @implements {QuestionElements}
+ */
+export class SelectComponentElements extends ListComponentElements {
+  /**
+   * @returns {BaseSettings}
+   * @protected
+   */
+  _getValues() {
+    const emptyItem = /** @type {ListElement} */ ({
+      id: 'da310b6e-2513-4d14-a7a1-63a93231891d',
+      text: '',
+      value: ''
+    })
+    const items = /** @type {ListElement[]} */ ([
+      emptyItem,
+      ...super._getValues().items
+    ])
+    return {
+      ...super._getValues(),
+      items
+    }
+  }
+}
+
 export class ListQuestion extends Question {
   /**
    * @type {ComponentType}
@@ -113,8 +138,9 @@ export class ListQuestion extends Question {
   }
 
   /**
+   * @protected
    * @returns {{
-   *  formGroup?: {afterInputs: {html: string}};
+   *  formGroup?: FormGroupAfterInput;
    *  hint: DefaultComponent;
    *  name: string;
    *  fieldset?: GovukFieldset;
@@ -122,19 +148,18 @@ export class ListQuestion extends Question {
    *  items: ListItemReadonly[]
    * }}
    */
-  get renderInput() {
-    const afterInputs =
-      /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
-        this.list.length
-          ? {}
-          : {
-              formGroup: {
-                afterInputs: {
-                  html: this._listElements.afterInputsHTML
-                }
+  _renderInput() {
+    const afterInputs = /** @type {{ formGroup?: FormGroupAfterInput }} */ (
+      this.list.length
+        ? {}
+        : {
+            formGroup: {
+              afterInputs: {
+                html: this._listElements.afterInputsHTML
               }
             }
-      )
+          }
+    )
 
     return {
       id: this.listRenderId,
@@ -144,6 +169,20 @@ export class ListQuestion extends Question {
       items: this.list,
       ...afterInputs
     }
+  }
+
+  /**
+   * @returns {{
+   *  formGroup?: FormGroupAfterInput;
+   *  hint: DefaultComponent;
+   *  name: string;
+   *  fieldset?: GovukFieldset;
+   *  id: string;
+   *  items: ListItemReadonly[]
+   * }}
+   */
+  get renderInput() {
+    return this._renderInput()
   }
 
   /**
@@ -173,9 +212,10 @@ export class ListQuestion extends Question {
   }
 
   /**
+   * @protected
    * @returns {ListItemReadonly[]}
    */
-  get list() {
+  _getList() {
     const iterator = /** @type {MapIterator<ListElement>} */ (
       this._list.values()
     )
@@ -194,7 +234,7 @@ export class ListQuestion extends Question {
           : undefined
       }
 
-      const text = listItem.text.length ? listItem.text : 'Item text'
+      const text = listItem.text
 
       return {
         ...listItem,
@@ -204,6 +244,22 @@ export class ListQuestion extends Question {
           text: listItem.text,
           classes: this.getHighlight(listItem.id + '-label')
         }
+      }
+    })
+  }
+
+  /**
+   * @returns {ListItemReadonly[]}
+   */
+  get list() {
+    const list = this._getList()
+
+    return list.map((listItem) => {
+      const text = listItem.text.length ? listItem.text : 'Item text'
+
+      return {
+        ...listItem,
+        text
       }
     })
   }
@@ -266,5 +322,6 @@ export class ListQuestion extends Question {
  * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
  * @import { SelectionComponentsDef, ListComponentsDef } from '~/src/components/types.js'
  * @import { List, Item } from '~/src/form/form-definition/types.js'
+ * @import { FormGroupAfterInput }  from '~/src/form/form-editor/macros/types.js'
  * @import { ListElements, QuestionRenderer, DefaultComponent, GovukFieldset, BaseSettings, QuestionElements } from '~/src/form/form-editor/preview/types.js'
  */

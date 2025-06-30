@@ -29,16 +29,27 @@ export interface AppPreviewPanelTabsMacro {
   basePageFields: GovukField[]
 }
 
+export interface SelectAfterInput {
+  afterInput: { html: string }
+}
+export interface RadioAndCheckboxAfterInputs {
+  afterInputs: { html: string }
+}
+
+// GDS components - Select uses afterInput, while Radio uses afterInputs
+export type FormGroupAfterInput = SelectAfterInput | RadioAndCheckboxAfterInputs
+
 export interface QuestionBaseModel {
   id?: string
   name?: string
   content?: string
+  attributes?: Record<string, string>
   label?: DefaultComponent
   hint?: DefaultComponent
   fieldset?: GovukFieldset
   readonly items?: ListItemReadonly[] | DateItem[]
   text?: string
-  formGroup?: { afterInputs: { html: string } }
+  formGroup?: FormGroupAfterInput
   type?: 'text' | 'number' | 'boolean'
   classes?: string
 }

@@ -18,7 +18,7 @@ export class SelectSortableQuestion extends ListSortableQuestion {
 
   get renderInput() {
     const afterInput =
-      /** @type {{ formGroup?: { afterInputs: { html: string } } }} */ (
+      /** @type {{ formGroup?: { afterInput: { html: string }} }} */ (
         this.list.length
           ? {}
           : {
@@ -41,3 +41,7 @@ export class SelectSortableQuestion extends ListSortableQuestion {
     }
   }
 }
+
+/**
+ * @import { FormGroupAfterInput }  from '~/src/form/form-editor/macros/types.js'
+ */

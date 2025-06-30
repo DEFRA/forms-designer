@@ -1,3 +1,6 @@
+/**
+ * @implements {RenderBase}
+ */
 export class NunjucksRendererBase {
   /**
    * @type {jest.Mock<void, [string, RenderContext]>}
@@ -24,17 +27,13 @@ export class NunjucksRendererBase {
     this._renderMock(questionTemplate, renderContext)
   }
 
-  get questionElements() {
-    return this._questionElements
-  }
-
   /**
    * @param {string} _questionTemplate
    * @param {RenderContext} _renderContext
    * @returns {string}
    */
   static buildHTML(_questionTemplate, _renderContext) {
-    return '**** BUILT HTML ****'
+    return '<div>**** BUILT HTML ****</div>'
   }
 }
 
@@ -83,5 +82,5 @@ export class NunjucksPageRenderer {
   }
 }
 /**
- * @import { QuestionRenderer, QuestionElements, QuestionBaseModel, RenderContext, PageRenderer, PagePreviewPanelMacro, DomElementsBase } from '@defra/forms-model'
+ * @import { QuestionRenderer, QuestionElements, QuestionBaseModel, RenderContext, PageRenderer, PagePreviewPanelMacro, DomElementsBase, RenderBase } from '@defra/forms-model'
  */

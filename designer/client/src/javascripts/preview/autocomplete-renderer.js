@@ -3,12 +3,41 @@ import accessibleAutocomplete from 'accessible-autocomplete'
 
 import { NunjucksRendererBase } from '~/src/javascripts/preview/nunjucks-renderer.js'
 
+export class AutocompleteRendererBase extends NunjucksRendererBase {
+  /**
+   * @param {string} questionTemplate
+   * @param {RenderContext} renderContext
+   */
+  render(questionTemplate, renderContext) {
+    const html = NunjucksRendererBase.buildHTML(questionTemplate, renderContext)
+    const autoCompletePreviewContainer = /** @type {HTMLDivElement} */ (
+      document.createElement('div')
+    )
+    autoCompletePreviewContainer.innerHTML = html.trim()
+
+    const autoCompleteFields = autoCompletePreviewContainer.querySelectorAll(
+      '[data-module="govuk-accessible-autocomplete"]'
+    )
+    Array.from(autoCompleteFields).forEach((autoCompleteField) => {
+      accessibleAutocomplete.enhanceSelectElement({
+        defaultValue: '',
+        selectElement: autoCompleteField
+      })
+    })
+
+    const innerEL = /** @type {HTMLElement} */ (
+      autoCompletePreviewContainer.firstElementChild
+    )
+    this._questionElements.setPreviewDOM(innerEL)
+  }
+}
+
 /**
  * @implements {QuestionRenderer}
  */
 export class AutocompleteRenderer {
   /**
-   * @type {NunjucksRendererBase}
+   * @type {AutocompleteRendererBase}
    * @protected
    */
   _renderBase
@@ -16,7 +45,7 @@ export class AutocompleteRenderer {
    * @param {QuestionElements} questionElements
    */
   constructor(questionElements) {
-    this._renderBase = new NunjucksRendererBase(questionElements)
+    this._renderBase = new AutocompleteRendererBase(questionElements)
   }
 
   /**
@@ -28,26 +57,8 @@ export class AutocompleteRenderer {
      * @type {RenderContext}
      */
     const renderContext = { model: questionBaseModel }
-    const html = NunjucksRendererBase.buildHTML(questionTemplate, renderContext)
-    const autoCompletePreviewContainer = /** @type {HTMLDivElement} */ (
-      document.createElement('div')
-    )
-    autoCompletePreviewContainer.innerHTML = html.trim()
-    const autoCompleteField =
-      autoCompletePreviewContainer.querySelector('#autoCompleteField')
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call,@typescript-eslint/no-unsafe-member-access
-    accessibleAutocomplete.enhanceSelectElement({
-      defaultValue: '',
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      selectElement: autoCompleteField
-    })
-
-    const innerEL = /** @type {HTMLElement} */ (
-      autoCompletePreviewContainer.firstElementChild
-    )
-
-    this._renderBase.questionElements.setPreviewDOM(innerEL)
+    this._renderBase.render(questionTemplate, renderContext)
   }
 }
 

@@ -20,6 +20,7 @@ export class AutocompleteListQuestion extends Question {
    */
   get customRenderFields() {
     return {
+      attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       items: this._htmlElements.values.items
     }
   }
