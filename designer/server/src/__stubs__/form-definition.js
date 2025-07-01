@@ -446,15 +446,6 @@ export const testFormDefinitionWithExistingGuidance = {
           title: 'html-title',
           content: 'Original guidance',
           options: {}
-        },
-        {
-          id: '99011',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
         }
       ],
       next: [{ path: '/summary' }]

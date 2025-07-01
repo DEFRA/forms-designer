@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   testFormDefinitionWithAGuidancePage,
+  testFormDefinitionWithExistingGuidance,
   testFormDefinitionWithExistingSummaryDeclaration,
   testFormDefinitionWithNoPages,
   testFormDefinitionWithNoQuestions,
@@ -12,6 +13,7 @@ import {
 import {
   determineEditUrl,
   hideFirstGuidance,
+  isGuidancePage,
   mapMarkdown,
   mapPageData,
   mapQuestionRows
@@ -240,8 +242,23 @@ describe('editor-v2 - pages model', () => {
       })
     })
   })
+
+  describe('isGuidancePage', () => {
+    test('should return false if page has no components', () => {
+      const [page1] = testFormDefinitionWithNoQuestions.pages
+      expect(isGuidancePage(page1)).toBeFalsy()
+    })
+    test('should return false if page has components but not guidance', () => {
+      const [page1] = testFormDefinitionWithTwoQuestions.pages
+      expect(isGuidancePage(page1)).toBeFalsy()
+    })
+    test('should return true if page is guidance page', () => {
+      const [page1] = testFormDefinitionWithExistingGuidance.pages
+      expect(isGuidancePage(page1)).toBeTruthy()
+    })
+  })
 })
 
 /**
- * @import { ComponentDef, MarkdownComponent, PageQuestion } from '@defra/forms-model'
+ * @import { ComponentDef, MarkdownComponent, Page, PageQuestion } from '@defra/forms-model'
  */

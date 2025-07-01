@@ -20,7 +20,8 @@
                   {%- include "../../../../views/forms/editor-v2/partials/page-navigation-tabs.njk" -%}
                 </div>
                 <div class="govuk-!-padding-top-3">
-                  <h1 class="govuk-heading-l" id="page-heading">{{ cardCaption }}</h1>
+                  <span class="govuk-caption-l">{{ cardCaption }}</span>
+                  <h1 class="govuk-heading-l" id="page-heading">{{ cardHeading }}</h1>
 
                   {% if errorList | length %}
                     {{ govukErrorSummary({
@@ -36,50 +37,28 @@
                       <p class="govuk-notification-banner__heading">{{ notification }}</p>
                     {% endcall %}
                   {% endif %}
-                  {% if questionRows | length %}
-                    {{ govukSummaryList({
-                      rows: questionRows,
-                      classes: 'govuk-summary-list__show_final_divider'
-                    })
-                  }}
-                  {% else %}
-                    {{ govukSummaryList({
-                        rows: [{
-                          value: {
-                            text: 'No questions'
-                          }
-                        }]
-                      })
-                    }}
-                  {% endif %}
-                  <div class="govuk-button-group govuk-!-margin-top-6">
-                    {{ appIconButton({
-                      label: "Preview page",
-                      href: previewPageUrl,
-                      id: "preview-page"
-                    }) }}
 
-                    {% if not preventAddQuestion %}
-                      {{ govukButton({
-                        text: 'Add another question',
-                        href: baseUrl + '/question/new/type'
-                      }) }}
-                    {% endif %}
 
-                    <a href="{{ baseUrl }}/delete" class="govuk-link govuk-link--no-visited-state">
-                      Delete page
-                    </a>
-                  </div>
-
-                  {{ govukSkipLink({
-                    text: "Skip to page preview",
-                    href: "#"
-                  }) }}
-
-                  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
                   <form class="form" method="post">
-                      {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
+
+                    {{ govukInput(fields.pageHeading) }}
+
+                    {{ govukTextarea(fields.guidanceText) }}
+
+                    {%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+
+                    <div class="govuk-button-group govuk-!-margin-top-6">
+                      {{ govukButton({
+                        text: buttonText
+                      }) }}
+
+                      <a href="{{ baseUrl }}/delete/{{ questionId }}" class="govuk-link govuk-link--no-visited-state">
+                        Delete page
+                      </a>
+                    </div>
+
                   </form>
+
                   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
                   {%- include "../../../../views/forms/editor-v2/partials/conditions.njk" -%}
                 </div>
