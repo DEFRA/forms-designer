@@ -484,7 +484,7 @@ describe('editor.js', () => {
         })
 
         const patchUrl = new URL(
-          `./${formId}/definition/draft/pages/12345`,
+          `./${formId}/definition/draft/pages/p1`,
           formsEndpoint
         )
 
@@ -510,7 +510,7 @@ describe('editor.js', () => {
         }
 
         const formDefinitionWithNoPageHeading = structuredClone(
-          testFormDefinitionWithExistingGuidance
+          testFormDefinitionWithTwoPagesAndQuestions
         )
         formDefinitionWithNoPageHeading.pages[0].title = ''
 
@@ -518,8 +518,8 @@ describe('editor.js', () => {
           formId,
           token,
           formDefinitionWithNoPageHeading,
-          '12345',
-          '99011',
+          'p1',
+          'q1',
           questionDetails
         )
 

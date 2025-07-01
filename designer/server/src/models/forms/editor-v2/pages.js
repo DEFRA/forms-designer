@@ -24,7 +24,9 @@ const BUTTON_SECONDARY_CLASS = 'govuk-button--secondary'
  */
 export function isGuidancePage(page) {
   const components = hasComponents(page) ? page.components : []
-  return components.length >= 1 && components[0].type === ComponentType.Markdown
+  return (
+    components.length === 1 && components[0].type === ComponentType.Markdown
+  )
 }
 
 /**
