@@ -683,6 +683,52 @@ describe('editor.js', () => {
         )
         expect(mockedPutJson).not.toHaveBeenCalled()
       })
+
+      test('returns response body when page heading checkbox selected and mark as exit page selected', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const expectedOptionsPageHeading = {
+          payload: {
+            title: 'My new page title',
+            path: '/my-new-page-title',
+            controller: ControllerType.Terminal
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedOptionsGuidance = {
+          payload: {
+            content: 'Some guidance',
+            type: ComponentType.Markdown,
+            id: undefined
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setPageSettings(formId, token, '12345', formDefinition, {
+          pageHeading: 'My new page title',
+          pageHeadingAndGuidance: 'true',
+          guidanceText: 'Some guidance',
+          exitPage: true
+        })
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptionsPageHeading
+        )
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          newGuidanceRequestUrl,
+          expectedOptionsGuidance
+        )
+        expect(mockedPutJson).not.toHaveBeenCalled()
+      })
     })
 
     test('handles overwriting of existing guidance', async () => {
