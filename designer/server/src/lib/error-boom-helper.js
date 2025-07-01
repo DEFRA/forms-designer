@@ -137,6 +137,30 @@ export function isInvalidFormErrorType(err, type) {
 }
 
 /**
+ * Returns the object details referenced in the error
+ * @param {unknown} err
+ * @param {string} tokenName
+ * @param {string[]} lookup
+ */
+export function unpackErrorToken(err, tokenName, lookup) {
+  if (Boom.isBoom(err) && isInvalidFormError(err)) {
+    const cause = err.cause
+
+    if (Array.isArray(cause)) {
+      const detail = cause[0]
+
+      const path = /** @type {unknown[]} */ (detail.detail.path)
+      const pos = path.findIndex((x) => x === tokenName)
+      if (pos > -1) {
+        const idx = /** @type {number} */ (path[pos + 1])
+        return /** @type {string} */ (lookup[idx])
+      }
+    }
+  }
+  return 'Unknown'
+}
+
+/**
  * @import { ValidationSessionKey } from '@hapi/yar'
  * @import { FormDefinitionError } from '@defra/forms-model'
  */

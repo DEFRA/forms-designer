@@ -10,9 +10,9 @@ import {
   token
 } from '~/src/lib/__stubs__/editor.js'
 import {
-  buildListFromDetails,
   createList,
   deleteList,
+  populateListIds,
   removeUniquelyMappedListFromQuestion,
   removeUniquelyMappedListsFromPage,
   updateList,
@@ -26,74 +26,6 @@ const listStubs = uniquelyMappedListsStubs()
 describe('list.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
   const listId = '8b10412c-cb4d-46bd-99d4-249bca722b3f'
-
-  describe('buildListFromDetails', () => {
-    it('should build a list from details', () => {
-      const payload = {
-        list: listId,
-        name: 'questionname'
-      }
-      const listItems = [
-        { text: 'English', value: 'en-gb' },
-        { text: 'German', value: 'de-De' }
-      ]
-
-      const definition = buildDefinition({
-        lists: [
-          {
-            id: listId,
-            name: 'listname',
-            items: listItems,
-            title: 'List for question questionname',
-            type: 'string'
-          }
-        ]
-      })
-
-      expect(buildListFromDetails(payload, listItems, definition)).toEqual({
-        id: listId,
-        title: 'List for question questionname',
-        name: 'listname',
-        type: 'string',
-        items: [
-          { text: 'English', value: 'en-gb', id: undefined, hint: undefined },
-          { text: 'German', value: 'de-De', id: undefined, hint: undefined }
-        ]
-      })
-    })
-
-    it('should build a list from details including populating random name', () => {
-      const payload = {
-        name: 'q-name'
-      }
-      const listItems = [
-        { text: 'English', value: 'en-gb' },
-        { text: 'German', value: 'de-De' }
-      ]
-
-      const definition = buildDefinition({
-        lists: [
-          {
-            id: listId,
-            name: 'listname',
-            items: listItems,
-            title: 'List for question questionname',
-            type: 'string'
-          }
-        ]
-      })
-
-      expect(buildListFromDetails(payload, listItems, definition)).toEqual({
-        title: 'List for question q-name',
-        name: expect.any(String),
-        type: 'string',
-        items: [
-          { text: 'English', value: 'en-gb' },
-          { text: 'German', value: 'de-De' }
-        ]
-      })
-    })
-  })
 
   describe('createList', () => {
     const requestUrl = new URL(
@@ -316,6 +248,56 @@ describe('list.js', () => {
       const { definition, pageId } = listStubs.pageWithNonUniquelyMappedList
       await removeUniquelyMappedListsFromPage(formId, definition, token, pageId)
       expect(mockedDelJson).toHaveBeenCalledTimes(0)
+    })
+  })
+
+  describe('populateListIds', () => {
+    test('should handle blank list', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = populateListIds(definition, listIdWithItemIds, [])
+      expect(populated).toEqual([])
+    })
+
+    test('should handle incorrect list ref', () => {
+      const { definition } = listStubs.exampleWithListItemIds
+      const populated = populateListIds(definition, 'wrong-list-id', [
+        { text: 'EnglandChanged', value: 'england' },
+        { text: 'ScotandChanged', value: 'scotland' },
+        { text: 'WalesChanged', value: 'wales' }
+      ])
+      expect(populated).toEqual([
+        { id: undefined, text: 'EnglandChanged', value: 'england' },
+        { id: undefined, text: 'ScotandChanged', value: 'scotland' },
+        { id: undefined, text: 'WalesChanged', value: 'wales' }
+      ])
+    })
+
+    test('should populate known ids using code value', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = populateListIds(definition, listIdWithItemIds, [
+        { text: 'EnglandChanged', value: 'england' },
+        { text: 'ScotandChanged', value: 'scotland' },
+        { text: 'WalesChanged', value: 'wales' }
+      ])
+      expect(populated).toEqual([
+        { id: 'id1', text: 'EnglandChanged', value: 'england' },
+        { id: 'id2', text: 'ScotandChanged', value: 'scotland' },
+        { id: 'id3', text: 'WalesChanged', value: 'wales' }
+      ])
+    })
+
+    test('should populate known ids using display text', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = populateListIds(definition, listIdWithItemIds, [
+        { text: 'England', value: 'eng' },
+        { text: 'Scotland', value: 'scot' },
+        { text: 'Wales', value: 'wal' }
+      ])
+      expect(populated).toEqual([
+        { id: 'id1', text: 'England', value: 'eng' },
+        { id: 'id2', text: 'Scotland', value: 'scot' },
+        { id: 'id3', text: 'Wales', value: 'wal' }
+      ])
     })
   })
 })
