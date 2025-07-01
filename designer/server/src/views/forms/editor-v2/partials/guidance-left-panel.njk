@@ -60,35 +60,7 @@
                   </form>
 
                   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-                  {% set conditionsContent %}
-                    <h2 class="govuk-heading-m govuk-!-margin-top-0">Current conditions</h2>
-                    {% if hasPageCondition %}
-                      <div class="govuk-!-margin-bottom-3">
-                              <span class="govuk-body">
-                                <span class="govuk-checkboxes__tick" style="color: #00703c; font-weight: bold;">✓</span>
-                                {{ pageConditionDetails.displayName }}
-                              </span>
-                      </div>
-                      {% if pageConditionPresentationString %}
-                        <p class="govuk-body-s govuk-!-margin-bottom-0" style="color: #626a6e;">
-                          {{ pageConditionPresentationString }}
-                        </p>
-                      {% endif %}
-                    {% else %}
-                        <p class="govuk-body govuk-!-margin-bottom-0">No conditions have been added to this page yet.</p>
-                    {% endif %}
-                  {% endset %}
-
-                  <h1 class="govuk-heading-l">Page conditions</h1>
-                  <p class="govuk-body">Control whether this page is shown to users based on their answer to a previous question</p>
-
-                  {{ govukInsetText({
-                    html: conditionsContent
-                  }) }}
-
-                  <a href="{{ baseUrl }}/conditions" class="govuk-button" role="button" draggable="false" data-module="govuk-button">
-                    Manage conditions
-                  </a>
+                  {%- include "../../../../views/forms/editor-v2/partials/conditions.njk" -%}
                 </div>
               </div>
             </div>

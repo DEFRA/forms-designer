@@ -8,7 +8,10 @@ import {
   getPageNum,
   toPresentationStringV2
 } from '~/src/models/forms/editor-v2/common.js'
-import { determineEditUrl } from '~/src/models/forms/editor-v2/pages.js'
+import {
+  determineEditUrl,
+  isGuidancePage
+} from '~/src/models/forms/editor-v2/pages.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -97,7 +100,7 @@ export function pageConditionsViewModel(
 
   const backLink = {
     href: backUrl,
-    text: backUrl.includes('/guidance/')
+    text: isGuidancePage(/** @type {Page} */ (page))
       ? 'Back to guidance'
       : 'Back to questions'
   }
