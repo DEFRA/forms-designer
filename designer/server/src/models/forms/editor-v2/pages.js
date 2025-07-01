@@ -21,6 +21,16 @@ const BUTTON_SECONDARY_CLASS = 'govuk-button--secondary'
 
 /**
  * @param {Page} page
+ */
+export function isGuidancePage(page) {
+  const components = hasComponents(page) ? page.components : []
+  return (
+    components.length === 1 && components[0].type === ComponentType.Markdown
+  )
+}
+
+/**
+ * @param {Page} page
  * @param {boolean} isEndPage
  * @param {string} editBaseUrl
  */
@@ -29,11 +39,8 @@ export function determineEditUrl(page, isEndPage, editBaseUrl) {
     return `${editBaseUrl}${page.id}/check-answers-settings`
   }
 
-  const components = hasComponents(page) ? page.components : []
-  if (
-    components.length === 1 &&
-    components[0].type === ComponentType.Markdown
-  ) {
+  if (isGuidancePage(page)) {
+    const components = hasComponents(page) ? page.components : []
     return `${editBaseUrl}${page.id}/guidance/${components[0].id}`
   }
 

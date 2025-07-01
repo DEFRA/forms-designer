@@ -8,6 +8,10 @@ import {
   getPageNum,
   toPresentationStringV2
 } from '~/src/models/forms/editor-v2/common.js'
+import {
+  determineEditUrl,
+  isGuidancePage
+} from '~/src/models/forms/editor-v2/pages.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -89,9 +93,16 @@ export function pageConditionsViewModel(
     ? `Page ${pageNum}: ${page.title}`
     : `Page ${pageNum}`
 
+  const baseUrl = editorv2Path(metadata.slug, `page/`)
+  const pageUrl = `${baseUrl}${pageId}`
+
+  const backUrl = determineEditUrl(/** @type {Page} */ (page), false, baseUrl)
+
   const backLink = {
-    href: editorv2Path(metadata.slug, `page/${pageId}/questions`),
-    text: 'Back to questions'
+    href: backUrl,
+    text: isGuidancePage(/** @type {Page} */ (page))
+      ? 'Back to guidance'
+      : 'Back to questions'
   }
 
   const conditionsManagerPath = editorv2Path(metadata.slug, 'conditions')
@@ -111,7 +122,7 @@ export function pageConditionsViewModel(
     backLink,
     currentTab: 'conditions',
     pageTitle: cardCaption,
-    baseUrl: editorv2Path(metadata.slug, `page/${pageId}`),
+    baseUrl: pageUrl,
     notification,
     errorList,
     formErrors: validation?.formErrors,
@@ -127,6 +138,6 @@ export function pageConditionsViewModel(
 }
 
 /**
- * @import { FormDefinition, ConditionWrapperV2, FormMetadata, RuntimeFormModel } from '@defra/forms-model'
+ * @import { FormDefinition, ConditionWrapperV2, FormMetadata, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

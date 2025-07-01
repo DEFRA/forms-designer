@@ -41,6 +41,8 @@ import {
   type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { checkErrors } from '~/src/form/form-manager/errors.js'
+import { FormDefinitionError } from '~/src/form/form-manager/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
@@ -148,7 +150,8 @@ const conditionListItemRefDataSchemaV2 =
           is: Joi.exist(),
           then: Joi.valid(listIdRef)
         })
-        .description('The id of the list'),
+        .description('The id of the list')
+        .error(checkErrors(FormDefinitionError.RefConditionListId)),
       itemId: Joi.string()
         .trim()
         .when('/lists', {
@@ -157,6 +160,7 @@ const conditionListItemRefDataSchemaV2 =
         })
         .required()
         .description('The id of the list item')
+        .error(checkErrors(FormDefinitionError.RefConditionItemId))
     })
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
@@ -230,6 +234,7 @@ const conditionRefDataSchemaV2 = Joi.object<ConditionRefDataV2>()
         then: Joi.valid(conditionIdRef)
       })
       .description('Name of the referenced condition')
+      .error(checkErrors(FormDefinitionError.RefConditionConditionId))
   })
 
 const conditionSchema = Joi.object<ConditionData>()
@@ -270,7 +275,8 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       })
       .description(
         'Reference to the component id being evaluated in this condition'
-      ),
+      )
+      .error(checkErrors(FormDefinitionError.RefConditionComponentId)),
     operator: Joi.string()
       .trim()
       .valid(...Object.values(OperatorName))
@@ -497,6 +503,7 @@ export const componentSchemaV2 = componentSchema
       .description(
         'List id reference to a predefined list of options for select components'
       )
+      .error(checkErrors(FormDefinitionError.RefPageComponentList))
   })
   .description('Component schema for V2 forms')
 
@@ -638,8 +645,8 @@ export const pageUploadComponentsSchema = Joi.array<
     fileUploadComponentSchema.required(),
     contentComponentSchema.optional()
   )
-  .unique('name')
   .unique('id')
+  .unique('name')
   .min(1)
   .max(2)
   .description('Components allowed on Page Upload schema')
@@ -723,9 +730,15 @@ export const pageSchemaV2 = pageSchema
       ],
       otherwise: Joi.array<ComponentDef>()
         .items(componentSchemaV2)
-        .unique('name')
         .unique('id')
+        .unique('name')
         .description('Components schema for V2 forms')
+        .error(
+          checkErrors([
+            FormDefinitionError.UniquePageComponentId,
+            FormDefinitionError.UniquePageComponentName
+          ])
+        )
     }),
     condition: Joi.string()
       .trim()
@@ -735,6 +748,7 @@ export const pageSchemaV2 = pageSchema
       })
       .optional()
       .description('Optional condition that determines if this page is shown')
+      .error(checkErrors(FormDefinitionError.RefPageCondition))
   })
   .description('Page schema for V2 forms')
 
@@ -749,8 +763,8 @@ export const pagePayloadSchemaV2 = pageSchemaV2
       ],
       otherwise: Joi.array<ComponentDef>()
         .items(componentPayloadSchemaV2)
-        .unique('name')
         .unique('id')
+        .unique('name')
         .description('Components schema for V2 forms')
     })
   })
@@ -834,13 +848,27 @@ export const listSchema = Joi.object<List>()
         .unique('id')
         .unique('text')
         .unique('value')
-        .description('Array of items with string values'),
+        .description('Array of items with string values')
+        .error(
+          checkErrors([
+            FormDefinitionError.UniqueListItemId,
+            FormDefinitionError.UniqueListItemText,
+            FormDefinitionError.UniqueListItemValue
+          ])
+        ),
       otherwise: Joi.array()
         .items(numberListItemSchema)
         .unique('id')
         .unique('text')
         .unique('value')
         .description('Array of items with numeric values')
+        .error(
+          checkErrors([
+            FormDefinitionError.UniqueListItemId,
+            FormDefinitionError.UniqueListItemText,
+            FormDefinitionError.UniqueListItemValue
+          ])
+        )
     })
   })
 
@@ -945,7 +973,13 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .unique('name')
       .unique('title')
       .required()
-      .description('Sections grouping related pages together'),
+      .description('Sections grouping related pages together')
+      .error(
+        checkErrors([
+          FormDefinitionError.UniqueSectionName,
+          FormDefinitionError.UniqueSectionTitle
+        ])
+      ),
     conditions: Joi.array<ConditionWrapper>()
       .items(conditionWrapperSchema)
       .unique('name')
@@ -990,20 +1024,39 @@ export const formDefinitionV2Schema = formDefinitionSchema
     pages: Joi.array<Page>()
       .items(pageSchemaV2)
       .required()
-      .unique('path')
       .unique('id')
-      .description('Pages schema for V2 forms'),
+      .unique('path')
+      .description('Pages schema for V2 forms')
+      .error(
+        checkErrors([
+          FormDefinitionError.UniquePageId,
+          FormDefinitionError.UniquePagePath
+        ])
+      ),
     lists: Joi.array<List>()
       .items(listSchemaV2)
+      .unique('id')
       .unique('name')
       .unique('title')
-      .unique('id')
-      .description('Lists schema for V2 forms'),
+      .description('Lists schema for V2 forms')
+      .error(
+        checkErrors([
+          FormDefinitionError.UniqueListId,
+          FormDefinitionError.UniqueListName,
+          FormDefinitionError.UniqueListTitle
+        ])
+      ),
     conditions: Joi.array<ConditionWrapperV2>()
       .items(conditionWrapperSchemaV2)
       .unique('id')
       .unique('displayName')
       .description('Named conditions used for form logic')
+      .error(
+        checkErrors([
+          FormDefinitionError.UniqueConditionId,
+          FormDefinitionError.UniqueConditionDisplayName
+        ])
+      )
   })
   .description('Form definition schema for V2')
 

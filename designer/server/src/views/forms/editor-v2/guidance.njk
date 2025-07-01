@@ -16,39 +16,15 @@
   description: pageDescription,
   caption: pageCaption,
   actions: pageActions,
-  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  classes: "govuk-grid-column-full",
   backLink: backLink,
   useNewMasthead: true
 }) %}
 
-  {% call appEditorCard({
-    title: cardTitle,
-    heading: cardHeading,
-    caption: cardCaption,
-    notification: notification,
-    errorList: errorList
-  }) %}
+    <div class="govuk-grid-column-one-half-from-desktop">
+      {%- include "../views/forms/editor-v2/partials/guidance-left-panel.njk" -%}
 
-    <form class="form" method="post">
-
-    {{ govukInput(fields.pageHeading) }}
-
-    {{ govukTextarea(fields.guidanceText) }}
-
-    {%- include "../views/forms/editor-v2/partials/markdown-help.njk" -%}
-
-    <div class="govuk-button-group govuk-!-margin-top-6">
-      {{ govukButton({
-        text: buttonText
-      }) }}
-
-      <a href="{{ baseUrl }}/delete/{{ questionId }}" class="govuk-link govuk-link--no-visited-state">
-        Delete page
-      </a>
     </div>
-
-    </form>
-    {% endcall %}
 
   {% endcall %}
 {% endblock %}

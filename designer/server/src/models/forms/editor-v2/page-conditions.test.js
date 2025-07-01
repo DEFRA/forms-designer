@@ -1,6 +1,7 @@
 import { ConditionType, Engine, OperatorName } from '@defra/forms-model'
 import {
   buildDefinition,
+  buildMarkdownComponent,
   buildMetaData,
   buildQuestionPage,
   buildSummaryPage,
@@ -52,6 +53,12 @@ describe('page-conditions model', () => {
     id: componentId,
     name: 'farmType',
     title: 'What type of farming do you do?'
+  })
+
+  const testGuidanceComponent = buildMarkdownComponent({
+    id: componentId,
+    name: 'farmType',
+    title: 'Explanation of farming'
   })
 
   describe('getPageConditionDetails', () => {
@@ -299,7 +306,20 @@ describe('page-conditions model', () => {
       engine: Engine.V2
     })
 
-    it('should return complete view model with all required fields', () => {
+    const baseDefinitionWithGuidance = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          id: pageId,
+          title: 'Farm Details',
+          components: [testGuidanceComponent]
+        }),
+        buildSummaryPage()
+      ],
+      conditions: [mockConditionV2],
+      engine: Engine.V2
+    })
+
+    it('should return complete view model with all required fields for a question', () => {
       const result = pageConditionsViewModel(metadata, baseDefinition, pageId)
 
       expect(result).toHaveProperty(
@@ -316,6 +336,41 @@ describe('page-conditions model', () => {
       expect(result).toHaveProperty('currentTab', 'conditions')
       expect(result).toHaveProperty('baseUrl')
       expect(result).toHaveProperty('backLink')
+      expect(result.backLink.href).toBe(
+        '/library/environmental-permit-application/editor-v2/page/farm-details-page/questions'
+      )
+      expect(result.backLink.text).toBe('Back to questions')
+      expect(result).toHaveProperty('navigation')
+      expect(result).toHaveProperty('allConditions')
+      expect(result).toHaveProperty('conditionsManagerPath')
+      expect(result).toHaveProperty('pageConditionsApiUrl')
+    })
+
+    it('should return complete view model with all required fields for a guidance page', () => {
+      const result = pageConditionsViewModel(
+        metadata,
+        baseDefinitionWithGuidance,
+        pageId
+      )
+
+      expect(result).toHaveProperty(
+        'formSlug',
+        'environmental-permit-application'
+      )
+      expect(result).toHaveProperty('pageId', pageId)
+      expect(result).toHaveProperty('cardTitle', 'Page 1')
+      expect(result).toHaveProperty('cardCaption', 'Page 1')
+      expect(result).toHaveProperty(
+        'pageSpecificHeading',
+        'Page 1: Farm Details'
+      )
+      expect(result).toHaveProperty('currentTab', 'conditions')
+      expect(result).toHaveProperty('baseUrl')
+      expect(result).toHaveProperty('backLink')
+      expect(result.backLink.href).toBe(
+        '/library/environmental-permit-application/editor-v2/page/farm-details-page/guidance/farm-type-field'
+      )
+      expect(result.backLink.text).toBe('Back to guidance')
       expect(result).toHaveProperty('navigation')
       expect(result).toHaveProperty('allConditions')
       expect(result).toHaveProperty('conditionsManagerPath')
