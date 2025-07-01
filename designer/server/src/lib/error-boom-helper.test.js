@@ -10,7 +10,8 @@ import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
 import {
   checkBoomError,
   isInvalidFormError,
-  isInvalidFormErrorType
+  isInvalidFormErrorType,
+  unpackErrorToken
 } from '~/src/lib/error-boom-helper.js'
 
 describe('Boom error helper', () => {
@@ -128,6 +129,79 @@ describe('Boom error helper', () => {
           FormDefinitionError.UniqueConditionDisplayName
         )
       ).toBe(false)
+    })
+  })
+
+  describe('unpackErrorToken', () => {
+    const conditionNames = [
+      'Condition name 1',
+      'Condition name 2',
+      'Condition name 3',
+      'Condition name 4',
+      'Condition name 5'
+    ]
+
+    test('should return error referenced object if boom message contains appropiate indexed key (idx 3)', () => {
+      const cause = [
+        {
+          id: FormDefinitionError.RefConditionItemId,
+          detail: { path: ['conditions', 3], pos: 1, dupePos: 0 },
+          message: '"conditions[3]" references a missing list item',
+          type: FormDefinitionErrorType.Ref
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"conditions[3]" references a missing list item', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+      expect(unpackErrorToken(boomErr, 'conditions', conditionNames)).toBe(
+        'Condition name 4'
+      )
+    })
+
+    test('should return error referenced object if boom message contains appropiate indexed key (idx 1)', () => {
+      const cause = [
+        {
+          id: FormDefinitionError.RefConditionItemId,
+          detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
+          message: '"conditions[1]" references a missing list item',
+          type: FormDefinitionErrorType.Ref
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"conditions[1]" references a missing list item', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+      expect(unpackErrorToken(boomErr, 'conditions', conditionNames)).toBe(
+        'Condition name 2'
+      )
+    })
+
+    test('should return unknown if token not found', () => {
+      const cause = [
+        {
+          id: FormDefinitionError.RefConditionItemId,
+          detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
+          message: '"conditions[1]" references a missing list item',
+          type: FormDefinitionErrorType.Ref
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"conditions[1]" references a missing list item', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+      expect(unpackErrorToken(boomErr, 'missing-token', conditionNames)).toBe(
+        'Unknown'
+      )
     })
   })
 })
