@@ -189,18 +189,12 @@ export function getListFromComponent(component, definition) {
 }
 
 /**
- * Turns a list into a string for auto complete (or keeps as a string if already a string)
- * @param { Item[] | ListItem[] | string | undefined } listItems
+ * Turns a list into a string for auto complete
+ * @param { List | undefined } list
  */
-export function mapListToTextareaStr(listItems) {
-  if (typeof listItems === 'string') {
-    return listItems
-  }
-
+export function mapListToAutoCompleteStr(list) {
   return (
-    listItems
-      ?.map(({ text, value }) => (value === text ? text : `${text}:${value}`))
-      .join('\r\n') ?? ''
+    list?.items.map(({ text, value }) => `${text}:${value}`).join('\r\n') ?? ''
   )
 }
 
@@ -296,6 +290,6 @@ export function requiresPageTitle(page) {
 
 /**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { ComponentDef, FormDefinition, Item, List, ListItem, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, List, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
  */

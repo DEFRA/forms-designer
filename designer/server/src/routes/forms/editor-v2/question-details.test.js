@@ -47,7 +47,6 @@ import {
   handleEnhancedActionOnGet
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 import {
-  buildListFromDetails,
   getListItems,
   saveList
 } from '~/src/routes/forms/editor-v2/question-details.js'
@@ -1044,75 +1043,6 @@ describe('Editor v2 question details routes', () => {
         { text: 'Option 1', value: 'val1' },
         { text: 'Option 2', value: 'val2' }
       ])
-    })
-  })
-
-  describe('buildListFromDetails', () => {
-    const listId = '8b10412c-cb4d-46bd-99d4-249bca722b3f'
-    it('should build a list from details', () => {
-      const payload = {
-        list: listId,
-        name: 'questionname'
-      }
-      const listItems = [
-        { text: 'English', value: 'en-gb' },
-        { text: 'German', value: 'de-De' }
-      ]
-
-      const definition = buildDefinition({
-        lists: [
-          {
-            id: listId,
-            name: 'listname',
-            items: listItems,
-            title: 'List for question questionname',
-            type: 'string'
-          }
-        ]
-      })
-
-      expect(buildListFromDetails(payload, listItems, definition)).toEqual({
-        id: listId,
-        title: 'List for question questionname',
-        name: 'listname',
-        type: 'string',
-        items: [
-          { text: 'English', value: 'en-gb', id: undefined, hint: undefined },
-          { text: 'German', value: 'de-De', id: undefined, hint: undefined }
-        ]
-      })
-    })
-
-    it('should build a list from details including populating random name', () => {
-      const payload = {
-        name: 'q-name'
-      }
-      const listItems = [
-        { text: 'English', value: 'en-gb' },
-        { text: 'German', value: 'de-De' }
-      ]
-
-      const definition = buildDefinition({
-        lists: [
-          {
-            id: listId,
-            name: 'listname',
-            items: listItems,
-            title: 'List for question questionname',
-            type: 'string'
-          }
-        ]
-      })
-
-      expect(buildListFromDetails(payload, listItems, definition)).toEqual({
-        title: 'List for question q-name',
-        name: expect.any(String),
-        type: 'string',
-        items: [
-          { text: 'English', value: 'en-gb' },
-          { text: 'German', value: 'de-De' }
-        ]
-      })
     })
   })
 })

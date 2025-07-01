@@ -1,9 +1,12 @@
+import { randomId } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
   findPageUniquelyMappedLists,
   findUniquelyMappedList,
-  getHeaders
+  getHeaders,
+  stringHasValue
 } from '~/src/lib/utils.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
@@ -16,6 +19,33 @@ const putJsonByListType =
     putJson
   )
 
+/**
+ * Maps FormEditorInputQuestion payload to AutoComplete Component
+ * @param {Partial<FormEditorInputQuestion>} questionDetails
+ * @param {Item[]} listItems
+ * @param {FormDefinition} definition
+ * @returns {Partial<List>}
+ */
+export function buildListFromDetails(questionDetails, listItems, definition) {
+  const listId = stringHasValue(questionDetails.list)
+    ? questionDetails.list
+    : undefined
+  const existingList = definition.lists.find((x) => x.id === listId)
+  return {
+    id: existingList ? existingList.id : undefined,
+    name: existingList ? existingList.name : randomId(),
+    title: `List for question ${questionDetails.name}`,
+    type: 'string',
+    items: listItems.map((item) => {
+      return {
+        id: item.id,
+        text: item.text,
+        hint: item.hint,
+        value: stringHasValue(`${item.value}`) ? item.value : item.text
+      }
+    })
+  }
+}
 /**
  * Creates a new list on the draft definition
  * @param {string} formId
@@ -140,35 +170,5 @@ export async function removeUniquelyMappedListsFromPage(
 }
 
 /**
- * @param {FormDefinition} definition
- * @param { string | undefined } listRef
- * @param { Item[] | undefined } listItems
- * @returns {Item[]}
- */
-export function populateListIds(definition, listRef, listItems) {
-  /**
-   * @param {Item[]} listItems
-   * @param {Item} item
-   */
-  function populateExistingId(listItems, item) {
-    const found =
-      listItems.find((i) => i.value === item.value) ??
-      listItems.find((i) => i.text === item.text)
-    return {
-      id: found?.id,
-      text: item.text,
-      value: item.value
-    }
-  }
-
-  const existingList = definition.lists.find((x) => x.id === listRef)
-  const existingListItems = existingList?.items ?? []
-
-  return /** @type {Item[]} */ (
-    listItems?.map((x) => populateExistingId(existingListItems, x))
-  )
-}
-
-/**
- * @import { FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
  */

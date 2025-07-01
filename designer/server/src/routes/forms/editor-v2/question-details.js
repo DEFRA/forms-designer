@@ -1,8 +1,7 @@
 import {
   ComponentType,
   FormDefinitionError,
-  questionDetailsFullSchema,
-  randomId
+  questionDetailsFullSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -18,14 +17,13 @@ import {
   DEFAULT_FIELD_NAME,
   checkBoomError,
   createJoiError,
-  isInvalidFormErrorType,
-  unpackErrorToken
+  isInvalidFormErrorType
 } from '~/src/lib/error-boom-helper.js'
 import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { populateListIds, upsertList } from '~/src/lib/list.js'
+import { buildListFromDetails, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
@@ -34,11 +32,7 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import {
-  isListComponentType,
-  requiresPageTitle,
-  stringHasValue
-} from '~/src/lib/utils.js'
+import { isListComponentType, requiresPageTitle } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -110,34 +104,6 @@ function redirectWithAnchorOrUrl(
 }
 
 /**
- * Maps FormEditorInputQuestion payload to AutoComplete Component
- * @param {Partial<FormEditorInputQuestion>} questionDetails
- * @param {Item[]} listItems
- * @param {FormDefinition} definition
- * @returns {Partial<List>}
- */
-export function buildListFromDetails(questionDetails, listItems, definition) {
-  const listId = stringHasValue(questionDetails.list)
-    ? questionDetails.list
-    : undefined
-  const existingList = definition.lists.find((x) => x.id === listId)
-  return {
-    id: existingList ? existingList.id : undefined,
-    name: existingList ? existingList.name : randomId(),
-    title: `List for question ${questionDetails.name}`,
-    type: 'string',
-    items: listItems.map((item) => {
-      return {
-        id: item.id,
-        text: item.text,
-        hint: item.hint,
-        value: stringHasValue(`${item.value}`) ? item.value : item.text
-      }
-    })
-  }
-}
-
-/**
  * @param {string} formId
  * @param {FormDefinition} definition
  * @param {string} token
@@ -161,11 +127,6 @@ export async function saveList(
     listItems ?? [],
     definition
   )
-
-  if (listMapped.id) {
-    // Existing list - match ids against entries
-    listMapped.items = populateListIds(definition, listMapped.id, listItems)
-  }
 
   const { list, status } = await upsertList(
     formId,
@@ -492,22 +453,6 @@ export default [
           return redirectWithErrors(request, h, joiErr, errorKey, '#')
         }
 
-        if (
-          isInvalidFormErrorType(err, FormDefinitionError.RefConditionItemId)
-        ) {
-          const conditionName = unpackErrorToken(
-            err,
-            'conditions',
-            definition.conditions.map((x) => x.displayName)
-          )
-          const joiErr = createJoiError(
-            'autoCompleteOptions',
-            `A list item used by condition '${conditionName}' has been deleted from the list.`
-          )
-
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
-        }
-
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
           return redirectWithErrors(request, h, error, errorKey, '#')
@@ -536,7 +481,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, List, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

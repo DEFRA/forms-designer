@@ -25,7 +25,6 @@ const checkboxListName = 'CheckboxList'
 const checkBoxListId = '0c427c3d-7502-445b-bd07-bdc8613e74cc'
 const checkboxComponentId = 'e40d2b9d-84d6-4ae5-bc80-0cdddd894c8c'
 const checkboxPageId = 'f229fb05-6639-4a6c-84aa-4df47d31dc78'
-const listIdWithItemIds = 'c3e6bf9a-d667-4f6e-a1f1-f2d07ab32373'
 
 const autoCompletePage = buildQuestionPage({
   id: autoCompletePageId,
@@ -100,15 +99,6 @@ const checkboxList = buildList({
     buildListItem({ value: 'gimli', text: 'Gimli' })
   ]
 })
-const listWithItemIds = buildList({
-  id: listIdWithItemIds,
-  name: 'listWithItemIds',
-  items: [
-    buildListItem({ id: 'id1', value: 'england', text: 'England' }),
-    buildListItem({ id: 'id2', value: 'scotland', text: 'Scotland' }),
-    buildListItem({ id: 'id3', value: 'wales', text: 'Wales' })
-  ]
-})
 
 const orphanedListDefinition = buildDefinition({
   pages: [autoCompletePage],
@@ -137,10 +127,6 @@ const definitionWithNonUniquelyMappedList = buildDefinition({
   lists: [list]
 })
 
-const definitionWithListItemIds = buildDefinition({
-  lists: [listWithItemIds]
-})
-
 export function uniquelyMappedListsStubs() {
   return {
     radio: {
@@ -151,7 +137,6 @@ export function uniquelyMappedListsStubs() {
     questionPage,
     autoCompletePage,
     listId,
-    listWithItemIds,
     basicList: list,
     autoCompletePageId,
     questionPageId,
@@ -187,10 +172,6 @@ export function uniquelyMappedListsStubs() {
     pageWithNonUniquelyMappedList: {
       definition: definitionWithNonUniquelyMappedList,
       pageId: radioPageId
-    },
-    exampleWithListItemIds: {
-      definition: definitionWithListItemIds,
-      listIdWithItemIds
     }
   }
 }

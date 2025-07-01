@@ -12,7 +12,7 @@ import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
 import {
   getListFromComponent,
   insertValidationErrors,
-  mapListToTextareaStr
+  mapListToAutoCompleteStr
 } from '~/src/lib/utils.js'
 import {
   GOVUK_LABEL__M,
@@ -325,7 +325,9 @@ export function getFieldValue(
 
   if (validationResult || validationResult === '') {
     if (fieldName === 'autoCompleteOptions') {
-      return mapListToTextareaStr(/** @type {Item[]} */ (validationResult))
+      return mapListToAutoCompleteStr(
+        /** @type {List} */ ({ items: validationResult })
+      )
     }
     return validationResult
   }
@@ -340,8 +342,8 @@ export function getFieldValue(
     case 'shortDescription':
       return questionFields?.shortDescription
     case 'autoCompleteOptions':
-      return mapListToTextareaStr(
-        getListFromComponent(questionFields, definition)?.items
+      return mapListToAutoCompleteStr(
+        getListFromComponent(questionFields, definition)
       )
   }
   return undefined
@@ -484,6 +486,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
