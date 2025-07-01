@@ -269,7 +269,8 @@ describe('Editor v2 guidance routes', () => {
       {
         guidanceText: 'New guidance text',
         pageHeading: 'New page heading',
-        pageHeadingAndGuidance: 'true'
+        pageHeadingAndGuidance: 'true',
+        exitPage: false
       }
     )
     expect(addPageAndFirstQuestion).not.toHaveBeenCalled()
@@ -296,7 +297,8 @@ describe('Editor v2 guidance routes', () => {
       testFormDefinitionWithAGuidancePage,
       {
         pageHeading: 'Page heading 1',
-        guidanceText: 'Guidnce 1'
+        guidanceText: 'Guidnce 1',
+        exitPage: false
       }
     )
     expect(res).toEqual({

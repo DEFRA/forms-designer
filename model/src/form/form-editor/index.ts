@@ -232,6 +232,11 @@ export const guidanceTextSchema = Joi.string()
   .trim()
   .description('Guidance text to assist users in completing the page')
 
+export const exitPageSchema = Joi.boolean()
+  .default(false)
+  .optional()
+  .description('Determines if page is set as an Exit Page')
+
 export const repeaterSchema = Joi.string()
   .trim()
   .optional()
