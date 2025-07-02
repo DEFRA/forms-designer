@@ -208,6 +208,7 @@ function mapQuestionRows(components, baseUrl) {
     .filter((c) => isFormType(c.type))
     .map((comp2, idx2) => {
       return {
+        id: comp2.id,
         key: {
           text: `Question ${idx2 + 1}`,
           classes: 'govuk-!-width-one-quarter'
@@ -347,6 +348,7 @@ export function getPreviewModel(page, definition, guidance = '') {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param { string | undefined } action
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -354,6 +356,7 @@ export function questionsViewModel(
   metadata,
   definition,
   pageId,
+  action,
   validation,
   notification
 ) {
@@ -426,7 +429,8 @@ export function questionsViewModel(
       conditionDetails.pageConditionPresentationString,
     hasPageCondition: Boolean(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
-    )
+    ),
+    action
   }
 }
 

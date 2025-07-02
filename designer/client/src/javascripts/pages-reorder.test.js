@@ -85,12 +85,12 @@ describe('PageReorder Class', () => {
     document.body.innerHTML = `
       <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
       <form>
-        <ol class="app-reorderable-list" id="pages-container" data-module="pages-reorder">
+        <ol class="app-reorderable-list" id="items-container" data-module="pages-reorder">
           <li class="app-reorderable-list__item" data-id="page1">
-            <div class="govuk-summary-card pages-reorder-panel">
+            <div class="govuk-summary-card reorder-panel">
               <div class="govuk-summary-card__title-wrapper">
-                <span class="govuk-body page-number">Page 1</span>
-                <h2 class="govuk-summary-card__title page-title">Page One Title</h2>
+                <span class="govuk-body item-number">Page 1</span>
+                <h2 class="govuk-summary-card__title item-title">Page One Title</h2>
                 <div class="govuk-button-group">
                   <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
                   <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
@@ -101,10 +101,10 @@ describe('PageReorder Class', () => {
             </div>
           </li>
           <li class="app-reorderable-list__item" data-id="page2">
-              <div class="govuk-summary-card pages-reorder-panel">
+              <div class="govuk-summary-card reorder-panel">
                 <div class="govuk-summary-card__title-wrapper">
-                  <span class="govuk-body page-number">Page 2</span>
-                  <h2 class="govuk-summary-card__title page-title">Page Two Title</h2>
+                  <span class="govuk-body item-number">Page 2</span>
+                  <h2 class="govuk-summary-card__title item-title">Page Two Title</h2>
                   <div class="govuk-button-group">
                     <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
                     <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
@@ -115,10 +115,10 @@ describe('PageReorder Class', () => {
               </div>
           </li>
           <li class="app-reorderable-list__item" data-id="page3">
-              <div class="govuk-summary-card pages-reorder-panel">
+              <div class="govuk-summary-card reorder-panel">
                 <div class="govuk-summary-card__title-wrapper">
-                  <span class="govuk-body page-number">Page 3</span>
-                  <h2 class="govuk-summary-card__title page-title">Page Three Title</h2>
+                  <span class="govuk-body item-number">Page 3</span>
+                  <h2 class="govuk-summary-card__title item-title">Page Three Title</h2>
                   <div class="govuk-button-group">
                     <button type="submit" name="movement" class="reorder-button-no-js">Up</button>
                     <button type="submit" name="movement" class="reorder-button-no-js">Down</button>
@@ -132,10 +132,10 @@ describe('PageReorder Class', () => {
             includeFixed
               ? `
           <li class="app-reorderable-list__item check-answers-item" data-id="fixedPage">
-              <div class="govuk-summary-card pages-reorder-panel">
+              <div class="govuk-summary-card reorder-panel">
                 <div class="govuk-summary-card__title-wrapper">
-                  <span class="govuk-body page-number">Page 4</span>
-                  <h2 class="govuk-summary-card__title page-title">Check Answers</h2>
+                  <span class="govuk-body item-number">Page 4</span>
+                  <h2 class="govuk-summary-card__title item-title">Check Answers</h2>
                   <div class="govuk-button-group">
                     <button type="submit" name="movement" class="reorder-button-no-js" style="visibility: hidden;">Up</button>
                     <button type="submit" name="movement" class="reorder-button-no-js" style="visibility: hidden;">Down</button>
@@ -149,11 +149,11 @@ describe('PageReorder Class', () => {
               : ''
           }
         </ol>
-        <input type="hidden" name="pageOrder" id="pageOrder" value="page1,page2,page3${includeFixed ? ',fixedPage' : ''}" />
+        <input type="hidden" name="itemOrder" id="itemOrder" value="page1,page2,page3${includeFixed ? ',fixedPage' : ''}" />
       </form>
     `
-    container = document.getElementById('pages-container')
-    const foundPageOrderInput = document.getElementById('pageOrder')
+    container = document.getElementById('items-container')
+    const foundPageOrderInput = document.getElementById('itemOrder')
     pageOrderInput =
       foundPageOrderInput instanceof HTMLInputElement
         ? foundPageOrderInput
@@ -164,8 +164,8 @@ describe('PageReorder Class', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     setupHTML()
-    container = document.getElementById('pages-container')
-    const foundPageOrderInput = document.getElementById('pageOrder')
+    container = document.getElementById('items-container')
+    const foundPageOrderInput = document.getElementById('itemOrder')
     pageOrderInput =
       foundPageOrderInput instanceof HTMLInputElement
         ? foundPageOrderInput
@@ -196,8 +196,8 @@ describe('PageReorder Class', () => {
   })
 
   test('constructor should return early if container is invalid', () => {
-    document.body.innerHTML = '<div id="pages-container"></div>'
-    const invalidContainer = document.getElementById('pages-container')
+    document.body.innerHTML = '<div id="items-container"></div>'
+    const invalidContainer = document.getElementById('items-container')
     expect(invalidContainer).not.toBeNull()
     const instance = new PageReorder(/** @type {Element} */ (invalidContainer))
     expect(instance.container).toBeNull()
@@ -205,8 +205,8 @@ describe('PageReorder Class', () => {
 
   test('constructor should return early if required elements are missing', () => {
     document.body.innerHTML =
-      '<ol id="pages-container" data-module="pages-reorder"></ol>'
-    const validContainer = document.getElementById('pages-container')
+      '<ol id="items-container" data-module="pages-reorder"></ol>'
+    const validContainer = document.getElementById('items-container')
 
     expect(validContainer).not.toBeNull()
 
@@ -217,9 +217,9 @@ describe('PageReorder Class', () => {
 
   test('constructor should return early if pageOrderInput is missing', () => {
     document.body.innerHTML = `
-      <ol id="pages-container" data-module="pages-reorder"></ol>
+      <ol id="items-container" data-module="pages-reorder"></ol>
       <div id="reorder-announcement"></div>`
-    const validContainer = document.getElementById('pages-container')
+    const validContainer = document.getElementById('items-container')
     const instance = new PageReorder(/** @type {Element} */ (validContainer))
 
     const initButtonListenersSpy = jest.spyOn(
@@ -235,9 +235,9 @@ describe('PageReorder Class', () => {
 
   test('constructor should return early if announcementRegion is missing', () => {
     document.body.innerHTML = `
-      <ol id="pages-container" data-module="pages-reorder"></ol>
-      <input id="pageOrder" />`
-    const validContainer = document.getElementById('pages-container')
+      <ol id="items-container" data-module="pages-reorder"></ol>
+      <input id="itemOrder" />`
+    const validContainer = document.getElementById('items-container')
     const instance = new PageReorder(/** @type {Element} */ (validContainer))
     expect(instance.announcementRegion).toBeNull()
     const initButtonListenersSpy = jest.spyOn(
@@ -388,9 +388,9 @@ describe('PageReorder Class', () => {
       expect(setAttributeSpy).toHaveBeenCalledWith('tabindex', '-1')
       expect(itemFocusSpy).toHaveBeenCalled()
 
-      expect(
-        itemToInteractWith.classList.contains('pages-reorder-panel-focus')
-      ).toBe(true)
+      expect(itemToInteractWith.classList.contains('reorder-panel-focus')).toBe(
+        true
+      )
     })
 
     test('should not throw if container is null during querySelectorAllHelper call', () => {
@@ -559,7 +559,7 @@ describe('PageReorder Class', () => {
       if (!pageReorderInstance || !container) throw new Error('Setup fail')
       const moveItemInDomSpy = jest.spyOn(pageReorderInstance, 'moveItemInDom')
       // Simulate a click on an element that won't find a button with .reorder-button-js
-      const nonButtonTarget = container.querySelector('.page-title') // Click on title
+      const nonButtonTarget = container.querySelector('.item-title') // Click on title
       if (!(nonButtonTarget instanceof HTMLElement))
         throw new Error('Setup fail')
 
@@ -618,7 +618,7 @@ describe('PageReorder Class', () => {
   describe('focusAfterMove scenarios via handleButtonClick', () => {
     beforeEach(() => {
       setupHTML()
-      container = document.getElementById('pages-container')
+      container = document.getElementById('items-container')
       if (container instanceof HTMLOListElement) {
         pageReorderInstance = initPageReorder(container)
       } else {
@@ -737,9 +737,9 @@ describe('PageReorder Class', () => {
     const upButton2 = items[1].querySelector('.js-reorderable-list-up')
     const downButton2 = items[1].querySelector('.js-reorderable-list-down')
 
-    expect(items[0].querySelector('.page-number')?.textContent).toBe('Page 1')
-    expect(items[1].querySelector('.page-number')?.textContent).toBe('Page 2')
-    expect(items[2].querySelector('.page-number')?.textContent).toBe('Page 3')
+    expect(items[0].querySelector('.item-number')?.textContent).toBe('Page 1')
+    expect(items[1].querySelector('.item-number')?.textContent).toBe('Page 2')
+    expect(items[2].querySelector('.item-number')?.textContent).toBe('Page 3')
 
     expect(upButton1?.getAttribute('aria-label')).toBe(
       'Button, Move page: Up, Page 1 of 3: Page One Title'
@@ -769,11 +769,11 @@ describe('PageReorder Class', () => {
     querySelectorAllSpy.mockRestore()
   })
 
-  test('updateVisuals should handle item missing page-number element', () => {
+  test('updateVisuals should handle item missing item-number element', () => {
     if (!pageReorderInstance || !container) throw new Error()
     const firstItem = /** @type {HTMLElement} */ (container.children[0])
-    const numberElement = firstItem.querySelector('.page-number')
-    const titleElement = firstItem.querySelector('.page-title')
+    const numberElement = firstItem.querySelector('.item-number')
+    const titleElement = firstItem.querySelector('.item-title')
     const originalTitle = titleElement?.textContent // Should be "Page One Title"
 
     if (numberElement) {
@@ -796,7 +796,7 @@ describe('PageReorder Class', () => {
     // Restore for other tests if necessary by re-running setupHTML or adding it back
     // Re-setting up HTML is cleaner than trying to add the element back perfectly
     setupHTML()
-    container = document.getElementById('pages-container')
+    container = document.getElementById('items-container')
     if (container instanceof HTMLOListElement) {
       pageReorderInstance = initPageReorder(container)
     } else {
@@ -862,7 +862,7 @@ describe('PageReorder Class', () => {
   test('updateMoveButtons should hide buttons on fixed item', () => {
     setupHTML(true)
 
-    const fixedContainer = document.getElementById('pages-container')
+    const fixedContainer = document.getElementById('items-container')
     if (fixedContainer instanceof HTMLOListElement) {
       pageReorderInstance = initPageReorder(fixedContainer)
     } else {
@@ -978,7 +978,7 @@ describe('PageReorder Class', () => {
     if (!pageReorderInstance || !announcementRegion)
       throw new Error('Setup fail')
     const item = document.createElement('li')
-    item.innerHTML = '<h2 class="page-title">Test</h2>'
+    item.innerHTML = '<h2 class="item-title">Test</h2>'
 
     const originalText = announcementRegion.textContent
     const originalContainer = pageReorderInstance.container
@@ -1038,7 +1038,7 @@ describe('PageReorder Class', () => {
     describe('with fixed item at the end', () => {
       beforeEach(() => {
         setupHTML(true)
-        container = document.getElementById('pages-container')
+        container = document.getElementById('items-container')
         if (container instanceof HTMLOListElement) {
           pageReorderInstance = initPageReorder(container)
         } else {

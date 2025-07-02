@@ -83,11 +83,12 @@ export default [
     path: ROUTE_FULL_PATH_QUESTIONS,
     async handler(request, h) {
       const { yar } = request
-      const { params, auth } = request
+      const { params, auth, query } = request
       const { token } = auth.credentials
       const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
         params
       )
+      const { action } = /** @type {{ action: string }} */ (query)
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
@@ -106,6 +107,7 @@ export default [
           metadata,
           definition,
           pageId,
+          action,
           validation,
           notification
         )

@@ -78,7 +78,12 @@ describe('editor-v2 - questions model', () => {
         engine: Engine.V2
       })
 
-      const modelResult = questionsViewModel(metadata, definition, pageId)
+      const modelResult = questionsViewModel(
+        metadata,
+        definition,
+        pageId,
+        undefined
+      )
       expect(modelResult.fields.repeater).toBeUndefined()
     })
 
@@ -87,7 +92,12 @@ describe('editor-v2 - questions model', () => {
         pages: [buildQuestionPage({ id: pageId }), buildSummaryPage()],
         engine: Engine.V2
       })
-      const modelResult = questionsViewModel(metadata, definition, pageId)
+      const modelResult = questionsViewModel(
+        metadata,
+        definition,
+        pageId,
+        undefined
+      )
       expect(modelResult.fields.repeater).toBeDefined()
     })
 
@@ -107,7 +117,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result.pageCondition).toBe(conditionId)
         expect(result.pageConditionDetails).toEqual(mockCondition)
@@ -130,7 +145,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result.pageCondition).toBeUndefined()
         expect(result.pageConditionDetails).toBeUndefined()
@@ -153,7 +173,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result.pageCondition).toBe('missing-permit-condition')
         expect(result.pageConditionDetails).toBeUndefined()
@@ -175,7 +200,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result.currentTab).toBe('overview')
       })
@@ -210,7 +240,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result.pageCondition).toBe(conditionId)
         expect(result.pageConditionDetails).toEqual(mockCondition)
@@ -231,7 +266,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result.pageCondition).toBeUndefined()
         expect(result.pageConditionDetails).toBeUndefined()
@@ -258,7 +298,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
 
         expect(result).toHaveProperty('cardTitle', 'Page 1 overview')
         expect(result).toHaveProperty('cardCaption', 'Page 1')
@@ -316,7 +361,12 @@ describe('editor-v2 - questions model', () => {
           conditions: [],
           engine: Engine.V2
         })
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          undefined
+        )
         const previewModel = result.previewModel
         const pageTitle = previewModel.pageTitle
         expect(pageTitle.text).toBe('')

@@ -5,7 +5,7 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
-
+{% from "reorder-panel/macro.njk" import appReorderPanel %}
 
 <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
   <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
@@ -36,12 +36,43 @@
                       <p class="govuk-notification-banner__heading">{{ notification }}</p>
                     {% endcall %}
                   {% endif %}
+
                   {% if questionRows | length %}
-                    {{ govukSummaryList({
-                      rows: questionRows,
-                      classes: 'govuk-summary-list__show_final_divider'
-                    })
-                  }}
+                    {% if action == 'reorder' %}
+
+                      <form class="form" method="post">
+                        <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
+
+                        <ol class="app-reorderable-list" id="questions-container" data-module="questions-reorder">
+                          {% for question in questionRows %}
+                            {{ appReorderPanel({
+                                itemTypeName: 'Question',
+                                itemNum: loop.index,
+                                itemTitle: question.value.text,
+                                itemId: question.id,
+                                totalItems: questions.length,
+                                isFixed: false,
+                                isFirst: loop.first,
+                                isLast: loop.last,
+                                isFocus: question.isFocus,
+                                prevFocusDirection: question.prevFocusDirection,
+                                itemClasses: 'app-reorderable-list__item',
+                                dataId: question.id
+                              })
+                            }}
+                          {% endfor %}
+                        </ol>
+
+                        <input type="hidden" name="itemOrder" id="itemOrder" value="{{ itemOrder }}" />
+                      </form>
+
+                    {% else %}
+                      {{ govukSummaryList({
+                        rows: questionRows,
+                        classes: 'govuk-summary-list__show_final_divider'
+                      })
+                    }}
+                    {% endif %}
                   {% else %}
                     {{ govukSummaryList({
                         rows: [{
@@ -63,6 +94,14 @@
                       {{ govukButton({
                         text: 'Add another question',
                         href: baseUrl + '/question/new/type'
+                      }) }}
+                    {% endif %}
+
+                    {% if questionRows | length > 1 %}
+                      {{ govukButton({
+                        text: 'Reorder questions',
+                        classes: 'govuk-button--inverse',
+                        href: '?action=reorder'
                       }) }}
                     {% endif %}
 
@@ -91,3 +130,7 @@
     </dl>
   </div>
 </div>
+
+{% if action == 'reorder' %}
+<script type="module" src="{{ getAssetPath("pages-reorder.js") }}"></script>
+{% endif %}

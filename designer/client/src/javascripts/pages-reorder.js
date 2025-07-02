@@ -49,13 +49,13 @@ export class PageReorder {
   /** @type {string} */
   listItemSelector = '.app-reorderable-list__item'
   /** @type {string} */
-  pageTitleSelector = '.page-title'
+  pageTitleSelector = '.item-title'
   /** @type {string} */
   jsButtonSelector = '.reorder-button-js'
   /** @type {string} */
   noJsButtonSelector = '.reorder-button-no-js'
   /** @type {string} */
-  panelFocusClass = 'pages-reorder-panel-focus'
+  panelFocusClass = 'reorder-panel-focus'
   /** @type {Sortable | null} */
   sortableInstance = null
   /** @type {ReturnType<typeof setTimeout> | undefined} */
@@ -74,7 +74,7 @@ export class PageReorder {
     }
     this.container = containerElement
 
-    this.pageOrderInput = querySelectorHelper(document, '#pageOrder')
+    this.pageOrderInput = querySelectorHelper(document, '#itemOrder')
     this.announcementRegion = querySelectorHelper(
       document,
       '#reorder-announcement'
@@ -93,7 +93,7 @@ export class PageReorder {
     }
 
     this.container.classList.add('js-enabled')
-    this.container.classList.add('pages-container')
+    this.container.classList.add('items-container')
 
     this.initSortable()
     this.initButtonListeners()
@@ -374,7 +374,7 @@ export class PageReorder {
         return
       }
 
-      const numberElement = querySelectorHelper(item, '.page-number')
+      const numberElement = querySelectorHelper(item, '.item-number')
       if (numberElement) {
         numberElement.textContent = `Page ${index + 1}`
       }
@@ -608,7 +608,7 @@ export function initPageReorder(container) {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  const container = querySelectorHelper(document, '#pages-container')
+  const container = querySelectorHelper(document, '#items-container')
   if (container) {
     initPageReorder(container)
   }

@@ -1,7 +1,7 @@
 {% extends "layouts/page.njk" %}
 
 {% from "page-body/macro.njk" import appPageBody %}
-{% from "pages-reorder-panel/macro.njk" import appPagesReorderPanel %}
+{% from "reorder-panel/macro.njk" import appReorderPanel %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -18,7 +18,7 @@
 
     <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
-    <ol class="app-reorderable-list" id="pages-container" data-module="pages-reorder">
+    <ol class="app-reorderable-list" id="items-container" data-module="pages-reorder">
       {% for page in pages %}
         {% set isFixed = page.isCheckAnswersPage | default(false) %}
         {% set itemClasses = "app-reorderable-list__item" %}
@@ -26,11 +26,12 @@
             {% set itemClasses = itemClasses + " check-answers-item" %}
         {% endif %}
 
-        {{ appPagesReorderPanel({
-            pageNum: loop.index,
-            pageTitle: page.title,
-            pageId: page.id,
-            totalPages: pages.length,
+        {{ appReorderPanel({
+            itemTypeName: 'Page',
+            itemNum: loop.index,
+            itemTitle: page.title,
+            itemId: page.id,
+            totalItems: pages.length,
             isFixed: isFixed,
             isFirst: loop.first,
             isLast: loop.last,
@@ -43,7 +44,7 @@
       {% endfor %}
     </ol>
 
-    <input type="hidden" name="pageOrder" id="pageOrder" value="{{ pageOrder }}" />
+    <input type="hidden" name="itemOrder" id="itemOrder" value="{{ itemOrder }}" />
   </form>
 {% endcall %}
 {% endblock %}

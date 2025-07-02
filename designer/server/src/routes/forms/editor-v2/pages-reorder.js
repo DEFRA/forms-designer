@@ -27,7 +27,7 @@ const reorderPagesKey = sessionNames.reorderPages
  * @param {string|undefined} value
  * @returns {string[]}
  */
-const customPageOrder = (value) => {
+const customItemOrder = (value) => {
   if (value?.length) {
     return value.split(',')
   }
@@ -35,11 +35,11 @@ const customPageOrder = (value) => {
   return []
 }
 
-export const pageOrderSchema = Joi.object()
+export const itemOrderSchema = Joi.object()
   .keys({
     saveChanges: Joi.boolean().default(false).optional(),
     movement: Joi.string().optional(),
-    pageOrder: Joi.any().custom(customPageOrder)
+    itemOrder: Joi.any().custom(customItemOrder)
   })
   .required()
 
@@ -90,7 +90,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormEditorInputPage, 'movement' | 'pageOrder'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormEditorInputPage, 'movement' | 'itemOrder'> }>}
    */
   ({
     method: 'POST',
@@ -98,8 +98,8 @@ export default [
     async handler(request, h) {
       const { params, auth, payload, yar } = request
       const { slug } = params
-      const { movement, pageOrder, saveChanges } =
-        /** @type {{ movement: string, pageOrder: string[], saveChanges: boolean}} */ (
+      const { movement, itemOrder, saveChanges } =
+        /** @type {{ movement: string, itemOrder: string[], saveChanges: boolean}} */ (
           payload
         )
 
@@ -107,8 +107,8 @@ export default [
         const { token } = auth.credentials
         const metadata = await forms.get(slug, token)
 
-        if (pageOrder.length > 0) {
-          await reorderPages(metadata.id, token, pageOrder)
+        if (itemOrder.length > 0) {
+          await reorderPages(metadata.id, token, itemOrder)
         }
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
         yar.clear(reorderPagesKey)
@@ -122,7 +122,7 @@ export default [
       if (movement) {
         const [direction, pageId] = movement.split('|')
 
-        const newPageOrder = repositionPage(pageOrder, direction, pageId).join(
+        const newPageOrder = repositionPage(itemOrder, direction, pageId).join(
           ','
         )
 
@@ -139,7 +139,7 @@ export default [
     },
     options: {
       validate: {
-        payload: pageOrderSchema
+        payload: itemOrderSchema
       },
       auth: {
         mode: 'required',
