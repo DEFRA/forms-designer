@@ -120,12 +120,14 @@ export function mapPageData(slug, definition) {
     ...definition,
     pages: definition.pages.map((page) => {
       const isEndPage = page.controller === ControllerType.Summary
+      const isExitPage = page.controller === ControllerType.Terminal
       if (page.title === '') {
         return {
           ...page,
           title: hasComponents(page) ? page.components[0].title : '',
           questionRows: mapQuestionRows(hideFirstGuidance(page)),
           isEndPage,
+          isExitPage,
           editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
         }
       }
@@ -133,6 +135,7 @@ export function mapPageData(slug, definition) {
         ...page,
         questionRows: mapQuestionRows(hideFirstGuidance(page)),
         isEndPage,
+        isExitPage,
         editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
       }
     })

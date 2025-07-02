@@ -131,10 +131,16 @@ describe('editor-v2 - questions model', () => {
           emptyReorderDetails
         )
 
-        expect(result.pageCondition).toBe(conditionId)
-        expect(result.pageConditionDetails).toEqual(mockCondition)
-        expect(result.pageConditionPresentationString).toBeTruthy()
-        expect(typeof result.pageConditionPresentationString).toBe('string')
+        expect(result.conditionDetails.pageCondition).toBe(conditionId)
+        expect(result.conditionDetails.pageConditionDetails).toEqual(
+          mockCondition
+        )
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeTruthy()
+        expect(
+          typeof result.conditionDetails.pageConditionPresentationString
+        ).toBe('string')
         expect(result.hasPageCondition).toBe(true)
       })
 
@@ -159,9 +165,11 @@ describe('editor-v2 - questions model', () => {
           emptyReorderDetails
         )
 
-        expect(result.pageCondition).toBeUndefined()
-        expect(result.pageConditionDetails).toBeUndefined()
-        expect(result.pageConditionPresentationString).toBeNull()
+        expect(result.conditionDetails.pageCondition).toBeUndefined()
+        expect(result.conditionDetails.pageConditionDetails).toBeUndefined()
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeNull()
         expect(result.hasPageCondition).toBe(false)
       })
 
@@ -187,9 +195,13 @@ describe('editor-v2 - questions model', () => {
           emptyReorderDetails
         )
 
-        expect(result.pageCondition).toBe('missing-permit-condition')
-        expect(result.pageConditionDetails).toBeUndefined()
-        expect(result.pageConditionPresentationString).toBeNull()
+        expect(result.conditionDetails.pageCondition).toBe(
+          'missing-permit-condition'
+        )
+        expect(result.conditionDetails.pageConditionDetails).toBeUndefined()
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeNull()
         expect(result.hasPageCondition).toBe(false)
       })
 
@@ -254,8 +266,10 @@ describe('editor-v2 - questions model', () => {
           emptyReorderDetails
         )
 
-        expect(result.pageCondition).toBe(conditionId)
-        expect(result.pageConditionDetails).toEqual(mockCondition)
+        expect(result.conditionDetails.pageCondition).toBe(conditionId)
+        expect(result.conditionDetails.pageConditionDetails).toEqual(
+          mockCondition
+        )
         expect(result.hasPageCondition).toBe(true)
       })
 
@@ -280,9 +294,11 @@ describe('editor-v2 - questions model', () => {
           emptyReorderDetails
         )
 
-        expect(result.pageCondition).toBeUndefined()
-        expect(result.pageConditionDetails).toBeUndefined()
-        expect(result.pageConditionPresentationString).toBeNull()
+        expect(result.conditionDetails.pageCondition).toBeUndefined()
+        expect(result.conditionDetails.pageConditionDetails).toBeUndefined()
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeNull()
         expect(result.hasPageCondition).toBe(false)
       })
     })
@@ -319,9 +335,7 @@ describe('editor-v2 - questions model', () => {
         expect(result).toHaveProperty('navigation')
         expect(result).toHaveProperty('questionRows')
         expect(result).toHaveProperty('previewPageUrl')
-        expect(result).toHaveProperty('pageCondition')
-        expect(result).toHaveProperty('pageConditionDetails')
-        expect(result).toHaveProperty('pageConditionPresentationString')
+        expect(result).toHaveProperty('conditionDetails')
         expect(result).toHaveProperty('hasPageCondition')
         expect(result).toHaveProperty('previewModel')
         expect(result.previewModel.pageTitle.text).toBe('Farm Details')

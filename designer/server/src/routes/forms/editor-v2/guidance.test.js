@@ -229,6 +229,56 @@ describe('Editor v2 guidance routes', () => {
     expect(setPageSettings).not.toHaveBeenCalled()
   })
 
+  test('POST - should save new guidance, setting page as exit page, and redirect to same page if valid payload', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(addPageAndFirstQuestion).mockResolvedValue({
+      path: '/page-one',
+      controller: ControllerType.Page,
+      title: '',
+      next: [],
+      id: 'newP1',
+      components: [
+        /** @type {ComponentDef} */ ({
+          id: 'newCompId'
+        })
+      ]
+    })
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/new/guidance/new',
+      auth,
+      payload: {
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text',
+        exitPage: true
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/newP1/guidance/newCompId'
+    )
+    expect(addPageAndFirstQuestion).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      {
+        content: 'New guidance text',
+        type: 'Markdown',
+        options: {},
+        schema: {}
+      },
+      {
+        title: 'New page heading',
+        controller: ControllerType.Terminal
+      }
+    )
+    expect(setPageSettings).not.toHaveBeenCalled()
+  })
+
   test('POST - should save existing guidance and redirect to same page if valid payload', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(addPageAndFirstQuestion).mockResolvedValue({
@@ -269,7 +319,8 @@ describe('Editor v2 guidance routes', () => {
       {
         guidanceText: 'New guidance text',
         pageHeading: 'New page heading',
-        pageHeadingAndGuidance: 'true'
+        pageHeadingAndGuidance: 'true',
+        exitPage: false
       }
     )
     expect(addPageAndFirstQuestion).not.toHaveBeenCalled()
@@ -296,7 +347,8 @@ describe('Editor v2 guidance routes', () => {
       testFormDefinitionWithAGuidancePage,
       {
         pageHeading: 'Page heading 1',
-        guidanceText: 'Guidnce 1'
+        guidanceText: 'Guidnce 1',
+        exitPage: false
       }
     )
     expect(res).toEqual({
