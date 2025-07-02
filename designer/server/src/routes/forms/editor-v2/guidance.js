@@ -1,5 +1,7 @@
 import {
   ComponentType,
+  ControllerType,
+  exitPageSchema,
   guidanceTextSchema,
   hasComponents,
   pageHeadingSchema
@@ -29,7 +31,8 @@ export const schema = Joi.object().keys({
   }),
   guidanceText: guidanceTextSchema.required().messages({
     '*': 'Enter guidance text'
-  })
+  }),
+  exitPage: exitPageSchema
 })
 
 /**
@@ -67,11 +70,14 @@ export async function addOrUpdateGuidance(
   }
 
   if (pageId === 'new') {
+    const controller = payload.exitPage
+      ? { controller: ControllerType.Terminal }
+      : {}
     const newPage = await addPageAndFirstQuestion(
       formId,
       token,
       guidanceDetails,
-      { title: payload.pageHeading }
+      { title: payload.pageHeading, ...controller }
     )
     const newComponentId = hasComponents(newPage)
       ? newPage.components[0].id

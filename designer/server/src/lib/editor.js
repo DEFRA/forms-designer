@@ -277,9 +277,16 @@ export async function setPageSettings(
   const pageHeadingForCall = isExpanded ? pageHeading : ''
   const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeadingForCall, components))}`
 
+  // Potentially unset/remove the controllerType if it already is set, and no longer needs a value
+  const unsetController = page?.controller ? { controller: null } : {}
+  const controller = payload.exitPage
+    ? { controller: ControllerType.Terminal }
+    : unsetController
+
   const requestPayload = {
     title: pageHeadingForCall,
-    path: pagePathForCall
+    path: pagePathForCall,
+    ...controller
   }
 
   const isCurrentlyRepeater = page?.controller === ControllerType.Repeat
