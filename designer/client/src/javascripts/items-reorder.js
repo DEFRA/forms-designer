@@ -37,11 +37,11 @@ export function focusIfExists(elem) {
   }
 }
 
-export class PageReorder {
+export class ItemReorder {
   /** @type {HTMLOListElement | null} */
   container = null
   /** @type {HTMLInputElement | null} */
-  pageOrderInput = null
+  itemOrderInput = null
   /** @type {HTMLElement | null} */
   announcementRegion = null
   /** @type {string} */
@@ -49,7 +49,7 @@ export class PageReorder {
   /** @type {string} */
   listItemSelector = '.app-reorderable-list__item'
   /** @type {string} */
-  pageTitleSelector = '.item-title'
+  itemTitleSelector = '.item-title'
   /** @type {string} */
   jsButtonSelector = '.reorder-button-js'
   /** @type {string} */
@@ -74,13 +74,13 @@ export class PageReorder {
     }
     this.container = containerElement
 
-    this.pageOrderInput = querySelectorHelper(document, '#itemOrder')
+    this.itemOrderInput = querySelectorHelper(document, '#itemOrder')
     this.announcementRegion = querySelectorHelper(
       document,
       '#reorder-announcement'
     )
 
-    if (!this.pageOrderInput || !this.announcementRegion) {
+    if (!this.itemOrderInput || !this.announcementRegion) {
       return
     }
 
@@ -99,7 +99,7 @@ export class PageReorder {
     this.initButtonListeners()
     this.updateVisuals()
     this.updateMoveButtons()
-    this.updateHiddenPageOrderData()
+    this.updateHiddenItemOrderData()
   }
 
   initSortable() {
@@ -138,7 +138,7 @@ export class PageReorder {
     if (evt.newIndex !== undefined) {
       this.updateVisuals()
       this.updateMoveButtons()
-      this.updateHiddenPageOrderData()
+      this.updateHiddenItemOrderData()
       this.announceReorder(movedItem, evt.newIndex + 1)
 
       if (movedItem instanceof HTMLElement) {
@@ -160,7 +160,7 @@ export class PageReorder {
     } else {
       this.updateVisuals()
       this.updateMoveButtons()
-      this.updateHiddenPageOrderData()
+      this.updateHiddenItemOrderData()
 
       if (movedItem instanceof HTMLElement) {
         movedItem.setAttribute('tabindex', '-1')
@@ -247,7 +247,7 @@ export class PageReorder {
 
       this.updateVisuals()
       this.updateMoveButtons()
-      this.updateHiddenPageOrderData()
+      this.updateHiddenItemOrderData()
       this.announceSuccessfulMove(itemToMove)
       this.focusAfterMove(itemToMove, isUpButtonOriginallyClicked)
     }
@@ -379,7 +379,7 @@ export class PageReorder {
         numberElement.textContent = `Page ${index + 1}`
       }
 
-      const titleElement = querySelectorHelper(item, this.pageTitleSelector)
+      const titleElement = querySelectorHelper(item, this.itemTitleSelector)
       const title = titleElement?.textContent?.trim() ?? 'this page'
       const currentPosition = index + 1 // 1-based index
 
@@ -536,24 +536,24 @@ export class PageReorder {
     return 'inline-block'
   }
 
-  updateHiddenPageOrderData() {
-    if (!this.container || !this.pageOrderInput) {
+  updateHiddenItemOrderData() {
+    if (!this.container || !this.itemOrderInput) {
       return
     }
 
     const items = querySelectorAllHelper(this.container, this.listItemSelector)
     /** @type {string[]} */
-    const pageOrderIds = []
+    const itemOrderIds = []
     items.forEach((item) => {
       if (item instanceof HTMLElement) {
-        const pageId = item.dataset.id
-        if (pageId) {
-          pageOrderIds.push(pageId)
+        const itemId = item.dataset.id
+        if (itemId) {
+          itemOrderIds.push(itemId)
         }
       }
     })
 
-    this.pageOrderInput.value = pageOrderIds.join(',')
+    this.itemOrderInput.value = itemOrderIds.join(',')
   }
 
   /**
@@ -566,14 +566,14 @@ export class PageReorder {
       return
     }
 
-    const titleElement = querySelectorHelper(movedItem, this.pageTitleSelector)
-    const pageTitle = titleElement?.textContent?.trim() ?? 'Item'
+    const titleElement = querySelectorHelper(movedItem, this.itemTitleSelector)
+    const itemTitle = titleElement?.textContent?.trim() ?? 'Item'
     const totalItems = querySelectorAllHelper(
       this.container,
       this.listItemSelector
     ).length
 
-    const message = `List reordered, ${pageTitle} is now page ${newPosition} of ${totalItems}.`
+    const message = `List reordered, ${itemTitle} is now page ${newPosition} of ${totalItems}.`
 
     clearTimeout(this.announceTimeout)
     this.announceTimeout = setTimeout(() => {
@@ -593,16 +593,16 @@ export class PageReorder {
 }
 
 /**
- * Initializes the page reorder functionality for matching containers.
- * @param {Element} container - The container to initialize page reordering on.
- * @returns {PageReorder|null} The PageReorder instance or null if not applicable.
+ * Initializes the item reorder functionality for matching containers.
+ * @param {Element} container - The container to initialize item reordering on.
+ * @returns {ItemReorder|null} The ItemReorder instance or null if not applicable.
  */
-export function initPageReorder(container) {
+export function initItemReorder(container) {
   if (
     container instanceof HTMLElement &&
-    container.dataset.module === 'pages-reorder'
+    container.dataset.module === 'items-reorder'
   ) {
-    return new PageReorder(container)
+    return new ItemReorder(container)
   }
   return null
 }
@@ -610,6 +610,6 @@ export function initPageReorder(container) {
 document.addEventListener('DOMContentLoaded', () => {
   const container = querySelectorHelper(document, '#items-container')
   if (container) {
-    initPageReorder(container)
+    initItemReorder(container)
   }
 })

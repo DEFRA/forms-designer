@@ -24,6 +24,7 @@ import {
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
+import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -200,11 +201,25 @@ export function hasUnderlyingRepeaterData(min, max, questionSetName) {
 }
 
 /**
+ * @param {ComponentDef} component
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
+ */
+export function constructReorderQuestion(component, focus) {
+  return {
+    ...component,
+    isFocus: focus?.itemId === component.id,
+    prevFocusDirection: focus?.button
+  }
+}
+
+/**
  * @param {ComponentDef[]} components
  * @param {string} baseUrl
+ * @param {string} questionOrder
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
  */
-function mapQuestionRows(components, baseUrl) {
-  return components
+function mapQuestionRows(components, baseUrl, questionOrder, focus) {
+  return orderItems(components, questionOrder)
     .filter((c) => isFormType(c.type))
     .map((comp2, idx2) => {
       return {
@@ -229,7 +244,9 @@ function mapQuestionRows(components, baseUrl) {
               classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'
             }
           ]
-        }
+        },
+        isFocus: focus?.itemId === comp2.id,
+        prevFocusDirection: focus?.button
       }
     })
 }
@@ -348,7 +365,9 @@ export function getPreviewModel(page, definition, guidance = '') {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param { string | undefined } questionOrder
  * @param { string | undefined } action
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -356,7 +375,9 @@ export function questionsViewModel(
   metadata,
   definition,
   pageId,
+  questionOrder,
   action,
+  focus,
   validation,
   notification
 ) {
@@ -395,6 +416,12 @@ export function questionsViewModel(
     validation
   )
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
+  const itemOrder =
+    questionOrder ??
+    components
+      .filter((c) => isFormType(c.type))
+      .map((x) => `${x.id}`)
+      .join(',')
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
@@ -416,11 +443,11 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionRows: mapQuestionRows(components, baseUrl),
+    questionRows: mapQuestionRows(components, baseUrl, itemOrder, focus),
     buttonText: SAVE_AND_CONTINUE,
-    preventAddQuestion: components.some(
-      (comp) => comp.type === ComponentType.FileUploadField
-    ),
+    preventAddQuestion:
+      components.some((comp) => comp.type === ComponentType.FileUploadField) ||
+      action === 'reorder',
     notification,
     previewPageUrl,
     pageCondition: conditionDetails.pageCondition,
@@ -430,6 +457,7 @@ export function questionsViewModel(
     hasPageCondition: Boolean(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
     ),
+    itemOrder,
     action
   }
 }

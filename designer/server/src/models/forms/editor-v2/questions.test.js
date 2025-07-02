@@ -82,6 +82,8 @@ describe('editor-v2 - questions model', () => {
         metadata,
         definition,
         pageId,
+        undefined,
+        undefined,
         undefined
       )
       expect(modelResult.fields.repeater).toBeUndefined()
@@ -96,6 +98,8 @@ describe('editor-v2 - questions model', () => {
         metadata,
         definition,
         pageId,
+        undefined,
+        undefined,
         undefined
       )
       expect(modelResult.fields.repeater).toBeDefined()
@@ -121,6 +125,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -149,6 +155,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -177,6 +185,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -204,6 +214,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -244,6 +256,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -270,6 +284,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -302,6 +318,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
 
@@ -365,6 +383,8 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
+          undefined,
+          undefined,
           undefined
         )
         const previewModel = result.previewModel

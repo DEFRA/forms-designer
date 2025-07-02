@@ -37,13 +37,11 @@
                     {% endcall %}
                   {% endif %}
 
+                  <form class="form" method="post">
                   {% if questionRows | length %}
                     {% if action == 'reorder' %}
-
-                      <form class="form" method="post">
-                        <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
-
-                        <ol class="app-reorderable-list" id="questions-container" data-module="questions-reorder">
+                      <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
+                        <ol class="app-reorderable-list" id="items-container" data-module="items-reorder">
                           {% for question in questionRows %}
                             {{ appReorderPanel({
                                 itemTypeName: 'Question',
@@ -64,8 +62,6 @@
                         </ol>
 
                         <input type="hidden" name="itemOrder" id="itemOrder" value="{{ itemOrder }}" />
-                      </form>
-
                     {% else %}
                       {{ govukSummaryList({
                         rows: questionRows,
@@ -97,11 +93,19 @@
                       }) }}
                     {% endif %}
 
-                    {% if questionRows | length > 1 %}
+                    {% if questionRows | length > 1 and action != 'reorder' %}
                       {{ govukButton({
                         text: 'Reorder questions',
                         classes: 'govuk-button--inverse',
                         href: '?action=reorder'
+                      }) }}
+                    {% endif %}
+
+                    {% if questionRows | length > 1 and action == 'reorder' %}
+                      {{ govukButton({
+                        text: 'Save changes',
+                        name: 'saveReorder',
+                        value: 'true'
                       }) }}
                     {% endif %}
 
@@ -114,6 +118,7 @@
                     text: "Skip to page preview",
                     href: "#"
                   }) }}
+                </form>
 
                   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
                   <form class="form" method="post">
@@ -132,5 +137,5 @@
 </div>
 
 {% if action == 'reorder' %}
-<script type="module" src="{{ getAssetPath("pages-reorder.js") }}"></script>
+<script type="module" src="{{ getAssetPath("items-reorder.js") }}"></script>
 {% endif %}

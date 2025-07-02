@@ -13,7 +13,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { setPageSettings } from '~/src/lib/editor.js'
+import { reorderQuestions, setPageSettings } from '~/src/lib/editor.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import {
   getValidationErrorsFromSession,
@@ -22,13 +22,22 @@ import {
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
+  getFlashFromSession,
+  setFlashInSession
+} from '~/src/lib/session-helper.js'
+import {
   getFormComponentsCount,
   getPageFromDefinition,
   isCheckboxSelected
 } from '~/src/lib/utils.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
+import {
+  getFocus,
+  repositionItem
+} from '~/src/models/forms/editor-v2/pages-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { customItemOrder } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_FULL_PATH_QUESTIONS = `/library/{slug}/editor-v2/page/{pageId}/questions`
 
@@ -36,6 +45,7 @@ export const ROUTE_PATH_QUESTION_DETAILS =
   '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}'
 
 const errorKey = sessionNames.validationFailure.editorQuestions
+const reorderQuestionsKey = sessionNames.reorderQuestions
 
 export const schema = Joi.object().keys({
   pageHeadingAndGuidance: pageHeadingAndGuidanceSchema,
@@ -71,7 +81,10 @@ export const schema = Joi.object().keys({
       'string.empty': 'Enter a name for this set of questions'
     }),
     otherwise: Joi.allow('')
-  })
+  }),
+  saveReorder: Joi.boolean().default(false).optional(),
+  movement: Joi.string().optional(),
+  itemOrder: Joi.any().custom(customItemOrder)
 })
 
 export default [
@@ -88,13 +101,17 @@ export default [
       const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
         params
       )
-      const { action } = /** @type {{ action: string }} */ (query)
+      const { action, focus } =
+        /** @type {{ action: string, focus: string }} */ (query)
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
-
+      const focusObj = getFocus(focus)
       const validation = getValidationErrorsFromSession(yar, errorKey)
+
+      // Question reorder
+      const questionOrder = getFlashFromSession(yar, reorderQuestionsKey)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
@@ -107,7 +124,9 @@ export default [
           metadata,
           definition,
           pageId,
+          questionOrder,
           action,
+          focusObj,
           validation,
           notification
         )
@@ -124,17 +143,19 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Payload: Partial<FormEditorInputPageSettings> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: Pick<FormEditorInputPageSettings, 'pageHeadingAndGuidance' | 'pageHeading' | 'movement' | 'itemOrder' | 'saveReorder'> }>}
    */
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTIONS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
-        params
-      )
+      const { slug, pageId } = params
       const { token } = auth.credentials
+      const { movement, itemOrder, saveReorder } =
+        /** @type {{ movement: string, itemOrder: string[], saveReorder: boolean}} */ (
+          payload
+        )
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
@@ -143,6 +164,40 @@ export default [
 
       if (!page) {
         throw Boom.notFound(`Page with id '${pageId}' not found`)
+      }
+
+      if (saveReorder) {
+        if (itemOrder.length > 0) {
+          await reorderQuestions(metadata.id, token, pageId, itemOrder)
+        }
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.clear(reorderQuestionsKey)
+
+        return h
+          .redirect(editorv2Path(slug, `page/${pageId}/questions`))
+          .code(StatusCodes.SEE_OTHER)
+          .takeover()
+      }
+
+      if (movement) {
+        const [direction, itemId] = movement.split('|')
+
+        const newQuestionOrder = repositionItem(
+          itemOrder,
+          direction,
+          itemId
+        ).join(',')
+
+        setFlashInSession(yar, reorderQuestionsKey, newQuestionOrder)
+
+        return h
+          .redirect(
+            editorv2Path(
+              slug,
+              `page/${pageId}/questions?action=reorder&focus=${movement}`
+            )
+          )
+          .code(StatusCodes.SEE_OTHER)
       }
 
       const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)

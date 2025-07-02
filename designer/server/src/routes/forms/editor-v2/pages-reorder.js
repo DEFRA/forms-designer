@@ -13,27 +13,16 @@ import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.
 import {
   excludeEndPages,
   getFocus,
-  repositionPage
+  repositionItem
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/pages-reorder.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { customItemOrder } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_FULL_PATH_REORDER_PAGES =
   '/library/{slug}/editor-v2/pages-reorder'
 
 const reorderPagesKey = sessionNames.reorderPages
-
-/**
- * @param {string|undefined} value
- * @returns {string[]}
- */
-const customItemOrder = (value) => {
-  if (value?.length) {
-    return value.split(',')
-  }
-
-  return []
-}
 
 export const itemOrderSchema = Joi.object()
   .keys({
@@ -122,7 +111,7 @@ export default [
       if (movement) {
         const [direction, pageId] = movement.split('|')
 
-        const newPageOrder = repositionPage(itemOrder, direction, pageId).join(
+        const newPageOrder = repositionItem(itemOrder, direction, pageId).join(
           ','
         )
 

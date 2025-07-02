@@ -18,7 +18,7 @@
 
     <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
-    <ol class="app-reorderable-list" id="items-container" data-module="pages-reorder">
+    <ol class="app-reorderable-list" id="items-container" data-module="items-reorder">
       {% for page in pages %}
         {% set isFixed = page.isCheckAnswersPage | default(false) %}
         {% set itemClasses = "app-reorderable-list__item" %}
@@ -51,5 +51,5 @@
 
 {% block mainEnd %}
   {{ super() }}
-  <script type="module" src="{{ getAssetPath("pages-reorder.js") }}"></script>
+  <script type="module" src="{{ getAssetPath("items-reorder.js") }}"></script>
 {% endblock %}
