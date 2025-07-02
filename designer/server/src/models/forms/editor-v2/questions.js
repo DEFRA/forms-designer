@@ -362,6 +362,21 @@ export function getPreviewModel(page, definition, guidance = '') {
 }
 
 /**
+ * @param { string | undefined } itemOrder
+ * @param {ComponentDef[]} components
+ * @returns {string}
+ */
+export function getItemOrder(itemOrder, components) {
+  return (
+    itemOrder ??
+    components
+      .filter((c) => isFormType(c.type))
+      .map((x) => `${x.id}`)
+      .join(',')
+  )
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -379,39 +394,21 @@ export function questionsViewModel(
 ) {
   const { formValues, formErrors } = validation ?? {}
   const { pageIdx, page, components } = extractPageData(definition, pageId)
-  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(
-    page,
-    components,
-    formValues
-  )
-  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(
-    page,
-    formValues
-  )
+  // prettier-ignore
+  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(page, components, formValues)
+  // prettier-ignore
+  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(page, formValues)
   const { baseUrl, pageHeading, cardTitle, formTitle, formPath } =
     buildViewModelData(metadata, pageIdx, pageId)
   const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
   const repeaterSettings = { minItems, maxItems, questionSetName }
-  const navigation = getFormSpecificNavigation(
-    formPath,
-    metadata,
-    definition,
-    'Editor'
-  )
+  // prettier-ignore
+  const navigation = getFormSpecificNavigation(formPath, metadata, definition, 'Editor')
   const conditionDetails = getPageConditionDetails(definition, pageId)
-  const fields = questionsFields(
-    page,
-    pageHeadingSettings,
-    repeaterSettings,
-    validation
-  )
+  // prettier-ignore
+  const fields = questionsFields(page, pageHeadingSettings, repeaterSettings, validation)
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
-  const itemOrder =
-    reorderDetails.questionOrder ??
-    components
-      .filter((c) => isFormType(c.type))
-      .map((x) => `${x.id}`)
-      .join(',')
+  const itemOrder = getItemOrder(reorderDetails.questionOrder, components)
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),

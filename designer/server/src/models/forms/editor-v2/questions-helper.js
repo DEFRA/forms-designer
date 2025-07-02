@@ -1,4 +1,4 @@
-import { stringHasValue } from "~/src/lib/utils.js"
+import { stringHasValue } from '~/src/lib/utils.js'
 
 /**
  * @param {string} focusStr
