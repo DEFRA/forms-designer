@@ -72,5 +72,11 @@
   "engines": {
     "node": "^22.11.0",
     "npm": "^10.9.0"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^0.3.23",
+    "@langchain/core": "^0.3.61",
+    "langchain": "^0.3.29",
+    "openai": "^5.8.2"
   }
 }

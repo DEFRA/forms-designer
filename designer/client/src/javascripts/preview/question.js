@@ -1,4 +1,5 @@
 import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
+import { postShortDescription } from '~/src/javascripts/preview/lib/llm.js'
 
 /**
  * @class QuestionDomElements
@@ -160,6 +161,21 @@ export class EventListeners {
       'input'
     ])
 
+    const shortDescriptionText = /** @type {ListenerRow} */ ([
+      this.baseElements.question,
+      /**
+       * @param {HTMLInputElement} target
+       */
+      (target) => {
+        postShortDescription(target.value).then(({ shortDescription }) => {
+          this.baseElements.shortDesc.value = shortDescription
+          const event = new InputEvent('input', { bubbles: true })
+          this.baseElements.shortDesc.dispatchEvent(event)
+        })
+      },
+      'blur'
+    ])
+
     const hintText = /** @type {ListenerRow} */ ([
       this.baseElements.hintText,
       /**
@@ -185,6 +201,7 @@ export class EventListeners {
       questionText,
       hintText,
       optionalCheckbox,
+      shortDescriptionText,
       ...this.highlightListeners,
       ...this._customListeners
     ]
