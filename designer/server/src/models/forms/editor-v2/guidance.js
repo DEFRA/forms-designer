@@ -12,6 +12,7 @@ import {
   getFormSpecificNavigation,
   getPageNum
 } from '~/src/models/forms/editor-v2/common.js'
+import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -94,6 +95,8 @@ export function guidanceViewModel(
   const cardHeading = 'Edit guidance page'
   const pageTitle = `${cardHeading} - ${formTitle}`
 
+  const conditionDetails = getPageConditionDetails(definition, pageId)
+
   return {
     ...baseModelFields(metadata.slug, pageTitle, formTitle),
     fields: { ...guidanceFields(pageHeadingVal, guidanceTextVal, validation) },
@@ -107,7 +110,11 @@ export function guidanceViewModel(
     baseUrl: editorv2Path(metadata.slug, `page/${pageId}`),
     questionId,
     buttonText: SAVE,
-    notification
+    notification,
+    conditionDetails,
+    hasPageCondition: Boolean(
+      conditionDetails.pageCondition && conditionDetails.pageConditionDetails
+    )
   }
 }
 

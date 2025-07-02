@@ -420,10 +420,7 @@ export function questionsViewModel(
     ),
     notification,
     previewPageUrl,
-    pageCondition: conditionDetails.pageCondition,
-    pageConditionDetails: conditionDetails.pageConditionDetails,
-    pageConditionPresentationString:
-      conditionDetails.pageConditionPresentationString,
+    conditionDetails,
     hasPageCondition: Boolean(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
     )
