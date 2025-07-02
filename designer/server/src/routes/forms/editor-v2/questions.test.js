@@ -32,7 +32,8 @@ const payload = {
   repeater: 'true',
   minItems: 2,
   maxItems: 5,
-  questionSetName: 'Cows'
+  questionSetName: 'Cows',
+  saveReorder: false
 }
 
 describe('Editor v2 questions routes', () => {
