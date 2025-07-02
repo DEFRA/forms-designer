@@ -20,7 +20,7 @@ import {
   getComponentsOnPageFromDefinition,
   getHeaders,
   getListFromComponent,
-  mapListToAutoCompleteStr,
+  mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
 
@@ -183,16 +183,16 @@ describe('utils', () => {
     })
   })
 
-  describe('mapListToAutoCompleteStr', () => {
+  describe('mapListToTextareaStr', () => {
     it('should map a list to an autocomplete string', () => {
       const list = buildList({
         items: [
           buildListItem({
-            text: 'JavaScript',
+            text: 'Javascript',
             value: 'javascript'
           }),
           buildListItem({
-            text: 'TypeScript',
+            text: 'Typescript',
             value: 'typescript'
           }),
           buildListItem({
@@ -201,15 +201,34 @@ describe('utils', () => {
           })
         ]
       })
-      expect(mapListToAutoCompleteStr(list)).toEqual(
-        'JavaScript:javascript\r\n' +
-          'TypeScript:typescript\r\n' +
+      const list2 = buildList({
+        items: [
+          buildListItem({
+            text: 'Javascript',
+            value: 'Javascript'
+          }),
+          buildListItem({
+            text: 'Typescript',
+            value: 'Typescript'
+          }),
+          buildListItem({
+            text: 'Haskell',
+            value: 'Haskell'
+          })
+        ]
+      })
+      expect(mapListToTextareaStr(list.items)).toEqual(
+        'Javascript:javascript\r\n' +
+          'Typescript:typescript\r\n' +
           'Haskell:haskell'
+      )
+      expect(mapListToTextareaStr(list2.items)).toEqual(
+        'Javascript\r\n' + 'Typescript\r\n' + 'Haskell'
       )
     })
 
     it('should return an empty string for undefined', () => {
-      expect(mapListToAutoCompleteStr(undefined)).toBe('')
+      expect(mapListToTextareaStr(undefined)).toBe('')
     })
   })
 
