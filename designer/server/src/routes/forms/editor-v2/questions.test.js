@@ -15,7 +15,7 @@ import {
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
-import { setPageSettings } from '~/src/lib/editor.js'
+import { reorderQuestions, setPageSettings } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -355,6 +355,69 @@ describe('Editor v2 questions routes', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
+
+  test('POST - should handle a reorder action', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions?action=reorder',
+      auth,
+      payload: {
+        ...structuredClone(payload),
+        movement: 'up|q2',
+        itemOrder: 'q1,q2,q3,q4'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions?action=reorder&focus=up|q2'
+    )
+    expect(setPageSettings).not.toHaveBeenCalled()
+  })
+
+  test('POST - should handle reorder save', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions?action=reorder',
+      auth,
+      payload: {
+        ...structuredClone(payload),
+        movement: 'up|q2',
+        itemOrder: 'q1,q2,q3,q4',
+        saveReorder: true
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+    expect(setPageSettings).not.toHaveBeenCalled()
+    expect(reorderQuestions).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      ['q1', 'q2', 'q3', 'q4']
     )
   })
 })

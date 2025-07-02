@@ -365,9 +365,7 @@ export function getPreviewModel(page, definition, guidance = '') {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
- * @param { string | undefined } questionOrder
- * @param { string | undefined } action
- * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
+ * @param {{ questionOrder?: string, action?: string, focus?: { button: string | undefined, itemId: string | undefined }}} reorderDetails
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -375,33 +373,25 @@ export function questionsViewModel(
   metadata,
   definition,
   pageId,
-  questionOrder,
-  action,
-  focus,
+  reorderDetails,
   validation,
   notification
 ) {
   const { formValues, formErrors } = validation ?? {}
-
   const { pageIdx, page, components } = extractPageData(definition, pageId)
-
   const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(
     page,
     components,
     formValues
   )
-
   const { minItems, maxItems, questionSetName } = extractRepeaterSettings(
     page,
     formValues
   )
-
   const { baseUrl, pageHeading, cardTitle, formTitle, formPath } =
     buildViewModelData(metadata, pageIdx, pageId)
-
   const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
   const repeaterSettings = { minItems, maxItems, questionSetName }
-
   const navigation = getFormSpecificNavigation(
     formPath,
     metadata,
@@ -417,7 +407,7 @@ export function questionsViewModel(
   )
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
   const itemOrder =
-    questionOrder ??
+    reorderDetails.questionOrder ??
     components
       .filter((c) => isFormType(c.type))
       .map((x) => `${x.id}`)
@@ -443,11 +433,16 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionRows: mapQuestionRows(components, baseUrl, itemOrder, focus),
+    questionRows: mapQuestionRows(
+      components,
+      baseUrl,
+      itemOrder,
+      reorderDetails.focus
+    ),
     buttonText: SAVE_AND_CONTINUE,
     preventAddQuestion:
       components.some((comp) => comp.type === ComponentType.FileUploadField) ||
-      action === 'reorder',
+      reorderDetails.action === 'reorder',
     notification,
     previewPageUrl,
     pageCondition: conditionDetails.pageCondition,
@@ -458,7 +453,7 @@ export function questionsViewModel(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
     ),
     itemOrder,
-    action
+    action: reorderDetails.action
   }
 }
 

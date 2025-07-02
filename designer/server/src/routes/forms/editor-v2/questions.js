@@ -124,9 +124,11 @@ export default [
           metadata,
           definition,
           pageId,
-          questionOrder,
-          action,
-          focusObj,
+          {
+            questionOrder,
+            action,
+            focus: focusObj
+          },
           validation,
           notification
         )

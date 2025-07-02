@@ -15,6 +15,7 @@ import {
 } from '@defra/forms-model/stubs'
 
 import {
+  constructReorderQuestion,
   dummyRenderer,
   getPreviewModel,
   hasUnderlyingHeadingData,
@@ -72,6 +73,12 @@ describe('editor-v2 - questions model', () => {
       title: 'What type of farming do you do?'
     })
 
+    const emptyReorderDetails = {
+      action: undefined,
+      focus: undefined,
+      questionOrder: undefined
+    }
+
     it('should not show repeater option if page type is FileUpload controller', () => {
       const definition = buildDefinition({
         pages: [buildFileUploadPage({ id: pageId }), buildSummaryPage()],
@@ -82,9 +89,7 @@ describe('editor-v2 - questions model', () => {
         metadata,
         definition,
         pageId,
-        undefined,
-        undefined,
-        undefined
+        emptyReorderDetails
       )
       expect(modelResult.fields.repeater).toBeUndefined()
     })
@@ -98,9 +103,7 @@ describe('editor-v2 - questions model', () => {
         metadata,
         definition,
         pageId,
-        undefined,
-        undefined,
-        undefined
+        emptyReorderDetails
       )
       expect(modelResult.fields.repeater).toBeDefined()
     })
@@ -125,9 +128,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result.pageCondition).toBe(conditionId)
@@ -155,9 +156,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result.pageCondition).toBeUndefined()
@@ -185,9 +184,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result.pageCondition).toBe('missing-permit-condition')
@@ -214,9 +211,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result.currentTab).toBe('overview')
@@ -256,9 +251,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result.pageCondition).toBe(conditionId)
@@ -284,9 +277,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result.pageCondition).toBeUndefined()
@@ -318,9 +309,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
 
         expect(result).toHaveProperty('cardTitle', 'Page 1 overview')
@@ -383,9 +372,7 @@ describe('editor-v2 - questions model', () => {
           metadata,
           definition,
           pageId,
-          undefined,
-          undefined,
-          undefined
+          emptyReorderDetails
         )
         const previewModel = result.previewModel
         const pageTitle = previewModel.pageTitle
@@ -436,6 +423,46 @@ describe('editor-v2 - questions model', () => {
           guidance: { text: '', classes: '' }
         })
       ).toThrow('Not implemented')
+    })
+  })
+
+  describe('constructReorderQuestion', () => {
+    it('should add focus details to component when not in focus', () => {
+      const component = buildTextFieldComponent()
+      const res = constructReorderQuestion(component, {
+        button: 'some button val',
+        itemId: 'other'
+      })
+      expect(res).toEqual({
+        id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
+        isFocus: false,
+        name: 'TextField',
+        options: {},
+        prevFocusDirection: 'some button val',
+        schema: {},
+        title: 'Text field',
+        hint: '',
+        type: 'TextField'
+      })
+    })
+
+    it('should add focus details to component when is in focus', () => {
+      const component = buildTextFieldComponent()
+      const res = constructReorderQuestion(component, {
+        button: 'some button val',
+        itemId: '407dd0d7-cce9-4f43-8e1f-7d89cb698875'
+      })
+      expect(res).toEqual({
+        id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
+        isFocus: true,
+        name: 'TextField',
+        options: {},
+        prevFocusDirection: 'some button val',
+        schema: {},
+        title: 'Text field',
+        hint: '',
+        type: 'TextField'
+      })
     })
   })
 })
