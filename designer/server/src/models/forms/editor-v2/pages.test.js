@@ -134,9 +134,9 @@ describe('editor-v2 - pages model', () => {
         }
       })
 
-      expect(resPageSummaryRepeater).toHaveLength(2)
+      expect(resPageSummaryRepeater).toHaveLength(1)
 
-      expect(resPageSummaryRepeater[1]).toEqual({
+      expect(resPageSummaryRepeater[0]).toEqual({
         key: {
           text: 'People can answer'
         },

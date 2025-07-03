@@ -77,7 +77,15 @@ export function mapCondition(conditionDetails) {
       text: 'Page shown when'
     },
     value: {
-      html: `<strong>${conditionDetails.pageConditionDetails?.displayName}</strong>`
+      html: `<ul class="govuk-list">
+        <li class="govuk-!-margin-bottom-2" style="display: flex; align-items: flex-start;">
+          <span class="govuk-checkboxes__tick green-tick">✓</span>
+          <div>
+            <span class="govuk-!-font-weight-bold">${conditionDetails.pageConditionDetails?.displayName}</span>
+            <div class="govuk-!-margin-left-3 govuk-!-margin-top-1 with-ellipsis">${conditionDetails.pageConditionPresentationString}</div>
+          </div>
+        </li>
+      </ul>`
     }
   }
 }
@@ -119,8 +127,11 @@ export function mapQuestionRows(definition, page) {
       : mapQuestion(comp, idx)
   )
 
-  if (rows.length === 1) {
-    // Hide question if only one per page
+  if (
+    components.length === 1 &&
+    components[0].type !== ComponentType.Markdown
+  ) {
+    // Hide question if only one per page, and not a markdown (summary or guidance page)
     rows.shift()
   }
 
