@@ -9,9 +9,9 @@ import {
 
 import {
   buildPreviewUrl,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  getPageConditionDetails
 } from '~/src/models/forms/editor-v2/common.js'
-import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
 import {
   editorv2Path,
   formOverviewBackLink,

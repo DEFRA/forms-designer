@@ -21,9 +21,9 @@ import {
   SAVE_AND_CONTINUE,
   baseModelFields,
   buildPreviewUrl,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  getPageConditionDetails
 } from '~/src/models/forms/editor-v2/common.js'
-import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
 import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
