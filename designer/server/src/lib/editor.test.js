@@ -26,6 +26,7 @@ import {
   getControllerType,
   migrateDefinitionToV2,
   reorderPages,
+  reorderQuestions,
   resolvePageHeading,
   setCheckAnswersDeclaration,
   setPageCondition,
@@ -1003,6 +1004,36 @@ describe('editor.js', () => {
         reorderPageUrl,
         expectedOrderCall
       )
+    })
+  })
+
+  describe('reorderQuestions', () => {
+    const reorderQuestionUrl = new URL(
+      `./${formId}/definition/draft/page/p1/components/order`,
+      formsEndpoint
+    )
+
+    it('should reorder the questions', async () => {
+      const questionOrderPayload = [
+        'd3214138-1c1f-42c1-9572-37b2f9ba1320',
+        '097becaf-ef20-4655-a8da-b2886f06c978',
+        'da9a860e-cf05-4b4b-bf4e-7c40e319ad7d'
+      ]
+      const expectedOrderCall = {
+        payload: questionOrderPayload,
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      await reorderQuestions(formId, token, 'p1', questionOrderPayload)
+      expect(mockedPostJson).toHaveBeenCalledWith(
+        reorderQuestionUrl,
+        expectedOrderCall
+      )
+    })
+
+    it('should handle empty array as payload', async () => {
+      const questionOrderPayload = /** @type {string[]} */ ([])
+      await reorderQuestions(formId, token, 'p1', questionOrderPayload)
+      expect(mockedPostJson).not.toHaveBeenCalled()
     })
   })
 

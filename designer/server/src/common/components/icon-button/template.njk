@@ -20,7 +20,7 @@
   {% endset %}
 
 {% if not params.type or params.type === 'link' %}
-<a href="{{ params.href }}" role="button" target="_blank" {% if params.id %} id="{{ params.id }}" {% endif %} draggable="false" class="govuk-button  {{ extraClasses }}" data-module="govuk-button" data-govuk-button-init="">
+<a href="{{ params.href }}" role="button" target="_blank" {% if params.id %} id="{{ params.id }}" {% endif %} draggable="false" class="govuk-button  {{ extraClasses }}" data-module="govuk-button">
   <span class="icon-wrapper">
     {{ iconHtml | safe }}
   </span>

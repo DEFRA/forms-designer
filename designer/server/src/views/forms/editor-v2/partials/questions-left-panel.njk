@@ -5,7 +5,7 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
-
+{% from "reorder-panel/macro.njk" import appReorderPanel %}
 
 <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
   <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
@@ -36,12 +36,38 @@
                       <p class="govuk-notification-banner__heading">{{ notification }}</p>
                     {% endcall %}
                   {% endif %}
+
                   {% if questionRows | length %}
-                    {{ govukSummaryList({
-                      rows: questionRows,
-                      classes: 'govuk-summary-list__show_final_divider'
-                    })
-                  }}
+                    {% if action == 'reorder' %}
+                      <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
+                        <ol class="app-reorderable-list" id="items-container" data-module="items-reorder">
+                          {% for question in questionRows %}
+                            {{ appReorderPanel({
+                                itemTypeName: 'Question',
+                                itemNum: loop.index,
+                                itemTitle: question.value.text,
+                                itemId: question.id,
+                                totalItems: questions.length,
+                                isFixed: false,
+                                isFirst: loop.first,
+                                isLast: loop.last,
+                                isFocus: question.isFocus,
+                                prevFocusDirection: question.prevFocusDirection,
+                                itemClasses: 'app-reorderable-list__item',
+                                dataId: question.id
+                              })
+                            }}
+                          {% endfor %}
+                        </ol>
+
+                        <input type="hidden" name="itemOrder" id="itemOrder" value="{{ itemOrder }}" />
+                    {% else %}
+                      {{ govukSummaryList({
+                        rows: questionRows,
+                        classes: 'govuk-summary-list__show_final_divider'
+                      })
+                    }}
+                    {% endif %}
                   {% else %}
                     {{ govukSummaryList({
                         rows: [{
@@ -66,6 +92,22 @@
                       }) }}
                     {% endif %}
 
+                    {% if questionRows | length > 1 and action != 'reorder' %}
+                      {{ govukButton({
+                        text: 'Reorder questions',
+                        classes: 'govuk-button--inverse',
+                        href: '?action=reorder'
+                      }) }}
+                    {% endif %}
+
+                    {% if questionRows | length > 1 and action == 'reorder' %}
+                      {{ govukButton({
+                        text: 'Save changes',
+                        name: 'saveReorder',
+                        value: 'true'
+                      }) }}
+                    {% endif %}
+
                     <a href="{{ baseUrl }}/delete" class="govuk-link govuk-link--no-visited-state">
                       Delete page
                     </a>
@@ -77,9 +119,7 @@
                   }) }}
 
                   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                  <form class="form" method="post">
-                      {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
-                  </form>
+                  {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
                   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
                   {%- include "../../../../views/forms/editor-v2/partials/conditions.njk" -%}
                 </div>
@@ -91,3 +131,7 @@
     </dl>
   </div>
 </div>
+
+{% if action == 'reorder' %}
+<script type="module" src="{{ getAssetPath("items-reorder.js") }}"></script>
+{% endif %}

@@ -53,8 +53,8 @@ export default /** @type {Configuration} */ ({
         './javascripts/preview/page-controller/setup-page-controller.js'
       ]
     },
-    'pages-reorder': {
-      import: ['./javascripts/pages-reorder.js']
+    'items-reorder': {
+      import: ['./javascripts/items-reorder.js']
     }
   },
   experiments: {

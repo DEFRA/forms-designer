@@ -5,14 +5,14 @@ import {
 import {
   constructReorderPage,
   excludeEndPages,
-  orderPages
+  orderItems
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {FormDefinition} definition
  * @param {string} pageOrder
- * @param {{ button: string | undefined, pageId: string | undefined} | undefined} focus
+ * @param {{ button: string | undefined, itemId: string | undefined} | undefined} focus
  */
 export function mapPageData(definition, pageOrder, focus) {
   if (!definition.pages.length) {
@@ -21,7 +21,7 @@ export function mapPageData(definition, pageOrder, focus) {
 
   const orderablePages = excludeEndPages(definition.pages)
 
-  const orderedPages = orderPages(orderablePages, pageOrder)
+  const orderedPages = orderItems(orderablePages, pageOrder)
 
   return {
     ...definition,
@@ -35,7 +35,7 @@ export function mapPageData(definition, pageOrder, focus) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageOrder
- * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
  */
 export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
   const formTitle = metadata.title
