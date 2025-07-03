@@ -430,6 +430,18 @@ export interface GovukFieldItem {
   checked?: boolean
 }
 
+export interface GovukSummaryListRow {
+  key?: {
+    text?: string
+    classes?: string
+  }
+  value?: {
+    text?: string
+    html?: string
+    classes?: string
+  }
+}
+
 export interface GovukField {
   id?: string
   name?: string

@@ -11,6 +11,7 @@ import {
   buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
+import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -50,6 +51,7 @@ export function determineEditUrl(page, isEndPage, editBaseUrl) {
 /**
  * @param {ComponentDef} component
  * @param {number} idx
+ * @returns {GovukSummaryListRow}
  */
 export function mapQuestion(component, idx) {
   return {
@@ -66,8 +68,24 @@ export function mapQuestion(component, idx) {
 }
 
 /**
+ * @param {{ pageCondition: string | undefined; pageConditionDetails: ConditionWrapperV2 | undefined; pageConditionPresentationString: string | null; }} conditionDetails
+ * @returns {GovukSummaryListRow}
+ */
+export function mapCondition(conditionDetails) {
+  return {
+    key: {
+      text: 'Page shown when'
+    },
+    value: {
+      html: `<strong>${conditionDetails.pageConditionDetails?.displayName}</strong>`
+    }
+  }
+}
+
+/**
  * @param {MarkdownComponent} component
  * @param {boolean} isSummary
+ * @returns {GovukSummaryListRow}
  */
 export function mapMarkdown(component, isSummary) {
   return {
@@ -82,10 +100,16 @@ export function mapMarkdown(component, isSummary) {
 }
 
 /**
+ * @param {FormDefinition} definition
  * @param {Page} page
  */
-export function mapQuestionRows(page) {
+export function mapQuestionRows(definition, page) {
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+
+  const conditionDetails = getPageConditionDetails(
+    definition,
+    /** @type {string} */ (page.id)
+  )
 
   const isSummary = page.controller === ControllerType.Summary
 
@@ -94,6 +118,15 @@ export function mapQuestionRows(page) {
       ? mapMarkdown(comp, isSummary)
       : mapQuestion(comp, idx)
   )
+
+  if (rows.length === 1) {
+    // Hide question if only one per page
+    rows.shift()
+  }
+
+  if (conditionDetails.pageCondition) {
+    rows.push(mapCondition(conditionDetails))
+  }
 
   if (page.controller === ControllerType.Repeat) {
     rows.push({
@@ -125,7 +158,7 @@ export function mapPageData(slug, definition) {
         return {
           ...page,
           title: hasComponents(page) ? page.components[0].title : '',
-          questionRows: mapQuestionRows(hideFirstGuidance(page)),
+          questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
           isEndPage,
           isExitPage,
           editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
@@ -133,7 +166,7 @@ export function mapPageData(slug, definition) {
       }
       return {
         ...page,
-        questionRows: mapQuestionRows(hideFirstGuidance(page)),
+        questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
         isEndPage,
         isExitPage,
         editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
@@ -318,5 +351,5 @@ export function pagesViewModel(metadata, definition, notification) {
 }
 
 /**
- * @import { ComponentDef, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionWrapperV2, GovukSummaryListRow, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */
