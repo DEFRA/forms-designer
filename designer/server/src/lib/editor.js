@@ -393,13 +393,15 @@ export async function reorderPages(formId, token, payload) {
  */
 export async function reorderQuestions(formId, token, pageId, payload) {
   // Update question ordering
-  await postJsonByComponentType(
-    buildRequestUrl(formId, `page/${pageId}/components/order`),
-    {
-      payload,
-      ...getHeaders(token)
-    }
-  )
+  if (payload.length > 0) {
+    await postJsonByComponentType(
+      buildRequestUrl(formId, `page/${pageId}/components/order`),
+      {
+        payload,
+        ...getHeaders(token)
+      }
+    )
+  }
 }
 
 /**

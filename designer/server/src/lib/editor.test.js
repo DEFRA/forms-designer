@@ -1007,7 +1007,7 @@ describe('editor.js', () => {
     })
   })
 
-  describe('reorderQuestionss', () => {
+  describe('reorderQuestions', () => {
     const reorderQuestionUrl = new URL(
       `./${formId}/definition/draft/page/p1/components/order`,
       formsEndpoint
@@ -1028,6 +1028,12 @@ describe('editor.js', () => {
         reorderQuestionUrl,
         expectedOrderCall
       )
+    })
+
+    it('should handle empty array as payload', async () => {
+      const questionOrderPayload = /** @type {string[]} */ ([])
+      await reorderQuestions(formId, token, 'p1', questionOrderPayload)
+      expect(mockedPostJson).not.toHaveBeenCalled()
     })
   })
 

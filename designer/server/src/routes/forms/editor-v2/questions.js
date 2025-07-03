@@ -170,9 +170,7 @@ export default [
       }
 
       if (saveReorder) {
-        if (itemOrder.length > 0) {
-          await reorderQuestions(metadata.id, token, pageId, itemOrder)
-        }
+        await reorderQuestions(metadata.id, token, pageId, itemOrder)
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
         yar.clear(reorderQuestionsKey)
 
@@ -209,9 +207,7 @@ export default [
         // Save re-order (if in reorder mode) in case user pressed the main 'Save changes' button
         // as opposed to the reorder 'Save changes' button
         if (action === 'reorder') {
-          if (itemOrder.length > 0) {
-            await reorderQuestions(metadata.id, token, pageId, itemOrder)
-          }
+          await reorderQuestions(metadata.id, token, pageId, itemOrder)
         }
 
         // Ensure there's a page title when multiple questions exist
