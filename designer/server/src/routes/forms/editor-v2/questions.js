@@ -151,8 +151,9 @@ export default [
     method: 'POST',
     path: ROUTE_FULL_PATH_QUESTIONS,
     async handler(request, h) {
-      const { params, auth, payload, yar } = request
+      const { params, auth, payload, yar, query } = request
       const { slug, pageId } = params
+      const { action } = query
       const { token } = auth.credentials
       const { movement, itemOrder, saveReorder } =
         /** @type {{ movement: string, itemOrder: string[], saveReorder: boolean}} */ (
@@ -205,6 +206,14 @@ export default [
       const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
 
       try {
+        // Save re-order (if in reorder mode) in case user pressed the main 'Save changes' button
+        // as opposed to the reorder 'Save changes' button
+        if (action === 'reorder') {
+          if (itemOrder.length > 0) {
+            await reorderQuestions(metadata.id, token, pageId, itemOrder)
+          }
+        }
+
         // Ensure there's a page title when multiple questions exist
         if (
           (!isExpanded || !payload.pageHeading) &&

@@ -37,7 +37,6 @@
                     {% endcall %}
                   {% endif %}
 
-                  <form class="form" method="post">
                   {% if questionRows | length %}
                     {% if action == 'reorder' %}
                       <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
@@ -118,12 +117,9 @@
                     text: "Skip to page preview",
                     href: "#"
                   }) }}
-                </form>
 
                   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-                  <form class="form" method="post">
-                      {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
-                  </form>
+                  {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
                   <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
                   {%- include "../../../../views/forms/editor-v2/partials/conditions.njk" -%}
                 </div>

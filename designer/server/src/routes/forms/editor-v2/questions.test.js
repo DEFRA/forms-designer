@@ -420,6 +420,51 @@ describe('Editor v2 questions routes', () => {
       ['q1', 'q2', 'q3', 'q4']
     )
   })
+
+  test('POST - should handle reorder save even when user presses main save changes, not the reorder save changes', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions?action=reorder',
+      auth,
+      payload: {
+        ...structuredClone(payload),
+        itemOrder: 'q1,q2,q3,q4',
+        saveReorder: false,
+        pageHeading: 'Page heading when reordering'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+    expect(setPageSettings).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      expect.anything(),
+      {
+        ...payload,
+        pageHeading: 'Page heading when reordering',
+        itemOrder: ['q1', 'q2', 'q3', 'q4']
+      }
+    )
+    expect(reorderQuestions).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      ['q1', 'q2', 'q3', 'q4']
+    )
+  })
 })
 
 /**
