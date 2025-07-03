@@ -424,6 +424,12 @@ export interface ConditionSessionState {
   conditionWrapper?: ConditionWrapperV2
 }
 
+export interface ConditionDetails {
+  pageCondition: string | undefined
+  pageConditionDetails: ConditionWrapperV2 | undefined
+  pageConditionPresentationString: string | null
+}
+
 export interface GovukFieldItem {
   text?: string
   value?: string

@@ -18,6 +18,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
   &-thin-border {
     border-left: 5px solid;
+    border-left-color: $defra-brand-colour;
   }
 
   &-standard {
@@ -26,10 +27,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     &-hide-declaration .govuk-summary-card__content {
       display: none;
     }
-  }
-
-  &-thin-border {
-    border-left-color: $defra-brand-colour;
   }
 
   &-end {

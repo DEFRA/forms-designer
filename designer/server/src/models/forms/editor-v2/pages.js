@@ -68,7 +68,7 @@ export function mapQuestion(component, idx) {
 }
 
 /**
- * @param {{ pageCondition: string | undefined; pageConditionDetails: ConditionWrapperV2 | undefined; pageConditionPresentationString: string | null; }} conditionDetails
+ * @param {ConditionDetails} conditionDetails
  * @returns {GovukSummaryListRow}
  */
 export function mapCondition(conditionDetails) {
@@ -362,5 +362,5 @@ export function pagesViewModel(metadata, definition, notification) {
 }
 
 /**
- * @import { ComponentDef, ConditionWrapperV2, GovukSummaryListRow, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionDetails, GovukSummaryListRow, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

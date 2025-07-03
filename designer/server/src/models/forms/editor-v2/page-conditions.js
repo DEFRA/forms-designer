@@ -18,7 +18,7 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
  * Gets page condition details and presentation string
  * @param {FormDefinition} definition
  * @param {string} pageId
- * @returns {{ pageCondition: string | undefined, pageConditionDetails: ConditionWrapperV2 | undefined, pageConditionPresentationString: string | null }}
+ * @returns {ConditionDetails}
  */
 export function getPageConditionDetails(definition, pageId) {
   const page = getPageFromDefinition(definition, pageId)
@@ -138,6 +138,6 @@ export function pageConditionsViewModel(
 }
 
 /**
- * @import { FormDefinition, ConditionWrapperV2, FormMetadata, Page } from '@defra/forms-model'
+ * @import { ConditionDetails, FormDefinition, ConditionWrapperV2, FormMetadata, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
