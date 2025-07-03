@@ -9,20 +9,20 @@ import { stringHasValue } from '~/src/lib/utils.js'
 
 /**
  * @param {Page} page
- * @param {{ button: string | undefined, pageId: string | undefined } | undefined } focus
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
  */
 export function constructReorderPage(page, focus) {
   if (page.title === '') {
     return {
       ...page,
       title: hasComponents(page) ? page.components[0].title : '',
-      isFocus: focus?.pageId === page.id,
+      isFocus: focus?.itemId === page.id,
       prevFocusDirection: focus?.button
     }
   }
   return {
     ...page,
-    isFocus: focus?.pageId === page.id,
+    isFocus: focus?.itemId === page.id,
     prevFocusDirection: focus?.button
   }
 }
@@ -36,54 +36,55 @@ export function excludeEndPages(pages) {
 }
 
 /**
- * Repositions a page in an array of pages
- * @param {string[]} pageOrder
+ * Repositions a page or question in an array of items
+ * @param {string[]} itemOrder
  * @param {string} direction
- * @param {string} pageId
+ * @param {string} itemId
  */
-export function repositionPage(pageOrder, direction, pageId) {
-  const pageIdx = pageOrder.findIndex((x) => x === pageId)
+export function repositionItem(itemOrder, direction, itemId) {
+  const itemIdx = itemOrder.findIndex((x) => x === itemId)
 
   const isValidDirection =
-    direction === 'down' || (direction === 'up' && pageIdx > 0)
+    direction === 'down' || (direction === 'up' && itemIdx > 0)
 
-  if (pageIdx === -1 || !isValidDirection) {
-    return pageOrder
+  if (itemIdx === -1 || !isValidDirection) {
+    return itemOrder
   }
 
-  const positionIndex = direction === 'down' ? pageIdx + 1 : pageIdx - 1
+  const positionIndex = direction === 'down' ? itemIdx + 1 : itemIdx - 1
 
-  return pageOrder.toSpliced(pageIdx, 1).toSpliced(positionIndex, 0, pageId)
+  return itemOrder.toSpliced(itemIdx, 1).toSpliced(positionIndex, 0, itemId)
 }
 
 /**
- * Orders a list of pages based on a list of ids
- * @param {Page[]} orderablePages
- * @param {string} pageOrder
+ * Orders a list of pages (or questions) based on a list of ids
+ * @template {Page | ComponentDef} T
+ * @param {T[]} orderableItems
+ * @param {string} itemOrder
  */
-export function orderPages(orderablePages, pageOrder) {
-  const pageIdsInOrder = pageOrder.split(',')
-  const pagesInOrder = /** @type {Page[]} */ ([])
-  pageIdsInOrder.forEach((pid) => {
-    const foundPage = orderablePages.find((page) => page.id === pid)
-    if (foundPage) {
-      pagesInOrder.push(foundPage)
+export function orderItems(orderableItems, itemOrder) {
+  const itemIdsInOrder = itemOrder.split(',')
+  const itemsInOrder = /** @type {T[]} */ ([])
+  itemIdsInOrder.forEach((pid) => {
+    const foundItem = orderableItems.find((item) => item.id === pid)
+    if (foundItem) {
+      itemsInOrder.push(foundItem)
     }
   })
-  return pagesInOrder
+  return itemsInOrder
 }
 
 /**
  * @param {string} focusStr
  */
 export function getFocus(focusStr) {
-  const [direction, pageId] = focusStr ? focusStr.split('|') : []
-  if (!stringHasValue(direction) || !stringHasValue(pageId)) {
+  const [direction, itemId] = focusStr ? focusStr.split('|') : []
+  if (!stringHasValue(direction) || !stringHasValue(itemId)) {
     return undefined
   }
 
   return {
-    pageId,
+    itemId,
     button: direction
   }
 }
@@ -109,5 +110,5 @@ export function hasConditionSupportForPage(page) {
 }
 
 /**
- * @import { Page } from '@defra/forms-model'
+ * @import { ComponentDef, Page } from '@defra/forms-model'
  */

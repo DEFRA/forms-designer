@@ -25,3 +25,16 @@ export async function getFormPage(slug, pageId, token) {
 
   return { page, metadata, definition }
 }
+
+/**
+ * Custom validator for item reordering
+ * @param {string|undefined} value
+ * @returns {string[]}
+ */
+export const customItemOrder = (value) => {
+  if (value?.length) {
+    return value.split(',')
+  }
+
+  return []
+}

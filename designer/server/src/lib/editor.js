@@ -29,6 +29,9 @@ const postJsonByPageType = /** @type {typeof postJson<Page>} */ (postJson)
 const postJsonByDefinitionType =
   /** @type {typeof postJson<FormDefinition>} */ (postJson)
 const putJsonByPageType = /** @type {typeof putJson<Page>} */ (putJson)
+const postJsonByComponentType = /** @type {typeof postJson<ComponentDef>} */ (
+  postJson
+)
 const delJsonByComponentType = /** @type {typeof delJson<ComponentDef>} */ (
   delJson
 )
@@ -379,6 +382,26 @@ export async function reorderPages(formId, token, payload) {
     payload,
     ...getHeaders(token)
   })
+}
+
+/**
+ * Re-order the questions as per list of ids
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string[]} payload
+ */
+export async function reorderQuestions(formId, token, pageId, payload) {
+  // Update question ordering
+  if (payload.length > 0) {
+    await postJsonByComponentType(
+      buildRequestUrl(formId, `page/${pageId}/components/order`),
+      {
+        payload,
+        ...getHeaders(token)
+      }
+    )
+  }
 }
 
 /**
