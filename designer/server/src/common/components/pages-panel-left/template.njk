@@ -9,7 +9,7 @@
 <div class="govuk-summary-card__title govuk-!-margin-0">{{ pageTitleText }}</div>
 {% endset %}
 
-{% set cardClass = "pages-panel-left-standard" if params.rows | length > 1 else "pages-panel-left-standard pages-panel-left-standard-hide-declaration" %}
+{% set cardClass = "pages-panel-left-standard" if params.rows | length > 0 else "pages-panel-left-standard pages-panel-left-standard-hide-declaration" %}
 {% set cardTitle = { text: pageTitleText } %}
 
 {% if params.isEndPage %}
