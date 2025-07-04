@@ -62,6 +62,7 @@ export function getConditionsData(definition) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param {string} conditionId
  * @param {ConditionSessionState} state
  * @param {ValidationFailure<any>} [validation]
  * @param {string[]} [notification]
@@ -70,6 +71,7 @@ export function pageConditionsViewModel(
   metadata,
   definition,
   pageId,
+  conditionId,
   state,
   validation,
   notification
@@ -111,7 +113,7 @@ export function pageConditionsViewModel(
   const conditionsManagerPath = editorv2Path(metadata.slug, 'conditions')
   const pageConditionsApiUrl = editorv2Path(
     metadata.slug,
-    `page/${pageId}/conditions`
+    `page/${pageId}/conditions/${conditionId}/${state.stateId}`
   )
 
   return {

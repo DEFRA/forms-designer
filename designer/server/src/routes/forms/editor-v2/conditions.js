@@ -155,6 +155,7 @@ export default [
           metadata,
           definition,
           pageId,
+          conditionId,
           sessionState,
           validation,
           notification
