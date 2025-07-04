@@ -424,10 +424,28 @@ export interface ConditionSessionState {
   conditionWrapper?: ConditionWrapperV2
 }
 
+export interface ConditionDetails {
+  pageCondition: string | undefined
+  pageConditionDetails: ConditionWrapperV2 | undefined
+  pageConditionPresentationString: string | null
+}
+
 export interface GovukFieldItem {
   text?: string
   value?: string
   checked?: boolean
+}
+
+export interface GovukSummaryListRow {
+  key?: {
+    text?: string
+    classes?: string
+  }
+  value?: {
+    text?: string
+    html?: string
+    classes?: string
+  }
 }
 
 export interface GovukField {

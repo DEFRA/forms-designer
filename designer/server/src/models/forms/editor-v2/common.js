@@ -234,5 +234,37 @@ export function toPresentationHtmlV2(conditionWrapper, definition) {
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition, FormStatus, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
+ * Gets page condition details and presentation string
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @returns {ConditionDetails}
+ */
+export function getPageConditionDetails(definition, pageId) {
+  const page = getPageFromDefinition(definition, pageId)
+  const pageCondition = page?.condition
+  const pageConditionDetails = pageCondition
+    ? /** @type {ConditionWrapperV2 | undefined} */ (
+        definition.conditions
+          .filter(isConditionWrapperV2)
+          .find((c) => c.id === pageCondition)
+      )
+    : undefined
+
+  let pageConditionPresentationString = null
+  if (pageConditionDetails) {
+    pageConditionPresentationString = toPresentationStringV2(
+      pageConditionDetails,
+      definition
+    )
+  }
+
+  return {
+    pageCondition,
+    pageConditionDetails,
+    pageConditionPresentationString
+  }
+}
+
+/**
+ * @import { ComponentDef, ConditionDetails, FormMetadata, FormDefinition, FormStatus, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
  */
