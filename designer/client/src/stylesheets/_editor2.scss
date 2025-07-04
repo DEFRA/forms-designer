@@ -159,3 +159,8 @@
     vertical-align: middle;
   }
 }
+
+.govuk-checkboxes__tick.green-tick {
+  color: govuk-colour("green");
+  margin-right: 5px;
+}

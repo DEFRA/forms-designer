@@ -8,9 +8,9 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
+import { getPageConditionDetails } from '~/src/models/forms/editor-v2/common.js'
 import {
   getConditionsData,
-  getPageConditionDetails,
   pageConditionsViewModel
 } from '~/src/models/forms/editor-v2/page-conditions.js'
 
