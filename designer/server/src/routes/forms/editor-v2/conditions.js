@@ -1,8 +1,4 @@
-import { randomUUID } from 'node:crypto'
-import Stream from 'node:stream'
-
 import { FormDefinitionError, slugSchema } from '@defra/forms-model'
-import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -10,10 +6,14 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { addCondition, setPageCondition } from '~/src/lib/editor.js'
 import {
+  checkBoomError,
   createJoiError,
   isInvalidFormErrorType
 } from '~/src/lib/error-boom-helper.js'
-import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
+import {
+  addErrorsToSession,
+  getValidationErrorsFromSession
+} from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
@@ -24,11 +24,10 @@ import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.
 import { conditionWrapperSchema } from '~/src/models/forms/editor-v2/condition-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/conditions.js'
 import * as pageConditionsViewModel from '~/src/models/forms/editor-v2/page-conditions.js'
-import { editorFormPath, editorv2Path } from '~/src/models/links.js'
+import { editorv2Path } from '~/src/models/links.js'
 import {
   buildSessionState,
-  processErrorMessages,
-  saveSessionState
+  conditionPostHandlerFailAction
 } from '~/src/routes/forms/editor-v2/condition-helper.js'
 import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
@@ -37,9 +36,22 @@ export const ROUTE_FULL_PATH_PAGE_CONDITIONS =
   '/library/{slug}/editor-v2/page/{pageId}/conditions'
 export const ROUTE_FULL_PATH_PAGE_CONDITIONS_WITH_STATE =
   '/library/{slug}/editor-v2/page/{pageId}/conditions/{conditionId}/{stateId?}'
+export const ROUTE_FULL_PATH_PAGE_CONDITIONS_WITH_ASSIGN =
+  '/library/{slug}/editor-v2/page/{pageId}/conditions/assign'
 
 const notificationKey = sessionNames.successNotification
-const errorKey = sessionNames.validationFailure.editorPageConditions
+const errorKey = sessionNames.validationFailure.editorCondition
+
+const assignConditionsSchema = Joi.object({
+  action: Joi.string().valid('add', 'remove').required(),
+  conditionName: Joi.string().when('action', {
+    is: 'add',
+    then: Joi.required().messages({
+      '*': 'Select existing condition'
+    }),
+    otherwise: Joi.optional()
+  })
+})
 
 export default [
   /**
@@ -155,7 +167,6 @@ export default [
           metadata,
           definition,
           pageId,
-          conditionId,
           sessionState,
           validation,
           notification
@@ -173,7 +184,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, conditionId: string, stateId: string }, Payload: ConditionPayload }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, conditionId: string, stateId: string }, Payload: ConditionWrapperV2 }>}
    */
   ({
     method: 'POST',
@@ -191,7 +202,7 @@ export default [
       const { auth, params, payload, yar } = request
       const { slug, pageId } = params
       const { token } = auth.credentials
-      const { action, conditionName, displayName } = payload
+      const { displayName } = payload
 
       const metadata = await forms.get(slug, token)
 
@@ -199,15 +210,12 @@ export default [
         if (displayName && displayName !== '') {
           const condRes = await addCondition(metadata.id, token, payload)
           await setPageCondition(metadata.id, token, pageId, condRes.id)
-        } else {
-          if (action === 'add' && conditionName) {
-            await setPageCondition(metadata.id, token, pageId, conditionName)
-          } else {
-            await setPageCondition(metadata.id, token, pageId, null)
-          }
-        }
 
-        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+          yar.flash(
+            sessionNames.successNotification,
+            CHANGES_SAVED_SUCCESSFULLY
+          )
+        }
 
         return h
           .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
@@ -239,53 +247,75 @@ export default [
         }),
         failAction: (request, h, error) => {
           // When the user clicks any button apart form 'Save condition', the processing should hit this section.
-          // Guard for type safety
-          if (
-            typeof request.payload !== 'object' ||
-            request.payload instanceof Stream ||
-            Buffer.isBuffer(request.payload)
-          ) {
-            throw Boom.badRequest(
-              'Unexpected payload data in conditions fail action'
-            )
-          }
 
-          /**
-           *  @type {ConditionWrapperPayload}
-           */
-          const payload = request.payload
-          const { params, yar } = request
-          const { slug, pageId, conditionId, stateId } = params
-          const { items = [] } = payload
+          const { pageId, conditionId, stateId } = request.params
 
-          if (payload.action || payload.removeAction) {
-            if (payload.action === 'addCondition') {
-              items.push({ id: randomUUID() })
-            } else if (payload.removeAction) {
-              items.splice(Number(payload.removeAction), 1)
-            } else {
-              // Do nothing - clause in here to satisfy SonarCloud
-            }
+          return conditionPostHandlerFailAction(request, h, error, {
+            redirectUrl: `page/${pageId}/conditions/${conditionId}/${stateId}`
+          })
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: { action: 'add' | 'remove', conditionName?: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH_PAGE_CONDITIONS_WITH_ASSIGN,
+    async handler(request, h) {
+      const { params, auth, payload, yar } = request
+      const { token } = auth.credentials
+      const { slug, pageId } = params
+      const { action, conditionName } = payload
 
-            saveSessionState(yar, payload, stateId, items)
+      try {
+        const metadata = await forms.get(slug, token)
+        const formId = metadata.id
 
-            // Redirect POST to GET without resubmit on back button
-            return h
-              .redirect(
-                editorFormPath(
-                  slug,
-                  `page/${pageId}/conditions/${conditionId}/${stateId}`
-                )
-              )
-              .code(StatusCodes.SEE_OTHER)
-              .takeover()
-          } else {
-            saveSessionState(yar, payload, stateId, items)
+        if (action === 'add' && conditionName) {
+          await setPageCondition(formId, token, pageId, conditionName)
+        } else {
+          await setPageCondition(formId, token, pageId, null)
+        }
 
-            processErrorMessages(error)
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-            return redirectWithErrors(request, h, error, errorKey)
-          }
+        return h
+          .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          addErrorsToSession(/** @type {*} */ (request), error, errorKey)
+          return h
+            .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
+            .code(StatusCodes.SEE_OTHER)
+        }
+        throw err
+      }
+    },
+    options: {
+      validate: {
+        payload: assignConditionsSchema,
+        failAction: (request, h, error) => {
+          const { params } = request
+          const { slug, pageId } =
+            /** @type {{ slug: string, pageId: string }} */ (params)
+
+          addErrorsToSession(/** @type {*} */ (request), error, errorKey)
+
+          return h
+            .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
+            .code(StatusCodes.SEE_OTHER)
+            .takeover()
         }
       },
       auth: {
@@ -304,6 +334,8 @@ export default [
  */
 
 /**
+ * @import { ConditionWrapperV2 } from '@defra/forms-model'
+ * @import Boom from '@hapi/boom'
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { ConditionWrapperPayload } from '~/src/models/forms/editor-v2/condition-helper.js'
  */

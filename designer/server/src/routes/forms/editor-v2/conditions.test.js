@@ -15,11 +15,13 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as editor from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
+import { getConditionSessionState } from '~/src/lib/session-helper.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/session-helper.js')
 
 describe('Editor v2 conditions routes', () => {
   /** @type {Server} */
@@ -145,6 +147,11 @@ describe('Editor v2 conditions routes', () => {
   })
 
   describe('page conditions routes', () => {
+    beforeEach(() => {
+      jest.mocked(getConditionSessionState).mockReturnValue({
+        stateId: 'state-id'
+      })
+    })
     describe('GET /library/{slug}/editor-v2/page/{pageId}/conditions', () => {
       test('should render page conditions view with no existing condition', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
@@ -154,7 +161,7 @@ describe('Editor v2 conditions routes', () => {
 
         const options = {
           method: 'get',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/new/state-id`,
           auth
         }
 
@@ -180,7 +187,7 @@ describe('Editor v2 conditions routes', () => {
 
         const options = {
           method: 'get',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/${conditionId}/state-id`,
           auth
         }
 
@@ -205,7 +212,7 @@ describe('Editor v2 conditions routes', () => {
 
         const options = {
           method: 'post',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/assign`,
           payload: {
             action: 'add',
             conditionName: conditionId
@@ -233,7 +240,7 @@ describe('Editor v2 conditions routes', () => {
 
         const options = {
           method: 'post',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/assign`,
           payload: {
             action: 'remove'
           },
@@ -257,7 +264,7 @@ describe('Editor v2 conditions routes', () => {
       test('should handle validation error for missing condition when adding', async () => {
         const options = {
           method: 'post',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/assign`,
           payload: {
             action: 'add'
             // Missing conditionName
@@ -283,7 +290,7 @@ describe('Editor v2 conditions routes', () => {
 
         const options = {
           method: 'post',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/assign`,
           payload: {
             action: 'add',
             conditionName: conditionId
@@ -313,7 +320,7 @@ describe('Editor v2 conditions routes', () => {
 
         const options = {
           method: 'post',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/assign`,
           payload: {
             action: 'add',
             conditionName: conditionId
@@ -338,7 +345,7 @@ describe('Editor v2 conditions routes', () => {
       test('should validate payload schema correctly', async () => {
         const options = {
           method: 'post',
-          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions`,
+          url: `/library/my-form-slug/editor-v2/page/${pageId}/conditions/assign`,
           payload: {
             action: 'invalid-action'
           },

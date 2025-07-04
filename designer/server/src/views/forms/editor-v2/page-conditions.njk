@@ -49,10 +49,6 @@
                         {% endcall %}
                       {% endif %}
 
-                      <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>
-
-                      <h2 class="govuk-heading-l">Control who can see this page based on previous answers</h2>
-
                       {% if allConditions and allConditions.length > 0 %}
                         {% if pageCondition and pageConditionDetails %}
                           {% set conditionCount = 1 %}
@@ -75,6 +71,9 @@
                             <input type="hidden" name="action" value="remove">
                           </form>
                         {% endif %}
+
+                        <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>
+                        <h2 class="govuk-heading-l">Control who can see this page based on previous answers</h2>
 
                         <div class="govuk-form-group">
                           <fieldset class="govuk-fieldset">
@@ -135,6 +134,8 @@
                           html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
                         }) }}
                       {% else %}
+                        <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>
+                        <h2 class="govuk-heading-l">Control who can see this page based on previous answers</h2>
                         {{ appConditionEditor(conditionEditor) }}
                         {{ govukInsetText({
                           html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'

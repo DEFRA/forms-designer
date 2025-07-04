@@ -319,8 +319,15 @@ describe('page-conditions model', () => {
       engine: Engine.V2
     })
 
+    const mockState = {}
+
     it('should return complete view model with all required fields for a question', () => {
-      const result = pageConditionsViewModel(metadata, baseDefinition, pageId)
+      const result = pageConditionsViewModel(
+        metadata,
+        baseDefinition,
+        pageId,
+        mockState
+      )
 
       expect(result).toHaveProperty(
         'formSlug',
@@ -350,7 +357,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         baseDefinitionWithGuidance,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result).toHaveProperty(
@@ -395,7 +403,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         definitionWithCondition,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result.pageCondition).toBe(conditionId)
@@ -463,7 +472,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         definitionWithMultipleConditions,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result.allConditions).toHaveLength(3)
@@ -495,6 +505,7 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinition,
         pageId,
+        {},
         validation
       )
 
@@ -514,6 +525,7 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinition,
         pageId,
+        {},
         undefined,
         notification
       )
@@ -522,7 +534,12 @@ describe('page-conditions model', () => {
     })
 
     it('should construct correct URLs and paths', () => {
-      const result = pageConditionsViewModel(metadata, baseDefinition, pageId)
+      const result = pageConditionsViewModel(
+        metadata,
+        baseDefinition,
+        pageId,
+        mockState
+      )
 
       expect(result.baseUrl).toBe(
         '/library/environmental-permit-application/editor-v2/page/farm-details-page'
@@ -535,7 +552,7 @@ describe('page-conditions model', () => {
         '/library/environmental-permit-application/editor-v2/conditions'
       )
       expect(result.pageConditionsApiUrl).toBe(
-        '/library/environmental-permit-application/editor-v2/page/farm-details-page/conditions'
+        '/library/environmental-permit-application/editor-v2/page/farm-details-page/conditions/assign'
       )
     })
 
@@ -557,7 +574,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         multiPageDefinition,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result.cardTitle).toBe('Page 2')
@@ -581,7 +599,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         definitionWithoutConditions,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result.allConditions).toEqual([])
@@ -591,7 +610,12 @@ describe('page-conditions model', () => {
     })
 
     it('should generate correct pageSpecificHeading when page has a title', () => {
-      const result = pageConditionsViewModel(metadata, baseDefinition, pageId)
+      const result = pageConditionsViewModel(
+        metadata,
+        baseDefinition,
+        pageId,
+        mockState
+      )
 
       expect(result).toHaveProperty(
         'pageSpecificHeading',
@@ -616,7 +640,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         definitionWithUntitledPage,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result).toHaveProperty('pageSpecificHeading', 'Page 1')
@@ -640,7 +665,8 @@ describe('page-conditions model', () => {
       const result = pageConditionsViewModel(
         metadata,
         multiPageDefinition,
-        pageId
+        pageId,
+        mockState
       )
 
       expect(result).toHaveProperty(
