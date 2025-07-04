@@ -1,4 +1,4 @@
-import { isConditionWrapperV2 } from '@defra/forms-model'
+import { getPageTitle, isConditionWrapperV2 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
@@ -8,6 +8,7 @@ import {
   getPageNum,
   toPresentationStringV2
 } from '~/src/models/forms/editor-v2/common.js'
+import { buildConditionEditor } from '~/src/models/forms/editor-v2/condition-helper.js'
 import {
   determineEditUrl,
   isGuidancePage
@@ -61,6 +62,7 @@ export function getConditionsData(definition) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param {ConditionSessionState} state
  * @param {ValidationFailure<any>} [validation]
  * @param {string[]} [notification]
  */
@@ -68,6 +70,7 @@ export function pageConditionsViewModel(
   metadata,
   definition,
   pageId,
+  state,
   validation,
   notification
 ) {
@@ -85,13 +88,13 @@ export function pageConditionsViewModel(
   const errorList = buildErrorList(validation?.formErrors)
 
   const cardTitle = `Page ${pageNum}`
-  const cardCaption = `Page ${pageNum}`
+  const title = getPageTitle(/** @type {Page} */ (page))
+  const cardCaption =
+    title && title !== '' ? `Page ${pageNum}: ${title}` : cardTitle
   const formTitle = metadata.title
   const pageTitle = `${cardTitle} - ${formTitle}`
 
-  const pageSpecificHeading = page?.title
-    ? `Page ${pageNum}: ${page.title}`
-    : `Page ${pageNum}`
+  const pageSpecificHeading = cardCaption
 
   const baseUrl = editorv2Path(metadata.slug, `page/`)
   const pageUrl = `${baseUrl}${pageId}`
@@ -133,11 +136,12 @@ export function pageConditionsViewModel(
       conditionDetails.pageConditionPresentationString,
     allConditions,
     conditionsManagerPath,
-    pageConditionsApiUrl
+    pageConditionsApiUrl,
+    conditionEditor: buildConditionEditor(definition, validation, state)
   }
 }
 
 /**
- * @import { FormDefinition, ConditionWrapperV2, FormMetadata, Page } from '@defra/forms-model'
+ * @import { ConditionSessionState, ConditionWrapperV2, FormDefinition, FormMetadata, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

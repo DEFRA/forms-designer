@@ -328,7 +328,7 @@ describe('page-conditions model', () => {
       )
       expect(result).toHaveProperty('pageId', pageId)
       expect(result).toHaveProperty('cardTitle', 'Page 1')
-      expect(result).toHaveProperty('cardCaption', 'Page 1')
+      expect(result).toHaveProperty('cardCaption', 'Page 1: Farm Details')
       expect(result).toHaveProperty(
         'pageSpecificHeading',
         'Page 1: Farm Details'
@@ -359,7 +359,7 @@ describe('page-conditions model', () => {
       )
       expect(result).toHaveProperty('pageId', pageId)
       expect(result).toHaveProperty('cardTitle', 'Page 1')
-      expect(result).toHaveProperty('cardCaption', 'Page 1')
+      expect(result).toHaveProperty('cardCaption', 'Page 1: Farm Details')
       expect(result).toHaveProperty(
         'pageSpecificHeading',
         'Page 1: Farm Details'
@@ -561,7 +561,7 @@ describe('page-conditions model', () => {
       )
 
       expect(result.cardTitle).toBe('Page 2')
-      expect(result.cardCaption).toBe('Page 2')
+      expect(result.cardCaption).toBe('Page 2: Farm Operations')
     })
 
     it('should handle empty conditions array', () => {

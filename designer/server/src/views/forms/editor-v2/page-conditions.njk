@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "condition-editor/macro.njk" import appConditionEditor %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -12,7 +13,7 @@
   {% call appPageBody({
     heading: pageHeading,
     caption: pageCaption,
-    classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink,
     useNewMasthead: true
   }) %}
@@ -134,9 +135,10 @@
                           html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
                         }) }}
                       {% else %}
-                        <p class="govuk-body">No conditions have been created. Go to the
-                          <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
-                        </p>
+                        {{ appConditionEditor(conditionEditor) }}
+                        {{ govukInsetText({
+                          html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
+                        }) }}
                       {% endif %}
                     </div>
                   </div>
