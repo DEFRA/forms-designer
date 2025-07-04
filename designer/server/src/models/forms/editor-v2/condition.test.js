@@ -11,7 +11,7 @@ import {
   getConditionType,
   getOperator,
   isRelativeDate
-} from '~/src/models/forms/editor-v2/condition.js'
+} from '~/src/models/forms/editor-v2/condition-helper.js'
 
 describe('editor-v2 - condition model', () => {
   describe('getComponentId', () => {
