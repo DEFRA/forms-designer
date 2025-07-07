@@ -105,7 +105,9 @@ export function withPageNumbers(page, index) {
  */
 export function hasConditionSupportForPage(page) {
   return (
-    hasComponentsEvenIfNoNext(page) && page.components.some(hasConditionSupport)
+    hasComponentsEvenIfNoNext(page) &&
+    page.components.some(hasConditionSupport) &&
+    page.controller !== ControllerType.Repeat
   )
 }
 
