@@ -1,5 +1,6 @@
 import { Engine } from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -138,6 +139,53 @@ describe('Editor v2 condition delete routes', () => {
         testFormMetadata.id,
         auth.credentials.token,
         'cond2'
+      )
+    })
+
+    test('should show error message when condition is referenced by other conditions', async () => {
+      const refConditionError = Boom.badRequest('Reference error')
+      refConditionError.output.payload.validation = {
+        source: 'payload',
+        keys: ['RefConditionConditionId']
+      }
+
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(editor.deleteCondition)
+        .mockRejectedValueOnce(refConditionError)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testDefinition)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/condition/cond1/delete',
+        auth
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $errorMessage = container.getByText(
+        'This condition cannot be deleted because it is referenced by other conditions. Remove all references to this condition before deleting it.'
+      )
+
+      expect($errorMessage).toBeInTheDocument()
+    })
+
+    test('should rethrow non-RefConditionConditionId errors', async () => {
+      const genericError = new Error('Generic error')
+
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(editor.deleteCondition).mockRejectedValueOnce(genericError)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/condition/cond1/delete',
+        auth
+      }
+
+      await expect(renderResponse(server, options)).rejects.toThrow(
+        'Generic error'
       )
     })
   })
