@@ -163,6 +163,47 @@ export function getConditionType(selectedComponent, operatorValue) {
 }
 
 /**
+ * @param { string | undefined } componentValue
+ * @param {number} idx
+ * @param {{ text: string, value: OperatorName }[]} operatorNames
+ * @param { OperatorName | undefined } operatorValue
+ * @param { ValidationFailure<FormEditor> | undefined } validation
+ */
+export function buildOperatorField(
+  componentValue,
+  idx,
+  operatorNames,
+  operatorValue,
+  validation
+) {
+  return componentValue
+    ? {
+        id: `items[${idx}].operator`,
+        name: `items[${idx}][operator]`,
+        label: {
+          text: 'Condition type'
+        },
+        items: [{ text: 'Select a condition type', value: '' }].concat(
+          operatorNames
+        ),
+        value:
+          operatorValue && operatorNames.find((x) => x.value === operatorValue)
+            ? operatorValue
+            : undefined,
+        formGroup: {
+          afterInput: {
+            html: `<button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-left-3" name="action" type="submit"
+      value="confirmSelectOperator">Select</button>`
+          }
+        },
+        ...insertValidationErrors(
+          validation?.formErrors[`items[${idx}].operator`]
+        )
+      }
+    : undefined
+}
+
+/**
  * @param {number} idx
  * @param {{ page: Page, number: number, components: ConditionalComponentsDef[], group: boolean }[]} componentItems
  * @param { ConditionDataV2 | ConditionRefDataV2 } item
@@ -212,31 +253,13 @@ export function buildConditionsFields(
     })
   )
 
-  const operator = component.value
-    ? {
-        id: `items[${idx}].operator`,
-        name: `items[${idx}][operator]`,
-        label: {
-          text: 'Condition type'
-        },
-        items: [{ text: 'Select a condition type', value: '' }].concat(
-          operatorNames
-        ),
-        value:
-          operatorValue && operatorNames.find((x) => x.value === operatorValue)
-            ? operatorValue
-            : undefined,
-        formGroup: {
-          afterInput: {
-            html: `<button class="govuk-button govuk-!-margin-bottom-0 govuk-!-margin-left-3" name="action" type="submit"
-      value="confirmSelectOperator">Select</button>`
-          }
-        },
-        ...insertValidationErrors(
-          validation?.formErrors[`items[${idx}].operator`]
-        )
-      }
-    : undefined
+  const operator = buildOperatorField(
+    component.value,
+    idx,
+    operatorNames,
+    operatorValue,
+    validation
+  )
 
   const conditionType = getConditionType(selectedComponent, operatorValue)
 

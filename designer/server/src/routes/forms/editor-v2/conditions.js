@@ -137,7 +137,10 @@ export default [
         const newStateId = createConditionSessionState(yar)
         return h
           .redirect(
-            editorv2Path(slug, `page/${pageId}/conditions/new/${newStateId}`)
+            editorv2Path(
+              slug,
+              `page/${pageId}/conditions/${conditionId}/${newStateId}`
+            )
           )
           .code(StatusCodes.SEE_OTHER)
       }
