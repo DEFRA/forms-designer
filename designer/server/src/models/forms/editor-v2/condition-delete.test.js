@@ -59,9 +59,10 @@ describe('editor-v2 - condition-delete model', () => {
       expect(result.pageTitle).toBe(
         'Are you sure you want to delete this condition? - Test form'
       )
-      expect(result.pageHeading).toBe(
-        'Are you sure you want to delete this condition?'
-      )
+      expect(result.pageHeading).toEqual({
+        text: 'Are you sure you want to delete this condition?',
+        size: 'large'
+      })
       expect(result.bodyCaptionText).toBe('Condition: Show if cattle farming')
       expect(result.bodyHeadingText).toBe(
         'Are you sure you want to delete this condition?'
