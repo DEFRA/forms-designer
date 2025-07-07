@@ -259,13 +259,11 @@ describe('Editor v2 conditions routes', () => {
       test('should successfully set page condition in state and redisplay page', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
         jest.mocked(editor.setPageCondition).mockResolvedValueOnce(undefined)
-        jest
-          .mocked(editor.addCondition)
-          .mockResolvedValueOnce({
-            id: conditionId,
-            status: 'created',
-            condition: /** @type{ConditionWrapperV2} */ ({})
-          })
+        jest.mocked(editor.addCondition).mockResolvedValueOnce({
+          id: conditionId,
+          status: 'created',
+          condition: /** @type {ConditionWrapperV2} */ ({})
+        })
         const conditionIdGuid = '5865188f-c381-49a1-97ac-246c27eef3b2'
 
         const options = {
@@ -315,13 +313,11 @@ describe('Editor v2 conditions routes', () => {
 
         jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
         jest.mocked(editor.setPageCondition).mockRejectedValueOnce(boomErr)
-        jest
-          .mocked(editor.addCondition)
-          .mockResolvedValueOnce({
-            id: conditionId,
-            status: 'created',
-            condition: /** @type{ConditionWrapperV2} */ ({})
-          })
+        jest.mocked(editor.addCondition).mockResolvedValueOnce({
+          id: conditionId,
+          status: 'created',
+          condition: /** @type {ConditionWrapperV2} */ ({})
+        })
         const conditionIdGuid = '5865188f-c381-49a1-97ac-246c27eef3b2'
 
         const options = {
@@ -348,13 +344,11 @@ describe('Editor v2 conditions routes', () => {
 
       test('should shows errors and redisplay page for invalid payload', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-        jest
-          .mocked(editor.addCondition)
-          .mockResolvedValueOnce({
-            id: conditionId,
-            status: 'created',
-            condition: /** @type{ConditionWrapperV2} */ ({})
-          })
+        jest.mocked(editor.addCondition).mockResolvedValueOnce({
+          id: conditionId,
+          status: 'created',
+          condition: /** @type {ConditionWrapperV2} */ ({})
+        })
 
         const options = {
           method: 'post',

@@ -110,7 +110,7 @@ export default [
       // the process flow hits the the failAction handler below.
       // When clicking the 'Save condition' button, and the payload is valid, the processing hits this section.
 
-      return await conditionPostHandlerSuccessAction(request, h, {
+      return conditionPostHandlerSuccessAction(request, h, {
         redirectUrl: 'conditions',
         showCheckChanges: true
       })
