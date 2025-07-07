@@ -114,15 +114,22 @@
                               </div>
 
                               <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="conditionChoiceCreateNew" name="conditionChoice" type="radio" value="createNew" data-aria-controls="conditional-conditionChoiceCreateNew">
+                                <input class="govuk-radios__input" id="conditionChoiceCreateNew" name="conditionChoice" type="radio" value="createNew" data-aria-controls="conditional-conditionChoiceCreateNew"
+                                {% if creating %}checked="checked"{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="conditionChoiceCreateNew">
                                   Create condition
                                 </label>
                               </div>
                               <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-conditionChoiceCreateNew">
+                                {% if not creating %}
                                 <p class="govuk-body">
-                                  Go to the <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
+                                  <a href="?create" class="govuk-link">Continue creating a condition</a>
                                 </p>
+                                {% else %}
+                                  {{ appConditionEditor(conditionEditor) }}
+                                <div class="govuk-form-group">
+                                </div>
+                                {% endif %}
                               </div>
                             </div>
                           </fieldset>

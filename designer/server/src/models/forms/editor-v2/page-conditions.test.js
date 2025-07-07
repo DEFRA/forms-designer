@@ -321,12 +321,15 @@ describe('page-conditions model', () => {
 
     const mockState = {}
 
+    const mockOptions = {}
+
     it('should return complete view model with all required fields for a question', () => {
       const result = pageConditionsViewModel(
         metadata,
         baseDefinition,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result).toHaveProperty(
@@ -358,7 +361,8 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinitionWithGuidance,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result).toHaveProperty(
@@ -404,7 +408,8 @@ describe('page-conditions model', () => {
         metadata,
         definitionWithCondition,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result.pageCondition).toBe(conditionId)
@@ -473,7 +478,8 @@ describe('page-conditions model', () => {
         metadata,
         definitionWithMultipleConditions,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result.allConditions).toHaveLength(3)
@@ -505,7 +511,8 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinition,
         pageId,
-        {},
+        mockState,
+        mockOptions,
         validation
       )
 
@@ -525,7 +532,8 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinition,
         pageId,
-        {},
+        mockState,
+        mockOptions,
         undefined,
         notification
       )
@@ -538,7 +546,8 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinition,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result.baseUrl).toBe(
@@ -575,7 +584,8 @@ describe('page-conditions model', () => {
         metadata,
         multiPageDefinition,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result.cardTitle).toBe('Page 2')
@@ -600,7 +610,8 @@ describe('page-conditions model', () => {
         metadata,
         definitionWithoutConditions,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result.allConditions).toEqual([])
@@ -614,7 +625,8 @@ describe('page-conditions model', () => {
         metadata,
         baseDefinition,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result).toHaveProperty(
@@ -641,7 +653,8 @@ describe('page-conditions model', () => {
         metadata,
         definitionWithUntitledPage,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result).toHaveProperty('pageSpecificHeading', 'Page 1')
@@ -666,7 +679,8 @@ describe('page-conditions model', () => {
         metadata,
         multiPageDefinition,
         pageId,
-        mockState
+        mockState,
+        mockOptions
       )
 
       expect(result).toHaveProperty(

@@ -159,6 +159,7 @@ describe('Editor v2 conditions routes', () => {
 
   describe('page conditions routes', () => {
     beforeEach(() => {
+      jest.clearAllMocks()
       jest.mocked(getConditionSessionState).mockReturnValue({
         stateId: 'state-id'
       })

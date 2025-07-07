@@ -31,6 +31,7 @@ export function getConditionsData(definition) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {ConditionSessionState} state
+ * @param {{ creating?: boolean }} options
  * @param {ValidationFailure<any>} [validation]
  * @param {string[]} [notification]
  */
@@ -39,6 +40,7 @@ export function pageConditionsViewModel(
   definition,
   pageId,
   state,
+  options,
   validation,
   notification
 ) {
@@ -105,7 +107,8 @@ export function pageConditionsViewModel(
     allConditions,
     conditionsManagerPath,
     pageConditionsApiUrl,
-    conditionEditor: buildConditionEditor(definition, validation, state)
+    conditionEditor: buildConditionEditor(definition, validation, state),
+    ...options
   }
 }
 

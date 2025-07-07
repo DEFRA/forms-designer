@@ -128,7 +128,7 @@ export default [
     method: 'GET',
     path: ROUTE_FULL_PATH_PAGE_CONDITIONS_WITH_STATE,
     async handler(request, h) {
-      const { params, auth, yar } = request
+      const { params, auth, yar, query } = request
       const { token } = auth.credentials
       const { slug, pageId, conditionId, stateId } = params
 
@@ -171,6 +171,7 @@ export default [
           definition,
           pageId,
           sessionState,
+          { creating: !!query.create },
           validation,
           notification
         )
@@ -252,9 +253,11 @@ export default [
           // When the user clicks any button apart form 'Save condition', the processing should hit this section.
 
           const { pageId, conditionId, stateId } = request.params
+          const query = request.query
+          const options = query.create !== undefined ? '?create' : ''
 
           return conditionPostHandlerFailAction(request, h, error, {
-            redirectUrl: `page/${pageId}/conditions/${conditionId}/${stateId}`
+            redirectUrl: `page/${pageId}/conditions/${conditionId}/${stateId}${options}`
           })
         }
       },

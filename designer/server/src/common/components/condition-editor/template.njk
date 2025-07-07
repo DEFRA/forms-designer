@@ -51,6 +51,9 @@
           {{ conditionRowHtml | safe }}
       {% endif %}
     {% endfor %}
+    {# govuk-form-group spacing fix for last in group when nested #}
+    <div class="govuk-form-group">
+    </div>
   {% endcall %}
 
   <div class="form-group">
