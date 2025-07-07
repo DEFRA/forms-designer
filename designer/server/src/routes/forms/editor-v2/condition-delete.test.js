@@ -1,4 +1,8 @@
-import { Engine } from '@defra/forms-model'
+import {
+  Engine,
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
@@ -143,11 +147,21 @@ describe('Editor v2 condition delete routes', () => {
     })
 
     test('should show error message when condition is referenced by other conditions', async () => {
-      const refConditionError = Boom.badRequest('Reference error')
-      refConditionError.output.payload.validation = {
-        source: 'payload',
-        keys: ['RefConditionConditionId']
-      }
+      const cause = [
+        {
+          id: FormDefinitionError.RefConditionConditionId,
+          detail: { path: ['conditions', 0] },
+          message: '"conditions[0]" references a missing condition',
+          type: FormDefinitionErrorType.Ref
+        }
+      ]
+
+      const refConditionError = Boom.boomify(
+        new Error('"conditions[0]" references a missing condition', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
 
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest
@@ -173,7 +187,7 @@ describe('Editor v2 condition delete routes', () => {
     })
 
     test('should rethrow non-RefConditionConditionId errors', async () => {
-      const genericError = new Error('Generic error')
+      const genericError = Boom.badRequest('Generic error')
 
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest.mocked(editor.deleteCondition).mockRejectedValueOnce(genericError)
@@ -184,9 +198,9 @@ describe('Editor v2 condition delete routes', () => {
         auth
       }
 
-      await expect(renderResponse(server, options)).rejects.toThrow(
-        'Generic error'
-      )
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(400)
     })
   })
 })
