@@ -507,5 +507,17 @@ export async function setPageCondition(formId, token, pageId, conditionName) {
 }
 
 /**
+ * Delete a condition from a form
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} conditionId
+ */
+export async function deleteCondition(formId, token, conditionId) {
+  await delJson(buildRequestUrl(formId, `conditions/${conditionId}`), {
+    ...getHeaders(token)
+  })
+}
+
+/**
  * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page } from '@defra/forms-model'
  */

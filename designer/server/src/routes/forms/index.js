@@ -6,6 +6,7 @@ import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
+import editorConditionDelete from '~/src/routes/forms/editor-v2/condition-delete.js'
 import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
@@ -45,6 +46,7 @@ export default [
   editorListItemDelete,
   editorCheckAnswersSettings,
   editorConditionCheckChanges,
+  editorConditionDelete,
   editorCondition,
   editorConditions,
   editorError,
