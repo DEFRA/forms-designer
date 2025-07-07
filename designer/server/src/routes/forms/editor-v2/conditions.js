@@ -171,7 +171,7 @@ export default [
           definition,
           pageId,
           sessionState,
-          { creating: !!query.create },
+          { creating: query.create !== undefined },
           validation,
           notification
         )
