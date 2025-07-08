@@ -112,7 +112,8 @@ export default [
 
       return conditionPostHandlerSuccessAction(request, h, {
         redirectUrl: 'conditions',
-        showCheckChanges: true
+        showCheckChanges: true,
+        errorSessionKey: sessionNames.validationFailure.editorCondition
       })
     },
     options: {
@@ -128,7 +129,8 @@ export default [
           const { conditionId, stateId } = request.params
 
           return conditionPostHandlerFailAction(request, h, error, {
-            redirectUrl: `condition/${conditionId}/${stateId}`
+            redirectUrl: `condition/${conditionId}/${stateId}`,
+            errorSessionKey: sessionNames.validationFailure.editorCondition
           })
         }
       },

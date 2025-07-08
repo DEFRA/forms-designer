@@ -153,7 +153,7 @@ export async function conditionPostHandlerSuccessAction(request, h, options) {
         request,
         h,
         joiErr,
-        sessionNames.validationFailure.editorCondition,
+        options.errorSessionKey,
         '#'
       )
     }
@@ -207,22 +207,17 @@ export function conditionPostHandlerFailAction(request, h, error, options) {
 
     processErrorMessages(error)
 
-    return redirectWithErrors(
-      request,
-      h,
-      error,
-      sessionNames.validationFailure.editorCondition
-    )
+    return redirectWithErrors(request, h, error, options.errorSessionKey)
   }
 }
 
 /**
- * @typedef {{ redirectUrl: string; showCheckChanges?: boolean; }} ConditionPostHandlerOptions
+ * @typedef {{ redirectUrl: string; showCheckChanges?: boolean; errorSessionKey: ValidationSessionKey }} ConditionPostHandlerOptions
  */
 
 /**
  * @import { Coordinator, ConditionDataV2, ConditionSessionState, ConditionWrapperV2, FormDefinition } from '@defra/forms-model'
- * @import { Request, ReqRefDefaults, ResponseToolkit, ServerRoute } from '@hapi/hapi'
- * @import { Yar } from '@hapi/yar'
+ * @import { Request, ReqRefDefaults, ResponseToolkit } from '@hapi/hapi'
+ * @import { ValidationSessionKey, Yar } from '@hapi/yar'
  * @import { ConditionWrapperPayload } from '~/src/models/forms/editor-v2/condition-helper.js'
  */

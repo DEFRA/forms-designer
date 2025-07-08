@@ -40,7 +40,6 @@ export const ROUTE_FULL_PATH_PAGE_CONDITIONS_WITH_ASSIGN =
   '/library/{slug}/editor-v2/page/{pageId}/conditions/assign'
 
 const notificationKey = sessionNames.successNotification
-const errorKey = sessionNames.validationFailure.editorCondition
 
 const assignConditionsSchema = Joi.object({
   action: Joi.string().valid('add', 'remove').required(),
@@ -155,7 +154,10 @@ export default [
         yar.flash(notificationKey).at(0)
       )
 
-      const validation = getValidationErrorsFromSession(yar, errorKey)
+      const validation = getValidationErrorsFromSession(
+        yar,
+        sessionNames.validationFailure.editorPageCondition
+      )
 
       const sessionState = buildSessionState(
         yar,
@@ -236,7 +238,13 @@ export default [
             'Duplicate condition name'
           )
 
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
+          return redirectWithErrors(
+            request,
+            h,
+            joiErr,
+            sessionNames.validationFailure.editorPageCondition,
+            '#'
+          )
         }
 
         throw err
@@ -257,7 +265,8 @@ export default [
           const options = query.create !== undefined ? '?create' : ''
 
           return conditionPostHandlerFailAction(request, h, error, {
-            redirectUrl: `page/${pageId}/conditions/${conditionId}/${stateId}${options}`
+            redirectUrl: `page/${pageId}/conditions/${conditionId}/${stateId}${options}`,
+            errorSessionKey: sessionNames.validationFailure.editorPageCondition
           })
         }
       },
@@ -298,9 +307,16 @@ export default [
           .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        const error = checkBoomError(
+          /** @type {Boom.Boom} */ (err),
+          sessionNames.validationFailure.editorPageCondition
+        )
         if (error) {
-          addErrorsToSession(/** @type {*} */ (request), error, errorKey)
+          addErrorsToSession(
+            /** @type {*} */ (request),
+            error,
+            sessionNames.validationFailure.editorPageCondition
+          )
           return h
             .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
             .code(StatusCodes.SEE_OTHER)
@@ -316,7 +332,11 @@ export default [
           const { slug, pageId } =
             /** @type {{ slug: string, pageId: string }} */ (params)
 
-          addErrorsToSession(/** @type {*} */ (request), error, errorKey)
+          addErrorsToSession(
+            /** @type {*} */ (request),
+            error,
+            sessionNames.validationFailure.editorPageCondition
+          )
 
           return h
             .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
