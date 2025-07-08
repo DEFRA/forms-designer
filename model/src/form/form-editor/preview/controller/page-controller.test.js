@@ -606,17 +606,23 @@ describe('page-controller', () => {
       expect(pageController.sectionTitle).toBeUndefined()
       expect(pageController.repeaterButton).toBeUndefined()
       pageController.setRepeater()
-      expect(pageController.sectionTitle).toBe('Question set name')
-      expect(pageController.repeaterButton).toBe('[question set name]')
-      pageController.sectionTitle = 'Repeater question'
-      expect(pageController.sectionTitle).toBe('Repeater question 1')
-      expect(pageController.repeaterButton).toBe('repeater question')
+      expect(pageController.sectionTitle).toEqual({
+        text: 'Question set name',
+        classes: ''
+      })
+      expect(pageController.repeaterButton).toEqual({
+        text: '[question set name]',
+        classes: ''
+      })
+      pageController.sectionTitleText = 'Repeater question'
+      expect(pageController.sectionTitleText).toBe('Repeater question 1')
+      expect(pageController.repeaterButtonText).toBe('repeater question')
       pageController.unsetRepeater()
-      expect(pageController.sectionTitle).toBeUndefined()
-      expect(pageController.repeaterButton).toBeUndefined()
+      expect(pageController.sectionTitleText).toBeUndefined()
+      expect(pageController.repeaterButtonText).toBeUndefined()
       pageController.setRepeater()
-      expect(pageController.sectionTitle).toBe('Repeater question 1')
-      expect(pageController.repeaterButton).toBe('repeater question')
+      expect(pageController.sectionTitleText).toBe('Repeater question 1')
+      expect(pageController.repeaterButtonText).toBe('repeater question')
       expect(pageRenderMock).toHaveBeenCalledTimes(4)
     })
 
@@ -648,15 +654,19 @@ describe('page-controller', () => {
         definition,
         renderer
       )
-      expect(pageController.sectionTitle).toBe('Simple question responses 1')
-      expect(pageController.repeaterButton).toBe('simple question responses')
+      expect(pageController.sectionTitleText).toBe(
+        'Simple question responses 1'
+      )
+      expect(pageController.repeaterButtonText).toBe(
+        'simple question responses'
+      )
       expect(pageController.isRepeater).toBe(true)
-      pageController.sectionTitle = ''
-      expect(pageController.sectionTitle).toBe('Question set name')
-      expect(pageController.repeaterButton).toBe('[question set name]')
-      pageController.sectionTitle = 'a'
-      expect(pageController.sectionTitle).toBe('a 1')
-      expect(pageController.repeaterButton).toBe('a')
+      pageController.sectionTitleText = ''
+      expect(pageController.sectionTitleText).toBe('Question set name')
+      expect(pageController.repeaterButtonText).toBe('[question set name]')
+      pageController.sectionTitleText = 'a'
+      expect(pageController.sectionTitleText).toBe('a 1')
+      expect(pageController.repeaterButtonText).toBe('a')
 
       expect(pageRenderMock).toHaveBeenCalledTimes(2)
     })

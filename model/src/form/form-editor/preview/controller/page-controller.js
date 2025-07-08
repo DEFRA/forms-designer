@@ -350,14 +350,27 @@ export class PreviewPageController {
   }
 
   /**
+   * @returns {{classes: string, text: string}|undefined}
+   */
+  get sectionTitle() {
+    if (this.sectionTitleText === undefined) {
+      return undefined
+    }
+    return {
+      classes: '',
+      text: this.sectionTitleText
+    }
+  }
+
+  /**
    * @param {string | undefined} val
    */
-  set sectionTitle(val) {
+  set sectionTitleText(val) {
     this._sectionTitle = val ?? ''
     this.render()
   }
 
-  get sectionTitle() {
+  get sectionTitleText() {
     if (!this.#isRepeater) {
       return undefined
     }
@@ -368,6 +381,16 @@ export class PreviewPageController {
   }
 
   get repeaterButton() {
+    if (this.repeaterButtonText === undefined) {
+      return undefined
+    }
+    return {
+      classes: '',
+      text: this.repeaterButtonText
+    }
+  }
+
+  get repeaterButtonText() {
     if (!this.#isRepeater) {
       return undefined
     }

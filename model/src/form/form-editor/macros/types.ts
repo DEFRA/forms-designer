@@ -73,4 +73,12 @@ export interface PagePreviewPanelMacro {
     classes: string
   }
   readonly components: PagePreviewComponent[]
+  readonly sectionTitle?: {
+    text: string
+    classes: string
+  }
+  readonly repeaterButton?: {
+    text: string
+    classes: string
+  }
 }

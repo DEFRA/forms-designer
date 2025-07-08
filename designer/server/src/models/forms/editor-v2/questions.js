@@ -26,6 +26,7 @@ import {
   getPageConditionDetails
 } from '~/src/models/forms/editor-v2/common.js'
 import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
+import { PagePreviewElementsSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import { getErrorTemplates } from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
@@ -359,11 +360,7 @@ export function getPreviewModel(
   guidance = ''
 ) {
   const components = hasComponents(page) ? page.components : []
-  const elements = {
-    heading: page.title,
-    guidance,
-    addHeading: page.title.length > 0
-  }
+  const elements = new PagePreviewElementsSSR(page, guidance)
 
   const previewPageController = new PreviewPageController(
     components,
@@ -382,6 +379,8 @@ export function getPreviewModel(
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
     guidance: previewPageController.guidance,
+    repeaterButton: previewPageController.repeaterButton,
+    sectionTitle: previewPageController.sectionTitle,
     previewPageUrl,
     previewErrorsUrl,
     errorTemplates,
