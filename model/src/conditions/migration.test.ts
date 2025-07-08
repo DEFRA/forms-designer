@@ -233,7 +233,7 @@ describe('Migration', () => {
 
       expect(() =>
         convertConditionWrapperFromV2(conditionWrapper, model)
-      ).toThrow('List not found')
+      ).toThrow('List nonExistentList not found')
     })
 
     test('convertConditionWrapperFromV2 throws error when list item is not found', () => {
@@ -276,7 +276,7 @@ describe('Migration', () => {
 
       expect(() =>
         convertConditionWrapperFromV2(conditionWrapper, model)
-      ).toThrow('List item not found')
+      ).toThrow('List item nonExistentItem not found')
     })
   })
 
