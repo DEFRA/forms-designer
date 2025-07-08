@@ -172,7 +172,8 @@ export async function createServer() {
 
   server.ext('onPostAuth', (request: Request, h: ResponseToolkit) => {
     const supportedRoutes = [
-      '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}'
+      '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}',
+      '/library/{slug}/editor-v2/page/{pageId}/conditions/{conditionId}/{stateId?}'
     ]
 
     if (
