@@ -22,14 +22,16 @@
       {% endif %}
 
       {% set conditionRowHtml %}
-        <input type="hidden" id="id" name="{{ condition.idField.name }}" value="{{ condition.idField.value }}" />
-        {{ appSelectWithOptGroup(condition) }}
-        {% if condition.operator %}
-          {{ govukSelect(condition.operator) }}
-        {% endif %}
-        {% if condition.value %}
-          {{ appConditionValueEditor(condition) }}
-        {% endif %}
+        <div class="govuk-form-group govuk-!-margin-bottom-6">
+          <input type="hidden" id="id" name="{{ condition.idField.name }}" value="{{ condition.idField.value }}" />
+          {{ appSelectWithOptGroup(condition) }}
+          {% if condition.operator %}
+            {{ govukSelect(condition.operator) }}
+          {% endif %}
+          {% if condition.value %}
+            {{ appConditionValueEditor(condition) }}
+          {% endif %}
+        </div>
       {% endset %}
 
       {% if loop.index > 1 %}
@@ -51,11 +53,9 @@
           {{ conditionRowHtml | safe }}
       {% endif %}
     {% endfor %}
-    {# govuk-form-group spacing fix for last in group when nested #}
-    <div class="govuk-form-group">
-    </div>
   {% endcall %}
 
+  {% if params.allowComplexConditions %}
   <div class="form-group">
     {{ appIconButton({
       label: "Add another condition",
@@ -65,6 +65,7 @@
       value: 'addCondition'
     }) }}
   </div>
+  {% endif %}
 
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 

@@ -48,11 +48,14 @@ export function conditionViewModel(
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     notification,
-    conditionEditor: buildConditionEditor(definition, validation, state)
+    conditionEditor: {
+      ...buildConditionEditor(definition, validation, state),
+      allowComplexConditions: true
+    }
   }
 }
 
 /**
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, ConditionWrapperV2, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { ConditionSessionState, FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

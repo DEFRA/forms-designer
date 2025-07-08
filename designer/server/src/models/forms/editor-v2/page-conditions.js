@@ -107,7 +107,10 @@ export function pageConditionsViewModel(
     allConditions,
     conditionsManagerPath,
     pageConditionsApiUrl,
-    conditionEditor: buildConditionEditor(definition, validation, state),
+    conditionEditor: {
+      ...buildConditionEditor(definition, validation, state),
+      allowComplexConditions: false
+    },
     ...options
   }
 }

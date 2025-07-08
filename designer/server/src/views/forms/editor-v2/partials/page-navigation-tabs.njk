@@ -1,9 +1,11 @@
 <nav class="app-page-navigation">
   <ul class="app-page-navigation__list">
-    <li class="app-page-navigation__item{% if currentTab == 'conditions' %} app-page-navigation__item--current{% endif %}">
-      <a class="app-page-navigation__link" href="{{ baseUrl }}/conditions"{% if currentTab == 'conditions' %} aria-current="page"{% endif %}>
-        Conditions
-      </a>
-    </li>
+    {% if questionId !== 'new' %}
+      <li class="app-page-navigation__item{% if currentTab == 'conditions' %} app-page-navigation__item--current{% endif %}">
+        <a class="app-page-navigation__link" href="{{ baseUrl }}/conditions"{% if currentTab == 'conditions' %} aria-current="page"{% endif %}>
+          Conditions
+        </a>
+      </li>
+    {% endif %}
   </ul>
 </nav>
