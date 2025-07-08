@@ -22,8 +22,8 @@ describe('Condition editor component', () => {
     })
 
     it('should render button only', () => {
-      expect($buttons[0]).toHaveClass('govuk-button govuk-button--inverse')
-      expect($buttons[0]).toHaveTextContent('Add another condition')
+      expect($buttons[0]).toHaveClass('govuk-button')
+      expect($buttons[0]).toHaveTextContent('Save condition')
       expect($conditionlists).toHaveLength(0)
     })
   })
