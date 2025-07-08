@@ -11,23 +11,6 @@ import { withPageNumbers } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
- * @param {string} id
- * @param {string} label
- * @param {string} value
- * @param {string} extraClasses?
- */
-export function buildCheckbox(id, label, value, extraClasses = '') {
-  const xClasses = extraClasses !== '' ? ` ${extraClasses}` : ''
-  const valueElem = value !== '' ? `value="${value}"` : ''
-  return `<div class="govuk-checkboxes__item govuk-checkboxes--small${xClasses}">
-    <input type="checkbox" class="govuk-checkboxes__input" id="${id}" name="${id}" ${valueElem}></input>
-    <label class="govuk-label govuk-checkboxes__label" for="${id}">
-      <span class="govuk-visually-hidden">${label}</span>
-    </label>
-    </div>`
-}
-
-/**
  * @param {string} slug
  * @param {FormDefinition} definition
  */
@@ -43,21 +26,8 @@ export function buildConditionsTable(slug, definition) {
   return {
     firstCellIsHeader: false,
     classes: 'app-conditions-table',
-    attributes: 'data-module="multi-select-table"',
-    head: [
-      {
-        html: buildCheckbox(
-          'multiSelectCondition-checkboxes-all',
-          'Select all',
-          '',
-          'govuk-visually-hidden'
-        )
-      },
-      { text: 'Condition' },
-      { text: 'Used in' },
-      { text: 'Actions' }
-    ],
-    rows: v2Conditions.map((condition, idx) => {
+    head: [{ text: 'Condition' }, { text: 'Used in' }, { text: 'Actions' }],
+    rows: v2Conditions.map((condition) => {
       const usedIn = pages
         .map(withPageNumbers)
         .filter(({ page }) => page.condition === condition.id)
@@ -69,13 +39,6 @@ export function buildConditionsTable(slug, definition) {
       const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
 
       return [
-        {
-          html: buildCheckbox(
-            `multiSelectCondition[${idx}]`,
-            `Select ${condition.displayName}`,
-            condition.id
-          )
-        },
         {
           html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${toPresentationHtmlV2(condition, definition)}</p>`
         },
