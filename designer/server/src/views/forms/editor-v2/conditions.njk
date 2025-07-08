@@ -4,6 +4,8 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "icon-button/macro.njk" import appIconButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -17,6 +19,14 @@
     backLink: backLink
   }) %}
 
+    {% if errorList | length %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList,
+        classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+      }) }}
+    {% endif %}
+
     {% if notification | length %}
       {% call govukNotificationBanner({
           type: "success"
@@ -27,18 +37,31 @@
 
     <div class="editor-card-title">{{ cardTitle }}</div>
 
-    {% if (summaryTable.rows | length) %}
-      {{ govukTable(summaryTable) }}
-    {% else %}
-      <p class="govuk-body govuk-!-margin-top-4">No conditions available to use. Create a new condition.</p>
-      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-    {% endif %}
-    <div class="govuk-button-group">
-      <a class="govuk-button" href="./condition/new">Create new condition</a>
-    </div>
+    <form method="post">
+      {% if (summaryTable.rows | length) %}
+        {{ govukTable(summaryTable) }}
+      {% else %}
+        <p class="govuk-body govuk-!-margin-top-4">No conditions available to use. Create a new condition.</p>
+        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+      {% endif %}
+      <div class="govuk-button-group">
+        <a class="govuk-button" href="./condition/new">Create new condition</a>
+        {% if summaryTable.rows | length > 1 %}
+          {{ appIconButton({
+            label: "Join selected conditions",
+            icon: 'join',
+            type: 'button',
+            name: 'action',
+            value: 'join',
+            extraClasses: 'govuk-button--secondary'
+          }) }}
+        {% endif %}
+      </div>
+    </form>
   {% endcall %}
 {% endblock %}
 
 {% block mainEnd %}
   {{ super() }}
+  <script type="module" src="{{ getAssetPath("multi-select-table.js") }}"></script>
 {% endblock %}

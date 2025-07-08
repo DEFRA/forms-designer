@@ -55,6 +55,9 @@ export default /** @type {Configuration} */ ({
     },
     'items-reorder': {
       import: ['./javascripts/items-reorder.js']
+    },
+    'multi-select-table': {
+      import: ['./javascripts/multi-select-table.js']
     }
   },
   experiments: {

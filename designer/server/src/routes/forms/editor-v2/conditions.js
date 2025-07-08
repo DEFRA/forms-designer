@@ -52,6 +52,17 @@ const assignConditionsSchema = Joi.object({
   })
 })
 
+const conditionsSchema = Joi.object({
+  action: Joi.string().valid('join').required(),
+  multiSelectCondition: Joi.array()
+    .min(2)
+    .items(Joi.string())
+    .required()
+    .messages({
+      '*': 'Select at least 2 conditions to join'
+    })
+})
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string } }>}
@@ -72,9 +83,16 @@ export default [
         yar.flash(notificationKey).at(0)
       )
 
+      const validation = getValidationErrorsFromSession(yar, errorKey)
+
       return h.view(
         'forms/editor-v2/conditions',
-        viewModel.conditionsViewModel(metadata, definition, notification)
+        viewModel.conditionsViewModel(
+          metadata,
+          definition,
+          validation,
+          notification
+        )
       )
     },
     options: {
@@ -340,6 +358,62 @@ export default [
 
           return h
             .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
+            .code(StatusCodes.SEE_OTHER)
+            .takeover()
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: { action: 'add' | 'remove', conditionName?: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH_CONDITIONS,
+    async handler(request, h) {
+      const { params, auth /* , payload, yar */ } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      try {
+        await forms.get(slug, token)
+
+        // console.log('payload', payload)
+
+        return h
+          .redirect(editorv2Path(slug, 'conditions'))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          addErrorsToSession(/** @type {*} */ (request), error, errorKey)
+          return h
+            .redirect(editorv2Path(slug, 'conditions'))
+            .code(StatusCodes.SEE_OTHER)
+        }
+        throw err
+      }
+    },
+    options: {
+      validate: {
+        payload: conditionsSchema,
+        failAction: (request, h, error) => {
+          const { params } = request
+          const { slug } = /** @type {{ slug: string, pageId: string }} */ (
+            params
+          )
+
+          addErrorsToSession(/** @type {*} */ (request), error, errorKey)
+
+          return h
+            .redirect(editorv2Path(slug, 'conditions'))
             .code(StatusCodes.SEE_OTHER)
             .takeover()
         }
