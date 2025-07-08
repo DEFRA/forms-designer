@@ -35,6 +35,7 @@ export function buildConditionsTable(slug, definition) {
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
+      // TODO - edit link for joined condition should go to /conditions-join/{id}
       const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}">Edit</a>`
       const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
 

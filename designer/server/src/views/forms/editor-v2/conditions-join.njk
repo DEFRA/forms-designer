@@ -1,0 +1,63 @@
+{% extends "layouts/page.njk" %}
+
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    description: pageDescription,
+    caption: pageCaption,
+    useNewMasthead: useNewMasthead,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+    {% if errorList | length %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList,
+        classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+      }) }}
+    {% endif %}
+
+    {% call appEditorCard({
+      title: cardTitle,
+      caption: cardCaption,
+      heading: cardHeading,
+      errorList: errorList
+    }) %}
+
+      <form method="post">
+
+        {{ govukCheckboxes(fields.conditions) }}
+
+        {{ govukRadios(fields.coordinator)}}
+
+        {{ govukInput(fields.displayName)}}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: 'Save joined condition'
+          }) }}
+
+          <a href="./conditions" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
+        </div>
+
+      </form>
+
+    {% endcall %}
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

@@ -1,58 +1,15 @@
-import { FormStatus, isConditionWrapperV2 } from '@defra/forms-model'
+import { FormStatus } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   buildPreviewUrl,
   getFormSpecificNavigation,
-  toPresentationHtmlV2
+  toPresentationStringV2
 } from '~/src/models/forms/editor-v2/common.js'
-import { withPageNumbers } from '~/src/models/forms/editor-v2/pages-helper.js'
+import { getConditionsData } from '~/src/models/forms/editor-v2/page-conditions.js'
 import { formOverviewPath } from '~/src/models/links.js'
-
-/**
- * @param {string} slug
- * @param {FormDefinition} definition
- */
-export function buildConditionsTable(slug, definition) {
-  const { pages, conditions } = definition
-  const editBaseUrl = `/library/${slug}/editor-v2/condition/`
-
-  /** @todo remove this filter when V1 is deprecated */
-  const v2Conditions = conditions
-    .filter(isConditionWrapperV2)
-    .sort((a, b) => a.displayName.localeCompare(b.displayName))
-
-  return {
-    firstCellIsHeader: false,
-    classes: 'app-conditions-table',
-    head: [{ text: 'Condition' }, { text: 'Used in' }, { text: 'Actions' }],
-    rows: v2Conditions.map((condition) => {
-      const usedIn = pages
-        .map(withPageNumbers)
-        .filter(({ page }) => page.condition === condition.id)
-        .map(({ number }) => `Page ${number}`)
-        .join(', ')
-
-      const linkClasses = 'govuk-link govuk-link--no-visited-state'
-      const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}">Edit</a>`
-      const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
-
-      return [
-        {
-          html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${toPresentationHtmlV2(condition, definition)}</p>`
-        },
-        {
-          text: usedIn,
-          classes: 'govuk-!-width-one-quarter'
-        },
-        {
-          html: `<div class="app-table-actions">${editLink}&nbsp;<span class="app-vertical-divider">|</span>&nbsp;${deleteLink}</div>`
-        }
-      ]
-    })
-  }
-}
 
 /**
  * @param {FormMetadata} metadata
@@ -73,24 +30,93 @@ export function conditionsJoinViewModel(
     definition,
     'Editor'
   )
+  const { formValues, formErrors } = validation ?? {}
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
   const pageHeading = 'Manage conditions'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
-  const errorList = buildErrorList(validation?.formErrors)
+  const errorList = buildErrorList(formErrors)
+
+  const allConditions = getConditionsData(definition)
+
+  const conditions = {
+    id: 'conditions',
+    name: 'conditions',
+    fieldset: {
+      legend: {
+        text: "Joined conditions",
+        isPageHeading: true,
+        classes: 'govuk-fieldset__legend--m'
+      }
+    },
+    hint: {
+      text: 'Select at least two conditions'
+    },
+    classes: 'govuk-checkboxes--small',
+    items: allConditions.map(cond => ({
+      text: cond.displayName,
+      label: {
+        classes: 'govuk-!-font-weight-bold'
+      },
+      hint: {
+        text: toPresentationStringV2(cond, definition)
+      },
+      value: cond.id,
+      checked: formValues?.conditions?.includes(cond.id)
+    })),
+    ...insertValidationErrors(validation?.formErrors.conditions)
+  }
+
+  const coordinator = {
+    id: 'coordinator',
+    name: 'coordinator',
+    fieldset: {
+      legend: {
+        text: 'How do you want to combine these conditions?',
+        classes: 'govuk-fieldset__legend--m'
+      }
+    },
+    classes: 'govuk-radios--inline',
+    value: formValues?.coordinator,
+    items: [
+      { text: 'All conditions must be met (AND)', value: 'and' },
+      { text: 'Any condition can be met (OR)', value: 'or' }
+    ],
+    ...insertValidationErrors(validation?.formErrors.coordinator)
+  }
+
+  const displayName = {
+    id: 'displayName',
+    name: 'displayName',
+    label: {
+      text: 'Name for joined condition',
+      classes: 'govuk-label--m'
+    },
+    classes: 'govuk-input--width-30',
+    value: formValues?.displayName,
+    hint: {
+      text: 'Condition names help you to identify conditions in your form, for example, ‘Not a farmer’. Users will not see condition names.'
+    },
+    ...insertValidationErrors(validation?.formErrors.displayName)
+  }
+
 
   return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     formSlug: metadata.slug,
     previewBaseUrl,
-    cardTitle: 'All conditions',
+    cardTitle: 'Edit conditions',
     navigation,
     pageCaption: {
       text: pageCaption
     },
     errorList,
     notification,
-    summaryTable: buildConditionsTable(metadata.slug, definition)
+    fields: {
+      conditions,
+      coordinator,
+      displayName
+    }
   }
 }
 
