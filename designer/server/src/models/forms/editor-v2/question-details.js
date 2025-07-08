@@ -77,14 +77,19 @@ export function hasDataOrErrorForDisplay(
 
 /**
  * @param { ComponentType | undefined } questionType
+ * @returns {{
+ *   baseErrors: [{
+ *     type: string;
+ *     template: string;
+ *   }],
+ *   advancedSettingsErrors: []
+ * }}
  */
 export function getErrorTemplates(questionType) {
   if (questionType === ComponentType.YesNoField) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return YesNoField.getAllPossibleErrors()
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const component = createComponent(
     /** @type {ComponentDef} */ ({
       type: questionType ?? ComponentType.Html,
@@ -99,8 +104,7 @@ export function getErrorTemplates(questionType) {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
     'getAllPossibleErrors' in component
-      ? // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-        component.getAllPossibleErrors()
+      ? component.getAllPossibleErrors()
       : { baseErrors: [], advancedSettingsErrors: [] }
 
   return errorTemplates

@@ -4,6 +4,7 @@ import {
   buildQuestionPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
+import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -67,6 +68,7 @@ describe('Editor v2 questions routes', () => {
     const $cardHeading = container.getByText('Page 1')
     const $questionNumbers = container.getAllByRole('term')
     const $questionTitles = container.getAllByRole('definition')
+    const $tabPanels = container.getAllByRole('tabpanel')
 
     const $actions = container.getAllByRole('button')
 
@@ -88,11 +90,13 @@ describe('Editor v2 questions routes', () => {
     expect($actions[3]).toHaveTextContent('Add another question')
     expect($actions[4]).toHaveTextContent('Save changes')
     expect($actions[5]).toHaveTextContent('Manage conditions')
+    expect($tabPanels).toHaveLength(1)
   })
 
   test('GET - should render one question in the view', async () => {
     const title = 'Text field title'
     const hint = 'Hint text'
+    const componentId = '84aea22e-88c0-4bbe-b3d9-a900298b419f'
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(
       buildDefinition({
@@ -104,6 +108,7 @@ describe('Editor v2 questions routes', () => {
             section: 'section',
             components: [
               buildTextFieldComponent({
+                id: componentId,
                 title,
                 hint
               })
@@ -125,11 +130,24 @@ describe('Editor v2 questions routes', () => {
     const $previewPanel = container.getByText('Previews')
     const $headings = container.getAllByRole('heading', { level: 1 })
     const $previewTitle = container.getAllByText(title)
+    const $tabPanels = container.getAllByRole('tabpanel')
+    const $tablink = within($tabPanels[1]).getByText(
+      'Preview error messages in a new tab'
+    )
 
     expect($previewPanel).toHaveTextContent('Previews')
     expect($headings[4]).toHaveTextContent('')
     expect($previewTitle[1]).toHaveTextContent(title)
     expect($previewTitle[1]).toHaveClass('govuk-label govuk-label--l')
+    expect(container.queryByText('Page preview')).not.toBeNull()
+    expect(container.queryByText('Error messages')).not.toBeNull()
+    expect($tabPanels).toHaveLength(2)
+    expect($tablink).toHaveAttribute(
+      'href',
+      expect.stringContaining(
+        'error-preview/draft/my-form-slug/page-one/84aea22e-88c0-4bbe-b3d9-a900298b419f'
+      )
+    )
   })
 
   test('GET - should render no questions in the view', async () => {
