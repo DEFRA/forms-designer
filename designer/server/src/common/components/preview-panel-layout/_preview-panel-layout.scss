@@ -14,7 +14,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
   .preview-before-content {
     background-color: #cce2d8;
-
     position: absolute;
     top: 0;
     right: 0;
@@ -40,7 +39,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     }
   }
 
-  .border-left-container-shorttext {
+  &.question-preview-panel .border-left-container-shorttext {
     border-left: 10px solid #ffb266;
     padding-left: 20px;
   }

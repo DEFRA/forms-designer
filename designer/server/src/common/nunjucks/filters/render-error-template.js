@@ -4,12 +4,27 @@ import { expandTemplate } from '~/src/common/nunjucks/render.js'
 import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 /**
+ * @typedef {{
+ *   name?: string;
+ *   id?: string;
+ *   label?: { text: string };
+ *   value?: string;
+ * }} BasePageFields
+ */
+
+const basePageFieldsFallback = /** @type {BasePageFields[]} */ ([])
+const extraFieldsFallback = /** @type {GovukField[]} */ ([])
+
+/**
  * @param {{ type: string, template: JoiExpression }} template - error template
- * @param {{ basePageFields: { name?: string, id?: string, label?: { text: string }, value?: string }[], extraFields: GovukField[] }} viewModel
+ * @param {{ basePageFields?: BasePageFields[], extraFields?: GovukField[] }} viewModel
  * @param {ComponentType} questionType
  */
 export function renderErrorTemplate(template, viewModel, questionType) {
-  const shortDescriptionField = viewModel.basePageFields.find(
+  const basePageFields = viewModel.basePageFields ?? basePageFieldsFallback
+  const extraFields = viewModel.extraFields ?? extraFieldsFallback
+
+  const shortDescriptionField = basePageFields.find(
     (x) => x.id === 'shortDescription'
   )
 
@@ -33,7 +48,7 @@ export function renderErrorTemplate(template, viewModel, questionType) {
   const renderedText = expandTemplate(newTemplate, {
     label: shortDescriptionField?.value ?? '[Short description]',
     title: shortDescriptionField?.value ?? '[Short description]',
-    limit: determineLimit(template.type, viewModel.extraFields, questionType)
+    limit: determineLimit(template.type, extraFields, questionType)
   })
   return renderedText
 }

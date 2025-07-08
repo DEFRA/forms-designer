@@ -20,11 +20,13 @@ import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
+  buildPreviewErrorsUrl,
   buildPreviewUrl,
   getFormSpecificNavigation,
   getPageConditionDetails
 } from '~/src/models/forms/editor-v2/common.js'
 import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
+import { getErrorTemplates } from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -336,10 +338,26 @@ export const dummyRenderer = {
 /**
  * @param {Page} page
  * @param {FormDefinition} definition
+ * @param {string} previewPageUrl
+ * @param {string} previewErrorsUrl
  * @param {string} [guidance]
- * @returns {PagePreviewPanelMacro}
+ * @returns {PagePreviewPanelMacro & {
+ *    previewPageUrl: string;
+ *    previewErrorsUrl: string;
+ *    errorTemplates?: {
+ *      baseErrors: {type: string, template: any}[],
+ *      advancedSettingsErrors: any[]
+ *    };
+ *    questionType?: ComponentType
+ * }}
  */
-export function getPreviewModel(page, definition, guidance = '') {
+export function getPreviewModel(
+  page,
+  definition,
+  previewPageUrl,
+  previewErrorsUrl,
+  guidance = ''
+) {
   const components = hasComponents(page) ? page.components : []
   const elements = {
     heading: page.title,
@@ -354,10 +372,20 @@ export function getPreviewModel(page, definition, guidance = '') {
     dummyRenderer
   )
 
+  let errorTemplates
+
+  if (components.length === 1) {
+    errorTemplates = getErrorTemplates(components[0].type)
+  }
+
   return {
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
-    guidance: previewPageController.guidance
+    guidance: previewPageController.guidance,
+    previewPageUrl,
+    previewErrorsUrl,
+    errorTemplates,
+    questionType: components[0]?.type
   }
 }
 
@@ -407,16 +435,16 @@ export function questionsViewModel(
   const conditionDetails = getPageConditionDetails(definition, pageId)
   // prettier-ignore
   const fields = questionsFields(page, pageHeadingSettings, repeaterSettings, validation)
+
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
   const itemOrder = getItemOrder(reorderDetails.questionOrder, components)
+  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${page.path}/${components[0]?.id}`
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields,
-    previewModel: {
-      ...getPreviewModel(page, definition, fields.guidanceText.value),
-      previewPageUrl
-    },
+    // prettier-ignore
+    previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value),
     preview: {
       page: JSON.stringify(page),
       definition: JSON.stringify(definition)

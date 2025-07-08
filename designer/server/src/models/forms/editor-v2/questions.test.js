@@ -96,7 +96,13 @@ describe('editor-v2 - questions model', () => {
 
     it('should show repeater option if page type is Question controller', () => {
       const definition = buildDefinition({
-        pages: [buildQuestionPage({ id: pageId }), buildSummaryPage()],
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            components: [buildTextFieldComponent()]
+          }),
+          buildSummaryPage()
+        ],
         engine: Engine.V2
       })
       const modelResult = questionsViewModel(
@@ -339,6 +345,8 @@ describe('editor-v2 - questions model', () => {
         expect(result).toHaveProperty('hasPageCondition')
         expect(result).toHaveProperty('previewModel')
         expect(result.previewModel.pageTitle.text).toBe('Farm Details')
+        // @ts-expect-error - checking for property that should be undefined
+        expect(result.errorTemplates).toBeUndefined()
         const components = result.previewModel.components
         expect(components).toEqual([
           {
@@ -392,6 +400,9 @@ describe('editor-v2 - questions model', () => {
         const pageTitle = previewModel.pageTitle
         expect(pageTitle.text).toBe('')
         expect(pageTitle.classes).toBe('')
+        expect(previewModel.errorTemplates?.baseErrors.length).toBeGreaterThan(
+          0
+        )
         expect(previewModel.components).toEqual([
           {
             model: {
@@ -423,8 +434,15 @@ describe('editor-v2 - questions model', () => {
       const definition = buildDefinition({
         pages: [page]
       })
-      const previewModel = getPreviewModel(page, definition)
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        '/page-preview-url',
+        '/error-preview-url'
+      )
       expect(previewModel.pageTitle.text).toBe('Page title')
+      expect(previewModel.previewErrorsUrl).toBe('/error-preview-url')
+      expect(previewModel.previewPageUrl).toBe('/page-preview-url')
     })
   })
 

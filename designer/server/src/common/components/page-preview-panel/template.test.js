@@ -34,8 +34,9 @@ describe('Page preview panel component', () => {
     })
 
     it('should render page widget heading', () => {
-      expect($headings[0]).toHaveClass('govuk-heading-l highlight')
-      expect($headings[0]).toHaveTextContent('My title')
+      expect($headings[0]).toHaveClass('govuk-tabs__title')
+      expect($headings[1]).toHaveClass('govuk-heading-l highlight')
+      expect($headings[1]).toHaveTextContent('My title')
     })
   })
 })
