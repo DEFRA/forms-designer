@@ -21,6 +21,7 @@ import {
   addCondition,
   addPageAndFirstQuestion,
   addQuestion,
+  deleteCondition,
   deletePage,
   deleteQuestion,
   getControllerType,
@@ -1141,6 +1142,40 @@ describe('editor.js', () => {
         await expect(
           deleteQuestion(formId, token, '12345', '67890', formDefinition)
         ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('deleteCondition', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/conditions/67890`,
+      formsEndpoint
+    )
+    const expectedOptions = {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when delJson succeeds', () => {
+      test('calls forms manager DELETE endpoint', async () => {
+        mockedDelJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { result: 'ok' }
+        })
+
+        await deleteCondition(formId, token, '67890')
+
+        expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+      })
+    })
+
+    describe('when delJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedDelJson.mockRejectedValueOnce(testError)
+
+        await expect(deleteCondition(formId, token, '67890')).rejects.toThrow(
+          testError
+        )
       })
     })
   })
