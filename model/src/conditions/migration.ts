@@ -47,13 +47,13 @@ function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
   const foundList = model.getListById(listId)
 
   if (!foundList) {
-    throw Error('List not found')
+    throw Error(`List ${listId} not found`)
   }
 
   const item = foundList.items.find((item) => item.id === itemId)
 
   if (!item) {
-    throw Error('List item not found')
+    throw Error(`List item ${itemId} not found`)
   }
 
   return item
