@@ -21,11 +21,13 @@ import {
   addCondition,
   addPageAndFirstQuestion,
   addQuestion,
+  deleteCondition,
   deletePage,
   deleteQuestion,
   getControllerType,
   migrateDefinitionToV2,
   reorderPages,
+  reorderQuestions,
   resolvePageHeading,
   setCheckAnswersDeclaration,
   setPageCondition,
@@ -683,6 +685,52 @@ describe('editor.js', () => {
         )
         expect(mockedPutJson).not.toHaveBeenCalled()
       })
+
+      test('returns response body when page heading checkbox selected and mark as exit page selected', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const expectedOptionsPageHeading = {
+          payload: {
+            title: 'My new page title',
+            path: '/my-new-page-title',
+            controller: ControllerType.Terminal
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        const expectedOptionsGuidance = {
+          payload: {
+            content: 'Some guidance',
+            type: ComponentType.Markdown,
+            id: undefined
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setPageSettings(formId, token, '12345', formDefinition, {
+          pageHeading: 'My new page title',
+          pageHeadingAndGuidance: 'true',
+          guidanceText: 'Some guidance',
+          exitPage: true
+        })
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptionsPageHeading
+        )
+        expect(mockedPostJson).toHaveBeenCalledWith(
+          newGuidanceRequestUrl,
+          expectedOptionsGuidance
+        )
+        expect(mockedPutJson).not.toHaveBeenCalled()
+      })
     })
 
     test('handles overwriting of existing guidance', async () => {
@@ -960,6 +1008,36 @@ describe('editor.js', () => {
     })
   })
 
+  describe('reorderQuestions', () => {
+    const reorderQuestionUrl = new URL(
+      `./${formId}/definition/draft/page/p1/components/order`,
+      formsEndpoint
+    )
+
+    it('should reorder the questions', async () => {
+      const questionOrderPayload = [
+        'd3214138-1c1f-42c1-9572-37b2f9ba1320',
+        '097becaf-ef20-4655-a8da-b2886f06c978',
+        'da9a860e-cf05-4b4b-bf4e-7c40e319ad7d'
+      ]
+      const expectedOrderCall = {
+        payload: questionOrderPayload,
+        headers: { Authorization: `Bearer ${token}` }
+      }
+      await reorderQuestions(formId, token, 'p1', questionOrderPayload)
+      expect(mockedPostJson).toHaveBeenCalledWith(
+        reorderQuestionUrl,
+        expectedOrderCall
+      )
+    })
+
+    it('should handle empty array as payload', async () => {
+      const questionOrderPayload = /** @type {string[]} */ ([])
+      await reorderQuestions(formId, token, 'p1', questionOrderPayload)
+      expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+  })
+
   describe('migrateDefinitionToV2', () => {
     const migrationDefinitionUrl = new URL(
       `./${formId}/definition/draft/migrate/v2`,
@@ -1064,6 +1142,40 @@ describe('editor.js', () => {
         await expect(
           deleteQuestion(formId, token, '12345', '67890', formDefinition)
         ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('deleteCondition', () => {
+    const requestUrl = new URL(
+      `./${formId}/definition/draft/conditions/67890`,
+      formsEndpoint
+    )
+    const expectedOptions = {
+      headers: { Authorization: `Bearer ${token}` }
+    }
+
+    describe('when delJson succeeds', () => {
+      test('calls forms manager DELETE endpoint', async () => {
+        mockedDelJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { result: 'ok' }
+        })
+
+        await deleteCondition(formId, token, '67890')
+
+        expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+      })
+    })
+
+    describe('when delJson fails', () => {
+      test('throws the error', async () => {
+        const testError = new Error('Network error')
+        mockedDelJson.mockRejectedValueOnce(testError)
+
+        await expect(deleteCondition(formId, token, '67890')).rejects.toThrow(
+          testError
+        )
       })
     })
   })

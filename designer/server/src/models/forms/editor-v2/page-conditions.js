@@ -5,46 +5,14 @@ import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   getFormSpecificNavigation,
-  getPageNum,
-  toPresentationStringV2
+  getPageConditionDetails,
+  getPageNum
 } from '~/src/models/forms/editor-v2/common.js'
 import {
   determineEditUrl,
   isGuidancePage
 } from '~/src/models/forms/editor-v2/pages.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
-
-/**
- * Gets page condition details and presentation string
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @returns {{ pageCondition: string | undefined, pageConditionDetails: ConditionWrapperV2 | undefined, pageConditionPresentationString: string | null }}
- */
-export function getPageConditionDetails(definition, pageId) {
-  const page = getPageFromDefinition(definition, pageId)
-  const pageCondition = page?.condition
-  const pageConditionDetails = pageCondition
-    ? /** @type {ConditionWrapperV2 | undefined} */ (
-        definition.conditions
-          .filter(isConditionWrapperV2)
-          .find((c) => c.id === pageCondition)
-      )
-    : undefined
-
-  let pageConditionPresentationString = null
-  if (pageConditionDetails) {
-    pageConditionPresentationString = toPresentationStringV2(
-      pageConditionDetails,
-      definition
-    )
-  }
-
-  return {
-    pageCondition,
-    pageConditionDetails,
-    pageConditionPresentationString
-  }
-}
 
 /**
  * Gets filtered and sorted V2 conditions
@@ -138,6 +106,6 @@ export function pageConditionsViewModel(
 }
 
 /**
- * @import { FormDefinition, ConditionWrapperV2, FormMetadata, Page } from '@defra/forms-model'
+ * @import { ConditionDetails, FormDefinition, ConditionWrapperV2, FormMetadata, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

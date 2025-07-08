@@ -9,7 +9,7 @@ import {
   getFlashFromSession,
   setFlashInSession
 } from '~/src/lib/session-helper.js'
-import { pageOrderSchema } from '~/src/routes/forms/editor-v2/pages-reorder.js'
+import { itemOrderSchema } from '~/src/routes/forms/editor-v2/pages-reorder.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -61,23 +61,23 @@ describe('Editor v2 pages reorder routes', () => {
     })
   })
 
-  describe('pageOrderSchema', () => {
-    test('schema should return pageOrder correctly', () => {
+  describe('itemOrderSchema', () => {
+    test('schema should return itemOrder correctly', () => {
       expect(
-        pageOrderSchema.validate({
-          pageOrder: ''
+        itemOrderSchema.validate({
+          itemOrder: ''
         }).error
       ).toBeUndefined()
       expect(
-        pageOrderSchema.validate({
-          pageOrder: 'abc,bce'
+        itemOrderSchema.validate({
+          itemOrder: 'abc,bce'
         }).value
-      ).toEqual({ pageOrder: ['abc', 'bce'], saveChanges: false })
+      ).toEqual({ itemOrder: ['abc', 'bce'], saveChanges: false })
       expect(
-        pageOrderSchema.validate({
-          pageOrder: ''
+        itemOrderSchema.validate({
+          itemOrder: ''
         }).value
-      ).toEqual({ pageOrder: [], saveChanges: false })
+      ).toEqual({ itemOrder: [], saveChanges: false })
     })
   })
 
@@ -93,7 +93,7 @@ describe('Editor v2 pages reorder routes', () => {
         method: 'post',
         url: '/library/my-form-slug/editor-v2/pages-reorder',
         auth,
-        payload: { movement: 'up|p2', pageOrder: 'p1,p2,p3' }
+        payload: { movement: 'up|p2', itemOrder: 'p1,p2,p3' }
       }
 
       const {
@@ -117,7 +117,7 @@ describe('Editor v2 pages reorder routes', () => {
         method: 'post',
         url: '/library/my-form-slug/editor-v2/pages-reorder',
         auth,
-        payload: { saveChanges: 'true', pageOrder: 'abc-123,def-456,ghi-789' }
+        payload: { saveChanges: 'true', itemOrder: 'abc-123,def-456,ghi-789' }
       }
 
       const {
@@ -141,7 +141,7 @@ describe('Editor v2 pages reorder routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/pages-reorder',
       auth,
-      payload: { pageOrder: 'invalid-format' }
+      payload: { itemOrder: 'invalid-format' }
     }
 
     const {

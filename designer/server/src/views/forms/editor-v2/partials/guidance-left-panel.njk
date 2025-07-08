@@ -5,7 +5,7 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
-
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
   <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
@@ -46,6 +46,8 @@
                     {{ govukTextarea(fields.guidanceText) }}
 
                     {%- include "../../../../views/forms/editor-v2/partials/markdown-help.njk" -%}
+
+                    {{ govukCheckboxes(fields.exitPage) }}
 
                     <div class="govuk-button-group govuk-!-margin-top-6">
                       {{ govukButton({

@@ -1,4 +1,8 @@
-import { ComponentType, hasComponents } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  hasComponents
+} from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
@@ -10,6 +14,7 @@ import {
   SAVE,
   baseModelFields,
   getFormSpecificNavigation,
+  getPageConditionDetails,
   getPageNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
@@ -17,9 +22,15 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 /**
  * @param {string | undefined} pageHeadingVal
  * @param {string | undefined} guidanceTextVal
+ * @param {boolean} exitPageVal
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-function guidanceFields(pageHeadingVal, guidanceTextVal, validation) {
+function guidanceFields(
+  pageHeadingVal,
+  guidanceTextVal,
+  exitPageVal,
+  validation
+) {
   return {
     pageHeading: {
       name: 'pageHeading',
@@ -47,6 +58,21 @@ function guidanceFields(pageHeadingVal, guidanceTextVal, validation) {
       rows: 3,
       value: guidanceTextVal,
       ...insertValidationErrors(validation?.formErrors.guidanceText)
+    },
+    exitPage: {
+      name: 'exitPage',
+      id: 'exitPage',
+      classes: 'govuk-checkboxes--small',
+      items: [
+        {
+          text: 'Mark as Exit Page',
+          value: 'true',
+          hint: {
+            text: 'Users who reach this page will be unable to continue filling out the form'
+          },
+          checked: exitPageVal
+        }
+      ]
     }
   }
 }
@@ -93,10 +119,20 @@ export function guidanceViewModel(
   const guidanceTextVal = formValues?.guidanceText ?? guidanceComponent?.content
   const cardHeading = 'Edit guidance page'
   const pageTitle = `${cardHeading} - ${formTitle}`
+  const exitPageVal = page?.controller === ControllerType.Terminal
+
+  const conditionDetails = getPageConditionDetails(definition, pageId)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle, formTitle),
-    fields: { ...guidanceFields(pageHeadingVal, guidanceTextVal, validation) },
+    fields: {
+      ...guidanceFields(
+        pageHeadingVal,
+        guidanceTextVal,
+        exitPageVal,
+        validation
+      )
+    },
     cardTitle: `Page settings`,
     cardCaption: `Page ${pageNum}`,
     cardHeading,
@@ -107,7 +143,11 @@ export function guidanceViewModel(
     baseUrl: editorv2Path(metadata.slug, `page/${pageId}`),
     questionId,
     buttonText: SAVE,
-    notification
+    notification,
+    conditionDetails,
+    hasPageCondition: Boolean(
+      conditionDetails.pageCondition && conditionDetails.pageConditionDetails
+    )
   }
 }
 

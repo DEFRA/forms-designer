@@ -117,7 +117,7 @@ describe('ComponentEdit', () => {
         content: true,
         optional: false,
         selectList: false,
-        selectCondition: true
+        selectCondition: false
       }
     ],
     [
@@ -141,7 +141,7 @@ describe('ComponentEdit', () => {
         content: true,
         optional: false,
         selectList: false,
-        selectCondition: true
+        selectCondition: false
       }
     ],
     [
@@ -177,7 +177,7 @@ describe('ComponentEdit', () => {
         content: true,
         optional: false,
         selectList: false,
-        selectCondition: true
+        selectCondition: false
       }
     ],
     [

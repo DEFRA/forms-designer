@@ -13,33 +13,22 @@ import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.
 import {
   excludeEndPages,
   getFocus,
-  repositionPage
+  repositionItem
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/pages-reorder.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { customItemOrder } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_FULL_PATH_REORDER_PAGES =
   '/library/{slug}/editor-v2/pages-reorder'
 
 const reorderPagesKey = sessionNames.reorderPages
 
-/**
- * @param {string|undefined} value
- * @returns {string[]}
- */
-const customPageOrder = (value) => {
-  if (value?.length) {
-    return value.split(',')
-  }
-
-  return []
-}
-
-export const pageOrderSchema = Joi.object()
+export const itemOrderSchema = Joi.object()
   .keys({
     saveChanges: Joi.boolean().default(false).optional(),
     movement: Joi.string().optional(),
-    pageOrder: Joi.any().custom(customPageOrder)
+    itemOrder: Joi.any().custom(customItemOrder)
   })
   .required()
 
@@ -90,7 +79,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormEditorInputPage, 'movement' | 'pageOrder'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormEditorInputPage, 'movement' | 'itemOrder'> }>}
    */
   ({
     method: 'POST',
@@ -98,8 +87,8 @@ export default [
     async handler(request, h) {
       const { params, auth, payload, yar } = request
       const { slug } = params
-      const { movement, pageOrder, saveChanges } =
-        /** @type {{ movement: string, pageOrder: string[], saveChanges: boolean}} */ (
+      const { movement, itemOrder, saveChanges } =
+        /** @type {{ movement: string, itemOrder: string[], saveChanges: boolean}} */ (
           payload
         )
 
@@ -107,8 +96,8 @@ export default [
         const { token } = auth.credentials
         const metadata = await forms.get(slug, token)
 
-        if (pageOrder.length > 0) {
-          await reorderPages(metadata.id, token, pageOrder)
+        if (itemOrder.length > 0) {
+          await reorderPages(metadata.id, token, itemOrder)
         }
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
         yar.clear(reorderPagesKey)
@@ -122,7 +111,7 @@ export default [
       if (movement) {
         const [direction, pageId] = movement.split('|')
 
-        const newPageOrder = repositionPage(pageOrder, direction, pageId).join(
+        const newPageOrder = repositionItem(itemOrder, direction, pageId).join(
           ','
         )
 
@@ -139,7 +128,7 @@ export default [
     },
     options: {
       validate: {
-        payload: pageOrderSchema
+        payload: itemOrderSchema
       },
       auth: {
         mode: 'required',

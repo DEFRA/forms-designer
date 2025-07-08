@@ -1,25 +1,32 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
-{% set cardClass = "pages-panel-left-standard" %}
-{% if params.isEndPage %}
-{% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end-hide-declaration"%}
-{% endif %}
+{% set pageTitleText = "Page " + params.pageNum + ": " + params.pageTitle %}
 
-{% set cardTitle = "Page " + params.pageNum + ": " + params.pageTitle %}
+{% set tagHtml %}
+<div class="govuk-button-group govuk-!-margin-bottom-2 govuk-!-margin-right-2">
+  <span class="govuk-tag govuk-tag--pink govuk-!-margin-right-2">Exit page</span>
+</div>
+<div class="govuk-summary-card__title govuk-!-margin-0">{{ pageTitleText }}</div>
+{% endset %}
+
+{% set cardClass = "pages-panel-left-standard" if params.rows | length > 0 else "pages-panel-left-standard pages-panel-left-standard-hide-declaration" %}
+{% set cardTitle = { text: pageTitleText } %}
 
 {% if params.isEndPage %}
-<hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-<h2 class="govuk-heading-m">End pages</h2>
-{% set cardTitle = "Check your answers" %}
+  {% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end pages-panel-left-end-hide-declaration"%}
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+  <h2 class="govuk-heading-m">End pages</h2>
+  {% set cardTitle = { text: "Check your answers" } %}
+{% elif params.isExitPage %}
+  {% set cardClass = "pages-panel-left-exit" if params.rows | length else "pages-panel-left-exit pages-panel-left-exit-hide-declaration"%}
+  {% set cardTitle = { html: tagHtml } %}
 {% endif %}
 
 {% set visuallyHiddenText = "" if params.isEndPage else " page " + params.pageNum %}
 
 {{ govukSummaryList({
   card: {
-    title: {
-      text: cardTitle
-    },
+    title: cardTitle,
     actions: {
       items: [
         {

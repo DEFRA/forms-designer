@@ -270,6 +270,11 @@ export interface FormEditor {
    * Relative date direction for conditions
    */
   direction: DateDirections
+
+  /**
+   * Denotes if page is an Exit Page
+   */
+  exitPage: boolean
 }
 
 export type FormEditorInputPage = Pick<
@@ -329,11 +334,12 @@ export type FormEditorInputPageSettings = Pick<
   | 'minItems'
   | 'maxItems'
   | 'questionSetName'
+  | 'exitPage'
 >
 
 export type FormEditorInputGuidancePage = Pick<
   FormEditor,
-  'pageHeading' | 'guidanceText'
+  'pageHeading' | 'guidanceText' | 'exitPage'
 >
 
 export type FormEditorInputQuestionDetails = Pick<
@@ -418,10 +424,28 @@ export interface ConditionSessionState {
   conditionWrapper?: ConditionWrapperV2
 }
 
+export interface ConditionDetails {
+  pageCondition: string | undefined
+  pageConditionDetails: ConditionWrapperV2 | undefined
+  pageConditionPresentationString: string | null
+}
+
 export interface GovukFieldItem {
   text?: string
   value?: string
   checked?: boolean
+}
+
+export interface GovukSummaryListRow {
+  key?: {
+    text?: string
+    classes?: string
+  }
+  value?: {
+    text?: string
+    html?: string
+    classes?: string
+  }
 }
 
 export interface GovukField {

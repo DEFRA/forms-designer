@@ -4,6 +4,7 @@ import {
   testFormDefinitionWithAGuidancePage,
   testFormDefinitionWithExistingGuidance,
   testFormDefinitionWithExistingSummaryDeclaration,
+  testFormDefinitionWithMultipleV2Conditions,
   testFormDefinitionWithNoPages,
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithRepeater,
@@ -14,6 +15,7 @@ import {
   determineEditUrl,
   hideFirstGuidance,
   isGuidancePage,
+  mapCondition,
   mapMarkdown,
   mapPageData,
   mapQuestionRows
@@ -66,19 +68,37 @@ describe('editor-v2 - pages model', () => {
   describe('mapQuestionRows', () => {
     test('should map question rows', () => {
       const resPageOneQuestions = mapQuestionRows(
+        testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[0]
       )
       const resPageTwoQuestions = mapQuestionRows(
+        testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[1]
       )
       const resPageSummaryQuestions = mapQuestionRows(
+        testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[2]
       )
       const resPageSummaryExistingMarkdown = mapQuestionRows(
+        testFormDefinitionWithExistingSummaryDeclaration,
         testFormDefinitionWithExistingSummaryDeclaration.pages[1]
       )
       const resPageSummaryRepeater = mapQuestionRows(
+        testFormDefinitionWithRepeater,
         testFormDefinitionWithRepeater.pages[0]
+      )
+
+      const conditionTestDefinition = structuredClone(
+        testFormDefinitionWithMultipleV2Conditions
+      )
+      // Assign a condition to first page
+      // @ts-expect-error - condition may not exist on page
+      conditionTestDefinition.pages[0].condition =
+        'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
+
+      const resPageCondition = mapQuestionRows(
+        conditionTestDefinition,
+        conditionTestDefinition.pages[0]
       )
 
       expect(resPageOneQuestions).toHaveLength(2)
@@ -129,9 +149,9 @@ describe('editor-v2 - pages model', () => {
         }
       })
 
-      expect(resPageSummaryRepeater).toHaveLength(2)
+      expect(resPageSummaryRepeater).toHaveLength(1)
 
-      expect(resPageSummaryRepeater[1]).toEqual({
+      expect(resPageSummaryRepeater[0]).toEqual({
         key: {
           text: 'People can answer'
         },
@@ -139,6 +159,18 @@ describe('editor-v2 - pages model', () => {
           text: 'More than once'
         }
       })
+
+      expect(resPageCondition).toHaveLength(1)
+
+      expect(resPageCondition[0].key).toEqual({
+        text: 'Page shown when'
+      })
+      expect(resPageCondition[0].value?.html).toContain(
+        '<span class="govuk-!-font-weight-bold">isBobV2</span>'
+      )
+      expect(resPageCondition[0].value?.html).toContain(
+        "<div class=\"govuk-!-margin-left-3 govuk-!-margin-top-1 with-ellipsis\">'What is your full name' is 'bob'</div>"
+      )
     })
   })
 
@@ -208,6 +240,38 @@ describe('editor-v2 - pages model', () => {
     })
   })
 
+  describe('mapCondition', () => {
+    test('should give correct html', () => {
+      expect(
+        mapCondition(
+          /** @type {ConditionDetails} */ ({
+            pageCondition: 'condId1',
+            pageConditionDetails: {
+              displayName: 'My first condition'
+            },
+            pageConditionPresentationString:
+              "'What is your favourite colour' is 'Red'"
+          })
+        )
+      ).toEqual({
+        key: {
+          text: 'Page shown when'
+        },
+        value: {
+          html: `<ul class="govuk-list">
+        <li class="govuk-!-margin-bottom-2" style="display: flex; align-items: flex-start;">
+          <span class="govuk-checkboxes__tick green-tick">✓</span>
+          <div>
+            <span class="govuk-!-font-weight-bold">My first condition</span>
+            <div class="govuk-!-margin-left-3 govuk-!-margin-top-1 with-ellipsis">'What is your favourite colour' is 'Red'</div>
+          </div>
+        </li>
+      </ul>`
+        }
+      })
+    })
+  })
+
   describe('mapMarkdown', () => {
     test('should give title of Declaration', () => {
       expect(
@@ -260,5 +324,5 @@ describe('editor-v2 - pages model', () => {
 })
 
 /**
- * @import { ComponentDef, MarkdownComponent, Page, PageQuestion } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionDetails, ConditionWrapperV2, MarkdownComponent, PageQuestion } from '@defra/forms-model'
  */

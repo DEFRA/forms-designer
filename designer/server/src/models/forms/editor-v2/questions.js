@@ -22,9 +22,10 @@ import {
   baseModelFields,
   buildPreviewErrorsUrl,
   buildPreviewUrl,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  getPageConditionDetails
 } from '~/src/models/forms/editor-v2/common.js'
-import { getPageConditionDetails } from '~/src/models/forms/editor-v2/page-conditions.js'
+import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { getErrorTemplates } from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
@@ -202,14 +203,29 @@ export function hasUnderlyingRepeaterData(min, max, questionSetName) {
 }
 
 /**
+ * @param {ComponentDef} component
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
+ */
+export function constructReorderQuestion(component, focus) {
+  return {
+    ...component,
+    isFocus: focus?.itemId === component.id,
+    prevFocusDirection: focus?.button
+  }
+}
+
+/**
  * @param {ComponentDef[]} components
  * @param {string} baseUrl
+ * @param {string} questionOrder
+ * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
  */
-function mapQuestionRows(components, baseUrl) {
-  return components
+function mapQuestionRows(components, baseUrl, questionOrder, focus) {
+  return orderItems(components, questionOrder)
     .filter((c) => isFormType(c.type))
     .map((comp2, idx2) => {
       return {
+        id: comp2.id,
         key: {
           text: `Question ${idx2 + 1}`,
           classes: 'govuk-!-width-one-quarter'
@@ -230,7 +246,9 @@ function mapQuestionRows(components, baseUrl) {
               classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'
             }
           ]
-        }
+        },
+        isFocus: focus?.itemId === comp2.id,
+        prevFocusDirection: focus?.button
       }
     })
 }
@@ -372,9 +390,25 @@ export function getPreviewModel(
 }
 
 /**
+ * @param { string | undefined } itemOrder
+ * @param {ComponentDef[]} components
+ * @returns {string}
+ */
+export function getItemOrder(itemOrder, components) {
+  return (
+    itemOrder ??
+    components
+      .filter((c) => isFormType(c.type))
+      .map((x) => `${x.id}`)
+      .join(',')
+  )
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ * @param {{ questionOrder?: string, action?: string, focus?: { button: string | undefined, itemId: string | undefined }}} reorderDetails
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
@@ -382,57 +416,35 @@ export function questionsViewModel(
   metadata,
   definition,
   pageId,
+  reorderDetails,
   validation,
   notification
 ) {
   const { formValues, formErrors } = validation ?? {}
-
   const { pageIdx, page, components } = extractPageData(definition, pageId)
-
-  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(
-    page,
-    components,
-    formValues
-  )
-
-  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(
-    page,
-    formValues
-  )
-
+  // prettier-ignore
+  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(page, components, formValues)
+  // prettier-ignore
+  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(page, formValues)
   const { baseUrl, pageHeading, cardTitle, formTitle, formPath } =
     buildViewModelData(metadata, pageIdx, pageId)
-
   const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
   const repeaterSettings = { minItems, maxItems, questionSetName }
-
-  const navigation = getFormSpecificNavigation(
-    formPath,
-    metadata,
-    definition,
-    'Editor'
-  )
+  // prettier-ignore
+  const navigation = getFormSpecificNavigation(formPath, metadata, definition, 'Editor')
   const conditionDetails = getPageConditionDetails(definition, pageId)
-  const fields = questionsFields(
-    page,
-    pageHeadingSettings,
-    repeaterSettings,
-    validation
-  )
+  // prettier-ignore
+  const fields = questionsFields(page, pageHeadingSettings, repeaterSettings, validation)
 
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
+  const itemOrder = getItemOrder(reorderDetails.questionOrder, components)
   const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${page.path}/${components[0]?.id}`
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields,
-    previewModel: getPreviewModel(
-      page,
-      definition,
-      previewPageUrl,
-      previewErrorsUrl,
-      fields.guidanceText.value
-    ),
+    // prettier-ignore
+    previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value),
     preview: {
       page: JSON.stringify(page),
       definition: JSON.stringify(definition)
@@ -446,20 +458,24 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    questionRows: mapQuestionRows(components, baseUrl),
-    buttonText: SAVE_AND_CONTINUE,
-    preventAddQuestion: components.some(
-      (comp) => comp.type === ComponentType.FileUploadField
+    questionRows: mapQuestionRows(
+      components,
+      baseUrl,
+      itemOrder,
+      reorderDetails.focus
     ),
+    buttonText: SAVE_AND_CONTINUE,
+    preventAddQuestion:
+      components.some((comp) => comp.type === ComponentType.FileUploadField) ||
+      reorderDetails.action === 'reorder',
     notification,
     previewPageUrl,
-    pageCondition: conditionDetails.pageCondition,
-    pageConditionDetails: conditionDetails.pageConditionDetails,
-    pageConditionPresentationString:
-      conditionDetails.pageConditionPresentationString,
+    conditionDetails,
     hasPageCondition: Boolean(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
-    )
+    ),
+    itemOrder,
+    action: reorderDetails.action
   }
 }
 

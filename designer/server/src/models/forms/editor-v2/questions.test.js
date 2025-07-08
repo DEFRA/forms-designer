@@ -15,6 +15,7 @@ import {
 } from '@defra/forms-model/stubs'
 
 import {
+  constructReorderQuestion,
   dummyRenderer,
   getPreviewModel,
   hasUnderlyingHeadingData,
@@ -72,13 +73,24 @@ describe('editor-v2 - questions model', () => {
       title: 'What type of farming do you do?'
     })
 
+    const emptyReorderDetails = {
+      action: undefined,
+      focus: undefined,
+      questionOrder: undefined
+    }
+
     it('should not show repeater option if page type is FileUpload controller', () => {
       const definition = buildDefinition({
         pages: [buildFileUploadPage({ id: pageId }), buildSummaryPage()],
         engine: Engine.V2
       })
 
-      const modelResult = questionsViewModel(metadata, definition, pageId)
+      const modelResult = questionsViewModel(
+        metadata,
+        definition,
+        pageId,
+        emptyReorderDetails
+      )
       expect(modelResult.fields.repeater).toBeUndefined()
     })
 
@@ -93,7 +105,12 @@ describe('editor-v2 - questions model', () => {
         ],
         engine: Engine.V2
       })
-      const modelResult = questionsViewModel(metadata, definition, pageId)
+      const modelResult = questionsViewModel(
+        metadata,
+        definition,
+        pageId,
+        emptyReorderDetails
+      )
       expect(modelResult.fields.repeater).toBeDefined()
     })
 
@@ -113,12 +130,23 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
-        expect(result.pageCondition).toBe(conditionId)
-        expect(result.pageConditionDetails).toEqual(mockCondition)
-        expect(result.pageConditionPresentationString).toBeTruthy()
-        expect(typeof result.pageConditionPresentationString).toBe('string')
+        expect(result.conditionDetails.pageCondition).toBe(conditionId)
+        expect(result.conditionDetails.pageConditionDetails).toEqual(
+          mockCondition
+        )
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeTruthy()
+        expect(
+          typeof result.conditionDetails.pageConditionPresentationString
+        ).toBe('string')
         expect(result.hasPageCondition).toBe(true)
       })
 
@@ -136,11 +164,18 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
-        expect(result.pageCondition).toBeUndefined()
-        expect(result.pageConditionDetails).toBeUndefined()
-        expect(result.pageConditionPresentationString).toBeNull()
+        expect(result.conditionDetails.pageCondition).toBeUndefined()
+        expect(result.conditionDetails.pageConditionDetails).toBeUndefined()
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeNull()
         expect(result.hasPageCondition).toBe(false)
       })
 
@@ -159,11 +194,20 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
-        expect(result.pageCondition).toBe('missing-permit-condition')
-        expect(result.pageConditionDetails).toBeUndefined()
-        expect(result.pageConditionPresentationString).toBeNull()
+        expect(result.conditionDetails.pageCondition).toBe(
+          'missing-permit-condition'
+        )
+        expect(result.conditionDetails.pageConditionDetails).toBeUndefined()
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeNull()
         expect(result.hasPageCondition).toBe(false)
       })
 
@@ -181,7 +225,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
         expect(result.currentTab).toBe('overview')
       })
@@ -216,10 +265,17 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
-        expect(result.pageCondition).toBe(conditionId)
-        expect(result.pageConditionDetails).toEqual(mockCondition)
+        expect(result.conditionDetails.pageCondition).toBe(conditionId)
+        expect(result.conditionDetails.pageConditionDetails).toEqual(
+          mockCondition
+        )
         expect(result.hasPageCondition).toBe(true)
       })
 
@@ -237,11 +293,18 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
-        expect(result.pageCondition).toBeUndefined()
-        expect(result.pageConditionDetails).toBeUndefined()
-        expect(result.pageConditionPresentationString).toBeNull()
+        expect(result.conditionDetails.pageCondition).toBeUndefined()
+        expect(result.conditionDetails.pageConditionDetails).toBeUndefined()
+        expect(
+          result.conditionDetails.pageConditionPresentationString
+        ).toBeNull()
         expect(result.hasPageCondition).toBe(false)
       })
     })
@@ -264,7 +327,12 @@ describe('editor-v2 - questions model', () => {
           engine: Engine.V2
         })
 
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
 
         expect(result).toHaveProperty('cardTitle', 'Page 1 overview')
         expect(result).toHaveProperty('cardCaption', 'Page 1')
@@ -273,9 +341,7 @@ describe('editor-v2 - questions model', () => {
         expect(result).toHaveProperty('navigation')
         expect(result).toHaveProperty('questionRows')
         expect(result).toHaveProperty('previewPageUrl')
-        expect(result).toHaveProperty('pageCondition')
-        expect(result).toHaveProperty('pageConditionDetails')
-        expect(result).toHaveProperty('pageConditionPresentationString')
+        expect(result).toHaveProperty('conditionDetails')
         expect(result).toHaveProperty('hasPageCondition')
         expect(result).toHaveProperty('previewModel')
         expect(result.previewModel.pageTitle.text).toBe('Farm Details')
@@ -324,7 +390,12 @@ describe('editor-v2 - questions model', () => {
           conditions: [],
           engine: Engine.V2
         })
-        const result = questionsViewModel(metadata, definition, pageId)
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
         const previewModel = result.previewModel
         const pageTitle = previewModel.pageTitle
         expect(pageTitle.text).toBe('')
@@ -384,6 +455,46 @@ describe('editor-v2 - questions model', () => {
           guidance: { text: '', classes: '' }
         })
       ).toThrow('Not implemented')
+    })
+  })
+
+  describe('constructReorderQuestion', () => {
+    it('should add focus details to component when not in focus', () => {
+      const component = buildTextFieldComponent()
+      const res = constructReorderQuestion(component, {
+        button: 'some button val',
+        itemId: 'other'
+      })
+      expect(res).toEqual({
+        id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
+        isFocus: false,
+        name: 'TextField',
+        options: {},
+        prevFocusDirection: 'some button val',
+        schema: {},
+        title: 'Text field',
+        hint: '',
+        type: 'TextField'
+      })
+    })
+
+    it('should add focus details to component when is in focus', () => {
+      const component = buildTextFieldComponent()
+      const res = constructReorderQuestion(component, {
+        button: 'some button val',
+        itemId: '407dd0d7-cce9-4f43-8e1f-7d89cb698875'
+      })
+      expect(res).toEqual({
+        id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
+        isFocus: true,
+        name: 'TextField',
+        options: {},
+        prevFocusDirection: 'some button val',
+        schema: {},
+        title: 'Text field',
+        hint: '',
+        type: 'TextField'
+      })
     })
   })
 })
