@@ -25,6 +25,15 @@ export default {
         const response = request.response
 
         if ('isBoom' in response && response.isBoom) {
+          request.logger.error(
+            {
+              message: response.message,
+              stack: response.stack,
+              statusCode: response.output.statusCode
+            },
+            'IMMEDIATE ERROR LOG - Testing error logging'
+          )
+
           // An error was raised during
           // processing the request
           const statusCode = response.output.statusCode
@@ -42,13 +51,14 @@ export default {
 
           const logLevel =
             statusCode === StatusCodes.NOT_FOUND.valueOf() ? 'info' : 'error'
+
           request.logger[logLevel](
             {
               statusCode,
               // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
               data: response.data ?? request.url,
               message: response.message,
-              stack_trace: response.stack
+              stack: response.stack
             },
             statusCode === StatusCodes.NOT_FOUND.valueOf()
               ? 'Resource not found'

@@ -114,7 +114,7 @@ const schema = joi.object<Config>({
       .string()
       .when('...env', {
         is: 'development',
-        then: joi.string().default('pino-pretty'),
+        then: joi.string().default('ecs'),
         otherwise: joi.string().default('ecs')
       })
       .valid('ecs', 'pino-pretty'),
