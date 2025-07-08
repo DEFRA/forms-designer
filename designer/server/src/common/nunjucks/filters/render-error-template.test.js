@@ -56,6 +56,32 @@ describe('render-error-template', () => {
     )
   })
 
+  test('should handle page template correctly', () => {
+    const template = {
+      type: 'max',
+      template: 'Please enter no more than {{#limit}} characters'
+    }
+
+    const viewModel = {}
+
+    renderErrorTemplate(template, viewModel, ComponentType.TextField)
+
+    expect(errorPreviewHelper.insertTags).toHaveBeenCalledWith(
+      'Please enter no more than {{#limit}} characters',
+      'max'
+    )
+
+    expect(renderModule.expandTemplate).toHaveBeenCalled()
+    expect(renderModule.expandTemplate).toHaveBeenCalledWith(
+      expect.anything(),
+      {
+        label: '[Short description]',
+        title: '[Short description]',
+        limit: '10'
+      }
+    )
+  })
+
   test('should handle Joi expressions correctly', () => {
     const joiExpression = Joi.expression('Enter {{#limit}} or fewer characters')
 
