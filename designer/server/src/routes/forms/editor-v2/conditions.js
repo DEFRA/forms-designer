@@ -40,6 +40,7 @@ export const ROUTE_FULL_PATH_PAGE_CONDITIONS_WITH_ASSIGN =
   '/library/{slug}/editor-v2/page/{pageId}/conditions/assign'
 
 const notificationKey = sessionNames.successNotification
+const errorKey = sessionNames.validationFailure.editorCondition
 
 const assignConditionsSchema = Joi.object({
   action: Joi.string().valid('add', 'remove').required(),
