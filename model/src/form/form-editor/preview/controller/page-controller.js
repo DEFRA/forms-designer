@@ -3,7 +3,9 @@ import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { ContentElements } from '~/src/form/form-editor/preview/content.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
+import { hasRepeater } from '~/src/index.js'
 import { hasComponents } from '~/src/pages/helpers.js'
+
 /**
  * @type {QuestionRenderer}
  */
@@ -53,6 +55,17 @@ export class PagePreviewElements {
   get addHeading() {
     return this._page.title.length > 0
   }
+
+  get repeatQuestion() {
+    if (hasRepeater(this._page)) {
+      return this._page.repeat.options.title
+    }
+    return undefined
+  }
+
+  get hasRepeater() {
+    return hasRepeater(this._page)
+  }
 }
 
 /**
@@ -90,6 +103,11 @@ export class PreviewPageController {
    */
   _guidanceText = ''
   /**
+   * @type { string }
+   * @protected
+   */
+  _sectionTitle = ''
+  /**
    * @type {Markdown}
    * @private
    */
@@ -105,6 +123,11 @@ export class PreviewPageController {
    * @private
    */
   _showTitle = true
+  /**
+   * @type {boolean}
+   */
+  #isRepeater = false
+
   /**
    * @param {ComponentDef[]} components
    * @param {PageOverviewElements} elements
@@ -127,6 +150,8 @@ export class PreviewPageController {
 
     this.#pageRenderer = renderer
     this.#title = elements.heading
+    this._sectionTitle = elements.repeatQuestion ?? ''
+    this.#isRepeater = elements.hasRepeater
   }
 
   /**
@@ -308,6 +333,53 @@ export class PreviewPageController {
 
   highlightTitle() {
     this.setHighLighted('title')
+  }
+
+  setRepeater() {
+    this.#isRepeater = true
+    this.render()
+  }
+
+  unsetRepeater() {
+    this.#isRepeater = false
+    this.render()
+  }
+
+  get isRepeater() {
+    return this.#isRepeater
+  }
+
+  /**
+   * @param {string | undefined} val
+   */
+  set sectionTitle(val) {
+    this._sectionTitle = val ?? ''
+    this.render()
+  }
+
+  get sectionTitle() {
+    if (!this.#isRepeater) {
+      return undefined
+    }
+    if (!this._sectionTitle.length) {
+      return 'Question set name'
+    }
+    return this._sectionTitle + ' 1'
+  }
+
+  get repeaterButton() {
+    if (!this.#isRepeater) {
+      return undefined
+    }
+
+    if (this._sectionTitle === '') {
+      return '[question set name]'
+    }
+
+    const [firstToken, ...rest] = this._sectionTitle
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const restOfStr = rest ? rest.join('') : ''
+    return firstToken.toLowerCase() + restOfStr
   }
 
   /**

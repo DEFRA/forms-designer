@@ -92,6 +92,8 @@ export interface PageOverviewElements {
   heading: string
   guidance: string
   addHeading: boolean
+  repeatQuestion: string | undefined
+  hasRepeater: boolean
 }
 
 export type PreviewQuestion =
