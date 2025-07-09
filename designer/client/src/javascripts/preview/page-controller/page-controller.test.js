@@ -215,7 +215,12 @@ describe('page-controller', () => {
       pagePreviewElements.questionSetNameElement.value = 'Repeater questions'
       pagePreviewElements.questionSetNameElement.dispatchEvent(inputEvent)
       expect(pageController.sectionTitle?.text).toBe('Repeater questions 1')
-      expect(pageRendererCb).toHaveBeenCalledTimes(5)
+      pagePreviewElements.repeaterElement.checked = false
+      pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
+      expect(pageController.sectionTitle).toBeUndefined()
+      expect(pageController.repeaterButton).toBeUndefined()
+      expect(pageController.repeaterText).toBeUndefined()
+      expect(pageRendererCb).toHaveBeenCalledTimes(6)
     })
   })
 })
