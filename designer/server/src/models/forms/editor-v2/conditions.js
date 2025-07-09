@@ -17,6 +17,7 @@ import { formOverviewPath } from '~/src/models/links.js'
 export function buildConditionsTable(slug, definition) {
   const { pages, conditions } = definition
   const editBaseUrl = `/library/${slug}/editor-v2/condition/`
+  const editJoinBaseUrl = `/library/${slug}/editor-v2/conditions-join/`
 
   /** @todo remove this filter when V1 is deprecated */
   const v2Conditions = conditions
@@ -35,8 +36,13 @@ export function buildConditionsTable(slug, definition) {
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
-      // TODO - edit link for joined condition should go to /conditions-join/{id}
-      const editLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}">Edit</a>`
+
+      const isJoinedCondition =
+        condition.items.length > 0 &&
+        condition.items.every((item) => 'conditionId' in item)
+
+      const editUrl = isJoinedCondition ? editJoinBaseUrl : editBaseUrl
+      const editLink = `<a class="${linkClasses}" href="${editUrl}${condition.id}">Edit</a>`
       const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
 
       return [

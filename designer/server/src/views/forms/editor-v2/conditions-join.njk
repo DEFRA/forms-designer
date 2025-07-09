@@ -21,6 +21,30 @@
     backLink: backLink
   }) %}
 
+    <div class="app-tab-container">
+      <a href="{{ backLink.href }}" class="editor-card-title app-tab-link">All conditions</a>
+      <nav class="app-page-navigation">
+        <ul class="app-page-navigation__list">
+          <li class="app-page-navigation__item--current">
+            <a class="app-page-navigation__link editor-card-title" href="#" aria-current="page">
+              {{ cardTitle }}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    {% if existingCondition %}
+      <div class="govuk-summary-card govuk-!-margin-bottom-6 govuk-!-margin-top-6">
+        <div class="govuk-summary-card__title-wrapper">
+          <div class="govuk-summary-card__title">Original condition</div>
+        </div>
+        <div class="govuk-summary-card__content">
+          <p class="govuk-body govuk-!-font-weight-bold">{{ existingCondition.displayName }}</p>
+        </div>
+      </div>
+    {% endif %}
+
     {% if errorList | length %}
       {{ govukErrorSummary({
         titleText: "There is a problem",
@@ -33,6 +57,7 @@
       title: cardTitle,
       caption: cardCaption,
       heading: cardHeading,
+      classes: 'editor-card-background-very-light-grey',
       errorList: errorList
     }) %}
 
@@ -49,7 +74,7 @@
             text: 'Save joined condition'
           }) }}
 
-          <a href="./conditions" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
+          <a href="{{ backLink.href }}" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
         </div>
 
       </form>

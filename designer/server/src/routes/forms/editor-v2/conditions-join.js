@@ -1,6 +1,8 @@
 import {
   FormDefinitionError,
   conditionWrapperSchemaV2,
+  isConditionWrapperV2,
+  randomId,
   slugSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
@@ -30,12 +32,8 @@ const idSchema = Joi.string().uuid().allow('new').required()
 const stateIdSchema = Joi.string().optional()
 
 const conditionSchema = Joi.object({
-  conditions: Joi.array()
-    .min(2)
-    .items(Joi.string())
-    .required()
-    .messages({
-      '*': 'Select at least 2 conditions to join'
+  conditions: Joi.array().min(2).items(Joi.string()).required().messages({
+    '*': 'Select at least 2 conditions to join'
   }),
   coordinator: conditionWrapperSchemaV2.extract('coordinator').messages({
     'any.required': 'Choose how you want to combine conditions'
@@ -56,9 +54,8 @@ export default [
       const { yar } = request
       const { params, auth } = request
       const { token } = auth.credentials
-      const { slug } = params
+      const { slug, conditionId } = params
 
-      // Get form metadata and definition
       const { metadata, definition } = await getForm(slug, token)
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
@@ -67,15 +64,20 @@ export default [
         yar.flash(notificationKey).at(0)
       )
 
-      // TODO - get condition if not 'new'
-
-      // TODO - exclude own condition if conditionId is not 'new'
+      const existingCondition =
+        conditionId !== 'new'
+          ? definition.conditions
+              .filter(isConditionWrapperV2)
+              .find((c) => c.id === conditionId)
+          : undefined
 
       return h.view(
         'forms/editor-v2/conditions-join',
         viewModel.conditionsJoinViewModel(
           metadata,
           definition,
+          conditionId,
+          existingCondition,
           validation,
           notification
         )
@@ -98,8 +100,9 @@ export default [
       }
     }
   }),
+
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string }, Payload: ConditionWrapperV2 }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, conditionId: string }, Payload: JoinedConditionPayload }>}
    */
   ({
     method: 'POST',
@@ -112,14 +115,15 @@ export default [
 
       const metadata = await forms.get(slug, token)
 
-      const data = {
+      const data = /** @type {ConditionWrapperV2} */ ({
         id: conditionId === 'new' ? undefined : conditionId,
         displayName,
         coordinator,
-        items: conditions.map(cond => ({
+        items: conditions.map((cond) => ({
+          id: randomId(),
           conditionId: cond
         }))
-      }
+      })
 
       try {
         if (conditionId === 'new') {
@@ -130,7 +134,6 @@ export default [
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-        // Redirect to conditions listing page
         return h
           .redirect(editorFormPath(slug, `conditions`))
           .code(StatusCodes.SEE_OTHER)
@@ -171,10 +174,10 @@ export default [
 ]
 
 /**
- * @typedef {Partial<Omit<ConditionWrapperV2, 'items'>> & { action?: string, removeAction?: string, items?: Partial<ConditionDataV2>[] }} ConditionWrapperPayload
+ * @typedef {{ displayName: string, coordinator: string, conditions: string[] }} JoinedConditionPayload
  */
 
 /**
- * @import { ConditionDataV2, ConditionWrapperV2 } from '@defra/forms-model'
+ * @import { ConditionWrapperV2 } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
