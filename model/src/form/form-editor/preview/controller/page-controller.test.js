@@ -626,6 +626,50 @@ describe('page-controller', () => {
       expect(pageRenderMock).toHaveBeenCalledTimes(4)
     })
 
+    it('should highlight section title and repeater button', () => {
+      const elements = new PagePreviewElementsWithHeading(
+        buildQuestionPage({ title: '' }),
+        false
+      )
+      const page = buildQuestionPage({ components: [textFieldComponent] })
+      const pageController = new PreviewPageController(
+        page.components,
+        elements,
+        buildDefinition({
+          pages: [page]
+        }),
+        renderer
+      )
+
+      pageController.setRepeater()
+      pageController.setHighLighted('repeater')
+      expect(pageController.sectionTitle).toEqual({
+        text: 'Question set name',
+        classes: 'highlight'
+      })
+      expect(pageController.repeaterButton).toEqual({
+        text: '[question set name]',
+        classes: 'highlight'
+      })
+      pageController.sectionTitleText = 'Repeater question'
+      pageController.clearHighlight()
+      expect(pageController.sectionTitle).toEqual({
+        text: 'Repeater question 1',
+        classes: ''
+      })
+      expect(pageController.repeaterButton).toEqual({
+        text: 'repeater question',
+        classes: ''
+      })
+      pageController.unsetRepeater()
+      expect(pageController.sectionTitleText).toBeUndefined()
+      expect(pageController.repeaterButtonText).toBeUndefined()
+      pageController.setRepeater()
+      expect(pageController.sectionTitleText).toBe('Repeater question 1')
+      expect(pageController.repeaterButtonText).toBe('repeater question')
+      expect(pageRenderMock).toHaveBeenCalledTimes(6)
+    })
+
     it('should show sectionTitle and repeaterButton given repeater page', () => {
       const component = buildTextFieldComponent({
         title: 'Text field question?'

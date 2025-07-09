@@ -69,6 +69,18 @@ export class PagePreviewElements {
 }
 
 /**
+ * Enum for tri-state values.
+ * @readonly
+ * @enum {string}
+ */
+const HighlightClass = {
+  /** The true value */
+  TITLE: 'title',
+  GUIDANCE: 'guidance',
+  REPEATER: 'repeater'
+}
+
+/**
  * @implements {PagePreviewPanelMacro}
  */
 export class PreviewPageController {
@@ -93,7 +105,7 @@ export class PreviewPageController {
    */
   #pageRenderer
   /**
-   * @type { undefined | 'title' | 'guidance'}
+   * @type { undefined | HighlightClass }
    * @protected
    */
   _highlighted = undefined
@@ -153,6 +165,11 @@ export class PreviewPageController {
     this._sectionTitle = elements.repeatQuestion ?? ''
     this.#isRepeater = elements.hasRepeater
   }
+
+  /**
+   * @type {typeof HighlightClass}
+   */
+  static HighlightClass = HighlightClass
 
   /**
    * @param { Question | Markdown | undefined} firstQuestion
@@ -280,7 +297,7 @@ export class PreviewPageController {
   get guidance() {
     return {
       text: this.guidanceText,
-      classes: this._highlighted === 'guidance' ? 'highlight' : ''
+      classes: this.#isHighlighted(HighlightClass.GUIDANCE)
     }
   }
 
@@ -290,7 +307,7 @@ export class PreviewPageController {
   get pageTitle() {
     return {
       text: this.title,
-      classes: this._highlighted === 'title' ? HIGHLIGHT_CLASS : ''
+      classes: this.#isHighlighted(HighlightClass.TITLE)
     }
   }
 
@@ -332,7 +349,7 @@ export class PreviewPageController {
   }
 
   highlightTitle() {
-    this.setHighLighted('title')
+    this.setHighLighted(HighlightClass.TITLE)
   }
 
   setRepeater() {
@@ -350,16 +367,26 @@ export class PreviewPageController {
   }
 
   /**
-   * @returns {{classes: string, text: string}|undefined}
+   * @returns {{classes: string, text: string} | undefined}
    */
   get sectionTitle() {
     if (this.sectionTitleText === undefined) {
       return undefined
     }
     return {
-      classes: '',
+      classes: this.#isHighlighted(HighlightClass.REPEATER),
       text: this.sectionTitleText
     }
+  }
+
+  get repeaterText() {
+    if (!this.#isRepeater) {
+      return undefined
+    }
+    if (!this._sectionTitle.length) {
+      return 'Question set name'
+    }
+    return this._sectionTitle + ' 1'
   }
 
   /**
@@ -371,13 +398,10 @@ export class PreviewPageController {
   }
 
   get sectionTitleText() {
-    if (!this.#isRepeater) {
-      return undefined
+    if (this.#isRepeater) {
+      return this.repeaterText
     }
-    if (!this._sectionTitle.length) {
-      return 'Question set name'
-    }
-    return this._sectionTitle + ' 1'
+    return undefined
   }
 
   get repeaterButton() {
@@ -385,7 +409,7 @@ export class PreviewPageController {
       return undefined
     }
     return {
-      classes: '',
+      classes: this.#isHighlighted(HighlightClass.REPEATER),
       text: this.repeaterButtonText
     }
   }
@@ -440,11 +464,11 @@ export class PreviewPageController {
 
   highlightGuidance() {
     this._guidanceComponent.highlightContent()
-    this.setHighLighted('guidance')
+    this.setHighLighted(HighlightClass.GUIDANCE)
   }
 
   /**
-   * @param {'title'|'guidance'} highlightSection
+   * @param {HighlightClass} highlightSection
    */
   setHighLighted(highlightSection) {
     this._highlighted = highlightSection
@@ -456,6 +480,14 @@ export class PreviewPageController {
 
     this._guidanceComponent.unHighlightContent()
     this.render()
+  }
+
+  /**
+   * @param {string} field
+   * @returns {string}
+   */
+  #isHighlighted(field) {
+    return this._highlighted === field ? HIGHLIGHT_CLASS : ''
   }
 }
 
