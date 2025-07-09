@@ -69,12 +69,11 @@ export class PagePreviewElements {
 }
 
 /**
- * Enum for tri-state values.
+ * Enum for Highlight classes
  * @readonly
  * @enum {string}
  */
 const HighlightClass = {
-  /** The true value */
   TITLE: 'title',
   GUIDANCE: 'guidance',
   REPEATER: 'repeater'

@@ -663,6 +663,7 @@ describe('page-controller', () => {
       })
       pageController.unsetRepeater()
       expect(pageController.sectionTitleText).toBeUndefined()
+      expect(pageController.repeaterText).toBeUndefined()
       expect(pageController.repeaterButtonText).toBeUndefined()
       pageController.setRepeater()
       expect(pageController.sectionTitleText).toBe('Repeater question 1')

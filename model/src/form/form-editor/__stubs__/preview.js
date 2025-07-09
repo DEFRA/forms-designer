@@ -166,6 +166,8 @@ export class PagePreviewElements {
    * @param {string} heading
    * @param {string} guidance
    * @param {boolean} [addHeading]
+   * @param {string} repeatQuestion
+   * @param {boolean} hasRepeater
    */
   constructor(
     heading,
