@@ -69,8 +69,8 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     border-bottom: 2px solid #ffb266;
   }
 
-  #repeater-btn.highlight {
-    color: black;
+  .govuk-button .highlight {
+    color: #000;
   }
 }
 
