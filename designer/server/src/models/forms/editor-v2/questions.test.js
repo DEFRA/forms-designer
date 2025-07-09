@@ -10,6 +10,7 @@ import {
   buildMarkdownComponent,
   buildMetaData,
   buildQuestionPage,
+  buildRepeaterPage,
   buildSummaryPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
@@ -443,6 +444,44 @@ describe('editor-v2 - questions model', () => {
       expect(previewModel.pageTitle.text).toBe('Page title')
       expect(previewModel.previewErrorsUrl).toBe('/error-preview-url')
       expect(previewModel.previewPageUrl).toBe('/page-preview-url')
+      expect(previewModel.sectionTitle).toBeUndefined()
+      expect(previewModel.repeaterButton).toBeUndefined()
+    })
+    it('should get preview model with repeater page', () => {
+      const page = buildRepeaterPage({
+        title: 'Page title',
+        components: undefined,
+        repeat: {
+          options: {
+            name: 'fawfed',
+            title: 'Simple question responses'
+          },
+          schema: {
+            min: 1,
+            max: 3
+          }
+        }
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        '/page-preview-url',
+        '/error-preview-url'
+      )
+      expect(previewModel.pageTitle.text).toBe('Page title')
+      expect(previewModel.previewErrorsUrl).toBe('/error-preview-url')
+      expect(previewModel.previewPageUrl).toBe('/page-preview-url')
+      expect(previewModel.sectionTitle).toEqual({
+        classes: '',
+        text: 'Simple question responses 1'
+      })
+      expect(previewModel.repeaterButton).toEqual({
+        classes: '',
+        text: 'simple question responses'
+      })
     })
   })
 

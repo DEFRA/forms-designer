@@ -3,7 +3,9 @@ import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { ContentElements } from '~/src/form/form-editor/preview/content.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
+import { hasRepeater } from '~/src/index.js'
 import { hasComponents } from '~/src/pages/helpers.js'
+
 /**
  * @type {QuestionRenderer}
  */
@@ -53,6 +55,28 @@ export class PagePreviewElements {
   get addHeading() {
     return this._page.title.length > 0
   }
+
+  get repeatQuestion() {
+    if (hasRepeater(this._page)) {
+      return this._page.repeat.options.title
+    }
+    return undefined
+  }
+
+  get hasRepeater() {
+    return hasRepeater(this._page)
+  }
+}
+
+/**
+ * Enum for Highlight classes
+ * @readonly
+ * @enum {string}
+ */
+const HighlightClass = {
+  TITLE: 'title',
+  GUIDANCE: 'guidance',
+  REPEATER: 'repeater'
 }
 
 /**
@@ -80,7 +104,7 @@ export class PreviewPageController {
    */
   #pageRenderer
   /**
-   * @type { undefined | 'title' | 'guidance'}
+   * @type { undefined | HighlightClass }
    * @protected
    */
   _highlighted = undefined
@@ -89,6 +113,11 @@ export class PreviewPageController {
    * @private
    */
   _guidanceText = ''
+  /**
+   * @type { string }
+   * @protected
+   */
+  _sectionTitle = ''
   /**
    * @type {Markdown}
    * @private
@@ -105,6 +134,11 @@ export class PreviewPageController {
    * @private
    */
   _showTitle = true
+  /**
+   * @type {boolean}
+   */
+  #isRepeater = false
+
   /**
    * @param {ComponentDef[]} components
    * @param {PageOverviewElements} elements
@@ -127,7 +161,14 @@ export class PreviewPageController {
 
     this.#pageRenderer = renderer
     this.#title = elements.heading
+    this._sectionTitle = elements.repeatQuestion ?? ''
+    this.#isRepeater = elements.hasRepeater
   }
+
+  /**
+   * @type {typeof HighlightClass}
+   */
+  static HighlightClass = HighlightClass
 
   /**
    * @param { Question | Markdown | undefined} firstQuestion
@@ -255,7 +296,7 @@ export class PreviewPageController {
   get guidance() {
     return {
       text: this.guidanceText,
-      classes: this._highlighted === 'guidance' ? 'highlight' : ''
+      classes: this.#isHighlighted(HighlightClass.GUIDANCE)
     }
   }
 
@@ -265,7 +306,7 @@ export class PreviewPageController {
   get pageTitle() {
     return {
       text: this.title,
-      classes: this._highlighted === 'title' ? HIGHLIGHT_CLASS : ''
+      classes: this.#isHighlighted(HighlightClass.TITLE)
     }
   }
 
@@ -307,7 +348,84 @@ export class PreviewPageController {
   }
 
   highlightTitle() {
-    this.setHighLighted('title')
+    this.setHighLighted(HighlightClass.TITLE)
+  }
+
+  setRepeater() {
+    this.#isRepeater = true
+    this.render()
+  }
+
+  unsetRepeater() {
+    this.#isRepeater = false
+    this.render()
+  }
+
+  get isRepeater() {
+    return this.#isRepeater
+  }
+
+  /**
+   * @returns {{classes: string, text: string} | undefined}
+   */
+  get sectionTitle() {
+    if (this.sectionTitleText === undefined) {
+      return undefined
+    }
+    return {
+      classes: this.#isHighlighted(HighlightClass.REPEATER),
+      text: this.sectionTitleText
+    }
+  }
+
+  get repeaterText() {
+    if (!this.#isRepeater) {
+      return undefined
+    }
+    if (!this._sectionTitle.length) {
+      return 'Question set name'
+    }
+    return this._sectionTitle + ' 1'
+  }
+
+  /**
+   * @param {string | undefined} val
+   */
+  set sectionTitleText(val) {
+    this._sectionTitle = val ?? ''
+    this.render()
+  }
+
+  get sectionTitleText() {
+    if (this.#isRepeater) {
+      return this.repeaterText
+    }
+    return undefined
+  }
+
+  get repeaterButton() {
+    if (this.repeaterButtonText === undefined) {
+      return undefined
+    }
+    return {
+      classes: this.#isHighlighted(HighlightClass.REPEATER),
+      text: this.repeaterButtonText
+    }
+  }
+
+  get repeaterButtonText() {
+    if (!this.#isRepeater) {
+      return undefined
+    }
+
+    if (this._sectionTitle === '') {
+      return '[question set name]'
+    }
+
+    const [firstToken, ...rest] = this._sectionTitle
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    const restOfStr = rest ? rest.join('') : ''
+    return firstToken.toLowerCase() + restOfStr
   }
 
   /**
@@ -345,11 +463,11 @@ export class PreviewPageController {
 
   highlightGuidance() {
     this._guidanceComponent.highlightContent()
-    this.setHighLighted('guidance')
+    this.setHighLighted(HighlightClass.GUIDANCE)
   }
 
   /**
-   * @param {'title'|'guidance'} highlightSection
+   * @param {HighlightClass} highlightSection
    */
   setHighLighted(highlightSection) {
     this._highlighted = highlightSection
@@ -361,6 +479,14 @@ export class PreviewPageController {
 
     this._guidanceComponent.unHighlightContent()
     this.render()
+  }
+
+  /**
+   * @param {string} field
+   * @returns {string}
+   */
+  #isHighlighted(field) {
+    return this._highlighted === field ? HIGHLIGHT_CLASS : ''
   }
 }
 

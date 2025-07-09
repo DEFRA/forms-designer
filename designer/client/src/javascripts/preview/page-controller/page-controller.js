@@ -1,3 +1,5 @@
+import { PreviewPageController } from '@defra/forms-model'
+
 import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
 
 /**
@@ -19,6 +21,14 @@ export class PagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   addPageHeadingElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  repeaterElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  questionSetNameElement = null
 
   constructor() {
     super()
@@ -30,6 +40,12 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.addPageHeadingElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('pageHeadingAndGuidance')
+    )
+    this.repeaterElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('repeater')
+    )
+    this.questionSetNameElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('questionSetName')
     )
   }
 
@@ -43,6 +59,14 @@ export class PagePreviewDomElements extends DomElements {
 
   get addHeading() {
     return this.addPageHeadingElement?.checked ?? false
+  }
+
+  get hasRepeater() {
+    return this.repeaterElement?.checked ?? false
+  }
+
+  get repeatQuestion() {
+    return this.questionSetNameElement?.value ?? undefined
   }
 }
 
@@ -138,6 +162,49 @@ export class PagePreviewListeners {
           this._pageController.clearHighlight()
         }
       }
+    },
+    repeaterElement: {
+      change: {
+        /**
+         * @param {Event} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          const checked = getTargetChecked(inputEvent)
+          if (checked) {
+            this._pageController.setRepeater()
+          } else {
+            this._pageController.unsetRepeater()
+          }
+        }
+      }
+    },
+    questionSetNameElement: {
+      input: {
+        /**
+         * @param {InputEvent} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          this._pageController.sectionTitleText = getTargetValue(inputEvent)
+        }
+      },
+      focus: {
+        /**
+         * @param {FocusEvent} _focusEvent
+         */
+        handleEvent: (_focusEvent) => {
+          this._pageController.setHighLighted(
+            PreviewPageController.HighlightClass.REPEATER
+          )
+        }
+      },
+      blur: {
+        /**
+         * @param {FocusEvent} _focusEvent
+         */
+        handleEvent: (_focusEvent) => {
+          this._pageController.clearHighlight()
+        }
+      }
     }
   }
 
@@ -186,6 +253,26 @@ export class PagePreviewListeners {
         this._baseElements.addPageHeadingElement,
         this._listeners.addPageHeadingElement.change,
         'change'
+      ],
+      [
+        this._baseElements.repeaterElement,
+        this._listeners.repeaterElement.change,
+        'change'
+      ],
+      [
+        this._baseElements.questionSetNameElement,
+        this._listeners.questionSetNameElement.input,
+        'input'
+      ],
+      [
+        this._baseElements.questionSetNameElement,
+        this._listeners.questionSetNameElement.focus,
+        'focus'
+      ],
+      [
+        this._baseElements.questionSetNameElement,
+        this._listeners.questionSetNameElement.blur,
+        'blur'
       ]
     ]
   }
@@ -218,5 +305,5 @@ export class PagePreviewListeners {
 }
 
 /**
- * @import { PageOverviewElements, PreviewPageController, DomElementsBase } from '@defra/forms-model'
+ * @import { PageOverviewElements, DomElementsBase } from '@defra/forms-model'
  */

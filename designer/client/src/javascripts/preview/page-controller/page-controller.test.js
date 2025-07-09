@@ -7,7 +7,10 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import { pageHeadingAndGuidanceHTML } from '~/src/javascripts/preview/__stubs__/page.js'
+import {
+  pageHeadingAndGuidanceHTML,
+  repeaterPageHTML
+} from '~/src/javascripts/preview/__stubs__/page.js'
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
 import {
   PagePreviewDomElements,
@@ -33,6 +36,17 @@ describe('page-controller', () => {
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.heading).toBe('')
       expect(pagePreviewElements.addHeading).toBe(false)
+      expect(pagePreviewElements.hasRepeater).toBe(false)
+      expect(pagePreviewElements.repeatQuestion).toBeUndefined()
+    })
+
+    it('should handle repeater pages', () => {
+      document.body.innerHTML = repeaterPageHTML + questionDetailsPreviewHTML
+      const pagePreviewElements = new PagePreviewDomElements()
+      expect(pagePreviewElements.repeatQuestion).toBe(
+        'Simple question responses'
+      )
+      expect(pagePreviewElements.hasRepeater).toBe(true)
     })
   })
   describe('PagePreviewListeners', () => {
@@ -170,6 +184,43 @@ describe('page-controller', () => {
       listener.clearListeners()
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.heading).toBe('')
+    })
+
+    it('should turn toggle multiple responses', () => {
+      if (pagePreviewElements.repeaterElement === null) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.repeaterElement.checked = true
+      pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
+      expect(pageController.repeaterButton?.text).toBe('[question set name]')
+      expect(pageController.sectionTitle?.text).toBe('Question set name')
+      expect(pageRendererCb).toHaveBeenCalledTimes(2)
+    })
+
+    it('should highlight section title & btn on section repeater title', () => {
+      if (
+        pagePreviewElements.repeaterElement === null ||
+        pagePreviewElements.questionSetNameElement === null
+      ) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.repeaterElement.checked = true
+      pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
+      pagePreviewElements.questionSetNameElement.focus()
+      expect(pageController.sectionTitle?.classes).toBe('highlight')
+      expect(pageController.repeaterButton?.classes).toBe('highlight')
+      pagePreviewElements.questionSetNameElement.blur()
+      expect(pageController.sectionTitle?.classes).toBe('')
+      expect(pageRendererCb).toHaveBeenCalledTimes(4)
+      pagePreviewElements.questionSetNameElement.value = 'Repeater questions'
+      pagePreviewElements.questionSetNameElement.dispatchEvent(inputEvent)
+      expect(pageController.sectionTitle?.text).toBe('Repeater questions 1')
+      pagePreviewElements.repeaterElement.checked = false
+      pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
+      expect(pageController.sectionTitle).toBeUndefined()
+      expect(pageController.repeaterButton).toBeUndefined()
+      expect(pageController.repeaterText).toBeUndefined()
+      expect(pageRendererCb).toHaveBeenCalledTimes(6)
     })
   })
 })

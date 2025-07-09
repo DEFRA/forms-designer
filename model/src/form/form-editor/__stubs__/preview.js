@@ -159,16 +159,28 @@ export class PagePreviewElements {
   guidance
   heading
   addHeading
+  repeatQuestion
+  hasRepeater
 
   /**
    * @param {string} heading
    * @param {string} guidance
    * @param {boolean} [addHeading]
+   * @param {string} repeatQuestion
+   * @param {boolean} hasRepeater
    */
-  constructor(heading, guidance = '', addHeading = undefined) {
+  constructor(
+    heading,
+    guidance = '',
+    addHeading = undefined,
+    repeatQuestion = '',
+    hasRepeater = false
+  ) {
     this.heading = heading
     this.guidance = guidance
     this.addHeading = addHeading ?? heading.length > 0
+    this.repeatQuestion = repeatQuestion
+    this.hasRepeater = hasRepeater
   }
 }
 

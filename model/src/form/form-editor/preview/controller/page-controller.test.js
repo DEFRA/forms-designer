@@ -8,7 +8,7 @@ import {
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
-import { buildQuestionPage } from '~/src/__stubs__/pages.js'
+import { buildQuestionPage, buildRepeaterPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { PageRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
 import {
@@ -66,6 +66,8 @@ describe('page-controller', () => {
       expect(pagePreviewElements.heading).toBe('')
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.addHeading).toBe(false)
+      expect(pagePreviewElements.repeatQuestion).toBeUndefined()
+      expect(pagePreviewElements.hasRepeater).toBe(false)
     })
 
     it('should map a page  with guidance to PagePreviewElements', () => {
@@ -80,6 +82,31 @@ describe('page-controller', () => {
       const pagePreviewElements = new PagePreviewElements(pageQuestion)
       expect(pagePreviewElements.heading).toBe('Page title')
       expect(pagePreviewElements.guidance).toBe('# This is a heading')
+    })
+
+    it('should map a repeater page to PagePreviewElements', () => {
+      const component = buildTextFieldComponent({
+        title: 'Text field component'
+      })
+      const pageQuestion = buildRepeaterPage({
+        title: 'Page title',
+        components: [component],
+        repeat: {
+          options: {
+            name: 'fawfed',
+            title: 'Simple question responses'
+          },
+          schema: {
+            min: 1,
+            max: 3
+          }
+        }
+      })
+      const pagePreviewElements = new PagePreviewElements(pageQuestion)
+      expect(pagePreviewElements.repeatQuestion).toBe(
+        'Simple question responses'
+      )
+      expect(pagePreviewElements.hasRepeater).toBe(true)
     })
   })
 
@@ -560,6 +587,133 @@ describe('page-controller', () => {
         text: '',
         classes: ''
       })
+    })
+
+    it('should toggle multiple responses', () => {
+      const elements = new PagePreviewElementsWithHeading(
+        buildQuestionPage({ title: '' }),
+        false
+      )
+      const page = buildQuestionPage({ components: [textFieldComponent] })
+      const pageController = new PreviewPageController(
+        page.components,
+        elements,
+        buildDefinition({
+          pages: [page]
+        }),
+        renderer
+      )
+      expect(pageController.sectionTitle).toBeUndefined()
+      expect(pageController.repeaterButton).toBeUndefined()
+      pageController.setRepeater()
+      expect(pageController.sectionTitle).toEqual({
+        text: 'Question set name',
+        classes: ''
+      })
+      expect(pageController.repeaterButton).toEqual({
+        text: '[question set name]',
+        classes: ''
+      })
+      pageController.sectionTitleText = 'Repeater question'
+      expect(pageController.sectionTitleText).toBe('Repeater question 1')
+      expect(pageController.repeaterButtonText).toBe('repeater question')
+      pageController.unsetRepeater()
+      expect(pageController.sectionTitleText).toBeUndefined()
+      expect(pageController.repeaterButtonText).toBeUndefined()
+      pageController.setRepeater()
+      expect(pageController.sectionTitleText).toBe('Repeater question 1')
+      expect(pageController.repeaterButtonText).toBe('repeater question')
+      expect(pageRenderMock).toHaveBeenCalledTimes(4)
+    })
+
+    it('should highlight section title and repeater button', () => {
+      const elements = new PagePreviewElementsWithHeading(
+        buildQuestionPage({ title: '' }),
+        false
+      )
+      const page = buildQuestionPage({ components: [textFieldComponent] })
+      const pageController = new PreviewPageController(
+        page.components,
+        elements,
+        buildDefinition({
+          pages: [page]
+        }),
+        renderer
+      )
+
+      pageController.setRepeater()
+      pageController.setHighLighted('repeater')
+      expect(pageController.sectionTitle).toEqual({
+        text: 'Question set name',
+        classes: 'highlight'
+      })
+      expect(pageController.repeaterButton).toEqual({
+        text: '[question set name]',
+        classes: 'highlight'
+      })
+      pageController.sectionTitleText = 'Repeater question'
+      pageController.clearHighlight()
+      expect(pageController.sectionTitle).toEqual({
+        text: 'Repeater question 1',
+        classes: ''
+      })
+      expect(pageController.repeaterButton).toEqual({
+        text: 'repeater question',
+        classes: ''
+      })
+      pageController.unsetRepeater()
+      expect(pageController.sectionTitleText).toBeUndefined()
+      expect(pageController.repeaterText).toBeUndefined()
+      expect(pageController.repeaterButtonText).toBeUndefined()
+      pageController.setRepeater()
+      expect(pageController.sectionTitleText).toBe('Repeater question 1')
+      expect(pageController.repeaterButtonText).toBe('repeater question')
+      expect(pageRenderMock).toHaveBeenCalledTimes(6)
+    })
+
+    it('should show sectionTitle and repeaterButton given repeater page', () => {
+      const component = buildTextFieldComponent({
+        title: 'Text field question?'
+      })
+      const page = buildRepeaterPage({
+        title: 'Repeater page',
+        repeat: {
+          options: {
+            name: 'fawfed',
+            title: 'Simple question responses'
+          },
+          schema: {
+            min: 1,
+            max: 3
+          }
+        },
+        components: [component]
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const elements = new PagePreviewElementsWithHeading(page, false)
+      const pageController = new PreviewPageController(
+        page.components,
+        elements,
+        definition,
+        renderer
+      )
+      expect(pageController.sectionTitleText).toBe(
+        'Simple question responses 1'
+      )
+      expect(pageController.repeaterButtonText).toBe(
+        'simple question responses'
+      )
+      expect(pageController.isRepeater).toBe(true)
+      pageController.sectionTitleText = ''
+      expect(pageController.sectionTitleText).toBe('Question set name')
+      expect(pageController.repeaterButtonText).toBe('[question set name]')
+      pageController.sectionTitleText = 'a'
+      expect(pageController.sectionTitleText).toBe('a 1')
+      expect(pageController.repeaterButtonText).toBe('a')
+
+      expect(pageRenderMock).toHaveBeenCalledTimes(2)
     })
   })
 })

@@ -4,6 +4,10 @@ describe('Pages left panel component', () => {
   let $headings = /** @type {Element[]} */ ([])
   /** @type { Element | null} */
   let $guidanceText
+  /** @type { Element | null} */
+  let $button = null
+  /** @type { Element | null} */
+  let $buttonSpan = null
 
   describe('With guidance and some components', () => {
     beforeEach(() => {
@@ -107,6 +111,61 @@ describe('Pages left panel component', () => {
 
     it('should render the guidance text', () => {
       expect($guidanceText).toBeNull()
+    })
+  })
+
+  describe('With section heading and repeater button', () => {
+    beforeEach(() => {
+      const { container, document } = renderMacro(
+        'appPagePreview',
+        'page-preview/macro.njk',
+        {
+          params: {
+            pageTitle: {
+              text: '',
+              classes: 'dummy-class'
+            },
+            sectionTitle: {
+              classes: 'highlight',
+              text: 'Family member name'
+            },
+            repeaterButton: {
+              classes: 'highlight',
+              text: 'family member name'
+            },
+            components: [
+              {
+                model: {
+                  hint: {
+                    classes: '',
+                    text: ''
+                  },
+                  id: 'inputField',
+                  label: {
+                    classes: 'govuk-label--l',
+                    text: 'What is the name of the family member?'
+                  },
+                  name: 'inputField'
+                },
+                questionType: 'TextField'
+              }
+            ]
+          }
+        }
+      )
+
+      $headings = container.getAllByRole('heading')
+      $button = container.getByRole('button')
+      $buttonSpan = document.querySelector('.govuk-button span')
+    })
+
+    it('should render page heading', () => {
+      expect($headings[0]).toHaveClass(
+        'govuk-caption-l govuk-!-margin-top-0 highlight'
+      )
+      expect($headings[0]).toHaveTextContent('Family member name')
+      expect($buttonSpan).toHaveClass('highlight')
+      expect($button).toHaveTextContent('Add another family member name')
     })
   })
 })
