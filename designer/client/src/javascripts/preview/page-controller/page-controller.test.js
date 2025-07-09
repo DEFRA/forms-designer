@@ -185,5 +185,37 @@ describe('page-controller', () => {
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.heading).toBe('')
     })
+
+    it('should turn toggle multiple responses', () => {
+      if (pagePreviewElements.repeaterElement === null) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.repeaterElement.checked = true
+      pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
+      expect(pageController.repeaterButton?.text).toBe('[question set name]')
+      expect(pageController.sectionTitle?.text).toBe('Question set name')
+      expect(pageRendererCb).toHaveBeenCalledTimes(2)
+    })
+
+    it('should highlight section title & btn on section repeater title', () => {
+      if (
+        pagePreviewElements.repeaterElement === null ||
+        pagePreviewElements.questionSetNameElement === null
+      ) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.repeaterElement.checked = true
+      pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
+      pagePreviewElements.questionSetNameElement.focus()
+      expect(pageController.sectionTitle?.classes).toBe('highlight')
+      expect(pageController.repeaterButton?.classes).toBe('highlight')
+      pagePreviewElements.questionSetNameElement.blur()
+      expect(pageController.sectionTitle?.classes).toBe('')
+      expect(pageRendererCb).toHaveBeenCalledTimes(4)
+      pagePreviewElements.questionSetNameElement.value = 'Repeater questions'
+      pagePreviewElements.questionSetNameElement.dispatchEvent(inputEvent)
+      expect(pageController.sectionTitle?.text).toBe('Repeater questions 1')
+      expect(pageRendererCb).toHaveBeenCalledTimes(5)
+    })
   })
 })

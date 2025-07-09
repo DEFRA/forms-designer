@@ -14,7 +14,7 @@
   {% endfor %}
   {% if params.repeaterButton %}
     {{ govukButton({
-      html: "Add another <span class=\"" + params.repeaterButton.classes + "\">" + params.repeaterButton.text + "</span>"
+      html: "Add another <span id=\"repeater-btn\" class=\"" + params.repeaterButton.classes + "\">" + params.repeaterButton.text + "</span>"
     }) }}
   {% endif %}
 </div>

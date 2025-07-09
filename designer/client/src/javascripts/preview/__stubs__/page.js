@@ -1,12 +1,12 @@
 export const pageHeadingAndGuidanceHTML = `
 <div>
-<div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="pageHeadingAndGuidance" name="pageHeadingAndGuidance" type="checkbox" value="true" checked="">
-      <label class="govuk-label govuk-checkboxes__label" for="pageHeadingAndGuidance">
-        Add a page heading, guidance or both
-      </label>
-    </div>
-<div class="govuk-checkboxes__conditional" id="conditional-pageHeadingAndGuidance">
+  <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input" id="pageHeadingAndGuidance" name="pageHeadingAndGuidance" type="checkbox" value="true" checked="">
+        <label class="govuk-label govuk-checkboxes__label" for="pageHeadingAndGuidance">
+          Add a page heading, guidance or both
+        </label>
+      </div>
+  <div class="govuk-checkboxes__conditional" id="conditional-pageHeadingAndGuidance">
       <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="pageHeading">
     Page heading
@@ -67,7 +67,52 @@ export const pageHeadingAndGuidanceHTML = `
   </div>
 </details>
     </div>
+  <div class="govuk-form-group">
+      <div class="govuk-checkboxes" data-module="govuk-checkboxes" data-govuk-checkboxes-init="">
+        <div class="govuk-checkboxes__item">
+          <input class="govuk-checkboxes__input" id="repeater" name="repeater" type="checkbox" value="true" aria-controls="conditional-repeater" aria-expanded="false">
+          <label class="govuk-label govuk-checkboxes__label" for="repeater">
+            Allow multiple responses to questions on this page
+          </label>
+        </div>
+        <div class="govuk-checkboxes__conditional govuk-checkboxes__conditional--hidden" id="conditional-repeater">
+          <fieldset class="govuk-fieldset govuk-!-margin-bottom-6">
+      <legend class="govuk-fieldset__legend">
+        Set the minimum and maximum number of responses you will accept
+      </legend>
+        <div class="govuk-hint">
+      The range must be between 1 and 25
     </div>
+
+        <div class="govuk-form-group">
+      <label class="govuk-label govuk-label--m" for="minItems">
+        Min
+      </label>
+      <input class="govuk-input govuk-input--width-2" id="minItems" name="minItems" type="text" value="1" inputmode="numeric">
+    </div>
+
+        <div class="govuk-form-group">
+      <label class="govuk-label govuk-label--m" for="maxItems">
+        Max
+      </label>
+      <input class="govuk-input govuk-input--width-2" id="maxItems" name="maxItems" type="text" value="3" inputmode="numeric">
+    </div>
+
+
+    </fieldset>
+      <div class="govuk-form-group">
+      <label class="govuk-label govuk-label--m" for="questionSetName">
+        Give the responses an identifiable name or label
+      </label>
+      <div id="questionSetName-hint" class="govuk-hint">
+        Use a word to describe what these questions are asking about. For example, ‘Cow’, ‘Pet’. This will be used to categorise the answers, for example ‘Cow 1’, ‘Cow 2’.
+      </div>
+      <input class="govuk-input" id="questionSetName" name="questionSetName" type="text" value="" aria-describedby="questionSetName-hint">
+    </div>
+        </div>
+      </div>
+  </div>
+</div>
 `
 
 export const repeaterPageHTML = `

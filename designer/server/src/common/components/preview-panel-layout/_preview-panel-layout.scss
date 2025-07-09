@@ -68,6 +68,10 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   .highlight {
     border-bottom: 2px solid #ffb266;
   }
+
+  #repeater-btn.highlight {
+    color: black;
+  }
 }
 
 // Taken from https://github.com/hmrc/hmrc-frontend/blob/main/src/components/summary-list/_summary-list.scss
