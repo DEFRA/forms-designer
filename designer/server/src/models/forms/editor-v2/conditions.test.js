@@ -215,13 +215,17 @@ describe('editor-v2 - conditions model', () => {
         pages: [
           buildQuestionPage({ id: 'page1', components: [testComponent] })
         ],
-        conditions: [regularCondition, joinedCondition],
+        conditions: [
+          regularCondition,
+          multiItemRegularCondition,
+          joinedCondition
+        ],
         engine: Engine.V2
       })
 
       const result = buildConditionsTable(metadata.slug, definition)
 
-      expect(result.rows).toHaveLength(2)
+      expect(result.rows).toHaveLength(3)
 
       const joinedRow = result.rows.find((row) =>
         row[0]?.html?.includes('Joined condition')
@@ -348,13 +352,17 @@ describe('editor-v2 - conditions model', () => {
         pages: [
           buildQuestionPage({ id: 'page1', components: [testComponent] })
         ],
-        conditions: [regularCondition, joinedCondition],
+        conditions: [
+          regularCondition,
+          multiItemRegularCondition,
+          joinedCondition
+        ],
         engine: Engine.V2
       })
 
       const result = buildConditionsTable(metadata.slug, definition)
 
-      expect(result.rows).toHaveLength(2)
+      expect(result.rows).toHaveLength(3)
 
       result.rows.forEach((row) => {
         const actionsHtml = row[2].html
@@ -370,13 +378,17 @@ describe('editor-v2 - conditions model', () => {
         pages: [
           buildQuestionPage({ id: 'page1', components: [testComponent] })
         ],
-        conditions: [regularCondition, joinedCondition],
+        conditions: [
+          regularCondition,
+          multiItemRegularCondition,
+          joinedCondition
+        ],
         engine: Engine.V2
       })
 
       const result = buildConditionsTable(metadata.slug, definition)
 
-      expect(result.rows).toHaveLength(2)
+      expect(result.rows).toHaveLength(3)
 
       result.rows.forEach((row) => {
         const actionsHtml = row[2].html
@@ -491,13 +503,17 @@ describe('editor-v2 - conditions model', () => {
         pages: [
           buildQuestionPage({ id: 'page1', components: [testComponent] })
         ],
-        conditions: [regularCondition, joinedCondition],
+        conditions: [
+          regularCondition,
+          multiItemRegularCondition,
+          joinedCondition
+        ],
         engine: Engine.V2
       })
 
       const result = conditionsViewModel(metadata, definition)
 
-      expect(result.summaryTable.rows).toHaveLength(2)
+      expect(result.summaryTable.rows).toHaveLength(3)
     })
 
     it('should generate view model with multiple conditions of different types', () => {
