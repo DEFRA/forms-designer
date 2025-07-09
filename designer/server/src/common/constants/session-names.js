@@ -31,7 +31,7 @@ export const sessionNames = {
     editorQuestionDetails: /** @type {const} */ (
       'questionDetailsValidationFailure'
     ),
-    editorPageConditions: /** @type {const} */ (
+    editorPageCondition: /** @type {const} */ (
       'pageConditionsValidationFailure'
     ),
     editorCondition: /** @type {const} */ ('conditionValidationFailure'),

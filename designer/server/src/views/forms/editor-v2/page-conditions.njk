@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "condition-editor/macro.njk" import appConditionEditor %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -12,7 +13,7 @@
   {% call appPageBody({
     heading: pageHeading,
     caption: pageCaption,
-    classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink,
     useNewMasthead: true
   }) %}
@@ -48,10 +49,6 @@
                         {% endcall %}
                       {% endif %}
 
-                      <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>
-
-                      <h2 class="govuk-heading-l">Control who can see this page based on previous answers</h2>
-
                       {% if allConditions and allConditions.length > 0 %}
                         {% if pageCondition and pageConditionDetails %}
                           {% set conditionCount = 1 %}
@@ -63,9 +60,7 @@
                                 <p class="govuk-body govuk-!-margin-bottom-0">{{ pageConditionPresentationString or "'How do you want to receive your order?' is 'delivery'" }}</p>
                               </div>
                               <div class="app-condition-applied__actions">
-                                <a href="#" class="govuk-link govuk-link--no-visited-state" onclick="document.getElementById('remove-condition-form').submit(); return false;">
-                                  Remove
-                                </a>
+                                <a href="#" class="govuk-link govuk-link--no-visited-state" onclick="document.getElementById('remove-condition-form').submit(); return false;">Remove</a>
                               </div>
                             </div>
                           </div>
@@ -74,6 +69,9 @@
                             <input type="hidden" name="action" value="remove">
                           </form>
                         {% endif %}
+
+                        <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>
+                        <h2 class="govuk-heading-l">Control who can see this page based on previous answers</h2>
 
                         <div class="govuk-form-group">
                           <fieldset class="govuk-fieldset">
@@ -116,15 +114,22 @@
                               </div>
 
                               <div class="govuk-radios__item">
-                                <input class="govuk-radios__input" id="conditionChoiceCreateNew" name="conditionChoice" type="radio" value="createNew" data-aria-controls="conditional-conditionChoiceCreateNew">
+                                <input class="govuk-radios__input" id="conditionChoiceCreateNew" name="conditionChoice" type="radio" value="createNew" data-aria-controls="conditional-conditionChoiceCreateNew"
+                                {% if creating %}checked="checked"{% endif %}>
                                 <label class="govuk-label govuk-radios__label" for="conditionChoiceCreateNew">
                                   Create condition
                                 </label>
                               </div>
                               <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-conditionChoiceCreateNew">
+                                {% if not creating %}
                                 <p class="govuk-body">
-                                  Go to the <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
+                                  <a href="?create" class="govuk-link">Continue creating a condition</a>
                                 </p>
+                                {% else %}
+                                  {{ appConditionEditor(conditionEditor) }}
+                                <div class="govuk-form-group">
+                                </div>
+                                {% endif %}
                               </div>
                             </div>
                           </fieldset>
@@ -134,9 +139,12 @@
                           html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
                         }) }}
                       {% else %}
-                        <p class="govuk-body">No conditions have been created. Go to the
-                          <a href="{{ conditionsManagerPath }}" class="govuk-link">conditions manager</a> and create a condition.
-                        </p>
+                        <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>
+                        <h2 class="govuk-heading-l">Control who can see this page based on previous answers</h2>
+                        {{ appConditionEditor(conditionEditor) }}
+                        {{ govukInsetText({
+                          html: '<h3 class="govuk-heading-s">Advanced conditions</h3><p class="govuk-body">Create, edit and combine conditions or reuse conditions in the <a href="' + conditionsManagerPath + '" class="govuk-link">conditions manager</a>.</p>'
+                        }) }}
                       {% endif %}
                     </div>
                   </div>
