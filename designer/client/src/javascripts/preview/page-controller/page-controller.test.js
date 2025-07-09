@@ -7,7 +7,10 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import { pageHeadingAndGuidanceHTML } from '~/src/javascripts/preview/__stubs__/page.js'
+import {
+  pageHeadingAndGuidanceHTML,
+  repeaterPageHTML
+} from '~/src/javascripts/preview/__stubs__/page.js'
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
 import {
   PagePreviewDomElements,
@@ -33,6 +36,17 @@ describe('page-controller', () => {
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.heading).toBe('')
       expect(pagePreviewElements.addHeading).toBe(false)
+      expect(pagePreviewElements.hasRepeater).toBe(false)
+      expect(pagePreviewElements.repeatQuestion).toBeUndefined()
+    })
+
+    it('should handle repeater pages', () => {
+      document.body.innerHTML = repeaterPageHTML + questionDetailsPreviewHTML
+      const pagePreviewElements = new PagePreviewDomElements()
+      expect(pagePreviewElements.repeatQuestion).toBe(
+        'Simple question responses'
+      )
+      expect(pagePreviewElements.hasRepeater).toBe(true)
     })
   })
   describe('PagePreviewListeners', () => {

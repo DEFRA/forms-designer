@@ -19,6 +19,14 @@ export class PagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   addPageHeadingElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  repeaterElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  questionSetNameElement = null
 
   constructor() {
     super()
@@ -30,6 +38,12 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.addPageHeadingElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('pageHeadingAndGuidance')
+    )
+    this.repeaterElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('repeater')
+    )
+    this.questionSetNameElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('questionSetName')
     )
   }
 
@@ -43,6 +57,14 @@ export class PagePreviewDomElements extends DomElements {
 
   get addHeading() {
     return this.addPageHeadingElement?.checked ?? false
+  }
+
+  get hasRepeater() {
+    return this.repeaterElement?.checked ?? false
+  }
+
+  get repeatQuestion() {
+    return this.questionSetNameElement?.value ?? undefined
   }
 }
 
