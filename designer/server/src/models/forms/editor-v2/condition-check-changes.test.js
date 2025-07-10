@@ -1,5 +1,8 @@
 import { ConditionType, Coordinator, OperatorName } from '@defra/forms-model'
-import { buildMetaData } from '@defra/forms-model/stubs'
+import {
+  buildMetaData,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
 
 import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
 import {
@@ -54,6 +57,42 @@ describe('editor-v2 - condition-check-changes', () => {
       title: 'Test Form'
     })
 
+    const testComponent = buildTextFieldComponent({
+      id: 'field-1',
+      name: 'testField',
+      title: 'Test Field'
+    })
+
+    /** @type {ConditionWrapperV2} */
+    const referencedCondition1 = {
+      id: 'condition-1',
+      displayName: 'Referenced condition 1',
+      items: [
+        {
+          id: 'item-ref-1',
+          componentId: 'field-1',
+          operator: OperatorName.Is,
+          type: ConditionType.StringValue,
+          value: 'value1'
+        }
+      ]
+    }
+
+    /** @type {ConditionWrapperV2} */
+    const referencedCondition2 = {
+      id: 'condition-2',
+      displayName: 'Referenced condition 2',
+      items: [
+        {
+          id: 'item-ref-2',
+          componentId: 'field-1',
+          operator: OperatorName.IsNot,
+          type: ConditionType.StringValue,
+          value: 'value2'
+        }
+      ]
+    }
+
     /** @type {ConditionWrapperV2} */
     const regularCondition = {
       id: 'regular-condition',
@@ -82,8 +121,18 @@ describe('editor-v2 - condition-check-changes', () => {
 
     const definition = {
       ...testFormDefinitionWithMultipleV2Conditions,
+      pages: [
+        ...testFormDefinitionWithMultipleV2Conditions.pages.slice(0, -1), // Remove summary page
+        {
+          ...testFormDefinitionWithMultipleV2Conditions.pages[0],
+          components: [testComponent]
+        },
+        ...testFormDefinitionWithMultipleV2Conditions.pages.slice(-1) // Add summary page back
+      ],
       conditions: [
         ...testFormDefinitionWithMultipleV2Conditions.conditions,
+        referencedCondition1,
+        referencedCondition2,
         regularCondition,
         joinedCondition
       ]

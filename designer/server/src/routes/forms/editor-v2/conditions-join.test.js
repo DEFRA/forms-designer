@@ -92,7 +92,6 @@ describe('Editor v2 conditions-join routes', () => {
     ]
   }
 
-  // Additional conditions that the joined condition references
   /** @type {ConditionWrapperV2} */
   const mockCondition1 = {
     id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
@@ -265,11 +264,6 @@ describe('Editor v2 conditions-join routes', () => {
 
     test('should successfully update existing joined condition', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-      jest.mocked(editor.updateCondition).mockResolvedValueOnce({
-        id: 'existing-joined',
-        condition: /** @type {ConditionWrapperV2} */ ({}),
-        status: 'created'
-      })
 
       const options = {
         method: 'post',
@@ -285,22 +279,10 @@ describe('Editor v2 conditions-join routes', () => {
       const response = await server.inject(options)
 
       expect(response.statusCode).toBe(303)
-      expect(response.headers.location).toBe(
-        '/library/my-form-slug/editor-v2/conditions'
+      expect(response.headers.location).toMatch(
+        /^\/library\/my-form-slug\/editor-v2\/condition-check-changes\/existing-joined\/[a-zA-Z0-9-_]+$/
       )
-      expect(editor.updateCondition).toHaveBeenCalledWith(
-        testFormMetadata.id,
-        auth.credentials.token,
-        expect.objectContaining({
-          id: 'existing-joined',
-          displayName: 'Updated joined condition',
-          coordinator: 'OR',
-          items: expect.arrayContaining([
-            expect.objectContaining({ conditionId: 'condition-1' }),
-            expect.objectContaining({ conditionId: 'condition-3' })
-          ])
-        })
-      )
+      expect(editor.updateCondition).not.toHaveBeenCalled()
     })
 
     test('should handle validation error for missing display name', async () => {

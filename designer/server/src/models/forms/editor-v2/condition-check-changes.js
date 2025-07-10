@@ -73,10 +73,9 @@ export function conditionCheckChangesViewModel(
     },
     newCondition: {
       name: state?.conditionWrapper?.displayName,
-      html: toPresentationHtmlV2(
-        state?.conditionWrapper ?? /** @type {ConditionWrapperV2} */ ({}),
-        definition
-      )
+      html: state?.conditionWrapper
+        ? toPresentationHtmlV2(state.conditionWrapper, definition)
+        : ''
     },
     warningItems,
     continueEditingPath: editorFormPath(metadata.slug, editorPath)
