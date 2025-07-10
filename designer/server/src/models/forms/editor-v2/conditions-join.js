@@ -1,14 +1,18 @@
 import { FormStatus } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   buildPreviewUrl,
-  getFormSpecificNavigation,
-  toPresentationStringV2
+  getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { getConditionsData } from '~/src/models/forms/editor-v2/page-conditions.js'
+import {
+  buildConditionsField,
+  buildCoordinatorField,
+  buildDisplayNameField,
+  getAvailableConditions,
+  getSelectedConditions
+} from '~/src/models/forms/editor-v2/conditions-join-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -41,84 +45,30 @@ export function conditionsJoinViewModel(
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const errorList = buildErrorList(formErrors)
 
-  const allConditions = getConditionsData(definition).filter(
-    (cond) => conditionId === 'new' || cond.id !== conditionId
+  const allConditions = getAvailableConditions(definition, conditionId)
+  const selectedConditions = getSelectedConditions(
+    formValues,
+    existingCondition
   )
 
-  const selectedConditions =
-    formValues?.conditions ??
-    (existingCondition
-      ? existingCondition.items
-          .filter((item) => 'conditionId' in item)
-          .map((item) => /** @type {ConditionRefDataV2} */ (item).conditionId)
-      : [])
+  const conditions = buildConditionsField(
+    allConditions,
+    selectedConditions,
+    definition,
+    validation
+  )
 
-  const conditions = {
-    id: 'conditions',
-    name: 'conditions',
-    fieldset: {
-      legend: {
-        text: 'Joined conditions',
-        isPageHeading: true,
-        classes: 'govuk-fieldset__legend--m'
-      }
-    },
-    hint: {
-      text: 'Select at least two conditions to join'
-    },
-    classes: 'govuk-checkboxes--small',
-    items: allConditions.map((cond) => ({
-      text: cond.displayName,
-      label: {
-        classes: 'govuk-!-font-weight-bold'
-      },
-      hint: {
-        text: toPresentationStringV2(cond, definition)
-      },
-      value: cond.id,
-      checked: selectedConditions.includes(cond.id)
-    })),
-    ...insertValidationErrors(validation?.formErrors.conditions)
-  }
+  const coordinator = buildCoordinatorField(
+    formValues,
+    existingCondition,
+    validation
+  )
 
-  const coordinatorValue =
-    formValues?.coordinator ?? existingCondition?.coordinator
-
-  const coordinator = {
-    id: 'coordinator',
-    name: 'coordinator',
-    fieldset: {
-      legend: {
-        text: 'How do you want to combine these conditions?',
-        classes: 'govuk-fieldset__legend--m'
-      }
-    },
-    classes: 'govuk-radios--inline',
-    value: coordinatorValue,
-    items: [
-      { text: 'All conditions must be met (AND)', value: 'and' },
-      { text: 'Any condition can be met (OR)', value: 'or' }
-    ],
-    ...insertValidationErrors(validation?.formErrors.coordinator)
-  }
-
-  const displayNameValue =
-    formValues?.displayName ?? existingCondition?.displayName ?? ''
-
-  const displayName = {
-    id: 'displayName',
-    name: 'displayName',
-    label: {
-      text: 'Name for joined condition',
-      classes: 'govuk-label--m'
-    },
-    classes: 'govuk-input--width-30',
-    value: displayNameValue,
-    hint: {
-      text: 'Condition names help you to identify conditions in your form, for example, ‘Not a farmer’. Users will not see condition names.'
-    },
-    ...insertValidationErrors(validation?.formErrors.displayName)
-  }
+  const displayName = buildDisplayNameField(
+    formValues,
+    existingCondition,
+    validation
+  )
 
   const cardTitle =
     conditionId === 'new' ? 'Create joined condition' : 'Edit joined condition'
