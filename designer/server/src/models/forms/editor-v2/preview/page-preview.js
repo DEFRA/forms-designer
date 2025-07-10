@@ -6,7 +6,7 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
    */
   #guidanceText = ''
   /**
-   * @param {Page} page
+   * @param {Page|undefined} page
    */
   constructor(page, guidanceText = '') {
     super(page)

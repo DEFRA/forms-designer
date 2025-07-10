@@ -1,4 +1,7 @@
-import { buildFileUploadComponent } from '~/src/__stubs__/components.js'
+import {
+  buildFileUploadComponent,
+  buildMarkdownComponent
+} from '~/src/__stubs__/components.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type PageFileUpload,
@@ -22,6 +25,22 @@ export function buildQuestionPage(
     path: '/page-one',
     next: [],
     components: [],
+    ...partialPage
+  }
+}
+
+export const GUIDANCE_PAGE_CONTENT = 'Lorem ipsum dolar sit amet'
+export function buildGuidancePage(partialPage: Partial<PageQuestion>) {
+  return {
+    id: 'a3fc003b-d380-43e8-9b87-9ca48ac8447f',
+    title: 'Guidance page',
+    path: '/guidance-page',
+    next: [],
+    components: [
+      buildMarkdownComponent({
+        content: 'Lorem ipsum dolar sit amet'
+      })
+    ],
     ...partialPage
   }
 }
