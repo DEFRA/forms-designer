@@ -381,17 +381,28 @@ CRITICAL: Follow these schemas exactly. Pay special attention to:
 - List-based components must reference existing lists
 - All cross-references must be valid`
 
+      const messages = [
+        {
+          role: /** @type {const} */ ('user'),
+          content: userPrompt
+        }
+      ]
+
+      // Count tokens before making the API call
+      const estimatedInputTokens = await this.countTokens(
+        systemPrompt,
+        messages
+      )
+      logger.info(
+        `Estimated input tokens for direct generation: ${estimatedInputTokens.toLocaleString()}`
+      )
+
       let response = await this.client.messages.create({
         model: this.model,
         max_tokens: this.maxTokens,
         temperature: this.temperature,
         system: systemPrompt,
-        messages: [
-          {
-            role: 'user',
-            content: userPrompt
-          }
-        ]
+        messages
       })
 
       await updateProgress('processing', 'Processing and validating form...', {
@@ -531,13 +542,31 @@ Original request: ${description}`
         )
       }
 
+      const actualUsage = {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens
+      }
+
+      // Log token usage and cost estimate
+      const cost = this.estimateCost(
+        actualUsage.inputTokens,
+        actualUsage.outputTokens,
+        this.model
+      )
+      logger.info(`=== TOKEN USAGE SUMMARY ===`)
+      logger.info(`Model: ${this.model}`)
+      logger.info(`Input Tokens: ${actualUsage.inputTokens.toLocaleString()}`)
+      logger.info(`Output Tokens: ${actualUsage.outputTokens.toLocaleString()}`)
+      logger.info(
+        `Total Tokens: ${(actualUsage.inputTokens + actualUsage.outputTokens).toLocaleString()}`
+      )
+      logger.info(`Cost Estimate: £${cost.toFixed(2)}`)
+      logger.info(`=== END TOKEN USAGE ===`)
+
       return {
         content: JSON.stringify(formDefinition, null, 2),
         formDefinition,
-        usage: {
-          inputTokens: response.usage.input_tokens,
-          outputTokens: response.usage.output_tokens
-        },
+        usage: actualUsage,
         model: this.model,
         directApproach: true,
         conversationTurns: 1,
@@ -574,6 +603,16 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
           content: userMessage
         }
       ])
+
+      // Count tokens for initial message to get estimate
+      const estimatedInputTokens = await this.countTokens(
+        systemPrompt,
+        messages,
+        tools
+      )
+      logger.info(
+        `Estimated input tokens for agentic generation: ${estimatedInputTokens.toLocaleString()}`
+      )
 
       const workflowSteps = []
       let formDefinition = null
@@ -866,13 +905,31 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
         }
       }
 
+      const actualUsage = {
+        inputTokens: totalInputTokens,
+        outputTokens: totalOutputTokens
+      }
+
+      // Log token usage and cost estimate
+      const cost = this.estimateCost(
+        actualUsage.inputTokens,
+        actualUsage.outputTokens,
+        this.model
+      )
+      logger.info(`=== TOKEN USAGE SUMMARY ===`)
+      logger.info(`Model: ${this.model}`)
+      logger.info(`Input Tokens: ${actualUsage.inputTokens.toLocaleString()}`)
+      logger.info(`Output Tokens: ${actualUsage.outputTokens.toLocaleString()}`)
+      logger.info(
+        `Total Tokens: ${(actualUsage.inputTokens + actualUsage.outputTokens).toLocaleString()}`
+      )
+      logger.info(`Cost Estimate: £${cost.toFixed(2)}`)
+      logger.info(`=== END TOKEN USAGE ===`)
+
       const result = {
         content: JSON.stringify(formDefinition, null, 2),
         formDefinition,
-        usage: {
-          inputTokens: totalInputTokens,
-          outputTokens: totalOutputTokens
-        },
+        usage: actualUsage,
         model: this.model,
         workflowSteps,
         agenticApproach: true,
@@ -893,9 +950,6 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
       logger.info(
         `Workflow tools used: ${workflowSteps.map((step) => step.tool).join(' → ')}`
       )
-      logger.info(
-        `Token usage - Input: ${result.usage.inputTokens}, Output: ${result.usage.outputTokens}, Total: ${Number(result.usage.inputTokens) + Number(result.usage.outputTokens)}`
-      )
 
       const pageCount =
         /** @type {any} */ (result.formDefinition).pages?.length ?? 0
@@ -914,6 +968,58 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
       logger.error('Agentic form generation failed', error)
       throw error
     }
+  }
+
+  /**
+   * Count tokens for a message to get input token estimate
+   * @param {string} systemPrompt - System prompt
+   * @param {Array<any>} messages - Messages array
+   * @param {Array<any>} [tools] - Optional tools array
+   * @returns {Promise<number>} - Estimated input tokens
+   */
+  async countTokens(systemPrompt, messages, tools = undefined) {
+    try {
+      const countParams = /** @type {any} */ ({
+        model: this.model,
+        system: systemPrompt,
+        messages
+      })
+
+      // Add tools if provided
+      if (tools && tools.length > 0) {
+        countParams.tools = tools
+      }
+
+      const response = await this.client.messages.countTokens(countParams)
+      return response.input_tokens
+    } catch (error) {
+      logger.warn('Token counting failed:', error)
+      return 0
+    }
+  }
+
+  /**
+   * Estimate cost based on token usage for different Claude models
+   * @param {number} inputTokens - Input tokens
+   * @param {number} outputTokens - Output tokens
+   * @param {string} model - Model name
+   * @returns {number} - Estimated cost in GBP
+   */
+  estimateCost(inputTokens, outputTokens, model) {
+    /** @type {Record<string, {input: number, output: number}>} */
+    const pricing = {
+      'claude-opus-4-20250514': { input: 12, output: 60 },
+      'claude-sonnet-4-20250514': { input: 2.4, output: 12 },
+      'claude-3-7-sonnet-20250219': { input: 2.4, output: 12 },
+      'claude-3-5-sonnet-20241022': { input: 2.4, output: 12 },
+      'claude-3-5-haiku-20241022': { input: 0.64, output: 3.2 },
+      'claude-3-opus-20240229': { input: 12, output: 60 },
+      'claude-3-haiku-20240307': { input: 0.2, output: 1 }
+    }
+    const modelPricing = pricing[model] ?? pricing['claude-3-5-sonnet-20241022']
+    const inputCost = (inputTokens * modelPricing.input) / 1000000
+    const outputCost = (outputTokens * modelPricing.output) / 1000000
+    return inputCost + outputCost
   }
 
   /**

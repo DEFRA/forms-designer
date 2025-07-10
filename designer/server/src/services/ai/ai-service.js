@@ -94,7 +94,6 @@ export class AIService {
         preferences,
         updateProgress
       )
-      this.logger.info('Agentic form generation completed')
 
       if (sessionId) {
         this.logger.info('Storing temp form')

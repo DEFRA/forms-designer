@@ -54,10 +54,11 @@ export function initAIFormCreation() {
   const evaluateForm = evaluateButtonElement.closest('form')
   if (evaluateForm) {
     evaluateForm.addEventListener('submit', (event) => {
+      event.preventDefault()
+
       const description = textarea.value.trim()
 
       if (!description || description.length < 10) {
-        event.preventDefault()
         showError(
           'Enter a description of at least 10 characters before evaluating',
           errorSummary
@@ -72,6 +73,76 @@ export function initAIFormCreation() {
       evaluateDescriptionInput.value = description
 
       showEvaluateLoadingState(evaluateButtonElement)
+
+      const formData = new FormData(
+        /** @type {HTMLFormElement} */ (evaluateForm)
+      )
+
+      const urlParams = new URLSearchParams()
+      Array.from(formData.entries()).forEach(([key, value]) => {
+        if (typeof value === 'string') {
+          urlParams.append(key, value)
+        }
+      })
+
+      fetch('/create/ai-describe/evaluate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: urlParams
+      })
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`)
+          }
+          return response.text()
+        })
+        .then((html) => {
+          const parser = new DOMParser()
+          const doc = parser.parseFromString(html, 'text/html')
+          const feedbackPanel = doc.querySelector('.app-feedback-panel')
+
+          if (feedbackPanel) {
+            const rightColumn = document.querySelector(
+              '.govuk-grid-column-one-half-from-desktop:last-child'
+            )
+            if (rightColumn) {
+              const existingPanel = rightColumn.querySelector(
+                '.app-feedback-panel'
+              )
+              if (existingPanel) {
+                existingPanel.remove()
+              }
+              rightColumn.appendChild(feedbackPanel)
+
+              initFeedbackPanelHandlers(
+                /** @type {HTMLElement} */ (feedbackPanel)
+              )
+            }
+          }
+
+          evaluateButtonElement.disabled = false
+          evaluateButtonElement.textContent = 'Evaluate my description'
+
+          return html
+        })
+        .catch((error) => {
+          evaluateButtonElement.disabled = false
+          evaluateButtonElement.textContent = 'Evaluate my description'
+          showError(
+            'Failed to evaluate description. Please try again.',
+            errorSummary
+          )
+          if (
+            typeof error === 'object' &&
+            error !== null &&
+            'message' in error
+          ) {
+            // Error is logged internally
+          }
+        })
     })
   }
 }
@@ -205,6 +276,101 @@ function showAnalysisLoadingPanel() {
   `
 
   rightColumn.appendChild(loadingPanel)
+}
+
+/**
+ * Initialize event handlers for feedback panel buttons
+ * @param {HTMLElement} feedbackPanel - The feedback panel element
+ */
+function initFeedbackPanelHandlers(feedbackPanel) {
+  // Handle "Apply suggestions" form
+  const applySuggestionsForm = feedbackPanel.querySelector(
+    'form[action="/create/ai-describe/apply-suggestions"]'
+  )
+  if (applySuggestionsForm) {
+    applySuggestionsForm.addEventListener('submit', (event) => {
+      event.preventDefault()
+
+      const formData = new FormData(
+        /** @type {HTMLFormElement} */ (applySuggestionsForm)
+      )
+      const refinedDescription = formData.get('refinedDescription')
+
+      // Get textarea from the main form
+      const mainTextarea = /** @type {HTMLTextAreaElement | null} */ (
+        document.getElementById('formDescription')
+      )
+
+      if (
+        refinedDescription &&
+        mainTextarea &&
+        typeof refinedDescription === 'string'
+      ) {
+        mainTextarea.value = refinedDescription
+
+        // Show success notification
+        showSuccessNotification('Description updated with AI suggestions')
+
+        // Remove feedback panel
+        feedbackPanel.remove()
+      }
+    })
+  }
+
+  // Handle "Hide feedback" links
+  const hideFeedbackLinks = feedbackPanel.querySelectorAll(
+    'a[href*="hide=feedback"]'
+  )
+  hideFeedbackLinks.forEach((link) => {
+    link.addEventListener('click', (event) => {
+      event.preventDefault()
+      feedbackPanel.remove()
+    })
+  })
+}
+
+/**
+ * Show success notification
+ * @param {string} message - The success message
+ */
+function showSuccessNotification(message) {
+  const existingNotification = document.querySelector(
+    '.govuk-notification-banner--success'
+  )
+  if (existingNotification) {
+    existingNotification.remove()
+  }
+
+  const notification = document.createElement('div')
+  notification.className =
+    'govuk-notification-banner govuk-notification-banner--success'
+  notification.setAttribute('role', 'alert')
+  notification.setAttribute(
+    'aria-labelledby',
+    'govuk-notification-banner-title'
+  )
+  notification.innerHTML = `
+    <div class="govuk-notification-banner__header">
+      <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+        Success
+      </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
+      <p class="govuk-notification-banner__heading">
+        ${message}
+      </p>
+    </div>
+  `
+
+  const pageBody = document.querySelector('.app-page-body')
+  if (pageBody) {
+    pageBody.insertBefore(notification, pageBody.firstChild)
+
+    // Auto-remove after 5 seconds
+    setTimeout(() => {
+      notification.remove()
+    }, 5000)
+  }
 }
 
 function safeInit() {
