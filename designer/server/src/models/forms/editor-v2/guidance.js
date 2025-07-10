@@ -84,7 +84,6 @@ function guidanceFields(
 
 /**
  * @param {Page|undefined} page
- * @param {FormDefinition} definition
  * @param {string} previewPageUrl
  * @param {string} [guidance]
  * @returns {PagePreviewPanelMacro & {
@@ -92,12 +91,7 @@ function guidanceFields(
  *    questionType?: ComponentType
  * }}
  */
-export function getGuidancePreviewModel(
-  page,
-  definition,
-  previewPageUrl,
-  guidance = ''
-) {
+export function getGuidancePreviewModel(page, previewPageUrl, guidance = '') {
   const components = hasComponents(page) ? page.components : []
   const elements = new PagePreviewElementsSSR(page, guidance)
   const previewPageController = new GuidancePageController(
@@ -162,7 +156,7 @@ export function guidanceViewModel(
 
   const conditionDetails = getPageConditionDetails(definition, pageId)
   // prettier-ignore
-  const previewModel = getGuidancePreviewModel(page, definition, previewPageUrl, guidanceTextVal)
+  const previewModel = getGuidancePreviewModel(page, previewPageUrl, guidanceTextVal)
   return {
     ...baseModelFields(metadata.slug, pageTitle, formTitle),
     fields: {
