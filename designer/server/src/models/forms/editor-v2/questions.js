@@ -357,11 +357,11 @@ export function getPreviewModel(
   definition,
   previewPageUrl,
   previewErrorsUrl,
-  guidance = ''
+  guidance = '',
+  isGuidancePage = false
 ) {
   const components = hasComponents(page) ? page.components : []
   const elements = new PagePreviewElementsSSR(page, guidance)
-
   const previewPageController = new PreviewPageController(
     components,
     elements,
@@ -371,16 +371,19 @@ export function getPreviewModel(
 
   let errorTemplates
 
-  if (components.length === 1) {
+  if (components.length === 1 && !isGuidancePage) {
     errorTemplates = getErrorTemplates(components[0].type)
   }
-
-  return {
+  const previewController = /** @type {PagePreviewPanelMacro} */ ({
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
     guidance: previewPageController.guidance,
     repeaterButton: previewPageController.repeaterButton,
-    sectionTitle: previewPageController.sectionTitle,
+    sectionTitle: previewPageController.sectionTitle
+  })
+
+  return {
+    ...previewController,
     previewPageUrl,
     previewErrorsUrl,
     errorTemplates,

@@ -1,3 +1,5 @@
+import { ComponentType } from '~/src/components/enums.js'
+import { hasFormField } from '~/src/components/helpers.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   type Link,
@@ -6,7 +8,6 @@ import {
   type PageQuestion,
   type PageRepeat
 } from '~/src/form/form-definition/types.js'
-import { ComponentType, hasFormField } from '~/src/index.js'
 import {
   ControllerNames,
   ControllerTypes
