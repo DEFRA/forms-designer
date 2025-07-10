@@ -2,7 +2,6 @@ import {
   FormDefinitionError,
   conditionWrapperSchemaV2,
   isConditionWrapperV2,
-  randomId,
   slugSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
@@ -120,7 +119,7 @@ export default [
         displayName,
         coordinator,
         items: conditions.map((cond) => ({
-          id: randomId(),
+          id: crypto.randomUUID(),
           conditionId: cond
         }))
       })

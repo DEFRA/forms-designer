@@ -45,11 +45,13 @@ export function conditionsJoinViewModel(
     (cond) => conditionId === 'new' || cond.id !== conditionId
   )
 
-  const selectedConditions = existingCondition
-    ? existingCondition.items
-        .filter((item) => 'conditionId' in item)
-        .map((item) => /** @type {ConditionRefDataV2} */ (item).conditionId)
-    : (formValues?.conditions ?? [])
+  const selectedConditions =
+    formValues?.conditions ??
+    (existingCondition
+      ? existingCondition.items
+          .filter((item) => 'conditionId' in item)
+          .map((item) => /** @type {ConditionRefDataV2} */ (item).conditionId)
+      : [])
 
   const conditions = {
     id: 'conditions',
@@ -62,7 +64,7 @@ export function conditionsJoinViewModel(
       }
     },
     hint: {
-      text: 'Select at least two conditions'
+      text: 'Select at least two conditions to join'
     },
     classes: 'govuk-checkboxes--small',
     items: allConditions.map((cond) => ({
@@ -80,7 +82,7 @@ export function conditionsJoinViewModel(
   }
 
   const coordinatorValue =
-    existingCondition?.coordinator ?? formValues?.coordinator
+    formValues?.coordinator ?? existingCondition?.coordinator
 
   const coordinator = {
     id: 'coordinator',
@@ -101,7 +103,7 @@ export function conditionsJoinViewModel(
   }
 
   const displayNameValue =
-    existingCondition?.displayName ?? formValues?.displayName ?? ''
+    formValues?.displayName ?? existingCondition?.displayName ?? ''
 
   const displayName = {
     id: 'displayName',

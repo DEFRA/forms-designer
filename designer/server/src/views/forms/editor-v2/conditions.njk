@@ -19,14 +19,6 @@
     backLink: backLink
   }) %}
 
-    {% if errorList | length %}
-      {{ govukErrorSummary({
-        titleText: "There is a problem",
-        errorList: errorList,
-        classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
-      }) }}
-    {% endif %}
-
     {% if notification | length %}
       {% call govukNotificationBanner({
           type: "success"

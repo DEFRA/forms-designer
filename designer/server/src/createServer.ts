@@ -174,7 +174,6 @@ export async function createServer() {
     const supportedRoutes = [
       '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}',
       '/library/{slug}/editor-v2/page/{pageId}/conditions/{conditionId}/{stateId?}',
-      '/library/{slug}/editor-v2/conditions',
       '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}'
     ]
 
