@@ -1,4 +1,7 @@
-import { PreviewPageController } from '@defra/forms-model'
+import {
+  GuidancePageController,
+  PreviewPageController
+} from '@defra/forms-model'
 import {
   buildAutoCompleteComponent,
   buildDefinition,
@@ -12,7 +15,10 @@ import {
 
 import { pageHeadingAndGuidanceHTML } from '~/src/javascripts/preview/__stubs__/page.js'
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
-import { setupPageController } from '~/src/javascripts/preview/page-controller/setup-page-controller.js'
+import {
+  setupGuidanceController,
+  setupPageController
+} from '~/src/javascripts/preview/page-controller/setup-page-controller.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
 jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
@@ -57,52 +63,66 @@ describe('setup-page-controller', () => {
     pages: [page]
   })
 
-  it('should setup', () => {
-    document.body.innerHTML =
-      pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+  describe('setupPageController', () => {
+    it('should setup', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
 
-    const pageController = setupPageController(page, definition)
-    expect(pageController).toBeInstanceOf(PreviewPageController)
+      const pageController = setupPageController(page, definition)
+      expect(pageController).toBeInstanceOf(PreviewPageController)
+    })
+
+    it('should handle pages without components', () => {
+      document.body.innerHTML = '<p>missing content</p>'
+
+      const page2 = buildSummaryPage({ title: 'Summary page' })
+      const definition2 = buildDefinition({ pages: [page2] })
+      const pageController = setupPageController(page2, definition2)
+      expect(pageController).toBeInstanceOf(PreviewPageController)
+      expect(pageController.title).toBe('')
+    })
+
+    it('should handle autocomplete components', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      const listId = 'feaa6e19-414d-4633-9c8c-1135bc84f1f2'
+      const list = buildList({
+        id: listId,
+        items: [
+          buildListItem({
+            text: 'Item 1'
+          }),
+          buildListItem({
+            text: 'Item 2'
+          })
+        ]
+      })
+      const autocompleteComponent = buildAutoCompleteComponent({
+        list: listId
+      })
+      const page2 = buildQuestionPage({
+        components: [autocompleteComponent]
+      })
+      const definition2 = buildDefinition({
+        pages: [page],
+        lists: [list]
+      })
+      const pageController = setupPageController(page2, definition2)
+      expect(pageController.components[1].model.attributes).toEqual({
+        'data-module': 'govuk-accessible-autocomplete'
+      })
+    })
   })
 
-  it('should handle pages without components', () => {
-    document.body.innerHTML = '<p>missing content</p>'
+  describe('setupGuidanceController', () => {
+    it('should setup', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      const guidancePage = setupGuidanceController()
 
-    const page2 = buildSummaryPage({ title: 'Summary page' })
-    const definition2 = buildDefinition({ pages: [page2] })
-    const pageController = setupPageController(page2, definition2)
-    expect(pageController).toBeInstanceOf(PreviewPageController)
-    expect(pageController.title).toBe('')
-  })
-
-  it('should handle autocomplete components', () => {
-    document.body.innerHTML =
-      pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
-    const listId = 'feaa6e19-414d-4633-9c8c-1135bc84f1f2'
-    const list = buildList({
-      id: listId,
-      items: [
-        buildListItem({
-          text: 'Item 1'
-        }),
-        buildListItem({
-          text: 'Item 2'
-        })
-      ]
-    })
-    const autocompleteComponent = buildAutoCompleteComponent({
-      list: listId
-    })
-    const page2 = buildQuestionPage({
-      components: [autocompleteComponent]
-    })
-    const definition2 = buildDefinition({
-      pages: [page],
-      lists: [list]
-    })
-    const pageController = setupPageController(page2, definition2)
-    expect(pageController.components[1].model.attributes).toEqual({
-      'data-module': 'govuk-accessible-autocomplete'
+      expect(guidancePage).toBeInstanceOf(GuidancePageController)
+      expect(guidancePage.title).toBe('Where do you live?')
+      // expect(guidancePage.)
     })
   })
 })

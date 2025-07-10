@@ -22,15 +22,6 @@ export class PreviewPageController extends PreviewPageControllerBase {
    * @type {Question[]}
    */
   _components = []
-  /**
-   * @type {boolean}
-   * @private
-   */
-  _showTitle = true
-  /**
-   * @type {boolean}
-   */
-  #isRepeater = false
 
   /**
    * @param {ComponentDef[]} components
@@ -52,7 +43,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
     this._components = this.#constructComponents(firstQuestion, questions)
     this._showTitle = elements.addHeading
     this._sectionTitle = elements.repeatQuestion ?? ''
-    this.#isRepeater = elements.hasRepeater
+    this._isRepeater = elements.hasRepeater
   }
 
   /**
@@ -144,19 +135,6 @@ export class PreviewPageController extends PreviewPageControllerBase {
   }
 
   /**
-   *
-   * @param {boolean} showTitle
-   */
-  set showTitle(showTitle) {
-    this._showTitle = showTitle
-    this.render()
-  }
-
-  get showTitle() {
-    return this._showTitle
-  }
-
-  /**
    * @returns {boolean}
    */
   get titleAndFirstTitleSame() {
@@ -190,22 +168,8 @@ export class PreviewPageController extends PreviewPageControllerBase {
     return super._getGuidanceText()
   }
 
-  setRepeater() {
-    this.#isRepeater = true
-    this.render()
-  }
-
-  unsetRepeater() {
-    this.#isRepeater = false
-    this.render()
-  }
-
-  get isRepeater() {
-    return this.#isRepeater
-  }
-
   get repeaterText() {
-    if (!this.#isRepeater) {
+    if (!this._isRepeater) {
       return undefined
     }
     if (!this._sectionTitle.length) {
@@ -219,7 +183,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
    * @protected
    */
   _getSectionTitleText() {
-    if (this.#isRepeater) {
+    if (this._isRepeater) {
       return this.repeaterText
     }
     return undefined
@@ -238,7 +202,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
   }
 
   get repeaterButtonText() {
-    if (!this.#isRepeater) {
+    if (!this._isRepeater) {
       return undefined
     }
 

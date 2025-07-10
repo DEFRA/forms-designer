@@ -19,6 +19,7 @@ import '~/src/views/page-preview-component/macro.njk'
 import '~/src/views/preview-controllers/page-controller.njk'
 import {
   ComponentType,
+  GuidancePageController,
   PreviewPageController,
   hasComponents
 } from '@defra/forms-model'
@@ -61,6 +62,18 @@ export function setupPageController(page, definition) {
   listeners.initListeners()
 
   return previewPageController
+}
+
+export function setupGuidanceController() {
+  const elements = new PagePreviewDomElements()
+  const nunjucksRenderBase = new NunjucksRendererBase(elements)
+  const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
+  const guidancePageController = new GuidancePageController(elements, renderer)
+
+  const listeners = new PagePreviewListeners(guidancePageController, elements)
+  listeners.initListeners()
+
+  return guidancePageController
 }
 
 /**

@@ -1,0 +1,12 @@
+{% from "page-preview-panel/macro.njk" import appPagePreviewPanel %}
+{% from "preview-panel/macro.njk" import appPreviewPanel %}
+
+
+{% call appPagePreviewPanel(previewModel) %}
+{% endcall %}
+
+<script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
+<script type="module">
+    import { setupGuidanceController } from "{{ getAssetPath("pagePreview.js") }}"
+    setupGuidanceController()
+</script>

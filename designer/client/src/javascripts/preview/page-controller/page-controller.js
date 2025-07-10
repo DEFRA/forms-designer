@@ -1,4 +1,4 @@
-import { PreviewPageController } from '@defra/forms-model'
+import { PreviewPageControllerBase } from '@defra/forms-model'
 
 import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
 
@@ -90,7 +90,7 @@ function getTargetChecked(changeEvent) {
 
 export class PagePreviewListeners {
   /**
-   * @type {PreviewPageController}
+   * @type {PreviewPageControllerBase}
    * @private
    */
   _pageController
@@ -193,7 +193,7 @@ export class PagePreviewListeners {
          */
         handleEvent: (_focusEvent) => {
           this._pageController.setHighLighted(
-            PreviewPageController.HighlightClass.REPEATER
+            PreviewPageControllerBase.HighlightClass.REPEATER
           )
         }
       },
@@ -210,7 +210,7 @@ export class PagePreviewListeners {
 
   /**
    *
-   * @param {PreviewPageController} pageController
+   * @param {PreviewPageControllerBase} pageController
    * @param {PagePreviewDomElements} baseElements
    */
   constructor(pageController, baseElements) {

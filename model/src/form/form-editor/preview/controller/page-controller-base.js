@@ -97,6 +97,11 @@ export class PreviewPageControllerBase {
    */
   _components = []
   /**
+   * @type {boolean}
+   * @protected
+   */
+  _showTitle = true
+  /**
    * @protected
    * @type {string}
    */
@@ -131,6 +136,11 @@ export class PreviewPageControllerBase {
    * @protected
    */
   _guidanceComponent = PreviewPageControllerBase.createGuidanceComponent()
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  _isRepeater = false
 
   /**
    * @param {PagePreviewBaseElements} elements
@@ -215,6 +225,18 @@ export class PreviewPageControllerBase {
   }
 
   /**
+   * @param {boolean} showTitle
+   */
+  set showTitle(showTitle) {
+    this._showTitle = showTitle
+    this.render()
+  }
+
+  get showTitle() {
+    return this._showTitle
+  }
+
+  /**
    * @returns {{ text: string, classes: string }}
    */
   get pageTitle() {
@@ -222,6 +244,20 @@ export class PreviewPageControllerBase {
       text: this.title,
       classes: this._isHighlighted(HighlightClass.TITLE)
     }
+  }
+
+  setRepeater() {
+    this._isRepeater = true
+    this.render()
+  }
+
+  unsetRepeater() {
+    this._isRepeater = false
+    this.render()
+  }
+
+  get isRepeater() {
+    return this._isRepeater
   }
 
   render() {
