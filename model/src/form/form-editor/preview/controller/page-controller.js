@@ -144,8 +144,9 @@ export class PreviewPageController {
    * @param {PageOverviewElements} elements
    * @param {FormDefinition} definition
    * @param {PageRenderer} renderer
+   * @param { string } pageTemplate
    */
-  constructor(components, elements, definition, renderer) {
+  constructor(components, elements, definition, renderer, pageTemplate = '') {
     const questions = components.map(
       mapComponentToPreviewQuestion(questionRenderer, definition)
     )
@@ -153,6 +154,10 @@ export class PreviewPageController {
       questions.shift()
     )
 
+    this._pageTemplate =
+      pageTemplate && pageTemplate !== ''
+        ? PreviewPageController.PATH + pageTemplate
+        : this._pageTemplate
     this._guidanceComponent =
       PreviewPageController.getOrCreateGuidanceComponent(firstQuestion)
     this._guidanceText = elements.guidance

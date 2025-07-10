@@ -16,7 +16,10 @@ import '~/src/views/preview-components/fileuploadfield.njk'
 import '~/src/views/preview-components/emailaddressfield.njk'
 import '~/src/views/page-preview-component/template.njk'
 import '~/src/views/page-preview-component/macro.njk'
+import '~/src/views/summary-preview-component/template.njk'
+import '~/src/views/summary-preview-component/macro.njk'
 import '~/src/views/preview-controllers/page-controller.njk'
+import '~/src/views/preview-controllers/summary-controller.njk'
 import {
   ComponentType,
   PreviewPageController,
@@ -35,8 +38,9 @@ import {
  * Setup the Page Controller for client
  * @param {Page} page
  * @param {FormDefinition} definition
+ * @param {string} pageTemplate
  */
-export function setupPageController(page, definition) {
+export function setupPageController(page, definition, pageTemplate = '') {
   const elements = new PagePreviewDomElements()
   const components = /** @type {ComponentDef[]} */ (
     hasComponents(page) ? page.components : []
@@ -54,7 +58,8 @@ export function setupPageController(page, definition) {
     components,
     elements,
     definition,
-    renderer
+    renderer,
+    pageTemplate
   )
 
   const listeners = new PagePreviewListeners(previewPageController, elements)

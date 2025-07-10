@@ -1,0 +1,16 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<div>
+  {% if params.sectionTitle.text %}
+  <h2 class="govuk-caption-l govuk-!-margin-top-0 {{ params.sectionTitle.classes }}" id="section-title">
+    {{- params.sectionTitle.text -}}
+  </h2>
+  {% endif %}
+  <h1 class="govuk-heading-l {{ params.pageTitle.classes }}">
+    {{ params.pageTitle.text }}
+  </h1>
+  <p>Some content here for summary preview</p>
+  <p>rows: {{ previewModel | dump }}</p>
+  {{ govukSummaryList(params.componentRows)}}
+</div>
