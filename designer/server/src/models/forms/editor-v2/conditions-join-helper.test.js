@@ -11,7 +11,8 @@ import {
   buildCoordinatorField,
   buildDisplayNameField,
   getAvailableConditions,
-  getSelectedConditions
+  getSelectedConditions,
+  isJoinedCondition
 } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
 
 describe('conditions-join-helper', () => {
@@ -392,6 +393,81 @@ describe('conditions-join-helper', () => {
       )
       const inputField = /** @type {GovukFieldWithError} */ (result)
       expect(inputField.value).toBe('')
+    })
+  })
+
+  describe('isJoinedCondition', () => {
+    it('should return true for conditions with only condition references', () => {
+      const condition = {
+        id: 'test-joined',
+        displayName: 'Test joined condition',
+        coordinator: Coordinator.AND,
+        items: [
+          { id: 'ref-1', conditionId: 'condition-1' },
+          { id: 'ref-2', conditionId: 'condition-2' },
+          { id: 'ref-3', conditionId: 'condition-3' }
+        ]
+      }
+
+      expect(isJoinedCondition(condition)).toBe(true)
+    })
+
+    it('should return false for conditions with component references', () => {
+      const condition = {
+        id: 'test-regular',
+        displayName: 'Test regular condition',
+        items: [
+          {
+            id: 'item-1',
+            componentId: 'field-1',
+            operator: OperatorName.Is,
+            type: ConditionType.StringValue,
+            value: 'test'
+          }
+        ]
+      }
+
+      expect(isJoinedCondition(condition)).toBe(false)
+    })
+
+    it('should return false for mixed conditions (both condition and component refs)', () => {
+      const condition = {
+        id: 'test-mixed',
+        displayName: 'Test mixed condition',
+        coordinator: Coordinator.OR,
+        items: [
+          { id: 'ref-1', conditionId: 'condition-1' },
+          {
+            id: 'item-1',
+            componentId: 'field-1',
+            operator: OperatorName.Is,
+            type: ConditionType.StringValue,
+            value: 'test'
+          }
+        ]
+      }
+
+      expect(isJoinedCondition(condition)).toBe(false)
+    })
+
+    it('should return false for conditions with empty items array', () => {
+      const condition = {
+        id: 'test-empty',
+        displayName: 'Test empty condition',
+        items: []
+      }
+
+      expect(isJoinedCondition(condition)).toBe(false)
+    })
+
+    it('should return true for single condition reference', () => {
+      const condition = {
+        id: 'test-single',
+        displayName: 'Test single ref condition',
+        items: [{ id: 'ref-1', conditionId: 'condition-1' }]
+      }
+
+      expect(isJoinedCondition(condition)).toBe(true)
     })
   })
 })

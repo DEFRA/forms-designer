@@ -9,7 +9,7 @@ import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { addCondition, updateCondition } from '~/src/lib/editor.js'
+import { addCondition } from '~/src/lib/editor.js'
 import {
   createJoiError,
   isInvalidFormErrorType
@@ -17,6 +17,10 @@ import {
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import {
+  createConditionSessionState,
+  setConditionSessionState
+} from '~/src/lib/session-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/conditions-join.js'
 import { editorFormPath } from '~/src/models/links.js'
@@ -128,7 +132,24 @@ export default [
         if (conditionId === 'new') {
           await addCondition(metadata.id, token, data)
         } else {
-          await updateCondition(metadata.id, token, data)
+          const stateId = createConditionSessionState(yar)
+
+          const sessionState = {
+            id: conditionId,
+            stateId,
+            conditionWrapper: data
+          }
+
+          setConditionSessionState(yar, stateId, sessionState)
+
+          return h
+            .redirect(
+              editorFormPath(
+                slug,
+                `condition-check-changes/${conditionId}/${stateId}`
+              )
+            )
+            .code(StatusCodes.SEE_OTHER)
         }
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

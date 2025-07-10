@@ -140,6 +140,18 @@ export function buildDisplayNameField(
 }
 
 /**
+ * Check if a condition is a joined condition (contains only condition references)
+ * @param {ConditionWrapperV2} condition
+ * @returns {boolean}
+ */
+export function isJoinedCondition(condition) {
+  return (
+    condition.items.length > 0 &&
+    condition.items.every((item) => 'conditionId' in item)
+  )
+}
+
+/**
  * @import { FormDefinition, ConditionDataV2, ConditionWrapperV2, ConditionRefDataV2, GovukField } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

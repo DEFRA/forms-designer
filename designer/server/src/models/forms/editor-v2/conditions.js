@@ -7,6 +7,7 @@ import {
   getFormSpecificNavigation,
   toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
+import { isJoinedCondition } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
 import { withPageNumbers } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -37,11 +38,9 @@ export function buildConditionsTable(slug, definition) {
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
 
-      const isJoinedCondition =
-        condition.items.length > 0 &&
-        condition.items.every((item) => 'conditionId' in item)
+      const isJoined = isJoinedCondition(condition)
 
-      const editUrl = isJoinedCondition ? editJoinBaseUrl : editBaseUrl
+      const editUrl = isJoined ? editJoinBaseUrl : editBaseUrl
       const editLink = `<a class="${linkClasses}" href="${editUrl}${condition.id}">Edit</a>`
       const deleteLink = `<a class="${linkClasses}" href="${editBaseUrl}${condition.id}/delete">Delete</a>`
 

@@ -4,6 +4,7 @@ import {
   getFormSpecificNavigation,
   toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
+import { isJoinedCondition } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -45,6 +46,11 @@ export function conditionCheckChangesViewModel(
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const warningItems = getImpactedPages(definition, conditionId)
 
+  const isJoined = isJoinedCondition(originalCondition)
+  const editorPath = isJoined
+    ? `conditions-join/${conditionId}`
+    : `condition/${conditionId}/${state?.stateId}`
+
   return {
     backLink: {
       href: editorFormPath(metadata.slug, 'conditions'),
@@ -73,10 +79,7 @@ export function conditionCheckChangesViewModel(
       )
     },
     warningItems,
-    continueEditingPath: editorFormPath(
-      metadata.slug,
-      `condition/${conditionId}/${state?.stateId}`
-    )
+    continueEditingPath: editorFormPath(metadata.slug, editorPath)
   }
 }
 
