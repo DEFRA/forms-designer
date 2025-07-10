@@ -55,11 +55,10 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Clear previous form data
       yar.clear(sessionNames.create)
       yar.clear(sessionNames.validationFailure.createForm)
+      yar.clear('gdsAnalysis')
 
-      // Redirect to first step
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     },
     options: {
@@ -82,7 +81,6 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
       const validation = yar
         .flash(sessionNames.validationFailure.createForm)
@@ -139,13 +137,11 @@ export default [
         }
       }
 
-      // Update form metadata, redirect to method selection
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         title: payload.title
       })
 
-      // Redirect POST to method selection
       return h.redirect('/create/method').code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -174,7 +170,6 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
       const validation = yar
         .flash(sessionNames.validationFailure.createForm)
@@ -205,13 +200,11 @@ export default [
     handler(request, h) {
       const { payload, yar } = request
 
-      // Update form metadata, redirect to next step
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         organisation: payload.organisation
       })
 
-      // Redirect POST to GET without resubmit on back button
       return h.redirect(ROUTE_PATH_CREATE_TEAM).code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -240,7 +233,6 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      // Form metadata, validation errors
       const metadata = yar.get(sessionNames.create)
       const validation = yar
         .flash(sessionNames.validationFailure.createForm)
@@ -272,7 +264,6 @@ export default [
       const { auth, payload, yar } = request
       const { token } = auth.credentials
 
-      // Update form metadata
       yar.set(sessionNames.create, {
         ...yar.get(sessionNames.create),
         teamName: payload.teamName,
@@ -280,15 +271,10 @@ export default [
       })
 
       try {
-        // Create the form
         const result = await forms.create(payload, token)
 
-        // Clear form metadata
         yar.clear(sessionNames.create)
 
-        /**
-         * Redirect POST to GET without resubmit on back button
-         */
         return h
           .redirect(formOverviewPath(result.slug))
           .code(StatusCodes.SEE_OTHER)
@@ -355,7 +341,6 @@ export function redirectWithErrors(
       formValues: payload
     })
 
-    // Optionally redirect to errors on previous steps
     if (redirectToPreviousStep) {
       if ('title' in formErrors) {
         redirectTo = '/create/title'
@@ -365,7 +350,6 @@ export function redirectWithErrors(
     }
   }
 
-  // Redirect POST to GET without resubmit on back button
   return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
 }
 

@@ -123,6 +123,8 @@ export default [
           throw new Error('AI service not available')
         }
 
+        yar.clear('gdsAnalysis')
+
         const createData = yar.get(sessionNames.create)
         yar.set(sessionNames.create, {
           ...createData,
