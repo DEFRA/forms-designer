@@ -24,7 +24,8 @@ const questionRenderer = {
 const HighlightClass = {
   TITLE: 'title',
   GUIDANCE: 'guidance',
-  REPEATER: 'repeater'
+  REPEATER: 'repeater',
+  QUESTION: 'question'
 }
 
 /**
@@ -355,9 +356,11 @@ export class PreviewPageControllerBase {
 
   /**
    * @param {HighlightClass} highlightSection
+   * @param { number | undefined } idx
    */
-  setHighLighted(highlightSection) {
+  setHighLighted(highlightSection, idx = undefined) {
     this._highlighted = highlightSection
+    this._highlightedIndex = idx
     this.render()
   }
 

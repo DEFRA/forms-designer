@@ -30,6 +30,11 @@ export class PagePreviewDomElements extends DomElements {
    */
   questionSetNameElement = null
 
+  /**
+   * @type {HTMLInputElement[]}
+   */
+  questionUpDownButtonElements = []
+
   constructor() {
     super()
     this.headingElement = /** @type {HTMLInputElement|null} */ (
@@ -46,6 +51,9 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.questionSetNameElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('questionSetName')
+    )
+    this.questionUpDownButtonElements = /** @type {HTMLInputElement[]} */ (
+      Array.from(document.getElementsByClassName('reorder-button-js'))
     )
   }
 
@@ -205,6 +213,29 @@ export class PagePreviewListeners {
           this._pageController.clearHighlight()
         }
       }
+    },
+    questionUpDownButtonElement: {
+      focus: {
+        /**
+         * @param {FocusEvent} _focusEvent
+         */
+        handleEvent: (_focusEvent) => {
+          // console.log('focus', _focusEvent)
+          this._pageController.setHighLighted(
+            PreviewPageControllerBase.HighlightClass.QUESTION,
+            1
+          )
+        }
+      },
+      blur: {
+        /**
+         * @param {FocusEvent} _focusEvent
+         */
+        handleEvent: (_focusEvent) => {
+          // console.log('blur')
+          this._pageController.clearHighlight()
+        }
+      }
     }
   }
 
@@ -222,7 +253,21 @@ export class PagePreviewListeners {
    * @returns {[HTMLInputElement|null, EventListenerObject, string][]}
    */
   getListeners() {
-    return [
+    const upDownButtonListenersFocus =
+      this._baseElements.questionUpDownButtonElements.map((butt) => {
+        return [
+          butt,
+          this._listeners.questionUpDownButtonElement.focus,
+          'focus'
+        ]
+      })
+
+    const upDownButtonListenersBlur =
+      this._baseElements.questionUpDownButtonElements.map((butt) => {
+        return [butt, this._listeners.questionUpDownButtonElement.blur, 'blur']
+      })
+
+    const allListeners = [
       [
         this._baseElements.headingElement,
         this._listeners.heading.input,
@@ -273,8 +318,14 @@ export class PagePreviewListeners {
         this._baseElements.questionSetNameElement,
         this._listeners.questionSetNameElement.blur,
         'blur'
-      ]
+      ],
+      ...upDownButtonListenersFocus,
+      ...upDownButtonListenersBlur
     ]
+
+    return /** @type {[HTMLInputElement, EventListenerObject, string][]} */ (
+      allListeners
+    )
   }
 
   /**
