@@ -10,7 +10,5 @@
   <h1 class="govuk-heading-l {{ params.pageTitle.classes }}">
     {{ params.pageTitle.text }}
   </h1>
-  <p>Some content here for summary preview</p>
-  <p>rows: {{ previewModel | dump }}</p>
   {{ govukSummaryList(params.componentRows)}}
 </div>

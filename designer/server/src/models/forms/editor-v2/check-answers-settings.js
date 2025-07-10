@@ -90,7 +90,7 @@ export const dummyRenderer = {
  *    };
  *    questionType?: ComponentType,
  *    previewTitle?: string,
- *    componentRows: { rows: { key: string, value: string }[] }
+ *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] }
  * }}
  */
 export function getPreviewModel(
@@ -105,8 +105,12 @@ export function getPreviewModel(
   )
   const componentRows = {
     rows: components.map((comp) => ({
-      key: comp.title,
-      value: 'example value'
+      key: {
+        text: comp.title
+      },
+      value: {
+        text: 'example value'
+      }
     }))
   }
 
