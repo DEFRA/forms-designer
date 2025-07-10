@@ -127,7 +127,6 @@ export class PreviewPageControllerBase {
    */
   _emptyGuidance = PreviewPageControllerBase.createGuidanceComponent()
   /**
-   *
    * @type {Markdown}
    * @protected
    */
@@ -152,7 +151,7 @@ export class PreviewPageControllerBase {
    * @returns {Markdown[]}
    * @protected
    */
-  get _guidanceComponents() {
+  _getGuidanceComponents() {
     if (this._guidanceText.length) {
       return [this._guidanceComponent]
     }
@@ -160,6 +159,14 @@ export class PreviewPageControllerBase {
       return [this._emptyGuidance]
     }
     return []
+  }
+
+  /**
+   * @returns {Markdown[]}
+   * @protected
+   */
+  get _guidanceComponents() {
+    return this._getGuidanceComponents()
   }
 
   /**
@@ -289,7 +296,7 @@ export class PreviewPageControllerBase {
    * but no guidance text exists
    * @returns {Markdown}
    */
-  static createGuidanceComponent() {
+  static createGuidanceComponent(highlight = true) {
     const guidanceElement = new ContentElements({
       type: ComponentType.Markdown,
       title: 'Guidance component',
@@ -299,8 +306,9 @@ export class PreviewPageControllerBase {
     })
     const guidanceComponent = new Markdown(guidanceElement, questionRenderer)
 
-    // the dummy component should always be highlighted
-    guidanceComponent.highlightContent()
+    if (highlight) {
+      guidanceComponent.highlightContent()
+    }
     return guidanceComponent
   }
 
