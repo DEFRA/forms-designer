@@ -88,9 +88,12 @@ export interface ListElements extends QuestionElements {
   afterInputsHTML: string
 }
 
-export interface PageOverviewElements {
+export interface PagePreviewBaseElements {
   heading: string
   guidance: string
+}
+
+export interface PageOverviewElements extends PagePreviewBaseElements {
   addHeading: boolean
   repeatQuestion: string | undefined
   hasRepeater: boolean

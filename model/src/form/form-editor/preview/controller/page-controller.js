@@ -1,10 +1,6 @@
-import { ComponentType } from '~/src/components/enums.js'
-import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
-import { ContentElements } from '~/src/form/form-editor/preview/content.js'
+import { PreviewPageControllerBase } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
-import { hasRepeater } from '~/src/index.js'
-import { hasComponents } from '~/src/pages/helpers.js'
 
 /**
  * @type {QuestionRenderer}
@@ -19,125 +15,13 @@ const questionRenderer = {
   }
 }
 
-/**
- * @implements {PageOverviewElements}
- */
-export class PagePreviewElements {
-  /**
-   * @type {Page}
-   * @private
-   */
-  _page
-
-  /**
-   * @param {Page} page
-   */
-  constructor(page) {
-    this._page = page
-  }
-
-  get heading() {
-    return this._page.title
-  }
-
-  get guidance() {
-    if (!hasComponents(this._page) || !this._page.components.length) {
-      return ''
-    }
-
-    const [possibleGuidanceComponent] = this._page.components
-
-    return possibleGuidanceComponent.type === ComponentType.Markdown
-      ? possibleGuidanceComponent.content
-      : ''
-  }
-
-  get addHeading() {
-    return this._page.title.length > 0
-  }
-
-  get repeatQuestion() {
-    if (hasRepeater(this._page)) {
-      return this._page.repeat.options.title
-    }
-    return undefined
-  }
-
-  get hasRepeater() {
-    return hasRepeater(this._page)
-  }
-}
-
-/**
- * Enum for Highlight classes
- * @readonly
- * @enum {string}
- */
-const HighlightClass = {
-  TITLE: 'title',
-  GUIDANCE: 'guidance',
-  REPEATER: 'repeater'
-}
-
-/**
- * @implements {PagePreviewPanelMacro}
- */
-export class PreviewPageController {
-  static PATH = 'preview-controllers/'
-  /**
-   * @type {string}
-   * @protected
-   */
-  _pageTemplate = PreviewPageController.PATH + 'page-controller.njk'
+export class PreviewPageController extends PreviewPageControllerBase {
+  static PATH = PreviewPageControllerBase.PATH
   /**
    * @protected
    * @type {Question[]}
    */
   _components = []
-  /**
-   * @type {string}
-   */
-  #title = ''
-  /**
-   *
-   * @type {PageRenderer}
-   */
-  #pageRenderer
-  /**
-   * @type { undefined | HighlightClass }
-   * @protected
-   */
-  _highlighted = undefined
-  /**
-   * @type {string}
-   * @private
-   */
-  _guidanceText = ''
-  /**
-   * @type { string }
-   * @protected
-   */
-  _sectionTitle = ''
-  /**
-   * @type {Markdown}
-   * @private
-   */
-  _emptyGuidance = PreviewPageController.createGuidanceComponent()
-  /**
-   *
-   * @type {Markdown}
-   * @protected
-   */
-  _guidanceComponent
-  /**
-   * @type {boolean}
-   * @private
-   */
-  _showTitle = true
-  /**
-   * @type {boolean}
-   */
-  #isRepeater = false
 
   /**
    * @param {ComponentDef[]} components
@@ -146,29 +30,26 @@ export class PreviewPageController {
    * @param {PageRenderer} renderer
    */
   constructor(components, elements, definition, renderer) {
+    super(elements, renderer)
     const questions = components.map(
       mapComponentToPreviewQuestion(questionRenderer, definition)
     )
     const firstQuestion = /** @type { Markdown | undefined | Question }  */ (
       questions.shift()
     )
-
     this._guidanceComponent =
       PreviewPageController.getOrCreateGuidanceComponent(firstQuestion)
     this._guidanceText = elements.guidance
     this._components = this.#constructComponents(firstQuestion, questions)
     this._showTitle = elements.addHeading
-
-    this.#pageRenderer = renderer
-    this.#title = elements.heading
     this._sectionTitle = elements.repeatQuestion ?? ''
-    this.#isRepeater = elements.hasRepeater
+    this._isRepeater = elements.hasRepeater
   }
 
   /**
-   * @type {typeof HighlightClass}
+   * @type {typeof PreviewPageControllerBase.HighlightClass}
    */
-  static HighlightClass = HighlightClass
+  static HighlightClass = PreviewPageControllerBase.HighlightClass
 
   /**
    * @param { Question | Markdown | undefined} firstQuestion
@@ -179,20 +60,6 @@ export class PreviewPageController {
     return firstQuestion instanceof Markdown || firstQuestion === undefined
       ? questions
       : [firstQuestion, ...questions]
-  }
-
-  /**
-   * @returns {Markdown[]}
-   * @private
-   */
-  get _guidanceComponents() {
-    if (this._guidanceText.length) {
-      return [this._guidanceComponent]
-    }
-    if (this._highlighted === 'guidance') {
-      return [this._emptyGuidance]
-    }
-    return []
   }
 
   /**
@@ -223,7 +90,7 @@ export class PreviewPageController {
       return false
     }
     // |_ one component and title not highlighted
-    if (this.#title.trim() === this._components[0].question.trim()) {
+    if (this._title.trim() === this._components[0]?.question.trim()) {
       return true
     }
     // titles not the same
@@ -267,60 +134,13 @@ export class PreviewPageController {
     }
   }
 
-  set guidanceText(text) {
-    this._guidanceText = text
-    this._guidanceComponent.content = text
-    this.render()
-  }
-
-  get guidanceText() {
-    if (!this._showTitle) {
-      return ''
-    }
-    return this._guidanceText
-  }
-
-  /**
-   *
-   * @param {boolean} showTitle
-   */
-  set showTitle(showTitle) {
-    this._showTitle = showTitle
-    this.render()
-  }
-
-  get showTitle() {
-    return this._showTitle
-  }
-
-  get guidance() {
-    return {
-      text: this.guidanceText,
-      classes: this.#isHighlighted(HighlightClass.GUIDANCE)
-    }
-  }
-
-  /**
-   * @returns {{ text: string, classes: string }}
-   */
-  get pageTitle() {
-    return {
-      text: this.title,
-      classes: this.#isHighlighted(HighlightClass.TITLE)
-    }
-  }
-
-  render() {
-    this.#pageRenderer.render(this._pageTemplate, this)
-  }
-
   /**
    * @returns {boolean}
    */
   get titleAndFirstTitleSame() {
     return (
       this._components.length > 0 &&
-      this.#title.trim() === this._components[0].question.trim() &&
+      this._title.trim() === this._components[0]?.question.trim() &&
       this.components.length === 1 &&
       this._highlighted !== 'title'
     )
@@ -328,58 +148,28 @@ export class PreviewPageController {
 
   /**
    * @returns {string}
+   * @protected
    */
-  get title() {
+  _getTitle() {
     if (!this._showTitle || this.titleAndFirstTitleSame) {
       return ''
     }
-    if (this.#title.length) {
-      return this.#title
-    }
-    return 'Page heading'
+    return super._getTitle()
   }
 
   /**
-   * @param {string} value
+   * @returns {string}
+   * @protected
    */
-  set title(value) {
-    this.#title = value
-    this.render()
-  }
-
-  highlightTitle() {
-    this.setHighLighted(HighlightClass.TITLE)
-  }
-
-  setRepeater() {
-    this.#isRepeater = true
-    this.render()
-  }
-
-  unsetRepeater() {
-    this.#isRepeater = false
-    this.render()
-  }
-
-  get isRepeater() {
-    return this.#isRepeater
-  }
-
-  /**
-   * @returns {{classes: string, text: string} | undefined}
-   */
-  get sectionTitle() {
-    if (this.sectionTitleText === undefined) {
-      return undefined
+  _getGuidanceText() {
+    if (!this._showTitle) {
+      return ''
     }
-    return {
-      classes: this.#isHighlighted(HighlightClass.REPEATER),
-      text: this.sectionTitleText
-    }
+    return super._getGuidanceText()
   }
 
   get repeaterText() {
-    if (!this.#isRepeater) {
+    if (!this._isRepeater) {
       return undefined
     }
     if (!this._sectionTitle.length) {
@@ -389,15 +179,11 @@ export class PreviewPageController {
   }
 
   /**
-   * @param {string | undefined} val
+   * @returns {string|undefined}
+   * @protected
    */
-  set sectionTitleText(val) {
-    this._sectionTitle = val ?? ''
-    this.render()
-  }
-
-  get sectionTitleText() {
-    if (this.#isRepeater) {
+  _getSectionTitleText() {
+    if (this._isRepeater) {
       return this.repeaterText
     }
     return undefined
@@ -408,13 +194,15 @@ export class PreviewPageController {
       return undefined
     }
     return {
-      classes: this.#isHighlighted(HighlightClass.REPEATER),
+      classes: this._isHighlighted(
+        PreviewPageControllerBase.HighlightClass.REPEATER
+      ),
       text: this.repeaterButtonText
     }
   }
 
   get repeaterButtonText() {
-    if (!this.#isRepeater) {
+    if (!this._isRepeater) {
       return undefined
     }
 
@@ -429,26 +217,6 @@ export class PreviewPageController {
   }
 
   /**
-   * Creates a dummy component for when guidance is highlighted
-   * but no guidance text exists
-   * @returns {Markdown}
-   */
-  static createGuidanceComponent() {
-    const guidanceElement = new ContentElements({
-      type: ComponentType.Markdown,
-      title: 'Guidance component',
-      name: 'guidanceComponent',
-      content: 'Guidance text',
-      options: {}
-    })
-    const guidanceComponent = new Markdown(guidanceElement, questionRenderer)
-
-    // the dummy component should always be highlighted
-    guidanceComponent.highlightContent()
-    return guidanceComponent
-  }
-
-  /**
    * Helper method to return the guidance or a new one
    * @param { Markdown | Question | undefined } guidanceComponent
    * @returns {Markdown}
@@ -458,35 +226,7 @@ export class PreviewPageController {
     if (guidanceComponent instanceof Markdown) {
       return guidanceComponent
     }
-    return PreviewPageController.createGuidanceComponent()
-  }
-
-  highlightGuidance() {
-    this._guidanceComponent.highlightContent()
-    this.setHighLighted(HighlightClass.GUIDANCE)
-  }
-
-  /**
-   * @param {HighlightClass} highlightSection
-   */
-  setHighLighted(highlightSection) {
-    this._highlighted = highlightSection
-    this.render()
-  }
-
-  clearHighlight() {
-    this._highlighted = undefined
-
-    this._guidanceComponent.unHighlightContent()
-    this.render()
-  }
-
-  /**
-   * @param {string} field
-   * @returns {string}
-   */
-  #isHighlighted(field) {
-    return this._highlighted === field ? HIGHLIGHT_CLASS : ''
+    return PreviewPageControllerBase.createGuidanceComponent()
   }
 }
 

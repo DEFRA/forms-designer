@@ -44,17 +44,19 @@ describe('Editor v2 guidance routes', () => {
       auth
     }
 
-    const { container } = await renderResponse(server, options)
+    const { container, document } = await renderResponse(server, options)
 
     const $mainHeadings = container.getAllByRole('heading', { level: 1 })
 
     const $actions = container.getAllByRole('button')
+    const $previewPanel = document.getElementById('preview-panel')
 
     expect($mainHeadings[0]).toHaveTextContent('Test form')
     expect($mainHeadings[1]).toHaveTextContent('Edit guidance page')
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save')
     expect($actions[3]).toHaveTextContent('Manage conditions')
+    expect($previewPanel).not.toBeNull()
   })
 
   test('POST - should error if missing mandatory fields', async () => {

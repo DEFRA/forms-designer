@@ -44,6 +44,8 @@ describe('guidance model', () => {
       const definition = buildDefinition({
         pages: [
           buildQuestionPage({
+            title: 'Guidance page',
+            path: '/guidance-page',
             id: pageId,
             components: undefined
           })
@@ -62,6 +64,42 @@ describe('guidance model', () => {
 
       expect(result.pageTitle).toBe('Edit guidance page - Test form')
       expect(result.hasPageCondition).toBeFalsy()
+      expect(result.previewPageUrl).toContain('/guidance-page')
+      expect(result.previewModel.pageTitle.text).toBe('Guidance page')
+      // @ts-expect-error - checking for property that should be undefined
+      expect(result.errorTemplates).toBeUndefined()
+      const components = result.previewModel.components
+      expect(components).toEqual([
+        {
+          model: {
+            classes: '',
+            content: '<p>Guidance text</p>\n',
+            id: 'markdown',
+            name: 'markdown'
+          },
+          questionType: 'Markdown'
+        }
+      ])
+    })
+
+    it('should handle a new page which does not exist', () => {
+      const definition = buildDefinition({
+        pages: [],
+        conditions: []
+      })
+
+      const result = guidanceViewModel(
+        metadata,
+        definition,
+        pageId,
+        'invalid',
+        undefined,
+        undefined
+      )
+
+      expect(result.pageTitle).toBe('Edit guidance page - Test form')
+      expect(result.hasPageCondition).toBeFalsy()
+      expect(result.previewPageUrl).toContain('')
     })
 
     it('should handle page with a condition', () => {

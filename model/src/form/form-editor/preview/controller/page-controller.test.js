@@ -11,10 +11,8 @@ import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import { buildQuestionPage, buildRepeaterPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { PageRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
-import {
-  PagePreviewElements,
-  PreviewPageController
-} from '~/src/form/form-editor/preview/controller/page-controller.js'
+import { PagePreviewElements } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
+import { PreviewPageController } from '~/src/form/form-editor/preview/controller/page-controller.js'
 
 /**
  * Overrides the default to
@@ -63,6 +61,15 @@ describe('page-controller', () => {
         components: []
       })
       const pagePreviewElements = new PagePreviewElements(pageQuestion)
+      expect(pagePreviewElements.heading).toBe('')
+      expect(pagePreviewElements.guidance).toBe('')
+      expect(pagePreviewElements.addHeading).toBe(false)
+      expect(pagePreviewElements.repeatQuestion).toBeUndefined()
+      expect(pagePreviewElements.hasRepeater).toBe(false)
+    })
+
+    it('should handle undefined page', () => {
+      const pagePreviewElements = new PagePreviewElements(undefined)
       expect(pagePreviewElements.heading).toBe('')
       expect(pagePreviewElements.guidance).toBe('')
       expect(pagePreviewElements.addHeading).toBe(false)
