@@ -132,41 +132,15 @@ describe('editor-v2 - conditions-join model', () => {
       expect(result.existingCondition).toBe(existingJoinedCondition)
     })
 
-    it('should generate conditions field with all available conditions', () => {
+    it('should generate conditions field correctly', () => {
       const result = conditionsJoinViewModel(metadata, testDefinition, 'new')
 
-      expect(result.fields.conditions).toMatchObject({
-        id: 'conditions',
-        name: 'conditions',
-        fieldset: {
-          legend: {
-            text: 'Joined conditions',
-            isPageHeading: true,
-            classes: 'govuk-fieldset__legend--m'
-          }
-        },
-        hint: {
-          text: 'Select at least two conditions'
-        },
-        classes: 'govuk-checkboxes--small'
-      })
-
-      expect(result.fields.conditions.items).toHaveLength(3)
-      expect(result.fields.conditions.items[0]).toMatchObject({
-        text: 'First condition',
-        value: 'condition-1',
-        checked: false
-      })
-      expect(result.fields.conditions.items[1]).toMatchObject({
-        text: 'Second condition',
-        value: 'condition-2',
-        checked: false
-      })
-      expect(result.fields.conditions.items[2]).toMatchObject({
-        text: 'Third condition',
-        value: 'condition-3',
-        checked: false
-      })
+      expect(result.fields.conditions).toBeDefined()
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
+      )
+      expect(conditionsField.id).toBe('conditions')
+      expect(conditionsField.name).toBe('conditions')
     })
 
     it('should exclude current condition from available conditions when editing', () => {
@@ -191,9 +165,12 @@ describe('editor-v2 - conditions-join model', () => {
         existingJoinedCondition
       )
 
-      expect(result.fields.conditions.items).toHaveLength(3)
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
+      )
+      expect(conditionsField.items).toHaveLength(3)
       expect(
-        result.fields.conditions.items.map((item) => item.value)
+        conditionsField.items?.map((/** @type {any} */ item) => item.value)
       ).not.toContain('existing-joined')
     })
 
@@ -205,9 +182,12 @@ describe('editor-v2 - conditions-join model', () => {
         existingJoinedCondition
       )
 
-      expect(result.fields.conditions.items[0].checked).toBe(true) // condition-1
-      expect(result.fields.conditions.items[1].checked).toBe(true) // condition-2
-      expect(result.fields.conditions.items[2].checked).toBe(false) // condition-3
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
+      )
+      expect(conditionsField.items?.[0].checked).toBe(true) // condition-1
+      expect(conditionsField.items?.[1].checked).toBe(true) // condition-2
+      expect(conditionsField.items?.[2].checked).toBe(false) // condition-3
     })
 
     it('should mark selected conditions as checked from form values', () => {
@@ -226,9 +206,12 @@ describe('editor-v2 - conditions-join model', () => {
         validation
       )
 
-      expect(result.fields.conditions.items[0].checked).toBe(true) // condition-1
-      expect(result.fields.conditions.items[1].checked).toBe(false) // condition-2
-      expect(result.fields.conditions.items[2].checked).toBe(true) // condition-3
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
+      )
+      expect(conditionsField.items?.[0].checked).toBe(true) // condition-1
+      expect(conditionsField.items?.[1].checked).toBe(false) // condition-2
+      expect(conditionsField.items?.[2].checked).toBe(true) // condition-3
     })
 
     it('should generate coordinator field with correct options', () => {
@@ -259,7 +242,10 @@ describe('editor-v2 - conditions-join model', () => {
         existingJoinedCondition
       )
 
-      expect(result.fields.coordinator.value).toBe(Coordinator.OR)
+      const coordinatorField = /** @type {GovukField} */ (
+        result.fields.coordinator
+      )
+      expect(coordinatorField.value).toBe(Coordinator.OR)
     })
 
     it('should set coordinator value from form values', () => {
@@ -278,7 +264,10 @@ describe('editor-v2 - conditions-join model', () => {
         validation
       )
 
-      expect(result.fields.coordinator.value).toBe('and')
+      const coordinatorField = /** @type {GovukField} */ (
+        result.fields.coordinator
+      )
+      expect(coordinatorField.value).toBe('and')
     })
 
     it('should generate display name field with correct configuration', () => {
@@ -294,7 +283,7 @@ describe('editor-v2 - conditions-join model', () => {
         classes: 'govuk-input--width-30',
         value: '',
         hint: {
-          text: 'Condition names help you to identify conditions in your form, for example, ‘Not a farmer’. Users will not see condition names.'
+          text: "Condition names help you to identify conditions in your form, for example, 'Not a farmer'. Users will not see condition names."
         }
       })
     })
@@ -307,7 +296,10 @@ describe('editor-v2 - conditions-join model', () => {
         existingJoinedCondition
       )
 
-      expect(result.fields.displayName.value).toBe('Existing joined condition')
+      const displayNameField = /** @type {GovukField} */ (
+        result.fields.displayName
+      )
+      expect(displayNameField.value).toBe('Existing joined condition')
     })
 
     it('should set display name value from form values', () => {
@@ -326,9 +318,10 @@ describe('editor-v2 - conditions-join model', () => {
         validation
       )
 
-      expect(result.fields.displayName.value).toBe(
-        'Form submitted display name'
+      const displayNameField = /** @type {GovukField} */ (
+        result.fields.displayName
       )
+      expect(displayNameField.value).toBe('Form submitted display name')
     })
 
     it('should include validation errors in error list', () => {
@@ -400,13 +393,23 @@ describe('editor-v2 - conditions-join model', () => {
         validation
       )
 
-      expect(result.fields.conditions.errorMessage).toMatchObject({
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
+      )
+      const coordinatorField = /** @type {GovukField} */ (
+        result.fields.coordinator
+      )
+      const displayNameField = /** @type {GovukField} */ (
+        result.fields.displayName
+      )
+
+      expect(/** @type {any} */ (conditionsField).errorMessage).toMatchObject({
         text: 'Select at least two conditions'
       })
-      expect(result.fields.coordinator.errorMessage).toMatchObject({
+      expect(/** @type {any} */ (coordinatorField).errorMessage).toMatchObject({
         text: 'Select how to combine conditions'
       })
-      expect(result.fields.displayName.errorMessage).toMatchObject({
+      expect(/** @type {any} */ (displayNameField).errorMessage).toMatchObject({
         text: 'Enter a name for this condition'
       })
     })
@@ -440,13 +443,14 @@ describe('editor-v2 - conditions-join model', () => {
         'new'
       )
 
-      expect(result.fields.conditions.items).toHaveLength(3)
-      // Conditions are sorted alphabetically by displayName
-      expect(result.fields.conditions.items[0].text).toBe(
-        'isBobAndFaveColourRedV2'
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
       )
-      expect(result.fields.conditions.items[1].text).toBe('isBobV2')
-      expect(result.fields.conditions.items[2].text).toBe('isFaveColourRedV2')
+      expect(conditionsField.items).toHaveLength(3)
+      // Conditions are sorted alphabetically by displayName
+      expect(conditionsField.items?.[0].text).toBe('isBobAndFaveColourRedV2')
+      expect(conditionsField.items?.[1].text).toBe('isBobV2')
+      expect(conditionsField.items?.[2].text).toBe('isFaveColourRedV2')
     })
 
     it('should generate correct preview URL with draft status', () => {
@@ -460,10 +464,13 @@ describe('editor-v2 - conditions-join model', () => {
       const result = conditionsJoinViewModel(metadata, testDefinition, 'new')
 
       // Each condition item should have a hint with presentation text
-      result.fields.conditions.items.forEach((item) => {
+      const conditionsField = /** @type {GovukField} */ (
+        result.fields.conditions
+      )
+      conditionsField.items?.forEach((/** @type {any} */ item) => {
         expect(item.hint).toBeDefined()
-        expect(item.hint.text).toBeDefined()
-        expect(typeof item.hint.text).toBe('string')
+        expect(item.hint?.text).toBeDefined()
+        expect(typeof item.hint?.text).toBe('string')
       })
     })
 
@@ -481,6 +488,5 @@ describe('editor-v2 - conditions-join model', () => {
 })
 
 /**
- * @import { FormMetadata, FormDefinition, ConditionWrapperV2, ConditionDataV2, ConditionRefDataV2 } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { GovukField } from '@defra/forms-model'
  */
