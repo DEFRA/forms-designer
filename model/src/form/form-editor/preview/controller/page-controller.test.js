@@ -363,6 +363,27 @@ describe('page-controller', () => {
       expect(pageController.components[0].model.name).toBe('markdown')
     })
 
+    it('should reorder items', () => {
+      const { pageController } = buildController()
+      expect(pageController.components[0].questionType).toBe(
+        textFieldComponent.type
+      )
+      expect(pageController.components[1].questionType).toBe(listComponent.type)
+      expect(pageController.components[2].questionType).toBe(
+        selectComponent.type
+      )
+      pageController.reorderComponents(
+        'd46c9ba0-f5d6-47ab-aa6b-f60b64306e5f,407dd0d7-cce9-4f43-8e1f-7d89cb698875,34455d57-df37-4b69-a64f-6c3af0317ebe'
+      )
+      expect(pageController.components[0].questionType).toBe(
+        selectComponent.type
+      )
+      expect(pageController.components[1].questionType).toBe(
+        textFieldComponent.type
+      )
+      expect(pageController.components[2].questionType).toBe(listComponent.type)
+    })
+
     describe('component title size', () => {
       const component = buildTextFieldComponent({
         title: 'Main title'

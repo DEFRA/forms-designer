@@ -216,6 +216,8 @@ export class PreviewPageControllerBase {
         return posA - posB
       })
     }
+
+    this.render()
   }
 
   /**
@@ -397,6 +399,20 @@ export class PreviewPageControllerBase {
    */
   _isHighlighted(field) {
     return this._highlighted === field ? HIGHLIGHT_CLASS : ''
+  }
+
+  /**
+   * @param { EventTarget | null } target
+   */
+  highlightQuestion(target) {
+    if (target instanceof HTMLButtonElement) {
+      const elem = document.getElementById(
+        /** @type {string} */ (target.dataset.questionid)
+      )
+      if (elem) {
+        elem.classList.add(HIGHLIGHT_CLASS)
+      }
+    }
   }
 }
 

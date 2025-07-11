@@ -170,6 +170,10 @@ describe('ItemReorder Class', () => {
       foundItemOrderInput instanceof HTMLInputElement
         ? foundItemOrderInput
         : null
+    // Mock dispatchEvent to avoid error during unit test
+    if (foundItemOrderInput) {
+      foundItemOrderInput.dispatchEvent = jest.fn()
+    }
     announcementRegion = document.getElementById('reorder-announcement')
 
     if (container instanceof HTMLOListElement) {
@@ -330,12 +334,6 @@ describe('ItemReorder Class', () => {
       )
       mockEvt.item.setAttribute = jest.fn()
 
-      // Mock dispatchEvent to avoid error during unit test
-      const foundItemOrderInput = document.getElementById('itemOrder')
-      if (foundItemOrderInput) {
-        foundItemOrderInput.dispatchEvent = jest.fn()
-      }
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mockInstance._onEndHandler(mockEvt)
 
@@ -384,12 +382,6 @@ describe('ItemReorder Class', () => {
       const setAttributeSpy = jest.spyOn(itemToInteractWith, 'setAttribute')
       const itemFocusSpy = jest.spyOn(itemToInteractWith, 'focus')
 
-      // Mock dispatchEvent to avoid error during unit test
-      const foundItemOrderInput = document.getElementById('itemOrder')
-      if (foundItemOrderInput) {
-        foundItemOrderInput.dispatchEvent = jest.fn()
-      }
-
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mockInstance._onEndHandler(mockEvt)
 
@@ -414,12 +406,6 @@ describe('ItemReorder Class', () => {
       const item = mockEvt.item
       const addClassSpy = jest.spyOn(item.classList, 'add')
 
-      // Mock dispatchEvent to avoid error during unit test
-      const foundItemOrderInput = document.getElementById('itemOrder')
-      if (foundItemOrderInput) {
-        foundItemOrderInput.dispatchEvent = jest.fn()
-      }
-
       expect(() =>
         itemReorderInstance?.handleSortableEnd(
           /** @type {Sortable.SortableEvent} */ (/** @type {any} */ (mockEvt))
@@ -441,12 +427,6 @@ describe('ItemReorder Class', () => {
       const panelFocusClass = itemReorderInstance.panelFocusClass
       const item = mockEvt.item
       const addClassSpy = jest.spyOn(item.classList, 'add')
-
-      // Mock dispatchEvent to avoid error during unit test
-      const foundItemOrderInput = document.getElementById('itemOrder')
-      if (foundItemOrderInput) {
-        foundItemOrderInput.dispatchEvent = jest.fn()
-      }
 
       expect(() =>
         itemReorderInstance?.handleSortableEnd(
@@ -476,12 +456,6 @@ describe('ItemReorder Class', () => {
         .spyOn(itemReorderInstance, 'announceReorder')
         .mockImplementation(() => undefined)
       const focusIfExistsSpy = jest.spyOn(ItemReorderModule, 'focusIfExists')
-
-      // Mock dispatchEvent to avoid error during unit test
-      const foundItemOrderInput = document.getElementById('itemOrder')
-      if (foundItemOrderInput) {
-        foundItemOrderInput.dispatchEvent = jest.fn()
-      }
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mockSorteableInstance._onEndHandler(mockEvt)

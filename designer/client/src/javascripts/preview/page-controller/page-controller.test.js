@@ -11,7 +11,10 @@ import {
   pageHeadingAndGuidanceHTML,
   repeaterPageHTML
 } from '~/src/javascripts/preview/__stubs__/page.js'
-import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
+import {
+  questionDetailsPreviewHTML,
+  upDownReorderButtonsHTML
+} from '~/src/javascripts/preview/__stubs__/question'
 import {
   PagePreviewDomElements,
   PagePreviewListeners
@@ -85,11 +88,15 @@ describe('page-controller', () => {
     const renderer = new PageRendererStub(pageRendererCb)
     const inputEvent = new InputEvent('input', { bubbles: true })
     const changeEvent = new InputEvent('change', { bubbles: true })
+    const focusEvent = new InputEvent('focus', { bubbles: true })
+    const blurEvent = new InputEvent('blur', { bubbles: true })
 
     beforeEach(() => {
       jest.clearAllMocks()
       document.body.innerHTML =
-        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+        pageHeadingAndGuidanceHTML +
+        questionDetailsPreviewHTML +
+        upDownReorderButtonsHTML
       pagePreviewElements = new PagePreviewDomElements()
       pageController = new PreviewPageController(
         components,
@@ -97,6 +104,7 @@ describe('page-controller', () => {
         definition,
         renderer
       )
+      pageController.highlightQuestion = jest.fn()
       pageListeners = new PagePreviewListeners(
         pageController,
         pagePreviewElements
@@ -165,6 +173,27 @@ describe('page-controller', () => {
       pagePreviewElements.guidanceElement.dispatchEvent(inputEvent)
       expect(pageController.guidance.text).toBe('New guidance')
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
+    })
+
+    it('should highlight a question', () => {
+      if (pagePreviewElements.questionUpDownButtonElements.length === 0) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.questionUpDownButtonElements[0].dispatchEvent(
+        focusEvent
+      )
+      expect(pageController.highlightQuestion).toHaveBeenCalled()
+    })
+
+    it('should remove highlight from a question', () => {
+      pageController.clearHighlight = jest.fn()
+      if (pagePreviewElements.questionUpDownButtonElements.length === 0) {
+        throw new Error('Failed')
+      }
+      pagePreviewElements.questionUpDownButtonElements[0].dispatchEvent(
+        blurEvent
+      )
+      expect(pageController.clearHighlight).toHaveBeenCalled()
     })
 
     it('should handle missing details', () => {
