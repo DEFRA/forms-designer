@@ -8,6 +8,11 @@ export class PreviewComponent {
   static PATH = 'preview-components/'
   /**
    * @abstract
+   * @type { string | undefined }
+   */
+  _id = undefined
+  /**
+   * @abstract
    * @type {ComponentType}
    */
   componentType = ComponentType.Details
@@ -191,6 +196,20 @@ export class PreviewComponent {
   set highlight(value) {
     this._highlight = value
     this.render()
+  }
+
+  /**
+   * @type { string | undefined }
+   */
+  get id() {
+    return this._id
+  }
+
+  /**
+   * @param { string | undefined } value
+   */
+  set id(value) {
+    this._id = value
   }
 
   /**

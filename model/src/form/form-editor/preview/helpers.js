@@ -90,7 +90,12 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
 
       const QuestionConstructor = InputFieldComponentDictionary[component.type]
 
-      return new QuestionConstructor(questionElements, questionRenderer)
+      const previewComponent = new QuestionConstructor(
+        questionElements,
+        questionRenderer
+      )
+      previewComponent.id = component.id
+      return previewComponent
     }
   )
 }
@@ -99,6 +104,6 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
  * @import { QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
- * @import { Item, FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { FormComponentsDef, ComponentDef } from '~/src/components/types.js'
+ * @import { FormDefinition } from '~/src/form/form-definition/types.js'
+ * @import { ComponentDef } from '~/src/components/types.js'
  */

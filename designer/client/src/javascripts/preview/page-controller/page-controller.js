@@ -35,6 +35,11 @@ export class PagePreviewDomElements extends DomElements {
    */
   questionUpDownButtonElements = []
 
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  listItemOrderElement = null
+
   constructor() {
     super()
     this.headingElement = /** @type {HTMLInputElement|null} */ (
@@ -54,6 +59,9 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.questionUpDownButtonElements = /** @type {HTMLInputElement[]} */ (
       Array.from(document.getElementsByClassName('reorder-button-js'))
+    )
+    this.listItemOrderElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('itemOrder')
     )
   }
 
@@ -220,11 +228,14 @@ export class PagePreviewListeners {
          * @param {FocusEvent} _focusEvent
          */
         handleEvent: (_focusEvent) => {
-          // console.log('focus', _focusEvent)
-          this._pageController.setHighLighted(
-            PreviewPageControllerBase.HighlightClass.QUESTION,
-            1
-          )
+          if (_focusEvent.target instanceof HTMLButtonElement) {
+            const elem = document.getElementById(
+              /** @type {string} */ (_focusEvent.target.dataset.questionid)
+            )
+            if (elem) {
+              elem.classList.add('highlight')
+            }
+          }
         }
       },
       blur: {
@@ -232,8 +243,29 @@ export class PagePreviewListeners {
          * @param {FocusEvent} _focusEvent
          */
         handleEvent: (_focusEvent) => {
-          // console.log('blur')
           this._pageController.clearHighlight()
+        }
+      }
+    },
+    listItemOrder: {
+      change: {
+        /**
+         * @param {{ target: HTMLInputElement | null }} _inputEvent
+         */
+        handleEvent: (_inputEvent) => {
+          this._pageController.reorderComponents(_inputEvent.target?.value)
+          this._pageController.render()
+          const elems = document.getElementsByClassName('reorder-panel-focus')
+          if (elems.length > 0) {
+            const elem0 = /** @type {HTMLElement} */ (elems[0])
+            const questionId = elem0.dataset.id
+            const elem = document.getElementById(
+              /** @type {string} */ (questionId)
+            )
+            if (elem) {
+              elem.classList.add('highlight')
+            }
+          }
         }
       }
     }
@@ -268,6 +300,11 @@ export class PagePreviewListeners {
       })
 
     const allListeners = [
+      [
+        this._baseElements.listItemOrderElement,
+        this._listeners.listItemOrder.change,
+        'change'
+      ],
       [
         this._baseElements.headingElement,
         this._listeners.heading.input,
@@ -356,5 +393,5 @@ export class PagePreviewListeners {
 }
 
 /**
- * @import { PageOverviewElements, DomElementsBase } from '@defra/forms-model'
+ * @import { PageOverviewElements } from '@defra/forms-model'
  */
