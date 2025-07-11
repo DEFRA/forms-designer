@@ -164,7 +164,8 @@ export const allBaseSettingsFields = {
     },
     hint: {
       text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
-    }
+    },
+    customTemplate: 'short-description'
   },
   fileTypes: {
     id: 'fileTypes',
