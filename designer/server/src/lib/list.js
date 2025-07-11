@@ -157,7 +157,8 @@ export function populateListIds(definition, listRef, listItems) {
     return {
       id: found?.id,
       text: item.text,
-      value: item.value
+      value: item.value,
+      hint: item.hint
     }
   }
 
