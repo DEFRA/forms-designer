@@ -26,6 +26,7 @@ const checkBoxListId = '0c427c3d-7502-445b-bd07-bdc8613e74cc'
 const checkboxComponentId = 'e40d2b9d-84d6-4ae5-bc80-0cdddd894c8c'
 const checkboxPageId = 'f229fb05-6639-4a6c-84aa-4df47d31dc78'
 const listIdWithItemIds = 'c3e6bf9a-d667-4f6e-a1f1-f2d07ab32373'
+const listIdWithItemIdsAndDesc = '93cb6046-9d35-4a6b-ae8b-78b0230b6804'
 
 const autoCompletePage = buildQuestionPage({
   id: autoCompletePageId,
@@ -110,6 +111,31 @@ const listWithItemIds = buildList({
   ]
 })
 
+const listWithItemIdsAndDesc = buildList({
+  id: listIdWithItemIdsAndDesc,
+  name: 'listIdWithItemIdsAndDesc',
+  items: [
+    buildListItem({
+      id: 'id1',
+      value: 'england',
+      text: 'England',
+      description: 'Eng'
+    }),
+    buildListItem({
+      id: 'id2',
+      value: 'scotland',
+      text: 'Scotland',
+      description: 'Sco'
+    }),
+    buildListItem({
+      id: 'id3',
+      value: 'wales',
+      text: 'Wales',
+      description: 'Wal'
+    })
+  ]
+})
+
 const orphanedListDefinition = buildDefinition({
   pages: [autoCompletePage],
   lists: [list]
@@ -139,6 +165,10 @@ const definitionWithNonUniquelyMappedList = buildDefinition({
 
 const definitionWithListItemIds = buildDefinition({
   lists: [listWithItemIds]
+})
+
+const definitionWithListItemIdsAndDesc = buildDefinition({
+  lists: [listWithItemIdsAndDesc]
 })
 
 export function uniquelyMappedListsStubs() {
@@ -191,6 +221,10 @@ export function uniquelyMappedListsStubs() {
     exampleWithListItemIds: {
       definition: definitionWithListItemIds,
       listIdWithItemIds
+    },
+    exampleWithListItemIdsAndDesc: {
+      definition: definitionWithListItemIdsAndDesc,
+      listIdWithItemIdsAndDesc
     }
   }
 }

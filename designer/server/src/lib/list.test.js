@@ -12,7 +12,7 @@ import {
 import {
   createList,
   deleteList,
-  populateListIds,
+  mergeListItems,
   removeUniquelyMappedListFromQuestion,
   removeUniquelyMappedListsFromPage,
   updateList,
@@ -251,16 +251,16 @@ describe('list.js', () => {
     })
   })
 
-  describe('populateListIds', () => {
+  describe('mergeListItems', () => {
     test('should handle blank list', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [])
+      const populated = mergeListItems(definition, listIdWithItemIds, [])
       expect(populated).toEqual([])
     })
 
     test('should handle incorrect list ref', () => {
       const { definition } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, 'wrong-list-id', [
+      const populated = mergeListItems(definition, 'wrong-list-id', [
         { text: 'EnglandChanged', value: 'england' },
         { text: 'ScotandChanged', value: 'scotland' },
         { text: 'WalesChanged', value: 'wales' }
@@ -274,7 +274,7 @@ describe('list.js', () => {
 
     test('should populate known ids using code value', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [
+      const populated = mergeListItems(definition, listIdWithItemIds, [
         { text: 'EnglandChanged', value: 'england' },
         { text: 'ScotandChanged', value: 'scotland' },
         { text: 'WalesChanged', value: 'wales' }
@@ -288,7 +288,7 @@ describe('list.js', () => {
 
     test('should populate known ids using display text', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [
+      const populated = mergeListItems(definition, listIdWithItemIds, [
         { text: 'England', value: 'eng' },
         { text: 'Scotland', value: 'scot' },
         { text: 'Wales', value: 'wal' }
@@ -297,6 +297,35 @@ describe('list.js', () => {
         { id: 'id1', text: 'England', value: 'eng' },
         { id: 'id2', text: 'Scotland', value: 'scot' },
         { id: 'id3', text: 'Wales', value: 'wal' }
+      ])
+    })
+
+    test('should retain hint text if provided', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = mergeListItems(definition, listIdWithItemIds, [
+        { text: 'England', value: 'eng', hint: { text: 'help' } },
+        { text: 'Scotland', value: 'scot' },
+        { text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }
+      ])
+      expect(populated).toEqual([
+        { id: 'id1', text: 'England', value: 'eng', hint: { text: 'help' } },
+        { id: 'id2', text: 'Scotland', value: 'scot' },
+        { id: 'id3', text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }
+      ])
+    })
+
+    test('should retain all previous item values', () => {
+      const { definition, listIdWithItemIdsAndDesc } =
+        listStubs.exampleWithListItemIdsAndDesc
+      const populated = mergeListItems(definition, listIdWithItemIdsAndDesc, [
+        { text: 'England', value: 'eng' },
+        { text: 'Scotland', value: 'scot' },
+        { text: 'Wales', value: 'wal' }
+      ])
+      expect(populated).toEqual([
+        { id: 'id1', text: 'England', value: 'eng', description: 'Eng' },
+        { id: 'id2', text: 'Scotland', value: 'scot', description: 'Sco' },
+        { id: 'id3', text: 'Wales', value: 'wal', description: 'Wal' }
       ])
     })
   })

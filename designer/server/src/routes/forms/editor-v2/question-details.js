@@ -25,7 +25,7 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { populateListIds, upsertList } from '~/src/lib/list.js'
+import { mergeListItems, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
@@ -163,8 +163,8 @@ export async function saveList(
   )
 
   if (listMapped.id) {
-    // Existing list - match ids against entries
-    listMapped.items = populateListIds(definition, listMapped.id, listItems)
+    // Existing list - merge with entries
+    listMapped.items = mergeListItems(definition, listMapped.id, listItems)
   }
 
   const { list, status } = await upsertList(
