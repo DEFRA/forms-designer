@@ -145,17 +145,19 @@ export async function removeUniquelyMappedListsFromPage(
  * @param { Item[] | undefined } listItems
  * @returns {Item[]}
  */
-export function populateListIds(definition, listRef, listItems) {
+export function mergeListItems(definition, listRef, listItems) {
   /**
    * @param {Item[]} listItems
    * @param {Item} item
    */
-  function populateExistingId(listItems, item) {
+  function mergeExistingItem(listItems, item) {
     const found =
       listItems.find((i) => i.value === item.value) ??
-      listItems.find((i) => i.text === item.text)
+      listItems.find((i) => i.text === item.text) ??
+      {}
+
     return {
-      id: found?.id,
+      ...found,
       text: item.text,
       value: item.value,
       hint: item.hint
@@ -166,7 +168,7 @@ export function populateListIds(definition, listRef, listItems) {
   const existingListItems = existingList?.items ?? []
 
   return /** @type {Item[]} */ (
-    listItems?.map((x) => populateExistingId(existingListItems, x))
+    listItems?.map((x) => mergeExistingItem(existingListItems, x))
   )
 }
 
