@@ -4,6 +4,8 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "icon-button/macro.njk" import appIconButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -35,6 +37,16 @@
     {% endif %}
     <div class="govuk-button-group">
       <a class="govuk-button" href="./condition/new">Create new condition</a>
+      {% if summaryTable.rows | length > 1 %}
+        {{ appIconButton({
+          label: "Join selected conditions",
+          icon: 'join',
+          type: 'link',
+          noNewTab: true,
+          href: './conditions-join/new',
+          extraClasses: 'govuk-button--secondary'
+        }) }}
+      {% endif %}
     </div>
   {% endcall %}
 {% endblock %}
