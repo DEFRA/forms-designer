@@ -205,6 +205,28 @@ describe('page-controller', () => {
       }
     }
 
+    const buildControllerWithNoComponents = ({
+      currentPage = page,
+      definition = formDefinition,
+      components = /** @type {ComponentDef[]} */ ([])
+    } = {}) => {
+      const pageRenderMock = jest.fn()
+      const renderer = new PageRendererStub(pageRenderMock)
+      const pageElements = new PagePreviewElements(currentPage)
+      const pageController = new PreviewPageController(
+        components,
+        pageElements,
+        definition,
+        renderer
+      )
+
+      return {
+        pageController,
+        pageRenderMock,
+        pageElements
+      }
+    }
+
     it('should return the page title should one exist', () => {
       const { pageController } = buildController()
       const expectedPageComponent = {
@@ -382,6 +404,32 @@ describe('page-controller', () => {
         textFieldComponent.type
       )
       expect(pageController.components[2].questionType).toBe(listComponent.type)
+    })
+
+    it('should ignore reorder if no sort order of items', () => {
+      const { pageController } = buildController()
+      expect(pageController.components[0].questionType).toBe(
+        textFieldComponent.type
+      )
+      expect(pageController.components[1].questionType).toBe(listComponent.type)
+      expect(pageController.components[2].questionType).toBe(
+        selectComponent.type
+      )
+      pageController.reorderComponents(undefined)
+      expect(pageController.components[0].questionType).toBe(
+        textFieldComponent.type
+      )
+      expect(pageController.components[1].questionType).toBe(listComponent.type)
+      expect(pageController.components[2].questionType).toBe(
+        selectComponent.type
+      )
+    })
+
+    it('should ignore reorder if no components', () => {
+      const { pageController } = buildControllerWithNoComponents()
+      expect(pageController.components).toHaveLength(0)
+      pageController.reorderComponents('some-id')
+      expect(pageController.components).toHaveLength(0)
     })
 
     describe('component title size', () => {
