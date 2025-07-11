@@ -47,8 +47,8 @@
     <div class="govuk-button-group">
       <button type="submit" name="movement" id="focus-up-{{ params.itemId }}" class="govuk-button govuk-button--secondary reorder-button{{ upHiddenClass }} reorder-button-no-js" {% if autoFocusUpButton %}autofocus{% endif %} value="up|{{ params.itemId }}" aria-label="{{ ariaLabelUp }}">Up</button>
       <button type="submit" name="movement" id="focus-down-{{ params.itemId }}" class="govuk-button govuk-button--secondary reorder-button{{ downHiddenClass }} reorder-button-no-js" {% if autoFocusDownButton %}autofocus{% endif %} value="down|{{ params.itemId }}" aria-label="{{ ariaLabelDown }}">Down</button>
-      <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" aria-label="Button, Move {{ typeNameLower }}: Up, {{ typeName }} {{ params.itemNum }} of {{ params.totalItems }}: {{ params.itemTitle }}" style="display: none; width: 80px;">Up</button>
-      <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" aria-label="Button, Move {{ typeNameLower }}: Down, {{ typeName }} {{ params.itemNum }} of {{ params.totalItems }}: {{ params.itemTitle }}" style="display: none; width: 80px;">Down</button>
+      <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" type="button" aria-label="Button, Move {{ typeNameLower }}: Up, {{ typeName }} {{ params.itemNum }} of {{ params.totalItems }}: {{ params.itemTitle }}" style="display: none; width: 80px;" data-questionid="{{ params.dataId }}">Up</button>
+      <button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" type="button" aria-label="Button, Move {{ typeNameLower }}: Down, {{ typeName }} {{ params.itemNum }} of {{ params.totalItems }}: {{ params.itemTitle }}" style="display: none; width: 80px;" data-questionid="{{ params.dataId }}">Down</button>
     </div>
   </div>
 </li>

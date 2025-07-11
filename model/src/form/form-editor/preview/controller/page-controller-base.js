@@ -197,6 +197,28 @@ export class PreviewPageControllerBase {
   }
 
   /**
+   *
+   * @param { string | undefined } newOrder
+   */
+  reorderComponents(newOrder) {
+    if (!newOrder) {
+      return
+    }
+
+    const MAX = Number.MAX_SAFE_INTEGER
+    const order = newOrder.split(',')
+
+    if (this._components.length > 0) {
+      this._components.sort((a, b) => {
+        const posA = a.id && order.includes(a.id) ? order.indexOf(a.id) : MAX
+        const posB = b.id && order.includes(b.id) ? order.indexOf(b.id) : MAX
+
+        return posA - posB
+      })
+    }
+  }
+
+  /**
    * @returns {string}
    * @protected
    */
@@ -376,13 +398,25 @@ export class PreviewPageControllerBase {
   _isHighlighted(field) {
     return this._highlighted === field ? HIGHLIGHT_CLASS : ''
   }
+
+  /**
+   * @param { EventTarget | null } target
+   */
+  highlightQuestion(target) {
+    if (target instanceof HTMLButtonElement) {
+      const elem = document.getElementById(
+        /** @type {string} */ (target.dataset.questionid)
+      )
+      if (elem) {
+        elem.classList.add(HIGHLIGHT_CLASS)
+      }
+    }
+  }
 }
 
 /**
  * @import { PageRenderer, PageOverviewElements, PagePreviewBaseElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
- * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
- * @import { FormDefinition, Page } from '~/src/form/form-definition/types.js'
- * @import { ComponentDef, MarkdownComponent } from '~/src/components/types.js'
+ * @import { Page } from '~/src/form/form-definition/types.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
  */

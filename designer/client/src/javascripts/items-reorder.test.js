@@ -170,6 +170,10 @@ describe('ItemReorder Class', () => {
       foundItemOrderInput instanceof HTMLInputElement
         ? foundItemOrderInput
         : null
+    // Mock dispatchEvent to avoid error during unit test
+    if (foundItemOrderInput) {
+      foundItemOrderInput.dispatchEvent = jest.fn()
+    }
     announcementRegion = document.getElementById('reorder-announcement')
 
     if (container instanceof HTMLOListElement) {

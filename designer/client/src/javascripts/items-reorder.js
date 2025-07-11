@@ -175,6 +175,7 @@ export class ItemReorder {
         movedItem.classList.add(this.panelFocusClass)
       }
     }
+    this.triggerRerender()
   }
 
   /**
@@ -250,6 +251,7 @@ export class ItemReorder {
       this.updateHiddenItemOrderData()
       this.announceSuccessfulMove(itemToMove)
       this.focusAfterMove(itemToMove, isUpButtonOriginallyClicked)
+      this.triggerRerender()
     }
   }
 
@@ -556,6 +558,15 @@ export class ItemReorder {
     this.itemOrderInput.value = itemOrderIds.join(',')
   }
 
+  triggerRerender() {
+    if (!this.itemOrderInput) {
+      return
+    }
+
+    const event = new Event('change')
+    this.itemOrderInput.dispatchEvent(event)
+  }
+
   /**
    * Announces the reorder action to screen readers via the live region.
    * @param {HTMLElement} movedItem - The list item that was moved.
@@ -595,7 +606,7 @@ export class ItemReorder {
 /**
  * Initializes the item reorder functionality for matching containers.
  * @param {Element} container - The container to initialize item reordering on.
- * @returns {ItemReorder|null} The ItemReorder instance or null if not applicable.
+ * @returns { ItemReorder | null } The ItemReorder instance or null if not applicable.
  */
 export function initItemReorder(container) {
   if (

@@ -238,6 +238,7 @@ export function buildRadioComponent(
   partialListComponent: Partial<RadiosFieldComponent> = {}
 ): RadiosFieldComponent {
   return {
+    id: '34455d57-df37-4b69-a64f-6c3af0317ebe',
     name: 'RadioField',
     title: 'Which country do you live in?',
     list: 'RadioList',

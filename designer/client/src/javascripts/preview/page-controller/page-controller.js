@@ -30,6 +30,16 @@ export class PagePreviewDomElements extends DomElements {
    */
   questionSetNameElement = null
 
+  /**
+   * @type {HTMLInputElement[]}
+   */
+  questionUpDownButtonElements = []
+
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  listItemOrderElement = null
+
   constructor() {
     super()
     this.headingElement = /** @type {HTMLInputElement|null} */ (
@@ -46,6 +56,12 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.questionSetNameElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('questionSetName')
+    )
+    this.questionUpDownButtonElements = /** @type {HTMLInputElement[]} */ (
+      Array.from(document.getElementsByClassName('reorder-button-js'))
+    )
+    this.listItemOrderElement = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('itemOrder')
     )
   }
 
@@ -205,6 +221,49 @@ export class PagePreviewListeners {
           this._pageController.clearHighlight()
         }
       }
+    },
+    questionUpDownButtonElement: {
+      focus: {
+        /**
+         * @param {FocusEvent} _focusEvent
+         */
+        handleEvent: (_focusEvent) => {
+          this._pageController.highlightQuestion(_focusEvent.target)
+        }
+      },
+      blur: {
+        /**
+         * @param {FocusEvent} _focusEvent
+         */
+        handleEvent: (_focusEvent) => {
+          this._pageController.clearHighlight()
+        }
+      }
+    },
+    listItemOrder: {
+      change: {
+        /**
+         * @param {{ target: HTMLInputElement | null }} _inputEvent
+         */
+        handleEvent: (_inputEvent) => {
+          this._pageController.reorderComponents(_inputEvent.target?.value)
+          this._pageController.render()
+
+          // Re-assert highlight on question
+          const buttonElem = /** @type {HTMLInputElement | null } */ (
+            document.querySelector('.reorder-panel-focus')
+          )
+          if (buttonElem) {
+            const questionId = buttonElem.dataset.id
+            const question = document.getElementById(
+              /** @type {string} */ (questionId)
+            )
+            if (question) {
+              question.classList.add('highlight')
+            }
+          }
+        }
+      }
     }
   }
 
@@ -218,11 +277,39 @@ export class PagePreviewListeners {
     this._baseElements = baseElements
   }
 
+  getUpDownListeners() {
+    return {
+      upDownButtonListenersFocus:
+        this._baseElements.questionUpDownButtonElements.map((butt) => {
+          return [
+            butt,
+            this._listeners.questionUpDownButtonElement.focus,
+            'focus'
+          ]
+        }),
+      upDownButtonListenersBlur:
+        this._baseElements.questionUpDownButtonElements.map((butt) => {
+          return [
+            butt,
+            this._listeners.questionUpDownButtonElement.blur,
+            'blur'
+          ]
+        })
+    }
+  }
+
   /**
    * @returns {[HTMLInputElement|null, EventListenerObject, string][]}
    */
   getListeners() {
-    return [
+    const upDownListeners = this.getUpDownListeners()
+
+    const allListeners = [
+      [
+        this._baseElements.listItemOrderElement,
+        this._listeners.listItemOrder.change,
+        'change'
+      ],
       [
         this._baseElements.headingElement,
         this._listeners.heading.input,
@@ -273,8 +360,14 @@ export class PagePreviewListeners {
         this._baseElements.questionSetNameElement,
         this._listeners.questionSetNameElement.blur,
         'blur'
-      ]
+      ],
+      ...upDownListeners.upDownButtonListenersFocus,
+      ...upDownListeners.upDownButtonListenersBlur
     ]
+
+    return /** @type {[HTMLInputElement, EventListenerObject, string][]} */ (
+      allListeners
+    )
   }
 
   /**
@@ -305,5 +398,5 @@ export class PagePreviewListeners {
 }
 
 /**
- * @import { PageOverviewElements, DomElementsBase } from '@defra/forms-model'
+ * @import { PageOverviewElements } from '@defra/forms-model'
  */
