@@ -247,11 +247,14 @@ export class PagePreviewListeners {
          */
         handleEvent: (_inputEvent) => {
           this._pageController.reorderComponents(_inputEvent.target?.value)
+          this._pageController.render()
 
-          const elems = document.getElementsByClassName('reorder-panel-focus')
-          if (elems.length > 0) {
-            const elem0 = /** @type {HTMLElement} */ (elems[0])
-            const questionId = elem0.dataset.id
+          // Re-assert highlight on question
+          const buttonElem = /** @type {HTMLInputElement | null } */ (
+            document.querySelector('.reorder-panel-focus')
+          )
+          if (buttonElem) {
+            const questionId = buttonElem.dataset.id
             const question = document.getElementById(
               /** @type {string} */ (questionId)
             )

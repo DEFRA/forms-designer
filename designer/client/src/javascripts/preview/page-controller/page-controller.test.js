@@ -12,6 +12,7 @@ import {
   repeaterPageHTML
 } from '~/src/javascripts/preview/__stubs__/page.js'
 import {
+  listItemOrderHTML,
   questionDetailsPreviewHTML,
   upDownReorderButtonsHTML
 } from '~/src/javascripts/preview/__stubs__/question'
@@ -96,7 +97,8 @@ describe('page-controller', () => {
       document.body.innerHTML =
         pageHeadingAndGuidanceHTML +
         questionDetailsPreviewHTML +
-        upDownReorderButtonsHTML
+        upDownReorderButtonsHTML +
+        listItemOrderHTML
       pagePreviewElements = new PagePreviewDomElements()
       pageController = new PreviewPageController(
         components,
@@ -194,6 +196,18 @@ describe('page-controller', () => {
         blurEvent
       )
       expect(pageController.clearHighlight).toHaveBeenCalled()
+    })
+
+    it('should rerender after question reordering', () => {
+      if (pagePreviewElements.questionUpDownButtonElements.length === 0) {
+        throw new Error('Failed')
+      }
+      if (!pagePreviewElements.listItemOrderElement) {
+        throw new Error('Failed')
+      }
+      pageController.reorderComponents = jest.fn()
+      pagePreviewElements.listItemOrderElement.dispatchEvent(changeEvent)
+      expect(pageController.reorderComponents).toHaveBeenCalled()
     })
 
     it('should handle missing details', () => {

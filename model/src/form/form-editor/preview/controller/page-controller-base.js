@@ -216,8 +216,6 @@ export class PreviewPageControllerBase {
         return posA - posB
       })
     }
-
-    this.render()
   }
 
   /**

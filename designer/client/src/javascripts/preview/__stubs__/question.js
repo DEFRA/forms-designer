@@ -313,7 +313,10 @@ export const questionDetailsPreviewHTML =
   '<div class="border-left-container-shorttext" id="preview-panel-content"><div id="preview-panel-inner"><div>something</div></div></div>'
 
 export const upDownReorderButtonsHTML =
-  '<button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js" data-questionid="756286fc-ee67-470c-b62c-d4638eb8df35" type="button" style="display: none;">Up</button><button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" data-questionid="756286fc-ee67-470c-b62c-d4638eb8df35" type="button" style="display: none;">Down</button>'
+  '<button class="app-button govuk-button govuk-button--secondary js-reorderable-list-up reorder-button-js reorder-panel-focus" data-questionid="756286fc-ee67-470c-b62c-d4638eb8df35" type="button" style="display: none;">Up</button><button class="app-button govuk-button govuk-button--secondary js-reorderable-list-down reorder-button-js" data-questionid="756286fc-ee67-470c-b62c-d4638eb8df35" type="button" style="display: none;">Down</button>'
+
+export const listItemOrderHTML =
+  '<input type="hidden" name="itemOrder" id="itemOrder" value="" />'
 
 /**
  *
