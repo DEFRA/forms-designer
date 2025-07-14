@@ -84,6 +84,12 @@ export class PagePreviewDomElements extends DomElements {
   get repeatQuestion() {
     return this.questionSetNameElement?.value ?? undefined
   }
+
+  findActiveReorderElement() {
+    return /** @type {HTMLInputElement | null } */ (
+      document.querySelector('.reorder-panel-focus')
+    )
+  }
 }
 
 /**
@@ -228,7 +234,13 @@ export class PagePreviewListeners {
          * @param {FocusEvent} _focusEvent
          */
         handleEvent: (_focusEvent) => {
-          this._pageController.highlightQuestion(_focusEvent.target)
+          const questionId =
+            _focusEvent.target instanceof HTMLButtonElement
+              ? _focusEvent.target.dataset.questionid
+              : undefined
+          if (questionId) {
+            this._pageController.highlightQuestion(questionId)
+          }
         }
       },
       blur: {
@@ -250,16 +262,12 @@ export class PagePreviewListeners {
           this._pageController.render()
 
           // Re-assert highlight on question
-          const buttonElem = /** @type {HTMLInputElement | null } */ (
-            document.querySelector('.reorder-panel-focus')
-          )
+          const buttonElem = this._baseElements.findActiveReorderElement()
           if (buttonElem) {
             const questionId = buttonElem.dataset.id
-            const question = document.getElementById(
-              /** @type {string} */ (questionId)
-            )
-            if (question) {
-              question.classList.add('highlight')
+
+            if (questionId) {
+              this._pageController.highlightQuestion(questionId)
             }
           }
         }

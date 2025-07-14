@@ -259,6 +259,7 @@ describe('page-controller', () => {
             classes: '',
             text: ''
           },
+          classes: '',
           items: [
             {
               hint: undefined,

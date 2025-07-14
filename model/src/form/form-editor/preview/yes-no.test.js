@@ -16,6 +16,7 @@ describe('YesNoQuestion', () => {
       id: 'yesNo',
       name: 'yesNo',
       type: 'boolean',
+      classes: '',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

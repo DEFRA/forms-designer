@@ -207,6 +207,7 @@ describe('list', () => {
       const expectedModel = {
         id: 'listInput',
         name: 'listInputField',
+        classes: '',
         fieldset: {
           legend: {
             text: 'Which quest would you like to pick?',

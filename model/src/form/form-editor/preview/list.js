@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import {
   Question,
@@ -145,6 +146,7 @@ export class ListQuestion extends Question {
    *  name: string;
    *  fieldset?: GovukFieldset;
    *  id: string;
+   *  classes: string;
    *  items: ListItemReadonly[]
    * }}
    */
@@ -167,6 +169,7 @@ export class ListQuestion extends Question {
       fieldset: this.fieldSet,
       hint: this.hint,
       items: this.list,
+      classes: this._highlighted ? HIGHLIGHT_CLASS : '',
       ...afterInputs
     }
   }

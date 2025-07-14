@@ -1,6 +1,6 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 
-<fieldset class="govuk-fieldset">
+<fieldset class="govuk-fieldset {{ model.classes }}">
   <legend class="govuk-fieldset__legend {{ model.fieldset.legend.classes }}" id="question-label-output">
     {{ model.fieldset.legend.text }}
   </legend>

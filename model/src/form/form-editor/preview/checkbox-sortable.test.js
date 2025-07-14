@@ -17,6 +17,7 @@ describe('CheckboxSortableQuestion', () => {
     expect(checkbox.renderInput).toEqual({
       id: 'checkboxField',
       name: 'checkboxField',
+      classes: '',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

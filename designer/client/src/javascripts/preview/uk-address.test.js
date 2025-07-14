@@ -19,6 +19,7 @@ describe('address', () => {
       expect(res.renderInput).toEqual({
         id: 'addressField',
         name: 'addressField',
+        classes: '',
         fieldset: {
           legend: {
             classes: 'govuk-fieldset__legend--l',

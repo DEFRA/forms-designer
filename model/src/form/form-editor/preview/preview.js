@@ -228,7 +228,5 @@ export class PreviewComponent {
 }
 
 /**
- * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { FormComponentsDef, ContentComponentsDef, ComponentDef } from '~/src/components/types.js'
- * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
+ * @import { QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  */

@@ -1,3 +1,4 @@
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import { ComponentType } from '~/src/index.js'
@@ -30,13 +31,15 @@ export class SelectSortableQuestion extends ListSortableQuestion {
             }
       )
 
+    const highlightedClass = this._highlighted ? HIGHLIGHT_CLASS : ''
+
     return {
       id: this._fieldName,
       name: this._fieldName,
       hint: this.hint,
       label: this.label,
       items: this.selectList,
-      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      classes: this.list.length ? highlightedClass : 'govuk-visually-hidden',
       ...afterInput
     }
   }

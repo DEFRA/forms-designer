@@ -400,16 +400,16 @@ export class PreviewPageControllerBase {
   }
 
   /**
-   * @param { EventTarget | null } target
+   * @param {string} questionId
    */
-  highlightQuestion(target) {
-    if (target instanceof HTMLButtonElement) {
-      const elem = document.getElementById(
-        /** @type {string} */ (target.dataset.questionid)
-      )
-      if (elem) {
-        elem.classList.add(HIGHLIGHT_CLASS)
-      }
+  highlightQuestion(questionId) {
+    const question = this._components.find((comp) => comp.id === questionId)
+    if (question) {
+      this._components
+        .filter((comp) => comp.id !== questionId)
+        .forEach((comp2) => comp2.unHighlightContent())
+      question.highlightContent()
+      this.render()
     }
   }
 }
