@@ -22,9 +22,3 @@ export class ReorderQuestionsPageController extends PreviewPageController {
     }
   }
 }
-
-/**
- * @import { PageRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { ComponentDef } from '~/src/components/types.js'
- */

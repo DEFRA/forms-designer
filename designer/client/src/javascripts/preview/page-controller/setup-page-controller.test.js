@@ -1,6 +1,7 @@
 import {
   GuidancePageController,
-  PreviewPageController
+  PreviewPageController,
+  ReorderQuestionsPageController
 } from '@defra/forms-model'
 import {
   buildAutoCompleteComponent,
@@ -17,7 +18,8 @@ import { pageHeadingAndGuidanceHTML } from '~/src/javascripts/preview/__stubs__/
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
 import {
   setupGuidanceController,
-  setupPageController
+  setupPageController,
+  setupReorderQuestionsController
 } from '~/src/javascripts/preview/page-controller/setup-page-controller.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
@@ -124,7 +126,17 @@ describe('setup-page-controller', () => {
 
       expect(guidancePage).toBeInstanceOf(GuidancePageController)
       expect(guidancePage.title).toBe('Where do you live?')
-      // expect(guidancePage.)
+    })
+  })
+
+  describe('setupReorderQuestionsController', () => {
+    it('should setup', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      const reorderPage = setupReorderQuestionsController(page, definition)
+
+      expect(reorderPage).toBeInstanceOf(ReorderQuestionsPageController)
+      expect(reorderPage.title).toBe('Where do you live?')
     })
   })
 })

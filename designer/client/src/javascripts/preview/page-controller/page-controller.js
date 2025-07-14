@@ -30,16 +30,6 @@ export class PagePreviewDomElements extends DomElements {
    */
   questionSetNameElement = null
 
-  /**
-   * @type {HTMLInputElement[]}
-   */
-  questionUpDownButtonElements = []
-
-  /**
-   * @type {HTMLInputElement|null}
-   */
-  listItemOrderElement = null
-
   constructor() {
     super()
     this.headingElement = /** @type {HTMLInputElement|null} */ (
@@ -56,12 +46,6 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.questionSetNameElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('questionSetName')
-    )
-    this.questionUpDownButtonElements = /** @type {HTMLInputElement[]} */ (
-      Array.from(document.getElementsByClassName('reorder-button-js'))
-    )
-    this.listItemOrderElement = /** @type {HTMLInputElement|null} */ (
-      document.getElementById('itemOrder')
     )
   }
 
