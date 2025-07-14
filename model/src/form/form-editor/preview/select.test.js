@@ -112,6 +112,40 @@ describe('SelectQuestion', () => {
       ]
     })
   })
+
+  it('should hide select element if no items', () => {
+    const elements = /** @type {ListElements} */ (
+      new QuestionPreviewElements({
+        question: 'My select list',
+        hintText: '',
+        items: [],
+        optional: false,
+        shortDesc: 'list',
+        content: ''
+      })
+    )
+    const renderer = new QuestionRendererStub(jest.fn())
+    const select = new SelectQuestion(elements, renderer)
+    expect(select.renderInput).toEqual({
+      id: 'selectInput',
+      name: 'selectInput',
+      label: {
+        text: 'My select list',
+        classes: 'govuk-label--l'
+      },
+      hint: {
+        text: '',
+        classes: ''
+      },
+      classes: 'govuk-visually-hidden',
+      items: [],
+      formGroup: {
+        afterInput: {
+          html: '<div class="govuk-inset-text">No items added yet.</div>'
+        }
+      }
+    })
+  })
 })
 
 /**
