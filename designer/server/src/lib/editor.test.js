@@ -139,6 +139,12 @@ const radioQuestionDetails = {
   list: 'my-list'
 }
 
+const guidanceDetails = {
+  name: 'markdown-component',
+  type: ComponentType.Markdown,
+  content: "Please use the 'Contact us' form to get in touch with us."
+}
+
 describe('editor.js', () => {
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
 
@@ -151,23 +157,24 @@ describe('editor.js', () => {
       `./${formId}/definition/draft/pages`,
       formsEndpoint
     )
-    const expectedOptions1 = {
-      payload: {
-        title: '',
-        path: '/what-is-your-name',
-        components: [
-          {
-            title: 'What is your name?',
-            name: 'what-is-your-name',
-            type: ComponentType.TextField
-          }
-        ]
-      },
-      headers: { Authorization: `Bearer ${token}` }
-    }
 
     describe('when postJson succeeds', () => {
       test('returns response body', async () => {
+        const expectedOptions = {
+          payload: {
+            title: '',
+            path: '/what-is-your-name',
+            components: [
+              {
+                title: 'What is your name?',
+                name: 'what-is-your-name',
+                type: ComponentType.TextField
+              }
+            ]
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
         mockedPostJson.mockResolvedValueOnce({
           response: createMockResponse(),
           body: { id: 'new-id' }
@@ -179,10 +186,44 @@ describe('editor.js', () => {
           questionDetails
         )
 
-        expect(mockedPostJson).toHaveBeenCalledWith(
-          requestUrl,
-          expectedOptions1
+        expect(mockedPostJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
+        expect(result).toEqual({ id: 'new-id' })
+      })
+
+      test('preserves page settings', async () => {
+        const expectedOptions = {
+          payload: {
+            title: 'You are not eligible for this service',
+            path: '/you-are-not-eligible-for-this-service',
+            controller: ControllerType.Terminal,
+            components: [
+              {
+                name: 'markdown-component',
+                type: ComponentType.Markdown,
+                content:
+                  "Please use the 'Contact us' form to get in touch with us."
+              }
+            ]
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        mockedPostJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'new-id' }
+        })
+
+        const result = await addPageAndFirstQuestion(
+          formId,
+          token,
+          guidanceDetails,
+          {
+            title: 'You are not eligible for this service',
+            controller: ControllerType.Terminal
+          }
         )
+
+        expect(mockedPostJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
         expect(result).toEqual({ id: 'new-id' })
       })
     })
