@@ -2,6 +2,8 @@ import { hasFormField } from '~/src/components/helpers.js'
 import { PreviewPageControllerBase } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
+const EXAMPLE_TEXT = ''
+
 export class SummaryPageController extends PreviewPageControllerBase {
   /**
    * @type {string}
@@ -28,12 +30,15 @@ export class SummaryPageController extends PreviewPageControllerBase {
     })
   }
 
+  /**
+   * @returns {{ rows: SummaryRow[] }}
+   */
   get componentRows() {
-    return this._componentDefs.map((component) => {
-      const summaryRowHeading = component.shortDescription
+    const rows = this._componentDefs.map((component) => {
+      const summaryRowHeading = component.shortDescription ?? ''
       return {
         key: { text: summaryRowHeading },
-        value: { text: 'lorem ipsum dolar sit amet' },
+        value: { text: EXAMPLE_TEXT },
         actions: {
           items: [
             { href: '#', text: 'Change', visuallyHiddenText: summaryRowHeading }
@@ -41,6 +46,9 @@ export class SummaryPageController extends PreviewPageControllerBase {
         }
       }
     })
+    return {
+      rows
+    }
   }
 
   /**
@@ -58,4 +66,5 @@ export class SummaryPageController extends PreviewPageControllerBase {
  * @import { ComponentDef, ContentComponentsDef, ListComponent, FormComponentsDef } from '~/src/components/types.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
  * @import { PageRenderer, PagePreviewBaseElements } from '~/src/form/form-editor/preview/types.js'
+ * @import { SummaryRowActionItem, SummaryRow } from '~/src/form/form-editor/macros/types.js'
  */

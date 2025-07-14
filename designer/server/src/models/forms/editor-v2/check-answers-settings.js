@@ -1,7 +1,6 @@
 import {
   ComponentType,
-  PreviewPageController,
-  hasComponents,
+  SummaryPageController,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
@@ -76,18 +75,12 @@ export const dummyRenderer = {
 }
 
 /**
- * @param {Page} page
+ * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
- * @param {string} previewErrorsUrl
  * @param {string} [guidance]
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
- *    previewErrorsUrl: string;
- *    errorTemplates?: {
- *      baseErrors: {type: string, template: any}[],
- *      advancedSettingsErrors: any[]
- *    };
  *    questionType?: ComponentType,
  *    previewTitle?: string,
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] }
@@ -97,31 +90,14 @@ export function getPreviewModel(
   page,
   definition,
   previewPageUrl,
-  previewErrorsUrl,
   guidance = ''
 ) {
-  const components = definition.pages.flatMap((p) =>
-    hasComponents(p) ? p.components : []
-  )
-  const componentRows = {
-    rows: components.map((comp) => ({
-      key: {
-        text: comp.title
-      },
-      value: {
-        text: 'example value'
-      }
-    }))
-  }
-
   const elements = new PagePreviewElementsSSR(page, guidance)
 
-  const previewPageController = new PreviewPageController(
-    components,
+  const previewPageController = new SummaryPageController(
     elements,
     definition,
-    dummyRenderer,
-    'summary-controller.njk'
+    dummyRenderer
   )
 
   return {
@@ -129,13 +105,10 @@ export function getPreviewModel(
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
     guidance: previewPageController.guidance,
-    repeaterButton: previewPageController.repeaterButton,
     sectionTitle: previewPageController.sectionTitle,
     previewPageUrl,
-    previewErrorsUrl,
-    errorTemplates: undefined,
     questionType: ComponentType.TextField, // components[0]?.type
-    componentRows
+    componentRows: previewPageController.componentRows
   }
 }
 
@@ -176,8 +149,16 @@ export function checkAnswersSettingsViewModel(
     formValues?.declarationText ?? guidanceComponent?.content
   const needDeclarationVal =
     formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
-
+  const fields = settingsFields(
+    needDeclarationVal,
+    declarationTextVal,
+    validation
+  )
   const pageHeading = 'Page settings'
+  // prettier-ignore
+  const previewModel = getPreviewModel(
+    page, definition, 'previewPageUrl', fields.declarationText.value
+  )
 
   return {
     ...baseModelFields(
@@ -195,13 +176,7 @@ export function checkAnswersSettingsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    previewModel: getPreviewModel(
-      /** @type {Page} */ (page),
-      definition,
-      'previewPageUrl',
-      'previewErrorsUrl',
-      'fields.guidanceText.value'
-    ),
+    previewModel,
     preview: {
       page: JSON.stringify(page),
       definition: JSON.stringify(definition),

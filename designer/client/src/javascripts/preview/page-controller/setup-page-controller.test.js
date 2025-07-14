@@ -43,6 +43,9 @@ jest.mock('~/src/views/preview-components/fileuploadfield.njk', () => '')
 jest.mock('~/src/views/page-preview-component/template.njk', () => '')
 jest.mock('~/src/views/page-preview-component/macro.njk', () => '')
 jest.mock('~/src/views/preview-controllers/page-controller.njk', () => '')
+jest.mock('~/src/views/preview-controllers/summary-controller.njk', () => '')
+jest.mock('~/src/views/summary-preview-component/template.njk', () => '')
+jest.mock('~/src/views/summary-preview-component/macro.njk', () => '')
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
 describe('setup-page-controller', () => {

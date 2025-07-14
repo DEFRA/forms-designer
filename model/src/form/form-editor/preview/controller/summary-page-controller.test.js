@@ -89,33 +89,40 @@ describe('summary page controller', () => {
       ]
     })
     const controller = new SummaryPageController(elements, definition, renderer)
-    const expectedActions = /** @type {string} */ (
-      (hiddenText) => ({
-        actions: {
-          items: [{ href: '#', text: 'Change', visuallyHiddenText: hiddenText }]
-        }
-      })
-    )
-    const DEFAULT_TEXT = 'lorem ipsum dolar sit amet'
+    const expectedActions =
+      /** @type {(hiddenText: string) => { actions: { items: { href:string, text:string, visuallyHiddenText: string }[]}}} */ (
+        (hiddenText) => ({
+          actions: {
+            items: [
+              { href: '#', text: 'Change', visuallyHiddenText: hiddenText }
+            ]
+          }
+        })
+      )
+    const DEFAULT_TEXT = ''
     // prettier-ignore
-    expect(controller.componentRows).toEqual([
-      { key: { text: 'Your full name' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your full name')},
-      { key: { text: 'Your date of birth' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your date of birth')},
-      { key: { text: 'Your address' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your address')},
-      { key: { text: 'Your email address' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your email address')},
-      { key: { text: 'Your native language' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your native language')},
-      { key: { text: 'Your country' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your country')},
-      { key: { text: 'Your phone number' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your phone number')},
-      { key: { text: 'Your favourite pizza' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your favourite pizza')},
-      { key: { text: 'Number of pizzas' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Number of pizzas')},
-      { key: { text: 'Your choice of toppings' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your choice of toppings')},
-      { key: { text: 'Free pizza month' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Free pizza month')},
-      { key: { text: 'Your delivery confirmation' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your delivery confirmation') }
-    ])
+    expect(controller.componentRows).toEqual({
+      rows: [
+        { key: { text: 'Your full name' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your full name')},
+        { key: { text: 'Your date of birth' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your date of birth')},
+        { key: { text: 'Your address' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your address')},
+        { key: { text: 'Your email address' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your email address')},
+        { key: { text: 'Your native language' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your native language')},
+        { key: { text: 'Your country' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your country')},
+        { key: { text: 'Your phone number' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your phone number')},
+        { key: { text: 'Your favourite pizza' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your favourite pizza')},
+        { key: { text: 'Number of pizzas' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Number of pizzas')},
+        { key: { text: 'Your choice of toppings' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your choice of toppings')},
+        { key: { text: 'Free pizza month' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Free pizza month')},
+        { key: { text: 'Your delivery confirmation' }, value: { text: DEFAULT_TEXT }, ...expectedActions('Your delivery confirmation') }
+      ]
+    })
 
     expect(controller.components).toEqual([])
     expect(controller.pageTitle.text).toBe(
       'Check your answers before sending your form'
     )
+    expect(controller.guidanceText).toBe('')
+    expect(controller.components).toHaveLength(0)
   })
 })
