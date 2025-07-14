@@ -382,14 +382,6 @@ describe('editor.js', () => {
           body: { id: '456' }
         })
 
-        const expectedPatch = {
-          payload: {
-            controller: null,
-            path: '/file-upload'
-          },
-          headers: { Authorization: `Bearer ${token}` }
-        }
-
         const result = await updateQuestion(
           formId,
           token,
@@ -400,7 +392,6 @@ describe('editor.js', () => {
         )
 
         expect(mockedPutJson).toHaveBeenCalledWith(requestUrl, expectedOptions2)
-        expect(mockedPatchJson).toHaveBeenCalledWith(requestUrl, expectedPatch)
         expect(result).toEqual({ id: '456' })
       })
 
@@ -1248,6 +1239,17 @@ describe('editor.js', () => {
           type: ComponentType.TextField
         })
       ).toEqual({})
+    })
+
+    test('returns current controller by default', () => {
+      expect(
+        getControllerType(
+          {
+            type: ComponentType.TextField
+          },
+          ControllerType.Repeat
+        )
+      ).toEqual({ controller: ControllerType.Repeat })
     })
   })
 

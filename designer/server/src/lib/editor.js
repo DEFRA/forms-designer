@@ -38,11 +38,12 @@ const delJsonByComponentType = /** @type {typeof delJson<ComponentDef>} */ (
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
+ * @param {ControllerType} [currentController]
  */
-export function getControllerType(questionDetails) {
+export function getControllerType(questionDetails, currentController) {
   return questionDetails.type === ComponentType.FileUploadField
     ? { controller: ControllerType.FileUpload }
-    : {}
+    : { controller: currentController }
 }
 
 /**
@@ -141,7 +142,10 @@ export async function updateQuestion(
 
   // Determine if page controller should change
   const origControllerType = page?.controller
-  const { controller: newControllerType } = getControllerType(questionDetails)
+  const { controller: newControllerType } = getControllerType(
+    questionDetails,
+    origControllerType
+  )
   if (
     origControllerType !== newControllerType ||
     isFirstQuestionAndNoPageTitle
