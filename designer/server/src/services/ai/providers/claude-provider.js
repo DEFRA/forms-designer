@@ -314,12 +314,28 @@ export class ClaudeProvider {
         throw new Error('No valid text content found in AI response')
       }
 
+      const usage = {
+        inputTokens: response.usage.input_tokens,
+        outputTokens: response.usage.output_tokens
+      }
+
+      const cost = this.estimateCost(
+        usage.inputTokens,
+        usage.outputTokens,
+        this.model
+      )
+      logger.info(`=== TOKEN USAGE SUMMARY (EVALUATION - ${this.model}) ===`)
+      logger.info(`Input Tokens: ${usage.inputTokens.toLocaleString()}`)
+      logger.info(`Output Tokens: ${usage.outputTokens.toLocaleString()}`)
+      logger.info(
+        `Total Tokens: ${(usage.inputTokens + usage.outputTokens).toLocaleString()}`
+      )
+      logger.info(`Cost Estimate: £${cost.toFixed(4)}`)
+      logger.info(`=== END TOKEN USAGE (EVALUATION) ===`)
+
       return {
         content: firstContent.text,
-        usage: {
-          inputTokens: response.usage.input_tokens,
-          outputTokens: response.usage.output_tokens
-        }
+        usage
       }
     } catch (error) {
       logger.error('Basic generation failed:', error)
@@ -553,15 +569,15 @@ Original request: ${description}`
         actualUsage.outputTokens,
         this.model
       )
-      logger.info(`=== TOKEN USAGE SUMMARY ===`)
+      logger.info(`=== TOKEN USAGE SUMMARY (FORM GENERATION - DIRECT) ===`)
       logger.info(`Model: ${this.model}`)
       logger.info(`Input Tokens: ${actualUsage.inputTokens.toLocaleString()}`)
       logger.info(`Output Tokens: ${actualUsage.outputTokens.toLocaleString()}`)
       logger.info(
         `Total Tokens: ${(actualUsage.inputTokens + actualUsage.outputTokens).toLocaleString()}`
       )
-      logger.info(`Cost Estimate: £${cost.toFixed(2)}`)
-      logger.info(`=== END TOKEN USAGE ===`)
+      logger.info(`Cost Estimate: £${cost.toFixed(4)}`)
+      logger.info(`=== END TOKEN USAGE (FORM GENERATION - DIRECT) ===`)
 
       return {
         content: JSON.stringify(formDefinition, null, 2),
@@ -916,15 +932,15 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
         actualUsage.outputTokens,
         this.model
       )
-      logger.info(`=== TOKEN USAGE SUMMARY ===`)
+      logger.info(`=== TOKEN USAGE SUMMARY (FORM GENERATION - AGENTIC) ===`)
       logger.info(`Model: ${this.model}`)
       logger.info(`Input Tokens: ${actualUsage.inputTokens.toLocaleString()}`)
       logger.info(`Output Tokens: ${actualUsage.outputTokens.toLocaleString()}`)
       logger.info(
         `Total Tokens: ${(actualUsage.inputTokens + actualUsage.outputTokens).toLocaleString()}`
       )
-      logger.info(`Cost Estimate: £${cost.toFixed(2)}`)
-      logger.info(`=== END TOKEN USAGE ===`)
+      logger.info(`Cost Estimate: £${cost.toFixed(4)}`)
+      logger.info(`=== END TOKEN USAGE (FORM GENERATION - AGENTIC) ===`)
 
       const result = {
         content: JSON.stringify(formDefinition, null, 2),
@@ -1013,6 +1029,7 @@ Start by analysing the requirements using the analyse_form_requirements tool.`
       'claude-3-7-sonnet-20250219': { input: 2.4, output: 12 },
       'claude-3-5-sonnet-20241022': { input: 2.4, output: 12 },
       'claude-3-5-haiku-20241022': { input: 0.64, output: 3.2 },
+      'claude-3-5-haiku-latest': { input: 0.64, output: 3.2 },
       'claude-3-opus-20240229': { input: 12, output: 60 },
       'claude-3-haiku-20240307': { input: 0.2, output: 1 }
     }

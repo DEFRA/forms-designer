@@ -52,12 +52,24 @@ export default [
   ({
     method: 'GET',
     path: ROUTE_PATH_CREATE,
-    handler(request, h) {
-      const { yar } = request
+    async handler(request, h) {
+      const { yar, server } = request
 
       yar.clear(sessionNames.create)
       yar.clear(sessionNames.validationFailure.createForm)
       yar.clear('gdsAnalysis')
+
+      try {
+        const aiService = server.app.aiService
+        if (aiService) {
+          await aiService.components.tempFormManager.deleteTempForm(
+            request.yar.id
+          )
+          logger.info('Cleared existing temp form cache when starting fresh')
+        }
+      } catch (error) {
+        logger.debug('No existing temp form to clear', error)
+      }
 
       return h.redirect(ROUTE_PATH_CREATE_TITLE).temporary()
     },

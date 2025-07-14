@@ -56,9 +56,6 @@ export default /** @type {Configuration} */ ({
     'items-reorder': {
       import: ['./javascripts/items-reorder.js']
     },
-    'pages-reorder': {
-      import: ['./javascripts/pages-reorder.js']
-    },
     'ai-form-creation': {
       import: ['./javascripts/ai-form-creation.js']
     }

@@ -32,6 +32,7 @@ export interface Config {
       maxTokens: number
       temperature: number
       useDirectGeneration?: boolean
+      evaluationModel?: string
     }
     maxRetries: number
     maxSelfRefinements: number
@@ -179,12 +180,10 @@ const schema = joi.object<Config>({
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
   }),
-<<<<<<< HEAD
   awsRegion: joi.string().default('eu-west-2'),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
-  featureFlagUseEntitlementApi: joi.boolean().default(false)
-=======
+  featureFlagUseEntitlementApi: joi.boolean().default(false),
   ai: joi
     .object({
       claude: joi
@@ -193,7 +192,8 @@ const schema = joi.object<Config>({
           model: joi.string().default('claude-3-5-sonnet-20241022'),
           maxTokens: joi.number().integer().default(8000),
           temperature: joi.number().min(0).max(1).default(0.1),
-          useDirectGeneration: joi.boolean().default(false)
+          useDirectGeneration: joi.boolean().default(false),
+          evaluationModel: joi.string().default('claude-3-5-haiku-latest')
         })
         .required(),
       maxRetries: joi.number().integer().default(3),
@@ -201,7 +201,6 @@ const schema = joi.object<Config>({
       enabled: joi.boolean().default(false)
     })
     .optional()
->>>>>>> 92d15596 (WIP: AI form gen POC)
 })
 
 // Validate config
@@ -258,7 +257,8 @@ const result = schema.validate(
             model: process.env.CLAUDE_MODEL,
             maxTokens: process.env.CLAUDE_MAX_TOKENS,
             temperature: process.env.CLAUDE_TEMPERATURE,
-            useDirectGeneration: process.env.CLAUDE_USE_DIRECT_GENERATION
+            useDirectGeneration: process.env.CLAUDE_USE_DIRECT_GENERATION,
+            evaluationModel: process.env.AI_EVALUATION_MODEL
           },
           maxRetries: process.env.AI_MAX_RETRIES,
           maxSelfRefinements: process.env.AI_MAX_SELF_REFINEMENTS,
