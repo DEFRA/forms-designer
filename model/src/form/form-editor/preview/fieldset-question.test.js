@@ -29,6 +29,31 @@ describe('fieldset-question', () => {
       }
     })
   })
+
+  it('should create class as highlighted', () => {
+    const elements = /** @type {QuestionElements} */ (
+      new QuestionPreviewElements(baseElements)
+    )
+    class DummyFieldsetClass extends FieldsetQuestion {}
+    const renderer = new QuestionRendererStub(jest.fn())
+    const dateInput = new DummyFieldsetClass(elements, renderer)
+    dateInput.highlightContent()
+    expect(dateInput.renderInput).toEqual({
+      id: 'inputField',
+      name: 'inputField',
+      classes: 'highlight',
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--l',
+          text: 'Which quest would you like to pick?'
+        }
+      },
+      hint: {
+        classes: '',
+        text: 'Choose one adventure that best suits you.'
+      }
+    })
+  })
 })
 
 /**
