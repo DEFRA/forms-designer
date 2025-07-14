@@ -23,6 +23,7 @@ import {
   ComponentType,
   GuidancePageController,
   PreviewPageController,
+  ReorderQuestionsPageController,
   hasComponents
 } from '@defra/forms-model'
 
@@ -33,6 +34,10 @@ import {
   PagePreviewDomElements,
   PagePreviewListeners
 } from '~/src/javascripts/preview/page-controller/page-controller.js'
+import {
+  ReorderQuestionsPagePreviewDomElements,
+  ReorderQuestionsPagePreviewListeners
+} from '~/src/javascripts/preview/page-controller/reorder-questions-page-controller'
 
 /**
  * Setup the Page Controller for client
@@ -76,6 +81,34 @@ export function setupGuidanceController() {
   listeners.initListeners()
 
   return guidancePageController
+}
+
+/**
+ * Setup the Page Controller for client
+ * @param {Page} page
+ * @param {FormDefinition} definition
+ */
+export function setupReorderQuestionsController(page, definition) {
+  const elements = new ReorderQuestionsPagePreviewDomElements()
+  const components = /** @type {ComponentDef[]} */ (
+    hasComponents(page) ? page.components : []
+  )
+  const nunjucksRenderBase = new NunjucksRendererBase(elements)
+  const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
+  const reorderQuestionsPageController = new ReorderQuestionsPageController(
+    components,
+    elements,
+    definition,
+    renderer
+  )
+
+  const listeners = new ReorderQuestionsPagePreviewListeners(
+    reorderQuestionsPageController,
+    elements
+  )
+  listeners.initListeners()
+
+  return reorderQuestionsPageController
 }
 
 /**

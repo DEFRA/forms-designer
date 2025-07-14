@@ -205,28 +205,6 @@ describe('page-controller', () => {
       }
     }
 
-    const buildControllerWithNoComponents = ({
-      currentPage = page,
-      definition = formDefinition,
-      components = /** @type {ComponentDef[]} */ ([])
-    } = {}) => {
-      const pageRenderMock = jest.fn()
-      const renderer = new PageRendererStub(pageRenderMock)
-      const pageElements = new PagePreviewElements(currentPage)
-      const pageController = new PreviewPageController(
-        components,
-        pageElements,
-        definition,
-        renderer
-      )
-
-      return {
-        pageController,
-        pageRenderMock,
-        pageElements
-      }
-    }
-
     it('should return the page title should one exist', () => {
       const { pageController } = buildController()
       const expectedPageComponent = {
@@ -384,53 +362,6 @@ describe('page-controller', () => {
       pageController.clearHighlight()
       expect(pageController.guidanceText).toBe(newGuidance)
       expect(pageController.components[0].model.name).toBe('markdown')
-    })
-
-    it('should reorder items', () => {
-      const { pageController } = buildController()
-      expect(pageController.components[0].questionType).toBe(
-        textFieldComponent.type
-      )
-      expect(pageController.components[1].questionType).toBe(listComponent.type)
-      expect(pageController.components[2].questionType).toBe(
-        selectComponent.type
-      )
-      pageController.reorderComponents(
-        'd46c9ba0-f5d6-47ab-aa6b-f60b64306e5f,407dd0d7-cce9-4f43-8e1f-7d89cb698875,34455d57-df37-4b69-a64f-6c3af0317ebe'
-      )
-      expect(pageController.components[0].questionType).toBe(
-        selectComponent.type
-      )
-      expect(pageController.components[1].questionType).toBe(
-        textFieldComponent.type
-      )
-      expect(pageController.components[2].questionType).toBe(listComponent.type)
-    })
-
-    it('should ignore reorder if no sort order of items', () => {
-      const { pageController } = buildController()
-      expect(pageController.components[0].questionType).toBe(
-        textFieldComponent.type
-      )
-      expect(pageController.components[1].questionType).toBe(listComponent.type)
-      expect(pageController.components[2].questionType).toBe(
-        selectComponent.type
-      )
-      pageController.reorderComponents(undefined)
-      expect(pageController.components[0].questionType).toBe(
-        textFieldComponent.type
-      )
-      expect(pageController.components[1].questionType).toBe(listComponent.type)
-      expect(pageController.components[2].questionType).toBe(
-        selectComponent.type
-      )
-    })
-
-    it('should ignore reorder if no components', () => {
-      const { pageController } = buildControllerWithNoComponents()
-      expect(pageController.components).toHaveLength(0)
-      pageController.reorderComponents('some-id')
-      expect(pageController.components).toHaveLength(0)
     })
 
     it('should highlight question', () => {

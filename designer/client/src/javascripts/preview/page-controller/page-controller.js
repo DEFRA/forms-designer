@@ -113,12 +113,12 @@ function getTargetChecked(changeEvent) {
 export class PagePreviewListeners {
   /**
    * @type {PreviewPageControllerBase}
-   * @private
+   * @protected
    */
   _pageController
   /**
    * @type {PagePreviewDomElements}
-   * @private
+   * @protected
    */
   _baseElements
 
@@ -227,51 +227,6 @@ export class PagePreviewListeners {
           this._pageController.clearHighlight()
         }
       }
-    },
-    questionUpDownButtonElement: {
-      focus: {
-        /**
-         * @param {FocusEvent} _focusEvent
-         */
-        handleEvent: (_focusEvent) => {
-          const questionId =
-            _focusEvent.target instanceof HTMLButtonElement
-              ? _focusEvent.target.dataset.questionid
-              : undefined
-          if (questionId) {
-            this._pageController.highlightQuestion(questionId)
-          }
-        }
-      },
-      blur: {
-        /**
-         * @param {FocusEvent} _focusEvent
-         */
-        handleEvent: (_focusEvent) => {
-          this._pageController.clearHighlight()
-        }
-      }
-    },
-    listItemOrder: {
-      change: {
-        /**
-         * @param {{ target: HTMLInputElement | null }} _inputEvent
-         */
-        handleEvent: (_inputEvent) => {
-          this._pageController.reorderComponents(_inputEvent.target?.value)
-          this._pageController.render()
-
-          // Re-assert highlight on question
-          const buttonElem = this._baseElements.findActiveReorderElement()
-          if (buttonElem) {
-            const questionId = buttonElem.dataset.id
-
-            if (questionId) {
-              this._pageController.highlightQuestion(questionId)
-            }
-          }
-        }
-      }
     }
   }
 
@@ -285,39 +240,11 @@ export class PagePreviewListeners {
     this._baseElements = baseElements
   }
 
-  getUpDownListeners() {
-    return {
-      upDownButtonListenersFocus:
-        this._baseElements.questionUpDownButtonElements.map((butt) => {
-          return [
-            butt,
-            this._listeners.questionUpDownButtonElement.focus,
-            'focus'
-          ]
-        }),
-      upDownButtonListenersBlur:
-        this._baseElements.questionUpDownButtonElements.map((butt) => {
-          return [
-            butt,
-            this._listeners.questionUpDownButtonElement.blur,
-            'blur'
-          ]
-        })
-    }
-  }
-
   /**
    * @returns {[HTMLInputElement|null, EventListenerObject, string][]}
    */
   getListeners() {
-    const upDownListeners = this.getUpDownListeners()
-
     const allListeners = [
-      [
-        this._baseElements.listItemOrderElement,
-        this._listeners.listItemOrder.change,
-        'change'
-      ],
       [
         this._baseElements.headingElement,
         this._listeners.heading.input,
@@ -368,9 +295,7 @@ export class PagePreviewListeners {
         this._baseElements.questionSetNameElement,
         this._listeners.questionSetNameElement.blur,
         'blur'
-      ],
-      ...upDownListeners.upDownButtonListenersFocus,
-      ...upDownListeners.upDownButtonListenersBlur
+      ]
     ]
 
     return /** @type {[HTMLInputElement, EventListenerObject, string][]} */ (
