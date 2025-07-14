@@ -249,7 +249,14 @@ AVAILABLE CONDITION TYPES: ${conditionTypes}
 - Condition wrappers with multiple items MUST have "coordinator" field
 - All cross-references must be valid (componentId → components[].id, listId → lists[].id, etc.)
 - Component types that support conditions: TextField, EmailAddressField, NumberField, DatePartsField, YesNoField, RadiosField, CheckboxesField, SelectField, AutocompleteField
-- **CONDITIONAL PAGE FLOW LOGIC**: When a page asks a question, conditions should be applied to the NEXT pages in navigation, not the current page asking the question
+- **CONDITIONAL PAGE FLOW LOGIC**: For conditional pages, apply conditions in BOTH places:
+1. In the navigation (next array) of the page asking the question
+2. On the destination page itself (page.condition property)
+
+**CRITICAL SCOTLAND PATTERN** - Apply conditions in BOTH places:
+1. Country selection page navigation: next: [{ path: "/scotland-not-eligible", condition: "abc123" }]
+2. Scotland page itself MUST ALSO have: condition: "abc123" (SAME condition ID)
+Without BOTH conditions, the editor UI won't recognize the conditional flow correctly!
 
 COMPONENT USAGE GUIDELINES:
 - **Input Fields**: TextField, EmailAddressField, NumberField, DatePartsField, MonthYearField, MultilineTextField, TelephoneNumberField, UkAddressField
@@ -362,11 +369,11 @@ Page A asks "Do you own a dog?" (component: ownsDog)
 Page A asks "Do you own a dog?" but condition is applied incorrectly
 
 **Key rules:**
-- Conditions reference components from PREVIOUS pages in the flow
-- Apply conditions to DESTINATION pages, not the page with the question
-- If Page A asks a question, the condition goes on Pages B/C/D that follow
-- Navigation: use "condition" field in next array
-- Page condition: use "condition" field on pages that should only show conditionally
+- For conditional pages, use BOTH navigation AND page-level conditions
+- Navigation conditions go in the "next" array of the page asking the question
+- Page-level conditions go on the destination page's "condition" property
+- Both should reference the SAME condition ID for consistency
+- This ensures compatibility with the form editor UI
 
 ## PERFECT GDS COMPLIANCE EXAMPLE - DEMONSTRATES CORRECT "ONE QUESTION PER PAGE":
 
@@ -665,15 +672,18 @@ Generate an improved form that addresses the user's feedback while maintaining p
   }
 
   /**
-   * Build GDS analysis prompt for form descriptions
+   * Build prompt for analyzing form description against GDS guidelines
    * @param {string} description - Form description to analyze
-   * @returns {string} Analysis prompt
+   * @returns {string}
    */
   buildGDSAnalysisPrompt(description) {
-    return `Analyze this form description against UK Government Digital Service (GDS) guidelines and best practices. Provide specific, actionable feedback to help the user create better forms.
+    return `You are an expert in UK Government Digital Service (GDS) guidelines and form design best practices.
 
-FORM DESCRIPTION TO ANALYZE:
-"${description}"
+Analyze the following form description against GDS standards:
+
+<description>
+${description}
+</description>
 
 GDS GUIDELINES TO CHECK AGAINST:
 
@@ -721,19 +731,21 @@ ANALYSIS REQUIREMENTS:
 - Be constructive and helpful
 - If the description is good, acknowledge it and only suggest minor improvements if any
 
-RESPONSE FORMAT (JSON only):
-{
-  "isGood": boolean (true if score >= 7),
-  "overallScore": number (1-10),
-  "feedback": [
-    {
-      "issue": "Specific problem found in the description",
-      "suggestion": "Clear, actionable advice on how to improve this"
-    }
-  ]
-}
+Provide your analysis in the following XML format:
 
-Be helpful and constructive. Praise good practices and gently guide users toward GDS compliance.`
+<analysis>
+  <isGood>true or false (true if score >= 7)</isGood>
+  <overallScore>number between 1-10</overallScore>
+  <feedback>
+    <item>
+      <issue>Specific problem found in the description</issue>
+      <suggestion>Clear, actionable advice on how to improve this</suggestion>
+    </item>
+    <!-- Add more items as needed, or leave empty if no issues -->
+  </feedback>
+</analysis>
+
+Be constructive and specific in your feedback. Focus on actionable improvements.`
   }
 
   /**

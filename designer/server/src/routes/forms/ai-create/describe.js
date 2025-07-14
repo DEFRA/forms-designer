@@ -113,7 +113,7 @@ export default [
      * @param {Request} request
      * @param {ResponseToolkit} h
      */
-    handler(request, h) {
+    async handler(request, h) {
       const { payload, yar, server } = request
       const { formDescription, preferences } = /** @type {any} */ (payload)
 
@@ -124,6 +124,15 @@ export default [
         }
 
         yar.clear('gdsAnalysis')
+
+        try {
+          await aiService.components.tempFormManager.deleteTempForm(
+            request.yar.id
+          )
+          logger.info('Cleared existing temp form cache before new generation')
+        } catch (error) {
+          logger.debug('No existing temp form to clear', error)
+        }
 
         const createData = yar.get(sessionNames.create)
         yar.set(sessionNames.create, {

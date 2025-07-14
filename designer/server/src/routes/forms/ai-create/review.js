@@ -9,6 +9,8 @@ import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import { formOverviewPath } from '~/src/models/links.js'
+import { AIFormValidator } from '~/src/services/ai/form-validator.js'
+import { ResponseProcessor } from '~/src/services/ai/response-processor.js'
 
 const logger = createLogger()
 
@@ -279,6 +281,40 @@ export default [
               return h.redirect('/create/ai-describe')
             }
 
+            const tempFormDef = /** @type {any} */ (tempForm.formDefinition)
+            logger.info('Form retrieved from temp form manager')
+            // eslint-disable-next-line no-console
+            console.log('=== RETRIEVED FORM ANALYSIS ===')
+            // eslint-disable-next-line no-console
+            console.log(
+              'Conditions:',
+              JSON.stringify(tempFormDef.conditions, null, 2)
+            )
+            // eslint-disable-next-line no-console
+            console.log('Pages with condition references:')
+            tempFormDef.pages?.forEach((/** @type {any} */ page) => {
+              if (page.condition) {
+                // eslint-disable-next-line no-console
+                console.log(
+                  `  - Page ${page.path} has page-level condition: ${page.condition}`
+                )
+              }
+              if (page.next && Array.isArray(page.next)) {
+                page.next.forEach(
+                  (/** @type {any} */ nextItem, /** @type {number} */ idx) => {
+                    if (nextItem.condition) {
+                      // eslint-disable-next-line no-console
+                      console.log(
+                        `  - Page ${page.path} next[${idx}] to ${nextItem.path} has condition: ${nextItem.condition}`
+                      )
+                    }
+                  }
+                )
+              }
+            })
+            // eslint-disable-next-line no-console
+            console.log('=== END RETRIEVED FORM ANALYSIS ===')
+
             const formDefinition = tempForm.formDefinition
             if (
               !formDefinition ||
@@ -305,6 +341,63 @@ export default [
             )
 
             try {
+              const responseProcessor = new ResponseProcessor()
+              responseProcessor.fixConditionStructure(formDefinition)
+              responseProcessor.ensureRequiredFields(formDefinition)
+
+              logger.info(
+                'Conditions fixed and required fields ensured by ResponseProcessor'
+              )
+              // eslint-disable-next-line no-console
+              console.log(
+                'Fixed conditions:',
+                JSON.stringify(
+                  /** @type {any} */ (formDefinition).conditions,
+                  null,
+                  2
+                )
+              )
+
+              const validator = new AIFormValidator()
+              const validationResult =
+                validator.validateFormIntegrity(formDefinition)
+
+              if (!validationResult.isValid) {
+                logger.error(
+                  'Form validation failed before sending to forms manager'
+                )
+                // eslint-disable-next-line no-console
+                console.log('Validation errors:', validationResult.errors)
+
+                // Store validation errors in session for regeneration
+                yar.set(sessionNames.create, {
+                  ...metadata
+                })
+
+                throw new Error(
+                  `Form validation failed: ${validationResult.errors.map((/** @type {any} */ e) => e.message).join(', ')}`
+                )
+              }
+
+              const formDef = /** @type {any} */ (formDefinition)
+              logger.info('Form structure being sent to forms manager')
+              // eslint-disable-next-line no-console
+              console.log('Form structure:', {
+                engine: formDef.engine,
+                schema: formDef.schema,
+                name: formDef.name,
+                startPage: formDef.startPage,
+                hasConditions: !!formDef.conditions,
+                conditionCount: formDef.conditions?.length ?? 0,
+                firstConditionStructure: formDef.conditions?.[0]
+                  ? {
+                      hasField: 'field' in formDef.conditions[0],
+                      hasItems: 'items' in formDef.conditions[0],
+                      keys: Object.keys(formDef.conditions[0])
+                    }
+                  : null
+              })
+
               await forms.updateDraftFormDefinition(
                 newForm.id,
                 /** @type {FormDefinition} */ (formDefinition),
@@ -327,6 +420,32 @@ export default [
               logger.error(
                 'Forms manager API failed to accept form definition',
                 formsManagerError
+              )
+
+              // Log more details about the error
+              // eslint-disable-next-line no-console
+              console.log('Forms manager error details:', {
+                message:
+                  formsManagerError instanceof Error
+                    ? formsManagerError.message
+                    : String(formsManagerError),
+                stack:
+                  formsManagerError instanceof Error
+                    ? formsManagerError.stack
+                    : undefined,
+                response:
+                  /** @type {any} */ (formsManagerError).response?.data ??
+                  formsManagerError,
+                data: /** @type {any} */ (formsManagerError).data,
+                validation: /** @type {any} */ (formsManagerError).data
+                  ?.validation
+              })
+
+              // Log the full form definition being sent
+              // eslint-disable-next-line no-console
+              console.log(
+                'Full form definition sent to forms manager:',
+                JSON.stringify(formDefinition, null, 2)
               )
 
               try {
@@ -447,11 +566,13 @@ export default [
             setImmediate(() => {
               const userId = request.auth.credentials.user?.id ?? undefined
 
+              const enhancedFeedback = feedback ?? ''
+
               aiService
                 .regenerateFormInBackground(
                   jobId,
                   typedTempForm.description ?? metadata.formDescription ?? '',
-                  feedback ?? '',
+                  enhancedFeedback,
                   typedTempForm.formDefinition,
                   metadata.title ?? 'AI Form',
                   yar,
@@ -496,6 +617,10 @@ export default [
               )
 
               try {
+                const responseProcessor = new ResponseProcessor()
+                responseProcessor.fixConditionStructure(editFormDef)
+                responseProcessor.ensureRequiredFields(editFormDef)
+
                 await forms.updateDraftFormDefinition(
                   draftForm.id,
                   editFormDef,
@@ -514,6 +639,21 @@ export default [
                   formsManagerError
                 )
 
+                // eslint-disable-next-line no-console
+                console.log('Forms manager error details (edit-manually):', {
+                  message:
+                    formsManagerError instanceof Error
+                      ? formsManagerError.message
+                      : String(formsManagerError),
+                  stack:
+                    formsManagerError instanceof Error
+                      ? formsManagerError.stack
+                      : undefined,
+                  response:
+                    /** @type {any} */ (formsManagerError).response?.data ??
+                    formsManagerError
+                })
+
                 try {
                   await forms.deleteForm(
                     draftForm.id,
@@ -526,7 +666,6 @@ export default [
                   logger.warn('Could not clean up empty form', cleanupError)
                 }
 
-                // Re-throw the error to trigger the main error handler
                 throw formsManagerError
               }
             }

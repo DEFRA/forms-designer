@@ -35,15 +35,10 @@ export class ClaudeProviderV2 {
       baseURL: this.baseUrl
     })
 
-    // Initialize optimized services
     this.schemaManager = new SchemaManager()
     this.promptBuilder = new PromptBuilderV2()
     this.responseProcessor = new ResponseProcessor()
     this.validator = new AIFormValidator()
-
-    logger.info(
-      `ClaudeProviderV2 initialized with model: ${this.model}, prompt caching: ${this.enablePromptCaching}`
-    )
   }
 
   /**
@@ -103,6 +98,7 @@ export class ClaudeProviderV2 {
       'claude-3-7-sonnet-20250219': { input: 2.4, output: 12 },
       'claude-3-5-sonnet-20241022': { input: 2.4, output: 12 },
       'claude-3-5-haiku-20241022': { input: 0.64, output: 3.2 },
+      'claude-3-5-haiku-latest': { input: 0.64, output: 3.2 },
       'claude-3-opus-20240229': { input: 12, output: 60 },
       'claude-3-haiku-20240307': { input: 0.2, output: 1 }
     }
@@ -177,7 +173,7 @@ export class ClaudeProviderV2 {
 
       let formDefinition = null
       let refinementAttempts = 0
-      const maxRefinements = 5
+      const maxRefinements = 10
 
       while (refinementAttempts < maxRefinements && !formDefinition) {
         try {
@@ -186,9 +182,66 @@ export class ClaudeProviderV2 {
             throw new Error('No valid text content found in AI response')
           }
 
+          // Log the raw AI response before processing
+          // eslint-disable-next-line no-console
+          console.log('=== RAW AI RESPONSE (BEFORE PROCESSING) ===')
+          // eslint-disable-next-line no-console
+          console.log(firstContent.text)
+          // eslint-disable-next-line no-console
+          console.log('=== END RAW AI RESPONSE ===')
+
           const candidateForm = this.responseProcessor.processResponse(
             firstContent.text
           )
+
+          // Log the processed form structure for debugging
+          const typedForm = /** @type {any} */ (candidateForm)
+          logger.info('Processed form structure')
+          // eslint-disable-next-line no-console
+          console.log('=== PROCESSED FORM STRUCTURE ===')
+          // eslint-disable-next-line no-console
+          console.log(
+            'Conditions array:',
+            JSON.stringify(typedForm.conditions, null, 2)
+          )
+          // eslint-disable-next-line no-console
+          console.log('Pages with condition references:')
+          typedForm.pages?.forEach((/** @type {any} */ page) => {
+            if (page.condition) {
+              // eslint-disable-next-line no-console
+              console.log(
+                `  - Page ${page.path} has page-level condition: ${page.condition}`
+              )
+            }
+            if (page.next && Array.isArray(page.next)) {
+              page.next.forEach(
+                (/** @type {any} */ nextItem, /** @type {number} */ idx) => {
+                  if (nextItem.condition) {
+                    // eslint-disable-next-line no-console
+                    console.log(
+                      `  - Page ${page.path} next[${idx}] to ${nextItem.path} has condition: ${nextItem.condition}`
+                    )
+                  }
+                }
+              )
+            }
+          })
+          // eslint-disable-next-line no-console
+          console.log('Summary:', {
+            engine: typedForm.engine,
+            schema: typedForm.schema,
+            hasConditions: !!typedForm.conditions,
+            conditionCount: typedForm.conditions?.length ?? 0,
+            firstConditionStructure: typedForm.conditions?.[0]
+              ? {
+                  hasField: 'field' in typedForm.conditions[0],
+                  hasItems: 'items' in typedForm.conditions[0],
+                  keys: Object.keys(typedForm.conditions[0])
+                }
+              : null
+          })
+          // eslint-disable-next-line no-console
+          console.log('=== END PROCESSED FORM STRUCTURE ===')
 
           const validationResult =
             this.validator.validateFormIntegrity(candidateForm)
@@ -198,6 +251,20 @@ export class ClaudeProviderV2 {
             logger.info('Form validation passed')
             break
           }
+
+          // Log validation errors as a formatted string
+          const errorSummary = validationResult.errors
+            .map((err, idx) => {
+              const error = /** @type {any} */ (err)
+              const path = error.path ?? 'root'
+              const message = error.message ?? 'Unknown error'
+              return `${idx + 1}. ${path}: ${message}`
+            })
+            .join('\n')
+
+          logger.warn(
+            `Form validation failed with ${validationResult.errors.length} errors:\n${errorSummary}`
+          )
 
           if (refinementAttempts >= maxRefinements - 1) {
             formDefinition = candidateForm
@@ -214,7 +281,8 @@ export class ClaudeProviderV2 {
 
           const refinementPrompt = this.promptBuilder.buildRefinementPrompt(
             description,
-            validationResult.errors
+            validationResult.errors,
+            candidateForm // Pass the already-fixed form
           )
 
           response = await this.client.messages.create({
@@ -256,7 +324,8 @@ export class ClaudeProviderV2 {
                   content: `Generate a valid FormDefinitionV2 for: "${description}"
 
 Focus on:
-- Valid UUID format (hex only: 0-9,a-f)
+- Valid UUID format with RANDOM hex values (0-9,a-f)
+- Good UUID example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
 - Unique IDs for all elements
 - One question per page
 - Required fields filled
@@ -286,25 +355,32 @@ Generate JSON only.`
           /** @type {any} */ (response.usage).cache_read_input_tokens ?? 0
       }
 
+      // Calculate total input tokens including cached
+      const inputTokens = Number(usage.inputTokens)
+      const cacheReadTokens = Number(usage.cacheReadTokens ?? 0)
+      const totalInputTokens = inputTokens + cacheReadTokens
       const cost = this.estimateCost(
-        usage.inputTokens,
+        totalInputTokens, // Use total input including cached
         usage.outputTokens,
         this.model
       )
-      logger.info(`=== TOKEN USAGE SUMMARY ===`)
+
+      logger.info(`=== TOKEN USAGE SUMMARY (FORM GENERATION - V2) ===`)
       logger.info(`Model: ${this.model}`)
-      logger.info(`Input Tokens: ${usage.inputTokens.toLocaleString()}`)
+      logger.info(
+        `Input Tokens: ${inputTokens.toLocaleString()} (new) + ${cacheReadTokens.toLocaleString()} (cached) = ${totalInputTokens.toLocaleString()} total`
+      )
       logger.info(`Output Tokens: ${usage.outputTokens.toLocaleString()}`)
       logger.info(
-        `Total Tokens: ${(usage.inputTokens + usage.outputTokens).toLocaleString()}`
+        `Total Tokens: ${(totalInputTokens + usage.outputTokens).toLocaleString()}`
       )
-      logger.info(`Cost Estimate: £${cost.toFixed(2)}`)
-      if (usage.cachedTokens > 0 || usage.cacheReadTokens > 0) {
+      logger.info(`Cost Estimate: £${cost.toFixed(4)}`)
+      if (usage.cachedTokens > 0) {
         logger.info(
-          `Cache Tokens: ${usage.cachedTokens.toLocaleString()} created, ${usage.cacheReadTokens.toLocaleString()} read`
+          `Cache Creation: ${usage.cachedTokens.toLocaleString()} tokens cached for future use`
         )
       }
-      logger.info(`=== END TOKEN USAGE ===`)
+      logger.info(`=== END TOKEN USAGE (FORM GENERATION - V2) ===`)
 
       return {
         content: JSON.stringify(formDefinition, null, 2),

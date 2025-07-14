@@ -1,10 +1,12 @@
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
-import { AIFormAgent } from '~/src/services/ai/ai-agent.js'
+// import { AIFormAgent } from '~/src/services/ai/ai-agent.js' // Not used - ClaudeProviderV2 always uses direct generation
 import { FormGeneratorService } from '~/src/services/ai/form-generator.js'
 import { AIFormValidator } from '~/src/services/ai/form-validator.js'
 import { PromptBuilder } from '~/src/services/ai/prompt-builder.js'
+import { ClaudeProviderV2 } from '~/src/services/ai/providers/claude-provider-v2.js'
 import { ClaudeProvider } from '~/src/services/ai/providers/claude-provider.js'
-import { ResponseParser } from '~/src/services/ai/response-parser.js'
+// import { ResponseParser } from '~/src/services/ai/response-parser.js' // Not used - ClaudeProviderV2 uses ResponseProcessor instead
+import { ResponseProcessor } from '~/src/services/ai/response-processor.js'
 import { TempFormManager } from '~/src/services/session/temp-form-manager.js'
 
 export class AIServiceError extends Error {
@@ -47,10 +49,20 @@ export class AIService {
         throw new Error('Claude API key is required but not provided')
       }
 
-      this.components.aiProvider = new ClaudeProvider(config.claude, null)
+      this.components.aiProvider = new ClaudeProviderV2(config.claude)
+
+      const evaluationConfig = {
+        ...config.claude,
+        model: config.claude.evaluationModel ?? 'claude-3-5-haiku-latest'
+      }
+      this.components.evaluationProvider = new ClaudeProvider(
+        evaluationConfig,
+        null
+      )
 
       this.components.promptBuilder = new PromptBuilder()
-      this.components.responseParser = new ResponseParser()
+      // this.components.responseParser = new ResponseParser() // Not used - ClaudeProviderV2 uses ResponseProcessor instead
+      this.components.responseProcessor = new ResponseProcessor()
       this.components.validator = new AIFormValidator()
       this.components.tempFormManager = new TempFormManager(server)
 
@@ -59,12 +71,12 @@ export class AIService {
         this.components.validator
       )
 
-      this.components.aiAgent = new AIFormAgent(
-        config,
-        this.components.formGenerator,
-        this.components.validator,
-        this.components.promptBuilder
-      )
+      // this.components.aiAgent = new AIFormAgent(
+      //   config,
+      //   this.components.formGenerator,
+      //   this.components.validator,
+      //   this.components.promptBuilder
+      // ) // Not used - ClaudeProviderV2 always uses direct generation
 
       this.isInitialized = true
     } catch (error) {
@@ -343,31 +355,59 @@ export class AIService {
       const analysisPrompt =
         this.components.promptBuilder.buildGDSAnalysisPrompt(description)
 
-      const response = await this.components.aiProvider.generate(analysisPrompt)
+      const response =
+        await this.components.evaluationProvider.generate(analysisPrompt)
 
-      const jsonMatch = /\{[\s\S]*\}/.exec(response.content)
-      if (!jsonMatch) {
+      // Extract XML content
+      const xmlMatch = /<analysis>[\s\S]*<\/analysis>/.exec(response.content)
+      if (!xmlMatch) {
+        this.logger.error(
+          'No XML analysis found in AI response:',
+          response.content
+        )
         throw new Error('Invalid response format from AI analysis')
       }
 
-      const analysis = JSON.parse(jsonMatch[0])
+      const xmlContent = xmlMatch[0]
 
-      if (
-        typeof analysis.isGood !== 'boolean' ||
-        typeof analysis.overallScore !== 'number' ||
-        !Array.isArray(analysis.feedback)
-      ) {
-        throw new Error('Invalid analysis response structure')
+      // Parse XML manually (simple parsing for our specific format)
+      const isGoodMatch = /<isGood>(true|false)<\/isGood>/.exec(xmlContent)
+      const scoreMatch = /<overallScore>(\d+(?:\.\d+)?)<\/overallScore>/.exec(
+        xmlContent
+      )
+      const feedbackItems = []
+
+      // Extract all feedback items
+      const feedbackRegex =
+        /<item>\s*<issue>([\s\S]*?)<\/issue>\s*<suggestion>([\s\S]*?)<\/suggestion>\s*<\/item>/g
+      let match
+      while ((match = feedbackRegex.exec(xmlContent)) !== null) {
+        feedbackItems.push({
+          issue: match[1].trim(),
+          suggestion: match[2].trim()
+        })
       }
 
-      this.logger.info('Form description analysis completed', {
+      const analysis = {
+        isGood: isGoodMatch ? isGoodMatch[1] === 'true' : true,
+        overallScore: scoreMatch ? parseFloat(scoreMatch[1]) : 7,
+        feedback: feedbackItems
+      }
+
+      this.logger.info('Form description analyzed')
+      // eslint-disable-next-line no-console
+      console.log('Form description analysis:', {
+        isGood: analysis.isGood,
         score: analysis.overallScore,
-        issuesFound: analysis.feedback.length
+        feedbackCount: analysis.feedback.length
       })
 
       return analysis
     } catch (error) {
-      this.logger.error('Form description analysis failed', error)
+      this.logger.error(error, 'Form description analysis failed')
+      this.logger.error(
+        `Returning default analysis due to error: ${error instanceof Error ? error.message : String(error)}`
+      )
 
       return {
         isGood: true,
@@ -398,7 +438,9 @@ export class AIService {
         )
       }
 
-      this.logger.info('Form description analyzed and refined', {
+      this.logger.info('Form description analyzed and refined')
+      // eslint-disable-next-line no-console
+      console.log('Form analysis and refinement:', {
         score: analysis.overallScore,
         issuesFound: analysis.feedback.length,
         wasRefined: refinedDescription !== description
@@ -410,8 +452,11 @@ export class AIService {
       }
     } catch (error) {
       this.logger.error(
-        'Form description analysis and refinement failed',
-        error
+        error,
+        'Form description analysis and refinement failed'
+      )
+      this.logger.error(
+        `Returning defaults due to error: ${error instanceof Error ? error.message : String(error)}`
       )
 
       return {
@@ -428,7 +473,7 @@ export class AIService {
   /**
    * Refine form description based on GDS feedback
    * @param {string} description - Original form description
-   * @param {Array<{issue: string, suggestion: string}>} feedback - GDS feedback items
+   * @param {Array<{issue: string, suggestion: string}>} feedback - GDS analysis feedback
    * @returns {Promise<string>} Refined description
    */
   async refineFormDescription(description, feedback) {
@@ -437,22 +482,61 @@ export class AIService {
     }
 
     try {
-      const refinementPrompt =
-        this.components.promptBuilder.buildDescriptionRefinementPrompt(
-          description,
-          feedback
-        )
+      const refinementPrompt = `You are helping improve a form description based on GDS guidelines feedback.
+
+Original description:
+<description>
+${description}
+</description>
+
+Feedback received:
+<feedback>
+${feedback
+  .map(
+    (item) => `
+  <item>
+    <issue>${item.issue}</issue>
+    <suggestion>${item.suggestion}</suggestion>
+  </item>`
+  )
+  .join('')}
+</feedback>
+
+Please rewrite the description to address ALL the feedback points while:
+1. Maintaining the original intent and requirements
+2. Following GDS guidelines for clarity and user focus
+3. Being specific about form fields and validation needed
+4. Using plain English and avoiding jargon
+
+Provide ONLY the improved description, no explanations or commentary.`
 
       const response =
-        await this.components.aiProvider.generate(refinementPrompt)
+        await this.components.evaluationProvider.generate(refinementPrompt)
 
-      const refinedDescription = response.content.trim()
+      const rawRefinedDescription = response.content.trim()
 
-      this.logger.info('Form description refined successfully')
+      // Clean any XML tags from the refined description before showing to users
+      const refinedDescription =
+        this.components.responseProcessor.cleanDescriptionText(
+          rawRefinedDescription
+        )
+
+      this.logger.info('Form description refined and cleaned')
+      // eslint-disable-next-line no-console
+      console.log('Form refinement details:', {
+        originalLength: description.length,
+        rawRefinedLength: rawRefinedDescription.length,
+        cleanedRefinedLength: refinedDescription.length,
+        feedbackItemsAddressed: feedback.length,
+        hadXmlTags: rawRefinedDescription !== refinedDescription
+      })
 
       return refinedDescription
     } catch (error) {
-      this.logger.error('Form description refinement failed', error)
+      this.logger.error(error, 'Form description refinement failed')
+      this.logger.error(
+        `Returning original description due to error: ${error instanceof Error ? error.message : String(error)}`
+      )
 
       return description
     }
