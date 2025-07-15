@@ -3,6 +3,7 @@ import {
   type ConditionalComponentType
 } from '~/src/components/types.js'
 import { ConditionType, type Coordinator } from '~/src/conditions/enums.js'
+import { generateConditionAlias } from '~/src/conditions/helpers.js'
 import {
   type ConditionData,
   type ConditionDataV2,
@@ -185,7 +186,7 @@ function convertConditionRefDataFromV2(
   }
 
   return {
-    conditionName: refCondition.displayName,
+    conditionName: generateConditionAlias(refCondition.id),
     conditionDisplayName: refCondition.displayName,
     coordinator
   }
