@@ -302,3 +302,47 @@ export const repeaterPageHTML = `
   </a>
 </div>
 `
+
+export const summaryPageHTML = (
+  declaration = false,
+  declarationContent = ''
+) => `
+<form id="checkAnswersForm" class="form" method="post">
+  <fieldset class="govuk-fieldset">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+      Do users need to make a declaration?
+    </legend>
+
+            <div class="govuk-form-group">
+    <div id="needDeclaration-hint" class="govuk-hint">
+      Use a declaration if you need users to declare or agree to something before they submit the form
+    </div>
+    <div class="govuk-radios" data-module="govuk-radios" data-govuk-radios-init="">
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="needDeclaration" name="needDeclaration" type="radio" value="false" ${!declaration ? 'checked=""' : ''}>
+        <label class="govuk-label govuk-radios__label" for="needDeclaration">
+          No
+        </label>
+      </div>
+      <div class="govuk-radios__item">
+        <input class="govuk-radios__input" id="needDeclaration-2" name="needDeclaration" type="radio" value="true" aria-controls="conditional-needDeclaration-2" aria-expanded="false" ${declaration ? 'checked=""' : ''}>
+        <label class="govuk-label govuk-radios__label" for="needDeclaration-2">
+          Yes
+        </label>
+      </div>
+      <div class="govuk-radios__conditional govuk-radios__conditional--hidden" id="conditional-needDeclaration-2">
+        <div class="govuk-form-group">
+    <label class="govuk-label govuk-label--m" for="declarationText">
+      Declaration text
+    </label>
+    <div id="declarationText-hint" class="govuk-hint">
+      Use a declaration if you need users to declare or agree to something before they submit the form
+    </div>
+    <textarea class="govuk-textarea" id="declarationText" name="declarationText" rows="3" aria-describedby="declarationText-hint">${declarationContent}</textarea>
+  </div>
+      </div>
+    </div>
+  </div>
+  </fieldset>
+</form>
+`

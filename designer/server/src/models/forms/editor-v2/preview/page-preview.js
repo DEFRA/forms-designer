@@ -19,5 +19,21 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
 }
 
 /**
- * @import { Page } from '@defra/forms-model'
+ * @implements {SummaryPageElements}
+ */
+export class SummaryPreviewSSR extends PagePreviewElementsSSR {
+  #declaration = false
+
+  constructor(page, declarationText, showDeclaration = false) {
+    super(page, declarationText)
+    this.#declaration = showDeclaration
+  }
+
+  get declaration() {
+    return this.#declaration
+  }
+}
+
+/**
+ * @import { Page, SummaryPageElements } from '@defra/forms-model'
  */

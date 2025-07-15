@@ -16,7 +16,10 @@ import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { PagePreviewElementsSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
+import {
+  PagePreviewElementsSSR,
+  SummaryPreviewSSR
+} from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -78,7 +81,7 @@ export const dummyRenderer = {
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
- * @param {string} [guidance]
+ * @param {string} [declaration]
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
  *    questionType?: ComponentType,
@@ -86,18 +89,48 @@ export const dummyRenderer = {
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] }
  * }}
  */
-export function getPreviewModel(
-  page,
-  definition,
-  previewPageUrl,
-  guidance = ''
-) {
-  const elements = new PagePreviewElementsSSR(page, guidance)
-
+export function getPreviewModel(page, definition, previewPageUrl, fields) {
+  const declarationText = fields.declarationText.value
+  const needDeclaration = fields.needDeclaration.value
+  const elements = new SummaryPreviewSSR(page, declarationText, needDeclaration)
+  console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Elements', elements)
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'Elements.declaration',
+    elements.declaration
+  )
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'Elements.guidance',
+    elements.guidance
+  )
   const previewPageController = new SummaryPageController(
     elements,
     definition,
     dummyRenderer
+  )
+  console.log('~~~~~~ Chris Debug ~~~~~~ ', 'PreviewPageController', {
+    ...previewPageController
+  })
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'PreviewPageController.buttonText',
+    previewPageController.buttonText
+  )
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'PreviewPageController.guidance',
+    previewPageController.guidance
+  )
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'PreviewPageController.declaration',
+    previewPageController.declaration
+  )
+  console.log(
+    '~~~~~~ Chris Debug ~~~~~~ ',
+    'PreviewPageController.d',
+    previewPageController.declarationText
   )
 
   return {
@@ -106,6 +139,7 @@ export function getPreviewModel(
     components: previewPageController.components,
     guidance: previewPageController.guidance,
     sectionTitle: previewPageController.sectionTitle,
+    buttonText: previewPageController.buttonText,
     previewPageUrl,
     questionType: ComponentType.TextField, // components[0]?.type
     componentRows: previewPageController.componentRows
@@ -157,7 +191,7 @@ export function checkAnswersSettingsViewModel(
   const pageHeading = 'Page settings'
   // prettier-ignore
   const previewModel = getPreviewModel(
-    page, definition, 'previewPageUrl', fields.declarationText.value
+    page, definition, 'previewPageUrl', fields
   )
 
   return {
@@ -166,9 +200,7 @@ export function checkAnswersSettingsViewModel(
       `${pageHeading} - ${formTitle}`,
       formTitle
     ),
-    fields: {
-      ...settingsFields(needDeclarationVal, declarationTextVal, validation)
-    },
+    fields,
     cardTitle: pageHeading,
     cardCaption: 'Check answers',
     cardHeading: pageHeading,

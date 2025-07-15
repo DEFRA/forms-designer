@@ -3,6 +3,7 @@ import {
   buildCheckboxComponent,
   buildDateComponent,
   buildEmailAddressFieldComponent,
+  buildMarkdownComponent,
   buildMonthYearFieldComponent,
   buildNumberFieldComponent,
   buildRadioComponent,
@@ -13,9 +14,8 @@ import {
   buildYesNoFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
-import { buildQuestionPage } from '~/src/__stubs__/pages.js'
+import { buildQuestionPage, buildSummaryPage } from '~/src/__stubs__/pages.js'
 import { PageRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
-import { PagePreviewElements } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
 import { SummaryPageController } from '~/src/form/form-editor/preview/controller/summary-page-controller.js'
 
 describe('summary page controller', () => {
@@ -23,7 +23,11 @@ describe('summary page controller', () => {
   const renderer = new PageRendererStub(pageRenderMock)
 
   it('should work without a declaration', () => {
-    const elements = new PagePreviewElements(undefined)
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: ''
+    })
     const definition = buildDefinition({
       pages: [
         buildQuestionPage({
@@ -99,7 +103,7 @@ describe('summary page controller', () => {
           }
         })
       )
-    const DEFAULT_TEXT = ''
+    const DEFAULT_TEXT = 'Answer goes here'
     // prettier-ignore
     expect(controller.componentRows).toEqual({
       rows: [
@@ -123,6 +127,110 @@ describe('summary page controller', () => {
       'Check your answers before sending your form'
     )
     expect(controller.guidanceText).toBe('')
+    expect(controller.guidance).toEqual({
+      classes: '',
+      text: ''
+    })
+    expect(controller.makeDeclaration).toBe(false)
+    expect(controller.buttonText).toBe('Send')
+    expect(controller.components).toHaveLength(0)
+  })
+
+  it('should work if a declaration has already been entered', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: true,
+      guidance: 'Markdown text'
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        }),
+        buildSummaryPage({
+          components: [
+            buildMarkdownComponent({
+              content: 'Markdown text'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+
+    expect(controller.guidanceText).toBe('Markdown text')
+    expect(controller.guidance).toEqual({
+      classes: '',
+      text: 'Markdown text'
+    })
+    expect(controller.components).toHaveLength(1)
+    expect(controller.buttonText).toBe('Accept and send')
+  })
+
+  it('should update the declaration text', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: ''
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.components).toHaveLength(0)
+    controller.setMakeDeclaration()
+    expect(controller.declaration).toEqual({
+      classes: '',
+      text: ''
+    })
+    expect(controller.makeDeclaration).toBe(true)
+    expect(controller.components).toHaveLength(0)
+    expect(controller.declaration).toEqual(controller.guidance)
+    controller.highlightDeclaration()
+    expect(controller.declaration).toEqual({
+      classes: 'highlight',
+      text: 'Declaration text'
+    })
+    expect(controller.components).toHaveLength(1)
+    expect(controller.declaration).toEqual(controller.guidance)
+    controller.declarationText = 'This is your declaration'
+    expect(controller.declaration).toEqual({
+      classes: 'highlight',
+      text: 'This is your declaration'
+    })
+    expect(controller.declaration).toEqual(controller.guidance)
+    controller.unhighlightDeclaration()
+    expect(controller.declaration).toEqual({
+      classes: '',
+      text: 'This is your declaration'
+    })
+    expect(controller.components).toHaveLength(1)
+    expect(controller.declaration).toEqual(controller.guidance)
+    expect(controller.makeDeclaration).toBe(true)
+    controller.unsetMakeDeclaration()
+    expect(controller.makeDeclaration).toBe(false)
+    expect(controller.declaration).toEqual({
+      classes: '',
+      text: ''
+    })
     expect(controller.components).toHaveLength(0)
   })
 })
+
+/**
+ * @import { SummaryPageElements } from '~/src/form/form-editor/preview/types.js'
+ */

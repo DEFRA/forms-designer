@@ -1,8 +1,9 @@
 import { hasFormField } from '~/src/components/helpers.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { PreviewPageControllerBase } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
-const EXAMPLE_TEXT = ''
+const EXAMPLE_TEXT = 'Answer goes here'
 
 export class SummaryPageController extends PreviewPageControllerBase {
   /**
@@ -16,7 +17,12 @@ export class SummaryPageController extends PreviewPageControllerBase {
    */
   _componentDefs = []
   /**
-   * @param {PagePreviewBaseElements} elements
+   * @type {boolean}
+   * @private
+   */
+  _makeDeclaration = false
+  /**
+   * @param {SummaryPageElements} elements
    * @param {FormDefinition} formDefinition
    * @param {PageRenderer} renderer
    */
@@ -28,6 +34,7 @@ export class SummaryPageController extends PreviewPageControllerBase {
       }
       return []
     })
+    this._makeDeclaration = elements.declaration
   }
 
   /**
@@ -60,11 +67,83 @@ export class SummaryPageController extends PreviewPageControllerBase {
       classes: ''
     }
   }
+
+  get guidance() {
+    if (!this._makeDeclaration) {
+      return {
+        classes: '',
+        text: ''
+      }
+    }
+    const guidanceHighlighted = this._highlighted === 'guidance'
+    const classes = guidanceHighlighted ? HIGHLIGHT_CLASS : ''
+    let text = this._guidanceText.length ? this._guidanceText : ''
+
+    if (!text.length && guidanceHighlighted) {
+      text = 'Declaration text'
+    }
+    return {
+      text,
+      classes
+    }
+  }
+
+  /**
+   * @param {string} declarationText
+   */
+  set declarationText(declarationText) {
+    this.guidanceText = declarationText
+  }
+
+  get declarationText() {
+    return this.guidanceText
+  }
+
+  get declaration() {
+    return this.guidance
+  }
+
+  setMakeDeclaration() {
+    this._makeDeclaration = true
+    this.render()
+  }
+
+  unsetMakeDeclaration() {
+    this._makeDeclaration = false
+  }
+
+  get makeDeclaration() {
+    return this._makeDeclaration
+  }
+
+  highlightDeclaration() {
+    this.highlightGuidance()
+  }
+
+  unhighlightDeclaration() {
+    this.clearHighlight()
+  }
+
+  /**
+   * @returns {Markdown[]}
+   * @protected
+   */
+  _getGuidanceComponents() {
+    if (!this._makeDeclaration) {
+      return []
+    }
+    return super._getGuidanceComponents()
+  }
+
+  get buttonText() {
+    return this.makeDeclaration ? 'Accept and send' : 'Send'
+  }
 }
 
 /**
  * @import { ComponentDef, ContentComponentsDef, ListComponent, FormComponentsDef } from '~/src/components/types.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { PageRenderer, PagePreviewBaseElements } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements } from '~/src/form/form-editor/preview/types.js'
  * @import { SummaryRowActionItem, SummaryRow } from '~/src/form/form-editor/macros/types.js'
+ * @import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
  */
