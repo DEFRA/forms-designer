@@ -117,6 +117,7 @@ export class SummaryPageController extends PreviewPageControllerBase {
 
   unsetMakeDeclaration() {
     this._makeDeclaration = false
+    this.render()
   }
 
   get makeDeclaration() {

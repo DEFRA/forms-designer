@@ -7,5 +7,7 @@
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
 <script type="module">
   import { setupSummaryPageController } from "{{ getAssetPath("pagePreview.js") }}"
-  setupSummaryPageController({{ preview.page | safe }}, {{ preview.definition | safe }})
+  const page = {{ preview.page | safe }}
+  const definition = {{ preview.definition | safe }}
+  setupSummaryPageController(page, definition)
 </script>

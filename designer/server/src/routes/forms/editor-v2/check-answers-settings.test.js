@@ -57,7 +57,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     expect($radios[0]).toBeChecked()
     expect($radios[1]).not.toBeChecked()
 
-    expect($actions).toHaveLength(3)
+    expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
   })
 
@@ -92,7 +92,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     expect($radios[0]).not.toBeChecked()
     expect($radios[1]).toBeChecked()
 
-    expect($actions).toHaveLength(3)
+    expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
   })
 

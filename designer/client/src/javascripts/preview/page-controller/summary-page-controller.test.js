@@ -7,10 +7,7 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import {
-  pageHeadingAndGuidanceHTML,
-  summaryPageHTML
-} from '~/src/javascripts/preview/__stubs__/page.js'
+import { summaryPageHTML } from '~/src/javascripts/preview/__stubs__/page.js'
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question.js'
 import { PageListenerBase } from '~/src/javascripts/preview/page-controller/page-listener.js'
 import {
@@ -26,7 +23,7 @@ describe('summary page controller', () => {
       document.body.innerHTML = summaryPageHTML() + questionDetailsPreviewHTML
 
       const pagePreviewElements = new SummaryPagePreviewDomElements()
-      expect(pagePreviewElements.declarationText).toBeUndefined()
+      expect(pagePreviewElements.declarationText).toBe('')
       expect(pagePreviewElements.declaration).toBe(false)
     })
 
@@ -36,7 +33,7 @@ describe('summary page controller', () => {
 
       const pagePreviewElements = new SummaryPagePreviewDomElements()
       expect(pagePreviewElements.declaration).toBe(true)
-      expect(pagePreviewElements.declarationText).toBeUndefined()
+      expect(pagePreviewElements.declarationText).toBe('')
     })
 
     it('should instantiate given elements true but with text', () => {
@@ -82,13 +79,12 @@ describe('summary page controller', () => {
 
     const pageRendererCb = jest.fn()
     const renderer = new PageRendererStub(pageRendererCb)
-    // const inputEvent = new InputEvent('input', { bubbles: true })
-    // const changeEvent = new InputEvent('change', { bubbles: true })
+    const inputEvent = new InputEvent('input', { bubbles: true })
+    const changeEvent = new InputEvent('change', { bubbles: true })
 
     beforeEach(() => {
       jest.clearAllMocks()
-      document.body.innerHTML =
-        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      document.body.innerHTML = summaryPageHTML() + questionDetailsPreviewHTML
       pagePreviewElements = new SummaryPagePreviewDomElements()
       pageController = new SummaryPageController(
         pagePreviewElements,
@@ -111,14 +107,23 @@ describe('summary page controller', () => {
     })
 
     it('should highlight declaration', () => {
-      if (!pagePreviewElements.declarationTextElement) {
-        throw new Error('Failed')
+      if (
+        !pagePreviewElements.declarationTextElement ||
+        !pagePreviewElements.needDeclarationYes
+      ) {
+        throw new Error('not found')
       }
+      pagePreviewElements.needDeclarationYes.checked = true
+      pagePreviewElements.needDeclarationYes.dispatchEvent(changeEvent)
+
       pagePreviewElements.declarationTextElement.focus()
       expect(pageController.guidance.classes).toBe('highlight')
+      pagePreviewElements.declarationTextElement.value = 'Declaration text'
+      pagePreviewElements.declarationTextElement.dispatchEvent(inputEvent)
+      expect(pageController.guidanceText).toBe('Declaration text')
       pagePreviewElements.declarationTextElement.blur()
       expect(pageController.guidance.classes).toBe('')
-      expect(pageRendererCb).toHaveBeenCalledTimes(3)
+      expect(pageRendererCb).toHaveBeenCalledTimes(5)
     })
   })
 })

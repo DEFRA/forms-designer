@@ -25,7 +25,7 @@ describe('check answers settings', () => {
           })
         ]
       })
-      const fields = settingsFields('true', 'text')
+      const fields = settingsFields('false', '')
       const previewModel = getPreviewModel(
         page,
         definition,
