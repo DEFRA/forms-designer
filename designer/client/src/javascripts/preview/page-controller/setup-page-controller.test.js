@@ -143,7 +143,7 @@ describe('setup-page-controller', () => {
       })
       document.body.innerHTML =
         summaryPageHTML(false, '') + questionDetailsPreviewHTML
-      const summaryPage = setupSummaryPageController(page, formDefinition)
+      const summaryPage = setupSummaryPageController(formDefinition)
       expect(summaryPage).toBeInstanceOf(SummaryPageController)
       expect(summaryPage.declarationText).toBe('')
       expect(summaryPage.declaration).toEqual({
