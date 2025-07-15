@@ -3,7 +3,6 @@ import {
   type ConditionalComponentType
 } from '~/src/components/types.js'
 import { ConditionType, type Coordinator } from '~/src/conditions/enums.js'
-import { generateConditionAlias } from '~/src/conditions/helpers.js'
 import {
   type ConditionData,
   type ConditionDataV2,
@@ -19,6 +18,15 @@ import {
   type ConditionWrapperV2,
   type List
 } from '~/src/form/form-definition/types.js'
+
+/**
+ * Generate a valid JavaScript identifier from a condition ID
+ * @param conditionId - The condition ID (UUID)
+ * @returns A valid JavaScript identifier
+ */
+export const generateConditionAlias = (conditionId: string): string => {
+  return `cond_${conditionId.replaceAll('-', '')}`
+}
 
 export function isConditionListItemRefValueDataV2(condition: ConditionDataV2) {
   return condition.type === ConditionType.ListItemRef

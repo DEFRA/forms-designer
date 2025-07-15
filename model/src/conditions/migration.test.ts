@@ -9,6 +9,7 @@ import {
 } from '~/src/conditions/enums.js'
 import {
   convertConditionWrapperFromV2,
+  generateConditionAlias,
   type RuntimeFormModel
 } from '~/src/conditions/migration.js'
 import {
@@ -551,6 +552,15 @@ describe('Migration', () => {
           ]
         }
       })
+    })
+  })
+
+  describe('generateConditionAlias', () => {
+    test('creates valid JavaScript identifier from UUID', () => {
+      const conditionId = '12345678-1234-1234-1234-123456789abc'
+      const alias = generateConditionAlias(conditionId)
+
+      expect(alias).toBe('cond_12345678123412341234123456789abc')
     })
   })
 })

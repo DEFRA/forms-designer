@@ -70,12 +70,3 @@ export const getConditionV2 = (
 
   return condition
 }
-
-/**
- * Generate a valid JavaScript identifier from a condition ID
- * @param conditionId - The condition ID (UUID)
- * @returns A valid JavaScript identifier
- */
-export const generateConditionAlias = (conditionId: string): string => {
-  return `cond_${conditionId.replaceAll('-', '')}`
-}

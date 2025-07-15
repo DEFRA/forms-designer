@@ -18,7 +18,6 @@ export { ConditionGroup } from '~/src/conditions/condition-group.js'
 export { ConditionsModel } from '~/src/conditions/condition-model.js'
 export { ConditionGroupDef } from '~/src/conditions/condition-group-def.js'
 export {
-  generateConditionAlias,
   getConditionV2,
   hasConditionField,
   hasConditionGroup,
@@ -31,6 +30,7 @@ export {
 
 export {
   convertConditionWrapperFromV2,
+  generateConditionAlias,
   isConditionBooleanValueDataV2,
   isConditionDateValueDataV2,
   isConditionListItemRefValueDataV2,
