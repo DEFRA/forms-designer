@@ -24,6 +24,11 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
 export class SummaryPreviewSSR extends PagePreviewElementsSSR {
   #declaration = false
 
+  /**
+   * @param {Page|undefined} page
+   * @param {string} declarationText
+   * @param {boolean} showDeclaration
+   */
   constructor(page, declarationText, showDeclaration = false) {
     super(page, declarationText)
     this.#declaration = showDeclaration

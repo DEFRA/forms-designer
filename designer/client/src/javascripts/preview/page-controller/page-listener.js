@@ -23,7 +23,7 @@ export class PageListenerBase {
    */
   _pageController
   /**
-   * @type {PagePreviewDomElements}
+   * @type {DomElements}
    * @protected
    */
   _baseElements
@@ -31,7 +31,7 @@ export class PageListenerBase {
   /**
    *
    * @param {PreviewPageControllerBase} pageController
-   * @param {PagePreviewDomElements} baseElements
+   * @param {DomElements} baseElements
    */
   constructor(pageController, baseElements) {
     this._pageController = pageController
@@ -42,7 +42,7 @@ export class PageListenerBase {
    * @returns {[HTMLInputElement|null, EventListenerObject, string][]}
    */
   getListeners() {
-    return [[]]
+    return []
   }
 
   /**
@@ -73,5 +73,7 @@ export class PageListenerBase {
 }
 
 /**
+ * @import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
+ * @import { PagePreviewDomElements } from '~/src/javascripts/preview/page-controller/page-controller.js'
  * @import { PageOverviewElements, DomElementsBase, PreviewPageControllerBase } from '@defra/forms-model'
  */

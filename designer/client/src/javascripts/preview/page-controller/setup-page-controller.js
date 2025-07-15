@@ -35,6 +35,10 @@ import {
   PagePreviewDomElements,
   PagePreviewListeners
 } from '~/src/javascripts/preview/page-controller/page-controller.js'
+import {
+  SummaryPagePreviewDomElements,
+  SummaryPagePreviewListeners
+} from '~/src/javascripts/preview/page-controller/summary-page-controller.js'
 
 /**
  * @param {Page} page
@@ -94,7 +98,7 @@ export function setupPageController(page, definition) {
  * @param {FormDefinition} definition
  */
 export function setupSummaryPageController(page, definition) {
-  const elements = new PagePreviewDomElements()
+  const elements = new SummaryPagePreviewDomElements()
   const nunjucksRenderBase = new NunjucksRendererBase(elements)
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
 
@@ -104,7 +108,13 @@ export function setupSummaryPageController(page, definition) {
     renderer
   )
 
-  return setupListener(previewPageController, elements)
+  const listeners = new SummaryPagePreviewListeners(
+    previewPageController,
+    elements
+  )
+  listeners.initListeners()
+
+  return previewPageController
 }
 
 export function setupGuidanceController() {

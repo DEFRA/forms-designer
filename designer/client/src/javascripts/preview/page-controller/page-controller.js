@@ -76,6 +76,12 @@ export class PagePreviewDomElements extends DomElements {
 }
 
 export class PagePreviewListeners extends PageListenerBase {
+  /**
+   * @type {PagePreviewDomElements}
+   * @protected
+   */
+  _baseElements
+
   _listeners = {
     addPageHeadingElement: {
       change: {
@@ -182,6 +188,15 @@ export class PagePreviewListeners extends PageListenerBase {
         }
       }
     }
+  }
+
+  /**
+   * @param {PreviewPageControllerBase} pageController
+   * @param {PagePreviewDomElements} baseElements
+   */
+  constructor(pageController, baseElements) {
+    super(pageController, baseElements)
+    this._baseElements = baseElements
   }
 
   /**

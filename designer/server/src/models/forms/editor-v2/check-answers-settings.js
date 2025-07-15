@@ -16,10 +16,7 @@ import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import {
-  PagePreviewElementsSSR,
-  SummaryPreviewSSR
-} from '~/src/models/forms/editor-v2/preview/page-preview.js'
+import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -27,7 +24,11 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {string | undefined} declarationTextVal
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-function settingsFields(needDeclarationVal, declarationTextVal, validation) {
+export function settingsFields(
+  needDeclarationVal,
+  declarationTextVal,
+  validation
+) {
   return {
     needDeclaration: {
       name: 'needDeclaration',
@@ -81,56 +82,29 @@ export const dummyRenderer = {
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
- * @param {string} [declaration]
+ * @param {ReturnType<typeof settingsFields>} fields
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
  *    questionType?: ComponentType,
  *    previewTitle?: string,
- *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] }
+ *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
+ *    buttonText: string
  * }}
  */
 export function getPreviewModel(page, definition, previewPageUrl, fields) {
   const declarationText = fields.declarationText.value
-  const needDeclaration = fields.needDeclaration.value
-  const elements = new SummaryPreviewSSR(page, declarationText, needDeclaration)
-  console.log('~~~~~~ Chris Debug ~~~~~~ ', 'Elements', elements)
-  console.log(
-    '~~~~~~ Chris Debug ~~~~~~ ',
-    'Elements.declaration',
-    elements.declaration
+  const needDeclaration = Boolean(fields.needDeclaration.value)
+
+  const elements = new SummaryPreviewSSR(
+    page,
+    declarationText ?? '',
+    needDeclaration
   )
-  console.log(
-    '~~~~~~ Chris Debug ~~~~~~ ',
-    'Elements.guidance',
-    elements.guidance
-  )
+
   const previewPageController = new SummaryPageController(
     elements,
     definition,
     dummyRenderer
-  )
-  console.log('~~~~~~ Chris Debug ~~~~~~ ', 'PreviewPageController', {
-    ...previewPageController
-  })
-  console.log(
-    '~~~~~~ Chris Debug ~~~~~~ ',
-    'PreviewPageController.buttonText',
-    previewPageController.buttonText
-  )
-  console.log(
-    '~~~~~~ Chris Debug ~~~~~~ ',
-    'PreviewPageController.guidance',
-    previewPageController.guidance
-  )
-  console.log(
-    '~~~~~~ Chris Debug ~~~~~~ ',
-    'PreviewPageController.declaration',
-    previewPageController.declaration
-  )
-  console.log(
-    '~~~~~~ Chris Debug ~~~~~~ ',
-    'PreviewPageController.d',
-    previewPageController.declarationText
   )
 
   return {

@@ -26,7 +26,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
     p {
       margin-bottom: 0;
-      color: $defra-brand-colour;
+      color: govuk-colour("green");
       padding: 2px 8px 3px;
       text-align: center;
     }
@@ -67,9 +67,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
   .highlight {
     border-bottom: 2px solid #ffb266;
-  }
-
-  .govuk-button .highlight {
     color: govuk-colour("black");
   }
 }

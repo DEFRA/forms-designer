@@ -5,7 +5,10 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-settings.js'
+import {
+  getPreviewModel,
+  settingsFields
+} from '~/src/models/forms/editor-v2/check-answers-settings.js'
 
 describe('check answers settings', () => {
   describe('getPreviewModel', () => {
@@ -22,7 +25,13 @@ describe('check answers settings', () => {
           })
         ]
       })
-      const previewModel = getPreviewModel(page, definition, 'http://url', '')
+      const fields = settingsFields('true', 'text')
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        'http://url',
+        fields
+      )
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
       expect(previewModel.components).toEqual([])
       expect(previewModel.previewTitle).toBe('Preview of Check answers page')

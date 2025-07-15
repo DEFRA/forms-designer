@@ -12,6 +12,11 @@ export class SummaryPageController extends PreviewPageControllerBase {
    */
   _pageTemplate = PreviewPageControllerBase.PATH + 'summary-controller.njk'
   /**
+   * @type {Markdown}
+   * @protected
+   */
+  _guidanceComponent = PreviewPageControllerBase.createGuidanceComponent(false)
+  /**
    * @type {FormComponentsDef[]}
    * @private
    */
@@ -35,6 +40,8 @@ export class SummaryPageController extends PreviewPageControllerBase {
       return []
     })
     this._makeDeclaration = elements.declaration
+
+    this._guidanceComponent.content = elements.guidance
   }
 
   /**
