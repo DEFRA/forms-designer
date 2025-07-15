@@ -44,6 +44,13 @@ describe('summary page controller', () => {
       expect(pagePreviewElements.declaration).toBe(true)
       expect(pagePreviewElements.declarationText).toBe('Declaration text')
     })
+
+    it('should give default values if HTML is missing', () => {
+      document.body.innerHTML = '<div></div>'
+      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      expect(pagePreviewElements.declarationText).toBe('')
+      expect(pagePreviewElements.declaration).toBe(false)
+    })
   })
   describe('SummaryPreviewListeners', () => {
     const components = [
@@ -123,7 +130,11 @@ describe('summary page controller', () => {
       expect(pageController.guidanceText).toBe('Declaration text')
       pagePreviewElements.declarationTextElement.blur()
       expect(pageController.guidance.classes).toBe('')
-      expect(pageRendererCb).toHaveBeenCalledTimes(5)
+      pagePreviewElements.needDeclarationYes.checked = false
+      pagePreviewElements.needDeclarationYes.dispatchEvent(changeEvent)
+      pagePreviewElements.needDeclarationNo.checked = true
+      pagePreviewElements.needDeclarationNo.dispatchEvent(changeEvent)
+      expect(pageRendererCb).toHaveBeenCalledTimes(6)
     })
   })
 })

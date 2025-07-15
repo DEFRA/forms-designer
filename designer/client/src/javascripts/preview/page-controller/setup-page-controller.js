@@ -96,6 +96,7 @@ export function setupPageController(page, definition) {
  * Setup the Page Controller for client
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
+ * @returns {SummaryPageController}
  */
 export function setupSummaryPageController(page, definition) {
   const elements = new SummaryPagePreviewDomElements()

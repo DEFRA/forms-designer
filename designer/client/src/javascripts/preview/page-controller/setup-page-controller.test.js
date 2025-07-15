@@ -1,6 +1,7 @@
 import {
   GuidancePageController,
-  PreviewPageController
+  PreviewPageController,
+  SummaryPageController
 } from '@defra/forms-model'
 import {
   buildAutoCompleteComponent,
@@ -13,11 +14,15 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import { pageHeadingAndGuidanceHTML } from '~/src/javascripts/preview/__stubs__/page.js'
+import {
+  pageHeadingAndGuidanceHTML,
+  summaryPageHTML
+} from '~/src/javascripts/preview/__stubs__/page.js'
 import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
 import {
   setupGuidanceController,
-  setupPageController
+  setupPageController,
+  setupSummaryPageController
 } from '~/src/javascripts/preview/page-controller/setup-page-controller.js'
 
 jest.mock('~/src/javascripts/preview/nunjucks.js')
@@ -125,7 +130,26 @@ describe('setup-page-controller', () => {
 
       expect(guidancePage).toBeInstanceOf(GuidancePageController)
       expect(guidancePage.title).toBe('Where do you live?')
-      // expect(guidancePage.)
+    })
+  })
+
+  describe('setupSummaryPageController', () => {
+    it('should setup', () => {
+      const page = buildSummaryPage({
+        components: []
+      })
+      const formDefinition = buildDefinition({
+        pages: [page]
+      })
+      document.body.innerHTML =
+        summaryPageHTML(false, '') + questionDetailsPreviewHTML
+      const summaryPage = setupSummaryPageController(page, formDefinition)
+      expect(summaryPage).toBeInstanceOf(SummaryPageController)
+      expect(summaryPage.declarationText).toBe('')
+      expect(summaryPage.declaration).toEqual({
+        text: '',
+        classes: ''
+      })
     })
   })
 })
