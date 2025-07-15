@@ -116,7 +116,8 @@ describe('summary page controller', () => {
     it('should highlight declaration', () => {
       if (
         !pagePreviewElements.declarationTextElement ||
-        !pagePreviewElements.needDeclarationYes
+        !pagePreviewElements.needDeclarationYes ||
+        !pagePreviewElements.needDeclarationNo
       ) {
         throw new Error('not found')
       }
