@@ -113,10 +113,16 @@
                     </a>
                   </div>
 
-                  {{ govukSkipLink({
-                    text: "Skip to page preview",
-                    href: "#"
-                  }) }}
+                  <div class="govuk-button-group govuk-!-margin-top-6">
+                    {{ govukSkipLink({
+                      text: "Skip to page preview",
+                      href: "#tab-preview",
+                      classes: "govuk-!-margin-right-4",
+                      attributes: {
+                        "data-module": "govuk-skip-link"
+                      }
+                    }) }}
+                  </div>
 
                   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
                   {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
