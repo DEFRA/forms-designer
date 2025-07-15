@@ -539,12 +539,12 @@ describe('Migration', () => {
           name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
           conditions: [
             {
-              conditionName: 'Test condition',
+              conditionName: 'cond_1f7473dd45b14f7eb9bfea4595d6f642',
               conditionDisplayName: 'Test condition',
               coordinator: undefined
             },
             {
-              conditionName: 'Test condition',
+              conditionName: 'cond_1f7473dd45b14f7eb9bfea4595d6f642',
               conditionDisplayName: 'Test condition',
               coordinator: Coordinator.OR
             }

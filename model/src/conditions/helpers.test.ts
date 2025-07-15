@@ -1,4 +1,7 @@
-import { getConditionV2 } from '~/src/conditions/index.js'
+import {
+  generateConditionAlias,
+  getConditionV2
+} from '~/src/conditions/index.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
 
 describe('condition helpers', () => {
@@ -36,5 +39,12 @@ describe('condition helpers', () => {
     expect(() => getConditionV2(definition, '2')).toThrow(
       "Condition '2' not found in form"
     )
+  })
+
+  test('generateConditionAlias creates valid JavaScript identifier', () => {
+    const conditionId = '12345678-1234-1234-1234-1234567891abc'
+    const alias = generateConditionAlias(conditionId)
+
+    expect(alias).toBe('cond_123456781234123412341234567891abc')
   })
 })

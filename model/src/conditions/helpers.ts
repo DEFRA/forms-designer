@@ -77,5 +77,5 @@ export const getConditionV2 = (
  * @returns A valid JavaScript identifier
  */
 export const generateConditionAlias = (conditionId: string): string => {
-  return `c_${conditionId.replaceAll('-', '')}`
+  return `cond_${conditionId.replaceAll('-', '')}`
 }
