@@ -38,11 +38,12 @@ const delJsonByComponentType = /** @type {typeof delJson<ComponentDef>} */ (
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
+ * @param {ControllerType} [currentController]
  */
-export function getControllerType(questionDetails) {
+export function getControllerType(questionDetails, currentController) {
   return questionDetails.type === ComponentType.FileUploadField
     ? { controller: ControllerType.FileUpload }
-    : {}
+    : { controller: currentController }
 }
 
 /**
@@ -67,17 +68,22 @@ export async function addPageAndFirstQuestion(
   questionDetails,
   pageDetails
 ) {
+  const fullPageDetails = {
+    ...pageDetails, // includes controller if not determined by component type (e.g. exit page)
+    ...getControllerType(questionDetails, pageDetails?.controller), // defines controller if can be determined by component type
+    title: pageDetails?.title ?? '',
+    path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`
+  }
+
   const { body } = await postJsonByPageType(buildRequestUrl(formId, 'pages'), {
     payload: {
-      title: pageDetails?.title ?? '',
-      path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
+      ...fullPageDetails,
       components: [
         {
           ...questionDetails,
           name: questionDetails.name ?? randomId()
         }
-      ],
-      ...getControllerType(questionDetails)
+      ]
     },
     ...getHeaders(token)
   })
@@ -141,7 +147,10 @@ export async function updateQuestion(
 
   // Determine if page controller should change
   const origControllerType = page?.controller
-  const { controller: newControllerType } = getControllerType(questionDetails)
+  const { controller: newControllerType } = getControllerType(
+    questionDetails,
+    origControllerType
+  )
   if (
     origControllerType !== newControllerType ||
     isFirstQuestionAndNoPageTitle

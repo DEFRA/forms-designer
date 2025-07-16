@@ -30,6 +30,7 @@ export {
 
 export {
   convertConditionWrapperFromV2,
+  generateConditionAlias,
   isConditionBooleanValueDataV2,
   isConditionDateValueDataV2,
   isConditionListItemRefValueDataV2,

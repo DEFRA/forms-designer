@@ -62,6 +62,16 @@ export function isConditionalType(
 }
 
 /**
+ * Check if the component type is supported for conditional reveal.
+ * As of today this is just content types, but we're providing this as a wrapper
+ * function for clarity.
+ * @param type - Component type to check
+ */
+export function isConditionalRevealType(type: ComponentType) {
+  return isContentType(type)
+}
+
+/**
  * Filter known components with content (textarea or list)
  */
 export function hasContent(

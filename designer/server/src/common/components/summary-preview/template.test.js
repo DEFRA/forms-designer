@@ -39,7 +39,6 @@ describe('Pages left panel component', () => {
       )
 
       $headings = container.getAllByRole('heading')
-      // $groups = container.getAllByRole('group')
       $guidanceText = container.getByText('Some info')
     })
 

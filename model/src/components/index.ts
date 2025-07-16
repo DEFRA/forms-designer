@@ -1,4 +1,10 @@
 export { ComponentTypes } from '~/src/components/component-types.js'
+export { ComponentType } from '~/src/components/enums.js'
+export {
+  allDocumentTypes,
+  allImageTypes,
+  allTabularDataTypes
+} from '~/src/components/file-types.js'
 export {
   getComponentDefaults,
   hasConditionSupport,
@@ -10,16 +16,12 @@ export {
   hasListField,
   hasSelectionFields,
   hasTitle,
+  isConditionalRevealType,
   isConditionalType,
   isContentType,
   isFormType,
   isListType
 } from '~/src/components/helpers.js'
-export {
-  allDocumentTypes,
-  allImageTypes,
-  allTabularDataTypes
-} from '~/src/components/file-types.js'
 export {
   getYesNoList,
   yesNoListId,
@@ -27,4 +29,3 @@ export {
   yesNoListNoItemId,
   yesNoListYesItemId
 } from '~/src/components/yes-no-helper.js'
-export { ComponentType } from '~/src/components/enums.js'
