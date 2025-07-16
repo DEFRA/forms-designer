@@ -15,6 +15,7 @@ describe('month-year', () => {
     expect(dateInput.renderInput).toEqual({
       id: 'monthYear',
       name: 'monthYear',
+      classes: '',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

@@ -237,6 +237,7 @@ describe('page-controller', () => {
             classes: '',
             text: ''
           },
+          classes: '',
           items: [
             {
               hint: undefined,
@@ -361,6 +362,21 @@ describe('page-controller', () => {
       pageController.clearHighlight()
       expect(pageController.guidanceText).toBe(newGuidance)
       expect(pageController.components[0].model.name).toBe('markdown')
+    })
+
+    it('should highlight question', () => {
+      const { pageController } = buildController()
+      expect(pageController.components[0].questionType).toBe(
+        textFieldComponent.type
+      )
+      expect(pageController.components[1].questionType).toBe(listComponent.type)
+      expect(pageController.components[2].questionType).toBe(
+        selectComponent.type
+      )
+      pageController.highlightQuestion('407dd0d7-cce9-4f43-8e1f-7d89cb698875')
+      expect(pageController.components[0].model.classes).toBe('highlight')
+      expect(pageController.components[1].model.classes).toBe('')
+      expect(pageController.components[2].model.classes).toBe('')
     })
 
     describe('component title size', () => {

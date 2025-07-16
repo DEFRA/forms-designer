@@ -80,6 +80,12 @@ export class PagePreviewDomElements extends DomElements {
   get repeatQuestion() {
     return this.questionSetNameElement?.value ?? undefined
   }
+
+  findActiveReorderElement() {
+    return /** @type {HTMLInputElement | null } */ (
+      document.querySelector('.reorder-panel-focus')
+    )
+  }
 }
 
 export class PagePreviewListeners extends PageListenerBase {
@@ -210,7 +216,7 @@ export class PagePreviewListeners extends PageListenerBase {
    * @returns {[HTMLInputElement|null, EventListenerObject, string][]}
    */
   getListeners() {
-    return [
+    const allListeners = [
       [
         this._baseElements.headingElement,
         this._listeners.heading.input,
@@ -263,6 +269,10 @@ export class PagePreviewListeners extends PageListenerBase {
         'blur'
       ]
     ]
+
+    return /** @type {[HTMLInputElement, EventListenerObject, string][]} */ (
+      allListeners
+    )
   }
 
   initListeners() {

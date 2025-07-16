@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { FieldsetQuestion } from '~/src/form/form-editor/preview/fieldset-question.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 
@@ -21,9 +22,10 @@ export class YesNoQuestion extends FieldsetQuestion {
     /**
      *
      */
+    const highlightClass = this._highlighted ? ` ${HIGHLIGHT_CLASS}` : ''
     return {
       type: 'boolean',
-      classes: 'govuk-radios--inline',
+      classes: `govuk-radios--inline${highlightClass}`,
       items: /** @type {ListElement[]} */ ([
         {
           id: 'yesNo-yes',

@@ -170,6 +170,10 @@ describe('ItemReorder Class', () => {
       foundItemOrderInput instanceof HTMLInputElement
         ? foundItemOrderInput
         : null
+    // Mock dispatchEvent to avoid error during unit test
+    if (foundItemOrderInput) {
+      foundItemOrderInput.dispatchEvent = jest.fn()
+    }
     announcementRegion = document.getElementById('reorder-announcement')
 
     if (container instanceof HTMLOListElement) {
@@ -328,6 +332,10 @@ describe('ItemReorder Class', () => {
         /** @type {HTMLElement} */ (mockEvt.item),
         'focus'
       )
+      const dispatchEventMock = jest.fn()
+      if (itemReorderInstance.itemOrderInput) {
+        itemReorderInstance.itemOrderInput.dispatchEvent = dispatchEventMock
+      }
       mockEvt.item.setAttribute = jest.fn()
 
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
@@ -342,6 +350,7 @@ describe('ItemReorder Class', () => {
       )
       expect(mockEvt.item.setAttribute).toHaveBeenCalledWith('tabindex', '-1')
       expect(focusSpy).toHaveBeenCalled()
+      expect(dispatchEventMock).toHaveBeenCalled()
     })
 
     test('should handle onEnd when newIndex is undefined (e.g. drag cancelled)', () => {

@@ -1,6 +1,7 @@
 import {
   GuidancePageController,
   PreviewPageController,
+  ReorderQuestionsPageController,
   SummaryPageController
 } from '@defra/forms-model'
 import {
@@ -22,6 +23,7 @@ import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/
 import {
   setupGuidanceController,
   setupPageController,
+  setupReorderQuestionsController,
   setupSummaryPageController
 } from '~/src/javascripts/preview/page-controller/setup-page-controller.js'
 
@@ -38,11 +40,13 @@ jest.mock('~/src/views/preview-components/textfield.njk', () => '')
 jest.mock('~/src/views/preview-components/numberfield.njk', () => '')
 jest.mock('~/src/views/preview-components/yesnofield.njk', () => '')
 jest.mock('~/src/views/preview-components/textarea.njk', () => '')
+jest.mock('~/src/views/preview-components/multilinetextfield.njk', () => '')
 jest.mock('~/src/views/preview-components/radios.njk', () => '')
 jest.mock('~/src/views/preview-components/radiosfield.njk', () => '')
 jest.mock('~/src/views/preview-components/selectfield.njk', () => '')
 jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
 jest.mock('~/src/views/preview-components/date-input.njk', () => '')
+jest.mock('~/src/views/preview-components/datepartsfield.njk', () => '')
 jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
 jest.mock('~/src/views/preview-components/fileuploadfield.njk', () => '')
 jest.mock('~/src/views/page-preview-component/template.njk', () => '')
@@ -130,6 +134,17 @@ describe('setup-page-controller', () => {
 
       expect(guidancePage).toBeInstanceOf(GuidancePageController)
       expect(guidancePage.title).toBe('Where do you live?')
+    })
+  })
+
+  describe('setupReorderQuestionsController', () => {
+    it('should setup', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      const reorderPage = setupReorderQuestionsController(page, definition)
+
+      expect(reorderPage).toBeInstanceOf(ReorderQuestionsPageController)
+      expect(reorderPage.title).toBe('Where do you live?')
     })
   })
 

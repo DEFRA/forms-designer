@@ -11,12 +11,57 @@ describe('YesNoQuestion', () => {
       new QuestionPreviewElements(baseElements)
     )
     const renderer = new QuestionRendererStub(jest.fn())
-    const dateInput = new YesNoQuestion(elements, renderer)
-    expect(dateInput.renderInput).toEqual({
+    const yesNo = new YesNoQuestion(elements, renderer)
+    expect(yesNo.renderInput).toEqual({
       id: 'yesNo',
       name: 'yesNo',
       type: 'boolean',
       classes: 'govuk-radios--inline',
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--l',
+          text: 'Which quest would you like to pick?'
+        }
+      },
+      hint: {
+        classes: '',
+        text: 'Choose one adventure that best suits you.'
+      },
+      items: [
+        {
+          id: 'yesNo-yes',
+          label: {
+            classes: '',
+            text: 'Yes'
+          },
+          text: 'Yes',
+          value: true
+        },
+        {
+          id: 'yesNo-no',
+          label: {
+            classes: '',
+            text: 'No'
+          },
+          text: 'No',
+          value: false
+        }
+      ]
+    })
+  })
+
+  it('should create class with highlight', () => {
+    const elements = /** @type {QuestionElements} */ (
+      new QuestionPreviewElements(baseElements)
+    )
+    const renderer = new QuestionRendererStub(jest.fn())
+    const yesNo = new YesNoQuestion(elements, renderer)
+    yesNo.highlightContent()
+    expect(yesNo.renderInput).toEqual({
+      id: 'yesNo',
+      name: 'yesNo',
+      type: 'boolean',
+      classes: 'govuk-radios--inline highlight',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

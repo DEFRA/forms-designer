@@ -14,6 +14,7 @@ describe('date-input', () => {
     expect(res.renderInput).toEqual({
       id: 'dateInput',
       name: 'dateInput',
+      classes: '',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

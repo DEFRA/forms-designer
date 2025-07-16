@@ -115,7 +115,8 @@ export const pageHeadingAndGuidanceHTML = `
 </div>
 `
 
-export const repeaterPageHTML = `
+export const repeaterPageHTML = /** @type {string} */ (
+  `
 <div class="govuk-!-padding-top-3">
                   <h1 class="govuk-heading-l" id="page-heading">Page 16</h1>
 
@@ -302,6 +303,7 @@ export const repeaterPageHTML = `
   </a>
 </div>
 `
+)
 
 export const summaryPageHTML = (
   declaration = false,

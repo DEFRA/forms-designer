@@ -6,6 +6,11 @@
 
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
 <script type="module">
+    {% if action == 'reorder' %}
+    import { setupReorderQuestionsController } from "{{ getAssetPath("pagePreview.js") }}"
+    setupReorderQuestionsController({{ preview.page | safe }}, {{ preview.definition | safe }})
+    {% else %}
     import { setupPageController } from "{{ getAssetPath("pagePreview.js") }}"
     setupPageController({{ preview.page | safe }}, {{ preview.definition | safe }})
+    {% endif %}
 </script>

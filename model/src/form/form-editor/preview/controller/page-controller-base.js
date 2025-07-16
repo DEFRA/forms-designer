@@ -376,13 +376,25 @@ export class PreviewPageControllerBase {
   _isHighlighted(field) {
     return this._highlighted === field ? HIGHLIGHT_CLASS : ''
   }
+
+  /**
+   * @param {string} questionId
+   */
+  highlightQuestion(questionId) {
+    const question = this._components.find((comp) => comp.id === questionId)
+    if (question) {
+      this._components
+        .filter((comp) => comp.id !== questionId)
+        .forEach((comp2) => comp2.unHighlightContent())
+      question.highlightContent()
+      this.render()
+    }
+  }
 }
 
 /**
  * @import { PageRenderer, PageOverviewElements, PagePreviewBaseElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
- * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
- * @import { FormDefinition, Page } from '~/src/form/form-definition/types.js'
- * @import { ComponentDef, MarkdownComponent } from '~/src/components/types.js'
+ * @import { Page } from '~/src/form/form-definition/types.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
  */

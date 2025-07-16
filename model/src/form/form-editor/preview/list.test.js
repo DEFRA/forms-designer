@@ -207,6 +207,36 @@ describe('list', () => {
       const expectedModel = {
         id: 'listInput',
         name: 'listInputField',
+        classes: '',
+        fieldset: {
+          legend: {
+            text: 'Which quest would you like to pick?',
+            classes: 'govuk-fieldset__legend--l'
+          }
+        },
+        hint: {
+          classes: '',
+          text: 'Choose one adventure that best suits you.'
+        },
+        items: expectedList
+      }
+      list.push(structuredClone(list1))
+      list.push(structuredClone(list2))
+      list.push(structuredClone(list3))
+      list.push(structuredClone(list4))
+      expect(list.renderInput).toEqual(expectedModel)
+      expect(renderer.renderMock).toHaveBeenCalledWith(
+        'preview-components/radios.njk',
+        expectedModel
+      )
+    })
+
+    it('should return the correct model with question highlighted', () => {
+      const list = new ListQuestion(emptyQuestionElements, renderer)
+      const expectedModel = {
+        id: 'listInput',
+        name: 'listInputField',
+        classes: 'highlight',
         fieldset: {
           legend: {
             text: 'Which quest would you like to pick?',
@@ -223,11 +253,8 @@ describe('list', () => {
       list.push(list2)
       list.push(list3)
       list.push(list4)
+      list.highlightContent()
       expect(list.renderInput).toEqual(expectedModel)
-      expect(renderer.renderMock).toHaveBeenCalledWith(
-        'preview-components/radios.njk',
-        expectedModel
-      )
     })
 
     it('should highlight', () => {

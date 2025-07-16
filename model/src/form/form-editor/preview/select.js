@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 
@@ -31,13 +32,15 @@ export class SelectQuestion extends ListQuestion {
             }
       )
 
+    const highlightedClass = this._highlighted ? HIGHLIGHT_CLASS : ''
+
     return {
       id: this._fieldName,
       name: this._fieldName,
       hint: this.hint,
       label: this.label,
       items: this.list,
-      classes: this.list.length ? '' : 'govuk-visually-hidden',
+      classes: this.list.length ? highlightedClass : 'govuk-visually-hidden',
       ...afterInput
     }
   }

@@ -1,4 +1,4 @@
-import { type FormStatus } from '~/src/index.js'
+import { type FormStatus } from '~/src/common/enums.js'
 
 /**
  * Search options for querying forms

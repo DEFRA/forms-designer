@@ -234,7 +234,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
  * @import { PageRenderer, PageOverviewElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
- * @import { FormDefinition, Page } from '~/src/form/form-definition/types.js'
- * @import { ComponentDef, MarkdownComponent } from '~/src/components/types.js'
- * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
+ * @import { FormDefinition } from '~/src/form/form-definition/types.js'
+ * @import { ComponentDef } from '~/src/components/types.js'
+ * @import { PagePreviewComponent } from '~/src/form/form-editor/macros/types.js'
  */

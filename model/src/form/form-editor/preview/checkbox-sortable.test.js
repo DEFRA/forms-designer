@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { CheckboxSortableQuestion } from '~/src/index.js'
+import { CheckboxSortableQuestion } from '~/src/form/form-editor/preview/checkbox-sortable.js'
 
 describe('CheckboxSortableQuestion', () => {
   it('should create class', () => {
@@ -17,6 +17,7 @@ describe('CheckboxSortableQuestion', () => {
     expect(checkbox.renderInput).toEqual({
       id: 'checkboxField',
       name: 'checkboxField',
+      classes: '',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',

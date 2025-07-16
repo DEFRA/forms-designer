@@ -465,7 +465,8 @@ describe('preview', () => {
           classes: 'govuk-fieldset__legend--l',
           text: 'Short answer (optional)'
         }
-      }
+      },
+      classes: ''
     })
 
     const formGroupBase = {
@@ -489,7 +490,8 @@ describe('preview', () => {
       },
       id: 'listInput',
       items: [],
-      name: 'listInputField'
+      name: 'listInputField',
+      classes: ''
     })
 
     it('should get TextField', () => {
@@ -761,8 +763,8 @@ describe('preview', () => {
             text: 'Short answer (optional)'
           }
         },
-
-        name: 'addressField'
+        name: 'addressField',
+        classes: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })

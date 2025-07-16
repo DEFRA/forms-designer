@@ -7,6 +7,10 @@ import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 export class PreviewComponent {
   static PATH = 'preview-components/'
   /**
+   * @type { string | undefined }
+   */
+  _id = undefined
+  /**
    * @abstract
    * @type {ComponentType}
    */
@@ -194,6 +198,20 @@ export class PreviewComponent {
   }
 
   /**
+   * @type { string | undefined }
+   */
+  get id() {
+    return this._id
+  }
+
+  /**
+   * @param { string | undefined } value
+   */
+  set id(value) {
+    this._id = value
+  }
+
+  /**
    * no render
    */
   highlightContent() {
@@ -209,7 +227,5 @@ export class PreviewComponent {
 }
 
 /**
- * @import { ListenerRow, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { FormComponentsDef, ContentComponentsDef, ComponentDef } from '~/src/components/types.js'
- * @import { ListElement, ListItemReadonly } from '~/src/form/form-editor/types.js'
+ * @import { QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  */

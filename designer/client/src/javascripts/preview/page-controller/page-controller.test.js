@@ -11,7 +11,11 @@ import {
   pageHeadingAndGuidanceHTML,
   repeaterPageHTML
 } from '~/src/javascripts/preview/__stubs__/page.js'
-import { questionDetailsPreviewHTML } from '~/src/javascripts/preview/__stubs__/question'
+import {
+  listItemOrderHTML,
+  questionDetailsPreviewHTML,
+  upDownReorderButtonsHTML
+} from '~/src/javascripts/preview/__stubs__/question'
 import {
   PagePreviewDomElements,
   PagePreviewListeners
@@ -89,7 +93,11 @@ describe('page-controller', () => {
     beforeEach(() => {
       jest.clearAllMocks()
       document.body.innerHTML =
-        previewBtn + pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+        pageHeadingAndGuidanceHTML +
+        questionDetailsPreviewHTML +
+        previewBtn +
+        upDownReorderButtonsHTML +
+        listItemOrderHTML
       pagePreviewElements = new PagePreviewDomElements()
       pageController = new PreviewPageController(
         components,
@@ -97,6 +105,7 @@ describe('page-controller', () => {
         definition,
         renderer
       )
+      pageController.highlightQuestion = jest.fn()
       pageListeners = new PagePreviewListeners(
         pageController,
         pagePreviewElements

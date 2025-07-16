@@ -34,6 +34,5 @@ export class ListSortableQuestion extends ListQuestion {
 
 /**
  * @import {ListElement} from '~/src/form/form-editor/types.js'
- * @import { QuestionRenderer, HTMLBuilder, ListElements, BaseSettings } from '~/src/form/form-editor/preview/types.js'
- * @import { SortableEvent, SortableOptions } from 'sortablejs'
+ * @import { QuestionRenderer, ListElements } from '~/src/form/form-editor/preview/types.js'
  */

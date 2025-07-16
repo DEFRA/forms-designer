@@ -1,6 +1,7 @@
 import { type Context } from 'joi'
 
-import { type ControllerType, type Repeat } from '~/src/index.js'
+import { type Repeat } from '~/src/form/form-definition/types.js'
+import { type ControllerType } from '~/src/pages/enums.js'
 
 export interface PatchPageFields {
   title?: string
