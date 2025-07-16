@@ -22,41 +22,48 @@
   description: pageDescription,
   caption: pageCaption,
   actions: pageActions,
-  classes: "govuk-grid-column-full govuk-grid-column-one-half-from-desktop",
+  classes: "govuk-grid-column-full",
   backLink: backLink,
   useNewMasthead: true
 }) %}
 
-  {% call appEditorCard({
-    title: cardTitle,
-    caption: cardCaption,
-    heading: cardHeading,
-    notification: notification,
-    errorList: errorList
-  }) %}
+  <div class="govuk-grid-column-one-half-from-desktop">
 
-    <form class="form" method="post">
+    {% call appEditorCard({
+      title: cardTitle,
+      caption: cardCaption,
+      heading: cardHeading,
+      notification: notification,
+      errorList: errorList
+    }) %}
 
-      {% call govukFieldset({
-        legend: {
-          text: "Do users need to make a declaration?",
-          classes: "govuk-fieldset__legend--m",
-          isPageHeading: false
-        }
-      }) %}
+      <form id="checkAnswersForm" class="form" method="post">
 
-        {{ govukRadios(fields.needDeclaration | setConditionalAttribute("true", declarationHtml)) }}
+        {% call govukFieldset({
+          legend: {
+            text: "Do users need to make a declaration?",
+            classes: "govuk-fieldset__legend--m",
+            isPageHeading: false
+          }
+        }) %}
 
-        {{ govukButton({
-          text: 'Save changes'
-        }) }}
+          {{ govukRadios(fields.needDeclaration | setConditionalAttribute("true", declarationHtml)) }}
 
-      {% endcall %}
+          {{ govukButton({
+            text: 'Save changes'
+          }) }}
 
-    </form>
+        {% endcall %}
+
+      </form>
     {% endcall %}
 
+  </div>
+  <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
+    {%- include "../views/forms/editor-v2/partials/check-answers-right-panel.njk" -%}
+  </div>
   {% endcall %}
+
 {% endblock %}
 
 {% block mainEnd %}

@@ -23,6 +23,7 @@ export class YesNoQuestion extends FieldsetQuestion {
      */
     return {
       type: 'boolean',
+      classes: 'govuk-radios--inline',
       items: /** @type {ListElement[]} */ ([
         {
           id: 'yesNo-yes',

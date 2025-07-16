@@ -1,7 +1,7 @@
 <div id="preview-container-inner">
     <!-- Before content -->
     <div id="before-content" class="preview-before-content">
-        <p class="govuk-body-s">Previews</p>
+        <p class="govuk-body-s">{{ params.previewTitle if params.previewTitle else "Previews" }}</p>
     </div>
 
     {{ caller() }}

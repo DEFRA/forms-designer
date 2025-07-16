@@ -5,6 +5,7 @@
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/hint/macro.njk" import govukHint %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 {% set pageHeadingAndGuidanceHtml %}
   {{ govukInput(fields.pageHeading) }}
@@ -30,6 +31,16 @@
   {{ govukCheckboxes(fields.repeater | setConditionalAttribute("true", repeaterHtml)) }}
 {% endif %}
 
-{{ govukButton({
-  text: 'Save changes'
-}) }}
+<div class="govuk-button-group">
+  {{ govukButton({
+    text: 'Save changes'
+  }) }}
+
+  {{ govukSkipLink({
+    text: "Skip to page preview",
+    href: "#tab-preview",
+    attributes: {
+      "data-module": "govuk-skip-link"
+    }
+  }) }}
+</div>

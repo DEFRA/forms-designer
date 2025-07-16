@@ -99,6 +99,10 @@ export interface PageOverviewElements extends PagePreviewBaseElements {
   hasRepeater: boolean
 }
 
+export interface SummaryPageElements extends PagePreviewBaseElements {
+  declaration: boolean
+}
+
 export type PreviewQuestion =
   | DateInputQuestion
   | EmailAddressQuestion

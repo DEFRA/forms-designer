@@ -4,6 +4,7 @@ import {
   getFormSpecificNavigation,
   toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
+import { isJoinedCondition } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -15,11 +16,16 @@ export function getImpactedPages(definition, conditionId) {
     (page) => page.condition === conditionId
   )
   return pages
-    .map((page) => ({
-      pageNum:
-        definition.pages.findIndex((innerPage) => innerPage.id === page.id) + 1,
-      pageTitle: getPageTitle(page)
-    }))
+    .map((page) => {
+      const index = /** @type {number} */ (
+        definition.pages.findIndex((innerPage) => innerPage.id === page.id)
+      )
+
+      return {
+        pageNum: index + 1,
+        pageTitle: getPageTitle(page)
+      }
+    })
     .map((x) => `Page ${x.pageNum}: ${x.pageTitle}`)
 }
 
@@ -45,6 +51,11 @@ export function conditionCheckChangesViewModel(
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const warningItems = getImpactedPages(definition, conditionId)
 
+  const isJoined = isJoinedCondition(originalCondition)
+  const editorPath = isJoined
+    ? `conditions-join/${conditionId}`
+    : `condition/${conditionId}/${state?.stateId}`
+
   return {
     backLink: {
       href: editorFormPath(metadata.slug, 'conditions'),
@@ -67,16 +78,12 @@ export function conditionCheckChangesViewModel(
     },
     newCondition: {
       name: state?.conditionWrapper?.displayName,
-      html: toPresentationHtmlV2(
-        state?.conditionWrapper ?? /** @type {ConditionWrapperV2} */ ({}),
-        definition
-      )
+      html: state?.conditionWrapper
+        ? toPresentationHtmlV2(state.conditionWrapper, definition)
+        : ''
     },
     warningItems,
-    continueEditingPath: editorFormPath(
-      metadata.slug,
-      `condition/${conditionId}/${state?.stateId}`
-    )
+    continueEditingPath: editorFormPath(metadata.slug, editorPath)
   }
 }
 

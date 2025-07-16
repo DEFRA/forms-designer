@@ -1,0 +1,21 @@
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<div>
+  <h2 class="govuk-heading-l">
+    {{ params.pageTitle.text }}
+  </h2>
+  {{ govukSummaryList(params.componentRows)}}
+  {% for component in params.components %}
+    {% if loop.index0 === 0 %}
+      {% set model = component.model %}
+      <div class="border-left-container govuk-!-margin-top-6">
+        {%- include 'preview-components/markdown.njk' -%}
+      </div>
+    {% endif %}
+  {% endfor %}
+  <br />
+  {{ govukButton({
+    text: params.buttonText
+  }) }}
+</div>
