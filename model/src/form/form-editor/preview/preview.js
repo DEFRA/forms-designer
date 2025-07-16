@@ -7,7 +7,6 @@ import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 export class PreviewComponent {
   static PATH = 'preview-components/'
   /**
-   * @abstract
    * @type { string | undefined }
    */
   _id = undefined
