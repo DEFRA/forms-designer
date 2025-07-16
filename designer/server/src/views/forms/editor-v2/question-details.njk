@@ -22,7 +22,9 @@
 }) %}
 
   <div class="govuk-grid-column-one-half-from-desktop">
-    {%- include "../views/forms/editor-v2/partials/question-details-left-panel.njk" -%}
+    <div id="page-overview" tabindex="-1">
+      {%- include "../views/forms/editor-v2/partials/question-details-left-panel.njk" -%}
+    </div>
   </div>
 
   <div class="govuk-grid-column-one-half-from-desktop preview-panel question-preview-panel" id="preview-panel">
