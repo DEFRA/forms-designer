@@ -22,9 +22,10 @@ export class YesNoQuestion extends FieldsetQuestion {
     /**
      *
      */
+    const highlightClass = this._highlighted ? ` ${HIGHLIGHT_CLASS}` : ''
     return {
       type: 'boolean',
-      classes: `govuk-radios--inline ${this._highlighted ? HIGHLIGHT_CLASS : ''}`,
+      classes: `govuk-radios--inline${highlightClass}`,
       items: /** @type {ListElement[]} */ ([
         {
           id: 'yesNo-yes',
