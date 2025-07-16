@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { SelectQuestion } from '~/src/index.js'
+import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
 
 describe('SelectQuestion', () => {
   it('should create class with items', () => {

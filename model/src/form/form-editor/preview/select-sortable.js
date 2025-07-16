@@ -1,7 +1,7 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { ListSortableQuestion } from '~/src/form/form-editor/preview/list-sortable.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
-import { ComponentType } from '~/src/index.js'
 
 export class SelectSortableQuestion extends ListSortableQuestion {
   _questionTemplate = PreviewComponent.PATH + 'selectfield.njk'

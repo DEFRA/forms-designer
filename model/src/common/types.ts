@@ -1,10 +1,10 @@
+import { type FormStatus } from '~/src/common/enums.js'
 import {
   type PaginationOptions,
   type PaginationResult
 } from '~/src/common/pagination/types.js'
 import { type SearchOptions } from '~/src/common/search/types.js'
 import { type SortingOptions } from '~/src/common/sorting/types.js'
-import { type FormStatus } from '~/src/index.js'
 
 /**
  * Options for querying results, including pagination, sorting, and searching

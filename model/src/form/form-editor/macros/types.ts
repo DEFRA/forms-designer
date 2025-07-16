@@ -1,10 +1,13 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import {
+  type DefaultComponent,
+  type GovukFieldset
+} from '~/src/form/form-editor/preview/types.js'
+import {
   type DateItem,
   type GovukField,
   type ListItemReadonly
 } from '~/src/form/form-editor/types.js'
-import { type DefaultComponent, type GovukFieldset } from '~/src/index.js'
 
 export interface AppPreviewErrorPanelMacroErrorTemplate {
   advancedSettingsErrors: []

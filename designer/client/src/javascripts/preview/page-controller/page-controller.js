@@ -285,5 +285,5 @@ export class PagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { PageOverviewElements } from '@defra/forms-model'
+ * @import { PageOverviewElements, DomElementsBase } from '@defra/forms-model'
  */

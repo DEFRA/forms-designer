@@ -16,11 +16,16 @@ export function getImpactedPages(definition, conditionId) {
     (page) => page.condition === conditionId
   )
   return pages
-    .map((page) => ({
-      pageNum:
-        definition.pages.findIndex((innerPage) => innerPage.id === page.id) + 1,
-      pageTitle: getPageTitle(page)
-    }))
+    .map((page) => {
+      const index = /** @type {number} */ (
+        definition.pages.findIndex((innerPage) => innerPage.id === page.id)
+      )
+
+      return {
+        pageNum: index + 1,
+        pageTitle: getPageTitle(page)
+      }
+    })
     .map((x) => `Page ${x.pageNum}: ${x.pageTitle}`)
 }
 

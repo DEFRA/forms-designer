@@ -95,11 +95,9 @@ describe('page-controller', () => {
       document.body.innerHTML =
         pageHeadingAndGuidanceHTML +
         questionDetailsPreviewHTML +
-        upDownReorderButtonsHTML +
-        listItemOrderHTML +
         previewBtn +
-        pageHeadingAndGuidanceHTML +
-        questionDetailsPreviewHTML
+        upDownReorderButtonsHTML +
+        listItemOrderHTML
       pagePreviewElements = new PagePreviewDomElements()
       pageController = new PreviewPageController(
         components,

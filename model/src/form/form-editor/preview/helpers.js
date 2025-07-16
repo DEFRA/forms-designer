@@ -1,4 +1,10 @@
 import { ComponentType } from '~/src/components/enums.js'
+import {
+  hasContentField,
+  hasInputField,
+  hasListField,
+  hasSelectionFields
+} from '~/src/components/helpers.js'
 import { AutocompleteListQuestion } from '~/src/form/form-editor/preview/autocomplete.js'
 import { CheckboxQuestion } from '~/src/form/form-editor/preview/checkbox.js'
 import { ComponentElements } from '~/src/form/form-editor/preview/component-elements.js'
@@ -6,6 +12,7 @@ import { ContentElements } from '~/src/form/form-editor/preview/content.js'
 import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import {
+  ListComponentElements,
   ListQuestion,
   SelectComponentElements
 } from '~/src/form/form-editor/preview/list.js'
@@ -14,6 +21,7 @@ import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
 import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
+import { QuestionComponentElements } from '~/src/form/form-editor/preview/question.js'
 import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
 import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
 import { ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
@@ -21,15 +29,6 @@ import { SupportingEvidenceQuestion } from '~/src/form/form-editor/preview/suppo
 import { UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
 import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
-import {
-  ListComponentElements,
-  QuestionComponentElements,
-  hasContentField,
-  hasInputField,
-  hasListField,
-  hasSelectionFields
-} from '~/src/index.js'
-
 /**
  * @type {Record<ComponentType, typeof PreviewComponent>}
  */

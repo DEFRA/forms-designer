@@ -4,9 +4,9 @@ import {
   autoCompleteOptionsSchema,
   customValidator,
   govukFieldIsQuestionOptional,
-  govukFieldValueIsString,
-  type GovukField
-} from '~/src/index.js'
+  govukFieldValueIsString
+} from '~/src/form/form-editor/index.js'
+import { type GovukField } from '~/src/form/form-editor/types.js'
 
 describe('index', () => {
   describe('customValidator', () => {

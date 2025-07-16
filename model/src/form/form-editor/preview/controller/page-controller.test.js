@@ -1,5 +1,3 @@
-import { PreviewPageController } from '@defra/forms-model'
-
 import {
   buildDateComponent,
   buildList,
@@ -14,6 +12,7 @@ import { buildQuestionPage, buildRepeaterPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { PageRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
 import { PagePreviewElements } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
+import { PreviewPageController } from '~/src/form/form-editor/preview/controller/page-controller.js'
 
 /**
  * Overrides the default to
