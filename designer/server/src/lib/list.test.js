@@ -299,5 +299,19 @@ describe('list.js', () => {
         { id: 'id3', text: 'Wales', value: 'wal' }
       ])
     })
+
+    test('should retain hint text if provided', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = populateListIds(definition, listIdWithItemIds, [
+        { text: 'England', value: 'eng', hint: { text: 'help' } },
+        { text: 'Scotland', value: 'scot' },
+        { text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }
+      ])
+      expect(populated).toEqual([
+        { id: 'id1', text: 'England', value: 'eng', hint: { text: 'help' } },
+        { id: 'id2', text: 'Scotland', value: 'scot' },
+        { id: 'id3', text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }
+      ])
+    })
   })
 })

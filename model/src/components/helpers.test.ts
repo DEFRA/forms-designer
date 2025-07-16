@@ -1,5 +1,9 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { hasContent, hasContentField } from '~/src/components/helpers.js'
+import {
+  hasContent,
+  hasContentField,
+  isConditionalRevealType
+} from '~/src/components/helpers.js'
 import { type ComponentDef } from '~/src/components/types.js'
 
 describe('Type guards', () => {
@@ -134,5 +138,33 @@ describe('Type guards', () => {
         type
       })
     })
+  })
+})
+
+describe('isConditionalRevealType', () => {
+  it.each([
+    ComponentType.Details,
+    ComponentType.Html,
+    ComponentType.Markdown,
+    ComponentType.InsetText,
+    ComponentType.List
+  ])('should return true for content types: %s', (type) => {
+    expect(isConditionalRevealType(type)).toBe(true)
+  })
+
+  it.each([
+    ComponentType.TextField,
+    ComponentType.RadiosField,
+    ComponentType.CheckboxesField,
+    ComponentType.DatePartsField,
+    ComponentType.EmailAddressField,
+    ComponentType.MultilineTextField,
+    ComponentType.TelephoneNumberField,
+    ComponentType.NumberField,
+    ComponentType.SelectField,
+    ComponentType.YesNoField,
+    ComponentType.AutocompleteField
+  ])('should return false for non-content types: %s', (type) => {
+    expect(isConditionalRevealType(type)).toBe(false)
   })
 })

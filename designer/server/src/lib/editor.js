@@ -67,17 +67,22 @@ export async function addPageAndFirstQuestion(
   questionDetails,
   pageDetails
 ) {
+  const fullPageDetails = {
+    ...pageDetails, // includes controller if not determined by component type (e.g. exit page)
+    ...getControllerType(questionDetails), // defines controller if can be determined by component type
+    title: pageDetails?.title ?? '',
+    path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`
+  }
+
   const { body } = await postJsonByPageType(buildRequestUrl(formId, 'pages'), {
     payload: {
-      title: pageDetails?.title ?? '',
-      path: `/${slugify(pageDetails?.title ?? questionDetails.title)}`,
+      ...fullPageDetails,
       components: [
         {
           ...questionDetails,
           name: questionDetails.name ?? randomId()
         }
-      ],
-      ...getControllerType(questionDetails)
+      ]
     },
     ...getHeaders(token)
   })

@@ -1,4 +1,4 @@
-import { Marked } from 'marked'
+import { Marked, Renderer, type Tokens } from 'marked'
 
 /**
  * Marked instance (avoids global option/extension scope)
@@ -8,10 +8,31 @@ export const marked = new Marked({
   gfm: true
 })
 
+function renderLink(href: string, text: string, baseUrl?: string) {
+  let isLocalLink = true
+
+  if (baseUrl) {
+    isLocalLink = href.startsWith(baseUrl) || href.startsWith('mailto:')
+  }
+
+  const attrs = [`class="govuk-link"`, `href="${href}"`]
+
+  if (!isLocalLink) {
+    attrs.push(`target="_blank" rel="noreferrer noopener"`)
+  }
+
+  const label = !isLocalLink ? `${text} (opens in new tab)` : text
+
+  return `<a ${attrs.join(' ')}>${label}</a>`
+}
+
 /**
  * Convert markdown to HTML, escaping any HTML tags first
  */
-export function markdownToHtml(markdown?: string | null) {
+export function markdownToHtml(
+  markdown: string | null | undefined,
+  baseUrl?: string // optional in some contexts, e.g. from the designer where it might not make sense
+) {
   if (markdown === undefined || markdown === null) {
     return ''
   }
@@ -23,5 +44,10 @@ export function markdownToHtml(markdown?: string | null) {
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#39;')
 
-  return marked.parse(escaped, { async: false })
+  const renderer = new Renderer()
+  renderer.link = ({ href, text }: Tokens.Link): string => {
+    return renderLink(href, text, baseUrl)
+  }
+
+  return marked.parse(escaped, { async: false, renderer })
 }

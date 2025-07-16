@@ -8,6 +8,7 @@ import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answe
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
 import editorConditionDelete from '~/src/routes/forms/editor-v2/condition-delete.js'
 import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
+import editorConditionsJoin from '~/src/routes/forms/editor-v2/conditions-join.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
@@ -49,6 +50,7 @@ export default [
   editorConditionDelete,
   editorCondition,
   editorConditions,
+  editorConditionsJoin,
   editorError,
   editorUpload,
   editorDownload,
