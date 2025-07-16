@@ -164,3 +164,13 @@
   color: govuk-colour("green");
   margin-right: 5px;
 }
+
+[id="page-overview"]:focus {
+  outline: none;
+}
+
+[id="page-overview"]:focus-visible .editor-card-title {
+  background-color: govuk-colour("yellow");
+  outline: 3px solid govuk-colour("yellow");
+  outline-offset: 0;
+}
