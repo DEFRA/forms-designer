@@ -1,5 +1,6 @@
 {% from "preview-error-panel/macro.njk" import appPreviewErrorPanel %}
 {% from "preview-panel-layout/macro.njk" import appPreviewPanelLayout %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 <div class="govuk-!-margin-top-9">
   <div class="govuk-tabs" data-module="govuk-tabs">
@@ -15,7 +16,7 @@
       {% endif %}
     </ul>
 
-    <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview">
+    <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview" tabindex="-1">
       <!-- Page Preview Content -->
       <p class="govuk-body-s">
         <a href="{{ params.previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
@@ -28,6 +29,17 @@
         <div id="preview-panel-inner">
           {{ caller() }}
         </div>
+      </div>
+
+      <div class="govuk-button-group govuk-!-margin-top-3">
+        {{ govukSkipLink({
+          text: "Skip to page overview",
+          href: "#page-overview",
+          classes: "govuk-!-margin-right-4",
+          attributes: {
+            "data-module": "govuk-skip-link"
+          }
+        }) }}
       </div>
     </div>
 
@@ -49,9 +61,16 @@
             questionType: params.questionType
           }) %}
           {% endcall %}
-        <a href="#edit-page" class="govuk-skip-link" style="margin-bottom: 30px!important;" data-module="govuk-skip-link" data-govuk-skip-link-init="">
-          Skip to edit page
-        </a>
+      </div>
+
+      <div class="govuk-button-group govuk-!-margin-top-3">
+        {{ govukSkipLink({
+          text: "Skip to page overview",
+          href: "#page-overview",
+          attributes: {
+            "data-module": "govuk-skip-link"
+          }
+        }) }}
       </div>
     </div>
     {% endif %}

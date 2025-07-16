@@ -24,3 +24,5 @@ export * from '~/src/form/form-editor/preview/controller/page-controller-base.js
 export * from '~/src/form/form-editor/preview/controller/page-controller.js'
 export * from '~/src/form/form-editor/preview/controller/guidance-page-controller.js'
 export * from '~/src/form/form-editor/preview/controller/reorder-questions-page-controller.js'
+export * from '~/src/form/form-editor/preview/controller/summary-page-controller.js'
+export * from '~/src/form/form-editor/preview/controller/page-controller-base.js'

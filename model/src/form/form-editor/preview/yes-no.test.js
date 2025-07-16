@@ -16,7 +16,7 @@ describe('YesNoQuestion', () => {
       id: 'yesNo',
       name: 'yesNo',
       type: 'boolean',
-      classes: '',
+      classes: 'govuk-radios--inline',
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',
