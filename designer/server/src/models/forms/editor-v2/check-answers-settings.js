@@ -1,4 +1,8 @@
-import { ComponentType, hasComponentsEvenIfNoNext } from '@defra/forms-model'
+import {
+  ComponentType,
+  SummaryPageController,
+  hasComponentsEvenIfNoNext
+} from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
@@ -12,6 +16,7 @@ import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
+import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -19,7 +24,11 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {string | undefined} declarationTextVal
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-function settingsFields(needDeclarationVal, declarationTextVal, validation) {
+export function settingsFields(
+  needDeclarationVal,
+  declarationTextVal,
+  validation
+) {
   return {
     needDeclaration: {
       name: 'needDeclaration',
@@ -54,6 +63,60 @@ function settingsFields(needDeclarationVal, declarationTextVal, validation) {
       value: declarationTextVal,
       ...insertValidationErrors(validation?.formErrors.declarationText)
     }
+  }
+}
+
+export const dummyRenderer = {
+  /**
+   * @param {string} _a
+   * @param {PagePreviewPanelMacro} _b
+   * @returns {never}
+   */
+  render(_a, _b) {
+    // Server Side Render shouldn't use render
+    throw new Error('Not implemented')
+  }
+}
+
+/**
+ * @param { Page | undefined } page
+ * @param {FormDefinition} definition
+ * @param {string} previewPageUrl
+ * @param {ReturnType<typeof settingsFields>} fields
+ * @returns {PagePreviewPanelMacro & {
+ *    previewPageUrl: string;
+ *    questionType?: ComponentType,
+ *    previewTitle?: string,
+ *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
+ *    buttonText: string
+ * }}
+ */
+export function getPreviewModel(page, definition, previewPageUrl, fields) {
+  const declarationText = fields.declarationText.value
+  const needDeclaration = Boolean(fields.needDeclaration.value)
+
+  const elements = new SummaryPreviewSSR(
+    page,
+    declarationText ?? '',
+    needDeclaration
+  )
+
+  const previewPageController = new SummaryPageController(
+    elements,
+    definition,
+    dummyRenderer
+  )
+
+  return {
+    previewTitle: 'Preview of Check answers page',
+    pageTitle: previewPageController.pageTitle,
+    components: previewPageController.components,
+    guidance: previewPageController.guidance,
+    sectionTitle: previewPageController.sectionTitle,
+    buttonText: previewPageController.buttonText,
+    previewPageUrl,
+    questionType: ComponentType.TextField, // components[0]?.type
+    componentRows: previewPageController.componentRows
   }
 }
 
@@ -94,8 +157,16 @@ export function checkAnswersSettingsViewModel(
     formValues?.declarationText ?? guidanceComponent?.content
   const needDeclarationVal =
     formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
-
+  const fields = settingsFields(
+    needDeclarationVal,
+    declarationTextVal,
+    validation
+  )
   const pageHeading = 'Page settings'
+  // prettier-ignore
+  const previewModel = getPreviewModel(
+    page, definition, 'previewPageUrl', fields
+  )
 
   return {
     ...baseModelFields(
@@ -103,9 +174,7 @@ export function checkAnswersSettingsViewModel(
       `${pageHeading} - ${formTitle}`,
       formTitle
     ),
-    fields: {
-      ...settingsFields(needDeclarationVal, declarationTextVal, validation)
-    },
+    fields,
     cardTitle: pageHeading,
     cardCaption: 'Check answers',
     cardHeading: pageHeading,
@@ -113,12 +182,18 @@ export function checkAnswersSettingsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    previewModel,
+    preview: {
+      page: JSON.stringify(page),
+      definition: JSON.stringify(definition),
+      pageTemplate: 'summary-controller.njk'
+    },
     buttonText: SAVE_AND_CONTINUE,
     notification
   }
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

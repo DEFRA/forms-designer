@@ -82,3 +82,17 @@ export interface PagePreviewPanelMacro {
     classes: string
   }
 }
+
+export interface SummaryRowActionItem {
+  href: string
+  text: string
+  visuallyHiddenText: string
+}
+
+export interface SummaryRow {
+  key: { text: string }
+  value: { text: string }
+  actions: {
+    items: SummaryRowActionItem[]
+  }
+}

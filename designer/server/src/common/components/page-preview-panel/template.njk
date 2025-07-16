@@ -1,13 +1,18 @@
 {% from "preview-error-panel/macro.njk" import appPreviewErrorPanel %}
 {% from "page-preview/macro.njk" import appPagePreview %}
+{% from "summary-preview/macro.njk" import appSummaryPreview %}
 {% from "preview-panel-layout/macro.njk" import appPreviewPanelLayout %}
 {% from "preview-panel-tabs/macro.njk" import appPreviewPanelTabs %}
 
 
-
 {% call appPreviewPanelLayout(params) %}
   {% call appPreviewPanelTabs(params) %}
-    {% call appPagePreview(params) %}
-    {% endcall %}
+    {% if params.componentRows %}
+      {% call appSummaryPreview(params) %}
+      {% endcall %}
+    {% else %}
+      {% call appPagePreview(params) %}
+      {% endcall %}
+    {% endif %}
   {% endcall %}
 {% endcall %}

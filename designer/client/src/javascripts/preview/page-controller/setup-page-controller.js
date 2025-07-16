@@ -16,11 +16,15 @@ import '~/src/views/preview-components/fileuploadfield.njk'
 import '~/src/views/preview-components/emailaddressfield.njk'
 import '~/src/views/page-preview-component/template.njk'
 import '~/src/views/page-preview-component/macro.njk'
+import '~/src/views/summary-preview-component/template.njk'
+import '~/src/views/summary-preview-component/macro.njk'
 import '~/src/views/preview-controllers/page-controller.njk'
+import '~/src/views/preview-controllers/summary-controller.njk'
 import {
   ComponentType,
   GuidancePageController,
   PreviewPageController,
+  SummaryPageController,
   hasComponents
 } from '@defra/forms-model'
 
@@ -31,13 +35,16 @@ import {
   PagePreviewDomElements,
   PagePreviewListeners
 } from '~/src/javascripts/preview/page-controller/page-controller.js'
+import {
+  SummaryPagePreviewDomElements,
+  SummaryPagePreviewListeners
+} from '~/src/javascripts/preview/page-controller/summary-page-controller.js'
 
 /**
- * Setup the Page Controller for client
  * @param {Page} page
- * @param {FormDefinition} definition
+ * @returns {[ComponentDef[],PagePreviewDomElements,NunjucksPageRenderer]}
  */
-export function setupPageController(page, definition) {
+function baseControllerSetup(page) {
   const elements = new PagePreviewDomElements()
   const components = /** @type {ComponentDef[]} */ (
     hasComponents(page) ? page.components : []
@@ -51,6 +58,30 @@ export function setupPageController(page, definition) {
     : new NunjucksRendererBase(elements)
 
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
+
+  return [components, elements, renderer]
+}
+
+/**
+ * @param {PreviewPageControllerBase} previewPageController
+ * @param {PagePreviewDomElements} elements
+ * @returns {PreviewPageControllerBase}
+ */
+function setupListener(previewPageController, elements) {
+  const listeners = new PagePreviewListeners(previewPageController, elements)
+  listeners.initListeners()
+
+  return previewPageController
+}
+
+/**
+ * Setup the Page Controller for client
+ * @param {Page} page
+ * @param {FormDefinition} definition
+ */
+export function setupPageController(page, definition) {
+  const [components, elements, renderer] = baseControllerSetup(page)
+
   const previewPageController = new PreviewPageController(
     components,
     elements,
@@ -58,7 +89,29 @@ export function setupPageController(page, definition) {
     renderer
   )
 
-  const listeners = new PagePreviewListeners(previewPageController, elements)
+  return setupListener(previewPageController, elements)
+}
+
+/**
+ * Setup the Page Controller for client
+ * @param {FormDefinition} definition
+ * @returns {SummaryPageController}
+ */
+export function setupSummaryPageController(definition) {
+  const elements = new SummaryPagePreviewDomElements()
+  const nunjucksRenderBase = new NunjucksRendererBase(elements)
+  const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
+
+  const previewPageController = new SummaryPageController(
+    elements,
+    definition,
+    renderer
+  )
+
+  const listeners = new SummaryPagePreviewListeners(
+    previewPageController,
+    elements
+  )
   listeners.initListeners()
 
   return previewPageController
@@ -70,12 +123,9 @@ export function setupGuidanceController() {
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
   const guidancePageController = new GuidancePageController(elements, renderer)
 
-  const listeners = new PagePreviewListeners(guidancePageController, elements)
-  listeners.initListeners()
-
-  return guidancePageController
+  return setupListener(guidancePageController, elements)
 }
 
 /**
- * @import { ComponentDef, Page, FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, Page, FormDefinition, PreviewPageControllerBase } from '@defra/forms-model'
  */

@@ -26,7 +26,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
     p {
       margin-bottom: 0;
-      color: $defra-brand-colour;
+      color: #005a30;
       padding: 2px 8px 3px;
       text-align: center;
     }
@@ -67,10 +67,12 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
   .highlight {
     border-bottom: 2px solid #ffb266;
+    color: govuk-colour("black");
   }
 
-  .govuk-button .highlight {
-    color: govuk-colour("black");
+  .govuk-radios__hint {
+    max-width: calc(100% - 74px);
+    overflow-wrap: break-word;
   }
 }
 

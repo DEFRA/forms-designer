@@ -1,6 +1,11 @@
 import { PreviewPageControllerBase } from '@defra/forms-model'
 
 import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
+import {
+  PageListenerBase,
+  getTargetChecked,
+  getTargetValue
+} from '~/src/javascripts/preview/page-controller/page-listener.js'
 
 /**
  * @implements {PageOverviewElements}
@@ -70,33 +75,10 @@ export class PagePreviewDomElements extends DomElements {
   }
 }
 
-/**
- * @param {InputEvent} inputEvent
- * @returns {string}
- */
-function getTargetValue(inputEvent) {
-  const target = /** @type {HTMLInputElement} */ (inputEvent.target)
-  return target.value
-}
-
-/**
- * @param {Event} changeEvent
- * @returns {boolean}
- */
-function getTargetChecked(changeEvent) {
-  const target = /** @type {HTMLInputElement} */ (changeEvent.target)
-  return target.checked
-}
-
-export class PagePreviewListeners {
-  /**
-   * @type {PreviewPageControllerBase}
-   * @private
-   */
-  _pageController
+export class PagePreviewListeners extends PageListenerBase {
   /**
    * @type {PagePreviewDomElements}
-   * @private
+   * @protected
    */
   _baseElements
 
@@ -209,12 +191,11 @@ export class PagePreviewListeners {
   }
 
   /**
-   *
    * @param {PreviewPageControllerBase} pageController
    * @param {PagePreviewDomElements} baseElements
    */
   constructor(pageController, baseElements) {
-    this._pageController = pageController
+    super(pageController, baseElements)
     this._baseElements = baseElements
   }
 
@@ -275,32 +256,6 @@ export class PagePreviewListeners {
         'blur'
       ]
     ]
-  }
-
-  /**
-   * @private
-   */
-  _setListeners() {
-    const listeners = this.getListeners()
-    for (const [htmlInputElement, eventListener, listenerType] of listeners) {
-      if (htmlInputElement) {
-        htmlInputElement.addEventListener(listenerType, eventListener)
-      }
-    }
-  }
-
-  initListeners() {
-    this._setListeners()
-    this._pageController.render()
-  }
-
-  clearListeners() {
-    const listeners = this.getListeners()
-    for (const [htmlInputElement, eventListener, listenerType] of listeners) {
-      if (htmlInputElement) {
-        htmlInputElement.removeEventListener(listenerType, eventListener)
-      }
-    }
   }
 }
 
