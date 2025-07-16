@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { SelectSortableQuestion } from '~/src/index.js'
+import { SelectSortableQuestion } from '~/src/form/form-editor/preview/select-sortable.js'
 
 describe('SelectSortableQuestion', () => {
   it('should create class with items', () => {

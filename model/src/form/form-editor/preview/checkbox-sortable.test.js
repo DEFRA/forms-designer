@@ -3,7 +3,7 @@ import {
   QuestionRendererStub,
   listElementsStub
 } from '~/src/form/form-editor/__stubs__/preview.js'
-import { CheckboxSortableQuestion } from '~/src/index.js'
+import { CheckboxSortableQuestion } from '~/src/form/form-editor/preview/checkbox-sortable.js'
 
 describe('CheckboxSortableQuestion', () => {
   it('should create class', () => {

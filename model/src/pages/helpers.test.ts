@@ -8,14 +8,15 @@ import {
   buildQuestionPage,
   buildRepeaterPage
 } from '~/src/__stubs__/pages.js'
+import { ComponentType } from '~/src/components/enums.js'
 import {
   type Page,
   type PageFileUpload,
   type PageQuestion,
   type PageSummary
 } from '~/src/form/form-definition/types.js'
-import { ComponentType, ControllerType } from '~/src/index.js'
 import { ControllerTypes } from '~/src/pages/controller-types.js'
+import { ControllerType } from '~/src/pages/enums.js'
 import {
   controllerNameFromPath,
   getPageDefaults,

@@ -24,6 +24,19 @@ import {
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
+  ConditionType,
+  Coordinator,
+  DateDirections,
+  DateUnits,
+  OperatorName
+} from '~/src/conditions/enums.js'
+import {
+  type ConditionDataV2,
+  type ConditionListItemRefValueDataV2,
+  type ConditionRefDataV2,
+  type RelativeDateValueDataV2
+} from '~/src/conditions/types.js'
+import {
   contentComponentSchema,
   fileUploadComponentSchema,
   formDefinitionSchema,
@@ -38,19 +51,7 @@ import {
   type PageQuestion,
   type PageSummary
 } from '~/src/form/form-definition/types.js'
-import {
-  ConditionType,
-  ControllerPath,
-  ControllerType,
-  Coordinator,
-  DateDirections,
-  DateUnits,
-  OperatorName,
-  type ConditionDataV2,
-  type ConditionListItemRefValueDataV2,
-  type ConditionRefDataV2,
-  type RelativeDateValueDataV2
-} from '~/src/index.js'
+import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
 
 describe('Form definition schema', () => {
   let page: PageQuestion

@@ -1,11 +1,10 @@
 import { type ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
+import { type DateDirections, type DateUnits } from '~/src/conditions/enums.js'
 import {
   type ConditionWrapperV2,
-  type DateDirections,
-  type DateUnits,
   type Item
-} from '~/src/index.js'
+} from '~/src/form/form-definition/types.js'
 
 /**
  * Interface for `FormEditor` Joi schema
