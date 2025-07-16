@@ -421,5 +421,5 @@ describe('helpers', () => {
 })
 
 /**
- * @import { ComponentDef } from '@defra/forms-model'
+ * @import { ComponentDef } from '~/src/components/types.js'
  */
