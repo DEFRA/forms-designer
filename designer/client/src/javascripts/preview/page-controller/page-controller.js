@@ -34,6 +34,10 @@ export class PagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   questionSetNameElement = null
+  /**
+   * @type {HTMLButtonElement|null}
+   */
+  previewPageButton = null
 
   constructor() {
     super()
@@ -51,6 +55,9 @@ export class PagePreviewDomElements extends DomElements {
     )
     this.questionSetNameElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('questionSetName')
+    )
+    this.previewPageButton = /** @type {HTMLButtonElement|null} */ (
+      document.getElementById('preview-page')
     )
   }
 
@@ -266,6 +273,14 @@ export class PagePreviewListeners extends PageListenerBase {
     return /** @type {[HTMLInputElement, EventListenerObject, string][]} */ (
       allListeners
     )
+  }
+
+  initListeners() {
+    super.initListeners()
+    const previewPageButton = this._baseElements.previewPageButton
+    if (previewPageButton !== null) {
+      previewPageButton.style.display = 'none'
+    }
   }
 }
 
