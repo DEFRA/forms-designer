@@ -1,7 +1,6 @@
 import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
 import {
   PageListenerBase,
-  // getTargetChecked
   getTargetChecked,
   getTargetValue
 } from '~/src/javascripts/preview/page-controller/page-listener.js'
