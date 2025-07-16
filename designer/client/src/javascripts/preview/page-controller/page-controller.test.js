@@ -86,7 +86,6 @@ describe('page-controller', () => {
     const inputEvent = new InputEvent('input', { bubbles: true })
     const changeEvent = new InputEvent('change', { bubbles: true })
     const previewBtn = `<a href="http://localhost" role="button" id="preview-page" class="govuk-button  govuk-button--inverse" data-module="govuk-button" data-govuk-button-init="">Preview page</a>`
-
     beforeEach(() => {
       jest.clearAllMocks()
       document.body.innerHTML =
@@ -110,7 +109,11 @@ describe('page-controller', () => {
     })
 
     it('should instantiate', () => {
+      if (!pagePreviewElements.previewPageButton) {
+        throw new Error('Failed')
+      }
       expect(pageListeners).toBeInstanceOf(PagePreviewListeners)
+      expect(pagePreviewElements.previewPageButton.style.display).toBe('none')
     })
 
     it('should highlight guidance', () => {
