@@ -295,6 +295,14 @@ export function requiresPageTitle(page) {
 }
 
 /**
+ * @param {string} json
+ * @returns {string}
+ */
+export function sanitiseJSON(json) {
+  return json.replace(/(<([^>]+)>)/gi, '')
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ComponentDef, FormDefinition, Item, List, ListItem, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'

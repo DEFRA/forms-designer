@@ -21,7 +21,8 @@ import {
   getHeaders,
   getListFromComponent,
   mapListToTextareaStr,
-  noListToSave
+  noListToSave,
+  sanitiseJSON
 } from '~/src/lib/utils.js'
 
 jest.mock('@defra/hapi-tracing')
@@ -312,6 +313,17 @@ describe('utils', () => {
           'e36fdaad-1395-4efe-bfec-ceae7efaf8e3'
         )
       ).toEqual([])
+    })
+  })
+
+  describe('sanitiseJSON', () => {
+    it('should remove HTML tags from JSON objects', () => {
+      const dirtyJSON = JSON.stringify({
+        text: "<script>alert('xss')</script>"
+      })
+      expect(sanitiseJSON(dirtyJSON)).toEqual(
+        JSON.stringify({ text: "alert('xss')" })
+      )
     })
   })
 })
