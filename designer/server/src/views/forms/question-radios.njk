@@ -29,22 +29,7 @@
       useNewMasthead: useNewMasthead,
       backLink: backLink
     }) %}
-      {{ govukRadios({
-        fieldset: {
-          legend: {
-            text: field.legend.text,
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
-          }
-        },
-        name: field.name,
-        idPrefix: field.id,
-        items: field.items,
-        value: field.value,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name]
-      }) }}
+      {{ govukRadios(field) }}
 
       {{ govukButton({
         text: buttonText
