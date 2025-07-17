@@ -8,6 +8,7 @@ import { Question } from '@defra/forms-model'
 const DefaultListConst = {
   TextElementId: 'radioText',
   HintElementId: 'radioHint',
+  ValueElementId: 'radioValue',
   Template: Question.PATH + 'radios.njk',
   Input: 'listInput',
   RenderName: 'listInputField'
@@ -25,10 +26,13 @@ export class ListQuestionDomElements extends QuestionDomElements {
   listText
   /** @type {HTMLInputElement} */
   listHint
+  /** @type {HTMLInputElement} */
+  listValue
   /** @type {string} */
   afterInputsHTML
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
+  listValueElementId = DefaultListConst.ValueElementId
   /**
    * @type {string}
    * @protected
@@ -53,6 +57,9 @@ export class ListQuestionDomElements extends QuestionDomElements {
     const listHint = /** @type {HTMLInputElement} */ (
       document.getElementById(this.listHintElementId)
     )
+    const listValue = /** @type {HTMLInputElement} */ (
+      document.getElementById(this.listValueElementId)
+    )
     const updateElement = /** @type {HTMLInputElement} */ (
       document.getElementById('add-option-form')
     )
@@ -75,6 +82,7 @@ export class ListQuestionDomElements extends QuestionDomElements {
 
     this.listText = listText
     this.listHint = listHint
+    this.listValue = listValue
     this.updateElement = updateElement
     const path = Question.PATH + 'inset.njk'
     this.afterInputsHTML = htmlBuilder.buildHTML(path, {
@@ -185,6 +193,7 @@ export class ListEventListeners extends EventListeners {
   _listQuestion
   listTextElementId = DefaultListConst.TextElementId
   listHintElementId = DefaultListConst.HintElementId
+  listValueElementId = DefaultListConst.ValueElementId
 
   /**
    *
@@ -209,9 +218,11 @@ export class ListEventListeners extends EventListeners {
       return false
     }
 
-    return [this.listTextElementId, this.listHintElementId].includes(
-      activeElementId
-    )
+    return [
+      this.listTextElementId,
+      this.listHintElementId,
+      this.listValueElementId
+    ].includes(activeElementId)
   }
 
   /**
@@ -282,6 +293,27 @@ export class ListEventListeners extends EventListeners {
       },
       'blur'
     ])
+    const listValueFocusListener = /** @type {ListenerRow} */ ([
+      this._listElements.listValue,
+      /**
+       * @param {HTMLInputElement} target
+       */
+      (target) => {
+        const { id } = this._listElements.getUpdateData(target)
+        this._question.highlight = `${id}-label`
+      },
+      'focus'
+    ])
+    const listValueBlurListener = /** @type {ListenerRow} */ ([
+      this._listElements.listValue,
+      /**
+       * @param {HTMLInputElement} _target
+       */
+      (_target) => {
+        this._question.highlight = null
+      },
+      'blur'
+    ])
 
     return [
       listTextInputListener,
@@ -289,48 +321,10 @@ export class ListEventListeners extends EventListeners {
       listTextBlurListener,
       listHintInputListener,
       listHintFocusListener,
-      listHintBlurListener
+      listHintBlurListener,
+      listValueFocusListener,
+      listValueBlurListener
     ]
-  }
-
-  /**
-   * @returns {ListenerRow[]}
-   */
-  get listHighlightListeners() {
-    return this._listElements.listElements.flatMap((listElem) => {
-      const mouseOverRow = /** @type {ListenerRow} */ ([
-        /** @type {HTMLInputElement} */ (listElem),
-        /**
-         * @param {HTMLInputElement} _target
-         * @param {Event} _e
-         */
-        (_target, _e) => {
-          if (!this.editFieldHasFocus()) {
-            this._question.highlight = `${listElem.dataset.id}-label`
-            if (listElem.dataset.hint?.length) {
-              this._question.highlight = `${listElem.dataset.id}-hint`
-            }
-          }
-        },
-        'mouseover'
-      ])
-
-      const mouseOutRow = /** @type {ListenerRow} */ ([
-        /** @type {HTMLInputElement} */ (listElem),
-        /**
-         * @param {HTMLInputElement} _target
-         * @param {Event} _e
-         */
-        (_target, _e) => {
-          if (!this.editFieldHasFocus()) {
-            this._question.highlight = null
-          }
-        },
-        'mouseout'
-      ])
-
-      return [mouseOverRow, mouseOutRow]
-    })
   }
 
   /**
@@ -361,12 +355,10 @@ export class ListEventListeners extends EventListeners {
         )
         */
     const editPanelListeners = this.editPanelListeners
-    const highlightListeners = this.listHighlightListeners
     const customListeners = this.customListeners
 
     return editPanelListeners
       .concat(super._getListeners())
-      .concat(highlightListeners)
       .concat(editLinkListeners)
       .concat(customListeners)
   }

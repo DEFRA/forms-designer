@@ -269,62 +269,6 @@ describe('list', () => {
         })
       })
     })
-
-    describe('listHighlightListeners', () => {
-      it('should update the List class when listeners are called', () => {
-        const preview = /** @type {ListQuestion} */ (
-          SetupPreview.ListSortable()
-        )
-        const listEventListeners = new ListEventListeners(
-          preview,
-          questionElements,
-          questionElements.listElements
-        )
-        expect(preview.list[0]).toEqual({
-          hint: undefined,
-          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
-          label: {
-            classes: '',
-            text: 'Treasure Hunting'
-          },
-          text: 'Treasure Hunting',
-          value: 'Treasure Hunting'
-        })
-
-        const [mouseOverItem, mouseOutItem] =
-          listEventListeners.listHighlightListeners
-        const listElement = /** @type {HTMLInputElement} */ (
-          questionElements.listElements[0]
-        )
-
-        const [, mouseOverHandler] = mouseOverItem
-        const [, mouseOutHandler] = mouseOutItem
-
-        mouseOverHandler(listElement, mockEvent)
-
-        expect(preview.list[0]).toEqual({
-          hint: undefined,
-          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
-          label: {
-            classes: ' highlight',
-            text: 'Treasure Hunting'
-          },
-          text: 'Treasure Hunting',
-          value: 'Treasure Hunting'
-        })
-        mouseOutHandler(listElement, mockEvent)
-        expect(preview.list[0]).toEqual({
-          hint: undefined,
-          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
-          label: {
-            classes: '',
-            text: 'Treasure Hunting'
-          },
-          text: 'Treasure Hunting',
-          value: 'Treasure Hunting'
-        })
-      })
-    })
   })
 
   describe('List class', () => {
