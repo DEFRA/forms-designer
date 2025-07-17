@@ -7,16 +7,16 @@
     <h2 class="govuk-tabs__title">Contents</h2>
     <ul class="govuk-tabs__list" role="tablist">
       <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
-        <a class="govuk-tabs__tab" href="#tab-preview" id="tab_tab-preview" role="tab" aria-controls="tab-preview">Page preview</a>
+        <a class="govuk-tabs__tab" href="#tab-preview" id="tab-preview" role="tab" aria-controls="tab-preview">Page preview</a>
       </li>
       {% if params.errorTemplates %}
       <li class="govuk-tabs__list-item" role="presentation">
-        <a class="govuk-tabs__tab" href="#tab-errors" id="tab_tab-errors" role="tab" aria-controls="tab-errors">Error messages</a>
+        <a class="govuk-tabs__tab" href="#tab-errors" id="tab-errors" role="tab" aria-controls="tab-errors">Error messages</a>
       </li>
       {% endif %}
     </ul>
 
-    <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview" tabindex="-1">
+    <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab-preview" tabindex="-1">
       <!-- Page Preview Content -->
       <p class="govuk-body-s">
         <a href="{{ params.previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
@@ -33,8 +33,8 @@
 
       <div class="govuk-button-group govuk-!-margin-top-3">
         {{ govukSkipLink({
-          text: "Skip to page overview",
-          href: "#page-overview",
+          text: "Skip to page overview" if not params.skipLink else params.skipLink.text,
+          href: "#page-overview" if not params.skipLink else params.skipLink.url,
           classes: "govuk-!-margin-right-4",
           attributes: {
             "data-module": "govuk-skip-link"
@@ -44,7 +44,7 @@
     </div>
 
     {% if params.errorTemplates %}
-      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab_tab-errors">
+      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab-errors">
       <p class="govuk-body-s">
         <a href="{{ params.previewErrorsUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
           Preview error messages in a new tab
@@ -65,8 +65,8 @@
 
       <div class="govuk-button-group govuk-!-margin-top-3">
         {{ govukSkipLink({
-          text: "Skip to page overview",
-          href: "#page-overview",
+          text: "Skip to edit short description",
+          href: "#shortDescription",
           attributes: {
             "data-module": "govuk-skip-link"
           }

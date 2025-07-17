@@ -87,8 +87,12 @@ function guidanceFields(
  * @param {string} previewPageUrl
  * @param {string} [guidance]
  * @returns {PagePreviewPanelMacro & {
- *    previewPageUrl: string;
+ *    previewPageUrl: string
  *    questionType?: ComponentType
+ *    skipLink: {
+ *      text: string
+ *      url: string
+ *    }
  * }}
  */
 export function getGuidancePreviewModel(page, previewPageUrl, guidance = '') {
@@ -107,7 +111,11 @@ export function getGuidancePreviewModel(page, previewPageUrl, guidance = '') {
   return {
     ...previewController,
     previewPageUrl,
-    questionType: components[0]?.type
+    questionType: components[0]?.type,
+    skipLink: {
+      text: 'Skip to page settings',
+      url: '#page-settings'
+    }
   }
 }
 

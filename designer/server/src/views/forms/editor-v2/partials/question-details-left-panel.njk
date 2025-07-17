@@ -4,6 +4,7 @@
 {% from "icon-button/macro.njk" import appIconButton %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 {% call appEditorCard({
   title: cardTitle,
@@ -43,6 +44,12 @@
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
 
     <div class="govuk-button-group govuk-!-margin-top-6">
+      {{ govukSkipLink({
+        text: "Skip to page preview",
+        href: "#tab-preview",
+        classes: "govuk-!-margin-right-4"
+      }) }}
+
       {% if questionId != 'new' %}
         {{ appIconButton({
           label: "Preview page",

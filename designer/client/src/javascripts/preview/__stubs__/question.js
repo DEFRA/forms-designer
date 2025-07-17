@@ -355,14 +355,14 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
           <h2 class="govuk-tabs__title">Contents</h2>
           <ul class="govuk-tabs__list" role="tablist">
             <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
-              <a class="govuk-tabs__tab" href="#tab-preview" id="tab_tab-preview" role="tab" aria-controls="tab-preview" aria-selected="true" tabindex="0">Page preview</a>
+              <a class="govuk-tabs__tab" href="#tab-preview" id="tab-preview" role="tab" aria-controls="tab-preview" aria-selected="true" tabindex="0">Page preview</a>
             </li>
             <li class="govuk-tabs__list-item" role="presentation">
-              <a class="govuk-tabs__tab" href="#tab-errors" id="tab_tab-errors" role="tab" aria-controls="tab-errors" aria-selected="false" tabindex="-1">Error messages</a>
+              <a class="govuk-tabs__tab" href="#tab-errors" id="tab-errors" role="tab" aria-controls="tab-errors" aria-selected="false" tabindex="-1">Error messages</a>
             </li>
           </ul>
 
-        <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab_tab-preview">
+        <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab-preview">
           <!-- Page Preview Content -->
           <div class="border-left-container-shorttext" id="preview-panel-content">
             <div class="govuk-form-group">
@@ -374,7 +374,7 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
           </div>
         </div>
 
-        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab_tab-errors">
+        <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab-errors">
         <!-- Error Messages Content -->
         <div class="govuk-error-summary" data-disable-auto-focus="true">
           <h2 class="govuk-error-summary__title">There is a problem</h2>

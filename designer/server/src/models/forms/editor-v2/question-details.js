@@ -239,6 +239,16 @@ export function getListDetails(state, questionFields) {
 }
 
 /**
+ * @param {{ questionNum: number }} details
+ */
+export function getSkipLink(details) {
+  return {
+    text: 'Skip to edit question',
+    url: `#question-${details.questionNum}`
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -317,6 +327,7 @@ export function questionDetailsViewModel(
     previewPageUrl,
     previewErrorsUrl,
     deleteUrl,
+    skipLink: getSkipLink(details),
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field)

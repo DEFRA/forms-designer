@@ -8,6 +8,7 @@
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -49,9 +50,17 @@
 
           {{ govukRadios(fields.needDeclaration | setConditionalAttribute("true", declarationHtml)) }}
 
-          {{ govukButton({
-            text: 'Save changes'
-          }) }}
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukSkipLink({
+              text: "Skip to page preview",
+              href: "#tab-preview",
+              classes: "govuk-!-margin-right-4"
+            }) }}
+
+            {{ govukButton({
+              text: 'Save changes'
+            }) }}
+          </div>
 
         {% endcall %}
 
