@@ -429,7 +429,7 @@ describe('list-sortable', () => {
         const upButtonLastRow = /** @type {HTMLElement} */ (
           document.getElementById('row-3-up')
         )
-        upButtonLastRow.classList.add('rerder-panel-focus')
+        upButtonLastRow.classList.add('reorder-panel-focus')
         listSortable.setItemFocus(downButtonFirstRow)
         expect(downButtonFirstRow.classList).toContain('reorder-panel-focus')
         expect(upButtonLastRow.classList).not.toContain('reorder-panel-focus')
