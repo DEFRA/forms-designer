@@ -1,5 +1,6 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 <div>
   <h2 class="govuk-heading-l">
@@ -15,7 +16,16 @@
     {% endif %}
   {% endfor %}
   <br />
-  {{ govukButton({
-    text: params.buttonText
-  }) }}
+
+  <div class="govuk-button-group govuk-!-margin-top-6">
+    {{ govukSkipLink({
+      text: "Skip to page settings",
+      href: "#page-settings",
+      classes: "govuk-!-margin-right-4"
+    }) }}
+
+    {{ govukButton({
+      text: params.buttonText
+    }) }}
+  </div>
 </div>
