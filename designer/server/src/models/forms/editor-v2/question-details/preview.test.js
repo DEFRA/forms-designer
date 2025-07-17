@@ -591,6 +591,8 @@ describe('preview', () => {
 
       expect(previewModel).toEqual({
         ...expectedQuestionModel,
+        id: 'numberField',
+        name: 'numberField',
         type: 'number'
       })
     })
