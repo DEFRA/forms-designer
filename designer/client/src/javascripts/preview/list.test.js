@@ -212,7 +212,9 @@ describe('list', () => {
           textBlurListener,
           hintInputListener,
           hintFocusListener,
-          hintBlurListener
+          hintBlurListener,
+          valueFocusListener,
+          valueBlurListener
         ] = listEventListeners.editPanelListeners
         const listTextTarget = questionElements.listText
         listTextTarget.value = 'Extreme Treasure Hunting'
@@ -222,6 +224,8 @@ describe('list', () => {
         const [, listHintInputHandler] = hintInputListener
         const [, listHintHighlightHandler] = hintFocusListener
         const [, listHintBlurHandler] = hintBlurListener
+        const [, listValueFocustHandler] = valueFocusListener
+        const [, listValueBlurHandler] = valueBlurListener
 
         textInputListenerElement(listTextTarget, mockEvent)
         listTextHighlightHandler(listTextTarget, mockEvent)
@@ -254,6 +258,23 @@ describe('list', () => {
         })
         listHintHighlightHandler(listHint, mockEvent)
         listHintBlurHandler(listHint, mockEvent)
+        expect(preview.list[0]).toEqual({
+          hint: {
+            text: 'Looking for gold',
+            classes: ''
+          },
+          id: '414d82a3-4cab-416a-bd54-6b86fbd51120',
+          label: {
+            classes: '',
+            text: 'Extreme Treasure Hunting'
+          },
+          text: 'Extreme Treasure Hunting',
+          value: 'Treasure Hunting'
+        })
+        const listValue = questionElements.listValue
+        listValue.value = 'Gold'
+        listValueFocustHandler(listValue, mockEvent)
+        listValueBlurHandler(listValue, mockEvent)
         expect(preview.list[0]).toEqual({
           hint: {
             text: 'Looking for gold',
@@ -327,6 +348,27 @@ describe('list', () => {
       preview.updateText(baronListItemId, '')
       expect(preview.list[3].text).toBe('Item text')
       expect(listsElementToMap(undefined)).toEqual(new Map([]))
+    })
+  })
+
+  describe('editFieldHasFocus', () => {
+    it('should return true for list text field', () => {
+      const preview = /** @type {ListQuestion} */ (SetupPreview.ListSortable())
+      const listEventListeners = new ListEventListeners(
+        preview,
+        questionElements,
+        questionElements.listElements
+      )
+      questionElements.listText.blur()
+      expect(listEventListeners.editFieldHasFocus()).toBeFalsy()
+      questionElements.listText.focus()
+      expect(listEventListeners.editFieldHasFocus()).toBeTruthy()
+      questionElements.listHint.focus()
+      expect(listEventListeners.editFieldHasFocus()).toBeTruthy()
+      questionElements.listValue.focus()
+      expect(listEventListeners.editFieldHasFocus()).toBeTruthy()
+      questionElements.listValue.blur()
+      expect(listEventListeners.editFieldHasFocus()).toBeFalsy()
     })
   })
 })
