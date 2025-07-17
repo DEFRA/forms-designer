@@ -79,6 +79,15 @@
                     }}
                   {% endif %}
                   <div class="govuk-button-group govuk-!-margin-top-6">
+                    {{ govukSkipLink({
+                      text: "Skip to page preview",
+                      href: "#tab-preview",
+                      classes: "govuk-!-margin-right-4",
+                      attributes: {
+                        "data-module": "govuk-skip-link"
+                      }
+                    }) }}
+
                     {{ appIconButton({
                       label: "Preview page",
                       href: previewPageUrl,
@@ -111,17 +120,6 @@
                     <a href="{{ baseUrl }}/delete" class="govuk-link govuk-link--no-visited-state">
                       Delete page
                     </a>
-                  </div>
-
-                  <div class="govuk-button-group govuk-!-margin-top-6">
-                    {{ govukSkipLink({
-                      text: "Skip to page preview",
-                      href: "#tab-preview",
-                      classes: "govuk-!-margin-right-4",
-                      attributes: {
-                        "data-module": "govuk-skip-link"
-                      }
-                    }) }}
                   </div>
 
                   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">

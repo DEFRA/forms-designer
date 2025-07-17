@@ -32,15 +32,16 @@
 {% endif %}
 
 <div class="govuk-button-group">
-  {{ govukButton({
-    text: 'Save changes'
-  }) }}
-
   {{ govukSkipLink({
     text: "Skip to page preview",
     href: "#tab-preview",
     attributes: {
       "data-module": "govuk-skip-link"
-    }
+    },
+    classes: "govuk-!-margin-right-4"
+  }) }}
+
+  {{ govukButton({
+    text: 'Save changes'
   }) }}
 </div>
