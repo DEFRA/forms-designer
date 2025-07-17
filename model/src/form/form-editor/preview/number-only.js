@@ -6,6 +6,16 @@ export class NumberOnlyQuestion extends Question {
    * @type {ComponentType}
    */
   componentType = ComponentType.NumberField
+
+  /**
+   * @param {QuestionElements} htmlElements
+   * @param {QuestionRenderer} questionRenderer
+   */
+  constructor(htmlElements, questionRenderer) {
+    super(htmlElements, questionRenderer)
+    this._fieldName = 'numberField'
+  }
+
   /**
    * @returns {Partial<QuestionBaseModel>}
    */
@@ -17,5 +27,5 @@ export class NumberOnlyQuestion extends Question {
 }
 
 /**
- * @import { QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
+ * @import { QuestionElements, QuestionBaseModel, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  */

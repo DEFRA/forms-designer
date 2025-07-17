@@ -13,8 +13,8 @@ describe('NumberOnly', () => {
     )
     const res = new NumberOnlyQuestion(elements, renderer)
     expect(res.renderInput).toEqual({
-      id: 'inputField',
-      name: 'inputField',
+      id: 'numberField',
+      name: 'numberField',
       classes: '',
       label: {
         text: 'Which quest would you like to pick?',
