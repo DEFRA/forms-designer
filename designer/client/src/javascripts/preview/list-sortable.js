@@ -14,6 +14,7 @@ const APP_REORDERABLE_LIST_ITEM = '.app-reorderable-list__item'
 const REORDER_BUTTON_HIDDEN = 'reorder-button-hidden'
 
 const OK_200 = 200
+const panelFocusClass = 'reorder-panel-focus'
 
 export class ListSortableQuestionElements extends ListQuestionDomElements {
   /** @type {HTMLElement} */
@@ -127,6 +128,7 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
         item.classList.add('sortable-enabled')
       } else {
         item.classList.remove('sortable-enabled')
+        item.classList.remove('reorder-panel-focus')
       }
     })
   }
@@ -165,6 +167,22 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
         button.classList.remove(REORDER_BUTTON_HIDDEN)
       }
     })
+  }
+
+  /**
+   * @param { Element | null } movedItem - The list item that was moved.
+   */
+  setItemFocus(movedItem) {
+    if (movedItem instanceof HTMLElement) {
+      const currentlyFocusedItems = this.sortableContainer.querySelectorAll(
+        `.${panelFocusClass}`
+      )
+      currentlyFocusedItems.forEach((item) => {
+        item.classList.remove(panelFocusClass)
+      })
+      movedItem.setAttribute('tabindex', '-1')
+      movedItem.classList.add('reorder-panel-focus')
+    }
   }
 
   /**
@@ -218,6 +236,7 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
       listenerClass._listQuestion.resyncPreviewAfterReorder()
       listenerClass._listSortableElements.updateMoveButtons()
       listenerClass._listSortableElements.setMoveFocus(target)
+      listenerClass._listSortableElements.setItemFocus(item)
     }
   }
 
@@ -235,6 +254,7 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
       listenerClass._listQuestion.resyncPreviewAfterReorder()
       listenerClass._listSortableElements.updateMoveButtons()
       listenerClass._listSortableElements.setMoveFocus(target)
+      listenerClass._listSortableElements.setItemFocus(item)
     }
   }
 
@@ -310,6 +330,7 @@ export class ListSortableEventListeners extends ListEventListeners {
       (e) => {
         this._listQuestion.resyncPreviewAfterReorder()
         this._listSortableElements.updateMoveButtons()
+        this._listSortableElements.setItemFocus(e.item)
         this._listSortableElements.announceReorder(e.item)
       }
     )
