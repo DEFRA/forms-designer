@@ -8,6 +8,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   getPageFromDefinition,
   insertValidationErrors,
+  sanitiseJSON,
   stringHasValue
 } from '~/src/lib/utils.js'
 import {
@@ -101,9 +102,13 @@ export function getPreviewModel(page, definition, previewPageUrl, fields) {
     needDeclaration
   )
 
+  const sanitisedDefinition = JSON.parse(
+    sanitiseJSON(JSON.stringify(definition))
+  )
+
   const previewPageController = new SummaryPageController(
     elements,
-    definition,
+    sanitisedDefinition,
     dummyRenderer
   )
 
@@ -184,8 +189,7 @@ export function checkAnswersSettingsViewModel(
     formValues: validation?.formValues,
     previewModel,
     preview: {
-      page: JSON.stringify(page),
-      definition: JSON.stringify(definition),
+      definition: sanitiseJSON(JSON.stringify(definition)),
       pageTemplate: 'summary-controller.njk'
     },
     buttonText: SAVE_AND_CONTINUE,
