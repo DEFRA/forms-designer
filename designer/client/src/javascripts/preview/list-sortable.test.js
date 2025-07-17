@@ -416,6 +416,38 @@ describe('list-sortable', () => {
       })
     })
 
+    describe('setItemFocus', () => {
+      it('should focus item and remove any previous highlight', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('row-3-up')
+        )
+        upButtonLastRow.classList.add('rerder-panel-focus')
+        listSortable.setItemFocus(downButtonFirstRow)
+        expect(downButtonFirstRow.classList).toContain('reorder-panel-focus')
+        expect(upButtonLastRow.classList).not.toContain('reorder-panel-focus')
+      })
+
+      it('should ignore if item is not an element', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryDownHTML
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
+        const downButtonFirstRow = null
+        expect(() =>
+          listSortable.setItemFocus(downButtonFirstRow)
+        ).not.toThrow()
+      })
+    })
+
     describe('announceReorder', () => {
       it('should announce, then clear announcement fater a timeout', async () => {
         document.body.innerHTML =
