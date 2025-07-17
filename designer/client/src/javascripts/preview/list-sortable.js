@@ -128,7 +128,7 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
         item.classList.add('sortable-enabled')
       } else {
         item.classList.remove('sortable-enabled')
-        item.classList.remove('reorder-panel-focus')
+        item.classList.remove(panelFocusClass)
       }
     })
   }
@@ -181,7 +181,7 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
         item.classList.remove(panelFocusClass)
       })
       movedItem.setAttribute('tabindex', '-1')
-      movedItem.classList.add('reorder-panel-focus')
+      movedItem.classList.add(panelFocusClass)
     }
   }
 
