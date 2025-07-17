@@ -238,13 +238,10 @@ export function getListDetails(state, questionFields) {
   }
 }
 
-/**
- * @param {{ questionNum: number }} details
- */
-export function getSkipLink(details) {
+export function getSkipLink() {
   return {
     text: 'Skip to edit question',
-    url: `#question-${details.questionNum}`
+    url: '#edit-question'
   }
 }
 
@@ -313,6 +310,7 @@ export function questionDetailsViewModel(
     cardTitle: `Question ${details.questionNum}`,
     cardCaption: `Page ${details.pageNum}`,
     cardHeading: `Edit question ${details.questionNum}`,
+    cardId: 'edit-question',
     navigation: details.navigation,
     errorList,
     formErrors: validation?.formErrors,
@@ -327,7 +325,7 @@ export function questionDetailsViewModel(
     previewPageUrl,
     previewErrorsUrl,
     deleteUrl,
-    skipLink: getSkipLink(details),
+    skipLink: getSkipLink(),
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field)
