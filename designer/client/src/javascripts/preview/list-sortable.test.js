@@ -216,7 +216,8 @@ describe('list-sortable', () => {
         },
         _listSortableElements: {
           updateMoveButtons: jest.fn(),
-          setMoveFocus: jest.fn()
+          setMoveFocus: jest.fn(),
+          setItemFocus: jest.fn()
         }
       })
       it('should move up if correct class', () => {
