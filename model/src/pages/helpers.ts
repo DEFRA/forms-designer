@@ -116,7 +116,7 @@ export function controllerNameFromPath(nameOrPath?: ControllerType | string) {
   return options?.name
 }
 
-function includesFileUploadField(components: ComponentDef[]): boolean {
+export function includesFileUploadField(components: ComponentDef[]): boolean {
   return components.some(
     (component) => component.type === ComponentType.FileUploadField
   )

@@ -25,6 +25,8 @@ import {
   deletePage,
   deleteQuestion,
   getControllerType,
+  getControllerTypeAndProperties,
+  getRepeaterProperties,
   migrateDefinitionToV2,
   reorderPages,
   reorderQuestions,
@@ -1384,8 +1386,149 @@ describe('editor.js', () => {
       })
     })
   })
+
+  describe('getRepeaterProperties', () => {
+    test('should return properties including random id', () => {
+      const page = /** @type {PageRepeat} */ ({
+        repeat: { options: { name: 'repeater-name' } }
+      })
+      const payload = {
+        minItems: 1,
+        maxItems: 5,
+        questionSetName: 'qSetName'
+      }
+      const res = getRepeaterProperties(page, false, payload)
+      expect(res).toEqual({
+        repeat: {
+          options: {
+            name: expect.any(String),
+            title: 'qSetName'
+          },
+          schema: {
+            max: 5,
+            min: 1
+          }
+        }
+      })
+      expect(res.repeat.options.name).not.toBe('repeater-name')
+    })
+
+    test('should return propertieswith existing name', () => {
+      const page = /** @type {PageRepeat} */ ({
+        repeat: { options: { name: 'repeater-name' } }
+      })
+      const payload = {
+        minItems: 1,
+        maxItems: 5,
+        questionSetName: 'qSetName'
+      }
+      const res = getRepeaterProperties(page, true, payload)
+      expect(res).toEqual({
+        repeat: {
+          options: {
+            name: 'repeater-name',
+            title: 'qSetName'
+          },
+          schema: {
+            max: 5,
+            min: 1
+          }
+        }
+      })
+    })
+  })
+
+  describe('getControllerTypeAndProperties', () => {
+    test('should return controller type for file upload', () => {
+      const page = /** @type {Page} */ ({})
+      const components = /** @type {ComponentDef[]} */ ([
+        {
+          type: ComponentType.FileUploadField
+        }
+      ])
+      const payload = {}
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBe(ControllerType.FileUpload)
+      expect(additionalProperties).toEqual({})
+    })
+
+    test('should clear controller type if no longer file upload', () => {
+      const page = /** @type {Page} */ ({
+        controller: ControllerType.FileUpload
+      })
+      const components = /** @type {ComponentDef[]} */ ([])
+      const payload = {}
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBeNull()
+      expect(additionalProperties).toEqual({})
+    })
+
+    test('should return controller type for exit page', () => {
+      const page = /** @type {Page} */ ({})
+      const components = /** @type {ComponentDef[]} */ ([])
+      const payload = {
+        exitPage: true
+      }
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBe(ControllerType.Terminal)
+      expect(additionalProperties).toEqual({})
+    })
+
+    test('should clear controller type if no longer exit page', () => {
+      const page = /** @type {Page} */ ({ controller: ControllerType.Terminal })
+      const components = /** @type {ComponentDef[]} */ ([])
+      const payload = {
+        exitPage: false
+      }
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBeNull()
+      expect(additionalProperties).toEqual({})
+    })
+
+    test('should return controller type for repeat page', () => {
+      const page = /** @type {Page} */ ({})
+      const components = /** @type {ComponentDef[]} */ ([])
+      const payload = {
+        repeater: 'yes',
+        minItems: 2,
+        maxItems: 4,
+        questionSetName: 'questionSetName'
+      }
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBe(ControllerType.Repeat)
+      expect(additionalProperties).toEqual({
+        repeat: {
+          options: {
+            name: expect.any(String),
+            title: 'questionSetName'
+          },
+          schema: {
+            min: 2,
+            max: 4
+          }
+        }
+      })
+    })
+
+    test('should clear controller type if no longer repeat page', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat
+      })
+      const components = /** @type {ComponentDef[]} */ ([])
+      const payload = {}
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBeNull()
+      expect(additionalProperties).toEqual({})
+    })
+  })
 })
 
 /**
- * @import { ConditionWrapperV2, FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionWrapperV2, FormDefinition, Page, PageRepeat } from '@defra/forms-model'
  */
