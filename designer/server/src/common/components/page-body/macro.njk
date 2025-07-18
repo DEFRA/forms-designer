@@ -57,7 +57,7 @@
   {% endif %}
 
   {%- if beforeContent %}
-    <div class="govuk-width-container app-width-container--wide">
+    <div id="main-content" class="govuk-width-container app-width-container--wide">
       {{ appGridLayout([
         {
           html: beforeContent | trim,
@@ -67,7 +67,7 @@
     </div>
   {% endif %}
 
-  <div class="govuk-width-container app-width-container--wide {%- if params.containerClasses %} {{ params.containerClasses }}{% endif %}">
+  <div id="main-content" class="govuk-width-container app-width-container--wide {%- if params.containerClasses %} {{ params.containerClasses }}{% endif %}">
     {{ appGridLayout(rows) }}
   </div>
 {% endmacro %}
