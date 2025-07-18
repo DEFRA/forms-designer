@@ -24,24 +24,31 @@ export function pageViewModel(metadata, formDefinition, editor, validation) {
   )
   const { formValues, formErrors } = validation ?? {}
 
+  const fieldName = 'pageType'
+
   return {
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
-      pageHeading
+      formTitle
     ),
     navigation,
-    pageCaption: {
-      text: formTitle
-    },
     pageClasses:
       'govuk-grid-column-full govuk-grid-column-one-half-from-desktop',
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     field: {
-      id: 'pageType',
-      name: 'pageType',
+      id: fieldName,
+      name: fieldName,
+      idPrefix: fieldName,
+      fieldset: {
+        legend: {
+          text: pageHeading,
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--l'
+        }
+      },
       value: formValues?.pageType ?? editor?.pageType,
       items: [
         {
@@ -58,7 +65,12 @@ export function pageViewModel(metadata, formDefinition, editor, validation) {
             text: 'If you need to add guidance without asking a question'
           }
         }
-      ]
+      ],
+      errorMessage: formErrors?.pageType
+        ? {
+            text: formErrors.pageType.text
+          }
+        : undefined
     },
     buttonText: SAVE_AND_CONTINUE
   }
