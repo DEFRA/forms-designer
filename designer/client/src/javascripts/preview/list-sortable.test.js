@@ -216,7 +216,8 @@ describe('list-sortable', () => {
         },
         _listSortableElements: {
           updateMoveButtons: jest.fn(),
-          setMoveFocus: jest.fn()
+          setMoveFocus: jest.fn(),
+          setItemFocus: jest.fn()
         }
       })
       it('should move up if correct class', () => {
@@ -415,6 +416,38 @@ describe('list-sortable', () => {
       })
     })
 
+    describe('setItemFocus', () => {
+      it('should focus item and remove any previous highlight', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('row-3-up')
+        )
+        upButtonLastRow.classList.add('reorder-panel-focus')
+        listSortable.setItemFocus(downButtonFirstRow)
+        expect(downButtonFirstRow.classList).toContain('reorder-panel-focus')
+        expect(upButtonLastRow.classList).not.toContain('reorder-panel-focus')
+      })
+
+      it('should ignore if item is not an element', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          listSingleEntryDownHTML
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
+        const downButtonFirstRow = null
+        expect(() =>
+          listSortable.setItemFocus(downButtonFirstRow)
+        ).not.toThrow()
+      })
+    })
+
     describe('announceReorder', () => {
       it('should announce, then clear announcement fater a timeout', async () => {
         document.body.innerHTML =
@@ -608,6 +641,88 @@ describe('list-sortable', () => {
           document.getElementById('last-row-up')
         )
         expect(upButtonLastRow.dataset.click).toBeUndefined()
+      })
+
+      it('should handle up button', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        SetupPreview.ListSortable()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const row3UpButton = /** @type {HTMLElement} */ (
+          document.getElementById('row-3-up')
+        )
+        const listContainer = /** @type {HTMLElement} */ (
+          document.getElementById('options-container')
+        )
+        const listOrderPre = /** @type {HTMLElement[]} */ (
+          Array.from(
+            listContainer.querySelectorAll('.app-reorderable-list__item')
+          )
+        ).map((node) => node.dataset.id)
+        expect(listOrderPre).toEqual([
+          'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+          '21e58240-5d0a-4e52-8003-3d99f318beb8',
+          '80c4cb93-f079-4836-93f9-509e683e5004',
+          'ade6652f-b67e-4665-bf07-66f03877b5c6'
+        ])
+        row3UpButton.click()
+        const listOrderPost = /** @type {HTMLElement[]} */ (
+          Array.from(
+            listContainer.querySelectorAll('.app-reorderable-list__item')
+          )
+        ).map((node) => node.dataset.id)
+        expect(listOrderPost).toEqual([
+          'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+          '80c4cb93-f079-4836-93f9-509e683e5004',
+          '21e58240-5d0a-4e52-8003-3d99f318beb8',
+          'ade6652f-b67e-4665-bf07-66f03877b5c6'
+        ])
+      })
+
+      it('should handle down button', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        SetupPreview.ListSortable()
+        const reorderButton = /** @type {HTMLElement} */ (
+          document.getElementById('edit-options-button')
+        )
+        reorderButton.click()
+        const downButton = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        const listContainer = /** @type {HTMLElement} */ (
+          document.getElementById('options-container')
+        )
+        const listOrderPre = /** @type {HTMLElement[]} */ (
+          Array.from(
+            listContainer.querySelectorAll('.app-reorderable-list__item')
+          )
+        ).map((node) => node.dataset.id)
+        expect(listOrderPre).toEqual([
+          'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+          '21e58240-5d0a-4e52-8003-3d99f318beb8',
+          '80c4cb93-f079-4836-93f9-509e683e5004',
+          'ade6652f-b67e-4665-bf07-66f03877b5c6'
+        ])
+        downButton.click()
+        const listOrderPost = /** @type {HTMLElement[]} */ (
+          Array.from(
+            listContainer.querySelectorAll('.app-reorderable-list__item')
+          )
+        ).map((node) => node.dataset.id)
+        expect(listOrderPost).toEqual([
+          '21e58240-5d0a-4e52-8003-3d99f318beb8',
+          'dc96bf7a-07a0-4f5b-ba6d-c5c4c9d381de',
+          '80c4cb93-f079-4836-93f9-509e683e5004',
+          'ade6652f-b67e-4665-bf07-66f03877b5c6'
+        ])
       })
     })
 
