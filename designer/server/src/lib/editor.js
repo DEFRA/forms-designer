@@ -326,6 +326,8 @@ export function getControllerTypeAndProperties(page, components, payload) {
       isCurrentlyRepeater,
       payload
     )
+  } else {
+    // Do nothing - to satisfy SonarCloud
   }
   return { controllerType, additionalProperties }
 }

@@ -52,8 +52,8 @@ export function getQuestionsOnPage(definition, pageId) {
  * @param {string} questionId
  */
 export function getQuestionNum(definition, pageId, questionId) {
-  const questions = getQuestionsOnPage(definition, pageId).filter((q) =>
-    isFormType(q.type)
+  const questions = getQuestionsOnPage(definition, pageId).filter(
+    (q) => isFormType(q.type) // Exclude non-form components such as Markdown
   )
   if (questionId === 'new') {
     return questions.length + 1
