@@ -4,7 +4,8 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   baseModelFields,
   buildPreviewUrl,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  toPresentationHtmlV2
 } from '~/src/models/forms/editor-v2/common.js'
 import {
   buildConditionsField,
@@ -70,6 +71,9 @@ export function conditionsJoinViewModel(
     validation
   )
 
+  const existingConditionHtml = existingCondition
+    ? toPresentationHtmlV2(existingCondition, definition)
+    : ''
   const cardTitle =
     conditionId === 'new' ? 'Create joined condition' : 'Edit joined condition'
 
@@ -90,6 +94,7 @@ export function conditionsJoinViewModel(
       displayName
     },
     existingCondition,
+    existingConditionHtml,
     conditionId,
     backLink: {
       href: `/library/${metadata.slug}/editor-v2/conditions`,

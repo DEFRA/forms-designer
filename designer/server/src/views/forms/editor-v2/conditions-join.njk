@@ -40,7 +40,7 @@
           <div class="govuk-summary-card__title">Original condition</div>
         </div>
         <div class="govuk-summary-card__content">
-          <p class="govuk-body govuk-!-font-weight-bold">{{ existingCondition.displayName }}</p>
+          <p class="govuk-body">{{ existingConditionHtml | safe }}</p>
         </div>
       </div>
     {% endif %}

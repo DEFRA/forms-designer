@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  FormStatus,
   SummaryPageController,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
@@ -14,6 +15,7 @@ import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
+  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
@@ -163,9 +165,11 @@ export function checkAnswersSettingsViewModel(
     validation
   )
   const pageHeading = 'Page settings'
+  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
+
   // prettier-ignore
   const previewModel = getPreviewModel(
-    page, definition, 'previewPageUrl', fields
+    page, definition, previewPageUrl, fields
   )
 
   return {

@@ -130,6 +130,9 @@ describe('editor-v2 - conditions-join model', () => {
         conditionId: 'existing-joined'
       })
       expect(result.existingCondition).toBe(existingJoinedCondition)
+      expect(result.existingConditionHtml).toBe(
+        "'First condition' <span class=\"govuk-!-font-weight-bold\">OR</span> 'Second condition'"
+      )
     })
 
     it('should generate conditions field correctly', () => {
