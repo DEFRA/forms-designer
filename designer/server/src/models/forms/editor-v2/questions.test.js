@@ -378,6 +378,39 @@ describe('editor-v2 - questions model', () => {
         ])
       })
 
+      it('should sanitise the JSON', () => {
+        const definition = buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: pageId,
+              title: 'Farm Details',
+              components: [
+                buildMarkdownComponent({
+                  content: `</script><script>alert('xss attack')</script><script>`
+                }),
+                testComponent
+              ]
+            }),
+            buildSummaryPage()
+          ],
+          conditions: [],
+          engine: Engine.V2
+        })
+
+        const result = questionsViewModel(
+          metadata,
+          definition,
+          pageId,
+          emptyReorderDetails
+        )
+        const definitionParsed = JSON.parse(result.preview.definition)
+        const pageParsed = JSON.parse(result.preview.page)
+        expect(pageParsed.components[0].content).toBe("alert('xss attack')")
+        expect(definitionParsed.pages[0].components[0].content).toBe(
+          "alert('xss attack')"
+        )
+      })
+
       it('should include the page title required properties', () => {
         const definition = buildDefinition({
           pages: [

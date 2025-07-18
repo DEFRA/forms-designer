@@ -13,6 +13,7 @@ import {
   insertValidationErrors,
   isCheckboxSelected,
   numberHasValue,
+  sanitiseJSON,
   stringHasValue
 } from '~/src/lib/utils.js'
 import {
@@ -448,8 +449,8 @@ export function questionsViewModel(
     // prettier-ignore
     previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value),
     preview: {
-      page: JSON.stringify(page),
-      definition: JSON.stringify(definition)
+      page: sanitiseJSON(JSON.stringify(page)),
+      definition: sanitiseJSON(JSON.stringify(definition))
     },
     cardTitle,
     cardCaption: pageHeading,
