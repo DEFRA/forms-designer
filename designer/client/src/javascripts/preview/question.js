@@ -1,4 +1,5 @@
 import { DomElements } from '~/src/javascripts/preview/dom-elements.js'
+import { postShortDescription } from '~/src/javascripts/preview/lib/llm.js'
 
 /**
  * @class QuestionDomElements
@@ -25,6 +26,9 @@ export class QuestionDomElements extends DomElements {
     const shortDescEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('shortDescription')
     )
+    const generateEl = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('generate')
+    )
 
     /**
      * @type {HTMLInputElement|null}
@@ -42,6 +46,7 @@ export class QuestionDomElements extends DomElements {
      * @type {HTMLInputElement|null}
      */
     this.shortDesc = shortDescEl
+    this.generate = generateEl
   }
 
   /**
@@ -160,6 +165,27 @@ export class EventListeners {
       'input'
     ])
 
+    const shortDescriptionText = /** @type {ListenerRow} */ ([
+      this.baseElements.generate,
+      /**
+       * @param {HTMLInputElement} target
+       * @param {Event} e
+       */
+      (target, e) => {
+        e.preventDefault()
+        postShortDescription(this.baseElements.question.value).then(
+          ({ shortDescription }) => {
+            this.baseElements.shortDesc.value = shortDescription
+            const event = new InputEvent('input', { bubbles: true })
+            this.baseElements.shortDesc.dispatchEvent(event)
+          }
+        ).catch(e => {
+          console.error('Generate short description failed' e)
+        })
+      },
+      'click'
+    ])
+
     const hintText = /** @type {ListenerRow} */ ([
       this.baseElements.hintText,
       /**
@@ -185,6 +211,7 @@ export class EventListeners {
       questionText,
       hintText,
       optionalCheckbox,
+      shortDescriptionText,
       ...this.highlightListeners,
       ...this._customListeners
     ]
