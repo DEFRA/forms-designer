@@ -4,7 +4,8 @@ import {
   convertConditionWrapperFromV2,
   hasComponents,
   hasComponentsEvenIfNoNext,
-  isConditionWrapperV2
+  isConditionWrapperV2,
+  isFormType
 } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -51,7 +52,9 @@ export function getQuestionsOnPage(definition, pageId) {
  * @param {string} questionId
  */
 export function getQuestionNum(definition, pageId, questionId) {
-  const questions = getQuestionsOnPage(definition, pageId)
+  const questions = getQuestionsOnPage(definition, pageId).filter((q) =>
+    isFormType(q.type)
+  )
   if (questionId === 'new') {
     return questions.length + 1
   }

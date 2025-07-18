@@ -3,6 +3,7 @@ import {
   ControllerType,
   hasComponents,
   hasComponentsEvenIfNoNext,
+  includesFileUploadField,
   isFormType,
   randomId
 } from '@defra/forms-model'
@@ -147,9 +148,16 @@ export async function updateQuestion(
 
   // Determine if page controller should change
   const origControllerType = page?.controller
-  const { controller: newControllerType } = getControllerType(
-    questionDetails,
-    origControllerType
+  const components = hasComponents(page) ? page.components : []
+  const questionToChange = components.find((x) => x.id === questionId)
+  if (questionToChange) {
+    // Side-effect to the component within the page
+    questionToChange.type = questionDetails.type ?? ComponentType.TextField
+  }
+  const { controllerType: newControllerType } = getControllerTypeAndProperties(
+    page,
+    hasComponents(page) ? page.components : [],
+    {}
   )
   if (
     origControllerType !== newControllerType ||
@@ -258,6 +266,71 @@ export async function insertUpdateOrDeleteGuidance(
 }
 
 /**
+ * @param {PageRepeat} page
+ * @param {boolean} isCurrentlyRepeater
+ * @param {Partial<FormEditorInputPageSettings>} payload
+ */
+export function getRepeaterProperties(page, isCurrentlyRepeater, payload) {
+  const { minItems, maxItems, questionSetName } = payload
+
+  const repeatName = isCurrentlyRepeater ? page.repeat.options.name : randomId()
+  return {
+    repeat: {
+      options: {
+        name: repeatName,
+        title: questionSetName
+      },
+      schema: {
+        min: minItems,
+        max: maxItems
+      }
+    }
+  }
+}
+
+/**
+ *
+ * @param { Page | undefined } page
+ * @param {ComponentDef[]} components
+ * @param {Partial<FormEditorInputPageSettings>} payload
+ */
+export function getControllerTypeAndProperties(page, components, payload) {
+  const { exitPage, repeater } = payload
+  let controllerType = /** @type { ControllerType | undefined | null } */ (
+    page?.controller
+  )
+  const isCurrentlyRepeater = controllerType === ControllerType.Repeat
+  const isCurrentlyFileUpload = controllerType === ControllerType.FileUpload
+  const isCurrentlyExitPage = controllerType === ControllerType.Terminal
+
+  // Potentially unset/remove the controllerType if it already is set, and no longer needs a value
+  if (isCurrentlyRepeater && !repeater) {
+    controllerType = null
+  }
+  if (isCurrentlyFileUpload && !includesFileUploadField(components)) {
+    controllerType = null
+  }
+  if (isCurrentlyExitPage && !exitPage) {
+    controllerType = null
+  }
+
+  let additionalProperties = {}
+  if (exitPage) {
+    controllerType = ControllerType.Terminal
+  } else if (includesFileUploadField(components)) {
+    controllerType = ControllerType.FileUpload
+  } else if (repeater) {
+    controllerType = ControllerType.Repeat
+    additionalProperties = getRepeaterProperties(
+      /** @type {PageRepeat} */ (page),
+      isCurrentlyRepeater,
+      payload
+    )
+  }
+  return { controllerType, additionalProperties }
+}
+
+/**
  * Update page settings including heading and/or guidance text and repeater options
  * @param {string} formId
  * @param {string} token
@@ -272,14 +345,7 @@ export async function setPageSettings(
   definition,
   payload
 ) {
-  const {
-    pageHeading,
-    guidanceText,
-    repeater,
-    minItems,
-    maxItems,
-    questionSetName
-  } = payload
+  const { pageHeading, guidanceText } = payload
 
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
@@ -289,45 +355,14 @@ export async function setPageSettings(
   const pageHeadingForCall = isExpanded ? pageHeading : ''
   const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeadingForCall, components))}`
 
-  // Potentially unset/remove the controllerType if it already is set, and no longer needs a value
-  const unsetController = page?.controller ? { controller: null } : {}
-  const controller = payload.exitPage
-    ? { controller: ControllerType.Terminal }
-    : unsetController
+  const { controllerType, additionalProperties } =
+    getControllerTypeAndProperties(page, components, payload)
 
   const requestPayload = {
     title: pageHeadingForCall,
     path: pagePathForCall,
-    ...controller
-  }
-
-  const isCurrentlyRepeater = page?.controller === ControllerType.Repeat
-
-  if (repeater) {
-    const repeatName = isCurrentlyRepeater
-      ? page.repeat.options.name
-      : randomId()
-
-    Object.assign(requestPayload, {
-      controller: ControllerType.Repeat,
-      repeat: {
-        options: {
-          name: repeatName,
-          title: questionSetName
-        },
-        schema: {
-          min: minItems,
-          max: maxItems
-        }
-      }
-    })
-  }
-
-  if (isCurrentlyRepeater && !repeater) {
-    // Unset the controller (repeat options will be stripped)
-    Object.assign(requestPayload, {
-      controller: null
-    })
+    controller: controllerType,
+    ...additionalProperties
   }
 
   // Update page heading
@@ -551,5 +586,5 @@ export async function deleteCondition(formId, token, conditionId) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat } from '@defra/forms-model'
  */
