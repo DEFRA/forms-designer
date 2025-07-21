@@ -9,13 +9,14 @@ describe('get-page-details', () => {
     id: pageId
   })
   const formDefinition = buildDefinition({
-    id: formId,
     pages: [page]
   })
-  global.fetch = jest.fn(() =>
-    Promise.resolve({
-      json: () => Promise.resolve(formDefinition)
-    })
+  window.fetch = jest.fn(() =>
+    Promise.resolve(
+      /** @type {Response} */ ({
+        json: () => Promise.resolve(formDefinition)
+      })
+    )
   )
   describe('getPageAndDefinition', () => {
     it('should get page and declaration', async () => {

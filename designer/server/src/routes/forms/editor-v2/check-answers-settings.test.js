@@ -38,13 +38,14 @@ describe('Editor v2 check-answers-settings routes', () => {
       auth
     }
 
-    const { container } = await renderResponse(server, options)
+    const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Page settings')
     const $radios = container.getAllByRole('radio')
 
     const $actions = container.getAllByRole('button')
+    const $previewPanel = document.getElementById('preview-panel')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
@@ -59,6 +60,9 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
+    expect($previewPanel?.innerHTML).toContain(
+      "setupSummaryPageController('661e4ca5039739ef2902b214')"
+    )
   })
 
   test('GET - should render radio group in the view when declaration text', async () => {
