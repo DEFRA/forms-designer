@@ -8,6 +8,7 @@ import {
   type PageQuestion,
   type PageRepeat
 } from '~/src/form/form-definition/types.js'
+import { type FormDefinition } from '~/src/index.js'
 import {
   ControllerNames,
   ControllerTypes
@@ -172,4 +173,17 @@ export function getPageTitle(page: Page) {
     }
   }
   return 'Page title unknown'
+}
+
+/**
+ *
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @returns { Page | undefined }
+ */
+export function getPageFromDefinition(
+  definition: FormDefinition,
+  pageId: string
+): Page | undefined {
+  return definition.pages.find((x) => x.id === pageId)
 }
