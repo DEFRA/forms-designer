@@ -143,9 +143,9 @@ describe('setup-page-controller', () => {
       })
     })
 
-    it('should fail if definition does not exist', async () => {
+    it('should fail if page does not exist', async () => {
       jest.mocked(getPageAndDefinition).mockResolvedValue({
-        definition: undefined,
+        definition,
         page: undefined
       })
       await expect(setupPageController(pageId, definitionId)).rejects.toThrow(
