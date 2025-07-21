@@ -142,6 +142,16 @@ describe('setup-page-controller', () => {
         'data-module': 'govuk-accessible-autocomplete'
       })
     })
+
+    it('should fail if definition does not exist', async () => {
+      jest.mocked(getPageAndDefinition).mockResolvedValue({
+        definition: undefined,
+        page: undefined
+      })
+      await expect(setupPageController(pageId, definitionId)).rejects.toThrow(
+        new Error(`Page not found with id ff2c6c10-f49b-44e4-bc70-5c85eb5a006a`)
+      )
+    })
   })
 
   describe('setupGuidanceController', () => {
