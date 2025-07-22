@@ -149,7 +149,14 @@ export async function setupReorderQuestionsController(pageId, definitionId) {
   const components = /** @type {ComponentDef[]} */ (
     hasComponents(page) ? page.components : []
   )
-  const nunjucksRenderBase = new NunjucksRendererBase(elements)
+
+  const hasAutocomplete = components.some(
+    (component) => component.type === ComponentType.AutocompleteField
+  )
+  const nunjucksRenderBase = hasAutocomplete
+    ? new AutocompleteRendererBase(elements)
+    : new NunjucksRendererBase(elements)
+
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
   const reorderQuestionsPageController = new ReorderQuestionsPageController(
     components,

@@ -181,6 +181,58 @@ describe('setup-page-controller', () => {
       expect(reorderPage).toBeInstanceOf(ReorderQuestionsPageController)
       expect(reorderPage.title).toBe('Where do you live?')
     })
+
+    it('should setup with autocomplete', async () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+
+      const componentsWithAutocomplete = [
+        buildTextFieldComponent(),
+        buildAutoCompleteComponent({
+          id: '756286fc-ee67-470c-b62c-d4638eb8df35',
+          name: 'Autocomplete question',
+          title: 'Autocomplete question',
+          list: 'feaa6e19-414d-4633-9c8c-1135bc84f1f2'
+        }),
+        buildMarkdownComponent()
+      ]
+      const pageIdWithAutocomplete = '4962a6bb-95cf-4b9f-882c-e9c6dd726a6c'
+      const pageWithAutocomplete = buildQuestionPage({
+        title: 'Page title',
+        components: componentsWithAutocomplete,
+        id: pageIdWithAutocomplete
+      })
+      const listId = 'feaa6e19-414d-4633-9c8c-1135bc84f1f2'
+      const list = buildList({
+        id: listId,
+        items: [
+          buildListItem({
+            text: 'Item 1'
+          }),
+          buildListItem({
+            text: 'Item 2'
+          })
+        ]
+      })
+
+      const definitionWithAutocomplete = buildDefinition({
+        pages: [pageWithAutocomplete],
+        lists: [list]
+      })
+
+      jest.mocked(getPageAndDefinition).mockResolvedValue({
+        page: pageWithAutocomplete,
+        definition: definitionWithAutocomplete
+      })
+
+      const reorderPage = await setupReorderQuestionsController(
+        pageIdWithAutocomplete,
+        definitionId
+      )
+
+      expect(reorderPage).toBeInstanceOf(ReorderQuestionsPageController)
+      expect(reorderPage.title).toBe('Where do you live?')
+    })
   })
 
   describe('setupSummaryPageController', () => {
