@@ -8,9 +8,9 @@
 <script type="module">
     {% if action == 'reorder' %}
     import { setupReorderQuestionsController } from "{{ getAssetPath("pagePreview.js") }}"
-    setupReorderQuestionsController({{ preview.page | safe }}, {{ preview.definition | safe }})
+    setupReorderQuestionsController('{{ preview.pageId }}','{{ preview.definitionId }}')
     {% else %}
     import { setupPageController } from "{{ getAssetPath("pagePreview.js") }}"
-    setupPageController({{ preview.page | safe }}, {{ preview.definition | safe }})
+    setupPageController('{{ preview.pageId }}','{{ preview.definitionId }}')
     {% endif %}
 </script>

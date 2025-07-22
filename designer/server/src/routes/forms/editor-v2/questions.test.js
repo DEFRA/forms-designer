@@ -72,6 +72,7 @@ describe('Editor v2 questions routes', () => {
     const $tabPanels = container.getAllByRole('tabpanel')
 
     const $actions = container.getAllByRole('button')
+    const $previewPanel = document.getElementById('preview-panel')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
@@ -93,6 +94,9 @@ describe('Editor v2 questions routes', () => {
     expect($actions[5]).toHaveTextContent('Save changes')
     expect($actions[6]).toHaveTextContent('Manage conditions')
     expect($tabPanels).toHaveLength(1)
+    expect($previewPanel?.innerHTML).toContain(
+      "setupPageController('p1','661e4ca5039739ef2902b214')"
+    )
   })
 
   test('GET - should render one question in the view', async () => {
@@ -183,6 +187,31 @@ describe('Editor v2 questions routes', () => {
     expect($questionTitles).toHaveLength(2)
     expect($questionNumbers[0]).toHaveTextContent('')
     expect($questionTitles[0]).toHaveTextContent('No questions')
+  })
+
+  test('GET - should render reorder view', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions?action=reorder',
+      auth
+    }
+
+    const { container, document } = await renderResponse(server, options)
+    const $previewPanel = document.getElementById('preview-panel')
+    const [$questionList] = container.getAllByRole('list')
+    const $questionListContainer = within($questionList)
+    const $questions = $questionListContainer.getAllByRole('listitem')
+
+    expect($questions).toHaveLength(2)
+
+    expect($previewPanel?.innerHTML).toContain(
+      "setupReorderQuestionsController('p1','661e4ca5039739ef2902b214')"
+    )
   })
 
   test('POST - should error if missing mandatory fields', async () => {

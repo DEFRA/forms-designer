@@ -3,6 +3,7 @@ import {
   buildMarkdownComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
+import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
   buildFileUploadPage,
   buildQuestionPage,
@@ -20,6 +21,7 @@ import { ControllerType } from '~/src/pages/enums.js'
 import {
   controllerNameFromPath,
   getPageDefaults,
+  getPageFromDefinition,
   getPageTitle,
   hasComponents,
   hasComponentsEvenIfNoNext,
@@ -417,6 +419,26 @@ describe('helpers', () => {
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
       }
       expect(getPageTitle(page)).toBe('Page title unknown')
+    })
+  })
+
+  describe('getPageFromDefinition', () => {
+    const pageId = '7dcf119c-9846-4e0e-a350-6b3730e45016'
+    it('should get the page if it exists', () => {
+      const page = buildQuestionPage({
+        id: pageId
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      expect(getPageFromDefinition(definition, pageId)).toEqual(page)
+    })
+
+    it('should return undefined if it does not exist', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+      expect(getPageFromDefinition(definition, pageId)).toBeUndefined()
     })
   })
 })

@@ -188,8 +188,8 @@ export function checkAnswersSettingsViewModel(
     formValues: validation?.formValues,
     previewModel,
     preview: {
-      page: JSON.stringify(page),
-      definition: JSON.stringify(definition),
+      pageId: page?.id,
+      definitionId: metadata.id,
       pageTemplate: 'summary-controller.njk'
     },
     buttonText: SAVE_AND_CONTINUE,

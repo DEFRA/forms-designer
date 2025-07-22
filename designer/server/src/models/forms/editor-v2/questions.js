@@ -448,8 +448,8 @@ export function questionsViewModel(
     // prettier-ignore
     previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value),
     preview: {
-      page: JSON.stringify(page),
-      definition: JSON.stringify(definition)
+      pageId: page.id,
+      definitionId: metadata.id
     },
     cardTitle,
     cardCaption: pageHeading,

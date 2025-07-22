@@ -34,6 +34,7 @@ import {
 import { AutocompleteRendererBase } from '~/src/javascripts/preview/autocomplete-renderer.js'
 import { NunjucksPageRenderer } from '~/src/javascripts/preview/nunjucks-page-renderer.js'
 import { NunjucksRendererBase } from '~/src/javascripts/preview/nunjucks-renderer.js'
+import { getPageAndDefinition } from '~/src/javascripts/preview/page-controller/get-page-details.js'
 import {
   PagePreviewDomElements,
   PagePreviewListeners
@@ -83,10 +84,14 @@ function setupListener(previewPageController, elements) {
 
 /**
  * Setup the Page Controller for client
- * @param {Page} page
- * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} definitionId
  */
-export function setupPageController(page, definition) {
+export async function setupPageController(pageId, definitionId) {
+  const { page, definition } = await getPageAndDefinition(definitionId, pageId)
+  if (!page) {
+    throw new Error(`Page not found with id ${pageId}`)
+  }
   const [components, elements, renderer] = baseControllerSetup(page)
 
   const previewPageController = new PreviewPageController(
@@ -101,10 +106,10 @@ export function setupPageController(page, definition) {
 
 /**
  * Setup the Page Controller for client
- * @param {FormDefinition} definition
- * @returns {SummaryPageController}
+ * @param {string} definitionId
  */
-export function setupSummaryPageController(definition) {
+export async function setupSummaryPageController(definitionId) {
+  const { definition } = await getPageAndDefinition(definitionId, undefined)
   const elements = new SummaryPagePreviewDomElements()
   const nunjucksRenderBase = new NunjucksRendererBase(elements)
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
@@ -135,10 +140,11 @@ export function setupGuidanceController() {
 
 /**
  * Setup the Page Controller for client
- * @param {Page} page
- * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} definitionId
  */
-export function setupReorderQuestionsController(page, definition) {
+export async function setupReorderQuestionsController(pageId, definitionId) {
+  const { page, definition } = await getPageAndDefinition(definitionId, pageId)
   const elements = new ReorderQuestionsPagePreviewDomElements()
   const components = /** @type {ComponentDef[]} */ (
     hasComponents(page) ? page.components : []
