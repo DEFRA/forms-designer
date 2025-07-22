@@ -72,6 +72,12 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     .highlight {
       border-bottom: inherit;
     }
+
+    input[type="text"].highlight,
+    input[type="number"].highlight,
+    select.highlight {
+      border-bottom: 2px solid govuk-colour("black");
+    }
   }
 
   .govuk-radios__hint {
