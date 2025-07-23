@@ -1,0 +1,28 @@
+{
+  "schemaVersion": "string",
+  "category": "FORM",
+  "type": "FORM_CREATED",
+  "createdAt": "Date",
+  "createdBy": {
+    "id": "string",
+    "displayName": "string"
+  },
+  "data": {
+    "formId": "string",
+    "title": "string",
+    "organisation": "string",
+    "teamName": "string",
+    "teamEmail": "string",
+    "slug": "string",
+    "createdAt": "Date",
+    "createdBy": {
+      "id": "string",
+      "displayName": "string"
+    },
+    "updatedAt": "Date",
+    "updatedBy": {
+      "id": "string",
+      "displayName": "string"
+    }
+  }
+}

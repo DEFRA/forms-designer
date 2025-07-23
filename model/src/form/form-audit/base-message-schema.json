@@ -1,0 +1,11 @@
+{
+  "schemaVersion": "string",
+  "category": "string",
+  "type": "string",
+  "createdAt": "Date",
+  "createdBy": {
+    "id": "string",
+    "displayName": "string"
+  },
+  "data": "object"
+}
