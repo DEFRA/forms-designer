@@ -23,11 +23,6 @@ export interface FormCreatedMessageData extends FormMessageData {
     id: string
     displayName: string
   }
-  updatedAt: Date
-  updatedBy: {
-    id: string
-    displayName: string
-  }
 }
 
 export interface SupportEmailUpdatedMessageData extends FormMessageData {
