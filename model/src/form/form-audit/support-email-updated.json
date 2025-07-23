@@ -1,0 +1,24 @@
+{
+  "schemaVersion": "string",
+  "category": "string",
+  "type": "string",
+  "createdAt": "Date",
+  "createdBy": {
+    "id": "string",
+    "displayName": "string"
+  },
+  "data": {
+    "formId": "string",
+    "slug": "string",
+    "changes": {
+      "previous": {
+        "supportEmail": "string",
+        "responseTime": "string"
+      },
+      "new": {
+        "supportEmail": "string",
+        "responseTime": "string"
+      }
+    }
+  }
+}
