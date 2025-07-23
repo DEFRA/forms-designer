@@ -21,8 +21,18 @@ export interface FormCreatedMessageData extends FormMessageData {
   teamEmail: string
 }
 
+export interface SupportEmailChanges {
+  supportEmail: string
+  responseTime: string
+}
+
 export interface SupportEmailUpdatedMessageData extends FormMessageData {
-  changes: ChangesMessageData<{ supportEmail: string; responseTime: string }>
+  changes: ChangesMessageData<SupportEmailChanges>
+}
+
+export interface AuditUser {
+  id: string
+  displayName: string
 }
 
 export type MessageData =
@@ -34,10 +44,7 @@ export interface BaseMessage {
   category: AuditEventMessageCategory
   type: AuditEventMessageType
   createdAt: Date
-  createdBy: {
-    id: string
-    displayName: string
-  }
+  createdBy: AuditUser
   data: MessageData
 }
 

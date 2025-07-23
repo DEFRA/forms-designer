@@ -1,61 +1,91 @@
-import Joi from 'joi'
+import Joi, { type ObjectSchema } from 'joi'
+import { type Message } from 'postcss'
 
-export const formMessageDataSchema = Joi.object({
+import {
+  AuditEventMessageCategory,
+  AuditEventMessageSchemaVersion,
+  AuditEventMessageType
+} from '~/src/form/form-audit/enums.js'
+import {
+  type AuditEvent,
+  type AuditUser,
+  type ChangesMessageData,
+  type FormCreatedMessageData,
+  type FormMessageData,
+  type SupportEmailChanges,
+  type SupportEmailUpdatedMessageData
+} from '~/src/form/form-audit/types.js'
+
+export const formMessageDataSchema = Joi.object<FormMessageData>({
   formId: Joi.string().trim().required(),
   slug: Joi.string().trim().required()
 })
 
-export interface ChangesMessageData<T> {
-  previous: T
-  new: T
+export const formCreatedMessageData =
+  formMessageDataSchema.append<FormCreatedMessageData>({
+    title: Joi.string().trim().required(),
+    organisation: Joi.string().trim().required(),
+    teamName: Joi.string().trim().required(),
+    teamEmail: Joi.string().trim().required()
+  })
+
+export const supportEmailChanges = Joi.object<SupportEmailChanges>().keys({
+  supportEmail: Joi.string().email().required(),
+  responseTime: Joi.string().required()
+})
+
+export function supportEmailUpdatedMessageData<T>(schema: ObjectSchema<T>) {
+  return formMessageDataSchema.append<SupportEmailUpdatedMessageData>({
+    changes: Joi.object<ChangesMessageData<T>>().keys({
+      previous: schema,
+      new: schema
+    })
+  })
 }
 
-// export const changesMessageData<T> = Joi.object<ChangesMessageData<T>>().keys({
-//   previous: Joi.string().trim().required(),
-//   new:
-// })
-
-export const formCreatedMessageData = formMessageDataSchema.append({
-  title: Joi.string().trim().required(),
-  organisation: Joi.string().trim().required(),
-  teamName: Joi.string().trim().required(),
-  teamEmail: Joi.string().trim().required()
+export const auditUserSchema = Joi.object<AuditUser>().keys({
+  id: Joi.string().uuid(),
+  displayName: Joi.string()
 })
 
-export const supportEmailUpdatedMessageData = formMessageDataSchema.append({
-  changes: Joi.string().trim().required()
+export const validCategories = [
+  AuditEventMessageCategory.FORM,
+  AuditEventMessageCategory.ENTITLEMENT
+]
+
+export const validTypes = [
+  AuditEventMessageType.FORM_CREATED,
+  AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
+]
+
+export const validMessageSchemaVersion = [AuditEventMessageSchemaVersion.V1]
+
+export const messageSchema = Joi.object<Message>().keys({
+  schemaVersion: Joi.string()
+    .valid(...validMessageSchemaVersion)
+    .required(),
+  type: Joi.string().valid(...validTypes),
+  category: Joi.string()
+    .valid(...validCategories)
+    .required(),
+  createdAt: Joi.date().required(),
+  createdBy: auditUserSchema.required(),
+  data: Joi.when('type', {
+    switch: [
+      {
+        is: Joi.string().trim().valid(AuditEventMessageType.FORM_CREATED),
+        then: formCreatedMessageData
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED),
+        then: supportEmailUpdatedMessageData(supportEmailChanges)
+      }
+    ]
+  })
 })
 
-// export type MessageData =
-//   | FormCreatedMessageData
-//   | SupportEmailUpdatedMessageData
-
-// export interface BaseMessage {
-//   schemaVersion: AuditEventMessageSchemaVersion
-//   category: AuditEventMessageCategory
-//   type: AuditEventMessageType
-//   createdAt: Date
-//   createdBy: {
-//     id: string
-//     displayName: string
-//   }
-//   data: MessageData
-// }
-
-// export interface FormCreatedMessage extends BaseMessage {
-//   category: AuditEventMessageCategory.FORM
-//   type: AuditEventMessageType.FORM_CREATED
-//   data: FormCreatedMessageData
-// }
-
-// export interface SupportEmailUpdatedMessage extends BaseMessage {
-//   category: AuditEventMessageCategory.FORM
-//   type: AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
-//   data: SupportEmailUpdatedMessageData
-// }
-
-// export type Message = FormCreatedMessage | SupportEmailUpdatedMessage
-
-// export interface AuditEvent {
-//   message: Message
-// }
+export const auditEvent = Joi.object<AuditEvent>().keys({
+  message: messageSchema
+})
