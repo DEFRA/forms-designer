@@ -18,11 +18,6 @@ export interface FormCreatedMessageData extends FormMessageData {
   organisation: string
   teamName: string
   teamEmail: string
-  createdAt: Date
-  createdBy: {
-    id: string
-    displayName: string
-  }
 }
 
 export interface SupportEmailUpdatedMessageData extends FormMessageData {
