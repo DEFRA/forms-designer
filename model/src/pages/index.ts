@@ -15,6 +15,7 @@ export {
   hasFormComponents,
   hasNext,
   hasRepeater,
+  includesFileUploadField,
   isControllerName,
   omitFileUploadComponent,
   showRepeaterSettings
