@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-model",
-  "version": "3.0.513",
+  "version": "3.0.514",
   "description": "A hapi plugin providing the model for Defra forms",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/model#readme",
   "types": "dist/types/index.d.ts",
