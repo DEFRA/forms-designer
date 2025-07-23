@@ -35,7 +35,7 @@
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.4",
-    "@defra/forms-engine-plugin": "^0.1.22",
+    "@defra/forms-engine-plugin": "^2.0.2",
     "@defra/forms-model": "^3.0.513",
     "@defra/hapi-tracing": "^1.0.0",
     "@elastic/ecs-pino-format": "^1.5.0",
