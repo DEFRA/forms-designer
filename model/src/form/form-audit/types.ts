@@ -1,5 +1,6 @@
 import {
   type AuditEventMessageCategory,
+  type AuditEventMessageSchemaVersion,
   type AuditEventMessageType
 } from '~/src/form/form-audit/enums.js'
 
@@ -18,16 +19,6 @@ export interface FormCreatedMessageData extends FormMessageData {
   organisation: string
   teamName: string
   teamEmail: string
-  createdAt: Date
-  createdBy: {
-    id: string
-    displayName: string
-  }
-  updatedAt: Date
-  updatedBy: {
-    id: string
-    displayName: string
-  }
 }
 
 export interface SupportEmailUpdatedMessageData extends FormMessageData {
@@ -39,7 +30,7 @@ export type MessageData =
   | SupportEmailUpdatedMessageData
 
 export interface BaseMessage {
-  schemaVersion: string
+  schemaVersion: AuditEventMessageSchemaVersion
   category: AuditEventMessageCategory
   type: AuditEventMessageType
   createdAt: Date

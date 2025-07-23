@@ -1,3 +1,7 @@
+export enum AuditEventMessageSchemaVersion {
+  V1 = 1
+}
+
 export enum AuditEventMessageCategory {
   FORM = 'FORM',
   ENTITLEMENT = 'ENTITLEMENT'
