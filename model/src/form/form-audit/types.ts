@@ -60,13 +60,13 @@ export interface SupportEmailUpdatedMessage extends BaseMessage {
   data: SupportEmailUpdatedMessageData
 }
 
-export type Message = FormCreatedMessage | SupportEmailUpdatedMessage
+export type AuditMessage = FormCreatedMessage | SupportEmailUpdatedMessage
 
 export interface AuditEvent {
-  message: Message
+  message: AuditMessage
 }
 
-export type AuditRecord = Message & {
+export type AuditRecord = AuditMessage & {
   messageId: string
 }
 

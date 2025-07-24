@@ -7,12 +7,12 @@ import {
 } from '~/src/form/form-audit/enums.js'
 import {
   type AuditEvent,
+  type AuditMessage,
   type AuditRecord,
   type AuditUser,
   type ChangesMessageData,
   type FormCreatedMessageData,
   type FormMessageData,
-  type Message,
   type SupportEmailChanges,
   type SupportEmailUpdatedMessageData
 } from '~/src/form/form-audit/types.js'
@@ -61,7 +61,7 @@ export const validTypes = [
 
 export const validMessageSchemaVersion = [AuditEventMessageSchemaVersion.V1]
 
-export const messageSchema = Joi.object<Message>().keys({
+export const messageSchema = Joi.object<AuditMessage>().keys({
   schemaVersion: Joi.string()
     .valid(...validMessageSchemaVersion)
     .required(),
