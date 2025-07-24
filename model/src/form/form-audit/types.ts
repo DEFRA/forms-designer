@@ -69,3 +69,7 @@ export interface AuditEvent {
 export type AuditRecord = Message & {
   messageId: string
 }
+
+export interface MessageBody {
+  Message: string
+}
