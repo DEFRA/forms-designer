@@ -646,7 +646,7 @@ export const pageUploadComponentsSchema = Joi.array<
     contentComponentSchema.optional()
   )
   .unique('id')
-  .unique('name')
+  .unique('name', { ignoreUndefined: true })
   .min(1)
   .max(2)
   .description('Components allowed on Page Upload schema')
@@ -731,7 +731,7 @@ export const pageSchemaV2 = pageSchema
       otherwise: Joi.array<ComponentDef>()
         .items(componentSchemaV2)
         .unique('id')
-        .unique('name')
+        .unique('name', { ignoreUndefined: true })
         .description('Components schema for V2 forms')
         .error(
           checkErrors([
