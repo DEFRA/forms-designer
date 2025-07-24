@@ -65,3 +65,7 @@ export type Message = FormCreatedMessage | SupportEmailUpdatedMessage
 export interface AuditEvent {
   message: Message
 }
+
+export interface AuditRecord extends Message {
+  messageId: string
+}

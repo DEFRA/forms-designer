@@ -8,6 +8,7 @@ import {
 } from '~/src/form/form-audit/enums.js'
 import {
   type AuditEvent,
+  type AuditRecord,
   type AuditUser,
   type ChangesMessageData,
   type FormCreatedMessageData,
@@ -88,4 +89,8 @@ export const messageSchema = Joi.object<Message>().keys({
 
 export const auditEvent = Joi.object<AuditEvent>().keys({
   message: messageSchema
+})
+
+export const auditRecord = messageSchema.append<AuditRecord>({
+  messageId: Joi.string().uuid().required()
 })
