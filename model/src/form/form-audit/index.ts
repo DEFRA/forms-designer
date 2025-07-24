@@ -1,5 +1,4 @@
 import Joi, { type ObjectSchema } from 'joi'
-import { type Message } from 'postcss'
 
 import {
   AuditEventMessageCategory,
@@ -13,6 +12,7 @@ import {
   type ChangesMessageData,
   type FormCreatedMessageData,
   type FormMessageData,
+  type Message,
   type SupportEmailChanges,
   type SupportEmailUpdatedMessageData
 } from '~/src/form/form-audit/types.js'
