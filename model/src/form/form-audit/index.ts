@@ -85,7 +85,7 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
       }
     ]
   }),
-  messageCreatedAt: Joi.date().default(new Date())
+  messageCreatedAt: Joi.date().required()
 })
 
 export const auditEvent = Joi.object<AuditEvent>().keys({
@@ -95,5 +95,5 @@ export const auditEvent = Joi.object<AuditEvent>().keys({
 export const auditRecord = messageSchema.append<AuditRecord>({
   messageId: Joi.string().uuid().required(),
   entityId: Joi.string().required(),
-  recordCreatedAt: Joi.date().default(new Date())
+  recordCreatedAt: Joi.date().required()
 })
