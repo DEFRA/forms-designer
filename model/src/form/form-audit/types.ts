@@ -4,7 +4,7 @@ import {
   type AuditEventMessageType
 } from '~/src/form/form-audit/enums.js'
 
-export interface FormMessageData {
+export interface FormMessageDataBase {
   formId: string
   slug: string
 }
@@ -14,47 +14,65 @@ export interface ChangesMessageData<T> {
   new: T
 }
 
-export interface FormCreatedMessageData extends FormMessageData {
+export interface FormCreatedMessageData extends FormMessageDataBase {
   title: string
   organisation: string
   teamName: string
   teamEmail: string
 }
 
-export interface SupportEmailUpdatedMessageData extends FormMessageData {
-  changes: ChangesMessageData<{ supportEmail: string; responseTime: string }>
+export interface SupportEmailChanges {
+  supportEmail: string
+  responseTime: string
+}
+
+export interface SupportEmailUpdatedMessageData extends FormMessageDataBase {
+  changes: ChangesMessageData<SupportEmailChanges>
+}
+
+export interface AuditUser {
+  id: string
+  displayName: string
 }
 
 export type MessageData =
   | FormCreatedMessageData
   | SupportEmailUpdatedMessageData
 
-export interface BaseMessage {
+export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
   category: AuditEventMessageCategory
   type: AuditEventMessageType
   createdAt: Date
-  createdBy: {
-    id: string
-    displayName: string
-  }
+  createdBy: AuditUser
   data: MessageData
+  messageCreatedAt: Date
 }
 
-export interface FormCreatedMessage extends BaseMessage {
+export interface FormCreatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_CREATED
   data: FormCreatedMessageData
 }
 
-export interface SupportEmailUpdatedMessage extends BaseMessage {
+export interface FormSupportEmailUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
   data: SupportEmailUpdatedMessageData
 }
 
-export type Message = FormCreatedMessage | SupportEmailUpdatedMessage
+export type AuditMessage = FormCreatedMessage | FormSupportEmailUpdatedMessage
 
 export interface AuditEvent {
-  message: Message
+  message: AuditMessage
+}
+
+export type AuditRecord = AuditMessage & {
+  messageId: string
+  entityId: string
+  recordCreatedAt: Date
+}
+
+export interface MessageBody {
+  Message: string
 }
