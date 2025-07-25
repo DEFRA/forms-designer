@@ -13,8 +13,8 @@ import {
   type ChangesMessageData,
   type FormCreatedMessageData,
   type FormMessageDataBase,
-  type SupportEmailChanges,
-  type SupportEmailUpdatedMessageData
+  type FormSupportEmailChanges,
+  type FormSupportEmailUpdatedMessageData
 } from '~/src/form/form-audit/types.js'
 
 export const formMessageDataBase = Joi.object<FormMessageDataBase>({
@@ -30,13 +30,13 @@ export const formCreatedMessageData =
     teamEmail: Joi.string().trim().required()
   })
 
-export const supportEmailChanges = Joi.object<SupportEmailChanges>().keys({
-  supportEmail: Joi.string().email().required(),
+export const supportEmailChanges = Joi.object<FormSupportEmailChanges>().keys({
+  address: Joi.string().email().required(),
   responseTime: Joi.string().required()
 })
 
 export function supportEmailUpdatedMessageData<T>(schema: ObjectSchema<T>) {
-  return formMessageDataBase.append<SupportEmailUpdatedMessageData>({
+  return formMessageDataBase.append<FormSupportEmailUpdatedMessageData>({
     changes: Joi.object<ChangesMessageData<T>>().keys({
       previous: schema,
       new: schema
