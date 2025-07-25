@@ -12,6 +12,7 @@ import {
   type AuditUser,
   type ChangesMessageData,
   type FormCreatedMessageData,
+  type FormMessageChangesData,
   type FormMessageDataBase,
   type FormNotificationEmailChanges,
   type FormNotificationEmailUpdatedMessageData,
@@ -130,7 +131,7 @@ export const formSupportEmailChanges =
     responseTime: Joi.string().required()
   })
 
-export function formChangesMessageData<T, U>(
+export function formChangesMessageData<T, U extends FormMessageChangesData>(
   schema: ObjectSchema<T>
 ): ObjectSchema<U> {
   return formMessageDataBase.append<U>({
