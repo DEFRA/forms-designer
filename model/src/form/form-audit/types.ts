@@ -51,15 +51,15 @@ export interface FormSupportOnlineChanges {
   text: string
 }
 
-export interface FormSupportPrivacyNoticeChanges {
+export interface FormPrivacyNoticeChanges {
   privacyNoticeUrl: string
 }
 
-export interface FormSupportNotificationEmailChanges {
+export interface FormNotificationEmailChanges {
   notificationEmail: string
 }
 
-export interface FormSupportSubmissionGuidanceChanges {
+export interface FormSubmissionGuidanceChanges {
   submissionGuidance: string
 }
 
@@ -99,24 +99,41 @@ export interface FormSupportOnlineUpdatedMessageData
   changes: ChangesMessageData<FormSupportOnlineChanges>
 }
 
-export interface FormSupportPrivacyNoticeUpdatedMessageData
+export interface FormPrivacyNoticeUpdatedMessageData
   extends FormMessageDataBase {
-  changes: ChangesMessageData<FormSupportPrivacyNoticeChanges>
+  changes: ChangesMessageData<FormPrivacyNoticeChanges>
 }
 
-export interface FormSupportNotificationEmailUpdatedMessageData
+export interface FormNotificationEmailUpdatedMessageData
   extends FormMessageDataBase {
-  changes: ChangesMessageData<FormSupportNotificationEmailChanges>
+  changes: ChangesMessageData<FormNotificationEmailChanges>
 }
 
-export interface FormSupportSubmissionGuidanceUpdatedMessageData
+export interface FormSubmissionGuidanceUpdatedMessageData
   extends FormMessageDataBase {
-  changes: ChangesMessageData<FormSupportSubmissionGuidanceChanges>
+  changes: ChangesMessageData<FormSubmissionGuidanceChanges>
 }
 
 export interface FormUploadedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormUploadedChanges>
 }
+
+export type FormMessageChangesData =
+  | FormTitleUpdatedMessageData
+  | FormOrganisationUpdatedMessageData
+  | FormTeamNameUpdatedMessageData
+  | FormTeamEmailUpdatedMessageData
+  | FormSupportPhoneUpdatedMessageData
+  | FormSupportEmailUpdatedMessageData
+  | FormSupportOnlineUpdatedMessageData
+  | FormPrivacyNoticeUpdatedMessageData
+  | FormNotificationEmailUpdatedMessageData
+  | FormSubmissionGuidanceUpdatedMessageData
+  | FormUploadedMessageData
+
+export type FormMessageActivitiesData =
+  | FormCreatedMessageData
+  | FormUpdatedMessageData
 
 export interface FormUpdatedMessageData extends FormMessageDataBase {
   description: string
@@ -127,20 +144,7 @@ export interface AuditUser {
   displayName: string
 }
 
-export type MessageData =
-  | FormCreatedMessageData
-  | FormTitleUpdatedMessageData
-  | FormOrganisationUpdatedMessageData
-  | FormTeamNameUpdatedMessageData
-  | FormTeamEmailUpdatedMessageData
-  | FormSupportPhoneUpdatedMessageData
-  | FormSupportEmailUpdatedMessageData
-  | FormSupportOnlineChanges
-  | FormSupportPrivacyNoticeUpdatedMessageData
-  | FormSupportNotificationEmailUpdatedMessageData
-  | FormSupportSubmissionGuidanceUpdatedMessageData
-  | FormUploadedMessageData
-  | FormUpdatedMessageData
+export type MessageData = FormMessageChangesData | FormMessageActivitiesData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -198,27 +202,27 @@ export interface FormSupportEmailUpdatedMessage extends MessageBase {
 export interface FormSupportOnlineUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED
-  data: FormSupportEmailUpdatedMessageData
+  data: FormSupportOnlineUpdatedMessageData
 }
 
 export interface FormSupportPrivacyNoticeUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED
-  data: FormSupportPrivacyNoticeUpdatedMessageData
+  data: FormPrivacyNoticeUpdatedMessageData
 }
 
 export interface FormSupportNotificationEmailUpdatedMessage
   extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED
-  data: FormSupportNotificationEmailUpdatedMessageData
+  data: FormNotificationEmailUpdatedMessageData
 }
 
 export interface FormSupportSubmissionGuidanceUpdatedMessage
   extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED
-  data: FormSupportSubmissionGuidanceUpdatedMessageData
+  data: FormSubmissionGuidanceUpdatedMessageData
 }
 
 export interface FormUploadedMessage extends MessageBase {
@@ -262,7 +266,26 @@ export interface FormUpdatedMessage extends MessageBase {
   type: AuditEventMessageType.FORM_UPDATED
 }
 
-export type AuditMessage = FormCreatedMessage | FormSupportEmailUpdatedMessage
+export type AuditMessage =
+  | FormCreatedMessage
+  | FormTitleUpdatedMessage
+  | FormOrganisationUpdatedMessage
+  | FormTeamNameUpdatedMessage
+  | FormTeamEmailUpdatedMessage
+  | FormSupportPhoneUpdatedMessage
+  | FormSupportEmailUpdatedMessage
+  | FormSupportOnlineUpdatedMessage
+  | FormSupportPrivacyNoticeUpdatedMessage
+  | FormSupportNotificationEmailUpdatedMessage
+  | FormSupportSubmissionGuidanceUpdatedMessage
+  | FormUploadedMessage
+  | FormDownloadedMessage
+  | FormPublishedMessage
+  | FormDraftCreatedFromLiveMessage
+  | FormLiveCreatedFromDraftMessage
+  | FormDraftDeletedMessage
+  | FormMigratedMessage
+  | FormUpdatedMessage
 
 export interface AuditEvent {
   message: AuditMessage

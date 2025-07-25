@@ -12,31 +12,146 @@ import {
   type AuditUser,
   type ChangesMessageData,
   type FormCreatedMessageData,
+  type FormDownloadedMessage,
+  type FormDraftCreatedFromLiveMessage,
+  type FormDraftDeletedMessage,
+  type FormLiveCreatedFromDraftMessage,
   type FormMessageDataBase,
+  type FormMigratedMessage,
+  type FormNotificationEmailChanges,
+  type FormNotificationEmailUpdatedMessageData,
+  type FormOrganisationChanges,
+  type FormOrganisationUpdatedMessage,
+  type FormOrganisationUpdatedMessageData,
+  type FormPrivacyNoticeChanges,
+  type FormPrivacyNoticeUpdatedMessageData,
+  type FormPublishedMessage,
+  type FormSubmissionGuidanceChanges,
+  type FormSubmissionGuidanceUpdatedMessageData,
   type FormSupportEmailChanges,
-  type FormSupportEmailUpdatedMessageData
+  type FormSupportEmailUpdatedMessage,
+  type FormSupportEmailUpdatedMessageData,
+  type FormSupportNotificationEmailUpdatedMessage,
+  type FormSupportOnlineChanges,
+  type FormSupportOnlineUpdatedMessage,
+  type FormSupportOnlineUpdatedMessageData,
+  type FormSupportPhoneChanges,
+  type FormSupportPhoneUpdatedMessage,
+  type FormSupportPhoneUpdatedMessageData,
+  type FormSupportPrivacyNoticeUpdatedMessage,
+  type FormSupportSubmissionGuidanceUpdatedMessage,
+  type FormTeamEmailChanges,
+  type FormTeamEmailUpdatedMessage,
+  type FormTeamEmailUpdatedMessageData,
+  type FormTeamNameChanges,
+  type FormTeamNameUpdatedMessage,
+  type FormTeamNameUpdatedMessageData,
+  type FormTitleChanges,
+  type FormTitleUpdatedMessage,
+  type FormTitleUpdatedMessageData,
+  type FormUpdatedMessage,
+  type FormUpdatedMessageData,
+  type FormUploadedChanges,
+  type FormUploadedMessage,
+  type FormUploadedMessageData
 } from '~/src/form/form-audit/types.js'
 
 export const formMessageDataBase = Joi.object<FormMessageDataBase>({
-  formId: Joi.string().trim().required(),
-  slug: Joi.string().trim().required()
+  formId: Joi.string().required(),
+  slug: Joi.string().required()
 })
 
 export const formCreatedMessageData =
   formMessageDataBase.append<FormCreatedMessageData>({
-    title: Joi.string().trim().required(),
-    organisation: Joi.string().trim().required(),
-    teamName: Joi.string().trim().required(),
-    teamEmail: Joi.string().trim().required()
+    title: Joi.string().required(),
+    organisation: Joi.string().required(),
+    teamName: Joi.string().required(),
+    teamEmail: Joi.string().required()
   })
 
-export const supportEmailChanges = Joi.object<FormSupportEmailChanges>().keys({
-  address: Joi.string().email().required(),
-  responseTime: Joi.string().required()
-})
+export const formUpdatedMessageData =
+  formMessageDataBase.append<FormUpdatedMessageData>({
+    description: Joi.string().trim().required()
+  })
 
-export function supportEmailUpdatedMessageData<T>(schema: ObjectSchema<T>) {
-  return formMessageDataBase.append<FormSupportEmailUpdatedMessageData>({
+export const formTitleChanges = Joi.object<FormTitleChanges>()
+  .keys({
+    title: Joi.string().required()
+  })
+  .required()
+
+export const formOrganisationChanges = Joi.object<FormOrganisationChanges>()
+  .keys({
+    organisation: Joi.string().required()
+  })
+  .required()
+
+export const formTeamNameChanges = Joi.object<FormTeamNameChanges>()
+  .keys({
+    teamName: Joi.string().required()
+  })
+  .required()
+
+export const formTeamEmailChanges = Joi.object<FormTeamEmailChanges>()
+  .keys({
+    teamEmail: Joi.string().required()
+  })
+  .required()
+
+export const formSupportPhoneChanges = Joi.object<FormSupportPhoneChanges>()
+  .keys({
+    phone: Joi.string().required()
+  })
+  .required()
+
+export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
+  .keys({
+    url: Joi.string().required(),
+    text: Joi.string().required()
+  })
+  .required()
+
+export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
+  .keys({
+    privacyNoticeUrl: Joi.string().required()
+  })
+  .required()
+
+export const formNotificationEmailChanges =
+  Joi.object<FormNotificationEmailChanges>()
+    .keys({
+      notificationEmail: Joi.string().required()
+    })
+    .required()
+
+export const formSubmissionGuidanceChanges =
+  Joi.object<FormSubmissionGuidanceChanges>()
+    .keys({
+      submissionGuidance: Joi.string().required()
+    })
+    .required()
+
+export const formUploadedChanges = Joi.object<FormUploadedChanges>()
+  .keys({
+    value: Joi.string().required()
+  })
+  .required()
+
+export const formTitleUpdatedMessageData =
+  formMessageDataBase.append<FormTitleChanges>({
+    title: Joi.string().trim().required()
+  })
+
+export const formSupportEmailChanges =
+  Joi.object<FormSupportEmailChanges>().keys({
+    address: Joi.string().email().required(),
+    responseTime: Joi.string().required()
+  })
+
+export function formChangesMessageData<T, U>(
+  schema: ObjectSchema<T>
+): ObjectSchema<U> {
+  return formMessageDataBase.append<U>({
     changes: Joi.object<ChangesMessageData<T>>().keys({
       previous: schema,
       new: schema
@@ -56,7 +171,24 @@ export const validCategories = [
 
 export const validTypes = [
   AuditEventMessageType.FORM_CREATED,
-  AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
+  AuditEventMessageType.FORM_PUBLISHED,
+  AuditEventMessageType.FORM_TITLE_UPDATED,
+  AuditEventMessageType.FORM_ORGANISATION_UPDATED,
+  AuditEventMessageType.FORM_TEAM_NAME_UPDATED,
+  AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED,
+  AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED,
+  AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED,
+  AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED,
+  AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED,
+  AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED,
+  AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED,
+  AuditEventMessageType.FORM_UPDATED,
+  AuditEventMessageType.FORM_JSON_UPLOADED,
+  AuditEventMessageType.FORM_JSON_DOWNLOADED,
+  AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE,
+  AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
+  AuditEventMessageType.FORM_DRAFT_DELETED,
+  AuditEventMessageType.FORM_MIGRATED
 ]
 
 export const validMessageSchemaVersions = [AuditEventMessageSchemaVersion.V1]
@@ -79,10 +211,103 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
         then: formCreatedMessageData
       },
       {
+        is: Joi.string().trim().valid(AuditEventMessageType.FORM_TITLE_UPDATED),
+        then: formChangesMessageData<
+          FormTitleChanges,
+          FormTitleUpdatedMessageData
+        >(formTitleChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_ORGANISATION_UPDATED),
+        then: formChangesMessageData<
+          FormOrganisationChanges,
+          FormOrganisationUpdatedMessageData
+        >(formOrganisationChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_TEAM_NAME_UPDATED),
+        then: formChangesMessageData<
+          FormTeamNameChanges,
+          FormTeamNameUpdatedMessageData
+        >(formTeamNameChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED),
+        then: formChangesMessageData<
+          FormTeamEmailChanges,
+          FormTeamEmailUpdatedMessageData
+        >(formTeamEmailChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED),
+        then: formChangesMessageData<
+          FormSupportPhoneChanges,
+          FormSupportPhoneUpdatedMessageData
+        >(formSupportPhoneChanges)
+      },
+      {
         is: Joi.string()
           .trim()
           .valid(AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED),
-        then: supportEmailUpdatedMessageData(supportEmailChanges)
+        then: formChangesMessageData<
+          FormSupportEmailChanges,
+          FormSupportEmailUpdatedMessageData
+        >(formSupportEmailChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED),
+        then: formChangesMessageData<
+          FormSupportOnlineChanges,
+          FormSupportOnlineUpdatedMessageData
+        >(formSupportOnlineChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED),
+        then: formChangesMessageData<
+          FormPrivacyNoticeChanges,
+          FormPrivacyNoticeUpdatedMessageData
+        >(formPrivacyNoticeChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED),
+        then: formChangesMessageData<
+          FormNotificationEmailChanges,
+          FormNotificationEmailUpdatedMessageData
+        >(formNotificationEmailChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED),
+        then: formChangesMessageData<
+          FormSubmissionGuidanceChanges,
+          FormSubmissionGuidanceUpdatedMessageData
+        >(formSubmissionGuidanceChanges)
+      },
+      {
+        is: Joi.string().trim().valid(AuditEventMessageType.FORM_JSON_UPLOADED),
+        then: formChangesMessageData<
+          FormUploadedChanges,
+          FormUploadedMessageData
+        >(formUploadedChanges)
+      },
+      {
+        is: Joi.string().trim().valid(AuditEventMessageType.FORM_UPDATED),
+        then: formUpdatedMessageData
       }
     ]
   }),
