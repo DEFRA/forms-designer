@@ -54,8 +54,12 @@ export function organisationViewModel(metadata, validation) {
     field: {
       id: 'organisation',
       name: 'organisation',
-      legend: {
-        text: 'Choose a lead organisation for this form'
+      fieldset: {
+        legend: {
+          text: 'Choose a lead organisation for this form',
+          isPageHeading: true,
+          classes: 'govuk-fieldset__legend--l'
+        }
       },
       items: organisations.map((organisation) => ({
         text: organisation,
