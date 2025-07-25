@@ -120,11 +120,6 @@ export const formUploadedChanges = Joi.object<FormUploadedChanges>()
   })
   .required()
 
-export const formTitleUpdatedMessageData =
-  formMessageDataBase.append<FormTitleChanges>({
-    title: Joi.string().trim().required()
-  })
-
 export const formSupportEmailChanges =
   Joi.object<FormSupportEmailChanges>().keys({
     address: Joi.string().email().required(),
