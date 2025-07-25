@@ -50,6 +50,15 @@ export interface Config {
   tracing: {
     header: string
   }
+  ai: {
+    llmEndpoint: string
+    anthropic: {
+      endpoint: string
+      key: string
+      version: string
+      maxTokens: number
+    }
+  }
 }
 
 // Define config schema
@@ -156,6 +165,16 @@ const schema = joi.object<Config>({
   roleEditorGroupId: joi.string().required(),
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
+  }),
+  ai: joi.object({
+    llmEndpoint: joi.string().required(),
+    anthropic: joi.object({
+      maxTokens: joi.number().default(1024),
+      model: joi.string().default(''),
+      endpoint: joi.string().default('https://api.anthropic.com'),
+      key: joi.string().required(),
+      version: joi.string().default('2023-06-01')
+    })
   })
 })
 
@@ -195,6 +214,14 @@ const result = schema.validate(
     roleEditorGroupId: process.env.ROLE_EDITOR_GROUP_ID,
     tracing: {
       header: process.env.TRACING_HEADER
+    },
+    ai: {
+      llmEndpoint: process.env.AI_LLM_ENDPOINT,
+      anthropic: {
+        endpoint: process.env.AI_ANTHROPIC_ENDPOINT,
+        key: process.env.AI_ANTHROPIC_KEY,
+        version: process.env.AI_ANTHROPIC_VERSION
+      }
     }
   },
   { abortEarly: false }
