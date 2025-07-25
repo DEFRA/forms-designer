@@ -12,18 +12,18 @@ import {
   type AuditUser,
   type ChangesMessageData,
   type FormCreatedMessageData,
-  type FormMessageData,
+  type FormMessageDataBase,
   type SupportEmailChanges,
   type SupportEmailUpdatedMessageData
 } from '~/src/form/form-audit/types.js'
 
-export const formMessageDataSchema = Joi.object<FormMessageData>({
+export const formMessageDataBase = Joi.object<FormMessageDataBase>({
   formId: Joi.string().trim().required(),
   slug: Joi.string().trim().required()
 })
 
 export const formCreatedMessageData =
-  formMessageDataSchema.append<FormCreatedMessageData>({
+  formMessageDataBase.append<FormCreatedMessageData>({
     title: Joi.string().trim().required(),
     organisation: Joi.string().trim().required(),
     teamName: Joi.string().trim().required(),
@@ -36,7 +36,7 @@ export const supportEmailChanges = Joi.object<SupportEmailChanges>().keys({
 })
 
 export function supportEmailUpdatedMessageData<T>(schema: ObjectSchema<T>) {
-  return formMessageDataSchema.append<SupportEmailUpdatedMessageData>({
+  return formMessageDataBase.append<SupportEmailUpdatedMessageData>({
     changes: Joi.object<ChangesMessageData<T>>().keys({
       previous: schema,
       new: schema
@@ -45,8 +45,8 @@ export function supportEmailUpdatedMessageData<T>(schema: ObjectSchema<T>) {
 }
 
 export const auditUserSchema = Joi.object<AuditUser>().keys({
-  id: Joi.string().uuid(),
-  displayName: Joi.string()
+  id: Joi.string().uuid().required(),
+  displayName: Joi.string().required()
 })
 
 export const validCategories = [
@@ -59,11 +59,11 @@ export const validTypes = [
   AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
 ]
 
-export const validMessageSchemaVersion = [AuditEventMessageSchemaVersion.V1]
+export const validMessageSchemaVersions = [AuditEventMessageSchemaVersion.V1]
 
 export const messageSchema = Joi.object<AuditMessage>().keys({
   schemaVersion: Joi.string()
-    .valid(...validMessageSchemaVersion)
+    .valid(...validMessageSchemaVersions)
     .required(),
   type: Joi.string().valid(...validTypes),
   category: Joi.string()
@@ -84,7 +84,8 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
         then: supportEmailUpdatedMessageData(supportEmailChanges)
       }
     ]
-  })
+  }),
+  messageCreatedAt: Joi.date().required()
 })
 
 export const auditEvent = Joi.object<AuditEvent>().keys({
@@ -94,6 +95,5 @@ export const auditEvent = Joi.object<AuditEvent>().keys({
 export const auditRecord = messageSchema.append<AuditRecord>({
   messageId: Joi.string().uuid().required(),
   entityId: Joi.string().required(),
-  messageCreatedAt: Joi.date().required(),
   recordCreatedAt: Joi.date().required()
 })
