@@ -40,6 +40,7 @@ export type MessageData =
   | SupportEmailUpdatedMessageData
 
 export interface MessageBase {
+  entityId: string
   schemaVersion: AuditEventMessageSchemaVersion
   category: AuditEventMessageCategory
   type: AuditEventMessageType
@@ -69,7 +70,6 @@ export interface AuditEvent {
 
 export type AuditRecord = AuditMessage & {
   messageId: string
-  entityId: string
   recordCreatedAt: Date
 }
 

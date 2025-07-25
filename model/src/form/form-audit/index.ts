@@ -62,6 +62,7 @@ export const validTypes = [
 export const validMessageSchemaVersions = [AuditEventMessageSchemaVersion.V1]
 
 export const messageSchema = Joi.object<AuditMessage>().keys({
+  entityId: Joi.string().required(),
   schemaVersion: Joi.string()
     .valid(...validMessageSchemaVersions)
     .required(),
