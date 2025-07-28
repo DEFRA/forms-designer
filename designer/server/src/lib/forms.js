@@ -195,6 +195,5 @@ export async function updateMetadata(id, metadata, token) {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, PaginationOptions, QueryOptions, QueryResult } from '@defra/forms-model'
- * @import Wreck from '@hapi/wreck'
+ * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, QueryOptions, QueryResult } from '@defra/forms-model'
  */
