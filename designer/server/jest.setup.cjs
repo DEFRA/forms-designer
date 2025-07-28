@@ -5,6 +5,7 @@ const { Duration } = require('luxon')
 process.env.APP_BASE_URL = `http://${hostname()}:3000`
 process.env.AZURE_CLIENT_ID = 'dummy'
 process.env.AZURE_CLIENT_SECRET = 'dummy'
+process.env.ENTITLEMENT_URL = 'http://localhost:3003'
 process.env.MANAGER_URL = 'http://localhost:3001'
 process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL = 'dummy'
 process.env.PREVIEW_URL = 'http://localhost:3009'

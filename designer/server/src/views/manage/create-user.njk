@@ -1,0 +1,36 @@
+{% extends "layouts/page.njk" %}
+
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+  <form method="post" novalidate>
+
+    {{ govukInput(fields.emailAddress) }}
+
+    {{ govukRadios(fields.userRole) }}
+
+    {{ govukButton({
+      text: 'Add user'
+    }) }}
+
+  </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
