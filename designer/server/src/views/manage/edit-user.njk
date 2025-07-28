@@ -31,9 +31,29 @@
 
     {{ govukRadios(fields.userRole) }}
 
-    {{ govukButton({
-      text: 'Add user'
-    }) }}
+    {% if (isEditing) %}
+
+      <div class="govuk-button-group">
+
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+        {{ govukButton({
+          text: 'Remove user',
+          classes: 'govuk-button--warning'
+        }) }}
+
+        <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
+
+      </div>
+    {% else %}
+
+      {{ govukButton({
+        text: 'Add user'
+      }) }}
+
+    {% endif %}
 
   </form>
 

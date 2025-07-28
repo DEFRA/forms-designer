@@ -22,11 +22,14 @@ export function getTabs() {
 
 /**
  * @param {EntitlementRole[]} allRoles
+ * @param { EntitlementUser | undefined } user
  * @param {ValidationFailure<ManageUser>} [validation]
  */
-export function createUserViewModel(allRoles, validation) {
+export function createOrEditUserViewModel(allRoles, user, validation) {
   const { formValues, formErrors } = validation ?? {}
+  const [role] = user?.roles ?? []
   return {
+    isEditing: user !== undefined,
     pageTitle: MANAGE_USERS_TEXT,
     navigation: getTabs(),
     backLink: {
@@ -34,7 +37,7 @@ export function createUserViewModel(allRoles, validation) {
       href: '/manage/users'
     },
     pageHeading: {
-      text: 'Add new user',
+      text: user ? 'Manage user account' : 'Add new user',
       size: 'large'
     },
     errorList: buildErrorList(formErrors),
@@ -47,9 +50,10 @@ export function createUserViewModel(allRoles, validation) {
           classes: GOVUK_LABEL__M
         },
         hint: {
-          text: 'Must be a Defra group email adrress'
+          text: 'Must be a Defra group email address'
         },
-        value: formValues?.emailAddress,
+        value: formValues?.emailAddress ?? user?.userId,
+        disabled: user !== undefined,
         ...insertValidationErrors(formErrors?.emailAddress)
       },
       userRole: {
@@ -66,7 +70,7 @@ export function createUserViewModel(allRoles, validation) {
           text: role.name,
           value: role.code
         })),
-        value: formValues?.userRole,
+        value: formValues?.userRole ?? role,
         ...insertValidationErrors(formErrors?.userRole)
       }
     }

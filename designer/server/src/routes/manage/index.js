@@ -1,3 +1,3 @@
-import createUser from '~/src/routes/manage/create-user.js'
+import createOrEditUser from '~/src/routes/manage/edit-user.js'
 
-export default [createUser].flat()
+export default [createOrEditUser].flat()

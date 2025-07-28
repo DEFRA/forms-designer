@@ -4,7 +4,7 @@ import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
-import { addUser, getRoles } from '~/src/lib/manage.js'
+import { addUser, getRoles, getUser } from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -32,13 +32,14 @@ describe('Create user routes', () => {
   beforeEach(() => {
     jest.mocked(getRoles).mockResolvedValue(roleList)
     jest.mocked(addUser).mockResolvedValue({ emailAddress: '', userRole: '' })
+    jest.mocked(getUser).mockResolvedValue(undefined)
   })
 
-  describe('GET /manage/users/create', () => {
-    test('should render view', async () => {
+  describe('GET /manage/users/new', () => {
+    test('should render view when creating', async () => {
       const options = {
         method: 'get',
-        url: '/manage/users/create',
+        url: '/manage/users/new',
         auth
       }
 
@@ -55,13 +56,44 @@ describe('Create user routes', () => {
       expect($buttons).toHaveLength(1)
       expect(response.result).toMatchSnapshot()
     })
+
+    test('should render view when editing', async () => {
+      jest.mocked(getUser).mockResolvedValue({
+        userId: '12345',
+        roles: ['admin']
+      })
+      const options = {
+        method: 'get',
+        url: '/manage/users/12345',
+        auth
+      }
+
+      const { container, response } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByText('Manage user account')
+      const $radios = container.getAllByRole('radio')
+      const $buttonSave = container.getAllByRole('button', {
+        name: 'Save changes'
+      })
+      const $buttonRemove = container.getAllByRole('button', {
+        name: 'Remove user'
+      })
+
+      expect($mastheadHeading).toBeDefined()
+      expect($radios).toHaveLength(2)
+      expect($radios[0].outerHTML).toContain('value="admin"')
+      expect($radios[1].outerHTML).toContain('value="form-creator"')
+      expect($buttonSave).toHaveLength(1)
+      expect($buttonRemove).toHaveLength(1)
+      expect(response.result).toMatchSnapshot()
+    })
   })
 
-  describe('POST /manage/users/create', () => {
+  describe('POST /manage/users/new', () => {
     test('should add user and redirect if valid payload', async () => {
       const options = {
         method: 'post',
-        url: '/manage/users/create',
+        url: '/manage/users/new',
         auth,
         payload: { emailAddress: 'me@here.com', userRole: 'admin' }
       }
@@ -81,7 +113,7 @@ describe('Create user routes', () => {
     test('should error if required fields not entered', async () => {
       const options = {
         method: 'post',
-        url: '/manage/users/create',
+        url: '/manage/users/new',
         auth,
         payload: { emailAddress: '' }
       }
@@ -91,7 +123,7 @@ describe('Create user routes', () => {
       } = await renderResponse(server, options)
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/manage/users/create')
+      expect(headers.location).toBe('/manage/users/new')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
         new Joi.ValidationError(
@@ -109,7 +141,7 @@ describe('Create user routes', () => {
       })
       const options = {
         method: 'post',
-        url: '/manage/users/create',
+        url: '/manage/users/new',
         auth,
         payload: { emailAddress: 'me@here.com', userRole: 'admin' }
       }
@@ -127,7 +159,7 @@ describe('Create user routes', () => {
       })
       const options = {
         method: 'post',
-        url: '/manage/users/create',
+        url: '/manage/users/new',
         auth,
         payload: { emailAddress: 'me@here.com', userRole: 'admin' }
       }
@@ -137,7 +169,7 @@ describe('Create user routes', () => {
       } = await renderResponse(server, options)
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/manage/users/create')
+      expect(headers.location).toBe('/manage/users/new')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
         new Joi.ValidationError('An error occurred', [], undefined),

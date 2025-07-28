@@ -1,4 +1,5 @@
 import config from '~/src/config.js'
+import { getUserFromEntra } from '~/src/lib/entra.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
@@ -21,6 +22,22 @@ export async function getRoles(token) {
 }
 
 /**
+ * Get user
+ * @param {string} token
+ * @param {string} userId
+ */
+export async function getUser(token, userId) {
+  const getJsonByType =
+    /** @type {typeof getJson<{ entity: EntitlementUser }>} */ (getJson)
+
+  const requestUrl = new URL(userId, usersEndpoint)
+
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body.entity
+}
+
+/**
  * Add a user
  * @param {string} token
  * @param {{ userId: string, roles: string[] }} userDetails
@@ -33,8 +50,13 @@ export async function addUser(token, userDetails) {
 
   const requestUrl = new URL(usersEndpoint)
 
+  const { userId } = await getUserFromEntra(userDetails.userId)
+
   const { body } = await postJsonByType(requestUrl, {
-    payload: userDetails,
+    payload: {
+      userId,
+      roles: userDetails.roles
+    },
     ...getHeaders(token)
   })
 

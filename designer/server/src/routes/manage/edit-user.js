@@ -5,7 +5,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { addUser, getRoles } from '~/src/lib/manage.js'
+import { addUser, getRoles, getUser } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/manage/users.js'
@@ -30,10 +30,11 @@ export default [
   /** @type {ServerRoute} */
   ({
     method: 'GET',
-    path: '/manage/users/create',
+    path: '/manage/users/{userId}',
     async handler(request, h) {
-      const { auth, yar } = request
+      const { auth, yar, params } = request
       const { token } = auth.credentials
+      const { userId } = params
 
       // Get list of possible roles
       const roles = await getRoles(token)
@@ -43,9 +44,14 @@ export default [
           getValidationErrorsFromSession(yar, errorKey)
         )
 
+      let user
+      if (userId !== 'new') {
+        user = await getUser(token, userId)
+      }
+
       return h.view(
-        'manage/create-user',
-        viewModel.createUserViewModel(roles, validation)
+        'manage/edit-user',
+        viewModel.createOrEditUserViewModel(roles, user, validation)
       )
     },
     options: {
@@ -64,7 +70,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/manage/users/create',
+    path: '/manage/users/{userId}',
     async handler(request, h) {
       const { payload, yar, auth } = request
       const { token } = auth.credentials
