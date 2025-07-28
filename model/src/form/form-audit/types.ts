@@ -52,15 +52,15 @@ export interface FormSupportOnlineChanges {
 }
 
 export interface FormPrivacyNoticeChanges {
-  privacyNoticeUrl: string
+  privacyNoticeUrl?: string
 }
 
 export interface FormNotificationEmailChanges {
-  notificationEmail: string
+  notificationEmail?: string
 }
 
 export interface FormSubmissionGuidanceChanges {
-  submissionGuidance: string
+  submissionGuidance?: string
 }
 
 export interface FormUploadedChanges {
