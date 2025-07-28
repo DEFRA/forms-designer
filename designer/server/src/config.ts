@@ -19,6 +19,7 @@ export interface Config {
   clientV2Views: string
   clientDir: string
   clientSrc: string
+  entitlementUrl: string
   previewUrl: string
   managerUrl: string
   submissionUrl: string
@@ -91,6 +92,7 @@ const schema = joi.object<Config>({
       .string()
       .default(resolve(import.meta.dirname, '../../client/dist'))
   }),
+  entitlementUrl: joi.string().required(),
   managerUrl: joi.string().required(),
   submissionUrl: joi.string().required(),
   previewUrl: joi.string().required(),
@@ -165,6 +167,7 @@ const result = schema.validate(
     port: process.env.PORT,
     cdpEnvironment: process.env.ENVIRONMENT,
     env: process.env.NODE_ENV,
+    entitlementUrl: process.env.ENTITLEMENT_URL,
     managerUrl: process.env.MANAGER_URL,
     submissionUrl: process.env.SUBMISSION_URL,
     previewUrl: process.env.PREVIEW_URL,
