@@ -42,7 +42,7 @@ describe('Create user routes', () => {
         auth
       }
 
-      const { container } = await renderResponse(server, options)
+      const { container, response } = await renderResponse(server, options)
 
       const $mastheadHeading = container.getByText('Add new user')
       const $radios = container.getAllByRole('radio')
@@ -53,6 +53,7 @@ describe('Create user routes', () => {
       expect($radios[0].outerHTML).toContain('value="admin"')
       expect($radios[1].outerHTML).toContain('value="form-creator"')
       expect($buttons).toHaveLength(1)
+      expect(response.result).toMatchSnapshot()
     })
   })
 
