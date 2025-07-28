@@ -186,6 +186,7 @@ exports[`Create user routes GET /manage/users/create should render view 1`] = `
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   
+
   <form method="post" novalidate>
 
     <div class="govuk-form-group">

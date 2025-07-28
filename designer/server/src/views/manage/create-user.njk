@@ -5,6 +5,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -15,6 +16,14 @@
     classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink
   }) %}
+
+  {% if errorList | length %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errorList,
+      classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
 
   <form method="post" novalidate>
 

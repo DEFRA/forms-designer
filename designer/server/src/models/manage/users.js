@@ -1,3 +1,4 @@
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 
@@ -36,6 +37,7 @@ export function createUserViewModel(allRoles, validation) {
       text: 'Add new user',
       size: 'large'
     },
+    errorList: buildErrorList(formErrors),
     fields: {
       emailAddress: {
         id: 'emailAddress',
