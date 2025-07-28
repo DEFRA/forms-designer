@@ -1,4 +1,5 @@
 const editUrl = '/manage/users/'
+const MANAGE_USERS_TEXT = 'Manage users'
 
 export function getTabs() {
   return [
@@ -8,7 +9,7 @@ export function getTabs() {
       isActive: false
     },
     {
-      text: 'Manage users',
+      text: MANAGE_USERS_TEXT,
       Url: '/manage/users',
       isActive: true
     }
@@ -45,14 +46,14 @@ export function usersViewModel(users) {
   ])
 
   return {
-    pageTitle: 'Manage users',
+    pageTitle: MANAGE_USERS_TEXT,
     navigation: getTabs(),
     backLink: {
       text: 'Back to form library',
       href: '/library'
     },
     pageHeading: {
-      text: 'Manage users',
+      text: MANAGE_USERS_TEXT,
       size: 'large'
     },
     pageActions: [
