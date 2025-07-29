@@ -1,7 +1,13 @@
 import config from '~/src/config.js'
 import { createMockResponse } from '~/src/lib/__stubs__/editor.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
-import { addUser, getRoles, getUsers } from '~/src/lib/manage.js'
+import { getJson, postJson, putJson } from '~/src/lib/fetch.js'
+import {
+  addUser,
+  getRoles,
+  getUser,
+  getUsers,
+  updateUser
+} from '~/src/lib/manage.js'
 
 jest.mock('~/src/lib/fetch.js')
 
@@ -34,6 +40,24 @@ const rolesList = [
 ]
 
 describe('manage.js', () => {
+  describe('getUser', () => {
+    it('should get the user details', async () => {
+      const userObj = {
+        userId: '12345',
+        roles: ['admin'],
+        scopes: ['user-edit', 'form-delete']
+      }
+      jest.mocked(getJson).mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {
+          entity: userObj
+        }
+      })
+      const result = await getUser(token, userObj.userId)
+      expect(result).toEqual(userObj)
+    })
+  })
+
   describe('getRoles', () => {
     it('should get the list of roles', async () => {
       jest.mocked(getJson).mockResolvedValueOnce({
@@ -59,6 +83,25 @@ describe('manage.js', () => {
 
       expect(postJson).toHaveBeenCalledWith(usersEndpoint, {
         payload,
+        headers: { Authorization: `Bearer ${token}` }
+      })
+    })
+  })
+
+  describe('updateUser', () => {
+    it('should update the user', async () => {
+      jest.mocked(putJson).mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      const payload = { userId: 'my-id', roles: ['role1'] }
+      const result = await updateUser(token, payload)
+      expect(result).toEqual({})
+
+      expect(putJson).toHaveBeenCalledWith(usersEndpoint, {
+        payload: {
+          roles: ['role1']
+        },
         headers: { Authorization: `Bearer ${token}` }
       })
     })

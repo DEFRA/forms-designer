@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Create user routes GET /manage/users/new should render view when creating 1`] = `
+exports[`Create and edit user routes GET /manage/users/new should render view when creating 1`] = `
 "<!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
@@ -309,7 +309,7 @@ exports[`Create user routes GET /manage/users/new should render view when creati
 "
 `;
 
-exports[`Create user routes GET /manage/users/new should render view when editing 1`] = `
+exports[`Create and edit user routes GET /manage/users/new should render view when editing 1`] = `
 "<!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>

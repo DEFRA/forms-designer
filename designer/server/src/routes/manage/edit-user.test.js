@@ -5,14 +5,14 @@ import Joi from 'joi'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
-import { addUser, getRoles, getUser } from '~/src/lib/manage.js'
+import { addUser, getRoles, getUser, updateUser } from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
 jest.mock('~/src/lib/error-helper.js')
 
-describe('Create user routes', () => {
+describe('Create and edit user routes', () => {
   /** @type {Server} */
   let server
 
@@ -167,6 +167,32 @@ describe('Create user routes', () => {
         new Joi.ValidationError('An error occurred', [], undefined),
         'manageUsersValidationFailure'
       )
+    })
+  })
+
+  describe('POST /manage/users/{userId} when editing', () => {
+    test('should update user and redirect if valid payload', async () => {
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345',
+        auth,
+        payload: {
+          userId: '12345',
+          emailAddress: 'me@here.com',
+          userRole: 'admin'
+        }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users')
+      expect(updateUser).toHaveBeenCalledWith(expect.anything(), {
+        userId: '12345',
+        roles: ['admin']
+      })
     })
   })
 })

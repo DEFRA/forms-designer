@@ -66,9 +66,9 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
             isPageHeading: false
           }
         },
-        items: allRoles.map((role) => ({
-          text: role.name,
-          value: role.code
+        items: allRoles.map((r) => ({
+          text: r.name,
+          value: r.code
         })),
         value: formValues?.userRole ?? role,
         ...insertValidationErrors(formErrors?.userRole)
