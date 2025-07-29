@@ -38,17 +38,17 @@ export interface FormTeamEmailChanges {
 }
 
 export interface FormSupportPhoneChanges {
-  phone: string
+  phone?: string
 }
 
 export interface FormSupportEmailChanges {
-  address: string
-  responseTime: string
+  address?: string
+  responseTime?: string
 }
 
 export interface FormSupportOnlineChanges {
-  url: string
-  text: string
+  url?: string
+  text?: string
 }
 
 export interface FormPrivacyNoticeChanges {
