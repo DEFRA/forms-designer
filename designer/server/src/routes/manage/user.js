@@ -42,12 +42,14 @@ const userIdSchema = Joi.object({
   userId: Joi.string().required()
 })
 
+const MANAGE_USERS_BASE_URL = '/manage/users'
+
 export default [
   /** @type {ServerRoute} */
   // Add a new user
   ({
     method: 'GET',
-    path: '/manage/users/new',
+    path: `${MANAGE_USERS_BASE_URL}/new`,
     async handler(request, h) {
       const { auth, yar } = request
       const { token } = auth.credentials
@@ -80,7 +82,7 @@ export default [
   // Edit an existing user
   ({
     method: 'GET',
-    path: '/manage/users/{userId}/amend',
+    path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
     async handler(request, h) {
       const { auth, yar, params } = request
       const { token } = auth.credentials
@@ -116,7 +118,7 @@ export default [
   // Delete a user
   ({
     method: 'GET',
-    path: '/manage/users/{userId}/delete',
+    path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
     async handler(request, h) {
       const { auth, params } = request
       const { token } = auth.credentials
@@ -147,7 +149,7 @@ export default [
   // Post new user details
   ({
     method: 'POST',
-    path: '/manage/users/new',
+    path: `${MANAGE_USERS_BASE_URL}/new`,
     async handler(request, h) {
       const { payload, yar, auth } = request
       const { token } = auth.credentials
@@ -161,7 +163,7 @@ export default [
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
         // Redirect back to list of users
-        return h.redirect('/manage/users').code(StatusCodes.SEE_OTHER)
+        return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
@@ -193,7 +195,7 @@ export default [
   // Post edited user details
   ({
     method: 'POST',
-    path: '/manage/users/{userId}/amend',
+    path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
     async handler(request, h) {
       const { payload, yar, auth, params } = request
       const { token } = auth.credentials
@@ -208,7 +210,7 @@ export default [
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
         // Redirect back to list of users
-        return h.redirect('/manage/users').code(StatusCodes.SEE_OTHER)
+        return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
@@ -241,7 +243,7 @@ export default [
   // Post operation for delete confirmation
   ({
     method: 'POST',
-    path: '/manage/users/{userId}/delete',
+    path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
     async handler(request, h) {
       const { yar, auth, params } = request
       const { token } = auth.credentials
@@ -253,7 +255,7 @@ export default [
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
         // Redirect back to list of users
-        return h.redirect('/manage/users').code(StatusCodes.SEE_OTHER)
+        return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
