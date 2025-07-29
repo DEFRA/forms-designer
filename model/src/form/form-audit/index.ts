@@ -105,21 +105,21 @@ export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: Joi.string().required()
+    privacyNoticeUrl: Joi.string()
   })
   .required()
 
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
     .keys({
-      notificationEmail: Joi.string().required()
+      notificationEmail: Joi.string()
     })
     .required()
 
 export const formSubmissionGuidanceChanges =
   Joi.object<FormSubmissionGuidanceChanges>()
     .keys({
-      submissionGuidance: Joi.string().required()
+      submissionGuidance: Joi.string()
     })
     .required()
 
