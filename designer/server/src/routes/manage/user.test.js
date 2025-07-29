@@ -172,6 +172,91 @@ describe('Create and edit user routes', () => {
     })
   })
 
+  describe('POST /manage/users/12345/amend', () => {
+    test('should amend user and redirect if valid payload', async () => {
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/amend',
+        auth,
+        payload: { userRole: 'admin' }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users')
+      expect(updateUser).toHaveBeenCalledWith(expect.anything(), {
+        userId: '12345',
+        roles: ['admin']
+      })
+    })
+
+    test('should error if required fields not entered', async () => {
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/amend',
+        auth,
+        payload: { userRole: '' }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users/12345/amend')
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        new Joi.ValidationError('Select a role', [], undefined),
+        'manageUsersValidationFailure'
+      )
+    })
+
+    test('should error if API failure (non-Boom)', async () => {
+      jest.mocked(updateUser).mockImplementationOnce(() => {
+        throw new Error('api error')
+      })
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/amend',
+        auth,
+        payload: { userRole: 'admin' }
+      }
+
+      const {
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
+
+    test('should error if API failure (handle Boom error)', async () => {
+      jest.mocked(updateUser).mockImplementationOnce(() => {
+        throw Boom.boomify(new Error('api boom error'))
+      })
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/amend',
+        auth,
+        payload: { userRole: 'admin' }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users/12345/amend')
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        new Joi.ValidationError('An error occurred', [], undefined),
+        'manageUsersValidationFailure'
+      )
+    })
+  })
+
   describe('POST /manage/users/{userId}/amend when editing', () => {
     test('should update user and redirect if valid payload', async () => {
       const options = {
