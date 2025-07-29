@@ -12,6 +12,7 @@
 {% block content %}
   {% call appPageBody({
     heading: pageHeading,
+    caption: displayName,
     useNewMasthead: true,
     classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink
@@ -39,12 +40,7 @@
           text: 'Save changes'
         }) }}
 
-        <!-- to be implemented later
-        {{ govukButton({
-          text: 'Remove user',
-          classes: 'govuk-button--warning'
-        }) }}
-        -->
+        <a href="/manage/users/{{ userId }}/delete" id="remove-user-button" class="govuk-button govuk-button--warning">Remove user</a>
 
         <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
 

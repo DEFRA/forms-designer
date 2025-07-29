@@ -5,7 +5,13 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { addUser, getRoles, getUser, updateUser } from '~/src/lib/manage.js'
+import {
+  addUser,
+  deleteUser,
+  getRoles,
+  getUser,
+  updateUser
+} from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/manage/users.js'
@@ -38,9 +44,43 @@ const userIdSchema = Joi.object({
 
 export default [
   /** @type {ServerRoute} */
+  // Add a new user
   ({
     method: 'GET',
-    path: '/manage/users/{userId}/{amend?}',
+    path: '/manage/users/new',
+    async handler(request, h) {
+      const { auth, yar } = request
+      const { token } = auth.credentials
+
+      // Get list of possible roles
+      const roles = await getRoles(token)
+
+      const validation =
+        /** @type { ValidationFailure<ManageUser> | undefined } */ (
+          getValidationErrorsFromSession(yar, errorKey)
+        )
+
+      return h.view(
+        'manage/user',
+        viewModel.createOrEditUserViewModel(roles, undefined, validation)
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
+  /** @type {ServerRoute} */
+  // Edit an existing user
+  ({
+    method: 'GET',
+    path: '/manage/users/{userId}/amend',
     async handler(request, h) {
       const { auth, yar, params } = request
       const { token } = auth.credentials
@@ -54,10 +94,7 @@ export default [
           getValidationErrorsFromSession(yar, errorKey)
         )
 
-      let user
-      if (userId !== 'new') {
-        user = await getUser(token, userId)
-      }
+      const user = await getUser(token, userId)
 
       return h.view(
         'manage/user',
@@ -75,9 +112,39 @@ export default [
     }
   }),
 
+  /** @type {ServerRoute} */
+  // Delete a user
+  ({
+    method: 'GET',
+    path: '/manage/users/{userId}/delete',
+    async handler(request, h) {
+      const { auth, params } = request
+      const { token } = auth.credentials
+      const { userId } = params
+
+      // Validate the userId
+      const user = await getUser(token, userId)
+
+      return h.view(
+        'forms/confirmation-page',
+        viewModel.deleteUserConfirmationPageViewModel(user)
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
   /**
    * @satisfies {ServerRoute<{ Payload: ManageUser }>}
    */
+  // Post new user details
   ({
     method: 'POST',
     path: '/manage/users/new',
@@ -123,6 +190,7 @@ export default [
   /**
    * @satisfies {ServerRoute<{ Payload: ManageUser }>}
    */
+  // Post edited user details
   ({
     method: 'POST',
     path: '/manage/users/{userId}/amend',
@@ -157,6 +225,44 @@ export default [
           return redirectWithErrors(request, h, error, errorKey)
         }
       },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  // Post operation for delete confirmation
+  ({
+    method: 'POST',
+    path: '/manage/users/{userId}/delete',
+    async handler(request, h) {
+      const { yar, auth, params } = request
+      const { token } = auth.credentials
+      const { userId } = params
+
+      try {
+        await deleteUser(token, userId)
+
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+        // Redirect back to list of users
+        return h.redirect('/manage/users').code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
+        throw err
+      }
+    },
+    options: {
       auth: {
         mode: 'required',
         access: {
