@@ -1,5 +1,6 @@
 import { createServer } from '~/src/createServer.js'
-import { getUsers } from '~/src/lib/manage.js'
+import { allRoles } from '~/src/lib/__stubs__/roles.js'
+import { getRoles, getUsers } from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -16,20 +17,21 @@ describe('Manage users route', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    jest.mocked(getRoles).mockResolvedValueOnce(allRoles)
   })
 
   const userList = [
     {
       userId: 'id1',
-      fullName: 'John Smith',
-      emailAddress: 'john.smith@here.com',
+      displayName: 'John Smith',
+      email: 'john.smith@here.com',
       roles: ['admin'],
       scopes: []
     },
     {
       userId: 'id2',
-      fullName: 'Peter Jones',
-      emailAddress: 'peter.jones@email.com',
+      displayName: 'Peter Jones',
+      email: 'peter.jones@email.com',
       roles: ['form-creator'],
       scopes: []
     }
@@ -84,5 +86,4 @@ describe('Manage users route', () => {
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { ConditionWrapperV2 } from '@defra/forms-model'
  */

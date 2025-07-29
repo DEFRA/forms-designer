@@ -1,0 +1,67 @@
+{% extends "layouts/page.njk" %}
+
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+  {% if errorList | length %}
+    {{ govukErrorSummary({
+      titleText: "There is a problem",
+      errorList: errorList,
+      classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+    }) }}
+  {% endif %}
+
+  <form method="post" novalidate>
+
+    {{ govukInput(fields.emailAddress) }}
+
+    {{ govukRadios(fields.userRole) }}
+
+    {% if (isEditing) %}
+
+      <div class="govuk-button-group">
+
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+        <!-- to be implemented later
+        {{ govukButton({
+          text: 'Remove user',
+          classes: 'govuk-button--warning'
+        }) }}
+        -->
+
+        <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
+
+      </div>
+    {% else %}
+
+      {{ govukButton({
+        text: 'Add user'
+      }) }}
+
+    {% endif %}
+
+  </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

@@ -3,6 +3,7 @@
 {% from "editor-card/macro.njk" import appEditorCard %}
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -14,6 +15,14 @@
     classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink
   }) %}
+
+    {% if notification | length %}
+      {% call govukNotificationBanner({
+          type: "success"
+        }) %}
+      <p class="govuk-notification-banner__heading">{{ notification }}</p>
+      {% endcall %}
+    {% endif %}
 
     {% if (summaryTable.rows | length) %}
       {{ govukTable(summaryTable) }}

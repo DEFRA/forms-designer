@@ -5,14 +5,14 @@ export interface EntitlementUser {
   userId: string
 
   /**
-   * The full name of the user
+   * The display name (full name) of the user
    */
-  fullName: string
+  displayName: string
 
   /**
    * The email addresss of the user
    */
-  emailAddress: string
+  email: string
 
   /**
    * The roles assigned to the user

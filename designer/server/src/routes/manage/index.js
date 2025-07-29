@@ -1,3 +1,4 @@
-import users from '~/src/routes/manage/users.js'
+import createOrEditUser from '~/src/routes/manage/user.js'
+import listUsers from '~/src/routes/manage/users.js'
 
-export default [users].flat()
+export default [createOrEditUser, listUsers].flat()
