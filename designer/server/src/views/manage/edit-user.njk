@@ -33,6 +33,9 @@
 
     {% if (isEditing) %}
 
+      <input type="hidden" name="userId" id="userId" value="{{ userId }}" />
+      <input type="hidden" name="emailAddress" id="emailAddress" value="{{ fields.emailAddress.value }}" />
+
       <div class="govuk-button-group">
 
         {{ govukButton({

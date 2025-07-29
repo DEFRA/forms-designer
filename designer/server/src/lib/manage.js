@@ -1,6 +1,5 @@
 import config from '~/src/config.js'
-import { getUserFromEntra } from '~/src/lib/entra.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
+import { getJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 const usersEndpoint = new URL('/users/', config.entitlementUrl)
@@ -40,7 +39,7 @@ export async function getUser(token, userId) {
 /**
  * Add a user
  * @param {string} token
- * @param {{ userId: string, roles: string[] }} userDetails
+ * @param {{ email: string, roles: string[] }} userDetails
  */
 export async function addUser(token, userDetails) {
   const postJsonByType =
@@ -50,11 +49,9 @@ export async function addUser(token, userDetails) {
 
   const requestUrl = new URL(usersEndpoint)
 
-  const { userId } = await getUserFromEntra(userDetails.userId)
-
   const { body } = await postJsonByType(requestUrl, {
     payload: {
-      userId,
+      email: userDetails.email,
       roles: userDetails.roles
     },
     ...getHeaders(token)
@@ -64,5 +61,43 @@ export async function addUser(token, userDetails) {
 }
 
 /**
- * @import { EntitlementRole } from '@defra/forms-model'
+ * Update a user
+ * @param {string} token
+ * @param {{ userId: string, roles: string[] }} userDetails
+ */
+export async function updateUser(token, userDetails) {
+  const putJsonByType =
+    /** @type {typeof putJson<{ userId: string, userRole: string }>} */ (
+      putJson
+    )
+
+  const requestUrl = new URL(userDetails.userId, usersEndpoint)
+
+  const { body } = await putJsonByType(requestUrl, {
+    payload: {
+      roles: userDetails.roles
+    },
+    ...getHeaders(token)
+  })
+
+  return body
+}
+
+/**
+ * List all users
+ * @param {string} token
+ */
+export async function getUsers(token) {
+  const getJsonByType =
+    /** @type {typeof getJson<{ entities: EntitlementUser[] }>} */ (getJson)
+
+  const requestUrl = new URL(usersEndpoint)
+
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body.entities
+}
+
+/**
+ * @import { EntitlementRole, EntitlementUser } from '@defra/forms-model'
  */

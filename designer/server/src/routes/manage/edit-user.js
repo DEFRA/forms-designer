@@ -5,7 +5,7 @@ import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { addUser, getRoles, getUser } from '~/src/lib/manage.js'
+import { addUser, getRoles, getUser, updateUser } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/manage/users.js'
@@ -23,7 +23,8 @@ const schema = Joi.object({
     .description('Email address of user'),
   userRole: Joi.string().valid('admin', 'form-creator').required().messages({
     '*': 'Select a role'
-  })
+  }),
+  userId: Joi.string().allow('').allow(null)
 })
 
 export default [
@@ -72,14 +73,22 @@ export default [
     method: 'POST',
     path: '/manage/users/{userId}',
     async handler(request, h) {
-      const { payload, yar, auth } = request
+      const { payload, yar, auth, params } = request
       const { token } = auth.credentials
+      const { userId } = params
 
       try {
-        await addUser(token, {
-          userId: payload.emailAddress,
-          roles: [payload.userRole]
-        })
+        if (userId === 'new') {
+          await addUser(token, {
+            email: payload.emailAddress,
+            roles: [payload.userRole]
+          })
+        } else {
+          await updateUser(token, {
+            userId: payload.userId,
+            roles: [payload.userRole]
+          })
+        }
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 

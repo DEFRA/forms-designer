@@ -23,6 +23,11 @@ export interface EntitlementRole {
  */
 export interface ManageUser {
   /**
+   * The object id of the user
+   */
+  userId: string
+
+  /**
    * The email address of the user
    */
   emailAddress: string

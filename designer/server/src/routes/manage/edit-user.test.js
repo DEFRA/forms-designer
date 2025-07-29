@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { createServer } from '~/src/createServer.js'
+import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import { addUser, getRoles, getUser } from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -10,15 +11,6 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
 jest.mock('~/src/lib/error-helper.js')
-
-const roleList = [
-  { name: 'Admin', code: 'admin', description: 'admin desc' },
-  {
-    name: 'Form creator',
-    code: 'form-creator',
-    description: 'form creator desc'
-  }
-]
 
 describe('Create user routes', () => {
   /** @type {Server} */
@@ -30,9 +22,9 @@ describe('Create user routes', () => {
   })
 
   beforeEach(() => {
-    jest.mocked(getRoles).mockResolvedValue(roleList)
+    jest.mocked(getRoles).mockResolvedValue(allRoles)
     jest.mocked(addUser).mockResolvedValue({ emailAddress: '', userRole: '' })
-    jest.mocked(getUser).mockResolvedValue(undefined)
+    jest.mocked(getUser).mockResolvedValue(/** @type {EntitlementUser} */ ({}))
   })
 
   describe('GET /manage/users/new', () => {
@@ -105,7 +97,7 @@ describe('Create user routes', () => {
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/manage/users')
       expect(addUser).toHaveBeenCalledWith(expect.anything(), {
-        userId: 'me@here.com',
+        email: 'me@here.com',
         roles: ['admin']
       })
     })
@@ -180,5 +172,6 @@ describe('Create user routes', () => {
 })
 
 /**
+ * @import { EntitlementUser } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

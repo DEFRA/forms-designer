@@ -52,7 +52,7 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
         hint: {
           text: 'Must be a Defra group email address'
         },
-        value: formValues?.emailAddress ?? user?.userId,
+        value: formValues?.emailAddress ?? user?.email,
         disabled: user !== undefined,
         ...insertValidationErrors(formErrors?.emailAddress)
       },
@@ -73,11 +73,77 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
         value: formValues?.userRole ?? role,
         ...insertValidationErrors(formErrors?.userRole)
       }
-    }
+    },
+    userId: user?.userId
   }
 }
 
 /**
- * @import { EntitlementRole, ManageUser } from '@defra/forms-model'
+ * @param {string} role
+ * @param {EntitlementRole[]} allRoles
+ */
+export function mapRoleName(role, allRoles) {
+  const foundRole = allRoles.find((r) => r.code === role)
+  return foundRole ? foundRole.name : 'Unknown'
+}
+
+/**
+ * @param {EntitlementUser[]} users
+ * @param {EntitlementRole[]} allRoles
+ * @param {string[]} [notification]
+ */
+export function listUsersViewModel(users, allRoles, notification) {
+  const rows = users.map((user) => [
+    {
+      html: `${user.displayName}<span class="govuk-visually-hidden">User: ${user.displayName}</span><br><span class="govuk-hint" aria-hidden="true"> ${user.email} </span>`
+    },
+    {
+      text: user.roles.map((role) => mapRoleName(role, allRoles)).join(', ')
+    },
+    {
+      html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}">Manage</a>`
+    }
+  ])
+
+  return {
+    pageTitle: MANAGE_USERS_TEXT,
+    navigation: getTabs(),
+    backLink: {
+      text: 'Back to form library',
+      href: '/library'
+    },
+    pageHeading: {
+      text: MANAGE_USERS_TEXT,
+      size: 'large'
+    },
+    pageActions: [
+      {
+        text: 'Add new user',
+        href: '/manage/users/new',
+        classes: 'govuk-button--inverse'
+      }
+    ],
+    summaryTable: {
+      caption: 'Users',
+      captionClasses: 'govuk-table__caption--m',
+      head: [
+        {
+          text: 'Name'
+        },
+        {
+          text: 'Role'
+        },
+        {
+          text: 'Actions'
+        }
+      ],
+      rows
+    },
+    notification
+  }
+}
+
+/**
+ * @import { EntitlementUser, EntitlementRole, ManageUser } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

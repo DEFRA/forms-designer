@@ -505,7 +505,7 @@ exports[`Create user routes GET /manage/users/new should render view when editin
   <div id="emailAddress-hint" class="govuk-hint">
     Must be a Defra group email address
   </div>
-  <input class="govuk-input" id="emailAddress" name="emailAddress" type="text" value="12345" disabled aria-describedby="emailAddress-hint">
+  <input class="govuk-input" id="emailAddress" name="emailAddress" type="text" disabled aria-describedby="emailAddress-hint">
 </div>
 
 
@@ -532,6 +532,9 @@ exports[`Create user routes GET /manage/users/new should render view when editin
 </div>
 
 
+
+      <input type="hidden" name="userId" id="userId" value="12345" />
+      <input type="hidden" name="emailAddress" id="emailAddress" value="" />
 
       <div class="govuk-button-group">
 
