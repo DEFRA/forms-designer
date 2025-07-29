@@ -38,29 +38,29 @@ export interface FormTeamEmailChanges {
 }
 
 export interface FormSupportPhoneChanges {
-  phone: string
+  phone?: string
 }
 
 export interface FormSupportEmailChanges {
-  address: string
-  responseTime: string
+  address?: string
+  responseTime?: string
 }
 
 export interface FormSupportOnlineChanges {
-  url: string
-  text: string
+  url?: string
+  text?: string
 }
 
 export interface FormPrivacyNoticeChanges {
-  privacyNoticeUrl: string
+  privacyNoticeUrl?: string
 }
 
 export interface FormNotificationEmailChanges {
-  notificationEmail: string
+  notificationEmail?: string
 }
 
 export interface FormSubmissionGuidanceChanges {
-  submissionGuidance: string
+  submissionGuidance?: string
 }
 
 export interface FormUploadedChanges {
@@ -205,21 +205,19 @@ export interface FormSupportOnlineUpdatedMessage extends MessageBase {
   data: FormSupportOnlineUpdatedMessageData
 }
 
-export interface FormSupportPrivacyNoticeUpdatedMessage extends MessageBase {
+export interface FormPrivacyNoticeUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED
   data: FormPrivacyNoticeUpdatedMessageData
 }
 
-export interface FormSupportNotificationEmailUpdatedMessage
-  extends MessageBase {
+export interface FormNotificationEmailUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED
   data: FormNotificationEmailUpdatedMessageData
 }
 
-export interface FormSupportSubmissionGuidanceUpdatedMessage
-  extends MessageBase {
+export interface FormSubmissionGuidanceUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED
   data: FormSubmissionGuidanceUpdatedMessageData
@@ -275,9 +273,9 @@ export type AuditMessage =
   | FormSupportPhoneUpdatedMessage
   | FormSupportEmailUpdatedMessage
   | FormSupportOnlineUpdatedMessage
-  | FormSupportPrivacyNoticeUpdatedMessage
-  | FormSupportNotificationEmailUpdatedMessage
-  | FormSupportSubmissionGuidanceUpdatedMessage
+  | FormPrivacyNoticeUpdatedMessage
+  | FormNotificationEmailUpdatedMessage
+  | FormSubmissionGuidanceUpdatedMessage
   | FormUploadedMessage
   | FormDownloadedMessage
   | FormPublishedMessage
