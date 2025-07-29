@@ -12,7 +12,7 @@ import * as viewModel from '~/src/models/manage/users.js'
 
 const errorKey = sessionNames.validationFailure.manageUsers
 
-const schema = Joi.object({
+const addUserSchema = Joi.object({
   emailAddress: Joi.string()
     .email()
     .trim()
@@ -23,15 +23,24 @@ const schema = Joi.object({
     .description('Email address of user'),
   userRole: Joi.string().valid('admin', 'form-creator').required().messages({
     '*': 'Select a role'
-  }),
-  userId: Joi.string().allow('').allow(null)
+  })
+})
+
+const amendUserSchema = Joi.object({
+  userRole: Joi.string().valid('admin', 'form-creator').required().messages({
+    '*': 'Select a role'
+  })
+})
+
+const userIdSchema = Joi.object({
+  userId: Joi.string().required()
 })
 
 export default [
   /** @type {ServerRoute} */
   ({
     method: 'GET',
-    path: '/manage/users/{userId}',
+    path: '/manage/users/{userId}/{amend?}',
     async handler(request, h) {
       const { auth, yar, params } = request
       const { token } = auth.credentials
@@ -51,7 +60,7 @@ export default [
       }
 
       return h.view(
-        'manage/edit-user',
+        'manage/user',
         viewModel.createOrEditUserViewModel(roles, user, validation)
       )
     },
@@ -71,24 +80,16 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/manage/users/{userId}',
+    path: '/manage/users/new',
     async handler(request, h) {
-      const { payload, yar, auth, params } = request
+      const { payload, yar, auth } = request
       const { token } = auth.credentials
-      const { userId } = params
 
       try {
-        if (userId === 'new') {
-          await addUser(token, {
-            email: payload.emailAddress,
-            roles: [payload.userRole]
-          })
-        } else {
-          await updateUser(token, {
-            userId: payload.userId,
-            roles: [payload.userRole]
-          })
-        }
+        await addUser(token, {
+          email: payload.emailAddress,
+          roles: [payload.userRole]
+        })
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
@@ -104,7 +105,54 @@ export default [
     },
     options: {
       validate: {
-        payload: schema,
+        payload: addUserSchema,
+        failAction: (request, h, error) => {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${scopes.SCOPE_WRITE}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: ManageUser }>}
+   */
+  ({
+    method: 'POST',
+    path: '/manage/users/{userId}/amend',
+    async handler(request, h) {
+      const { payload, yar, auth, params } = request
+      const { token } = auth.credentials
+      const { userId } = params
+
+      try {
+        await updateUser(token, {
+          userId,
+          roles: [payload.userRole]
+        })
+
+        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+
+        // Redirect back to list of users
+        return h.redirect('/manage/users').code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+        if (error) {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
+        throw err
+      }
+    },
+    options: {
+      validate: {
+        params: userIdSchema,
+        payload: amendUserSchema,
         failAction: (request, h, error) => {
           return redirectWithErrors(request, h, error, errorKey)
         }

@@ -2,17 +2,17 @@ export interface EntitlementUser {
   /**
    * The id of the user
    */
-  userId?: string
+  userId: string
 
   /**
    * The display name (full name) of the user
    */
-  displayName?: string
+  displayName: string
 
   /**
    * The email addresss of the user
    */
-  email?: string
+  email: string
 
   /**
    * The roles assigned to the user
@@ -22,5 +22,5 @@ export interface EntitlementUser {
   /**
    * The scopes assigned to the user
    */
-  scopes?: string[]
+  scopes: string[]
 }

@@ -50,13 +50,15 @@ describe('Create and edit user routes', () => {
     })
 
     test('should render view when editing', async () => {
-      jest.mocked(getUser).mockResolvedValue({
-        userId: '12345',
-        roles: ['admin']
-      })
+      jest.mocked(getUser).mockResolvedValue(
+        /** @type {EntitlementUser} */ ({
+          userId: '12345',
+          roles: ['admin']
+        })
+      )
       const options = {
         method: 'get',
-        url: '/manage/users/12345',
+        url: '/manage/users/12345/amend',
         auth
       }
 
@@ -67,16 +69,16 @@ describe('Create and edit user routes', () => {
       const $buttonSave = container.getAllByRole('button', {
         name: 'Save changes'
       })
-      const $buttonRemove = container.getAllByRole('button', {
-        name: 'Remove user'
-      })
+      // const $buttonRemove = container.getAllByRole('button', {
+      //   name: 'Remove user'
+      // })
 
       expect($mastheadHeading).toBeDefined()
       expect($radios).toHaveLength(2)
       expect($radios[0].outerHTML).toContain('value="admin"')
       expect($radios[1].outerHTML).toContain('value="form-creator"')
       expect($buttonSave).toHaveLength(1)
-      expect($buttonRemove).toHaveLength(1)
+      // expect($buttonRemove).toHaveLength(1)
       expect(response.result).toMatchSnapshot()
     })
   })
@@ -170,15 +172,13 @@ describe('Create and edit user routes', () => {
     })
   })
 
-  describe('POST /manage/users/{userId} when editing', () => {
+  describe('POST /manage/users/{userId}/amend when editing', () => {
     test('should update user and redirect if valid payload', async () => {
       const options = {
         method: 'post',
-        url: '/manage/users/12345',
+        url: '/manage/users/12345/amend',
         auth,
         payload: {
-          userId: '12345',
-          emailAddress: 'me@here.com',
           userRole: 'admin'
         }
       }

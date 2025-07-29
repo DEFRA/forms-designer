@@ -533,18 +533,17 @@ exports[`Create and edit user routes GET /manage/users/new should render view wh
 
 
 
-      <input type="hidden" name="userId" id="userId" value="12345" />
-      <input type="hidden" name="emailAddress" id="emailAddress" value="" />
-
       <div class="govuk-button-group">
 
         <button type="submit" class="govuk-button" data-module="govuk-button">
   Save changes
 </button>
 
+        <!-- to be implemented later
         <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
   Remove user
 </button>
+        -->
 
         <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
 

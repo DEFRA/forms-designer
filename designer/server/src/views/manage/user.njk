@@ -33,19 +33,18 @@
 
     {% if (isEditing) %}
 
-      <input type="hidden" name="userId" id="userId" value="{{ userId }}" />
-      <input type="hidden" name="emailAddress" id="emailAddress" value="{{ fields.emailAddress.value }}" />
-
       <div class="govuk-button-group">
 
         {{ govukButton({
           text: 'Save changes'
         }) }}
 
+        <!-- to be implemented later
         {{ govukButton({
           text: 'Remove user',
           classes: 'govuk-button--warning'
         }) }}
+        -->
 
         <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
 

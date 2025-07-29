@@ -101,7 +101,7 @@ export function listUsersViewModel(users, allRoles, notification) {
       text: user.roles.map((role) => mapRoleName(role, allRoles)).join(', ')
     },
     {
-      html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}">Manage</a>`
+      html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}/amend">Manage</a>`
     }
   ])
 
