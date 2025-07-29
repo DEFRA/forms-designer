@@ -3,6 +3,7 @@ import {
   type AuditEventMessageSchemaVersion,
   type AuditEventMessageType
 } from '~/src/form/form-audit/enums.js'
+import { type FormMetadataContact } from '~/src/form/form-metadata/types.js'
 
 export interface FormMessageDataBase {
   formId: string
@@ -35,6 +36,10 @@ export interface FormTeamNameChanges {
 
 export interface FormTeamEmailChanges {
   teamEmail: string
+}
+
+export interface FormSupportContactChanges {
+  contact?: FormMetadataContact
 }
 
 export interface FormSupportPhoneChanges {
@@ -84,6 +89,11 @@ export interface FormTeamEmailUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormTeamEmailChanges>
 }
 
+export interface FormSupportContactUpdatedMessageData
+  extends FormMessageDataBase {
+  changes: ChangesMessageData<FormSupportContactChanges>
+}
+
 export interface FormSupportPhoneUpdatedMessageData
   extends FormMessageDataBase {
   changes: ChangesMessageData<FormSupportPhoneChanges>
@@ -123,6 +133,7 @@ export type FormMessageChangesData =
   | FormOrganisationUpdatedMessageData
   | FormTeamNameUpdatedMessageData
   | FormTeamEmailUpdatedMessageData
+  | FormSupportContactUpdatedMessageData
   | FormSupportPhoneUpdatedMessageData
   | FormSupportEmailUpdatedMessageData
   | FormSupportOnlineUpdatedMessageData
@@ -185,6 +196,12 @@ export interface FormTeamEmailUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED
   data: FormTeamEmailUpdatedMessageData
+}
+
+export interface FormSupportContactUpdatedMessage extends MessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED
+  data: FormSupportContactUpdatedMessageData
 }
 
 export interface FormSupportPhoneUpdatedMessage extends MessageBase {
@@ -270,6 +287,7 @@ export type AuditMessage =
   | FormOrganisationUpdatedMessage
   | FormTeamNameUpdatedMessage
   | FormTeamEmailUpdatedMessage
+  | FormSupportContactUpdatedMessage
   | FormSupportPhoneUpdatedMessage
   | FormSupportEmailUpdatedMessage
   | FormSupportOnlineUpdatedMessage

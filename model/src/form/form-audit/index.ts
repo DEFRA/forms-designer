@@ -22,6 +22,8 @@ import {
   type FormPrivacyNoticeUpdatedMessageData,
   type FormSubmissionGuidanceChanges,
   type FormSubmissionGuidanceUpdatedMessageData,
+  type FormSupportContactChanges,
+  type FormSupportContactUpdatedMessageData,
   type FormSupportEmailChanges,
   type FormSupportEmailUpdatedMessageData,
   type FormSupportOnlineChanges,
@@ -38,6 +40,7 @@ import {
   type FormUploadedChanges,
   type FormUploadedMessageData
 } from '~/src/form/form-audit/types.js'
+import { contactSchema } from '~/src/form/form-metadata/index.js'
 
 export const formMessageDataBase = Joi.object<FormMessageDataBase>({
   formId: Joi.string().required(),
@@ -78,6 +81,12 @@ export const formTeamNameChanges = Joi.object<FormTeamNameChanges>()
 export const formTeamEmailChanges = Joi.object<FormTeamEmailChanges>()
   .keys({
     teamEmail: Joi.string().required()
+  })
+  .required()
+
+export const formSupportContactChanges = Joi.object<FormSupportContactChanges>()
+  .keys({
+    contact: contactSchema
   })
   .required()
 
@@ -154,6 +163,7 @@ export const validTypes = [
   AuditEventMessageType.FORM_ORGANISATION_UPDATED,
   AuditEventMessageType.FORM_TEAM_NAME_UPDATED,
   AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED,
+  AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED,
   AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED,
   AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED,
   AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED,
@@ -221,6 +231,15 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
           FormTeamEmailChanges,
           FormTeamEmailUpdatedMessageData
         >(formTeamEmailChanges)
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED),
+        then: formChangesMessageData<
+          FormSupportContactChanges,
+          FormSupportContactUpdatedMessageData
+        >(formSupportContactChanges)
       },
       {
         is: Joi.string()
