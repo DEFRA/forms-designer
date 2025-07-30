@@ -5,7 +5,13 @@ import Joi from 'joi'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
-import { addUser, getRoles, getUser, updateUser } from '~/src/lib/manage.js'
+import {
+  addUser,
+  deleteUser,
+  getRoles,
+  getUser,
+  updateUser
+} from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -27,7 +33,7 @@ describe('Create and edit user routes', () => {
     jest.mocked(getUser).mockResolvedValue(/** @type {EntitlementUser} */ ({}))
   })
 
-  describe('GET /manage/users/new', () => {
+  describe('GET /manage/users', () => {
     test('should render view when creating', async () => {
       const options = {
         method: 'get',
@@ -69,16 +75,47 @@ describe('Create and edit user routes', () => {
       const $buttonSave = container.getAllByRole('button', {
         name: 'Save changes'
       })
-      // const $buttonRemove = container.getAllByRole('button', {
-      //   name: 'Remove user'
-      // })
+      const $buttonRemove = container.getAllByRole('button', {
+        name: 'Remove user'
+      })
 
       expect($mastheadHeading).toBeDefined()
       expect($radios).toHaveLength(2)
       expect($radios[0].outerHTML).toContain('value="admin"')
       expect($radios[1].outerHTML).toContain('value="form-creator"')
       expect($buttonSave).toHaveLength(1)
-      // expect($buttonRemove).toHaveLength(1)
+      expect($buttonRemove).toHaveLength(1)
+      expect(response.result).toMatchSnapshot()
+    })
+
+    test('should render view when deleting', async () => {
+      jest.mocked(getUser).mockResolvedValue(
+        /** @type {EntitlementUser} */ ({
+          userId: '12345',
+          roles: ['admin']
+        })
+      )
+      const options = {
+        method: 'get',
+        url: '/manage/users/12345/delete',
+        auth
+      }
+
+      const { container, response } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByText(
+        'Are you sure you want to remove this user?'
+      )
+      const $buttonSave = container.getAllByRole('button', {
+        name: 'Remove user'
+      })
+      const $buttonCancel = container.getAllByRole('button', {
+        name: 'Cancel'
+      })
+
+      expect($mastheadHeading).toBeDefined()
+      expect($buttonSave).toHaveLength(1)
+      expect($buttonCancel).toHaveLength(1)
       expect(response.result).toMatchSnapshot()
     })
   })
@@ -255,9 +292,7 @@ describe('Create and edit user routes', () => {
         'manageUsersValidationFailure'
       )
     })
-  })
 
-  describe('POST /manage/users/{userId}/amend when editing', () => {
     test('should update user and redirect if valid payload', async () => {
       const options = {
         method: 'post',
@@ -278,6 +313,64 @@ describe('Create and edit user routes', () => {
         userId: '12345',
         roles: ['admin']
       })
+    })
+  })
+
+  describe('POST /manage/users/12345/delete', () => {
+    test('should delete user and redirect if valid payload', async () => {
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/delete',
+        auth
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users')
+      expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '12345')
+    })
+
+    test('should error if API failure (non-Boom)', async () => {
+      jest.mocked(deleteUser).mockImplementationOnce(() => {
+        throw new Error('api error')
+      })
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/delete',
+        auth
+      }
+
+      const {
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
+
+    test('should error if API failure (handle Boom error)', async () => {
+      jest.mocked(deleteUser).mockImplementationOnce(() => {
+        throw Boom.boomify(new Error('api boom error'))
+      })
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/delete',
+        auth
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users/12345/delete')
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        new Joi.ValidationError('An error occurred', [], undefined),
+        'manageUsersValidationFailure'
+      )
     })
   })
 })

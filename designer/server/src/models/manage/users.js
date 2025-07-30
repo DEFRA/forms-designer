@@ -68,11 +68,17 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
         },
         items: allRoles.map((r) => ({
           text: r.name,
-          value: r.code
+          value: r.code,
+          hint: {
+            text: r.description
+          }
         })),
         value: formValues?.userRole ?? role,
         ...insertValidationErrors(formErrors?.userRole)
       }
+    },
+    displayName: {
+      text: user?.displayName
     },
     userId: user?.userId
   }
@@ -140,6 +146,42 @@ export function listUsersViewModel(users, allRoles, notification) {
       rows
     },
     notification
+  }
+}
+
+/**
+ * Model to represent confirmation page dialog
+ * @param {EntitlementUser} user
+ */
+export function deleteUserConfirmationPageViewModel(user) {
+  const backOrCancelUrl = `${editUrl}${user.userId}/amend`
+  return {
+    navigation: getTabs(),
+    backLink: {
+      href: backOrCancelUrl,
+      text: 'Back to edit user'
+    },
+    useNewMasthead: true,
+    pageHeading: {
+      text: 'Are you sure you want to remove this user?'
+    },
+    pageCaption: {
+      text: user.displayName
+    },
+    warning: {
+      text: 'Removing this user means they can no longer create and manage forms.'
+    },
+    buttons: [
+      {
+        text: 'Remove user',
+        classes: 'govuk-button--warning'
+      },
+      {
+        href: backOrCancelUrl,
+        text: 'Cancel',
+        classes: 'govuk-button--secondary'
+      }
+    ]
   }
 }
 
