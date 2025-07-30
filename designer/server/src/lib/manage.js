@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { getJson, postJson, putJson } from '~/src/lib/fetch.js'
+import { delJson, getJson, postJson, putJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 const usersEndpoint = new URL('/users/', config.entitlementUrl)
@@ -81,6 +81,17 @@ export async function updateUser(token, userDetails) {
   })
 
   return body
+}
+
+/**
+ * Delete a user
+ * @param {string} token
+ * @param {string} userId
+ */
+export async function deleteUser(token, userId) {
+  const requestUrl = new URL(userId, usersEndpoint)
+
+  await delJson(requestUrl, getHeaders(token))
 }
 
 /**

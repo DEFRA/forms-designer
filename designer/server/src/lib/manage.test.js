@@ -1,8 +1,9 @@
 import config from '~/src/config.js'
 import { createMockResponse } from '~/src/lib/__stubs__/editor.js'
-import { getJson, postJson, putJson } from '~/src/lib/fetch.js'
+import { delJson, getJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
   addUser,
+  deleteUser,
   getRoles,
   getUser,
   getUsers,
@@ -102,6 +103,20 @@ describe('manage.js', () => {
         payload: {
           roles: ['role1']
         },
+        headers: { Authorization: `Bearer ${token}` }
+      })
+    })
+  })
+
+  describe('deleteUser', () => {
+    it('should delete the user', async () => {
+      jest.mocked(delJson).mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      await deleteUser(token, '12345')
+
+      expect(delJson).toHaveBeenCalledWith(usersEndpoint, {
         headers: { Authorization: `Bearer ${token}` }
       })
     })
