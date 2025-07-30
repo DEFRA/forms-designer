@@ -208,16 +208,22 @@ exports[`Create and edit user routes GET /manage/users should render view when c
     </legend>
     <div class="govuk-radios" data-module="govuk-radios">
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin">
+        <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" aria-describedby="userRole-item-hint">
         <label class="govuk-label govuk-radios__label" for="userRole">
           Admin
         </label>
+        <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
+          admin desc
+        </div>
       </div>
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator">
+        <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator" aria-describedby="userRole-2-item-hint">
         <label class="govuk-label govuk-radios__label" for="userRole-2">
           Form creator
         </label>
+        <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
+          form creator desc
+        </div>
       </div>
     </div>
   </fieldset>
@@ -804,16 +810,22 @@ exports[`Create and edit user routes GET /manage/users should render view when e
     </legend>
     <div class="govuk-radios" data-module="govuk-radios">
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" checked>
+        <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" checked aria-describedby="userRole-item-hint">
         <label class="govuk-label govuk-radios__label" for="userRole">
           Admin
         </label>
+        <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
+          admin desc
+        </div>
       </div>
       <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator">
+        <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator" aria-describedby="userRole-2-item-hint">
         <label class="govuk-label govuk-radios__label" for="userRole-2">
           Form creator
         </label>
+        <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
+          form creator desc
+        </div>
       </div>
     </div>
   </fieldset>
@@ -827,7 +839,9 @@ exports[`Create and edit user routes GET /manage/users should render view when e
   Save changes
 </button>
 
-        <a href="/manage/users/12345/delete" id="remove-user-button" class="govuk-button govuk-button--warning">Remove user</a>
+        <a href="/manage/users/12345/delete" role="button" draggable="false" class="govuk-button govuk-button govuk-button--warning" data-module="govuk-button">
+  Remove user
+</a>
 
         <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
 

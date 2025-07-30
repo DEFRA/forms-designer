@@ -40,7 +40,11 @@
           text: 'Save changes'
         }) }}
 
-        <a href="/manage/users/{{ userId }}/delete" id="remove-user-button" class="govuk-button govuk-button--warning">Remove user</a>
+        {{ govukButton({
+          text: 'Remove user',
+          classes: 'govuk-button govuk-button--warning',
+          href: '/manage/users/' + userId + '/delete'
+        }) }}
 
         <a href="/manage/users" class="govuk-link govuk-link--no-visited-state" id="cancel-edit-user">Cancel</a>
 

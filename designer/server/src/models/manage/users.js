@@ -68,7 +68,10 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
         },
         items: allRoles.map((r) => ({
           text: r.name,
-          value: r.code
+          value: r.code,
+          hint: {
+            text: r.description
+          }
         })),
         value: formValues?.userRole ?? role,
         ...insertValidationErrors(formErrors?.userRole)

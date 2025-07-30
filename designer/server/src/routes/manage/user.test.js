@@ -75,7 +75,7 @@ describe('Create and edit user routes', () => {
       const $buttonSave = container.getAllByRole('button', {
         name: 'Save changes'
       })
-      const $buttonRemove = container.getAllByRole('link', {
+      const $buttonRemove = container.getAllByRole('button', {
         name: 'Remove user'
       })
 
