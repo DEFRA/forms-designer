@@ -1,0 +1,29 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    description: pageDescription,
+    caption: pageCaption,
+    actions: pageActions,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+<p> creds: {{ user | dump }}</p>
+
+  {{ govukSummaryList(userDetails) }}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

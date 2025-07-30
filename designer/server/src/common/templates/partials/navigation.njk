@@ -11,7 +11,7 @@
   productName: productName | safe | trim,
   navigationItems: navigation if isAuthenticated and isAuthorized and isFormsUser,
   accountName: authedUser.displayName if isAuthenticated,
-  accountLink: "/library",
+  accountLink: "/auth/account" if isAuthenticated else "/library",
   signOutLink: "/auth/sign-out",
   homepageLink: "/"
 }) }}

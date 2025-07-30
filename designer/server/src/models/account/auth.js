@@ -35,3 +35,66 @@ export function signInViewModel(options) {
     errorList
   }
 }
+
+/**
+ * @param { AuthCredentials<UserCredentials, AppCredentials> & Record<string, unknown> } credentials
+ */
+export function accountViewModel(credentials) {
+  const pageTitle = 'My account'
+
+  const navigation = [
+    {
+      text: 'My account',
+      Url: '/account',
+      isActive: true
+    }
+  ]
+
+  // if (hasAdmin(credentials)) {
+  navigation.push({
+    text: 'Manage users',
+    Url: '/manage/users',
+    isActive: false
+  })
+  // }
+
+  return {
+    navigation,
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
+    pageCaption: {
+      text: credentials.user?.displayName
+    },
+    backLink: {
+      text: 'Back to form library',
+      href: '/library'
+    },
+    userDetails: {
+      rows: [
+        {
+          key: {
+            text: 'Email'
+          },
+          value: {
+            text: credentials.user?.email
+          }
+        },
+        {
+          key: {
+            text: 'Role'
+          },
+          value: {
+            text: credentials.user?.email
+          }
+        }
+      ]
+    }
+  }
+}
+
+/**
+ * @import { AuthCredentials, UserCredentials, AppCredentials} from '@hapi/hapi'
+ */
