@@ -60,8 +60,8 @@ export const formCreatedMessageData =
 const allowedOperations = [Operation.ADD, Operation.REMOVE, Operation.UPDATE]
 
 export const formChangeSet = Joi.array().items(
-  Joi.object()
-    .keys<FormChangeSet>({
+  Joi.object<FormChangeSet>()
+    .keys({
       type: Joi.string()
         .valid(...allowedOperations)
         .required(),
