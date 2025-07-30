@@ -25,6 +25,7 @@ describe('Account profile route', () => {
       /** @type {EntitlementUser} */ ({
         userId: 'my-user-id',
         email: 'my-email@mail.com',
+        displayName: 'John Smith',
         roles: ['admin']
       })
     )

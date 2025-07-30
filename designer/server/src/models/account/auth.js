@@ -69,7 +69,7 @@ export function accountViewModel(credentials, user) {
       size: 'large'
     },
     pageCaption: {
-      text: credentials.user?.displayName
+      text: user.displayName
     },
     backLink: {
       text: 'Back to form library',
