@@ -1,4 +1,5 @@
 import config from '~/src/config.js'
+import { roleNameMapper } from '~/src/models/account/role-mapper.js'
 
 export function signedOutViewModel() {
   const pageTitle = 'You have signed out'
@@ -38,24 +39,26 @@ export function signInViewModel(options) {
 
 /**
  * @param { AuthCredentials<UserCredentials, AppCredentials> & Record<string, unknown> } credentials
+ * @param {EntitlementUser} user
  */
-export function accountViewModel(credentials) {
+export function accountViewModel(credentials, user) {
   const pageTitle = 'My account'
 
   const navigation = [
     {
       text: 'My account',
-      Url: '/account',
+      url: '/auth/account',
       isActive: true
     }
   ]
 
+  // TODO - determine hwot ochec if user has ADMIN role
   // if (hasAdmin(credentials)) {
-  navigation.push({
-    text: 'Manage users',
-    Url: '/manage/users',
-    isActive: false
-  })
+  // navigation.push({
+  //   text: 'Manage users',
+  //   url: '/manage/users',
+  //   isActive: false
+  // })
   // }
 
   return {
@@ -79,7 +82,7 @@ export function accountViewModel(credentials) {
             text: 'Email'
           },
           value: {
-            text: credentials.user?.email
+            text: user.email
           }
         },
         {
@@ -87,14 +90,16 @@ export function accountViewModel(credentials) {
             text: 'Role'
           },
           value: {
-            text: credentials.user?.email
+            text: user.roles.map(roleNameMapper).join(', ')
           }
         }
       ]
-    }
+    },
+    user
   }
 }
 
 /**
  * @import { AuthCredentials, UserCredentials, AppCredentials} from '@hapi/hapi'
+ * @import { EntitlementUser } from '@defra/forms-model'
  */

@@ -1,19 +1,20 @@
 import * as scopes from '~/src/common/constants/scopes.js'
-import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
+import { getUser } from '~/src/lib/manage.js'
 import { accountViewModel } from '~/src/models/account/auth.js'
 
 export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/auth/account',
-  handler(request, h) {
+  async handler(request, h) {
     const { credentials } = request.auth
+    const { token } = credentials
 
-    // Skip when not authenticated
-    if (!hasUser(credentials)) {
-      return h.redirect('/')
-    }
+    const user = await getUser(
+      token,
+      /** @type {string} */ (credentials.user?.id)
+    )
 
-    return h.view('account/account', accountViewModel(credentials))
+    return h.view('account/account', accountViewModel(credentials, user))
   },
   options: {
     auth: {

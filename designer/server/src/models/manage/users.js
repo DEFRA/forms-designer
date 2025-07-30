@@ -1,5 +1,9 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  roleDescriptionMapper,
+  roleNameMapper
+} from '~/src/models/account/role-mapper.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 
 const editUrl = '/manage/users/'
@@ -9,12 +13,12 @@ export function getTabs() {
   return [
     {
       text: 'My account',
-      Url: '/account',
+      url: '/auth/account',
       isActive: false
     },
     {
       text: MANAGE_USERS_TEXT,
-      Url: editUrl,
+      url: editUrl,
       isActive: true
     }
   ]
@@ -67,10 +71,10 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
           }
         },
         items: allRoles.map((r) => ({
-          text: r.name,
+          text: roleNameMapper(r.code),
           value: r.code,
           hint: {
-            text: r.description
+            text: roleDescriptionMapper(r.code)
           }
         })),
         value: formValues?.userRole ?? role,
@@ -85,26 +89,16 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
 }
 
 /**
- * @param {string} role
- * @param {EntitlementRole[]} allRoles
- */
-export function mapRoleName(role, allRoles) {
-  const foundRole = allRoles.find((r) => r.code === role)
-  return foundRole ? foundRole.name : 'Unknown'
-}
-
-/**
  * @param {EntitlementUser[]} users
- * @param {EntitlementRole[]} allRoles
  * @param {string[]} [notification]
  */
-export function listUsersViewModel(users, allRoles, notification) {
+export function listUsersViewModel(users, notification) {
   const rows = users.map((user) => [
     {
       html: `${user.displayName}<span class="govuk-visually-hidden">User: ${user.displayName}</span><br><span class="govuk-hint" aria-hidden="true"> ${user.email} </span>`
     },
     {
-      text: user.roles.map((role) => mapRoleName(role, allRoles)).join(', ')
+      text: user.roles.map((role) => roleNameMapper(role)).join(', ')
     },
     {
       html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}/amend">Manage</a>`

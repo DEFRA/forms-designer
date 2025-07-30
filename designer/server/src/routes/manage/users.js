@@ -1,6 +1,6 @@
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { getRoles, getUsers } from '~/src/lib/manage.js'
+import { getUsers } from '~/src/lib/manage.js'
 import * as viewModel from '~/src/models/manage/users.js'
 
 const notificationKey = sessionNames.successNotification
@@ -16,9 +16,6 @@ export default /** @type {ServerRoute} */
     // Get list of users
     const users = await getUsers(token)
 
-    // Get list of possible roles
-    const allRoles = await getRoles(token)
-
     // Saved banner
     const notification = /** @type {string[] | undefined} */ (
       yar.flash(notificationKey).at(0)
@@ -26,7 +23,7 @@ export default /** @type {ServerRoute} */
 
     return h.view(
       'manage/users',
-      viewModel.listUsersViewModel(users, allRoles, notification)
+      viewModel.listUsersViewModel(users, notification)
     )
   },
   options: {
