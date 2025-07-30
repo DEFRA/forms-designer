@@ -145,6 +145,7 @@ export type FormMessageChangesData =
 export type FormMessageActivitiesData =
   | FormCreatedMessageData
   | FormUpdatedMessageData
+  | FormMessageDataBase
 
 export interface FormUpdatedMessageData extends FormMessageDataBase {
   description: string
