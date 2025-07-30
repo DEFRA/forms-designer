@@ -154,7 +154,7 @@ export type FormMessageActivitiesData =
   | FormCreatedMessageData
   | FormMessageDataBase
 
-export type FormMessageChangesetData = FormUpdatedMessageData
+export type FormMessageChangeSetData = FormUpdatedMessageData
 
 export interface AuditUser {
   id: string
@@ -164,7 +164,7 @@ export interface AuditUser {
 export type MessageData =
   | FormMessageChangesData
   | FormMessageActivitiesData
-  | FormMessageChangesetData
+  | FormMessageChangeSetData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
