@@ -1,3 +1,5 @@
+import { type IChange } from 'json-diff-ts'
+
 import {
   type AuditEventMessageCategory,
   type AuditEventMessageSchemaVersion,
@@ -128,6 +130,12 @@ export interface FormUploadedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormUploadedChanges>
 }
 
+export type FormChangeSet = IChange
+
+export interface FormUpdatedMessageData extends FormMessageDataBase {
+  changeSet: FormChangeSet[]
+}
+
 export type FormMessageChangesData =
   | FormTitleUpdatedMessageData
   | FormOrganisationUpdatedMessageData
@@ -144,19 +152,19 @@ export type FormMessageChangesData =
 
 export type FormMessageActivitiesData =
   | FormCreatedMessageData
-  | FormUpdatedMessageData
   | FormMessageDataBase
 
-export interface FormUpdatedMessageData extends FormMessageDataBase {
-  description: string
-}
+export type FormMessageChangesetData = FormUpdatedMessageData
 
 export interface AuditUser {
   id: string
   displayName: string
 }
 
-export type MessageData = FormMessageChangesData | FormMessageActivitiesData
+export type MessageData =
+  | FormMessageChangesData
+  | FormMessageActivitiesData
+  | FormMessageChangesetData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -280,6 +288,7 @@ export interface FormMigratedMessage extends MessageBase {
 export interface FormUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_UPDATED
+  data: FormUpdatedMessageData
 }
 
 export type AuditMessage =
