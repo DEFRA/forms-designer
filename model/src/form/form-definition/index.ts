@@ -418,6 +418,7 @@ export const componentSchema = Joi.object<ComponentDef>()
       otherwise: Joi.string()
         .trim()
         .pattern(/^[a-zA-Z]+$/)
+        .required()
         .description('Unique identifier for the component, used in form data')
     }),
     title: Joi.when('type', {
