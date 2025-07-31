@@ -1,3 +1,5 @@
+import { hasComponentsEvenIfNoNext } from '@defra/forms-model'
+
 import * as forms from '~/src/lib/forms.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 
@@ -38,3 +40,25 @@ export const customItemOrder = (value) => {
 
   return []
 }
+
+/**
+ * Ensure any components that are not in the
+ * order array are retained in their current position
+ * @param {Page} page
+ * @param {string[]} order
+ */
+export const mergeMissingComponentsIntoOrder = (page, order) => {
+  if (hasComponentsEvenIfNoNext(page)) {
+    const { components } = page
+
+    components.forEach((component, idx) => {
+      if (component.id && !order.includes(component.id)) {
+        order.splice(idx, 0, component.id)
+      }
+    })
+  }
+}
+
+/**
+ * @import { Page } from '@defra/forms-model'
+ */

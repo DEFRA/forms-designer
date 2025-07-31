@@ -464,6 +464,60 @@ export const testFormDefinitionWithExistingGuidance = {
 /**
  * @satisfies {FormDefinition}
  */
+export const testFormDefinitionWithComponentsAndLeadingGuidance = {
+  name: 'Test form',
+  pages: [
+    {
+      path: '/page-one',
+      title: 'Page one',
+      section: 'section',
+      id: '12345',
+      components: [
+        {
+          id: '04132d25-a648-43ae-9d5d-6fa410ae8d99',
+          type: ComponentType.Markdown,
+          name: 'html-guidance',
+          title: 'html-title',
+          content: 'Original guidance',
+          options: {}
+        },
+        {
+          id: 'cda48ac2-91b1-47a8-ba14-8480b5d2c86f',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your first field',
+          hint: 'Help text',
+          options: {},
+          schema: {}
+        },
+        {
+          id: '43425d8e-4832-4ed1-a574-1d29fd63cf3c',
+          type: ComponentType.TextField,
+          name: 'textField',
+          title: 'This is your second question - page two',
+          hint: 'Help text',
+          options: {
+            required: false
+          },
+          schema: {}
+        }
+      ],
+      next: [{ path: '/summary' }]
+    },
+    {
+      title: 'Summary',
+      path: '/summary',
+      controller: ControllerType.Summary
+    }
+  ],
+  conditions: [],
+  sections: [],
+  lists: []
+}
+
+/**
+ * @satisfies {FormDefinition}
+ */
 export const testFormDefinitionWithExistingSummaryDeclaration = {
   name: 'Test form',
   pages: [
