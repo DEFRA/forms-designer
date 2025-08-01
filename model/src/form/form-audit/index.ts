@@ -1,10 +1,10 @@
 import Joi, { type ObjectSchema } from 'joi'
-import { Operation } from 'json-diff-ts'
 
 import {
   AuditEventMessageCategory,
   AuditEventMessageSchemaVersion,
-  AuditEventMessageType
+  AuditEventMessageType,
+  FormDefinitionRequestType
 } from '~/src/form/form-audit/enums.js'
 import {
   type AuditEvent,
@@ -12,8 +12,9 @@ import {
   type AuditRecord,
   type AuditUser,
   type ChangesMessageData,
-  type FormChangeSet,
   type FormCreatedMessageData,
+  type FormDefinitionMessageBase,
+  type FormDefinitionS3Meta,
   type FormMessageChangesData,
   type FormMessageDataBase,
   type FormNotificationEmailChanges,
@@ -57,26 +58,40 @@ export const formCreatedMessageData =
     teamEmail: Joi.string().required()
   })
 
-const allowedOperations = [Operation.ADD, Operation.REMOVE, Operation.UPDATE]
+export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>().keys({
+  fileId: Joi.string().required(),
+  filename: Joi.string().required(),
+  s3Key: Joi.string().required()
+})
 
-export const formChangeSet = Joi.array().items(
-  Joi.object<FormChangeSet>()
-    .keys({
-      type: Joi.string()
-        .valid(...allowedOperations)
-        .required(),
-      key: Joi.string().required(),
-      embeddedKey: Joi.string().optional(),
-      value: Joi.any().optional(),
-      oldValue: Joi.any().optional(),
-      changes: Joi.array().items(Joi.link('#formChangeSet')).optional()
-    })
-    .id('formChangeSet')
-)
+export const formDefinitionMessageBase =
+  formMessageDataBase.append<FormDefinitionMessageBase>({
+    s3Meta: formDefinitionS3Meta.optional()
+  })
+
+const allowedDefinitionRequestTypes = [
+  FormDefinitionRequestType.CREATE_COMPONENT,
+  FormDefinitionRequestType.UPDATE_COMPONENT,
+  FormDefinitionRequestType.DELETE_COMPONENT,
+  FormDefinitionRequestType.ADD_CONDITION,
+  FormDefinitionRequestType.UPDATE_CONDITION,
+  FormDefinitionRequestType.REMOVE_CONDITION,
+  FormDefinitionRequestType.REORDER_PAGES,
+  FormDefinitionRequestType.REORDER_COMPONENTS,
+  FormDefinitionRequestType.ADD_LIST,
+  FormDefinitionRequestType.UPDATE_LIST,
+  FormDefinitionRequestType.REMOVE_LIST,
+  FormDefinitionRequestType.CREATE_PAGE,
+  FormDefinitionRequestType.UPDATE_PAGE_FIELDS,
+  FormDefinitionRequestType.DELETE_PAGE
+]
 
 export const formUpdatedMessageData =
-  formMessageDataBase.append<FormUpdatedMessageData>({
-    changeSet: formChangeSet.required()
+  formDefinitionMessageBase.append<FormUpdatedMessageData>({
+    payload: Joi.object().required(),
+    requestType: Joi.string()
+      .valid(...allowedDefinitionRequestTypes)
+      .required()
   })
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
