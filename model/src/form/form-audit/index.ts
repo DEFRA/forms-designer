@@ -1,5 +1,4 @@
 import Joi, { type ObjectSchema } from 'joi'
-import { Operation } from 'json-diff-ts'
 
 import {
   AuditEventMessageCategory,
@@ -13,7 +12,6 @@ import {
   type AuditRecord,
   type AuditUser,
   type ChangesMessageData,
-  type FormChangeSet,
   type FormCreatedMessageData,
   type FormDefinitionMessageBase,
   type FormMessageChangesData,
@@ -59,8 +57,6 @@ export const formCreatedMessageData =
     teamEmail: Joi.string().required()
   })
 
-const allowedOperations = [Operation.ADD, Operation.REMOVE, Operation.UPDATE]
-
 export const formDefinitionMessageBase =
   formMessageDataBase.append<FormDefinitionMessageBase>({
     fileId: Joi.string().optional(),
@@ -84,21 +80,6 @@ const allowedDefinitionRequestTypes = [
   FormDefinitionRequestType.UPDATE_PAGE_FIELDS,
   FormDefinitionRequestType.DELETE_PAGE
 ]
-
-export const formChangeSet = Joi.array().items(
-  Joi.object<FormChangeSet>()
-    .keys({
-      type: Joi.string()
-        .valid(...allowedOperations)
-        .required(),
-      key: Joi.string().required(),
-      embeddedKey: Joi.string().optional(),
-      value: Joi.any().optional(),
-      oldValue: Joi.any().optional(),
-      changes: Joi.array().items(Joi.link('#formChangeSet')).optional()
-    })
-    .id('formChangeSet')
-)
 
 export const formUpdatedMessageData =
   formMessageDataBase.append<FormUpdatedMessageData>({
