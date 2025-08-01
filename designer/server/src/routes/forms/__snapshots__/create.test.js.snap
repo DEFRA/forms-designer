@@ -84,7 +84,7 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
       <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/auth/account">
               <span class="one-login-header__nav__link-content">
                 John Smith
               </span>
@@ -397,7 +397,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
       <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/auth/account">
               <span class="one-login-header__nav__link-content">
                 John Smith
               </span>
@@ -676,7 +676,7 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
       <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/auth/account">
               <span class="one-login-header__nav__link-content">
                 John Smith
               </span>

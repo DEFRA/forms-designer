@@ -1,11 +1,17 @@
 import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
+import { getErrorMessage } from '@defra/forms-model'
+
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
-import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
+import {
+  getUserSession,
+  hasAdminRole
+} from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
+import { getUser } from '~/src/lib/manage.js'
 import {
   buildFormUrl,
   buildPreviewUrl
@@ -34,6 +40,21 @@ export async function context(request) {
 
   const credentials = request ? await getUserSession(request) : undefined
 
+  let userDetails = null
+  let isAdmin = false
+
+  if (credentials?.user?.id && credentials.token) {
+    try {
+      userDetails = await getUser(credentials.token, credentials.user.id)
+      isAdmin = hasAdminRole(userDetails)
+    } catch (error) {
+      logger.warn(
+        'Could not fetch user details from entitlement API:',
+        getErrorMessage(error)
+      )
+    }
+  }
+
   return {
     breadcrumbs: [],
     config: {
@@ -49,6 +70,8 @@ export async function context(request) {
     isAuthorized: request?.auth?.isAuthorized ?? false,
     isFormsUser: credentials?.scope?.includes(SCOPE_READ) ?? false, // isAuthorized may be true if no scopes are required for the route
     authedUser: credentials?.user,
+    userDetails,
+    isAdmin,
     helpers: {
       buildFormUrl,
       buildPreviewUrl
