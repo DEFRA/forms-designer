@@ -14,6 +14,7 @@ import {
   type ChangesMessageData,
   type FormCreatedMessageData,
   type FormDefinitionMessageBase,
+  type FormDefinitionS3Meta,
   type FormMessageChangesData,
   type FormMessageDataBase,
   type FormNotificationEmailChanges,
@@ -57,11 +58,15 @@ export const formCreatedMessageData =
     teamEmail: Joi.string().required()
   })
 
+export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>().keys({
+  fileId: Joi.string().required(),
+  filename: Joi.string().required(),
+  s3Key: Joi.string().required()
+})
+
 export const formDefinitionMessageBase =
   formMessageDataBase.append<FormDefinitionMessageBase>({
-    fileId: Joi.string().optional(),
-    filename: Joi.string().optional(),
-    s3Key: Joi.string().optional()
+    s3Meta: formDefinitionS3Meta.optional()
   })
 
 const allowedDefinitionRequestTypes = [
@@ -82,7 +87,7 @@ const allowedDefinitionRequestTypes = [
 ]
 
 export const formUpdatedMessageData =
-  formMessageDataBase.append<FormUpdatedMessageData>({
+  formDefinitionMessageBase.append<FormUpdatedMessageData>({
     payload: Joi.object().required(),
     requestType: Joi.string().valid(...allowedDefinitionRequestTypes)
   })
