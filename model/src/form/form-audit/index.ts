@@ -89,7 +89,9 @@ const allowedDefinitionRequestTypes = [
 export const formUpdatedMessageData =
   formDefinitionMessageBase.append<FormUpdatedMessageData>({
     payload: Joi.object().required(),
-    requestType: Joi.string().valid(...allowedDefinitionRequestTypes)
+    requestType: Joi.string()
+      .valid(...allowedDefinitionRequestTypes)
+      .required()
   })
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()

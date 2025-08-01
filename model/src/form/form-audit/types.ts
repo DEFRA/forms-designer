@@ -130,9 +130,9 @@ export interface FormUploadedMessageData extends FormMessageDataBase {
 }
 
 export interface FormDefinitionS3Meta {
-  fileId?: string
-  filename?: string
-  s3Key?: string
+  fileId: string
+  filename: string
+  s3Key: string
 }
 
 export interface FormDefinitionMessageBase extends FormMessageDataBase {
