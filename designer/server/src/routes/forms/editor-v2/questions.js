@@ -37,7 +37,10 @@ import {
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { customItemOrder } from '~/src/routes/forms/editor-v2/helpers.js'
+import {
+  customItemOrder,
+  mergeMissingComponentsIntoOrder
+} from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_FULL_PATH_QUESTIONS = `/library/{slug}/editor-v2/page/{pageId}/questions`
 
@@ -170,6 +173,7 @@ export default [
       }
 
       if (saveReorder) {
+        mergeMissingComponentsIntoOrder(page, itemOrder)
         await reorderQuestions(metadata.id, token, pageId, itemOrder)
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
         yar.clear(reorderQuestionsKey)
@@ -207,6 +211,7 @@ export default [
         // Save re-order (if in reorder mode) in case user pressed the main 'Save changes' button
         // as opposed to the reorder 'Save changes' button
         if (action === 'reorder') {
+          mergeMissingComponentsIntoOrder(page, itemOrder)
           await reorderQuestions(metadata.id, token, pageId, itemOrder)
         }
 

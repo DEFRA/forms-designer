@@ -418,6 +418,7 @@ export const componentSchema = Joi.object<ComponentDef>()
       otherwise: Joi.string()
         .trim()
         .pattern(/^[a-zA-Z]+$/)
+        .required()
         .description('Unique identifier for the component, used in form data')
     }),
     title: Joi.when('type', {
@@ -646,7 +647,7 @@ export const pageUploadComponentsSchema = Joi.array<
     contentComponentSchema.optional()
   )
   .unique('id')
-  .unique('name')
+  .unique('name', { ignoreUndefined: true })
   .min(1)
   .max(2)
   .description('Components allowed on Page Upload schema')
@@ -731,7 +732,7 @@ export const pageSchemaV2 = pageSchema
       otherwise: Joi.array<ComponentDef>()
         .items(componentSchemaV2)
         .unique('id')
-        .unique('name')
+        .unique('name', { ignoreUndefined: true })
         .description('Components schema for V2 forms')
         .error(
           checkErrors([
