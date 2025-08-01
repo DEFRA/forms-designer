@@ -21,7 +21,7 @@
 {{ appServiceHeader({
   organisationName: "Defra",
   productName: productName | safe | trim,
-  navigationItems: navigation,
+  navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)),
   adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: accountLinkUrl,

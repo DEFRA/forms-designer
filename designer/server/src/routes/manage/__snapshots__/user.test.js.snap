@@ -422,6 +422,11 @@ exports[`Create and edit user routes GET /manage/users should render view when d
           </span>
             </a>
           </li>
+            <li class="one-login-header__nav__list-item">
+              <a class="one-login-header__nav__link" href="/manage/users">
+                Manage users
+              </a>
+            </li>
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link" href="/auth/sign-out">
               Sign out
@@ -708,6 +713,11 @@ exports[`Create and edit user routes GET /manage/users should render view when e
           </span>
             </a>
           </li>
+            <li class="one-login-header__nav__list-item">
+              <a class="one-login-header__nav__link" href="/manage/users">
+                Manage users
+              </a>
+            </li>
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link" href="/auth/sign-out">
               Sign out

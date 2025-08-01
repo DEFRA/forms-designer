@@ -39,10 +39,9 @@ export function signInViewModel(options) {
 }
 
 /**
- * @param { AuthCredentials<UserCredentials, AppCredentials> & Record<string, unknown> } credentials
  * @param {EntitlementUser} user
  */
-export function accountViewModel(credentials, user) {
+export function accountViewModel(user) {
   const pageTitle = 'My account'
 
   const navigation = [

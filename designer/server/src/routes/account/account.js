@@ -14,7 +14,7 @@ export default /** @satisfies {ServerRoute} */ ({
       /** @type {string} */ (credentials.user?.id)
     )
 
-    return h.view('account/account', accountViewModel(credentials, user))
+    return h.view('account/account', accountViewModel(user))
   },
   options: {
     auth: {
