@@ -3,7 +3,8 @@ import { type IChange } from 'json-diff-ts'
 import {
   type AuditEventMessageCategory,
   type AuditEventMessageSchemaVersion,
-  type AuditEventMessageType
+  type AuditEventMessageType,
+  type FormDefinitionRequestType
 } from '~/src/form/form-audit/enums.js'
 import { type FormMetadataContact } from '~/src/form/form-metadata/types.js'
 
@@ -132,8 +133,15 @@ export interface FormUploadedMessageData extends FormMessageDataBase {
 
 export type FormChangeSet = IChange
 
-export interface FormUpdatedMessageData extends FormMessageDataBase {
-  changeSet: FormChangeSet[]
+export interface FormDefinitionMessageBase extends FormMessageDataBase {
+  fileId?: string
+  filename?: string
+  s3Key?: string
+}
+
+export interface FormUpdatedMessageData extends FormDefinitionMessageBase {
+  payload: Record<string, unknown>
+  requestType: FormDefinitionRequestType
 }
 
 export type FormMessageChangesData =

@@ -4,7 +4,8 @@ import { Operation } from 'json-diff-ts'
 import {
   AuditEventMessageCategory,
   AuditEventMessageSchemaVersion,
-  AuditEventMessageType
+  AuditEventMessageType,
+  FormDefinitionRequestType
 } from '~/src/form/form-audit/enums.js'
 import {
   type AuditEvent,
@@ -14,6 +15,7 @@ import {
   type ChangesMessageData,
   type FormChangeSet,
   type FormCreatedMessageData,
+  type FormDefinitionMessageBase,
   type FormMessageChangesData,
   type FormMessageDataBase,
   type FormNotificationEmailChanges,
@@ -59,6 +61,30 @@ export const formCreatedMessageData =
 
 const allowedOperations = [Operation.ADD, Operation.REMOVE, Operation.UPDATE]
 
+export const formDefinitionMessageBase =
+  formMessageDataBase.append<FormDefinitionMessageBase>({
+    fileId: Joi.string().optional(),
+    filename: Joi.string().optional(),
+    s3Key: Joi.string().optional()
+  })
+
+const allowedDefinitionRequestTypes = [
+  FormDefinitionRequestType.CREATE_COMPONENT,
+  FormDefinitionRequestType.UPDATE_COMPONENT,
+  FormDefinitionRequestType.DELETE_COMPONENT,
+  FormDefinitionRequestType.ADD_CONDITION,
+  FormDefinitionRequestType.UPDATE_CONDITION,
+  FormDefinitionRequestType.REMOVE_CONDITION,
+  FormDefinitionRequestType.REORDER_PAGES,
+  FormDefinitionRequestType.REORDER_COMPONENTS,
+  FormDefinitionRequestType.ADD_LIST,
+  FormDefinitionRequestType.UPDATE_LIST,
+  FormDefinitionRequestType.REMOVE_LIST,
+  FormDefinitionRequestType.CREATE_PAGE,
+  FormDefinitionRequestType.UPDATE_PAGE_FIELDS,
+  FormDefinitionRequestType.DELETE_PAGE
+]
+
 export const formChangeSet = Joi.array().items(
   Joi.object<FormChangeSet>()
     .keys({
@@ -76,7 +102,8 @@ export const formChangeSet = Joi.array().items(
 
 export const formUpdatedMessageData =
   formMessageDataBase.append<FormUpdatedMessageData>({
-    changeSet: formChangeSet.required()
+    payload: Joi.object().required(),
+    requestType: Joi.string().valid(...allowedDefinitionRequestTypes)
   })
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
