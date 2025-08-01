@@ -1,5 +1,3 @@
-import { type IChange } from 'json-diff-ts'
-
 import {
   type AuditEventMessageCategory,
   type AuditEventMessageSchemaVersion,
@@ -130,8 +128,6 @@ export interface FormSubmissionGuidanceUpdatedMessageData
 export interface FormUploadedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormUploadedChanges>
 }
-
-export type FormChangeSet = IChange
 
 export interface FormDefinitionMessageBase extends FormMessageDataBase {
   fileId?: string

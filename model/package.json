@@ -35,7 +35,6 @@
   },
   "dependencies": {
     "@joi/date": "^2.1.1",
-    "json-diff-ts": "^4.8.1",
     "marked": "^15.0.12",
     "nanoid": "^5.0.7",
     "slug": "^11.0.0",
