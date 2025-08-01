@@ -2,6 +2,7 @@ import { token } from '@hapi/jwt'
 import { isPast, parseISO, subMinutes } from 'date-fns'
 
 import { groupsToScopes } from '~/src/common/constants/scopes.js'
+import { Roles } from '~/src/models/account/role-mapper.js'
 
 /**
  * @param {Partial<Request> | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Query: { logoutHint?: string } }>} request
@@ -115,6 +116,16 @@ export function hasUser(credentials) {
 }
 
 /**
+ * Check if user has admin role
+ * @param {EntitlementUser} user
+ * @returns {boolean}
+ */
+export function hasAdminRole(user) {
+  return user.roles.includes(Roles.Admin)
+}
+
+/**
  * @import { AuthArtifacts, AuthCredentials, Request, UserCredentials } from '@hapi/hapi'
  * @import { AuthSignedIn, AuthWithTokens, Tokens, UserProfile } from '~/src/common/helpers/auth/types.js'
+ * @import { EntitlementUser } from '@defra/forms-model'
  */

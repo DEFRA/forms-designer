@@ -1,3 +1,4 @@
+import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { roleNameMapper } from '~/src/models/account/role-mapper.js'
 
@@ -52,14 +53,13 @@ export function accountViewModel(credentials, user) {
     }
   ]
 
-  // TODO - determine hwot ochec if user has ADMIN role
-  // if (hasAdmin(credentials)) {
-  // navigation.push({
-  //   text: 'Manage users',
-  //   url: '/manage/users',
-  //   isActive: false
-  // })
-  // }
+  if (hasAdminRole(user)) {
+    navigation.push({
+      text: 'Manage users',
+      url: '/manage/users',
+      isActive: false
+    })
+  }
 
   return {
     navigation,
