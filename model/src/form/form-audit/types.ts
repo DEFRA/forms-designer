@@ -136,7 +136,7 @@ export interface FormDefinitionMessageBase extends FormMessageDataBase {
 }
 
 export interface FormUpdatedMessageData extends FormDefinitionMessageBase {
-  payload: Record<string, unknown>
+  payload: unknown
   requestType: FormDefinitionRequestType
 }
 
