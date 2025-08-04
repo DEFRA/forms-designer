@@ -1,3 +1,5 @@
+import { type IChange } from 'json-diff-ts'
+
 import {
   type AuditEventMessageCategory,
   type AuditEventMessageSchemaVersion,
@@ -135,13 +137,12 @@ export interface FormDefinitionS3Meta {
   s3Key: string
 }
 
-export interface FormDefinitionMessageBase extends FormMessageDataBase {
-  s3Meta?: FormDefinitionS3Meta
-}
+export type FormChangeSet = IChange
 
-export interface FormUpdatedMessageData extends FormDefinitionMessageBase {
+export interface FormUpdatedMessageData extends FormMessageDataBase {
   payload: unknown
   requestType: FormDefinitionRequestType
+  changeSet: FormChangeSet[]
 }
 
 export type FormMessageChangesData =

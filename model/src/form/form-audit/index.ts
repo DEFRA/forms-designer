@@ -1,4 +1,5 @@
 import Joi, { type ObjectSchema } from 'joi'
+import { Operation } from 'json-diff-ts'
 
 import {
   AuditEventMessageCategory,
@@ -12,8 +13,8 @@ import {
   type AuditRecord,
   type AuditUser,
   type ChangesMessageData,
+  type FormChangeSet,
   type FormCreatedMessageData,
-  type FormDefinitionMessageBase,
   type FormDefinitionS3Meta,
   type FormMessageChangesData,
   type FormMessageDataBase,
@@ -64,10 +65,22 @@ export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>().keys({
   s3Key: Joi.string().required()
 })
 
-export const formDefinitionMessageBase =
-  formMessageDataBase.append<FormDefinitionMessageBase>({
-    s3Meta: formDefinitionS3Meta.optional()
-  })
+const allowedOperations = [Operation.ADD, Operation.REMOVE, Operation.UPDATE]
+
+export const formChangeSet = Joi.array().items(
+  Joi.object<FormChangeSet>()
+    .keys({
+      type: Joi.string()
+        .valid(...allowedOperations)
+        .required(),
+      key: Joi.string().required(),
+      embeddedKey: Joi.string().optional(),
+      value: Joi.any().optional(),
+      oldValue: Joi.any().optional(),
+      changes: Joi.array().items(Joi.link('#formChangeSet')).optional()
+    })
+    .id('formChangeSet')
+)
 
 const allowedDefinitionRequestTypes = [
   FormDefinitionRequestType.CREATE_COMPONENT,
@@ -87,7 +100,8 @@ const allowedDefinitionRequestTypes = [
 ]
 
 export const formUpdatedMessageData =
-  formDefinitionMessageBase.append<FormUpdatedMessageData>({
+  formMessageDataBase.append<FormUpdatedMessageData>({
+    changeSet: formChangeSet.required(),
     payload: Joi.object().required(),
     requestType: Joi.string()
       .valid(...allowedDefinitionRequestTypes)
