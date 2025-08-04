@@ -48,10 +48,11 @@ export async function context(request) {
       userDetails = await getUser(credentials.token, credentials.user.id)
       isAdmin = hasAdminRole(userDetails)
     } catch (error) {
-      logger.warn(
+      logger.error(
         'Could not fetch user details from entitlement API:',
         getErrorMessage(error)
       )
+      throw error
     }
   }
 
