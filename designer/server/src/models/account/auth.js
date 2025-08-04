@@ -1,6 +1,6 @@
 import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
-import { roleNameMapper } from '~/src/models/account/role-mapper.js'
+import { getNameForRole } from '~/src/models/account/role-mapper.js'
 
 export function signedOutViewModel() {
   const pageTitle = 'You have signed out'
@@ -89,7 +89,7 @@ export function accountViewModel(user) {
             text: 'Role'
           },
           value: {
-            text: user.roles.map(roleNameMapper).join(', ')
+            text: user.roles.map(getNameForRole).join(', ')
           }
         }
       ]

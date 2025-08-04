@@ -1,8 +1,8 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
-  roleDescriptionMapper,
-  roleNameMapper
+  getDescriptionForRole,
+  getNameForRole
 } from '~/src/models/account/role-mapper.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 
@@ -71,10 +71,10 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
           }
         },
         items: allRoles.map((r) => ({
-          text: roleNameMapper(r.code),
+          text: getNameForRole(r.code),
           value: r.code,
           hint: {
-            text: roleDescriptionMapper(r.code)
+            text: getDescriptionForRole(r.code)
           }
         })),
         value: formValues?.userRole ?? role,
@@ -98,7 +98,7 @@ export function listUsersViewModel(users, notification) {
       html: `${user.displayName}<span class="govuk-visually-hidden">User: ${user.displayName}</span><br><span class="govuk-hint" aria-hidden="true"> ${user.email} </span>`
     },
     {
-      text: user.roles.map((role) => roleNameMapper(role)).join(', ')
+      text: user.roles.map((role) => getNameForRole(role)).join(', ')
     },
     {
       html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}/amend">Manage</a>`
