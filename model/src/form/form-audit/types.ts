@@ -1,16 +1,24 @@
-import { type IChange } from 'json-diff-ts'
-
 import {
   type AuditEventMessageCategory,
+  type AuditEventMessageObjectType,
   type AuditEventMessageSchemaVersion,
+  type AuditEventMessageSource,
   type AuditEventMessageType,
   type FormDefinitionRequestType
 } from '~/src/form/form-audit/enums.js'
-import { type FormMetadataContact } from '~/src/form/form-metadata/types.js'
+import {
+  type FormMetadata,
+  type FormMetadataContact
+} from '~/src/form/form-metadata/types.js'
 
 export interface FormMessageDataBase {
   formId: string
   slug: string
+  payload: unknown
+}
+
+export interface FormsManagerMessageDataBase extends FormMessageDataBase {
+  objectType: AuditEventMessageObjectType
 }
 
 export interface ChangesMessageData<T> {
@@ -131,18 +139,32 @@ export interface FormUploadedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormUploadedChanges>
 }
 
+export interface FormDefinitionMessageData extends FormsManagerMessageDataBase {
+  objectType: AuditEventMessageObjectType.FORM_DEFINITION
+}
+
+export interface FormMetadataMessageData extends FormsManagerMessageDataBase {
+  objectType: AuditEventMessageObjectType.FORM_METADATA
+  updatedAt: Date
+  updatedBy: AuditUser
+  before: FormMetadata
+  after: FormMetadata
+}
+
 export interface FormDefinitionS3Meta {
   fileId: string
   filename: string
   s3Key: string
 }
 
-export type FormChangeSet = IChange
-
-export interface FormUpdatedMessageData extends FormMessageDataBase {
-  payload: unknown
+export interface FormDefinitionUpdatedMessageData
+  extends FormDefinitionMessageData {
   requestType: FormDefinitionRequestType
-  changeSet: FormChangeSet[]
+}
+
+export interface FormFullDefinitionUpdatedMessageData
+  extends FormDefinitionUpdatedMessageData {
+  s3Meta: FormDefinitionS3Meta
 }
 
 export type FormMessageChangesData =
@@ -163,7 +185,9 @@ export type FormMessageActivitiesData =
   | FormCreatedMessageData
   | FormMessageDataBase
 
-export type FormMessageChangeSetData = FormUpdatedMessageData
+export type FormMessageUpdateDefinitionData =
+  | FormDefinitionUpdatedMessageData
+  | FormFullDefinitionUpdatedMessageData
 
 export interface AuditUser {
   id: string
@@ -173,13 +197,17 @@ export interface AuditUser {
 export type MessageData =
   | FormMessageChangesData
   | FormMessageActivitiesData
-  | FormMessageChangeSetData
+  | FormMessageUpdateDefinitionData
+  | FormMetadataMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
   category: AuditEventMessageCategory
+  source: AuditEventMessageSource
   type: AuditEventMessageType
   entityId: string
+  traceId: string
+  endpoint: string
   createdAt: Date
   createdBy: AuditUser
   data?: MessageData
@@ -189,84 +217,91 @@ export interface MessageBase {
 export interface FormCreatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_CREATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormCreatedMessageData
 }
 
 export interface FormTitleUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TITLE_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormTitleUpdatedMessageData
 }
 
 export interface FormOrganisationUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_ORGANISATION_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormOrganisationUpdatedMessageData
 }
 
 export interface FormTeamNameUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TEAM_NAME_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormTeamNameUpdatedMessageData
 }
 
 export interface FormTeamEmailUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormTeamEmailUpdatedMessageData
-}
-
-export interface FormSupportContactUpdatedMessage extends MessageBase {
-  category: AuditEventMessageCategory.FORM
-  type: AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED
-  data: FormSupportContactUpdatedMessageData
 }
 
 export interface FormSupportPhoneUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSupportPhoneUpdatedMessageData
 }
 
 export interface FormSupportEmailUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSupportEmailUpdatedMessageData
 }
 
 export interface FormSupportOnlineUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSupportOnlineUpdatedMessageData
 }
 
 export interface FormPrivacyNoticeUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormPrivacyNoticeUpdatedMessageData
 }
 
 export interface FormNotificationEmailUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormNotificationEmailUpdatedMessageData
 }
 
 export interface FormSubmissionGuidanceUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSubmissionGuidanceUpdatedMessageData
 }
 
 export interface FormUploadedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_JSON_UPLOADED
+  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormUploadedMessageData
 }
 
 export interface FormDownloadedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_JSON_DOWNLOADED
+  source: AuditEventMessageSource.FORMS_DESIGNER
 }
 
 export interface FormPublishedMessage extends MessageBase {
@@ -277,11 +312,13 @@ export interface FormPublishedMessage extends MessageBase {
 export interface FormDraftCreatedFromLiveMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE
+  source: AuditEventMessageSource.FORMS_DESIGNER
 }
 
 export interface FormLiveCreatedFromDraftMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
+  source: AuditEventMessageSource.FORMS_DESIGNER
 }
 
 export interface FormDraftDeletedMessage extends MessageBase {
@@ -294,10 +331,25 @@ export interface FormMigratedMessage extends MessageBase {
   type: AuditEventMessageType.FORM_MIGRATED
 }
 
-export interface FormUpdatedMessage extends MessageBase {
+export interface FormDefinitionCreatedMessage extends MessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_DEFINITION_CREATED
+  source: AuditEventMessageSource.FORMS_MANAGER
+  data: FormDefinitionMessageData
+}
+
+export interface FormDefinitionUpdatedMessage extends MessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_DEFINITION_UPDATED
+  source: AuditEventMessageSource.FORMS_MANAGER
+  data: FormMessageUpdateDefinitionData
+}
+
+export interface FormMetadataUpdatedMessage extends MessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_UPDATED
-  data: FormUpdatedMessageData
+  source: AuditEventMessageSource.FORMS_MANAGER
+  data: FormMetadataMessageData
 }
 
 export type AuditMessage =
@@ -306,7 +358,6 @@ export type AuditMessage =
   | FormOrganisationUpdatedMessage
   | FormTeamNameUpdatedMessage
   | FormTeamEmailUpdatedMessage
-  | FormSupportContactUpdatedMessage
   | FormSupportPhoneUpdatedMessage
   | FormSupportEmailUpdatedMessage
   | FormSupportOnlineUpdatedMessage
@@ -320,7 +371,9 @@ export type AuditMessage =
   | FormLiveCreatedFromDraftMessage
   | FormDraftDeletedMessage
   | FormMigratedMessage
-  | FormUpdatedMessage
+  | FormDefinitionCreatedMessage
+  | FormDefinitionUpdatedMessage
+  | FormMetadataUpdatedMessage
 
 export interface AuditEvent {
   message: AuditMessage
