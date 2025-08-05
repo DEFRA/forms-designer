@@ -117,11 +117,11 @@ export function hasUser(credentials) {
 
 /**
  * Check if user has admin role
- * @param {EntitlementUser} user
+ * @param {EntitlementUser | UserCredentials | null | undefined} user
  * @returns {boolean}
  */
 export function hasAdminRole(user) {
-  return user.roles.includes(Roles.Admin)
+  return user?.roles?.includes(Roles.Admin) ?? false
 }
 
 /**

@@ -51,6 +51,7 @@ export interface Config {
   tracing: {
     header: string
   }
+  featureFlagUseEntitlementApi: boolean
 }
 
 // Define config schema
@@ -158,7 +159,8 @@ const schema = joi.object<Config>({
   roleEditorGroupId: joi.string().required(),
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
-  })
+  }),
+  featureFlagUseEntitlementApi: joi.boolean().default(false)
 })
 
 // Validate config
@@ -198,7 +200,8 @@ const result = schema.validate(
     roleEditorGroupId: process.env.ROLE_EDITOR_GROUP_ID,
     tracing: {
       header: process.env.TRACING_HEADER
-    }
+    },
+    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API
   },
   { abortEarly: false }
 )

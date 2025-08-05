@@ -62,6 +62,7 @@ declare module '@hapi/hapi' {
     refreshToken: string
     expiresIn: number
     flowId: string
+    scope?: string[]
   }
 
   interface UserCredentials {
@@ -79,6 +80,16 @@ declare module '@hapi/hapi' {
      * User display name
      */
     displayName: string
+
+    /**
+     * User roles from entitlement API
+     */
+    roles?: string[]
+
+    /**
+     * User scopes from entitlement API
+     */
+    scopes?: string[]
 
     /**
      * Session issued time (ISO 8601)

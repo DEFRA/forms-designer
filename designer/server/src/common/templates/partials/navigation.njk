@@ -6,7 +6,7 @@
   Forms Designer {{ appTagEnv({ env: config.cdpEnvironment }) }}
 {% endset -%}
 
-{%- set accountLinkUrl = "/auth/account" if isAuthenticated else "/library" -%}
+{%- set accountLinkUrl = "/auth/account" if (isAuthenticated and config.featureFlagUseEntitlementApi) else "/library" -%}
 
 {%- set adminNavigation = [] -%}
 {%- if isAuthenticated and isAdmin -%}
