@@ -2,6 +2,7 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
@@ -13,7 +14,14 @@ import {
   getUser,
   updateUser
 } from '~/src/lib/manage.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { Roles } from '~/src/models/account/role-mapper.js'
+import {
+  artifacts,
+  auth,
+  credentials,
+  profile,
+  user
+} from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
@@ -373,6 +381,55 @@ describe('Create and edit user routes', () => {
         expect.anything(),
         new Joi.ValidationError('An error occurred', [], undefined),
         'manageUsersValidationFailure'
+      )
+    })
+  })
+
+  describe('checkUserManagementAccess pre-handler', () => {
+    test('should return 403 when feature flag is disabled', async () => {
+      jest.mocked(config).featureFlagUseEntitlementApi = false
+
+      const options = {
+        method: 'get',
+        url: '/manage/users/new',
+        auth
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).toBe(403)
+      expect(response.result).toContain(
+        'You do not have access to this service'
+      )
+    })
+
+    test('should return 403 when user does not have admin role', async () => {
+      const claims = {
+        token: profile({ groups: ['valid-test-group'], login_hint: 'foo' }),
+        idToken: profile()
+      }
+
+      const nonAdminAuth = {
+        strategy: 'azure-oidc',
+        artifacts: artifacts(claims),
+        credentials: credentials({
+          claims,
+          user: user(claims.token, [Roles.FormCreator]),
+          scope: [SCOPE_READ, SCOPE_WRITE]
+        })
+      }
+
+      const options = {
+        method: 'get',
+        url: '/manage/users/new',
+        auth: nonAdminAuth
+      }
+
+      const response = await server.inject(options)
+
+      expect(response.statusCode).toBe(403)
+      expect(response.result).toContain(
+        'You do not have access to this service'
       )
     })
   })

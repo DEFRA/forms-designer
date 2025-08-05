@@ -55,6 +55,21 @@ describe('Account profile route', () => {
     expect($mastheadHeading.textContent).toContain('John Smith')
     expect(response.result).toMatchSnapshot()
   })
+
+  test('/auth/account route redirects to library when feature flag is disabled', async () => {
+    jest.mocked(config).featureFlagUseEntitlementApi = false
+
+    const options = {
+      method: 'GET',
+      url: '/auth/account',
+      auth
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(response.headers.location).toBe('/library')
+  })
 })
 
 /**
