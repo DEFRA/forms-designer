@@ -48,11 +48,30 @@ export async function context(request) {
       userDetails = await getUser(credentials.token, credentials.user.id)
       isAdmin = hasAdminRole(userDetails)
     } catch (error) {
-      logger.error(
-        'Could not fetch user details from entitlement API:',
-        getErrorMessage(error)
-      )
-      throw error
+      const errorMessage = getErrorMessage(error)
+
+      // @ts-expect-error -- Boom errors have output.statusCode and isBoom property
+      const statusCode = error?.output?.statusCode
+      // @ts-expect-error -- Boom errors have isBoom property
+      const isBoomError = error?.isBoom === true
+
+      if (statusCode === 401 || statusCode === 403) {
+        logger.error(
+          `Authentication/authorisation error fetching user details (${statusCode}):`,
+          errorMessage
+        )
+      } else if (statusCode >= 500 || !isBoomError) {
+        const statusInfo = statusCode ? ` (${statusCode})` : ''
+        logger.error(
+          `Failed to fetch user details from entitlement API${statusInfo}:`,
+          errorMessage
+        )
+      } else {
+        logger.warn(
+          `Unexpected response fetching user details (${statusCode}):`,
+          errorMessage
+        )
+      }
     }
   }
 
