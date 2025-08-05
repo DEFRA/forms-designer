@@ -2,6 +2,7 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
@@ -17,6 +18,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
 jest.mock('~/src/lib/error-helper.js')
+jest.mock('~/src/config.ts')
 
 describe('Create and edit user routes', () => {
   /** @type {Server} */
@@ -31,6 +33,7 @@ describe('Create and edit user routes', () => {
     jest.mocked(getRoles).mockResolvedValue(allRoles)
     jest.mocked(addUser).mockResolvedValue({ emailAddress: '', userRole: '' })
     jest.mocked(getUser).mockResolvedValue(/** @type {EntitlementUser} */ ({}))
+    jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
   describe('GET /manage/users', () => {

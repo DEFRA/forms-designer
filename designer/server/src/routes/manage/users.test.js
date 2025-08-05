@@ -1,3 +1,4 @@
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { getRoles, getUsers } from '~/src/lib/manage.js'
@@ -5,6 +6,7 @@ import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
+jest.mock('~/src/config.ts')
 
 describe('Manage users route', () => {
   /** @type {Server} */
@@ -18,6 +20,7 @@ describe('Manage users route', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(getRoles).mockResolvedValueOnce(allRoles)
+    jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
   const userList = [
