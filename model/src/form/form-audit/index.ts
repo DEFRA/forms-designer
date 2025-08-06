@@ -2,7 +2,6 @@ import Joi, { type ObjectSchema } from 'joi'
 
 import {
   AuditEventMessageCategory,
-  AuditEventMessageSchemaVersion,
   AuditEventMessageSource,
   AuditEventMessageType,
   FormDefinitionRequestType
@@ -65,27 +64,10 @@ export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>().keys({
   s3Key: Joi.string().required()
 })
 
-const allowedDefinitionRequestTypes = [
-  FormDefinitionRequestType.CREATE_COMPONENT,
-  FormDefinitionRequestType.UPDATE_COMPONENT,
-  FormDefinitionRequestType.DELETE_COMPONENT,
-  FormDefinitionRequestType.ADD_CONDITION,
-  FormDefinitionRequestType.UPDATE_CONDITION,
-  FormDefinitionRequestType.REMOVE_CONDITION,
-  FormDefinitionRequestType.REORDER_PAGES,
-  FormDefinitionRequestType.REORDER_COMPONENTS,
-  FormDefinitionRequestType.ADD_LIST,
-  FormDefinitionRequestType.UPDATE_LIST,
-  FormDefinitionRequestType.REMOVE_LIST,
-  FormDefinitionRequestType.CREATE_PAGE,
-  FormDefinitionRequestType.UPDATE_PAGE_FIELDS,
-  FormDefinitionRequestType.DELETE_PAGE
-]
-
 export const formUpdatedMessageData =
   formMessageDataBase.append<FormUpdatedMessageData>({
     requestType: Joi.string()
-      .valid(...allowedDefinitionRequestTypes)
+      .valid(...Object.values(FormDefinitionRequestType))
       .required(),
     s3Meta: formDefinitionS3Meta
   })
@@ -181,52 +163,17 @@ export function formChangesMessageData<T, U extends FormMessageChangesData>(
   })
 }
 
-export const validCategories = [
-  AuditEventMessageCategory.FORM,
-  AuditEventMessageCategory.ENTITLEMENT
-]
-
-export const validTypes = [
-  AuditEventMessageType.FORM_CREATED,
-  AuditEventMessageType.FORM_PUBLISHED,
-  AuditEventMessageType.FORM_TITLE_UPDATED,
-  AuditEventMessageType.FORM_ORGANISATION_UPDATED,
-  AuditEventMessageType.FORM_TEAM_NAME_UPDATED,
-  AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED,
-  AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED,
-  AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED,
-  AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED,
-  AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED,
-  AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED,
-  AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED,
-  AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED,
-  AuditEventMessageType.FORM_JSON_UPLOADED,
-  AuditEventMessageType.FORM_JSON_DOWNLOADED,
-  AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE,
-  AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
-  AuditEventMessageType.FORM_DRAFT_DELETED,
-  AuditEventMessageType.FORM_MIGRATED,
-  AuditEventMessageType.FORM_UPDATED
-]
-
-export const validMessageSchemaVersions = [AuditEventMessageSchemaVersion.V1]
-export const validMessageSource = [
-  AuditEventMessageSource.FORMS_MANAGER,
-  AuditEventMessageSource.FORMS_DESIGNER,
-  AuditEventMessageSource.ENTITLEMENT
-]
-
 export const messageSchema = Joi.object<AuditMessage>().keys({
   schemaVersion: Joi.string()
-    .valid(...validMessageSchemaVersions)
+    .valid(...Object.values(FormDefinitionRequestType))
     .required(),
   category: Joi.string()
-    .valid(...validCategories)
+    .valid(...Object.values(AuditEventMessageCategory))
     .required(),
   source: Joi.string()
-    .valid(...validMessageSource)
+    .valid(...Object.values(AuditEventMessageSource))
     .required(),
-  type: Joi.string().valid(...validTypes),
+  type: Joi.string().valid(...Object.values(AuditEventMessageType)),
   entityId: Joi.string().required(),
   traceId: Joi.string().optional(),
   createdAt: Joi.date().required(),
