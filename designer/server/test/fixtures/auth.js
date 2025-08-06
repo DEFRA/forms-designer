@@ -2,6 +2,7 @@ import { token } from '@hapi/jwt'
 import { DateTime, Duration } from 'luxon'
 
 import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
+import config from '~/src/config.js'
 import { Roles } from '~/src/models/account/role-mapper.js'
 
 const issuedAt = DateTime.now().minus({ minutes: 30 })
@@ -22,6 +23,7 @@ export function profile(options) {
     given_name: 'John',
     family_name: 'Smith',
     sub: 'dummy_session_id',
+    oid: 'dummy_object_id',
     groups: options?.groups,
     login_hint: options?.login_hint
   })
@@ -33,7 +35,9 @@ export function profile(options) {
  */
 export function user(token, roles = []) {
   return /** @satisfies {UserCredentials} */ ({
-    id: token.sub,
+    id: config.featureFlagUseEntitlementApi
+      ? (token.oid ?? token.sub)
+      : token.sub,
     email: token.email,
     displayName: token.name ?? '',
     issuedAt: issuedAt.toUTC().toISO(),

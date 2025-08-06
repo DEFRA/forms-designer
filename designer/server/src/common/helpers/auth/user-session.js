@@ -33,7 +33,9 @@ export function createUser(credentials, claims) {
 
   // Create user object (e.g. signed in token but no session)
   return /** @satisfies {UserCredentials} */ ({
-    id: /** @type {string} */ (token.oid ?? token.sub),
+    id: /** @type {string} */ (
+      config.featureFlagUseEntitlementApi ? (token.oid ?? token.sub) : token.sub
+    ),
     email: token.email ?? token.unique_name ?? '',
     displayName: displayName ?? '',
     issuedAt: DateTime.fromSeconds(token.iat).toUTC().toISO(),
@@ -74,14 +76,16 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
       user.roles = entitlementUser.roles
 
       credentials.scope = user.roles.length > 0 ? [SCOPE_READ, SCOPE_WRITE] : []
+
+      logger.info('Successfully fetched roles from entitlement API')
     } catch (error) {
-      logger.error(
-        'Failed to fetch user from entitlement API during login:',
+      logger.warn(
+        'Entitlement API failed, falling back to AAD groups',
         getErrorMessage(error)
       )
 
       user.roles = []
-      credentials.scope = []
+      credentials.scope = getUserScopes(credentials, claims)
     }
   } else {
     credentials.scope = getUserScopes(credentials, claims)
