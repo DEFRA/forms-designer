@@ -2,7 +2,6 @@ import Joi, { type ObjectSchema } from 'joi'
 
 import {
   AuditEventMessageCategory,
-  AuditEventMessageObjectType,
   AuditEventMessageSchemaVersion,
   AuditEventMessageSource,
   AuditEventMessageType,
@@ -15,13 +14,9 @@ import {
   type AuditUser,
   type ChangesMessageData,
   type FormCreatedMessageData,
-  type FormDefinitionMessageData,
   type FormDefinitionS3Meta,
-  type FormDefinitionUpdatedMessageData,
-  type FormFullDefinitionUpdatedMessageData,
   type FormMessageChangesData,
   type FormMessageDataBase,
-  type FormMetadataMessageData,
   type FormNotificationEmailChanges,
   type FormNotificationEmailUpdatedMessageData,
   type FormOrganisationChanges,
@@ -44,30 +39,17 @@ import {
   type FormTeamNameUpdatedMessageData,
   type FormTitleChanges,
   type FormTitleUpdatedMessageData,
+  type FormUpdatedMessageData,
   type FormUploadedChanges,
-  type FormUploadedMessageData,
-  type FormsManagerMessageDataBase
+  type FormUploadedMessageData
 } from '~/src/form/form-audit/types.js'
-import {
-  contactSchema,
-  formMetadataSchema
-} from '~/src/form/form-metadata/index.js'
+import { contactSchema } from '~/src/form/form-metadata/index.js'
 
 export const formMessageDataBase = Joi.object<FormMessageDataBase>({
   formId: Joi.string().required(),
   slug: Joi.string().required(),
-  payload: Joi.object().required()
+  payload: Joi.object().optional()
 })
-
-const allowedObjectTypes = [
-  AuditEventMessageObjectType.FORM_METADATA,
-  AuditEventMessageObjectType.FORM_DEFINITION
-]
-
-export const formManagerMessageDataBase =
-  formMessageDataBase.append<FormsManagerMessageDataBase>({
-    objectType: Joi.string().valid(...allowedObjectTypes)
-  })
 
 export const formCreatedMessageData =
   formMessageDataBase.append<FormCreatedMessageData>({
@@ -101,10 +83,11 @@ const allowedDefinitionRequestTypes = [
 ]
 
 export const formUpdatedMessageData =
-  formMessageDataBase.append<FormDefinitionUpdatedMessageData>({
+  formMessageDataBase.append<FormUpdatedMessageData>({
     requestType: Joi.string()
       .valid(...allowedDefinitionRequestTypes)
-      .required()
+      .required(),
+    s3Meta: formDefinitionS3Meta
   })
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
@@ -150,6 +133,12 @@ export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
   })
   .required()
 
+export const formSupportEmailChanges =
+  Joi.object<FormSupportEmailChanges>().keys({
+    address: Joi.string().email().required(),
+    responseTime: Joi.string().required()
+  })
+
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
     privacyNoticeUrl: Joi.string()
@@ -176,46 +165,10 @@ export const formUploadedChanges = Joi.object<FormUploadedChanges>()
   })
   .required()
 
-export const formDefinitionData =
-  formManagerMessageDataBase.append<FormDefinitionMessageData>({
-    objectType: Joi.string()
-      .valid(AuditEventMessageObjectType.FORM_DEFINITION)
-      .required()
-  })
-
 export const auditUserSchema = Joi.object<AuditUser>().keys({
   id: Joi.string().uuid().required(),
   displayName: Joi.string().required()
 })
-
-export const formMetadataData =
-  formManagerMessageDataBase.append<FormMetadataMessageData>({
-    objectType: Joi.string()
-      .valid(AuditEventMessageObjectType.FORM_METADATA)
-      .required(),
-    updatedAt: Joi.date().required(),
-    updatedBy: auditUserSchema.required(),
-    before: formMetadataSchema.required(),
-    after: formMetadataSchema.required()
-  })
-
-export const formDefinitionUpdatedData =
-  formDefinitionData.append<FormDefinitionUpdatedMessageData>({
-    requestType: Joi.string()
-      .valid(...allowedDefinitionRequestTypes)
-      .required()
-  })
-
-export const formFullDefinitionUpdatedData =
-  formDefinitionUpdatedData.append<FormFullDefinitionUpdatedMessageData>({
-    s3Meta: formDefinitionS3Meta
-  })
-
-export const formSupportEmailChanges =
-  Joi.object<FormSupportEmailChanges>().keys({
-    address: Joi.string().email().required(),
-    responseTime: Joi.string().required()
-  })
 
 export function formChangesMessageData<T, U extends FormMessageChangesData>(
   schema: ObjectSchema<T>
@@ -253,11 +206,7 @@ export const validTypes = [
   AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
   AuditEventMessageType.FORM_DRAFT_DELETED,
   AuditEventMessageType.FORM_MIGRATED,
-  AuditEventMessageType.FORM_UPDATED,
-  AuditEventMessageType.FORM_METADATA_CREATED,
-  AuditEventMessageType.FORM_METADATA_UPDATED,
-  AuditEventMessageType.FORM_DEFINITION_CREATED,
-  AuditEventMessageType.FORM_DEFINITION_UPDATED
+  AuditEventMessageType.FORM_UPDATED
 ]
 
 export const validMessageSchemaVersions = [AuditEventMessageSchemaVersion.V1]
@@ -268,17 +217,18 @@ export const validMessageSource = [
 ]
 
 export const messageSchema = Joi.object<AuditMessage>().keys({
-  entityId: Joi.string().required(),
   schemaVersion: Joi.string()
     .valid(...validMessageSchemaVersions)
     .required(),
-  type: Joi.string().valid(...validTypes),
   category: Joi.string()
     .valid(...validCategories)
     .required(),
-  source: Joi.string().valid(...validMessageSource).required(),
-  traceId: Joi.string().required(),
-  endpoint: Joi.string().required(),
+  source: Joi.string()
+    .valid(...validMessageSource)
+    .required(),
+  type: Joi.string().valid(...validTypes),
+  entityId: Joi.string().required(),
+  traceId: Joi.string().optional(),
   createdAt: Joi.date().required(),
   createdBy: auditUserSchema.required(),
   data: Joi.when('type', {
@@ -394,10 +344,6 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
       {
         is: Joi.string().trim().valid(AuditEventMessageType.FORM_UPDATED),
         then: formUpdatedMessageData
-      },
-      {
-        is: Joi.string().trim().valid(AuditEventMessageType.FORM_DEFINITION_UPDATED),
-        then:
       }
     ]
   }),
