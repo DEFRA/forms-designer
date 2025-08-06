@@ -310,6 +310,13 @@ export interface FormMigratedMessage extends MessageBase {
   source: AuditEventMessageSource.FORMS_MANAGER
 }
 
+export interface FormUpdatedMessage extends MessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_UPDATED
+  source: AuditEventMessageSource.FORMS_MANAGER
+  data: FormUpdatedMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -329,6 +336,7 @@ export type AuditMessage =
   | FormLiveCreatedFromDraftMessage
   | FormDraftDeletedMessage
   | FormMigratedMessage
+  | FormUpdatedMessage
 
 export interface AuditEvent {
   message: AuditMessage
