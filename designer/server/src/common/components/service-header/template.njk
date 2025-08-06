@@ -98,6 +98,15 @@ Component options:
               {% endif %}
             </a>
           </li>
+          {% if params.adminNavigation %}
+            {% for adminItem in params.adminNavigation %}
+            <li class="one-login-header__nav__list-item">
+              <a class="one-login-header__nav__link" href="{{ adminItem.url }}">
+                {{ adminItem.text }}
+              </a>
+            </li>
+            {% endfor %}
+          {% endif %}
           {% if params.accountName %}
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link" href="{{ signOutLink }}">

@@ -1,8 +1,11 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
+import config from '~/src/config.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import {
@@ -13,6 +16,7 @@ import {
   updateUser
 } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { Roles } from '~/src/models/account/role-mapper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/manage/users.js'
 
@@ -27,15 +31,21 @@ const addUserSchema = Joi.object({
       '*': 'Enter an email address in the correct format'
     })
     .description('Email address of user'),
-  userRole: Joi.string().valid('admin', 'form-creator').required().messages({
-    '*': 'Select a role'
-  })
+  userRole: Joi.string()
+    .valid(Roles.Admin, Roles.FormCreator)
+    .required()
+    .messages({
+      '*': 'Select a role'
+    })
 })
 
 const amendUserSchema = Joi.object({
-  userRole: Joi.string().valid('admin', 'form-creator').required().messages({
-    '*': 'Select a role'
-  })
+  userRole: Joi.string()
+    .valid(Roles.Admin, Roles.FormCreator)
+    .required()
+    .messages({
+      '*': 'Select a role'
+    })
 })
 
 const userIdSchema = Joi.object({
@@ -43,6 +53,25 @@ const userIdSchema = Joi.object({
 })
 
 const MANAGE_USERS_BASE_URL = '/manage/users'
+
+/**
+ * Pre-handler to check if user management features are available
+ */
+const checkUserManagementAccess = [
+  {
+    method: /** @param {Request} request */ (request) => {
+      if (!config.featureFlagUseEntitlementApi) {
+        throw Boom.forbidden('User management is not available')
+      }
+
+      const { credentials } = request.auth
+      if (!hasAdminRole(credentials.user)) {
+        throw Boom.forbidden('Admin access required')
+      }
+      return true
+    }
+  }
+]
 
 export default [
   /** @type {ServerRoute} */
@@ -54,7 +83,6 @@ export default [
       const { auth, yar } = request
       const { token } = auth.credentials
 
-      // Get list of possible roles
       const roles = await getRoles(token)
 
       const validation =
@@ -74,7 +102,8 @@ export default [
           entity: 'user',
           scope: [`+${scopes.SCOPE_WRITE}`]
         }
-      }
+      },
+      pre: checkUserManagementAccess
     }
   }),
 
@@ -88,7 +117,6 @@ export default [
       const { token } = auth.credentials
       const { userId } = params
 
-      // Get list of possible roles
       const roles = await getRoles(token)
 
       const validation =
@@ -110,7 +138,8 @@ export default [
           entity: 'user',
           scope: [`+${scopes.SCOPE_WRITE}`]
         }
-      }
+      },
+      pre: checkUserManagementAccess
     }
   }),
 
@@ -139,7 +168,8 @@ export default [
           entity: 'user',
           scope: [`+${scopes.SCOPE_WRITE}`]
         }
-      }
+      },
+      pre: checkUserManagementAccess
     }
   }),
 
@@ -279,6 +309,5 @@ export default [
 /**
  * @import { ManageUser } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
- * @import Boom from '@hapi/boom'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ServerRoute, Request } from '@hapi/hapi'
  */

@@ -1,12 +1,19 @@
 import { randomUUID } from 'node:crypto'
 
+import { getErrorMessage } from '@defra/forms-model'
 import { DateTime } from 'luxon'
 
+import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
 import {
   getUserClaims,
   getUserScopes,
   hasAuthenticated
 } from '~/src/common/helpers/auth/get-user-session.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import config from '~/src/config.js'
+import { getUser } from '~/src/lib/manage.js'
+
+const logger = createLogger()
 
 /**
  * @param {AuthWithTokens} credentials
@@ -26,11 +33,14 @@ export function createUser(credentials, claims) {
 
   // Create user object (e.g. signed in token but no session)
   return /** @satisfies {UserCredentials} */ ({
-    id: token.sub,
+    id: /** @type {string} */ (
+      config.featureFlagUseEntitlementApi ? (token.oid ?? token.sub) : token.sub
+    ),
     email: token.email ?? token.unique_name ?? '',
     displayName: displayName ?? '',
     issuedAt: DateTime.fromSeconds(token.iat).toUTC().toISO(),
-    expiresAt: DateTime.fromSeconds(token.exp).toUTC().toISO()
+    expiresAt: DateTime.fromSeconds(token.exp).toUTC().toISO(),
+    roles: /** @type {string[]} */ ([])
   })
 }
 
@@ -60,8 +70,27 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
   const claims = getUserClaims(credentials)
   const user = createUser(credentials, claims)
 
-  // Add user scopes to credentials
-  credentials.scope = getUserScopes(credentials, claims)
+  if (config.featureFlagUseEntitlementApi) {
+    try {
+      const entitlementUser = await getUser(credentials.token, user.id)
+      user.roles = entitlementUser.roles
+
+      credentials.scope = user.roles.length > 0 ? [SCOPE_READ, SCOPE_WRITE] : []
+
+      logger.info('Successfully fetched roles from entitlement API')
+    } catch (error) {
+      logger.warn(
+        'Entitlement API failed, falling back to AAD groups',
+        getErrorMessage(error)
+      )
+
+      user.roles = []
+      credentials.scope = getUserScopes(credentials, claims)
+    }
+  } else {
+    credentials.scope = getUserScopes(credentials, claims)
+    user.roles = []
+  }
 
   // Create and retrieve user session from Redis
   await server.methods.session.set(user.id, { ...credentials, user })

@@ -84,7 +84,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
       <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/auth/account">
               <span class="one-login-header__nav__link-content">
                 John Smith
               </span>
@@ -106,6 +106,11 @@ exports[`Create and edit user routes GET /manage/users should render view when c
           </span>
             </a>
           </li>
+            <li class="one-login-header__nav__list-item">
+              <a class="one-login-header__nav__link" href="/manage/users">
+                Manage users
+              </a>
+            </li>
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link" href="/auth/sign-out">
               Sign out
@@ -137,13 +142,13 @@ exports[`Create and edit user routes GET /manage/users should render view when c
             <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"                  href="">
+                <a class="service-header__nav-list-item-link"                  href="/auth/account">
                   My account
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item service-header__nav-list-item--active">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"aria-current="page"                  href="">
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/manage/users/">
                   Manage users
                 </a>
               </li>            </ul>
@@ -213,7 +218,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
           Admin
         </label>
         <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
-          admin desc
+          Can publish and delete forms and manage users
         </div>
       </div>
       <div class="govuk-radios__item">
@@ -222,7 +227,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
           Form creator
         </label>
         <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
-          form creator desc
+          Can create and edit existing forms only
         </div>
       </div>
     </div>
@@ -400,7 +405,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
       <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/auth/account">
               <span class="one-login-header__nav__link-content">
                 John Smith
               </span>
@@ -422,6 +427,11 @@ exports[`Create and edit user routes GET /manage/users should render view when d
           </span>
             </a>
           </li>
+            <li class="one-login-header__nav__list-item">
+              <a class="one-login-header__nav__link" href="/manage/users">
+                Manage users
+              </a>
+            </li>
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link" href="/auth/sign-out">
               Sign out
@@ -453,13 +463,13 @@ exports[`Create and edit user routes GET /manage/users should render view when d
             <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"                  href="">
+                <a class="service-header__nav-list-item-link"                  href="/auth/account">
                   My account
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item service-header__nav-list-item--active">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"aria-current="page"                  href="">
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/manage/users/">
                   Manage users
                 </a>
               </li>            </ul>
@@ -686,7 +696,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
       <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
         <ul class="one-login-header__nav__list">
           <li class="one-login-header__nav__list-item">
-            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/auth/account">
               <span class="one-login-header__nav__link-content">
                 John Smith
               </span>
@@ -708,6 +718,11 @@ exports[`Create and edit user routes GET /manage/users should render view when e
           </span>
             </a>
           </li>
+            <li class="one-login-header__nav__list-item">
+              <a class="one-login-header__nav__link" href="/manage/users">
+                Manage users
+              </a>
+            </li>
           <li class="one-login-header__nav__list-item">
             <a class="one-login-header__nav__link" href="/auth/sign-out">
               Sign out
@@ -739,13 +754,13 @@ exports[`Create and edit user routes GET /manage/users should render view when e
             <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"                  href="">
+                <a class="service-header__nav-list-item-link"                  href="/auth/account">
                   My account
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item service-header__nav-list-item--active">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"aria-current="page"                  href="">
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/manage/users/">
                   Manage users
                 </a>
               </li>            </ul>
@@ -815,7 +830,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
           Admin
         </label>
         <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
-          admin desc
+          Can publish and delete forms and manage users
         </div>
       </div>
       <div class="govuk-radios__item">
@@ -824,7 +839,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
           Form creator
         </label>
         <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
-          form creator desc
+          Can create and edit existing forms only
         </div>
       </div>
     </div>

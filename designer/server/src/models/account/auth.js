@@ -1,4 +1,6 @@
+import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
+import { getNameForRole } from '~/src/models/account/role-mapper.js'
 
 export function signedOutViewModel() {
   const pageTitle = 'You have signed out'
@@ -35,3 +37,68 @@ export function signInViewModel(options) {
     errorList
   }
 }
+
+/**
+ * @param {EntitlementUser} user
+ */
+export function accountViewModel(user) {
+  const pageTitle = 'My account'
+
+  const navigation = [
+    {
+      text: 'My account',
+      url: '/auth/account',
+      isActive: true
+    }
+  ]
+
+  if (hasAdminRole(user)) {
+    navigation.push({
+      text: 'Manage users',
+      url: '/manage/users',
+      isActive: false
+    })
+  }
+
+  return {
+    navigation,
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
+    pageCaption: {
+      text: user.displayName
+    },
+    backLink: {
+      text: 'Back to form library',
+      href: '/library'
+    },
+    userDetails: {
+      rows: [
+        {
+          key: {
+            text: 'Email'
+          },
+          value: {
+            text: user.email
+          }
+        },
+        {
+          key: {
+            text: 'Role'
+          },
+          value: {
+            text: user.roles.map(getNameForRole).join(', ')
+          }
+        }
+      ]
+    },
+    user
+  }
+}
+
+/**
+ * @import { AuthCredentials, UserCredentials, AppCredentials} from '@hapi/hapi'
+ * @import { EntitlementUser } from '@defra/forms-model'
+ */
