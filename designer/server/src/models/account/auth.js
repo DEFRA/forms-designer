@@ -1,5 +1,6 @@
+import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
-import { roleNameMapper } from '~/src/models/account/role-mapper.js'
+import { getNameForRole } from '~/src/models/account/role-mapper.js'
 
 export function signedOutViewModel() {
   const pageTitle = 'You have signed out'
@@ -38,10 +39,9 @@ export function signInViewModel(options) {
 }
 
 /**
- * @param { AuthCredentials<UserCredentials, AppCredentials> & Record<string, unknown> } credentials
  * @param {EntitlementUser} user
  */
-export function accountViewModel(credentials, user) {
+export function accountViewModel(user) {
   const pageTitle = 'My account'
 
   const navigation = [
@@ -52,14 +52,13 @@ export function accountViewModel(credentials, user) {
     }
   ]
 
-  // TODO - determine hwot ochec if user has ADMIN role
-  // if (hasAdmin(credentials)) {
-  // navigation.push({
-  //   text: 'Manage users',
-  //   url: '/manage/users',
-  //   isActive: false
-  // })
-  // }
+  if (hasAdminRole(user)) {
+    navigation.push({
+      text: 'Manage users',
+      url: '/manage/users',
+      isActive: false
+    })
+  }
 
   return {
     navigation,
@@ -90,7 +89,7 @@ export function accountViewModel(credentials, user) {
             text: 'Role'
           },
           value: {
-            text: user.roles.map(roleNameMapper).join(', ')
+            text: user.roles.map(getNameForRole).join(', ')
           }
         }
       ]

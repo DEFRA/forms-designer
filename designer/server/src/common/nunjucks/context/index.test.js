@@ -82,7 +82,8 @@ describe('Nunjucks context', () => {
         cdpEnvironment: config.cdpEnvironment,
         phase: config.phase,
         serviceName: config.serviceName,
-        serviceVersion: config.serviceVersion
+        serviceVersion: config.serviceVersion,
+        featureFlagUseEntitlementApi: config.featureFlagUseEntitlementApi
       })
     })
   })

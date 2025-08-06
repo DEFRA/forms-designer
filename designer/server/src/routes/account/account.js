@@ -1,4 +1,5 @@
 import * as scopes from '~/src/common/constants/scopes.js'
+import config from '~/src/config.js'
 import { getUser } from '~/src/lib/manage.js'
 import { accountViewModel } from '~/src/models/account/auth.js'
 
@@ -6,6 +7,10 @@ export default /** @satisfies {ServerRoute} */ ({
   method: 'GET',
   path: '/auth/account',
   async handler(request, h) {
+    if (!config.featureFlagUseEntitlementApi) {
+      return h.redirect('/library')
+    }
+
     const { credentials } = request.auth
     const { token } = credentials
 
@@ -14,7 +19,7 @@ export default /** @satisfies {ServerRoute} */ ({
       /** @type {string} */ (credentials.user?.id)
     )
 
-    return h.view('account/account', accountViewModel(credentials, user))
+    return h.view('account/account', accountViewModel(user))
   },
   options: {
     auth: {

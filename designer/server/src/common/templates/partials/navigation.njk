@@ -6,12 +6,25 @@
   Forms Designer {{ appTagEnv({ env: config.cdpEnvironment }) }}
 {% endset -%}
 
+{%- set accountLinkUrl = "/auth/account" if (isAuthenticated and config.featureFlagUseEntitlementApi) else "/library" -%}
+
+{%- set adminNavigation = [] -%}
+{%- if isAuthenticated and isAdmin -%}
+  {%- set adminNavigation = [
+    {
+      text: "Manage users",
+      url: "/manage/users"
+    }
+  ] -%}
+{%- endif -%}
+
 {{ appServiceHeader({
   organisationName: "Defra",
   productName: productName | safe | trim,
-  navigationItems: navigation if isAuthenticated and isAuthorized and isFormsUser,
+  navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)),
+  adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
   accountName: authedUser.displayName if isAuthenticated,
-  accountLink: "/auth/account" if isAuthenticated else "/library",
+  accountLink: accountLinkUrl,
   signOutLink: "/auth/sign-out",
   homepageLink: "/"
 }) }}

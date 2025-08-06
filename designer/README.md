@@ -49,6 +49,7 @@ Base URLs should should include protocol, hostname, port number, e.g. `http://lo
 | HTTP_PROXY                        | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
 | HTTPS_PROXY                       | HTTPS proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.               | no       |         |                             |
 | NO_PROXY                          | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
+| FEATURE_FLAG_USE_ENTITLEMENT_API  | Feature flag to enable fetching roles from entitlement API and user management features | no       | false   | true,false                  |
 
 For proxy options, see https://www.npmjs.com/package/proxy-from-env which is used by https://github.com/TooTallNate/proxy-agents/tree/main/packages/proxy-agent.
 

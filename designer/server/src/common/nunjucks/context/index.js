@@ -2,7 +2,10 @@ import { readFileSync } from 'node:fs'
 import { basename, join } from 'node:path'
 
 import { SCOPE_READ } from '~/src/common/constants/scopes.js'
-import { getUserSession } from '~/src/common/helpers/auth/get-user-session.js'
+import {
+  getUserSession,
+  hasAdminRole
+} from '~/src/common/helpers/auth/get-user-session.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -34,13 +37,19 @@ export async function context(request) {
 
   const credentials = request ? await getUserSession(request) : undefined
 
+  let isAdmin = false
+  if (config.featureFlagUseEntitlementApi && credentials?.user) {
+    isAdmin = hasAdminRole(credentials.user)
+  }
+
   return {
     breadcrumbs: [],
     config: {
       cdpEnvironment,
       phase,
       serviceName,
-      serviceVersion
+      serviceVersion,
+      featureFlagUseEntitlementApi: config.featureFlagUseEntitlementApi
     },
     navigation: buildNavigation(request),
     getAssetPath: (asset = '') => `/${webpackManifest?.[asset] ?? asset}`,
@@ -49,6 +58,7 @@ export async function context(request) {
     isAuthorized: request?.auth?.isAuthorized ?? false,
     isFormsUser: credentials?.scope?.includes(SCOPE_READ) ?? false, // isAuthorized may be true if no scopes are required for the route
     authedUser: credentials?.user,
+    isAdmin,
     helpers: {
       buildFormUrl,
       buildPreviewUrl

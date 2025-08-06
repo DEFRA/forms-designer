@@ -1,11 +1,13 @@
 import { StatusCodes } from 'http-status-codes'
 
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { getUser } from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
+jest.mock('~/src/config.ts')
 
 describe('Account profile route', () => {
   /** @type {Server} */
@@ -21,12 +23,15 @@ describe('Account profile route', () => {
   })
 
   test('/auth/account route displays user profile', async () => {
+    jest.mocked(config).featureFlagUseEntitlementApi = true
+
     jest.mocked(getUser).mockResolvedValue(
       /** @type {EntitlementUser} */ ({
         userId: 'my-user-id',
         email: 'my-email@mail.com',
         displayName: 'John Smith',
-        roles: ['admin']
+        roles: ['admin'],
+        scopes: []
       })
     )
 
@@ -49,6 +54,21 @@ describe('Account profile route', () => {
     expect($mastheadHeading.textContent).toContain('My account')
     expect($mastheadHeading.textContent).toContain('John Smith')
     expect(response.result).toMatchSnapshot()
+  })
+
+  test('/auth/account route redirects to library when feature flag is disabled', async () => {
+    jest.mocked(config).featureFlagUseEntitlementApi = false
+
+    const options = {
+      method: 'GET',
+      url: '/auth/account',
+      auth
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(response.headers.location).toBe('/library')
   })
 })
 

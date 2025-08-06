@@ -2,6 +2,8 @@ import { token } from '@hapi/jwt'
 import { DateTime, Duration } from 'luxon'
 
 import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
+import config from '~/src/config.js'
+import { Roles } from '~/src/models/account/role-mapper.js'
 
 const issuedAt = DateTime.now().minus({ minutes: 30 })
 const expiresAt = DateTime.now().plus({ minutes: 30 })
@@ -21,6 +23,7 @@ export function profile(options) {
     given_name: 'John',
     family_name: 'Smith',
     sub: 'dummy_session_id',
+    oid: 'dummy_object_id',
     groups: options?.groups,
     login_hint: options?.login_hint
   })
@@ -28,14 +31,18 @@ export function profile(options) {
 
 /**
  * @param {UserProfile} token
+ * @param {string[]} [roles]
  */
-export function user(token) {
+export function user(token, roles = []) {
   return /** @satisfies {UserCredentials} */ ({
-    id: token.sub,
+    id: config.featureFlagUseEntitlementApi
+      ? (token.oid ?? token.sub)
+      : token.sub,
     email: token.email,
     displayName: token.name ?? '',
     issuedAt: issuedAt.toUTC().toISO(),
-    expiresAt: expiresAt.toUTC().toISO()
+    expiresAt: expiresAt.toUTC().toISO(),
+    roles
   })
 }
 
@@ -98,7 +105,7 @@ export const auth = {
   artifacts: artifacts(claims),
   credentials: credentials({
     claims,
-    user: user(claims.token),
+    user: user(claims.token, [Roles.Admin]),
     scope: [SCOPE_READ, SCOPE_WRITE]
   })
 }

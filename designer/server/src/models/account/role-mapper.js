@@ -16,13 +16,13 @@ export const RoleDescriptions = {
 /**
  * @param {string} role
  */
-export function roleNameMapper(role) {
-  return RoleNames[role]
+export function getNameForRole(role) {
+  return RoleNames[role] ?? role
 }
 
 /**
  * @param {string} role
  */
-export function roleDescriptionMapper(role) {
-  return RoleDescriptions[role]
+export function getDescriptionForRole(role) {
+  return RoleDescriptions[role] ?? ''
 }

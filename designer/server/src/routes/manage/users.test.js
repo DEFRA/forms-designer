@@ -1,10 +1,20 @@
+import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { getRoles, getUsers } from '~/src/lib/manage.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { Roles } from '~/src/models/account/role-mapper.js'
+import {
+  artifacts,
+  auth,
+  credentials,
+  profile,
+  user
+} from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
+jest.mock('~/src/config.ts')
 
 describe('Manage users route', () => {
   /** @type {Server} */
@@ -18,6 +28,7 @@ describe('Manage users route', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(getRoles).mockResolvedValueOnce(allRoles)
+    jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
   const userList = [
@@ -81,6 +92,51 @@ describe('Manage users route', () => {
     expect($rows[2].textContent).toContain('Peter Jones')
     expect($rows[2].textContent).toContain('Form creator')
     expect($rows[2].textContent).toContain('Manage')
+  })
+
+  test('GET - should return 403 when feature flag is disabled', async () => {
+    jest.mocked(config).featureFlagUseEntitlementApi = false
+
+    const options = {
+      method: 'get',
+      url: '/manage/users',
+      auth
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(403)
+
+    expect(response.result).toContain('You do not have access to this service')
+  })
+
+  test('GET - should return 403 when user does not have admin role', async () => {
+    const claims = {
+      token: profile({ groups: ['valid-test-group'], login_hint: 'foo' }),
+      idToken: profile()
+    }
+
+    const nonAdminAuth = {
+      strategy: 'azure-oidc',
+      artifacts: artifacts(claims),
+      credentials: credentials({
+        claims,
+        user: user(claims.token, [Roles.FormCreator]),
+        scope: [SCOPE_READ, SCOPE_WRITE]
+      })
+    }
+
+    const options = {
+      method: 'get',
+      url: '/manage/users',
+      auth: nonAdminAuth
+    }
+
+    const response = await server.inject(options)
+
+    expect(response.statusCode).toBe(403)
+
+    expect(response.result).toContain('You do not have access to this service')
   })
 })
 
