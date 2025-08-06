@@ -22,6 +22,19 @@ const mockEntitlementUser = /** @type {EntitlementUser} */ ({
   scopes: ['scope1', 'scope2']
 })
 
+// @ts-expect-error - typing not required for testing
+const mockUserClaims = /** @type {Record<keyof Tokens, UserProfile>} */ ({
+  token: {
+    id: '123-123',
+    oid: '123-123',
+    name: 'John Smith',
+    family_name: 'Smith',
+    given_name: 'John',
+    iat: 10000000,
+    exp: 600000
+  }
+})
+
 const mockRequest =
   // @ts-expect-error - typing not required for testing
   /** @type {Request<{ AuthArtifactsExtra: AuthArtifacts }>} */ ({
@@ -56,17 +69,7 @@ describe('user-session', () => {
 
     test('should return user id', async () => {
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
-      jest.mocked(getUserClaims).mockReturnValue({
-        // @ts-expect-error - typing not required for testing
-        token: {
-          id: '123-123',
-          name: 'John Smith',
-          family_name: 'Smith',
-          given_name: 'John',
-          iat: 10000000,
-          exp: 600000
-        }
-      })
+      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
       const res = await createUserSession(mockRequest)
       expect(res).toBe('123-123')
       expect(getUser).not.toHaveBeenCalled()
@@ -75,18 +78,7 @@ describe('user-session', () => {
     test('should add roles/scopes from entitlement api if enabled', async () => {
       jest.mocked(config).featureFlagUseEntitlementApi = true
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
-      jest.mocked(getUserClaims).mockReturnValue({
-        // @ts-expect-error - typing not required for testing
-        token: {
-          id: '123-123',
-          oid: '123-123',
-          name: 'John Smith',
-          family_name: 'Smith',
-          given_name: 'John',
-          iat: 10000000,
-          exp: 600000
-        }
-      })
+      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
       jest.mocked(getUser).mockResolvedValueOnce(mockEntitlementUser)
       const res = await createUserSession(mockRequest)
       expect(res).toBe('123-123')
@@ -115,18 +107,7 @@ describe('user-session', () => {
     test('should fallback if error in entitlement api', async () => {
       jest.mocked(config).featureFlagUseEntitlementApi = true
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
-      jest.mocked(getUserClaims).mockReturnValue({
-        // @ts-expect-error - typing not required for testing
-        token: {
-          id: '123-123',
-          oid: '123-123',
-          name: 'John Smith',
-          family_name: 'Smith',
-          given_name: 'John',
-          iat: 10000000,
-          exp: 600000
-        }
-      })
+      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
       jest.mocked(getUser).mockImplementationOnce(() => {
         throw new Error('entitlement api error')
       })
@@ -160,4 +141,5 @@ describe('user-session', () => {
 /**
  * @import { AuthArtifacts, Request } from '@hapi/hapi'
  * @import { EntitlementUser } from '@defra/forms-model'
+ * @import { Tokens, UserProfile } from '~/src/common/helpers/auth/types.js'
  */
