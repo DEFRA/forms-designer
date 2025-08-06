@@ -2,6 +2,7 @@ import Joi, { type ObjectSchema } from 'joi'
 
 import {
   AuditEventMessageCategory,
+  AuditEventMessageSchemaVersion,
   AuditEventMessageSource,
   AuditEventMessageType,
   FormDefinitionRequestType
@@ -165,7 +166,7 @@ export function formChangesMessageData<T, U extends FormMessageChangesData>(
 
 export const messageSchema = Joi.object<AuditMessage>().keys({
   schemaVersion: Joi.string()
-    .valid(...Object.values(FormDefinitionRequestType))
+    .valid(...Object.values(AuditEventMessageSchemaVersion))
     .required(),
   category: Joi.string()
     .valid(...Object.values(AuditEventMessageCategory))
