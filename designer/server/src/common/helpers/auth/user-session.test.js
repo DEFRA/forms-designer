@@ -11,8 +11,8 @@ const mockSession = {
   get: jest.fn().mockReturnValue('123-123')
 }
 
-// @ts-expect-error - typing not required for testing
 const mockRequest =
+  // @ts-expect-error - typing not required for testing
   /** @type {Request<{ AuthArtifactsExtra: AuthArtifacts }>} */ ({
     auth: {
       credentials: {},
