@@ -13,12 +13,6 @@ export enum AuditEventMessageSource {
   ENTITLEMENT = 'ENTITLEMENT'
 }
 
-export enum AuditEventMessageObjectType {
-  FORM_METADATA = 'FORM_METADATA',
-  FORM_DEFINITION = 'FORM_DEFINITION',
-  FORM_SUBMISSION = 'FORM_SUBMISSION'
-}
-
 export enum AuditEventMessageType {
   FORM_CREATED = 'FORM_CREATED',
   FORM_PUBLISHED = 'FORM_PUBLISHED',
