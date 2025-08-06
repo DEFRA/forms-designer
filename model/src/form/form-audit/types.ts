@@ -183,137 +183,129 @@ export interface MessageBase {
   messageCreatedAt: Date
 }
 
-export interface FormCreatedMessage extends MessageBase {
+export interface ManagerMessageBase extends MessageBase {
+  source: AuditEventMessageSource.FORMS_MANAGER
+}
+export interface DesignerMessageBase extends MessageBase {
+  source: AuditEventMessageSource.FORMS_DESIGNER
+}
+
+export interface FormCreatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_CREATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormCreatedMessageData
 }
 
-export interface FormTitleUpdatedMessage extends MessageBase {
+export interface FormTitleUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TITLE_UPDATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormTitleUpdatedMessageData
 }
 
-export interface FormOrganisationUpdatedMessage extends MessageBase {
+export interface FormOrganisationUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_ORGANISATION_UPDATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormOrganisationUpdatedMessageData
 }
 
-export interface FormTeamNameUpdatedMessage extends MessageBase {
+export interface FormTeamNameUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TEAM_NAME_UPDATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormTeamNameUpdatedMessageData
 }
 
-export interface FormTeamEmailUpdatedMessage extends MessageBase {
+export interface FormTeamEmailUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormTeamEmailUpdatedMessageData
 }
 
-export interface FormSupportContactUpdatedMessage extends MessageBase {
+export interface FormSupportContactUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormSupportContactUpdatedMessageData
 }
 
-export interface FormSupportPhoneUpdatedMessage extends MessageBase {
+export interface FormSupportPhoneUpdatedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED
-  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSupportPhoneUpdatedMessageData
 }
 
-export interface FormSupportEmailUpdatedMessage extends MessageBase {
+export interface FormSupportEmailUpdatedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED
-  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSupportEmailUpdatedMessageData
 }
 
-export interface FormSupportOnlineUpdatedMessage extends MessageBase {
+export interface FormSupportOnlineUpdatedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED
-  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormSupportOnlineUpdatedMessageData
 }
 
-export interface FormPrivacyNoticeUpdatedMessage extends MessageBase {
+export interface FormPrivacyNoticeUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED
   source: AuditEventMessageSource.FORMS_MANAGER
   data: FormPrivacyNoticeUpdatedMessageData
 }
 
-export interface FormNotificationEmailUpdatedMessage extends MessageBase {
+export interface FormNotificationEmailUpdatedMessage
+  extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED
   source: AuditEventMessageSource.FORMS_MANAGER
   data: FormNotificationEmailUpdatedMessageData
 }
 
-export interface FormSubmissionGuidanceUpdatedMessage extends MessageBase {
+export interface FormSubmissionGuidanceUpdatedMessage
+  extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED
   source: AuditEventMessageSource.FORMS_MANAGER
   data: FormSubmissionGuidanceUpdatedMessageData
 }
 
-export interface FormUploadedMessage extends MessageBase {
+export interface FormUploadedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_JSON_UPLOADED
-  source: AuditEventMessageSource.FORMS_DESIGNER
   data: FormUploadedMessageData
 }
 
-export interface FormDownloadedMessage extends MessageBase {
+export interface FormDownloadedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
-  source: AuditEventMessageSource.FORMS_DESIGNER
   type: AuditEventMessageType.FORM_JSON_DOWNLOADED
 }
 
-export interface FormPublishedMessage extends MessageBase {
+export interface FormPublishedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_PUBLISHED
-  source: AuditEventMessageSource.FORMS_MANAGER
 }
 
-export interface FormDraftCreatedFromLiveMessage extends MessageBase {
+export interface FormDraftCreatedFromLiveMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE
-  source: AuditEventMessageSource.FORMS_MANAGER
 }
 
-export interface FormLiveCreatedFromDraftMessage extends MessageBase {
+export interface FormLiveCreatedFromDraftMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
-  source: AuditEventMessageSource.FORMS_MANAGER
 }
 
-export interface FormDraftDeletedMessage extends MessageBase {
+export interface FormDraftDeletedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_DRAFT_DELETED
-  source: AuditEventMessageSource.FORMS_MANAGER
 }
 
-export interface FormMigratedMessage extends MessageBase {
+export interface FormMigratedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_MIGRATED
-  source: AuditEventMessageSource.FORMS_MANAGER
 }
 
-export interface FormUpdatedMessage extends MessageBase {
+export interface FormUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_UPDATED
-  source: AuditEventMessageSource.FORMS_MANAGER
   data: FormUpdatedMessageData
 }
 
@@ -323,6 +315,7 @@ export type AuditMessage =
   | FormOrganisationUpdatedMessage
   | FormTeamNameUpdatedMessage
   | FormTeamEmailUpdatedMessage
+  | FormSupportContactUpdatedMessage
   | FormSupportPhoneUpdatedMessage
   | FormSupportEmailUpdatedMessage
   | FormSupportOnlineUpdatedMessage
