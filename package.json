@@ -60,7 +60,6 @@
     "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jsdom": "^26.1.0",
-    "json-diff-ts": "^4.8.1",
     "lint-staged": "^16.1.2",
     "postcss": "^8.4.49",
     "postcss-scss": "^4.0.9",

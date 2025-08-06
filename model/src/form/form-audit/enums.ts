@@ -7,10 +7,10 @@ export enum AuditEventMessageCategory {
   ENTITLEMENT = 'ENTITLEMENT'
 }
 
-export enum AuditEventMessageSubCategory {
-  FORM_METADATA = 'FORM_METADATA',
-  FORM_DEFINITION = 'FORM_DEFINITION',
-  FORM_SUBMISSION = 'FORM_SUBMISSION'
+export enum AuditEventMessageSource {
+  FORMS_MANAGER = 'FORMS_MANAGER',
+  FORMS_DESIGNER = 'FORMS_DESIGNER',
+  ENTITLEMENT = 'ENTITLEMENT'
 }
 
 export enum AuditEventMessageType {
@@ -37,6 +37,7 @@ export enum AuditEventMessageType {
 }
 
 export enum FormDefinitionRequestType {
+  REPLACE_DRAFT = 'REPLACE_DRAFT',
   CREATE_COMPONENT = 'CREATE_COMPONENT',
   UPDATE_COMPONENT = 'UPDATE_COMPONENT',
   DELETE_COMPONENT = 'DELETE_COMPONENT',
