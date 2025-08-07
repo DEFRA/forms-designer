@@ -106,7 +106,7 @@ export function sortByName(a, b) {
  */
 export function listUsersViewModel(users, notification) {
   const rows = users
-    .sort((a, b) => sortByName(a, b))
+    .toSorted((a, b) => sortByName(a, b))
     .map((user) => [
       {
         html: `${user.displayName}<span class="govuk-visually-hidden">User: ${user.displayName}</span><br><span class="govuk-hint" aria-hidden="true"> ${user.email} </span>`
