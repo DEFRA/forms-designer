@@ -336,6 +336,7 @@ export interface AuditEvent {
 }
 
 export type AuditRecord = AuditMessage & {
+  id: string
   messageId: string
   recordCreatedAt: Date
 }
