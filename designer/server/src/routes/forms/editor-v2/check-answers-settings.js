@@ -1,11 +1,11 @@
 import {
+  Scopes,
   declarationTextSchema,
   needDeclarationSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { setCheckAnswersDeclaration } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
@@ -71,7 +71,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormRead}`]
         }
       }
     }
@@ -117,7 +117,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -125,7 +125,6 @@ export default [
 ]
 
 /**
- * @import { FormEditor, FormEditorInputCheckAnswersSettings } from '@defra/forms-model'
+ * @import { FormEditorInputCheckAnswersSettings } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

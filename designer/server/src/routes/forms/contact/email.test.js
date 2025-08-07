@@ -96,7 +96,10 @@ describe('Forms contact email', () => {
   })
 
   test('POST - should redirect to overview page after updating email details', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
       slug: 'my-form-slug',
@@ -122,13 +125,17 @@ describe('Forms contact email', () => {
   })
 
   test('POST - should redirect to overview page after removing email details', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce({
+    const testMetadata = {
       ...formMetadata,
       contact: {
         ...formMetadata.contact,
         phone: '123'
       }
-    })
+    }
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(testMetadata)
+      .mockResolvedValueOnce(testMetadata)
 
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,

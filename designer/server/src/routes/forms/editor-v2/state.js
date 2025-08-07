@@ -1,6 +1,6 @@
+import { Scopes } from '@defra/forms-model'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import {
   getQuestionSessionState,
@@ -82,7 +82,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -91,6 +91,5 @@ export default [
 
 /**
  * @import { QuestionSessionState } from '@defra/forms-model'
- * @import Boom from '@hapi/boom'
  * @import { ServerRoute } from '@hapi/hapi'
  */

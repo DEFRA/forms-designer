@@ -1,0 +1,16 @@
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% extends "layouts/page.njk" %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container app-width-container--wide">
+    {{ govukBackLink(backLink) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading
+  }) %}
+    <p class="govuk-body"><a href="mailto:defraforms@defra.gov.uk" class="govuk-link">Contact the Defra forms team</a> or use the slack channel #defra-forms-support on the Defra Digital instance.</p>
+  {% endcall %}
+{% endblock %}

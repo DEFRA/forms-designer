@@ -1,5 +1,6 @@
 import Stream from 'node:stream'
 
+import { Scopes } from '@defra/forms-model'
 import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
 import hapi, {
@@ -12,7 +13,6 @@ import Wreck from '@hapi/wreck'
 import { ProxyAgent } from 'proxy-agent'
 import qs from 'qs'
 
-import { SCOPE_READ } from '~/src/common/constants/scopes.js'
 import {
   azureOidc,
   azureOidcNoop
@@ -50,7 +50,7 @@ const serverOptions = (): ServerOptions => {
         strategies: ['session'],
         access: {
           entity: 'user',
-          scope: [`+${SCOPE_READ}`]
+          scope: [`+${Scopes.FormRead}`]
         }
       },
       validate: {

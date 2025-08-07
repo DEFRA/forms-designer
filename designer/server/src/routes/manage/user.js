@@ -1,11 +1,8 @@
-import Boom from '@hapi/boom'
+import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
-import config from '~/src/config.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import {
@@ -19,6 +16,7 @@ import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { Roles } from '~/src/models/account/role-mapper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/manage/users.js'
+import { checkUserManagementAccess } from '~/src/routes/forms/route-helpers.js'
 
 const errorKey = sessionNames.validationFailure.manageUsers
 
@@ -54,25 +52,6 @@ const userIdSchema = Joi.object({
 
 const MANAGE_USERS_BASE_URL = '/manage/users'
 
-/**
- * Pre-handler to check if user management features are available
- */
-const checkUserManagementAccess = [
-  {
-    method: /** @param {Request} request */ (request) => {
-      if (!config.featureFlagUseEntitlementApi) {
-        throw Boom.forbidden('User management is not available')
-      }
-
-      const { credentials } = request.auth
-      if (!hasAdminRole(credentials.user)) {
-        throw Boom.forbidden('Admin access required')
-      }
-      return true
-    }
-  }
-]
-
 export default [
   /** @type {ServerRoute} */
   // Add a new user
@@ -100,7 +79,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.UserCreate}`]
         }
       },
       pre: checkUserManagementAccess
@@ -136,7 +115,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.UserEdit}`]
         }
       },
       pre: checkUserManagementAccess
@@ -166,7 +145,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.UserDelete}`]
         }
       },
       pre: checkUserManagementAccess
@@ -213,7 +192,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.UserCreate}`]
         }
       }
     }
@@ -261,7 +240,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.UserEdit}`]
         }
       }
     }
@@ -299,7 +278,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.UserDelete}`]
         }
       }
     }
@@ -309,5 +288,6 @@ export default [
 /**
  * @import { ManageUser } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
- * @import { ServerRoute, Request } from '@hapi/hapi'
+ * @import Boom from '@hapi/boom'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

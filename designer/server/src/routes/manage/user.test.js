@@ -1,8 +1,8 @@
+import { Scopes } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
@@ -415,7 +415,7 @@ describe('Create and edit user routes', () => {
         credentials: credentials({
           claims,
           user: user(claims.token, [Roles.FormCreator]),
-          scope: [SCOPE_READ, SCOPE_WRITE]
+          scope: [Scopes.FormRead, Scopes.FormEdit]
         })
       }
 

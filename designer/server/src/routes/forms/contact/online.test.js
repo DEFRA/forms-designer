@@ -92,7 +92,10 @@ describe('Forms contact online', () => {
   })
 
   test('POST - should redirect to overview page after updating online details', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
       slug: 'my-form-slug',
@@ -118,7 +121,7 @@ describe('Forms contact online', () => {
   })
 
   test('POST - should redirect to overview page after removing online details', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce({
+    const testMetadata = {
       ...formMetadata,
       contact: {
         ...formMetadata.contact,
@@ -127,7 +130,11 @@ describe('Forms contact online', () => {
           responseTime: 'We aim to respond within 2 working days'
         }
       }
-    })
+    }
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(testMetadata)
+      .mockResolvedValueOnce(testMetadata)
 
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,

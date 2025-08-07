@@ -1,7 +1,6 @@
-import { isFormType } from '@defra/forms-model'
+import { Scopes, isFormType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
@@ -55,7 +54,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -91,7 +90,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -99,6 +98,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPage, FormDefinition } from '@defra/forms-model'
+ * @import { FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

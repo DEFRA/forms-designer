@@ -1,4 +1,5 @@
-import * as scopes from '~/src/common/constants/scopes.js'
+import { Scopes } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { getUser } from '~/src/lib/manage.js'
 import { accountViewModel } from '~/src/models/account/auth.js'
@@ -26,7 +27,7 @@ export default /** @satisfies {ServerRoute} */ ({
       mode: 'required',
       access: {
         entity: 'user',
-        scope: [`+${scopes.SCOPE_READ}`]
+        scope: [`+${Scopes.FormRead}`]
       }
     }
   }

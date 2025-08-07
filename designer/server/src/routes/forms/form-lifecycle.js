@@ -1,15 +1,15 @@
-import { getErrorMessage } from '@defra/forms-model'
+import { Scopes, getErrorMessage } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import * as notifications from '~/src/common/constants/notifications.js'
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
+import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.js'
 
 const logger = createLogger()
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
@@ -43,9 +43,10 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormRead}`]
         }
-      }
+      },
+      pre: [protectMetadataEditOfLiveForm]
     }
   }),
   /**
@@ -100,7 +101,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormPublish}`]
         }
       }
     }
@@ -144,7 +145,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormPublish}`]
         }
       }
     }
@@ -177,7 +178,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormDelete}`]
         }
       }
     }
@@ -244,7 +245,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormDelete}`]
         }
       }
     }

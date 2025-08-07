@@ -1,9 +1,8 @@
 import { randomUUID } from 'node:crypto'
 
-import { getErrorMessage } from '@defra/forms-model'
+import { getErrorMessage, mapScopesToRoles } from '@defra/forms-model'
 import { DateTime } from 'luxon'
 
-import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
 import {
   getUserClaims,
   getUserScopes,
@@ -75,7 +74,10 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
       const entitlementUser = await getUser(credentials.token, user.id)
       user.roles = entitlementUser.roles
 
-      credentials.scope = user.roles.length > 0 ? [SCOPE_READ, SCOPE_WRITE] : []
+      credentials.scope =
+        user.roles.length > 0
+          ? mapScopesToRoles(/** @type {Roles[]} */ (user.roles))
+          : []
 
       logger.info('Successfully fetched roles from entitlement API')
     } catch (error) {
@@ -99,5 +101,6 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
 
 /**
  * @import { AuthArtifacts, Request, UserCredentials } from '@hapi/hapi'
+ * @import { Roles } from '@defra/forms-model'
  * @import { AuthWithTokens } from '~/src/common/helpers/auth/types.js'
  */
