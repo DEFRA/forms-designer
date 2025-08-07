@@ -16,8 +16,7 @@ import {
   updateUser
 } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { Roles } from '~/src/models/account/role-mapper.js'
-import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
+import { Roles, getNameForRole } from '~/src/models/account/role-mapper.js'
 import * as viewModel from '~/src/models/manage/users.js'
 
 const errorKey = sessionNames.validationFailure.manageUsers
@@ -185,12 +184,15 @@ export default [
       const { token } = auth.credentials
 
       try {
-        await addUser(token, {
+        const newUser = await addUser(token, {
           email: payload.emailAddress,
           roles: [payload.userRole]
         })
 
-        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(
+          sessionNames.successNotification,
+          `You added ${newUser.displayName}`
+        )
 
         // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
@@ -230,14 +232,20 @@ export default [
       const { payload, yar, auth, params } = request
       const { token } = auth.credentials
       const { userId } = params
+      const { userRole } = payload
 
       try {
+        const existingUser = await getUser(token, userId)
+
         await updateUser(token, {
           userId,
-          roles: [payload.userRole]
+          roles: [userRole]
         })
 
-        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(
+          sessionNames.successNotification,
+          `You updated ${existingUser.displayName}'s role to ${getNameForRole(userRole)}`
+        )
 
         // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
@@ -280,9 +288,14 @@ export default [
       const { userId } = params
 
       try {
+        const existingUser = await getUser(token, userId)
+
         await deleteUser(token, userId)
 
-        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(
+          sessionNames.successNotification,
+          `You removed ${existingUser.displayName} from Forms Designer`
+        )
 
         // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)

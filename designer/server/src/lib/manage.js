@@ -43,7 +43,7 @@ export async function getUser(token, userId) {
  */
 export async function addUser(token, userDetails) {
   const postJsonByType =
-    /** @type {typeof postJson<{ emailAddress: string, userRole: string }>} */ (
+    /** @type {typeof postJson<{ emailAddress: string, userRole: string, displayName: string }>} */ (
       postJson
     )
 

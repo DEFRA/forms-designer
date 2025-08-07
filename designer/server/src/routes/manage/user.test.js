@@ -39,7 +39,9 @@ describe('Create and edit user routes', () => {
 
   beforeEach(() => {
     jest.mocked(getRoles).mockResolvedValue(allRoles)
-    jest.mocked(addUser).mockResolvedValue({ emailAddress: '', userRole: '' })
+    jest
+      .mocked(addUser)
+      .mockResolvedValue({ emailAddress: '', userRole: '', displayName: '' })
     jest.mocked(getUser).mockResolvedValue(/** @type {EntitlementUser} */ ({}))
     jest.mocked(config).featureFlagUseEntitlementApi = true
   })
