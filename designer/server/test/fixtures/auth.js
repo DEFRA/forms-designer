@@ -119,6 +119,20 @@ export const auth = {
 }
 
 /**
+ * Request auth with scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authFormCreator = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claims),
+  credentials: credentials({
+    claims,
+    user: user(claims.token, [Roles.FormCreator]),
+    scope: [Scopes.FormEdit, Scopes.FormRead]
+  })
+}
+
+/**
  * Request auth with invalid groups for Hapi `server.inject()`
  * @satisfies {ServerInjectOptions['auth']}
  */

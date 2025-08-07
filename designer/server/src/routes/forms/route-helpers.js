@@ -1,7 +1,6 @@
 import { Scopes } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 
-import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
@@ -10,14 +9,9 @@ import * as forms from '~/src/lib/forms.js'
  */
 export const checkUserManagementAccess = [
   {
-    method: /** @param {Request} request */ (request) => {
+    method: /** @param {Request} _request */ (_request) => {
       if (!config.featureFlagUseEntitlementApi) {
         throw Boom.forbidden('User management is not available')
-      }
-
-      const { credentials } = request.auth
-      if (!hasAdminRole(credentials.user)) {
-        throw Boom.forbidden('Admin access required')
       }
       return true
     }
