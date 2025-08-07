@@ -335,10 +335,13 @@ export interface AuditEvent {
   message: AuditMessage
 }
 
-export type AuditRecord = AuditMessage & {
-  id: string
+export type AuditRecordInput = AuditMessage & {
   messageId: string
   recordCreatedAt: Date
+}
+
+export type AuditRecord = AuditRecordInput & {
+  id: string
 }
 
 export interface MessageBody {
