@@ -89,21 +89,35 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
 }
 
 /**
+ * @param {EntitlementUser} a
+ * @param {EntitlementUser} b
+ */
+export function sortByName(a, b) {
+  const [aFirstName, aLastFirst] = a.displayName.split(' ')
+  const [bFirstName, bLastFirst] = b.displayName.split(' ')
+  return `${aLastFirst} ${aFirstName}`.localeCompare(
+    `${bLastFirst} ${bFirstName}`
+  )
+}
+
+/**
  * @param {EntitlementUser[]} users
  * @param {string[]} [notification]
  */
 export function listUsersViewModel(users, notification) {
-  const rows = users.map((user) => [
-    {
-      html: `${user.displayName}<span class="govuk-visually-hidden">User: ${user.displayName}</span><br><span class="govuk-hint" aria-hidden="true"> ${user.email} </span>`
-    },
-    {
-      text: user.roles.map((role) => getNameForRole(role)).join(', ')
-    },
-    {
-      html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}/amend">Manage</a>`
-    }
-  ])
+  const rows = users
+    .sort((a, b) => sortByName(a, b))
+    .map((user) => [
+      {
+        html: `${user.displayName}<span class="govuk-visually-hidden">User: ${user.displayName}</span><br><span class="govuk-hint" aria-hidden="true"> ${user.email} </span>`
+      },
+      {
+        text: user.roles.map((role) => getNameForRole(role)).join(', ')
+      },
+      {
+        html: `<a class="govuk-link govuk-link--no-visited-state" href="${editUrl}${user.userId}/amend">Manage</a>`
+      }
+    ])
 
   return {
     pageTitle: MANAGE_USERS_TEXT,
