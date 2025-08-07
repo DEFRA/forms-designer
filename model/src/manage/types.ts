@@ -36,4 +36,9 @@ export interface ManageUser {
    * The role assigned to the user
    */
   userRole: string
+
+  /**
+   * The full name of the user for display
+   */
+  displayName?: string
 }
