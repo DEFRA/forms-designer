@@ -1,7 +1,6 @@
-import { FormDefinitionError } from '@defra/forms-model'
+import { FormDefinitionError, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { updateCondition } from '~/src/lib/editor.js'
 import {
@@ -59,7 +58,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -116,7 +115,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }

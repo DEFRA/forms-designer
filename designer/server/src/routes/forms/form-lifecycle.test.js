@@ -62,7 +62,10 @@ describe('Test form draft and live creation route handlers', () => {
   })
 
   test('When a draft will be going live and there are no warnings, show the page content', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(metadata)
+      .mockResolvedValueOnce(metadata)
 
     const options = {
       method: 'GET',
@@ -90,7 +93,10 @@ describe('Test form draft and live creation route handlers', () => {
       updatedBy: author
     }
 
-    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(metadata)
+      .mockResolvedValueOnce(metadata)
 
     const options = {
       method: 'GET',

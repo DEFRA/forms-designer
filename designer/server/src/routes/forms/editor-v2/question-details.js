@@ -1,13 +1,13 @@
 import {
   ComponentType,
   FormDefinitionError,
+  Scopes,
   questionDetailsFullSchema,
   randomId
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   addPageAndFirstQuestion,
@@ -398,7 +398,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormRead}`]
         }
       }
     }
@@ -528,7 +528,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }

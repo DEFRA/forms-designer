@@ -1,13 +1,13 @@
-import { submissionGuidanceSchema } from '@defra/forms-model'
+import { Scopes, submissionGuidanceSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import { submissionGuidanceViewModel } from '~/src/models/forms/submission-guidance.js'
 import { formOverviewPath } from '~/src/models/links.js'
+import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.js'
 
 export const ROUTE_PATH_EDIT_SUBMISSION_GUIDANCE =
   '/library/{slug}/edit/submission-guidance'
@@ -47,7 +47,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -107,9 +107,10 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
-      }
+      },
+      pre: [protectMetadataEditOfLiveForm]
     }
   })
 ]

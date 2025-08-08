@@ -1,6 +1,6 @@
+import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { errorViewModel } from '~/src/models/errors.js'
 
 export const ROUTE_FULL_PATH = `/library/{slug}/editor-v2/error`
@@ -26,7 +26,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormRead}`]
         }
       }
     }

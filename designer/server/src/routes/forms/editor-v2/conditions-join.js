@@ -1,5 +1,6 @@
 import {
   FormDefinitionError,
+  Scopes,
   conditionWrapperSchemaV2,
   isConditionWrapperV2,
   slugSchema
@@ -7,7 +8,6 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { addCondition } from '~/src/lib/editor.js'
 import {
@@ -91,7 +91,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       },
       validate: {
@@ -186,7 +186,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }

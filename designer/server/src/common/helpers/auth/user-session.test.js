@@ -90,7 +90,15 @@ describe('user-session', () => {
           flowId: expect.any(String),
           idToken: 'id_token',
           refreshToken: 'refresh_token',
-          scope: ['read', 'write'],
+          scope: [
+            'form-delete',
+            'form-edit',
+            'form-read',
+            'form-publish',
+            'user-create',
+            'user-delete',
+            'user-edit'
+          ],
           token: "{ name: 'my-name'}",
           user: {
             displayName: 'John Smith',
@@ -111,7 +119,7 @@ describe('user-session', () => {
       jest.mocked(getUser).mockImplementationOnce(() => {
         throw new Error('entitlement api error')
       })
-      jest.mocked(getUserScopes).mockReturnValueOnce(['read', 'write'])
+      jest.mocked(getUserScopes).mockReturnValueOnce(['form-read', 'form-edit'])
       const res = await createUserSession(mockRequest)
       expect(res).toBe('123-123')
       expect(getUser).toHaveBeenCalled()
@@ -122,7 +130,7 @@ describe('user-session', () => {
           flowId: expect.any(String),
           idToken: 'id_token',
           refreshToken: 'refresh_token',
-          scope: ['read', 'write'],
+          scope: ['form-read', 'form-edit'],
           token: "{ name: 'my-name'}",
           user: {
             displayName: 'John Smith',

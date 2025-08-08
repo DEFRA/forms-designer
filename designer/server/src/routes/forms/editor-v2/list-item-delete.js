@@ -1,6 +1,6 @@
+import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   getQuestionSessionState,
@@ -48,7 +48,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -86,7 +86,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -94,6 +94,5 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPage, FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

@@ -1,4 +1,5 @@
-import * as scopes from '~/src/common/constants/scopes.js'
+import { Scopes } from '@defra/forms-model'
+
 import * as forms from '~/src/lib/forms.js'
 
 export const ROUTE_PATH_DOWNLOAD = 'download'
@@ -33,7 +34,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_READ}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }

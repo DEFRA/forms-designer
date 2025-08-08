@@ -1,13 +1,13 @@
-import { notificationEmailAddressSchema } from '@defra/forms-model'
+import { Scopes, notificationEmailAddressSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
 import { notificationEmailViewModel } from '~/src/models/forms/notification-email.js'
 import { formOverviewPath } from '~/src/models/links.js'
+import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.js'
 
 export const ROUTE_PATH_EDIT_NOTIFICATION_EMAIL =
   '/library/{slug}/edit/notification-email'
@@ -54,7 +54,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -120,9 +120,10 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
-      }
+      },
+      pre: [protectMetadataEditOfLiveForm]
     }
   })
 ]

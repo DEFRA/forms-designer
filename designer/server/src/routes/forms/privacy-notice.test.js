@@ -81,7 +81,10 @@ describe('Forms privacy notice', () => {
   })
 
   test('POST - should redirect to overview page after updating privacy notice url', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
       slug: 'my-form-slug',

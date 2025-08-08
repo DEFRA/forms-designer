@@ -78,7 +78,10 @@ describe('Forms notification email', () => {
   })
 
   test('POST - should redirect to overview page after updating notification email', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
       slug: 'my-form-slug',
@@ -101,7 +104,10 @@ describe('Forms notification email', () => {
   })
 
   test('POST - should update notification email and convert to lowercase', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
       slug: 'my-form-slug',

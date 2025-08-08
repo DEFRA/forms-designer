@@ -1,7 +1,7 @@
+import { Scopes } from '@defra/forms-model'
 import { token } from '@hapi/jwt'
 import { DateTime, Duration } from 'luxon'
 
-import { SCOPE_READ, SCOPE_WRITE } from '~/src/common/constants/scopes.js'
 import config from '~/src/config.js'
 import { Roles } from '~/src/models/account/role-mapper.js'
 
@@ -106,7 +106,29 @@ export const auth = {
   credentials: credentials({
     claims,
     user: user(claims.token, [Roles.Admin]),
-    scope: [SCOPE_READ, SCOPE_WRITE]
+    scope: [
+      Scopes.FormDelete,
+      Scopes.FormEdit,
+      Scopes.FormPublish,
+      Scopes.FormRead,
+      Scopes.UserCreate,
+      Scopes.UserDelete,
+      Scopes.UserEdit
+    ]
+  })
+}
+
+/**
+ * Request auth with scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authFormCreator = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claims),
+  credentials: credentials({
+    claims,
+    user: user(claims.token, [Roles.FormCreator]),
+    scope: [Scopes.FormEdit, Scopes.FormRead]
   })
 }
 
