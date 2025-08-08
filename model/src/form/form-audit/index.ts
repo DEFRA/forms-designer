@@ -43,7 +43,7 @@ import {
   type FormUploadedChanges,
   type FormUploadedMessageData
 } from '~/src/form/form-audit/types.js'
-import { contactSchema } from '~/src/form/form-metadata/index.js'
+import { contactSchema, idSchema } from '~/src/form/form-metadata/index.js'
 
 export const formMessageDataBase = Joi.object<FormMessageDataBase>({
   formId: Joi.string().required(),
@@ -303,6 +303,7 @@ export const auditEvent = Joi.object<AuditEvent>().keys({
 })
 
 export const auditRecord = messageSchema.append<AuditRecord>({
+  id: idSchema,
   messageId: Joi.string().uuid().required(),
   entityId: Joi.string().required(),
   recordCreatedAt: Joi.date().required()

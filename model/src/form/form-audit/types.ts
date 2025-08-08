@@ -335,10 +335,18 @@ export interface AuditEvent {
   message: AuditMessage
 }
 
-export type AuditRecord = AuditMessage & {
+export interface AuditMetaBase {
   messageId: string
   recordCreatedAt: Date
 }
+
+export interface AuditInputMeta extends AuditMetaBase {
+  id: string
+}
+
+export type AuditRecordInput = AuditMessage & AuditMetaBase
+
+export type AuditRecord = AuditMessage & AuditInputMeta
 
 export interface MessageBody {
   Message: string
