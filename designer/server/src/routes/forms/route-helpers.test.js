@@ -156,9 +156,7 @@ describe('Route helpers', () => {
 
       const { container } = await renderResponse(server, options)
       const $mainHeading = container.getByRole('heading', { level: 1 })
-      expect($mainHeading).toHaveTextContent(
-        'You do not have access to this service'
-      )
+      expect($mainHeading).toHaveTextContent('You cannot change these answers')
     })
 
     test('should allow if form draft and trying to edit metadata', async () => {

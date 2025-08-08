@@ -11,6 +11,9 @@
   {% call appPageBody({
     heading: pageHeading
   }) %}
+    {% if contentHtml %}
+        {{ contentHtml | safe }}
+    {% endif %}
     <p class="govuk-body"><a href="mailto:defraforms@defra.gov.uk" class="govuk-link">Contact the Defra forms team</a> or use the slack channel #defra-forms-support on the Defra Digital instance.</p>
   {% endcall %}
 {% endblock %}

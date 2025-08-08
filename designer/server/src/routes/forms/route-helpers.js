@@ -19,6 +19,32 @@ export const checkUserManagementAccess = [
 ]
 
 /**
+ * @param {string} slug
+ * @param {FormMetadata} metadata
+ * @param {string} headingText
+ * @param {string} [contentHtml]
+ */
+export function createErrorPageModel(
+  slug,
+  metadata,
+  headingText,
+  contentHtml = undefined
+) {
+  return {
+    pageHeading: {
+      classes: 'govuk-heading-xl',
+      text: headingText
+    },
+    pageTitle: `${headingText} - ${metadata.title}`,
+    contentHtml,
+    backLink: {
+      text: 'Back to form overview',
+      href: `/library/${slug}`
+    }
+  }
+}
+
+/**
  * Pre-handler to check if user has permission to change metadata on form
  */
 export const protectMetadataEditOfLiveForm = [
@@ -41,21 +67,24 @@ export const protectMetadataEditOfLiveForm = [
           metadata.live?.updatedAt
         ) {
           if (!request.url.pathname.endsWith('make-draft-live')) {
-            throw Boom.forbidden('FormPublish access required')
+            return h
+              .view(
+                'generic-error',
+                createErrorPageModel(
+                  slug,
+                  metadata,
+                  'You cannot change these answers',
+                  '<p class="govuk-body">Changes go straight to the live form. Only certain roles, like admin or publisher, can make changes.</p>'
+                )
+              )
+              .takeover()
           }
 
           return h
-            .view('generic-error', {
-              pageHeading: {
-                classes: 'govuk-heading-xl',
-                text: 'You cannot publish a form'
-              },
-              pageTitle: `You cannot publish a form - ${metadata.title}`,
-              backLink: {
-                text: 'Back to form overview',
-                href: `/library/${slug}`
-              }
-            })
+            .view(
+              'generic-error',
+              createErrorPageModel(slug, metadata, 'You cannot publish a form')
+            )
             .takeover()
         }
         return true
@@ -64,6 +93,6 @@ export const protectMetadataEditOfLiveForm = [
 ]
 
 /**
- * @import { FormBySlugInput } from '@defra/forms-model'
+ * @import { FormBySlugInput, FormMetadata } from '@defra/forms-model'
  * @import { Request, ResponseToolkit } from '@hapi/hapi'
  */
