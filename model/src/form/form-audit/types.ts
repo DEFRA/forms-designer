@@ -160,6 +160,13 @@ export type FormMessageActivitiesData =
   | FormCreatedMessageData
   | FormMessageDataBase
 
+export interface EntitlementMessageData {
+  userId: string
+  displayName: string
+  email: string
+  roles: string[]
+}
+
 export interface AuditUser {
   id: string
   displayName: string
@@ -169,6 +176,7 @@ export type MessageData =
   | FormMessageChangesData
   | FormMessageActivitiesData
   | FormUpdatedMessageData
+  | EntitlementMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -188,6 +196,10 @@ export interface ManagerMessageBase extends MessageBase {
 }
 export interface DesignerMessageBase extends MessageBase {
   source: AuditEventMessageSource.FORMS_DESIGNER
+}
+
+export interface EntitlementMessageBase extends MessageBase {
+  source: AuditEventMessageSource.ENTITLEMENT
 }
 
 export interface FormCreatedMessage extends ManagerMessageBase {
@@ -309,6 +321,24 @@ export interface FormUpdatedMessage extends ManagerMessageBase {
   data: FormUpdatedMessageData
 }
 
+export interface EntitlementCreatedMessage extends EntitlementMessageBase {
+  category: AuditEventMessageCategory.ENTITLEMENT
+  type: AuditEventMessageType.ENTITLEMENT_CREATED
+  data: EntitlementMessageData
+}
+
+export interface EntitlementUpdatedMessage extends EntitlementMessageBase {
+  category: AuditEventMessageCategory.ENTITLEMENT
+  type: AuditEventMessageType.ENTITLEMENT_UPDATED
+  data: EntitlementMessageData
+}
+
+export interface EntitlementDeletedMessage extends EntitlementMessageBase {
+  category: AuditEventMessageCategory.ENTITLEMENT
+  type: AuditEventMessageType.ENTITLEMENT_DELETED
+  data: EntitlementMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -330,6 +360,9 @@ export type AuditMessage =
   | FormDraftDeletedMessage
   | FormMigratedMessage
   | FormUpdatedMessage
+  | EntitlementCreatedMessage
+  | EntitlementUpdatedMessage
+  | EntitlementDeletedMessage
 
 export interface AuditEvent {
   message: AuditMessage
