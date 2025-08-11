@@ -310,6 +310,10 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
         then: entitlementMessageData
       },
       {
+        is: Joi.string().trim().valid(AuditEventMessageType.FORM_DRAFT_DELETED),
+        then: formMessageDataBase
+      },
+      {
         is: Joi.string()
           .trim()
           .valid(AuditEventMessageType.ENTITLEMENT_UPDATED),
