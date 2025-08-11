@@ -13,6 +13,7 @@ import {
   type AuditRecord,
   type AuditUser,
   type ChangesMessageData,
+  type EntitlementMessageData,
   type FormCreatedMessageData,
   type FormDefinitionS3Meta,
   type FormMessageChangesData,
@@ -147,6 +148,15 @@ export const formUploadedChanges = Joi.object<FormUploadedChanges>()
     value: Joi.string().required()
   })
   .required()
+
+export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
+  {
+    userId: Joi.string().required(),
+    displayName: Joi.string().required(),
+    email: Joi.string().email().required(),
+    roles: Joi.array().items(Joi.string())
+  }
+)
 
 export const auditUserSchema = Joi.object<AuditUser>().keys({
   id: Joi.string().uuid().required(),
@@ -292,8 +302,27 @@ export const messageSchema = Joi.object<AuditMessage>().keys({
       {
         is: Joi.string().trim().valid(AuditEventMessageType.FORM_UPDATED),
         then: formUpdatedMessageData
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.ENTITLEMENT_CREATED),
+        then: entitlementMessageData
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.ENTITLEMENT_UPDATED),
+        then: entitlementMessageData
+      },
+      {
+        is: Joi.string()
+          .trim()
+          .valid(AuditEventMessageType.ENTITLEMENT_DELETED),
+        then: entitlementMessageData
       }
-    ]
+    ],
+    otherwise: Joi.forbidden()
   }),
   messageCreatedAt: Joi.date().required()
 })
