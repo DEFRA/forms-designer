@@ -65,6 +65,7 @@ export const formMessageDataBase = Joi.object<FormMessageDataBase>({
   payload: Joi.object().optional()
 })
   .required()
+  .unknown()
   .description('The base data object for Form Messages')
 
 export const formCreatedMessageData = formMessageDataBase
@@ -75,6 +76,7 @@ export const formCreatedMessageData = formMessageDataBase
     teamEmail: teamEmailSchema
   })
   .required()
+  .unknown()
   .description('Message data schema for when a form is created')
 
 export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>()
@@ -84,6 +86,7 @@ export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>()
     s3Key: Joi.string().required()
   })
   .required()
+  .unknown()
   .description('Schema for form data S3 object in message')
 
 export const formUpdatedMessageData = formMessageDataBase
@@ -93,6 +96,7 @@ export const formUpdatedMessageData = formMessageDataBase
       .required(),
     s3Meta: formDefinitionS3Meta
   })
+  .unknown()
   .required()
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
@@ -100,6 +104,7 @@ export const formTitleChanges = Joi.object<FormTitleChanges>()
     title: titleSchema
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_TITLE_UPDATED event')
 
 export const formOrganisationChanges = Joi.object<FormOrganisationChanges>()
@@ -107,6 +112,7 @@ export const formOrganisationChanges = Joi.object<FormOrganisationChanges>()
     organisation: organisationSchema
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_ORGANISATION_UPDATED event')
 
 export const formTeamNameChanges = Joi.object<FormTeamNameChanges>()
@@ -114,6 +120,7 @@ export const formTeamNameChanges = Joi.object<FormTeamNameChanges>()
     teamName: teamNameSchema
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_TEAM_NAME_UPDATED event')
 
 export const formTeamEmailChanges = Joi.object<FormTeamEmailChanges>()
@@ -121,6 +128,7 @@ export const formTeamEmailChanges = Joi.object<FormTeamEmailChanges>()
     teamEmail: teamEmailSchema
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_TEAM_EMAIL_UPDATED event')
 
 export const formSupportContactChanges = Joi.object<FormSupportContactChanges>()
@@ -135,6 +143,7 @@ export const formSupportPhoneChanges = Joi.object<FormSupportPhoneChanges>()
     phone: phoneSchema
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_SUPPORT_PHONE_UPDATED event')
 
 export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
@@ -143,6 +152,7 @@ export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
     text: onlineTextSchema
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_SUPPORT_ONLINE_UPDATED event')
 
 export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
@@ -150,6 +160,7 @@ export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
     address: emailAddressSchema,
     responseTime: emailResponseTimeSchema
   })
+  .unknown()
   .description('Changes schema for FORM_SUPPORT_EMAIL_UPDATED event')
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
@@ -157,6 +168,7 @@ export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
     privacyNoticeUrl: Joi.string()
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
 
 export const formNotificationEmailChanges =
@@ -165,6 +177,7 @@ export const formNotificationEmailChanges =
       notificationEmail: Joi.string()
     })
     .required()
+    .unknown()
     .description('Changes schema for FORM_NOTIFICATION_EMAIL_UPDATED event')
 
 export const formSubmissionGuidanceChanges =
@@ -173,6 +186,7 @@ export const formSubmissionGuidanceChanges =
       submissionGuidance: Joi.string()
     })
     .required()
+    .unknown()
     .description('Changes schema for FORM_SUBMISSION_GUIDANCE_UPDATED event')
 
 export const formUploadedChanges = Joi.object<FormUploadedChanges>()
@@ -180,35 +194,39 @@ export const formUploadedChanges = Joi.object<FormUploadedChanges>()
     value: Joi.string().required()
   })
   .required()
+  .unknown()
   .description('Changes schema for FORM_JSON_UPLOADED event')
 
-export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
-  {
+export const entitlementMessageData = Joi.object<EntitlementMessageData>()
+  .keys({
     userId: Joi.string().required(),
     displayName: Joi.string().required(),
     email: Joi.string().email().required(),
     roles: Joi.array().items(Joi.string())
-  }
-)
+  })
+  .unknown()
 
 export const auditUserSchema = Joi.object<AuditUser>()
   .keys({
     id: Joi.string().uuid().required(),
     displayName: Joi.string().required()
   })
+  .unknown()
   .description('Schema for CREATED_BY audit event')
 
 export function formChangesMessageData<T, U extends FormMessageChangesData>(
   schema: ObjectSchema<T>
 ): ObjectSchema<U> {
-  return formMessageDataBase.append<U>({
-    changes: Joi.object<ChangesMessageData<T>>()
-      .keys({
-        previous: schema,
-        new: schema
-      })
-      .description('Changes schema')
-  })
+  return formMessageDataBase
+    .append<U>({
+      changes: Joi.object<ChangesMessageData<T>>()
+        .keys({
+          previous: schema,
+          new: schema
+        })
+        .description('Changes schema')
+    })
+    .unknown()
 }
 
 export const messageSchema = Joi.object<AuditMessage>()
@@ -395,6 +413,7 @@ export const messageSchema = Joi.object<AuditMessage>()
       .required()
       .description('ISO timestamp when the message was published')
   })
+  .unknown()
   .required()
   .description('The audit message issued by the publishing service')
 
@@ -402,6 +421,7 @@ export const auditEvent = Joi.object<AuditEvent>()
   .keys({
     message: messageSchema
   })
+  .unknown()
   .description('The Body of the audit event')
 
 export const auditRecord = messageSchema
@@ -411,4 +431,5 @@ export const auditRecord = messageSchema
     entityId: Joi.string().required(),
     recordCreatedAt: Joi.date().required()
   })
+  .unknown()
   .description('The audit record persisted into the DB')
