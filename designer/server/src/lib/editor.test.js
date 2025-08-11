@@ -25,7 +25,7 @@ import {
   deletePage,
   deleteQuestion,
   getControllerType,
-  getControllerTypeAndProperties,
+  getControllerTypeAndPropertiesForPage,
   getRepeaterProperties,
   migrateDefinitionToV2,
   reorderPages,
@@ -1438,7 +1438,7 @@ describe('editor.js', () => {
     })
   })
 
-  describe('getControllerTypeAndProperties', () => {
+  describe('getControllerTypeAndPropertiesForPage', () => {
     test('should return controller type for file upload', () => {
       const page = /** @type {Page} */ ({})
       const components = /** @type {ComponentDef[]} */ ([
@@ -1448,7 +1448,7 @@ describe('editor.js', () => {
       ])
       const payload = {}
       const { controllerType, additionalProperties } =
-        getControllerTypeAndProperties(page, components, payload)
+        getControllerTypeAndPropertiesForPage(page, components, payload)
       expect(controllerType).toBe(ControllerType.FileUpload)
       expect(additionalProperties).toEqual({})
     })
@@ -1460,7 +1460,7 @@ describe('editor.js', () => {
       const components = /** @type {ComponentDef[]} */ ([])
       const payload = {}
       const { controllerType, additionalProperties } =
-        getControllerTypeAndProperties(page, components, payload)
+        getControllerTypeAndPropertiesForPage(page, components, payload)
       expect(controllerType).toBeNull()
       expect(additionalProperties).toEqual({})
     })
@@ -1472,7 +1472,7 @@ describe('editor.js', () => {
         exitPage: true
       }
       const { controllerType, additionalProperties } =
-        getControllerTypeAndProperties(page, components, payload)
+        getControllerTypeAndPropertiesForPage(page, components, payload)
       expect(controllerType).toBe(ControllerType.Terminal)
       expect(additionalProperties).toEqual({})
     })
@@ -1484,7 +1484,7 @@ describe('editor.js', () => {
         exitPage: false
       }
       const { controllerType, additionalProperties } =
-        getControllerTypeAndProperties(page, components, payload)
+        getControllerTypeAndPropertiesForPage(page, components, payload)
       expect(controllerType).toBeNull()
       expect(additionalProperties).toEqual({})
     })
@@ -1499,7 +1499,7 @@ describe('editor.js', () => {
         questionSetName: 'questionSetName'
       }
       const { controllerType, additionalProperties } =
-        getControllerTypeAndProperties(page, components, payload)
+        getControllerTypeAndPropertiesForPage(page, components, payload)
       expect(controllerType).toBe(ControllerType.Repeat)
       expect(additionalProperties).toEqual({
         repeat: {
@@ -1522,7 +1522,7 @@ describe('editor.js', () => {
       const components = /** @type {ComponentDef[]} */ ([])
       const payload = {}
       const { controllerType, additionalProperties } =
-        getControllerTypeAndProperties(page, components, payload)
+        getControllerTypeAndPropertiesForPage(page, components, payload)
       expect(controllerType).toBeNull()
       expect(additionalProperties).toEqual({})
     })

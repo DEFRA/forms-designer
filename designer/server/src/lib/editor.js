@@ -154,11 +154,11 @@ export async function updateQuestion(
     // Side-effect to the component within the page
     questionToChange.type = questionDetails.type ?? ComponentType.TextField
   }
-  const { controllerType: newControllerType } = getControllerTypeAndProperties(
-    page,
-    hasComponents(page) ? page.components : [],
-    {}
-  )
+  const { controllerType: newControllerType } =
+    getControllerTypeAndPropertiesForQuestion(
+      page,
+      hasComponents(page) ? page.components : []
+    )
   if (
     origControllerType !== newControllerType ||
     isFirstQuestionAndNoPageTitle
@@ -292,9 +292,25 @@ export function getRepeaterProperties(page, isCurrentlyRepeater, payload) {
  *
  * @param { Page | undefined } page
  * @param {ComponentDef[]} components
+ */
+export function getControllerTypeAndPropertiesForQuestion(page, components) {
+  return getControllerTypeAndPropertiesForPage(page, components, {
+    exitPage: page?.controller === ControllerType.Terminal,
+    repeater: page?.controller === ControllerType.Repeat ? 'true' : ''
+  })
+}
+
+/**
+ *
+ * @param { Page | undefined } page
+ * @param {ComponentDef[]} components
  * @param {Partial<FormEditorInputPageSettings>} payload
  */
-export function getControllerTypeAndProperties(page, components, payload) {
+export function getControllerTypeAndPropertiesForPage(
+  page,
+  components,
+  payload
+) {
   const { exitPage, repeater } = payload
   let controllerType = /** @type { ControllerType | undefined | null } */ (
     page?.controller
@@ -358,7 +374,7 @@ export async function setPageSettings(
   const pagePathForCall = `/${slugify(resolvePageHeading(page, pageHeadingForCall, components))}`
 
   const { controllerType, additionalProperties } =
-    getControllerTypeAndProperties(page, components, payload)
+    getControllerTypeAndPropertiesForPage(page, components, payload)
 
   const requestPayload = {
     title: pageHeadingForCall,
