@@ -162,9 +162,9 @@ export type FormMessageActivitiesData =
 
 export interface EntitlementMessageData {
   userId: string
-  displayName?: string
+  displayName: string
   email: string
-  roles?: string[]
+  roles: string[]
 }
 
 export interface AuditUser {
