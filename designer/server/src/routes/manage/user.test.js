@@ -346,6 +346,34 @@ describe('Create and edit user routes', () => {
       expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '12345')
     })
 
+    test('should force logout when user deletes themselves', async () => {
+      const testProfile = profile({
+        groups: ['valid-test-group'],
+        login_hint: 'foo'
+      })
+      const selfAuth = {
+        ...auth,
+        credentials: {
+          ...auth.credentials,
+          user: { ...user(testProfile, [Roles.Admin]), id: '12345' }
+        }
+      }
+
+      const options = {
+        method: 'post',
+        url: '/manage/users/12345/delete',
+        auth: selfAuth
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/')
+      expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '12345')
+    })
+
     test('should error if API failure (non-Boom)', async () => {
       jest.mocked(deleteUser).mockImplementationOnce(() => {
         throw new Error('api error')

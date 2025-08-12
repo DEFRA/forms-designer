@@ -208,7 +208,7 @@ export default [
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
     async handler(request, h) {
-      const { payload, yar, auth, params } = request
+      const { payload, yar, auth, params, server } = request
       const { token } = auth.credentials
       const { userId } = params
       const { userRole } = payload
@@ -220,6 +220,8 @@ export default [
           userId,
           roles: [userRole]
         })
+
+        await server.methods.session.drop(userId)
 
         yar.flash(
           sessionNames.successNotification,
@@ -262,15 +264,28 @@ export default [
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
     async handler(request, h) {
-      const { yar, auth, params } = request
-      const { token } = auth.credentials
+      const { yar, auth, params, server } = request
+      const { token, user } = auth.credentials
       const { userId } = params
+      const isSelfDeletion = user?.id === userId
 
       try {
         const existingUser = await getUser(token, userId)
 
+        if (isSelfDeletion) {
+          await server.methods.session.drop(userId)
+          request.cookieAuth.clear()
+        }
+
         await deleteUser(token, userId)
 
+        if (!isSelfDeletion) {
+          await server.methods.session.drop(userId)
+        }
+
+        if (isSelfDeletion) {
+          return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
+        }
         yar.flash(
           sessionNames.successNotification,
           `You removed ${existingUser.displayName} from Forms Designer`
@@ -279,6 +294,10 @@ export default [
         // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
+        if (isSelfDeletion) {
+          return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
+        }
+
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
           return redirectWithErrors(request, h, error, errorKey)
