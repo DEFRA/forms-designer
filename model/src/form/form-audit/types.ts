@@ -167,6 +167,12 @@ export interface EntitlementMessageData {
   roles: string[]
 }
 
+export interface AuthenticationMessageData {
+  userId: string
+  displayName: string
+  email?: string
+}
+
 export interface AuditUser {
   id: string
   displayName: string
@@ -177,6 +183,7 @@ export type MessageData =
   | FormMessageActivitiesData
   | FormUpdatedMessageData
   | EntitlementMessageData
+  | AuthenticationMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -200,6 +207,10 @@ export interface DesignerMessageBase extends MessageBase {
 
 export interface EntitlementMessageBase extends MessageBase {
   source: AuditEventMessageSource.ENTITLEMENT
+}
+
+export interface AuthenticationMessageBase extends MessageBase {
+  source: AuditEventMessageSource.AUTHENTICATION
 }
 
 export interface FormCreatedMessage extends ManagerMessageBase {
@@ -339,6 +350,33 @@ export interface EntitlementDeletedMessage extends EntitlementMessageBase {
   data: EntitlementMessageData
 }
 
+export interface AuthenticationLoginMessage extends AuthenticationMessageBase {
+  category: AuditEventMessageCategory.AUTHENTICATION
+  type: AuditEventMessageType.AUTHENTICATION_LOGIN
+  data: AuthenticationMessageData
+}
+
+export interface AuthenticationLogoutManualMessage
+  extends AuthenticationMessageBase {
+  category: AuditEventMessageCategory.AUTHENTICATION
+  type: AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL
+  data: AuthenticationMessageData
+}
+
+export interface AuthenticationLogoutAutoMessage
+  extends AuthenticationMessageBase {
+  category: AuditEventMessageCategory.AUTHENTICATION
+  type: AuditEventMessageType.AUTHENTICATION_LOGOUT_AUTO
+  data: AuthenticationMessageData
+}
+
+export interface AuthenticationLogoutDifferentDeviceMessage
+  extends AuthenticationMessageBase {
+  category: AuditEventMessageCategory.AUTHENTICATION
+  type: AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
+  data: AuthenticationMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -363,6 +401,10 @@ export type AuditMessage =
   | EntitlementCreatedMessage
   | EntitlementUpdatedMessage
   | EntitlementDeletedMessage
+  | AuthenticationLoginMessage
+  | AuthenticationLogoutManualMessage
+  | AuthenticationLogoutAutoMessage
+  | AuthenticationLogoutDifferentDeviceMessage
 
 export interface AuditEvent {
   message: AuditMessage
