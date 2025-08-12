@@ -13,6 +13,7 @@ jest.mock('~/src/common/helpers/auth/drop-user-session.js')
 jest.mock('~/src/common/helpers/auth/get-user-session.js')
 jest.mock('~/src/routes/account/auth.js')
 jest.mock('~/src/lib/oidc.js')
+jest.mock('~/src/messaging/publish.js')
 
 describe('signOutRoute', () => {
   /** @type {Server} */

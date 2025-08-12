@@ -12,6 +12,7 @@ import {
 import { forms as formMetadataList } from '~/test/fixtures/forms.js'
 
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/messaging/publish.js')
 
 describe('Authentiation', () => {
   /** @type {Server} */

@@ -23,7 +23,7 @@ async function validateAndPublishEvent(auditMessage) {
 
 /**
  * Publish authentication 'login' event
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  */
 export async function publishAuthenticationLoginEvent(user) {
   const auditMessage = authenticationLoginMapper(user)
@@ -33,7 +33,7 @@ export async function publishAuthenticationLoginEvent(user) {
 
 /**
  * Publish authentication 'manual logout' event
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  */
 export async function publishAuthenticationLogoutManualEvent(user) {
   const auditMessage = authenticationLogoutManualMapper(user)
@@ -43,7 +43,7 @@ export async function publishAuthenticationLogoutManualEvent(user) {
 
 /**
  * Publish authentication 'auto logout' event
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  */
 export async function publishAuthenticationLogoutAutoEvent(user) {
   const auditMessage = authenticationLogoutAutoMapper(user)
@@ -53,7 +53,7 @@ export async function publishAuthenticationLogoutAutoEvent(user) {
 
 /**
  * Publish authentication 'logout due to login on different device' event
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  */
 export async function publishAuthenticationLogoutDifferentDeviceEvent(user) {
   const auditMessage = authenticationLogoutDifferentDevicelMapper(user)
@@ -62,6 +62,5 @@ export async function publishAuthenticationLogoutDifferentDeviceEvent(user) {
 }
 
 /**
- * @import { AuditMessage } from '@defra/forms-model'
- * @import { UserCredentials } from '@hapi/hapi'
+ * @import { AuditMessage, AuditUser } from '@defra/forms-model'
  */

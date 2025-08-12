@@ -27,4 +27,4 @@ process.env.FILE_DOWNLOAD_PASSWORD_TTL = Duration.fromObject({ days: 1 })
 process.env.SUBMISSION_URL = 'http://localhost:3002'
 process.env.SNS_ENDPOINT = 'http://localhost:4566'
 process.env.SNS_TOPIC_ARN =
-  'arn:aws:sns:eu-west-2:000000000000:forms_authentication_events'
+  'arn:aws:sns:eu-west-2:000000000000:forms_designer_events'

@@ -6,14 +6,13 @@ import {
 } from '@defra/forms-model'
 
 /**
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  * @returns {AuthenticationLoginMessage}
  */
 export function authenticationBaseMapper(user) {
   /** @type {AuthenticationMessageData} */
   const data = {
     userId: user.id,
-    email: user.email ?? 'unknown@notfound.com',
     displayName: user.displayName
   }
   const now = new Date()
@@ -34,7 +33,7 @@ export function authenticationBaseMapper(user) {
 }
 
 /**
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  * @returns {AuthenticationLoginMessage}
  */
 export function authenticationLoginMapper(user) {
@@ -45,7 +44,7 @@ export function authenticationLoginMapper(user) {
 }
 
 /**
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  * @returns {AuthenticationLogoutManualMessage}
  */
 export function authenticationLogoutManualMapper(user) {
@@ -56,7 +55,7 @@ export function authenticationLogoutManualMapper(user) {
 }
 
 /**
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  * @returns {AuthenticationLogoutAutoMessage}
  */
 export function authenticationLogoutAutoMapper(user) {
@@ -67,7 +66,7 @@ export function authenticationLogoutAutoMapper(user) {
 }
 
 /**
- * @param {UserCredentials} user
+ * @param {AuditUser} user
  * @returns {AuthenticationLogoutDifferentDeviceMessage}
  */
 export function authenticationLogoutDifferentDevicelMapper(user) {
@@ -78,6 +77,5 @@ export function authenticationLogoutDifferentDevicelMapper(user) {
 }
 
 /**
- * @import { AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData } from '@defra/forms-model'
- * @import { UserCredentials } from '@hapi/hapi'
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData } from '@defra/forms-model'
  */

@@ -1,16 +1,16 @@
 /**
  *
  * @param { Partial<UserCredentials> | undefined } user
- * @returns {UserCredentials}
+ * @returns {AuditUser}
  */
 export function mapUserForAudit(user) {
-  return /** @type {UserCredentials} */ ({
+  return /** @type {AuditUser} */ ({
     id: user?.id,
-    displayName: user?.displayName,
-    email: user?.email
+    displayName: user?.displayName
   })
 }
 
 /**
+ * @import { AuditUser } from '@defra/forms-model'
  * @import { UserCredentials } from '@hapi/hapi'
  */

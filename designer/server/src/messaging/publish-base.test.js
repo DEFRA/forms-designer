@@ -6,8 +6,7 @@ import config from '~/src/config.js'
 import 'aws-sdk-client-mock-jest'
 import { publishEvent } from '~/src/messaging/publish-base.js'
 
-const snsTopicArn =
-  'arn:aws:sns:eu-west-2:000000000000:forms_authentication_events'
+const snsTopicArn = 'arn:aws:sns:eu-west-2:000000000000:forms_designer_events'
 jest.mock('~/src/config.ts')
 
 jest.mock('~/src/common/helpers/logging/logger.js', () => ({

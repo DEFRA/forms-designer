@@ -170,7 +170,6 @@ export interface EntitlementMessageData {
 export interface AuthenticationMessageData {
   userId: string
   displayName: string
-  email?: string
 }
 
 export interface AuditUser {

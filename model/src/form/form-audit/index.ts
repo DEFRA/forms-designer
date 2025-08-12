@@ -162,8 +162,7 @@ export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
 export const authenticationMessageData =
   Joi.object<AuthenticationMessageData>().keys({
     userId: Joi.string().required(),
-    displayName: Joi.string().required(),
-    email: Joi.string().email().allow('').allow(null)
+    displayName: Joi.string().required()
   })
 
 export const auditUserSchema = Joi.object<AuditUser>().keys({
