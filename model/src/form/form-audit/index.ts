@@ -49,11 +49,14 @@ import {
   emailAddressSchema,
   emailResponseTimeSchema,
   idSchema,
+  notificationEmailAddressSchema,
   onlineTextSchema,
   onlineUrlSchema,
   organisationSchema,
   phoneSchema,
+  privacyNoticeUrlSchema,
   slugSchema,
+  submissionGuidanceSchema,
   teamEmailSchema,
   teamNameSchema,
   titleSchema
@@ -154,7 +157,7 @@ export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: Joi.string()
+    privacyNoticeUrl: privacyNoticeUrlSchema.required()
   })
   .required()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
@@ -162,7 +165,7 @@ export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
     .keys({
-      notificationEmail: Joi.string()
+      notificationEmail: notificationEmailAddressSchema.required()
     })
     .required()
     .description('Changes schema for FORM_NOTIFICATION_EMAIL_UPDATED event')
@@ -170,7 +173,7 @@ export const formNotificationEmailChanges =
 export const formSubmissionGuidanceChanges =
   Joi.object<FormSubmissionGuidanceChanges>()
     .keys({
-      submissionGuidance: Joi.string()
+      submissionGuidance: submissionGuidanceSchema.required()
     })
     .required()
     .description('Changes schema for FORM_SUBMISSION_GUIDANCE_UPDATED event')
