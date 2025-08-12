@@ -296,7 +296,7 @@ export function getRepeaterProperties(page, isCurrentlyRepeater, payload) {
 export function getControllerTypeAndPropertiesForQuestion(page, components) {
   return getControllerTypeAndPropertiesForPage(page, components, {
     exitPage: page?.controller === ControllerType.Terminal,
-    repeater: page?.controller === ControllerType.Repeat ? 'true' : ''
+    repeater: page?.controller === ControllerType.Repeat ? 'true' : '' // TODO why is this a string?
   })
 }
 
