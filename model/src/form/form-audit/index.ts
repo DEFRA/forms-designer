@@ -86,7 +86,6 @@ export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>()
     filename: Joi.string().required(),
     s3Key: Joi.string().required()
   })
-  .required()
   .description('Schema for form data S3 object in message')
 
 export const formUpdatedMessageData = formMessageDataBase
@@ -94,7 +93,7 @@ export const formUpdatedMessageData = formMessageDataBase
     requestType: Joi.string()
       .valid(...Object.values(FormDefinitionRequestType))
       .required(),
-    s3Meta: formDefinitionS3Meta
+    s3Meta: formDefinitionS3Meta.optional()
   })
   .required()
 
