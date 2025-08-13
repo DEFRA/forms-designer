@@ -5,17 +5,12 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import {
-  addUser,
-  deleteUser,
-  getRoles,
-  getUser,
-  updateUser
-} from '~/src/lib/manage.js'
+import { getRoles, getUser } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { Roles, getNameForRole } from '~/src/models/account/role-mapper.js'
 import * as viewModel from '~/src/models/manage/users.js'
 import { checkUserManagementAccess } from '~/src/routes/forms/route-helpers.js'
+import * as userService from '~/src/services/userService.js'
 
 const errorKey = sessionNames.validationFailure.manageUsers
 
@@ -163,7 +158,7 @@ export default [
       const { token } = auth.credentials
 
       try {
-        const newUser = await addUser(token, {
+        const newUser = await userService.addUser(token, {
           email: payload.emailAddress,
           roles: [payload.userRole]
         })
@@ -209,26 +204,29 @@ export default [
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
     async handler(request, h) {
       const { payload, yar, auth, params, server } = request
-      const { token } = auth.credentials
+      const { token, user } = auth.credentials
       const { userId } = params
       const { userRole } = payload
+      const isSelfUpdate = user?.id === userId
+      const isDowngradingToFormCreator = userRole === Roles.FormCreator
 
       try {
         const existingUser = await getUser(token, userId)
 
-        await updateUser(token, {
+        await userService.updateUser(server, token, {
           userId,
           roles: [userRole]
         })
-
-        await server.methods.session.drop(userId)
 
         yar.flash(
           sessionNames.successNotification,
           `You updated ${existingUser.displayName}'s role to ${getNameForRole(userRole)}`
         )
 
-        // Redirect back to list of users
+        if (isSelfUpdate && isDowngradingToFormCreator) {
+          return h.redirect('/library').code(StatusCodes.SEE_OTHER)
+        }
+
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
@@ -272,15 +270,10 @@ export default [
       try {
         const existingUser = await getUser(token, userId)
 
+        await userService.deleteUser(server, token, userId)
+
         if (isSelfDeletion) {
-          await server.methods.session.drop(userId)
           request.cookieAuth.clear()
-        }
-
-        await deleteUser(token, userId)
-
-        if (!isSelfDeletion) {
-          await server.methods.session.drop(userId)
         }
 
         if (isSelfDeletion) {
