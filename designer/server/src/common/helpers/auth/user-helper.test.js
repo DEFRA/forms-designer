@@ -9,4 +9,10 @@ describe('user-helper', () => {
       displayName: authAuditUser.displayName
     })
   })
+
+  test('should throw if user missing', () => {
+    expect(() => mapUserForAudit(undefined)).toThrow(
+      'Missing user for auditing'
+    )
+  })
 })
