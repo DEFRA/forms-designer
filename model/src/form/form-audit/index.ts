@@ -384,7 +384,9 @@ export const messageSchema = Joi.object<AuditMessage>()
           then: entitlementMessageData
         },
         {
-          is: Joi.string().trim().valid(AuditEventMessageType.FORM_DRAFT_DELETED),
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_DRAFT_DELETED),
           then: formMessageDataBase
         },
         {
