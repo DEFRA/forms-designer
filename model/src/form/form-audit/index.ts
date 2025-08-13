@@ -12,6 +12,7 @@ import {
   type AuditMessage,
   type AuditRecord,
   type AuditUser,
+  type AuthenticationMessageData,
   type ChangesMessageData,
   type EntitlementMessageData,
   type FormCreatedMessageData,
@@ -193,6 +194,12 @@ export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
   }
 )
 
+export const authenticationMessageData =
+  Joi.object<AuthenticationMessageData>().keys({
+    userId: Joi.string().required(),
+    displayName: Joi.string().required()
+  })
+
 export const auditUserSchema = Joi.object<AuditUser>()
   .keys({
     id: Joi.string().uuid().required(),
@@ -369,7 +376,11 @@ export const messageSchema = Joi.object<AuditMessage>()
         {
           is: Joi.string()
             .trim()
-            .valid(AuditEventMessageType.ENTITLEMENT_CREATED),
+            .valid(
+              AuditEventMessageType.ENTITLEMENT_CREATED,
+              AuditEventMessageType.ENTITLEMENT_UPDATED,
+              AuditEventMessageType.ENTITLEMENT_DELETED
+            ),
           then: entitlementMessageData
         },
         {
@@ -381,14 +392,13 @@ export const messageSchema = Joi.object<AuditMessage>()
         {
           is: Joi.string()
             .trim()
-            .valid(AuditEventMessageType.ENTITLEMENT_UPDATED),
-          then: entitlementMessageData
-        },
-        {
-          is: Joi.string()
-            .trim()
-            .valid(AuditEventMessageType.ENTITLEMENT_DELETED),
-          then: entitlementMessageData
+            .valid(
+              AuditEventMessageType.AUTHENTICATION_LOGIN,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_AUTO,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
+            ),
+          then: authenticationMessageData
         }
       ],
       otherwise: Joi.forbidden()

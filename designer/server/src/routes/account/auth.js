@@ -3,7 +3,9 @@ import { token } from '@hapi/jwt'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
+import { publishAuthenticationLoginEvent } from '~/src/messaging/publish.js'
 import { formsLibraryPath } from '~/src/models/links.js'
 
 export default [
@@ -41,6 +43,9 @@ export default [
 
       const redirect =
         yar.flash(sessionNames.redirectTo).at(0) ?? formsLibraryPath
+
+      const auditUser = mapUserForAudit(credentials.user)
+      await publishAuthenticationLoginEvent(auditUser)
 
       return h.redirect(redirect)
     },
