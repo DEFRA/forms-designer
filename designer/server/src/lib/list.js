@@ -152,6 +152,7 @@ export function populateListIds(definition, listRef, listItems) {
    */
   function populateExistingId(listItems, item) {
     const found =
+      listItems.find((i) => i.id === item.id) ??
       listItems.find((i) => i.value === item.value) ??
       listItems.find((i) => i.text === item.text)
     return {
