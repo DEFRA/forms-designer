@@ -26,4 +26,32 @@ describe('schema tests', () => {
       ).not.toThrow()
     })
   })
+
+  describe('FORM_NOTIFICATION_EMAIL_UPDATED', () => {
+    it('should allow empty previous body', () => {
+      const message = {
+        schemaVersion: 1,
+        source: 'FORMS_MANAGER',
+        entityId: '689c349a4fe32fcd09445523',
+        createdAt: '2025-08-13T11:09:55.393Z',
+        createdBy: {
+          id: '17ab7e7d-c6b7-4675-bd11-50d56e975cb2',
+          displayName: 'Dummy user'
+        },
+        messageCreatedAt: '2025-08-13T11:09:55.399Z',
+        data: {
+          formId: '689c349a4fe32fcd09445523',
+          slug: 'test-form',
+          changes: {
+            previous: {},
+            new: { notificationEmail: 'tester@defra.gov.uk' }
+          }
+        },
+        category: 'FORM',
+        type: 'FORM_NOTIFICATION_EMAIL_UPDATED'
+      }
+
+      expect(() => Joi.attempt(message, messageSchema)).not.toThrow()
+    })
+  })
 })

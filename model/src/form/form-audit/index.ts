@@ -141,22 +141,22 @@ export const formSupportPhoneChanges = Joi.object<FormSupportPhoneChanges>()
 
 export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
   .keys({
-    url: onlineUrlSchema,
-    text: onlineTextSchema
+    url: onlineUrlSchema.optional(),
+    text: onlineTextSchema.optional()
   })
   .required()
   .description('Changes schema for FORM_SUPPORT_ONLINE_UPDATED event')
 
 export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
   .keys({
-    address: emailAddressSchema,
-    responseTime: emailResponseTimeSchema
+    address: emailAddressSchema.optional(),
+    responseTime: emailResponseTimeSchema.optional()
   })
   .description('Changes schema for FORM_SUPPORT_EMAIL_UPDATED event')
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: privacyNoticeUrlSchema.required()
+    privacyNoticeUrl: privacyNoticeUrlSchema
   })
   .required()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
@@ -164,7 +164,7 @@ export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
     .keys({
-      notificationEmail: notificationEmailAddressSchema.required()
+      notificationEmail: notificationEmailAddressSchema
     })
     .required()
     .description('Changes schema for FORM_NOTIFICATION_EMAIL_UPDATED event')
@@ -172,7 +172,7 @@ export const formNotificationEmailChanges =
 export const formSubmissionGuidanceChanges =
   Joi.object<FormSubmissionGuidanceChanges>()
     .keys({
-      submissionGuidance: submissionGuidanceSchema.required()
+      submissionGuidance: submissionGuidanceSchema
     })
     .required()
     .description('Changes schema for FORM_SUBMISSION_GUIDANCE_UPDATED event')
