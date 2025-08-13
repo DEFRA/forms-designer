@@ -45,110 +45,145 @@ import {
   type FormUploadedChanges,
   type FormUploadedMessageData
 } from '~/src/form/form-audit/types.js'
-import { contactSchema, idSchema } from '~/src/form/form-metadata/index.js'
+import {
+  contactSchema,
+  emailAddressSchema,
+  emailResponseTimeSchema,
+  idSchema,
+  notificationEmailAddressSchema,
+  onlineTextSchema,
+  onlineUrlSchema,
+  organisationSchema,
+  phoneSchema,
+  privacyNoticeUrlSchema,
+  slugSchema,
+  submissionGuidanceSchema,
+  teamEmailSchema,
+  teamNameSchema,
+  titleSchema
+} from '~/src/form/form-metadata/index.js'
 
 export const formMessageDataBase = Joi.object<FormMessageDataBase>({
-  formId: Joi.string().required(),
-  slug: Joi.string().required(),
+  formId: idSchema,
+  slug: slugSchema,
   payload: Joi.object().optional()
 })
+  .required()
+  .description('The base data object for Form Messages')
 
-export const formCreatedMessageData =
-  formMessageDataBase.append<FormCreatedMessageData>({
-    title: Joi.string().required(),
-    organisation: Joi.string().required(),
-    teamName: Joi.string().required(),
-    teamEmail: Joi.string().required()
+export const formCreatedMessageData = formMessageDataBase
+  .append<FormCreatedMessageData>({
+    title: titleSchema,
+    organisation: organisationSchema,
+    teamName: teamNameSchema,
+    teamEmail: teamEmailSchema
   })
+  .required()
+  .description('Message data schema for when a form is created')
 
-export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>().keys({
-  fileId: Joi.string().required(),
-  filename: Joi.string().required(),
-  s3Key: Joi.string().required()
-})
+export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>()
+  .keys({
+    fileId: Joi.string().required(),
+    filename: Joi.string().required(),
+    s3Key: Joi.string().required()
+  })
+  .description('Schema for form data S3 object in message')
 
-export const formUpdatedMessageData =
-  formMessageDataBase.append<FormUpdatedMessageData>({
+export const formUpdatedMessageData = formMessageDataBase
+  .append<FormUpdatedMessageData>({
     requestType: Joi.string()
       .valid(...Object.values(FormDefinitionRequestType))
       .required(),
-    s3Meta: formDefinitionS3Meta
+    s3Meta: formDefinitionS3Meta.optional()
   })
+  .required()
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
   .keys({
-    title: Joi.string().required()
+    title: titleSchema
   })
   .required()
+  .description('Changes schema for FORM_TITLE_UPDATED event')
 
 export const formOrganisationChanges = Joi.object<FormOrganisationChanges>()
   .keys({
-    organisation: Joi.string().required()
+    organisation: organisationSchema
   })
   .required()
+  .description('Changes schema for FORM_ORGANISATION_UPDATED event')
 
 export const formTeamNameChanges = Joi.object<FormTeamNameChanges>()
   .keys({
-    teamName: Joi.string().required()
+    teamName: teamNameSchema
   })
   .required()
+  .description('Changes schema for FORM_TEAM_NAME_UPDATED event')
 
 export const formTeamEmailChanges = Joi.object<FormTeamEmailChanges>()
   .keys({
-    teamEmail: Joi.string().required()
+    teamEmail: teamEmailSchema
   })
   .required()
+  .description('Changes schema for FORM_TEAM_EMAIL_UPDATED event')
 
 export const formSupportContactChanges = Joi.object<FormSupportContactChanges>()
   .keys({
     contact: contactSchema
   })
   .required()
+  .description('Changes schema for FORM_SUPPORT_CONTACT_UPDATED event')
 
 export const formSupportPhoneChanges = Joi.object<FormSupportPhoneChanges>()
   .keys({
-    phone: Joi.string().required()
+    phone: phoneSchema
   })
   .required()
+  .description('Changes schema for FORM_SUPPORT_PHONE_UPDATED event')
 
 export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
   .keys({
-    url: Joi.string().required(),
-    text: Joi.string().required()
+    url: onlineUrlSchema,
+    text: onlineTextSchema
   })
   .required()
+  .description('Changes schema for FORM_SUPPORT_ONLINE_UPDATED event')
 
-export const formSupportEmailChanges =
-  Joi.object<FormSupportEmailChanges>().keys({
-    address: Joi.string().email().required(),
-    responseTime: Joi.string().required()
+export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
+  .keys({
+    address: emailAddressSchema,
+    responseTime: emailResponseTimeSchema
   })
+  .description('Changes schema for FORM_SUPPORT_EMAIL_UPDATED event')
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: Joi.string()
+    privacyNoticeUrl: privacyNoticeUrlSchema.required()
   })
   .required()
+  .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
 
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
     .keys({
-      notificationEmail: Joi.string()
+      notificationEmail: notificationEmailAddressSchema.required()
     })
     .required()
+    .description('Changes schema for FORM_NOTIFICATION_EMAIL_UPDATED event')
 
 export const formSubmissionGuidanceChanges =
   Joi.object<FormSubmissionGuidanceChanges>()
     .keys({
-      submissionGuidance: Joi.string()
+      submissionGuidance: submissionGuidanceSchema.required()
     })
     .required()
+    .description('Changes schema for FORM_SUBMISSION_GUIDANCE_UPDATED event')
 
 export const formUploadedChanges = Joi.object<FormUploadedChanges>()
   .keys({
     value: Joi.string().required()
   })
   .required()
+  .description('Changes schema for FORM_JSON_UPLOADED event')
 
 export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
   {
@@ -165,189 +200,225 @@ export const authenticationMessageData =
     displayName: Joi.string().required()
   })
 
-export const auditUserSchema = Joi.object<AuditUser>().keys({
-  id: Joi.string().uuid().required(),
-  displayName: Joi.string().required()
-})
+export const auditUserSchema = Joi.object<AuditUser>()
+  .keys({
+    id: Joi.string().uuid().required(),
+    displayName: Joi.string().required()
+  })
+  .description('Schema for CREATED_BY audit event')
 
 export function formChangesMessageData<T, U extends FormMessageChangesData>(
   schema: ObjectSchema<T>
 ): ObjectSchema<U> {
   return formMessageDataBase.append<U>({
-    changes: Joi.object<ChangesMessageData<T>>().keys({
-      previous: schema,
-      new: schema
-    })
+    changes: Joi.object<ChangesMessageData<T>>()
+      .keys({
+        previous: schema,
+        new: schema
+      })
+      .description('Changes schema')
   })
 }
 
-export const messageSchema = Joi.object<AuditMessage>().keys({
-  schemaVersion: Joi.string()
-    .valid(...Object.values(AuditEventMessageSchemaVersion))
-    .required(),
-  category: Joi.string()
-    .valid(...Object.values(AuditEventMessageCategory))
-    .required(),
-  source: Joi.string()
-    .valid(...Object.values(AuditEventMessageSource))
-    .required(),
-  type: Joi.string().valid(...Object.values(AuditEventMessageType)),
-  entityId: Joi.string().required(),
-  traceId: Joi.string().optional(),
-  createdAt: Joi.date().required(),
-  createdBy: auditUserSchema.required(),
-  data: Joi.when('type', {
-    switch: [
-      {
-        is: Joi.string().trim().valid(AuditEventMessageType.FORM_CREATED),
-        then: formCreatedMessageData
-      },
-      {
-        is: Joi.string().trim().valid(AuditEventMessageType.FORM_TITLE_UPDATED),
-        then: formChangesMessageData<
-          FormTitleChanges,
-          FormTitleUpdatedMessageData
-        >(formTitleChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_ORGANISATION_UPDATED),
-        then: formChangesMessageData<
-          FormOrganisationChanges,
-          FormOrganisationUpdatedMessageData
-        >(formOrganisationChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_TEAM_NAME_UPDATED),
-        then: formChangesMessageData<
-          FormTeamNameChanges,
-          FormTeamNameUpdatedMessageData
-        >(formTeamNameChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED),
-        then: formChangesMessageData<
-          FormTeamEmailChanges,
-          FormTeamEmailUpdatedMessageData
-        >(formTeamEmailChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED),
-        then: formChangesMessageData<
-          FormSupportContactChanges,
-          FormSupportContactUpdatedMessageData
-        >(formSupportContactChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED),
-        then: formChangesMessageData<
-          FormSupportPhoneChanges,
-          FormSupportPhoneUpdatedMessageData
-        >(formSupportPhoneChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED),
-        then: formChangesMessageData<
-          FormSupportEmailChanges,
-          FormSupportEmailUpdatedMessageData
-        >(formSupportEmailChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED),
-        then: formChangesMessageData<
-          FormSupportOnlineChanges,
-          FormSupportOnlineUpdatedMessageData
-        >(formSupportOnlineChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED),
-        then: formChangesMessageData<
-          FormPrivacyNoticeChanges,
-          FormPrivacyNoticeUpdatedMessageData
-        >(formPrivacyNoticeChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED),
-        then: formChangesMessageData<
-          FormNotificationEmailChanges,
-          FormNotificationEmailUpdatedMessageData
-        >(formNotificationEmailChanges)
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED),
-        then: formChangesMessageData<
-          FormSubmissionGuidanceChanges,
-          FormSubmissionGuidanceUpdatedMessageData
-        >(formSubmissionGuidanceChanges)
-      },
-      {
-        is: Joi.string().trim().valid(AuditEventMessageType.FORM_JSON_UPLOADED),
-        then: formChangesMessageData<
-          FormUploadedChanges,
-          FormUploadedMessageData
-        >(formUploadedChanges)
-      },
-      {
-        is: Joi.string().trim().valid(AuditEventMessageType.FORM_UPDATED),
-        then: formUpdatedMessageData
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(
-            AuditEventMessageType.ENTITLEMENT_CREATED,
-            AuditEventMessageType.ENTITLEMENT_UPDATED,
-            AuditEventMessageType.ENTITLEMENT_DELETED
-          ),
-        then: entitlementMessageData
-      },
-      {
-        is: Joi.string().trim().valid(AuditEventMessageType.FORM_DRAFT_DELETED),
-        then: formMessageDataBase
-      },
-      {
-        is: Joi.string()
-          .trim()
-          .valid(
-            AuditEventMessageType.AUTHENTICATION_LOGIN,
-            AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL,
-            AuditEventMessageType.AUTHENTICATION_LOGOUT_AUTO,
-            AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
-          ),
-        then: authenticationMessageData
-      }
-    ],
-    otherwise: Joi.forbidden()
-  }),
-  messageCreatedAt: Joi.date().required()
-})
+export const messageSchema = Joi.object<AuditMessage>()
+  .keys({
+    schemaVersion: Joi.string()
+      .valid(...Object.values(AuditEventMessageSchemaVersion))
+      .required()
+      .description(
+        'The version of the AuditMessage - bumped with breaking changes'
+      ),
+    category: Joi.string()
+      .valid(...Object.values(AuditEventMessageCategory))
+      .required()
+      .description('The message category - what does the entityId represent?'),
+    source: Joi.string()
+      .valid(...Object.values(AuditEventMessageSource))
+      .required()
+      .description('Source of the message - which service?'),
+    type: Joi.string()
+      .valid(...Object.values(AuditEventMessageType))
+      .description('Event type'),
+    entityId: Joi.string()
+      .required()
+      .description('The id of the entity the category relates to'),
+    traceId: Joi.string()
+      .optional()
+      .description(
+        'Trace id of the event - to link events across multiple services'
+      ),
+    createdAt: Joi.date()
+      .required()
+      .description(
+        'The ISO timestamp where the action took place - should be the same as updated_at field in DB'
+      ),
+    createdBy: auditUserSchema
+      .required()
+      .description('The user who performed the action being audited'),
+    data: Joi.when('type', {
+      switch: [
+        {
+          is: Joi.string().trim().valid(AuditEventMessageType.FORM_CREATED),
+          then: formCreatedMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_TITLE_UPDATED),
+          then: formChangesMessageData<
+            FormTitleChanges,
+            FormTitleUpdatedMessageData
+          >(formTitleChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_ORGANISATION_UPDATED),
+          then: formChangesMessageData<
+            FormOrganisationChanges,
+            FormOrganisationUpdatedMessageData
+          >(formOrganisationChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_TEAM_NAME_UPDATED),
+          then: formChangesMessageData<
+            FormTeamNameChanges,
+            FormTeamNameUpdatedMessageData
+          >(formTeamNameChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED),
+          then: formChangesMessageData<
+            FormTeamEmailChanges,
+            FormTeamEmailUpdatedMessageData
+          >(formTeamEmailChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED),
+          then: formChangesMessageData<
+            FormSupportContactChanges,
+            FormSupportContactUpdatedMessageData
+          >(formSupportContactChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED),
+          then: formChangesMessageData<
+            FormSupportPhoneChanges,
+            FormSupportPhoneUpdatedMessageData
+          >(formSupportPhoneChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED),
+          then: formChangesMessageData<
+            FormSupportEmailChanges,
+            FormSupportEmailUpdatedMessageData
+          >(formSupportEmailChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED),
+          then: formChangesMessageData<
+            FormSupportOnlineChanges,
+            FormSupportOnlineUpdatedMessageData
+          >(formSupportOnlineChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED),
+          then: formChangesMessageData<
+            FormPrivacyNoticeChanges,
+            FormPrivacyNoticeUpdatedMessageData
+          >(formPrivacyNoticeChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED),
+          then: formChangesMessageData<
+            FormNotificationEmailChanges,
+            FormNotificationEmailUpdatedMessageData
+          >(formNotificationEmailChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED),
+          then: formChangesMessageData<
+            FormSubmissionGuidanceChanges,
+            FormSubmissionGuidanceUpdatedMessageData
+          >(formSubmissionGuidanceChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_JSON_UPLOADED),
+          then: formChangesMessageData<
+            FormUploadedChanges,
+            FormUploadedMessageData
+          >(formUploadedChanges)
+        },
+        {
+          is: Joi.string().trim().valid(AuditEventMessageType.FORM_UPDATED),
+          then: formUpdatedMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(
+              AuditEventMessageType.ENTITLEMENT_CREATED,
+              AuditEventMessageType.ENTITLEMENT_UPDATED,
+              AuditEventMessageType.ENTITLEMENT_DELETED
+            ),
+          then: entitlementMessageData
+        },
+        {
+          is: Joi.string().trim().valid(AuditEventMessageType.FORM_DRAFT_DELETED),
+          then: formMessageDataBase
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(
+              AuditEventMessageType.AUTHENTICATION_LOGIN,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_AUTO,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
+            ),
+          then: authenticationMessageData
+        }
+      ],
+      otherwise: Joi.forbidden()
+    }).description('The data/payload of the audit message'),
+    messageCreatedAt: Joi.date()
+      .required()
+      .description('ISO timestamp when the message was published')
+  })
+  .required()
+  .description('The audit message issued by the publishing service')
 
-export const auditEvent = Joi.object<AuditEvent>().keys({
-  message: messageSchema
-})
+export const auditEvent = Joi.object<AuditEvent>()
+  .keys({
+    message: messageSchema
+  })
+  .description('The Body of the audit event')
 
-export const auditRecord = messageSchema.append<AuditRecord>({
-  id: idSchema,
-  messageId: Joi.string().uuid().required(),
-  entityId: Joi.string().required(),
-  recordCreatedAt: Joi.date().required()
-})
+export const auditRecord = messageSchema
+  .append<AuditRecord>({
+    id: idSchema,
+    messageId: Joi.string().uuid().required(),
+    entityId: Joi.string().required(),
+    recordCreatedAt: Joi.date().required()
+  })
+  .description('The audit record persisted into the DB')
