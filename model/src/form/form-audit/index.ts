@@ -156,7 +156,7 @@ export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: privacyNoticeUrlSchema.required()
+    privacyNoticeUrl: privacyNoticeUrlSchema
   })
   .required()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
@@ -164,7 +164,7 @@ export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
     .keys({
-      notificationEmail: notificationEmailAddressSchema.required()
+      notificationEmail: notificationEmailAddressSchema
     })
     .required()
     .description('Changes schema for FORM_NOTIFICATION_EMAIL_UPDATED event')
@@ -172,7 +172,7 @@ export const formNotificationEmailChanges =
 export const formSubmissionGuidanceChanges =
   Joi.object<FormSubmissionGuidanceChanges>()
     .keys({
-      submissionGuidance: submissionGuidanceSchema.required()
+      submissionGuidance: submissionGuidanceSchema
     })
     .required()
     .description('Changes schema for FORM_SUBMISSION_GUIDANCE_UPDATED event')
