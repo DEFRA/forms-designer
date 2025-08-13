@@ -141,16 +141,16 @@ export const formSupportPhoneChanges = Joi.object<FormSupportPhoneChanges>()
 
 export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
   .keys({
-    url: onlineUrlSchema,
-    text: onlineTextSchema
+    url: onlineUrlSchema.optional(),
+    text: onlineTextSchema.optional()
   })
   .required()
   .description('Changes schema for FORM_SUPPORT_ONLINE_UPDATED event')
 
 export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
   .keys({
-    address: emailAddressSchema,
-    responseTime: emailResponseTimeSchema
+    address: emailAddressSchema.optional(),
+    responseTime: emailResponseTimeSchema.optional()
   })
   .description('Changes schema for FORM_SUPPORT_EMAIL_UPDATED event')
 
