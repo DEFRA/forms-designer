@@ -37,31 +37,37 @@ describe('schema tests', () => {
       })
     ).not.toThrow()
   })
+
   it('should validate FORM_CREATED events', () => {
     expect(() =>
       Joi.attempt(FORM_CREATED, messageSchema, { abortEarly: false })
     ).not.toThrow()
   })
+
   it('should validate REPLACE_DRAFT events', () => {
     expect(() =>
       Joi.attempt(REPLACE_DRAFT, messageSchema, { abortEarly: false })
     ).not.toThrow()
   })
+
   it('should validate FORM_MIGRATED events', () => {
     expect(() =>
       Joi.attempt(FORM_MIGRATED, messageSchema, { abortEarly: false })
     ).not.toThrow()
   })
+
   it('should validate FORM_TITLE_UPDATED events', () => {
     expect(() =>
       Joi.attempt(FORM_TITLE_UPDATED, messageSchema, { abortEarly: false })
     ).not.toThrow()
   })
+
   it('should validate FORM_UPDATED events', () => {
     expect(() =>
       Joi.attempt(FORM_UPDATED, messageSchema, { abortEarly: false })
     ).not.toThrow()
   })
+
   it('should validate FORM_LIVE_CREATED_FROM_DRAFT events', () => {
     expect(() =>
       Joi.attempt(FORM_LIVE_CREATED_FROM_DRAFT, messageSchema, {
