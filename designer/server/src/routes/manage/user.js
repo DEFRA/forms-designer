@@ -5,17 +5,12 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import {
-  addUser,
-  deleteUser,
-  getRoles,
-  getUser,
-  updateUser
-} from '~/src/lib/manage.js'
+import { getRoles, getUser } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { Roles, getNameForRole } from '~/src/models/account/role-mapper.js'
 import * as viewModel from '~/src/models/manage/users.js'
 import { checkUserManagementAccess } from '~/src/routes/forms/route-helpers.js'
+import * as userService from '~/src/services/userService.js'
 
 const errorKey = sessionNames.validationFailure.manageUsers
 
@@ -163,7 +158,7 @@ export default [
       const { token } = auth.credentials
 
       try {
-        const newUser = await addUser(token, {
+        const newUser = await userService.addUser(token, {
           email: payload.emailAddress,
           roles: [payload.userRole]
         })
@@ -201,7 +196,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: ManageUser }>}
+   * @satisfies {ServerRoute}
    */
   // Post edited user details
   ({
@@ -211,22 +206,29 @@ export default [
       const { payload, yar, auth, params } = request
       const { token } = auth.credentials
       const { userId } = params
-      const { userRole } = payload
+      const { userRole } = /** @type {ManageUser} */ (payload)
 
       try {
         const existingUser = await getUser(token, userId)
 
-        await updateUser(token, {
+        await userService.updateUser(request, {
           userId,
           roles: [userRole]
         })
+
+        if (!userService.checkCanAccessUserManagement(request)) {
+          yar.flash(
+            sessionNames.successNotification,
+            `Your role has been updated to ${getNameForRole(userRole)}`
+          )
+          return h.redirect('/library').code(StatusCodes.SEE_OTHER)
+        }
 
         yar.flash(
           sessionNames.successNotification,
           `You updated ${existingUser.displayName}'s role to ${getNameForRole(userRole)}`
         )
 
-        // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
@@ -263,14 +265,17 @@ export default [
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
     async handler(request, h) {
       const { yar, auth, params } = request
-      const { token } = auth.credentials
+      const { user } = auth.credentials
       const { userId } = params
 
       try {
-        const existingUser = await getUser(token, userId)
+        const existingUser = await getUser(auth.credentials.token, userId)
 
-        await deleteUser(token, userId)
+        const wasSelfDeletion = await userService.deleteUser(request, userId)
 
+        if (wasSelfDeletion) {
+          return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
+        }
         yar.flash(
           sessionNames.successNotification,
           `You removed ${existingUser.displayName} from Forms Designer`
@@ -279,6 +284,11 @@ export default [
         // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
+        // If self-deletion fails, still try to redirect to home
+        if (user?.id === userId) {
+          return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
+        }
+
         const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
         if (error) {
           return redirectWithErrors(request, h, error, errorKey)
