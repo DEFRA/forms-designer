@@ -204,10 +204,9 @@ export default [
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
     async handler(request, h) {
       const { payload, yar, auth, params } = request
-      const { token, user } = auth.credentials
+      const { token } = auth.credentials
       const { userId } = params
       const { userRole } = /** @type {ManageUser} */ (payload)
-      const isSelfUpdate = user?.id === userId
 
       try {
         const existingUser = await getUser(token, userId)
@@ -217,10 +216,7 @@ export default [
           roles: [userRole]
         })
 
-        if (
-          isSelfUpdate &&
-          !userService.checkCanAccessUserManagement(request)
-        ) {
+        if (!userService.checkCanAccessUserManagement(request)) {
           yar.flash(
             sessionNames.successNotification,
             `Your role has been updated to ${getNameForRole(userRole)}`
@@ -269,12 +265,11 @@ export default [
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
     async handler(request, h) {
       const { yar, auth, params } = request
-      const { token, user } = auth.credentials
+      const { user } = auth.credentials
       const { userId } = params
-      const isSelfDeletion = user?.id === userId
 
       try {
-        const existingUser = await getUser(token, userId)
+        const existingUser = await getUser(auth.credentials.token, userId)
 
         const wasSelfDeletion = await userService.deleteUser(request, userId)
 
@@ -290,7 +285,7 @@ export default [
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
         // If self-deletion fails, still try to redirect to home
-        if (isSelfDeletion) {
+        if (user?.id === userId) {
           return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
         }
 

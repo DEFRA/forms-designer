@@ -7,14 +7,9 @@ import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
-import {
-  addUser,
-  deleteUser,
-  getRoles,
-  getUser,
-  updateUser
-} from '~/src/lib/manage.js'
+import { getRoles, getUser } from '~/src/lib/manage.js'
 import { Roles } from '~/src/models/account/role-mapper.js'
+import * as userService from '~/src/services/userService.js'
 import {
   artifacts,
   auth,
@@ -25,6 +20,7 @@ import {
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/manage.js')
+jest.mock('~/src/services/userService.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/config.ts')
 
@@ -40,9 +36,15 @@ describe('Create and edit user routes', () => {
   beforeEach(() => {
     jest.mocked(getRoles).mockResolvedValue(allRoles)
     jest
-      .mocked(addUser)
+      .mocked(userService.addUser)
       .mockResolvedValue({ emailAddress: '', userRole: '', displayName: '' })
     jest.mocked(getUser).mockResolvedValue(/** @type {EntitlementUser} */ ({}))
+    jest.mocked(userService.updateUser).mockResolvedValue({
+      updatedUser: { userId: '', userRole: '' },
+      newScopes: []
+    })
+    jest.mocked(userService.deleteUser).mockResolvedValue(false)
+    jest.mocked(userService.checkCanAccessUserManagement).mockReturnValue(true)
     jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
@@ -148,7 +150,7 @@ describe('Create and edit user routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/manage/users')
-      expect(addUser).toHaveBeenCalledWith(expect.anything(), {
+      expect(userService.addUser).toHaveBeenCalledWith(expect.anything(), {
         email: 'me@here.com',
         roles: ['admin']
       })
@@ -180,7 +182,7 @@ describe('Create and edit user routes', () => {
     })
 
     test('should error if API failure (non-Boom)', async () => {
-      jest.mocked(addUser).mockImplementationOnce(() => {
+      jest.mocked(userService.addUser).mockImplementationOnce(() => {
         throw new Error('api error')
       })
       const options = {
@@ -198,7 +200,7 @@ describe('Create and edit user routes', () => {
     })
 
     test('should error if API failure (handle Boom error)', async () => {
-      jest.mocked(addUser).mockImplementationOnce(() => {
+      jest.mocked(userService.addUser).mockImplementationOnce(() => {
         throw Boom.boomify(new Error('api boom error'))
       })
       const options = {
@@ -237,7 +239,7 @@ describe('Create and edit user routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/manage/users')
-      expect(updateUser).toHaveBeenCalledWith(expect.anything(), {
+      expect(userService.updateUser).toHaveBeenCalledWith(expect.anything(), {
         userId: '12345',
         roles: ['admin']
       })
@@ -265,7 +267,7 @@ describe('Create and edit user routes', () => {
     })
 
     test('should error if API failure (non-Boom)', async () => {
-      jest.mocked(updateUser).mockImplementationOnce(() => {
+      jest.mocked(userService.updateUser).mockImplementationOnce(() => {
         throw new Error('api error')
       })
       const options = {
@@ -283,7 +285,7 @@ describe('Create and edit user routes', () => {
     })
 
     test('should error if API failure (handle Boom error)', async () => {
-      jest.mocked(updateUser).mockImplementationOnce(() => {
+      jest.mocked(userService.updateUser).mockImplementationOnce(() => {
         throw Boom.boomify(new Error('api boom error'))
       })
       const options = {
@@ -322,7 +324,7 @@ describe('Create and edit user routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/manage/users')
-      expect(updateUser).toHaveBeenCalledWith(expect.anything(), {
+      expect(userService.updateUser).toHaveBeenCalledWith(expect.anything(), {
         userId: '12345',
         roles: ['admin']
       })
@@ -343,10 +345,15 @@ describe('Create and edit user routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/manage/users')
-      expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '12345')
+      expect(userService.deleteUser).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345'
+      )
     })
 
     test('should force logout when user deletes themselves', async () => {
+      jest.mocked(userService.deleteUser).mockResolvedValueOnce(true)
+
       const testProfile = profile({
         groups: ['valid-test-group'],
         login_hint: 'foo'
@@ -371,11 +378,14 @@ describe('Create and edit user routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/')
-      expect(deleteUser).toHaveBeenCalledWith(expect.anything(), '12345')
+      expect(userService.deleteUser).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345'
+      )
     })
 
     test('should error if API failure (non-Boom)', async () => {
-      jest.mocked(deleteUser).mockImplementationOnce(() => {
+      jest.mocked(userService.deleteUser).mockImplementationOnce(() => {
         throw new Error('api error')
       })
       const options = {
@@ -392,7 +402,7 @@ describe('Create and edit user routes', () => {
     })
 
     test('should error if API failure (handle Boom error)', async () => {
-      jest.mocked(deleteUser).mockImplementationOnce(() => {
+      jest.mocked(userService.deleteUser).mockImplementationOnce(() => {
         throw Boom.boomify(new Error('api boom error'))
       })
       const options = {
