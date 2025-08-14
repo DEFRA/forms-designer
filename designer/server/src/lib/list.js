@@ -151,7 +151,7 @@ export function populateListIds(definition, listRef, listItems) {
    * This method handles the following scenarios:
    * 1. When editing an individual option (e.g. checkbox or radio), an ID will be present so this is used initially to find a match
    * 2. When editing an autocomplete (or possibly checkbox or radio if we have implemented textarea editing). Here we do not have any IDs to pass,
-   * just a text value (and possibly code value), so we try to match on text then code.
+   * just a text value (and possibly code value), so we try to match on 'code' first, then 'text' if not matched on 'code'.
    * @param {Item[]} listItems
    * @param {Item} item
    */
