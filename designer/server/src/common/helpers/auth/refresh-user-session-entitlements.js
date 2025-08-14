@@ -6,11 +6,16 @@ import { getUser } from '~/src/lib/manage.js'
 const logger = createLogger()
 
 /**
- * @param {Server} server
+ * Refreshes user session entitlements and patches the current request if it's the same user
+ * @template {Request} T
+ * @param {T} request
  * @param {string} userId
  * @param {string} token
+ * @returns {Promise<string[] | undefined>} The updated scopes
  */
-export async function refreshUserSessionEntitlements(server, userId, token) {
+export async function refreshUserSessionEntitlements(request, userId, token) {
+  const { server } = request
+
   try {
     const existingSession = await server.methods.session.get(userId)
 
@@ -25,6 +30,7 @@ export async function refreshUserSessionEntitlements(server, userId, token) {
       if (existingSession.user) {
         existingSession.user.roles = entitlementUser.roles
       }
+
       existingSession.scope =
         entitlementUser.roles.length > 0
           ? mapScopesToRoles(/** @type {Roles[]} */ (entitlementUser.roles))
@@ -32,13 +38,21 @@ export async function refreshUserSessionEntitlements(server, userId, token) {
 
       await server.methods.session.set(userId, existingSession)
 
+      if (request.auth.credentials.user?.id === userId) {
+        request.auth.credentials.scope = existingSession.scope
+        request.auth.credentials.user.roles = entitlementUser.roles // hapi doesn't user this, however for consistency we'll keep it
+      }
+
       logger.info(`Successfully refreshed entitlements for user ${userId}`)
+
+      return existingSession.scope
     } catch (error) {
       logger.warn(
         `Failed to fetch entitlements for user ${userId}, dropping session`,
         error
       )
       await server.methods.session.drop(userId)
+      throw error
     }
   } catch (error) {
     logger.error(
@@ -50,19 +64,6 @@ export async function refreshUserSessionEntitlements(server, userId, token) {
 }
 
 /**
- * @param {Server} server
- * @param {string} userId
- */
-export async function dropUserSessionById(server, userId) {
-  try {
-    await server.methods.session.drop(userId)
-    logger.info(`Successfully dropped session for user ${userId}`)
-  } catch (error) {
-    logger.error(`Error dropping session for user ${userId}`, error)
-  }
-}
-
-/**
- * @import { Server } from '@hapi/hapi'
+ * @import { Request } from '@hapi/hapi'
  * @import { Roles } from '@defra/forms-model'
  */

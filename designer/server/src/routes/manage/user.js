@@ -196,36 +196,42 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: ManageUser }>}
+   * @satisfies {ServerRoute}
    */
   // Post edited user details
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
     async handler(request, h) {
-      const { payload, yar, auth, params, server } = request
+      const { payload, yar, auth, params } = request
       const { token, user } = auth.credentials
       const { userId } = params
-      const { userRole } = payload
+      const { userRole } = /** @type {ManageUser} */ (payload)
       const isSelfUpdate = user?.id === userId
-      const isDowngradingToFormCreator = userRole === Roles.FormCreator
 
       try {
         const existingUser = await getUser(token, userId)
 
-        await userService.updateUser(server, token, {
+        await userService.updateUser(request, {
           userId,
           roles: [userRole]
         })
+
+        if (
+          isSelfUpdate &&
+          !userService.checkCanAccessUserManagement(request)
+        ) {
+          yar.flash(
+            sessionNames.successNotification,
+            `Your role has been updated to ${getNameForRole(userRole)}`
+          )
+          return h.redirect('/library').code(StatusCodes.SEE_OTHER)
+        }
 
         yar.flash(
           sessionNames.successNotification,
           `You updated ${existingUser.displayName}'s role to ${getNameForRole(userRole)}`
         )
-
-        if (isSelfUpdate && isDowngradingToFormCreator) {
-          return h.redirect('/library').code(StatusCodes.SEE_OTHER)
-        }
 
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
@@ -262,7 +268,7 @@ export default [
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
     async handler(request, h) {
-      const { yar, auth, params, server } = request
+      const { yar, auth, params } = request
       const { token, user } = auth.credentials
       const { userId } = params
       const isSelfDeletion = user?.id === userId
@@ -270,13 +276,9 @@ export default [
       try {
         const existingUser = await getUser(token, userId)
 
-        await userService.deleteUser(server, token, userId)
+        const wasSelfDeletion = await userService.deleteUser(request, userId)
 
-        if (isSelfDeletion) {
-          request.cookieAuth.clear()
-        }
-
-        if (isSelfDeletion) {
+        if (wasSelfDeletion) {
           return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
         }
         yar.flash(
@@ -287,6 +289,7 @@ export default [
         // Redirect back to list of users
         return h.redirect(MANAGE_USERS_BASE_URL).code(StatusCodes.SEE_OTHER)
       } catch (err) {
+        // If self-deletion fails, still try to redirect to home
         if (isSelfDeletion) {
           return h.redirect('/').code(StatusCodes.SEE_OTHER).takeover()
         }

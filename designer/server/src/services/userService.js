@@ -1,7 +1,5 @@
-import {
-  dropUserSessionById,
-  refreshUserSessionEntitlements
-} from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
+import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
+import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import * as lib from '~/src/lib/manage.js'
 
@@ -21,36 +19,74 @@ export async function addUser(token, userDetails) {
 }
 
 /**
- * @param {Server} server
- * @param {string} token
+ * Updates a user and refreshes their session entitlements
+ * @template {Request} T
+ * @param {T} request
  * @param {{ userId: string, roles: string[] }} userDetails
- * @returns {Promise<{ userId: string, userRole: string }>}
+ * @returns {Promise<{ updatedUser: { userId: string, userRole: string }, newScopes: string[] | undefined }>}
  */
-export async function updateUser(server, token, userDetails) {
+export async function updateUser(request, userDetails) {
+  const { auth } = request
+  const { token } = auth.credentials
+
   logger.info(
     `Updating user ${userDetails.userId} with roles: ${userDetails.roles.join(', ')}`
   )
 
   const updatedUser = await lib.updateUser(token, userDetails)
 
-  await refreshUserSessionEntitlements(server, userDetails.userId, token)
+  const newScopes = await refreshUserSessionEntitlements(
+    request,
+    userDetails.userId,
+    token
+  )
 
-  return updatedUser
+  return {
+    updatedUser,
+    newScopes
+  }
 }
 
 /**
- * @param {Server} server
- * @param {string} token
- * @param {string} userId
+ * Checks if a user still has admin role after a role change
+ * @template {Request} T
+ * @param {T} request
+ * @returns {boolean} Whether the user still has admin role
  */
-export async function deleteUser(server, token, userId) {
+export function checkCanAccessUserManagement(request) {
+  const { credentials } = request.auth
+  return hasAdminRole(credentials.user)
+}
+
+/**
+ * Deletes a user and handles session cleanup
+ * @template {Request} T
+ * @param {T} request
+ * @param {string} userId
+ * @returns {Promise<boolean>} Whether it was a self-deletion
+ */
+export async function deleteUser(request, userId) {
+  const { server, auth, cookieAuth } = request
+  const { token, user } = auth.credentials
+  const isSelfDeletion = user?.id === userId
+
   logger.info(`Deleting user ${userId}`)
 
   await lib.deleteUser(token, userId)
 
-  await dropUserSessionById(server, userId)
+  try {
+    await server.methods.session.drop(userId)
+  } catch (error) {
+    logger.error(`Error dropping session for user ${userId}`, error)
+  }
+
+  if (isSelfDeletion) {
+    cookieAuth.clear()
+  }
+
+  return isSelfDeletion
 }
 
 /**
- * @import { Server } from '@hapi/hapi'
+ * @import { Request } from '@hapi/hapi'
  */

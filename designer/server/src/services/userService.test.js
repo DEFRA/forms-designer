@@ -1,7 +1,4 @@
-import {
-  dropUserSessionById,
-  refreshUserSessionEntitlements
-} from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
+import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
 import * as lib from '~/src/lib/manage.js'
 import { addUser, deleteUser, updateUser } from '~/src/services/userService.js'
 
@@ -9,15 +6,36 @@ jest.mock('~/src/lib/manage.js')
 jest.mock('~/src/common/helpers/auth/refresh-user-session-entitlements.js')
 
 describe('userService', () => {
-  const mockServer = /** @type {Server} */ (
+  const mockSession = {
+    get: jest.fn(),
+    set: jest.fn(),
+    drop: jest.fn()
+  }
+
+  const mockCookieAuth = {
+    clear: jest.fn()
+  }
+
+  const mockRequest = /** @type {Request} */ (
     /** @type {unknown} */ ({
-      methods: {
-        session: {
-          get: jest.fn(),
-          set: jest.fn(),
-          drop: jest.fn()
+      server: {
+        methods: {
+          session: mockSession
+        },
+        auth: {
+          verify: jest.fn()
         }
-      }
+      },
+      auth: {
+        credentials: {
+          token: 'test-token-123',
+          user: {
+            id: 'current-user',
+            email: 'current@example.com'
+          }
+        }
+      },
+      cookieAuth: mockCookieAuth
     })
   )
 
@@ -100,18 +118,21 @@ describe('userService', () => {
       jest.mocked(lib.updateUser).mockResolvedValue(expectedUser)
       jest.mocked(refreshUserSessionEntitlements).mockResolvedValue(undefined)
 
-      const result = await updateUser(mockServer, token, userDetails)
+      const result = await updateUser(mockRequest, userDetails)
 
       expect(jest.mocked(lib.updateUser)).toHaveBeenCalledWith(
         token,
         userDetails
       )
       expect(jest.mocked(refreshUserSessionEntitlements)).toHaveBeenCalledWith(
-        mockServer,
+        mockRequest,
         'user-123',
         token
       )
-      expect(result).toEqual(expectedUser)
+      expect(result).toEqual({
+        updatedUser: expectedUser,
+        newScopes: undefined
+      })
     })
 
     it('should handle multiple roles when updating user', async () => {
@@ -125,21 +146,26 @@ describe('userService', () => {
         userRole: 'form-creator,form-editor'
       }
 
-      jest.mocked(lib.updateUser).mockResolvedValue(expectedUser)
-      jest.mocked(refreshUserSessionEntitlements).mockResolvedValue(undefined)
+      const newScopes = ['form-read', 'form-edit']
 
-      const result = await updateUser(mockServer, token, userDetails)
+      jest.mocked(lib.updateUser).mockResolvedValue(expectedUser)
+      jest.mocked(refreshUserSessionEntitlements).mockResolvedValue(newScopes)
+
+      const result = await updateUser(mockRequest, userDetails)
 
       expect(jest.mocked(lib.updateUser)).toHaveBeenCalledWith(
         token,
         userDetails
       )
       expect(jest.mocked(refreshUserSessionEntitlements)).toHaveBeenCalledWith(
-        mockServer,
+        mockRequest,
         'user-456',
         token
       )
-      expect(result).toEqual(expectedUser)
+      expect(result).toEqual({
+        updatedUser: expectedUser,
+        newScopes
+      })
     })
 
     it('should update user even if session refresh fails', async () => {
@@ -158,7 +184,7 @@ describe('userService', () => {
         .mocked(refreshUserSessionEntitlements)
         .mockRejectedValue(new Error('Session refresh failed'))
 
-      await expect(updateUser(mockServer, token, userDetails)).rejects.toThrow(
+      await expect(updateUser(mockRequest, userDetails)).rejects.toThrow(
         'Session refresh failed'
       )
 
@@ -167,7 +193,7 @@ describe('userService', () => {
         userDetails
       )
       expect(jest.mocked(refreshUserSessionEntitlements)).toHaveBeenCalledWith(
-        mockServer,
+        mockRequest,
         'user-789',
         token
       )
@@ -182,7 +208,7 @@ describe('userService', () => {
       const error = new Error('Failed to update user')
       jest.mocked(lib.updateUser).mockRejectedValue(error)
 
-      await expect(updateUser(mockServer, token, userDetails)).rejects.toThrow(
+      await expect(updateUser(mockRequest, userDetails)).rejects.toThrow(
         'Failed to update user'
       )
 
@@ -199,34 +225,41 @@ describe('userService', () => {
       const userId = 'user-to-delete'
 
       jest.mocked(lib.deleteUser).mockResolvedValue(undefined)
-      jest.mocked(dropUserSessionById).mockResolvedValue(undefined)
+      mockSession.drop.mockResolvedValue(undefined)
 
-      await deleteUser(mockServer, token, userId)
+      const wasSelfDeletion = await deleteUser(mockRequest, userId)
 
       expect(jest.mocked(lib.deleteUser)).toHaveBeenCalledWith(token, userId)
-      expect(jest.mocked(dropUserSessionById)).toHaveBeenCalledWith(
-        mockServer,
-        userId
-      )
+      expect(mockSession.drop).toHaveBeenCalledWith(userId)
+      expect(mockCookieAuth.clear).not.toHaveBeenCalled()
+      expect(wasSelfDeletion).toBe(false)
+    })
+
+    it('should clear cookie when user deletes themselves', async () => {
+      const userId = 'current-user' // Same as mockRequest.auth.credentials.user.id
+
+      jest.mocked(lib.deleteUser).mockResolvedValue(undefined)
+      mockSession.drop.mockResolvedValue(undefined)
+
+      const wasSelfDeletion = await deleteUser(mockRequest, userId)
+
+      expect(jest.mocked(lib.deleteUser)).toHaveBeenCalledWith(token, userId)
+      expect(mockSession.drop).toHaveBeenCalledWith(userId)
+      expect(mockCookieAuth.clear).toHaveBeenCalled()
+      expect(wasSelfDeletion).toBe(true)
     })
 
     it('should complete deletion even if session drop fails', async () => {
       const userId = 'user-with-no-session'
 
       jest.mocked(lib.deleteUser).mockResolvedValue(undefined)
-      jest
-        .mocked(dropUserSessionById)
-        .mockRejectedValue(new Error('Session not found'))
+      mockSession.drop.mockRejectedValue(new Error('Session not found'))
 
-      await expect(deleteUser(mockServer, token, userId)).rejects.toThrow(
-        'Session not found'
-      )
+      const wasSelfDeletion = await deleteUser(mockRequest, userId)
 
       expect(jest.mocked(lib.deleteUser)).toHaveBeenCalledWith(token, userId)
-      expect(jest.mocked(dropUserSessionById)).toHaveBeenCalledWith(
-        mockServer,
-        userId
-      )
+      expect(mockSession.drop).toHaveBeenCalledWith(userId)
+      expect(wasSelfDeletion).toBe(false)
     })
 
     it('should throw error if deleteUser fails', async () => {
@@ -235,31 +268,29 @@ describe('userService', () => {
       const error = new Error('Cannot delete protected user')
       jest.mocked(lib.deleteUser).mockRejectedValue(error)
 
-      await expect(deleteUser(mockServer, token, userId)).rejects.toThrow(
+      await expect(deleteUser(mockRequest, userId)).rejects.toThrow(
         'Cannot delete protected user'
       )
 
       expect(jest.mocked(lib.deleteUser)).toHaveBeenCalledWith(token, userId)
-      expect(jest.mocked(dropUserSessionById)).not.toHaveBeenCalled()
+      expect(mockSession.drop).not.toHaveBeenCalled()
     })
 
     it('should handle deletion of non-existent user', async () => {
       const userId = 'non-existent-user'
 
       jest.mocked(lib.deleteUser).mockResolvedValue(undefined)
-      jest.mocked(dropUserSessionById).mockResolvedValue(undefined)
+      mockSession.drop.mockResolvedValue(undefined)
 
-      await deleteUser(mockServer, token, userId)
+      const wasSelfDeletion = await deleteUser(mockRequest, userId)
 
       expect(jest.mocked(lib.deleteUser)).toHaveBeenCalledWith(token, userId)
-      expect(jest.mocked(dropUserSessionById)).toHaveBeenCalledWith(
-        mockServer,
-        userId
-      )
+      expect(mockSession.drop).toHaveBeenCalledWith(userId)
+      expect(wasSelfDeletion).toBe(false)
     })
   })
 })
 
 /**
- * @import { Server } from '@hapi/hapi'
+ * @import { Request, Server } from '@hapi/hapi'
  */

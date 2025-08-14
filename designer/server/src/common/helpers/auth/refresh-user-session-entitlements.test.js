@@ -1,9 +1,6 @@
 import { mapScopesToRoles } from '@defra/forms-model'
 
-import {
-  dropUserSessionById,
-  refreshUserSessionEntitlements
-} from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
+import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
 import { getUser } from '~/src/lib/manage.js'
 
 jest.mock('@defra/forms-model')
@@ -24,6 +21,21 @@ describe('refresh-user-session-entitlements', () => {
     })
   )
 
+  const mockRequest = /** @type {Request} */ (
+    /** @type {unknown} */ ({
+      server: mockServer,
+      auth: {
+        credentials: {
+          user: {
+            id: 'user-123',
+            roles: ['form-creator']
+          },
+          scope: ['form-read', 'form-edit']
+        }
+      }
+    })
+  )
+
   const token = 'test-token'
   const userId = 'user-123'
 
@@ -35,14 +47,14 @@ describe('refresh-user-session-entitlements', () => {
     it('should do nothing if no session exists', async () => {
       mockSession.get.mockResolvedValue(null)
 
-      await refreshUserSessionEntitlements(mockServer, userId, token)
+      await refreshUserSessionEntitlements(mockRequest, userId, token)
 
       expect(mockSession.get).toHaveBeenCalledWith(userId)
       expect(jest.mocked(getUser)).not.toHaveBeenCalled()
       expect(mockSession.set).not.toHaveBeenCalled()
     })
 
-    it('should refresh user session with new entitlements', async () => {
+    it('should refresh user session with new entitlements using server', async () => {
       const existingSession = {
         user: {
           id: userId,
@@ -76,13 +88,51 @@ describe('refresh-user-session-entitlements', () => {
       jest.mocked(getUser).mockResolvedValue(updatedUser)
       jest.mocked(mapScopesToRoles).mockReturnValue(newScopes)
 
-      await refreshUserSessionEntitlements(mockServer, userId, token)
+      const result = await refreshUserSessionEntitlements(
+        mockRequest,
+        userId,
+        token
+      )
 
       expect(mockSession.get).toHaveBeenCalledWith(userId)
       expect(jest.mocked(getUser)).toHaveBeenCalledWith(token, userId)
       expect(jest.mocked(mapScopesToRoles)).toHaveBeenCalledWith(['admin'])
       expect(existingSession.user.roles).toEqual(['admin'])
       expect(existingSession.scope).toEqual(newScopes)
+      expect(mockSession.set).toHaveBeenCalledWith(userId, existingSession)
+      expect(result).toEqual(newScopes)
+    })
+
+    it('should patch request credentials when updating current user', async () => {
+      const existingSession = {
+        user: {
+          id: userId,
+          email: 'test@example.com',
+          displayName: 'Test User',
+          roles: ['form-creator']
+        },
+        scope: ['form-read', 'form-edit'],
+        token: 'old-token'
+      }
+
+      const updatedUser = {
+        userId,
+        email: 'test@example.com',
+        displayName: 'Test User',
+        roles: ['admin'],
+        scopes: []
+      }
+
+      const newScopes = ['admin-scope']
+
+      mockSession.get.mockResolvedValue(existingSession)
+      jest.mocked(getUser).mockResolvedValue(updatedUser)
+      jest.mocked(mapScopesToRoles).mockReturnValue(newScopes)
+
+      await refreshUserSessionEntitlements(mockRequest, userId, token)
+
+      expect(mockRequest.auth.credentials.scope).toEqual(newScopes)
+      expect(mockRequest.auth.credentials.user?.roles).toEqual(['admin'])
       expect(mockSession.set).toHaveBeenCalledWith(userId, existingSession)
     })
 
@@ -109,7 +159,7 @@ describe('refresh-user-session-entitlements', () => {
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
 
-      await refreshUserSessionEntitlements(mockServer, userId, token)
+      await refreshUserSessionEntitlements(mockRequest, userId, token)
 
       expect(existingSession.user.roles).toEqual([])
       expect(existingSession.scope).toEqual([])
@@ -136,13 +186,13 @@ describe('refresh-user-session-entitlements', () => {
       jest.mocked(getUser).mockResolvedValue(updatedUser)
       jest.mocked(mapScopesToRoles).mockReturnValue(newScopes)
 
-      await refreshUserSessionEntitlements(mockServer, userId, token)
+      await refreshUserSessionEntitlements(mockRequest, userId, token)
 
       expect(existingSession.scope).toEqual(newScopes)
       expect(mockSession.set).toHaveBeenCalledWith(userId, existingSession)
     })
 
-    it('should drop session if user not found in entitlement API', async () => {
+    it('should drop session and throw if user not found in entitlement API', async () => {
       const existingSession = {
         user: {
           id: userId,
@@ -159,7 +209,9 @@ describe('refresh-user-session-entitlements', () => {
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockRejectedValue(apiError)
 
-      await refreshUserSessionEntitlements(mockServer, userId, token)
+      await expect(
+        refreshUserSessionEntitlements(mockRequest, userId, token)
+      ).rejects.toThrow('User not found')
 
       expect(mockSession.get).toHaveBeenCalledWith(userId)
       expect(jest.mocked(getUser)).toHaveBeenCalledWith(token, userId)
@@ -172,11 +224,11 @@ describe('refresh-user-session-entitlements', () => {
       mockSession.get.mockRejectedValue(sessionError)
 
       await expect(
-        refreshUserSessionEntitlements(mockServer, userId, token)
+        refreshUserSessionEntitlements(mockRequest, userId, token)
       ).rejects.toThrow('Redis connection failed')
     })
 
-    it('should drop session if session.set fails', async () => {
+    it('should throw error if session.set fails', async () => {
       const existingSession = {
         user: {
           id: userId,
@@ -200,36 +252,54 @@ describe('refresh-user-session-entitlements', () => {
       jest.mocked(mapScopesToRoles).mockReturnValue(['admin-scope'])
       mockSession.set.mockRejectedValue(sessionError)
 
-      // When session.set fails, it should catch the error and drop the session
-      await refreshUserSessionEntitlements(mockServer, userId, token)
-
-      expect(mockSession.drop).toHaveBeenCalledWith(userId)
-    })
-  })
-
-  describe('dropUserSessionById', () => {
-    it('should drop user session successfully', async () => {
-      mockSession.drop.mockResolvedValue(undefined)
-
-      await dropUserSessionById(mockServer, userId)
-
-      expect(mockSession.drop).toHaveBeenCalledWith(userId)
-    })
-
-    it('should log error but not throw if drop fails', async () => {
-      const error = new Error('Redis error')
-      mockSession.drop.mockRejectedValue(error)
-
-      // Should not throw even if drop fails
+      // When session.set fails, it should throw the error
       await expect(
-        dropUserSessionById(mockServer, userId)
-      ).resolves.toBeUndefined()
+        refreshUserSessionEntitlements(mockRequest, userId, token)
+      ).rejects.toThrow('Redis write failed')
+    })
 
-      expect(mockSession.drop).toHaveBeenCalledWith(userId)
+    it('should not patch credentials for different user', async () => {
+      const otherUserId = 'other-user-456'
+      const existingSession = {
+        user: {
+          id: otherUserId,
+          roles: ['form-creator']
+        },
+        scope: ['form-read']
+      }
+
+      const updatedUser = {
+        userId: otherUserId,
+        email: 'other@example.com',
+        displayName: 'Other User',
+        roles: ['admin'],
+        scopes: []
+      }
+
+      const originalScope = mockRequest.auth.credentials.scope
+        ? [...mockRequest.auth.credentials.scope]
+        : []
+      const originalRoles = mockRequest.auth.credentials.user?.roles
+        ? [...mockRequest.auth.credentials.user.roles]
+        : []
+
+      // Reset mockSession.set to resolve successfully
+      mockSession.set.mockResolvedValue(undefined)
+      mockSession.get.mockResolvedValue(existingSession)
+      jest.mocked(getUser).mockResolvedValue(updatedUser)
+      jest.mocked(mapScopesToRoles).mockReturnValue(['admin-scope'])
+
+      await refreshUserSessionEntitlements(mockRequest, otherUserId, token)
+
+      // Should NOT patch the current request's credentials
+      expect(mockRequest.auth.credentials.scope).toEqual(originalScope)
+      expect(mockRequest.auth.credentials.user?.roles).toEqual(originalRoles)
+      // Should still update the session
+      expect(mockSession.set).toHaveBeenCalledWith(otherUserId, existingSession)
     })
   })
 })
 
 /**
- * @import { Server } from '@hapi/hapi'
+ * @import { Server, Request } from '@hapi/hapi'
  */
