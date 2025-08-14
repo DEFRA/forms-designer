@@ -1,8 +1,75 @@
 import Joi from 'joi'
 
+import {
+  FORM_CREATED,
+  FORM_DRAFT_CREATED_FROM_LIVE,
+  FORM_DRAFT_DELETED,
+  FORM_LIVE_CREATED_FROM_DRAFT,
+  FORM_MIGRATED,
+  FORM_ORGANISATION_UPDATED,
+  FORM_TITLE_UPDATED,
+  FORM_UPDATED,
+  REPLACE_DRAFT
+} from '~/src/form/form-audit/__snapshots__/index.snap.js'
 import { messageSchema } from '~/src/index.js'
 
 describe('schema tests', () => {
+  it('should validate FORM_ORGANISATION_UPDATED events', () => {
+    expect(() =>
+      Joi.attempt(FORM_ORGANISATION_UPDATED, messageSchema, {
+        abortEarly: false
+      })
+    ).not.toThrow()
+  })
+
+  it('should validate FORM_DRAFT_DELETED events', () => {
+    expect(() =>
+      Joi.attempt(FORM_DRAFT_DELETED, messageSchema, {
+        abortEarly: false
+      })
+    ).not.toThrow()
+  })
+
+  it('should validate FORM_DRAFT_CREATED_FROM_LIVE events', () => {
+    expect(() =>
+      Joi.attempt(FORM_DRAFT_CREATED_FROM_LIVE, messageSchema, {
+        abortEarly: false
+      })
+    ).not.toThrow()
+  })
+  it('should validate FORM_CREATED events', () => {
+    expect(() =>
+      Joi.attempt(FORM_CREATED, messageSchema, { abortEarly: false })
+    ).not.toThrow()
+  })
+  it('should validate REPLACE_DRAFT events', () => {
+    expect(() =>
+      Joi.attempt(REPLACE_DRAFT, messageSchema, { abortEarly: false })
+    ).not.toThrow()
+  })
+  it('should validate FORM_MIGRATED events', () => {
+    expect(() =>
+      Joi.attempt(FORM_MIGRATED, messageSchema, { abortEarly: false })
+    ).not.toThrow()
+  })
+  it('should validate FORM_TITLE_UPDATED events', () => {
+    expect(() =>
+      Joi.attempt(FORM_TITLE_UPDATED, messageSchema, { abortEarly: false })
+    ).not.toThrow()
+  })
+  it('should validate FORM_UPDATED events', () => {
+    expect(() =>
+      Joi.attempt(FORM_UPDATED, messageSchema, { abortEarly: false })
+    ).not.toThrow()
+  })
+  it('should validate FORM_LIVE_CREATED_FROM_DRAFT events', () => {
+    expect(() =>
+      Joi.attempt(FORM_LIVE_CREATED_FROM_DRAFT, messageSchema, {
+        abortEarly: false
+      })
+    ).not.toThrow()
+  })
+
   describe('FORM_DRAFT_DELETED', () => {
     it('a valid FORM_DRAFT_DELETED event should pass', () => {
       const test = {
