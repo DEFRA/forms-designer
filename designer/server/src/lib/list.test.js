@@ -286,6 +286,20 @@ describe('list.js', () => {
       ])
     })
 
+    test('should populate known ids using existing ids', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = populateListIds(definition, listIdWithItemIds, [
+        { id: 'id1', text: 'England1', value: 'eng1' },
+        { id: 'id2', text: 'Scotland2', value: 'scot2' },
+        { id: 'id3', text: 'Wales3', value: 'wal3' }
+      ])
+      expect(populated).toEqual([
+        { id: 'id1', text: 'England1', value: 'eng1' },
+        { id: 'id2', text: 'Scotland2', value: 'scot2' },
+        { id: 'id3', text: 'Wales3', value: 'wal3' }
+      ])
+    })
+
     test('should populate known ids using display text', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
       const populated = populateListIds(definition, listIdWithItemIds, [

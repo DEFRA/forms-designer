@@ -147,13 +147,19 @@ export async function removeUniquelyMappedListsFromPage(
  */
 export function populateListIds(definition, listRef, listItems) {
   /**
+   * Matches list items against existing items (if they exist)
+   * This method handles the following scenarios:
+   * 1. When editing an individual option (e.g. checkbox or radio), an ID will be present so this is used initially to find a match
+   * 2. When editing an autocomplete (or possibly checkbox or radio if we have implemented textarea editing). Here we do not have any IDs to pass,
+   * just a text value (and possibly code value), so we try to match on 'code' first, then 'text' if not matched on 'code'.
    * @param {Item[]} listItems
    * @param {Item} item
    */
   function populateExistingId(listItems, item) {
     const found =
-      listItems.find((i) => i.value === item.value) ??
-      listItems.find((i) => i.text === item.text)
+      listItems.find((i) => i.id === item.id) ?? // for when we are editing individual items
+      listItems.find((i) => i.value === item.value) ?? // for when no IDs present in submitted data (see note on method)
+      listItems.find((i) => i.text === item.text) // for when no IDs present in submitted data (see note on method)
     return {
       id: found?.id,
       text: item.text,
