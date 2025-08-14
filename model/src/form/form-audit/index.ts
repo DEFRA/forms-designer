@@ -202,7 +202,7 @@ export const authenticationMessageData =
 
 export const auditUserSchema = Joi.object<AuditUser>()
   .keys({
-    id: Joi.string().uuid().required(),
+    id: Joi.string().required(),
     displayName: Joi.string().required()
   })
   .description('Schema for CREATED_BY audit event')
