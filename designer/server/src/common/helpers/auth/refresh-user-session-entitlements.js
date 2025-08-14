@@ -21,7 +21,7 @@ export async function refreshUserSessionEntitlements(request, userId, token) {
 
     if (!existingSession) {
       logger.info(`No session found for user ${userId}, nothing to refresh`)
-      return
+      return undefined
     }
 
     try {

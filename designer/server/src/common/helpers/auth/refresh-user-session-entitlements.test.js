@@ -47,8 +47,13 @@ describe('refresh-user-session-entitlements', () => {
     it('should do nothing if no session exists', async () => {
       mockSession.get.mockResolvedValue(null)
 
-      await refreshUserSessionEntitlements(mockRequest, userId, token)
+      const result = await refreshUserSessionEntitlements(
+        mockRequest,
+        userId,
+        token
+      )
 
+      expect(result).toBeUndefined()
       expect(mockSession.get).toHaveBeenCalledWith(userId)
       expect(jest.mocked(getUser)).not.toHaveBeenCalled()
       expect(mockSession.set).not.toHaveBeenCalled()
