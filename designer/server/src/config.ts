@@ -51,6 +51,9 @@ export interface Config {
   tracing: {
     header: string
   }
+  awsRegion: string
+  snsEndpoint: string
+  snsTopicArn: string
   featureFlagUseEntitlementApi: boolean
 }
 
@@ -160,6 +163,9 @@ const schema = joi.object<Config>({
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
   }),
+  awsRegion: joi.string().default('eu-west-2'),
+  snsEndpoint: joi.string().required(),
+  snsTopicArn: joi.string().required(),
   featureFlagUseEntitlementApi: joi.boolean().default(false)
 })
 
@@ -201,6 +207,9 @@ const result = schema.validate(
     tracing: {
       header: process.env.TRACING_HEADER
     },
+    awsRegion: process.env.AWS_REGION,
+    snsEndpoint: process.env.SNS_ENDPOINT,
+    snsTopicArn: process.env.SNS_TOPIC_ARN,
     featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API
   },
   { abortEarly: false }

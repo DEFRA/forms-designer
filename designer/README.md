@@ -30,26 +30,28 @@ If there is a .env file present, these will be loaded in first for local develop
 
 Base URLs should should include protocol, hostname, port number, e.g. `http://localhost:3000`.
 
-| name                              | description                                                                             | required | default | valid                       |
-| --------------------------------- | --------------------------------------------------------------------------------------- | :------- | ------- | :-------------------------- |
-| APP_BASE_URL                      | Base URL for each request.                                                              | yes      |         |                             |
-| AZURE_CLIENT_ID                   | Client ID of the Azure app registration.                                                | yes      |         |                             |
-| AZURE_CLIENT_SECRET               | Client secret of the Azure app registration.                                            | yes      |         |                             |
-| LOG_LEVEL                         | Log level                                                                               | yes      | info    | trace,debug,info,error      |
-| MANAGER_URL                       | Base URL of the forms-manager API.                                                      | yes      |         |                             |
-| NODE_ENV                          | Node environment                                                                        | yes      |         | development,test,production |
-| OIDC_WELL_KNOWN_CONFIGURATION_URL | OIDC Well known configuration URL for the Azure tenant containing the app registration. | yes      |         |                             |
-| PORT                              | Port number                                                                             | yes      | 3000    |                             |
-| PREVIEW_URL                       | Base URL for links to preview forms in user's web browser (forms-runner).               | yes      |         |                             |
-| REACT_LOG_LEVEL                   | Log level for client-side designer logging                                              | yes      | debug   | trace,debug,info,warn,error |
-| SESSION_COOKIE_PASSWORD           | at least 32 char long string for session cookie encryption                              | yes      |         |                             |
-| SESSION_COOKIE_TTL                | server-side storage expiration time for sessions - in milliseconds                      | yes      |         |                             |
-| SESSION_TTL                       | server-side storage expiration time - in milliseconds                                   | yes      |         |                             |
-| USE_SINGLE_INSTANCE_CACHE         | If true, disables the redis cluster connection and uses a single node.                  | yes      |         |                             |
-| HTTP_PROXY                        | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
-| HTTPS_PROXY                       | HTTPS proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.               | no       |         |                             |
-| NO_PROXY                          | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                | no       |         |                             |
-| FEATURE_FLAG_USE_ENTITLEMENT_API  | Feature flag to enable fetching roles from entitlement API and user management features | no       | false   | true,false                  |
+| name                              | description                                                                                                               | required | default | valid                       |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | :------- | ------- | :-------------------------- |
+| APP_BASE_URL                      | Base URL for each request.                                                                                                | yes      |         |                             |
+| AZURE_CLIENT_ID                   | Client ID of the Azure app registration.                                                                                  | yes      |         |                             |
+| AZURE_CLIENT_SECRET               | Client secret of the Azure app registration.                                                                              | yes      |         |                             |
+| LOG_LEVEL                         | Log level                                                                                                                 | yes      | info    | trace,debug,info,error      |
+| MANAGER_URL                       | Base URL of the forms-manager API.                                                                                        | yes      |         |                             |
+| NODE_ENV                          | Node environment                                                                                                          | yes      |         | development,test,production |
+| OIDC_WELL_KNOWN_CONFIGURATION_URL | OIDC Well known configuration URL for the Azure tenant containing the app registration.                                   | yes      |         |                             |
+| PORT                              | Port number                                                                                                               | yes      | 3000    |                             |
+| PREVIEW_URL                       | Base URL for links to preview forms in user's web browser (forms-runner).                                                 | yes      |         |                             |
+| REACT_LOG_LEVEL                   | Log level for client-side designer logging                                                                                | yes      | debug   | trace,debug,info,warn,error |
+| SESSION_COOKIE_PASSWORD           | at least 32 char long string for session cookie encryption                                                                | yes      |         |                             |
+| SESSION_COOKIE_TTL                | server-side storage expiration time for sessions - in milliseconds                                                        | yes      |         |                             |
+| SESSION_TTL                       | server-side storage expiration time - in milliseconds                                                                     | yes      |         |                             |
+| SNS_ENDPOINT                      | Url of SNS endpoint                                                                                                       | yes      |         |                             |
+| SNS_TOPIC_ARN                     | Amazon Resource Name (ARN) of SNS topic. The typical format is "arn:aws:sns:eu-west-2:000000000000:forms_designer_events" | yes      |         |                             |
+| USE_SINGLE_INSTANCE_CACHE         | If true, disables the redis cluster connection and uses a single node.                                                    | yes      |         |                             |
+| HTTP_PROXY                        | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                                                  | no       |         |                             |
+| HTTPS_PROXY                       | HTTPS proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                                                 | no       |         |                             |
+| NO_PROXY                          | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                                                  | no       |         |                             |
+| FEATURE_FLAG_USE_ENTITLEMENT_API  | Feature flag to enable fetching roles from entitlement API and user management features                                   | no       | false   | true,false                  |
 
 For proxy options, see https://www.npmjs.com/package/proxy-from-env which is used by https://github.com/TooTallNate/proxy-agents/tree/main/packages/proxy-agent.
 
@@ -76,6 +78,8 @@ SESSION_COOKIE_TTL=86400000
 SESSION_TTL=2419200000
 FILE_DOWNLOAD_PASSWORD_TTL=86400000
 USE_SINGLE_INSTANCE_CACHE=true
+SNS_ENDPOINT="http://localhost:4566"
+SNS_TOPIC_ARN="arn:aws:sns:eu-west-2:000000000000:forms_designer_events"
 ```
 
 ## Unit tests

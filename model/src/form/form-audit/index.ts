@@ -12,6 +12,7 @@ import {
   type AuditMessage,
   type AuditRecord,
   type AuditUser,
+  type AuthenticationMessageData,
   type ChangesMessageData,
   type EntitlementMessageData,
   type FormCreatedMessageData,
@@ -141,22 +142,22 @@ export const formSupportPhoneChanges = Joi.object<FormSupportPhoneChanges>()
 
 export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
   .keys({
-    url: onlineUrlSchema,
-    text: onlineTextSchema
+    url: onlineUrlSchema.optional(),
+    text: onlineTextSchema.optional()
   })
   .required()
   .description('Changes schema for FORM_SUPPORT_ONLINE_UPDATED event')
 
 export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
   .keys({
-    address: emailAddressSchema,
-    responseTime: emailResponseTimeSchema
+    address: emailAddressSchema.optional(),
+    responseTime: emailResponseTimeSchema.optional()
   })
   .description('Changes schema for FORM_SUPPORT_EMAIL_UPDATED event')
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: privacyNoticeUrlSchema.required()
+    privacyNoticeUrl: privacyNoticeUrlSchema
   })
   .required()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
@@ -164,7 +165,7 @@ export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
     .keys({
-      notificationEmail: notificationEmailAddressSchema.required()
+      notificationEmail: notificationEmailAddressSchema
     })
     .required()
     .description('Changes schema for FORM_NOTIFICATION_EMAIL_UPDATED event')
@@ -172,7 +173,7 @@ export const formNotificationEmailChanges =
 export const formSubmissionGuidanceChanges =
   Joi.object<FormSubmissionGuidanceChanges>()
     .keys({
-      submissionGuidance: submissionGuidanceSchema.required()
+      submissionGuidance: submissionGuidanceSchema
     })
     .required()
     .description('Changes schema for FORM_SUBMISSION_GUIDANCE_UPDATED event')
@@ -192,6 +193,12 @@ export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
     roles: Joi.array().items(Joi.string())
   }
 )
+
+export const authenticationMessageData =
+  Joi.object<AuthenticationMessageData>().keys({
+    userId: Joi.string().required(),
+    displayName: Joi.string().required()
+  })
 
 export const auditUserSchema = Joi.object<AuditUser>()
   .keys({
@@ -369,7 +376,11 @@ export const messageSchema = Joi.object<AuditMessage>()
         {
           is: Joi.string()
             .trim()
-            .valid(AuditEventMessageType.ENTITLEMENT_CREATED),
+            .valid(
+              AuditEventMessageType.ENTITLEMENT_CREATED,
+              AuditEventMessageType.ENTITLEMENT_UPDATED,
+              AuditEventMessageType.ENTITLEMENT_DELETED
+            ),
           then: entitlementMessageData
         },
         {
@@ -381,14 +392,13 @@ export const messageSchema = Joi.object<AuditMessage>()
         {
           is: Joi.string()
             .trim()
-            .valid(AuditEventMessageType.ENTITLEMENT_UPDATED),
-          then: entitlementMessageData
-        },
-        {
-          is: Joi.string()
-            .trim()
-            .valid(AuditEventMessageType.ENTITLEMENT_DELETED),
-          then: entitlementMessageData
+            .valid(
+              AuditEventMessageType.AUTHENTICATION_LOGIN,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_AUTO,
+              AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
+            ),
+          then: authenticationMessageData
         }
       ],
       otherwise: Joi.forbidden()

@@ -4,8 +4,13 @@ import Joi from 'joi'
 
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
 import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import config from '~/src/config.js'
 import * as oidc from '~/src/lib/oidc.js'
+import {
+  publishAuthenticationLogoutDifferentDeviceEvent,
+  publishAuthenticationLogoutManualEvent
+} from '~/src/messaging/publish.js'
 import { getLoginHint } from '~/src/routes/account/auth.js'
 
 const redirectUrl = new URL(`/account/signed-out`, config.appBaseUrl)
@@ -33,7 +38,15 @@ export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} *
       logoutHint ?? getLoginHint(credentials.token) // take the logout hint from the request if provided (force signout), else find it from the user's session
     )
 
+    const loggedInUser = mapUserForAudit(credentials.user)
+
     await dropUserSession(request)
+
+    if (logoutHint) {
+      await publishAuthenticationLogoutDifferentDeviceEvent(loggedInUser)
+    } else {
+      await publishAuthenticationLogoutManualEvent(loggedInUser)
+    }
 
     // Redirect to end session URL
     return h.redirect(endSessionUrl.href)
@@ -54,5 +67,5 @@ export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} *
 })
 
 /**
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { ServerRoute, UserCredentials } from '@hapi/hapi'
  */
