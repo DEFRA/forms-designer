@@ -392,6 +392,12 @@ export const messageSchema = Joi.object<AuditMessage>()
         {
           is: Joi.string()
             .trim()
+            .valid(AuditEventMessageType.FORM_JSON_DOWNLOADED),
+          then: formMessageDataBase
+        },
+        {
+          is: Joi.string()
+            .trim()
             .valid(
               AuditEventMessageType.AUTHENTICATION_LOGIN,
               AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL,
