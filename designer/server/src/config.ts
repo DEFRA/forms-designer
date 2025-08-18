@@ -35,6 +35,7 @@ export interface Config {
   isProduction: boolean
   isDevelopment: boolean
   isTest: boolean
+  isSecure: boolean
   sessionTtl: number
   fileDownloadPasswordTtl: number
   sessionCookieTtl: number
@@ -148,6 +149,7 @@ const schema = joi.object<Config>({
   isProduction: joi.boolean().default(false),
   isDevelopment: joi.boolean().default(true),
   isTest: joi.boolean().default(false),
+  isSecure: joi.boolean().default(true),
   sessionTtl: joi.number().required(),
   fileDownloadPasswordTtl: joi.number().required(),
   sessionCookieTtl: joi.number().required(),
@@ -192,6 +194,8 @@ const result = schema.validate(
     isProduction: process.env.NODE_ENV === 'production',
     isDevelopment: !['production', 'test'].includes(`${process.env.NODE_ENV}`),
     isTest: process.env.NODE_ENV === 'test',
+    isSecure:
+      process.env.IS_SECURE_OVERRIDE ?? process.env.NODE_ENV === 'production',
     sessionTtl: process.env.SESSION_TTL,
     fileDownloadPasswordTtl: process.env.FILE_DOWNLOAD_PASSWORD_TTL,
     sessionCookiePassword: process.env.SESSION_COOKIE_PASSWORD,

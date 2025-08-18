@@ -12,7 +12,7 @@ const sessionManager = {
     errorOnCacheNotReady: true,
     cookieOptions: {
       password: config.sessionCookiePassword,
-      isSecure: config.isProduction
+      isSecure: config.isSecure
     }
   }
 }

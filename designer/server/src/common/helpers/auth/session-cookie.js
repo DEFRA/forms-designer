@@ -30,7 +30,7 @@ const sessionCookie = {
             name: 'userSession',
             path: '/',
             password: config.sessionCookiePassword,
-            isSecure: config.isProduction,
+            isSecure: config.isSecure,
             ttl: config.sessionCookieTtl,
             clearInvalid: true
           },
