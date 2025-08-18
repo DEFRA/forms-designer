@@ -57,7 +57,7 @@ export const azureOidc = {
           clientId: config.azureClientId,
           clientSecret: config.azureClientSecret,
           cookie: 'bell-azure-oidc',
-          isSecure: config.isProduction,
+          isSecure: config.isSecure,
           password: config.sessionCookiePassword
         })
       )

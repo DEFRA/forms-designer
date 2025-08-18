@@ -16,7 +16,7 @@ const csrf = {
           cookieOptions: {
             path: '/',
             password: config.sessionCookiePassword,
-            isSecure: config.isProduction,
+            isSecure: config.isSecure,
             ttl: config.sessionCookieTtl
           }
         }
