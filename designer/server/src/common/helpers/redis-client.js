@@ -16,7 +16,7 @@ function buildRedisClient() {
   const db = 0
   let redisClient
 
-  if (!config.isProduction) {
+  if (config.useSingleInstanceCache) {
     logger.info('Connecting to Redis using single instance')
 
     redisClient = new Redis({
