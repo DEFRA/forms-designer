@@ -26,17 +26,8 @@ export default [
       const filename = `${slug}.json`
       const definitionJson = JSON.stringify(definition, null, 2)
 
-      // Attempt to publish audit event, but don't fail the download if it fails
-      try {
-        const auditUser = mapUserForAudit(auth.credentials.user)
-        await publishFormDownloadedEvent(formId, slug, auditUser)
-      } catch (error) {
-        // Log the error but continue with the download
-        request.logger.error(
-          error,
-          'Failed to publish form download audit event'
-        )
-      }
+      const auditUser = mapUserForAudit(auth.credentials.user)
+      await publishFormDownloadedEvent(formId, slug, auditUser)
 
       return h
         .response(definitionJson)
