@@ -77,5 +77,39 @@ export function authenticationLogoutDifferentDevicelMapper(user) {
 }
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData } from '@defra/forms-model'
+ * @param {FormDownloadData} downloadData
+ * @returns {FormDownloadedMessage}
+ */
+export function formDownloadedMapper(downloadData) {
+  const { formId, slug, user } = downloadData
+  const now = new Date()
+
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.FORM,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type: AuditEventMessageType.FORM_JSON_DOWNLOADED,
+    entityId: formId,
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    data: {
+      formId,
+      slug
+    },
+    messageCreatedAt: now
+  }
+}
+
+/**
+ * @typedef {object} FormDownloadData
+ * @property {string} formId - The form ID
+ * @property {string} slug - The form slug
+ * @property {AuditUser} user - The user downloading the form
+ */
+
+/**
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage } from '@defra/forms-model'
  */
