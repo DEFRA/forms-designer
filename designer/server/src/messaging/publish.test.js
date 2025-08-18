@@ -12,7 +12,8 @@ import {
   publishAuthenticationLoginEvent,
   publishAuthenticationLogoutAutoEvent,
   publishAuthenticationLogoutDifferentDeviceEvent,
-  publishAuthenticationLogoutManualEvent
+  publishAuthenticationLogoutManualEvent,
+  publishFormDownloadedEvent
 } from '~/src/messaging/publish.js'
 
 jest.mock('~/src/messaging/publish-base.js')
@@ -190,6 +191,111 @@ describe('publish', () => {
           {}
         )
       )
+    })
+  })
+
+  describe('publishFormDownloadedEvent', () => {
+    const testFormId = '507f1f77bcf86cd799439011'
+    const testSlug = 'test-form-slug'
+
+    it('should publish FORM_JSON_DOWNLOADED event', async () => {
+      await publishFormDownloadedEvent(testFormId, testSlug, authAuditUser)
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: testFormId,
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        type: AuditEventMessageType.FORM_JSON_DOWNLOADED,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          formId: testFormId,
+          slug: testSlug
+        }
+      })
+    })
+
+    it('should return the result from publishEvent', async () => {
+      const expectedResult = {
+        MessageId: '12345',
+        SequenceNumber: undefined,
+        $metadata: {}
+      }
+      jest.mocked(publishEvent).mockResolvedValue(expectedResult)
+
+      const result = await publishFormDownloadedEvent(
+        testFormId,
+        testSlug,
+        authAuditUser
+      )
+
+      expect(result).toEqual(expectedResult)
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      const invalidFormId = null
+      const invalidSlug = null
+      const invalidUser = {}
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormDownloadedEvent(invalidFormId, invalidSlug, invalidUser)
+      ).rejects.toThrow(
+        new ValidationError(
+          '"entityId" must be a string. "createdBy.id" is required. "createdBy.displayName" is required. "data.formId" must be a string. "data.slug" must be a string',
+          [],
+          {}
+        )
+      )
+    })
+
+    it('should handle publishEvent rejection', async () => {
+      const expectedError = new Error('SNS publish failed')
+      jest.mocked(publishEvent).mockRejectedValue(expectedError)
+
+      await expect(
+        publishFormDownloadedEvent(testFormId, testSlug, authAuditUser)
+      ).rejects.toThrow(expectedError)
+    })
+
+    it('should validate all required fields', async () => {
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormDownloadedEvent(undefined, testSlug, authAuditUser)
+      ).rejects.toThrow(ValidationError)
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormDownloadedEvent(testFormId, undefined, authAuditUser)
+      ).rejects.toThrow(ValidationError)
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormDownloadedEvent(testFormId, testSlug, undefined)
+      ).rejects.toThrow(TypeError)
+    })
+
+    it('should use the correct message structure for form events', async () => {
+      await publishFormDownloadedEvent(testFormId, testSlug, authAuditUser)
+
+      const callArgs = jest.mocked(publishEvent).mock.calls[0][0]
+
+      // Verify it's a form event
+      expect(callArgs.category).toBe(AuditEventMessageCategory.FORM)
+      expect(callArgs.source).toBe(AuditEventMessageSource.FORMS_DESIGNER)
+      expect(callArgs.type).toBe(AuditEventMessageType.FORM_JSON_DOWNLOADED)
+
+      // Verify entityId is the form ID, not user ID
+      expect(callArgs.entityId).toBe(testFormId)
+
+      // Verify user info is in createdBy
+      expect(callArgs.createdBy.id).toBe(authAuditUser.id)
+      expect(callArgs.createdBy.displayName).toBe(authAuditUser.displayName)
     })
   })
 })

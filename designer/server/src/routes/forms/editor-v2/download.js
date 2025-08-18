@@ -1,6 +1,8 @@
 import { Scopes } from '@defra/forms-model'
 
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { publishFormDownloadedEvent } from '~/src/messaging/publish.js'
 
 export const ROUTE_PATH_DOWNLOAD = 'download'
 export const ROUTE_FULL_PATH_DOWNLOAD = '/library/{slug}/editor-v2/download'
@@ -23,6 +25,9 @@ export default [
 
       const filename = `${slug}.json`
       const definitionJson = JSON.stringify(definition, null, 2)
+
+      const auditUser = mapUserForAudit(auth.credentials.user)
+      await publishFormDownloadedEvent(formId, slug, auditUser)
 
       return h
         .response(definitionJson)
