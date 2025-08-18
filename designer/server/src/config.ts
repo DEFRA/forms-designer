@@ -206,8 +206,8 @@ const result = schema.validate(
     redisPassword: process.env.REDIS_PASSWORD,
     redisKeyPrefix: process.env.REDIS_KEY_PREFIX,
     useSingleInstanceCache:
-      process.env.NODE_ENV !== 'production' &&
-      process.env.USE_SINGLE_INSTANCE_CACHE,
+      process.env.USE_SINGLE_INSTANCE_CACHE ??
+      process.env.NODE_ENV !== 'production',
     roleEditorGroupId: process.env.ROLE_EDITOR_GROUP_ID,
     tracing: {
       header: process.env.TRACING_HEADER
