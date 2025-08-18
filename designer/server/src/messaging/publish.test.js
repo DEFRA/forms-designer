@@ -48,6 +48,7 @@ describe('publish', () => {
         },
         data: {
           userId: authAuditUser.id,
+          email: authAuditUser.email,
           displayName: authAuditUser.displayName
         }
       })
@@ -88,6 +89,7 @@ describe('publish', () => {
         },
         data: {
           userId: authAuditUser.id,
+          email: authAuditUser.email,
           displayName: authAuditUser.displayName
         }
       })
@@ -128,6 +130,7 @@ describe('publish', () => {
         },
         data: {
           userId: authAuditUser.id,
+          email: authAuditUser.email,
           displayName: authAuditUser.displayName
         }
       })
@@ -168,6 +171,7 @@ describe('publish', () => {
         },
         data: {
           userId: authAuditUser.id,
+          email: authAuditUser.email,
           displayName: authAuditUser.displayName
         }
       })

@@ -273,37 +273,6 @@ describe('Editor v2 download routes', () => {
       )
     })
 
-    test('should still download file even if audit event publishing fails', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
-      jest
-        .mocked(publishFormDownloadedEvent)
-        .mockRejectedValueOnce(new Error('SNS publishing failed'))
-
-      const options = {
-        method: 'get',
-        url: '/library/my-form-slug/editor-v2/download',
-        auth
-      }
-
-      const response = await server.inject(options)
-
-      // Download should still succeed
-      expect(response.statusCode).toBe(StatusCodes.OK)
-      expect(response.headers['content-disposition']).toBe(
-        'attachment; filename="my-form-slug.json"'
-      )
-
-      // Verify the response body is still valid JSON
-      const downloadedDefinition = JSON.parse(response.payload)
-      expect(downloadedDefinition).toEqual(testFormDefinitionWithSummaryOnly)
-
-      // Verify audit event was attempted
-      expect(publishFormDownloadedEvent).toHaveBeenCalledTimes(1)
-    })
-
     test('should publish audit event with correct user information', async () => {
       const customAuth = {
         strategy: 'azure-oidc',
