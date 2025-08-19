@@ -80,6 +80,8 @@ FILE_DOWNLOAD_PASSWORD_TTL=86400000
 USE_SINGLE_INSTANCE_CACHE=true
 SNS_ENDPOINT="http://localhost:4566"
 SNS_TOPIC_ARN="arn:aws:sns:eu-west-2:000000000000:forms_designer_events"
+AWS_ACCESS_KEY_ID=dummy
+AWS_SECRET_ACCESS_KEY=dummy
 ```
 
 ## Unit tests
