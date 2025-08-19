@@ -81,9 +81,9 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
 
       logger.info('Successfully fetched roles from entitlement API')
     } catch (error) {
-      logger.warn(
-        'Entitlement API failed, falling back to AAD groups',
-        getErrorMessage(error)
+      logger.error(
+        error,
+        `Entitlement API failed, falling back to AAD groups: ${getErrorMessage(error)}`
       )
 
       user.roles = []
