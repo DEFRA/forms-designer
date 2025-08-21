@@ -301,11 +301,6 @@ export interface FormDownloadedMessage extends DesignerMessageBase {
   data: FormMessageDataBase
 }
 
-export interface FormPublishedMessage extends ManagerMessageBase {
-  category: AuditEventMessageCategory.FORM
-  type: AuditEventMessageType.FORM_PUBLISHED
-}
-
 export interface FormDraftCreatedFromLiveMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE
@@ -392,7 +387,6 @@ export type AuditMessage =
   | FormSubmissionGuidanceUpdatedMessage
   | FormUploadedMessage
   | FormDownloadedMessage
-  | FormPublishedMessage
   | FormDraftCreatedFromLiveMessage
   | FormLiveCreatedFromDraftMessage
   | FormDraftDeletedMessage
