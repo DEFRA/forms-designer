@@ -298,6 +298,7 @@ export interface FormUploadedMessage extends DesignerMessageBase {
 export interface FormDownloadedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_JSON_DOWNLOADED
+  data: FormMessageDataBase
 }
 
 export interface FormPublishedMessage extends ManagerMessageBase {
