@@ -1,13 +1,4 @@
 import { type FormStatus } from '~/src/common/enums.js'
-import {
-  type DatePartsState,
-  type MonthYearState,
-  type UkAddressState
-} from '~/src/form/form-engine/components/types.js'
-import {
-  type FormPayload,
-  type FormValue
-} from '~/src/form/form-engine/types.js'
 
 export interface FormAdapterSubmissionMessagePayload {
   meta: FormAdapterSubmissionMessageMeta
@@ -33,10 +24,3 @@ export enum FormAdapterSubmissionSchemaVersion {
   V1 = 1,
   V2 = 2
 }
-
-type RichFormValue =
-  | FormValue
-  | FormPayload
-  | DatePartsState
-  | MonthYearState
-  | UkAddressState
