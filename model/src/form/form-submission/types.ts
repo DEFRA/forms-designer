@@ -1,4 +1,10 @@
 import {
+  type SubmissionEventMessageCategory,
+  type SubmissionEventMessageSchemaVersion,
+  type SubmissionEventMessageSource,
+  type SubmissionEventMessageType
+} from '~/src/form/form-submission/enums.js'
+import {
   formSubmitPayloadSchema,
   formSubmitRecordSchema,
   formSubmitRecordsetSchema
@@ -84,3 +90,34 @@ export interface SubmitResponsePayload {
     }
   }
 }
+
+export interface SaveAndExitMessageData {
+  formId: string
+  email: string
+  security: {
+    question: string
+    answer: string
+  }
+  state: object
+}
+
+export type SubmissionMessageData = SaveAndExitMessageData
+
+export interface SubmissionMessage {
+  schemaVersion: SubmissionEventMessageSchemaVersion
+  category: SubmissionEventMessageCategory
+  source: SubmissionEventMessageSource
+  type: SubmissionEventMessageType
+  entityId: string
+  traceId?: string
+  createdAt: Date
+  messageCreatedAt: Date
+  data: SubmissionMessageData
+}
+
+export interface SaveAndExitMessage extends SubmissionMessage {
+  category: SubmissionEventMessageCategory.RUNNER
+  type: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT
+}
+
+export type RunnerMessage = SaveAndExitMessage
