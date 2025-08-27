@@ -82,7 +82,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
       question: Joi.string().required(),
       answer: Joi.string().required()
     },
-    state: Joi.any()
+    state: Joi.object().required()
   }
 )
 

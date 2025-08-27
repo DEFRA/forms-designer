@@ -1,17 +1,8 @@
-export const securityQuestions = [
-  {
-    text: 'What is a memorable place you have visited?',
-    value: 'memorable-place'
-  },
-  {
-    text: 'What is the name of your favourite character from a story or TV show?',
-    value: 'character-name'
-  },
-  {
-    text: 'What album or song to you always recommend to others?',
-    value: 'audio-recommendation'
-  }
-]
+export enum SecurityQuestionsEnum {
+  MemorablePlace = 'memorable-place',
+  CharacterName = 'character-name',
+  AudioRecommendation = 'audio-recommendation'
+}
 
 export enum SubmissionEventMessageSchemaVersion {
   V1 = 1
