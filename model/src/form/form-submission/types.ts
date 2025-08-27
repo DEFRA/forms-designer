@@ -98,7 +98,7 @@ export interface SaveAndExitMessageData {
     question: string
     answer: string
   }
-  state: unknown
+  state: object
 }
 
 export type SubmissionMessageData = SaveAndExitMessageData
