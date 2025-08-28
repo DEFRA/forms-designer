@@ -121,3 +121,16 @@ export interface SaveAndExitMessage extends SubmissionMessage {
 }
 
 export type RunnerMessage = SaveAndExitMessage
+
+export interface RunnerRecordBase {
+  messageId: string
+  recordCreatedAt: Date
+}
+
+export interface RunnerRecordInputMeta extends RunnerRecordBase {
+  id: string
+}
+
+export type RunnerRecordInput = RunnerMessage & RunnerRecordBase
+
+export type RunnerRecord = RunnerMessage & RunnerRecordInputMeta
