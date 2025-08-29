@@ -29,22 +29,6 @@ export default [
         mode: 'try'
       }
     }
-  }),
-
-  /**
-   * @satisfies {ServerRoute}
-   */
-  ({
-    method: 'GET',
-    path: '/help/feedback',
-    handler(request, h) {
-      return h.view('feedback')
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
   })
 ]
 

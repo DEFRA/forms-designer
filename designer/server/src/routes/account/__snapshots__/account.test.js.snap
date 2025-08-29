@@ -237,11 +237,6 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
               Privacy
             </a>

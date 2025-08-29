@@ -269,11 +269,6 @@ exports[`Create and edit user routes GET /manage/users should render view when c
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
               Privacy
             </a>
@@ -557,11 +552,6 @@ exports[`Create and edit user routes GET /manage/users should render view when d
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
@@ -887,11 +877,6 @@ exports[`Create and edit user routes GET /manage/users should render view when e
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
