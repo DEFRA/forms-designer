@@ -261,11 +261,6 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
               Privacy
             </a>
@@ -540,11 +535,6 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
               Privacy
             </a>
@@ -793,11 +783,6 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/feedback">
-              Feedback
             </a>
           </li>
           <li class="govuk-footer__inline-list-item">
