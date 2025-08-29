@@ -3,7 +3,8 @@
 
 {% block content %}
   {% call appPageBody({
-    heading: pageHeading
+    heading: pageHeading,
+    errorList: badRequestErrorList
   }) %}
     <p class="govuk-body">The service could not process your request.</p>
     <p class="govuk-body"><a href="mailto:defraforms@defra.gov.uk" class="govuk-link">Contact the Defra forms team</a> to report this error.</p>
