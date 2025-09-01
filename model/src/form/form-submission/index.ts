@@ -1,5 +1,6 @@
 import Joi from 'joi'
 
+import { FormStatus } from '~/src/common/enums.js'
 import {
   SecurityQuestionsEnum,
   SubmissionEventMessageCategory,
@@ -82,10 +83,16 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
     security: {
       question: Joi.string()
         .valid(
-          ...Object.keys(SecurityQuestionsEnum).map((value) => value.toString())
+          ...Object.values(SecurityQuestionsEnum).map((value) =>
+            value.toString()
+          )
         )
         .required(),
       answer: Joi.string().required()
+    },
+    formStatus: {
+      status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
+      isPreview: Joi.boolean().required()
     },
     state: Joi.object().required()
   }

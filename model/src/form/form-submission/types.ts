@@ -101,7 +101,7 @@ export interface SaveAndExitMessageData {
     answer: string
   }
   formStatus: {
-    status: FormStatus.Draft
+    status: FormStatus
     isPreview: boolean
   }
   state: object
@@ -114,7 +114,6 @@ export interface SaveAndExitMessage {
   messageCreatedAt: Date
   category: SubmissionEventMessageCategory.RUNNER
   type: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT
-  magicLinkId: string
   data: SaveAndExitMessageData
 }
 
