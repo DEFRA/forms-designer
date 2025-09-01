@@ -33,10 +33,10 @@
     "test:watch": "jest --color --watch"
   },
   "devDependencies": {
-    "@babel/cli": "^7.26.4",
-    "@babel/core": "^7.26.10",
-    "@babel/preset-env": "^7.26.9",
-    "@babel/preset-typescript": "^7.26.0",
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
+    "@babel/preset-typescript": "^7.27.1",
     "@types/eslint": "^8.56.12",
     "@types/jest": "^29.5.14",
     "@types/node": "^22.15.29",
@@ -47,7 +47,7 @@
     "aws-sdk-client-mock-jest": "^4.1.0",
     "babel-plugin-module-resolver": "^5.0.2",
     "babel-plugin-replace-import-extension": "^1.1.5",
-    "babel-plugin-transform-import-meta": "^2.3.2",
+    "babel-plugin-transform-import-meta": "^2.3.3",
     "editorconfig-checker": "^6.0.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^10.1.5",
@@ -63,13 +63,13 @@
     "jest": "^29.7.0",
     "jsdom": "^26.1.0",
     "lint-staged": "^16.1.2",
-    "postcss": "^8.4.49",
+    "postcss": "^8.5.6",
     "postcss-scss": "^4.0.9",
     "prettier": "^3.5.3",
     "sortablejs": "^1.15.6",
     "stylelint": "^16.20.0",
     "stylelint-config-gds": "^2.0.0",
-    "typescript": "^5.8.2"
+    "typescript": "^5.9.2"
   },
   "engines": {
     "node": "^22.11.0",
