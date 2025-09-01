@@ -1,6 +1,7 @@
 import Joi from 'joi'
 
 import {
+  SecurityQuestionsEnum,
   SubmissionEventMessageCategory,
   SubmissionEventMessageSchemaVersion,
   SubmissionEventMessageSource,
@@ -79,7 +80,11 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
     formId: Joi.string().required(),
     email: Joi.string().required(),
     security: {
-      question: Joi.string().required(),
+      question: Joi.string()
+        .valid(
+          Object.keys(SecurityQuestionsEnum).map((value) => value.toString())
+        )
+        .required(),
       answer: Joi.string().required()
     },
     state: Joi.object().required()
@@ -107,11 +112,6 @@ export const submissionMessageSchema = Joi.object<SubmissionMessage>().keys({
   entityId: Joi.string()
     .required()
     .description('The id of the entity the category relates to'),
-  traceId: Joi.string()
-    .optional()
-    .description(
-      'Trace id of the event - to link events across multiple services'
-    ),
   createdAt: Joi.date()
     .required()
     .description(

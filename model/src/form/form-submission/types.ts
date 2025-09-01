@@ -1,4 +1,6 @@
+import { type FormStatus } from '~/src/common/enums.js'
 import {
+  type SecurityQuestionsEnum,
   type SubmissionEventMessageCategory,
   type SubmissionEventMessageSchemaVersion,
   type SubmissionEventMessageSource,
@@ -95,29 +97,25 @@ export interface SaveAndExitMessageData {
   formId: string
   email: string
   security: {
-    question: string
+    question: SecurityQuestionsEnum
     answer: string
+  }
+  formStatus: {
+    status: FormStatus.Draft
+    isPreview: boolean
   }
   state: object
 }
 
-export type SubmissionMessageData = SaveAndExitMessageData
-
-export interface SubmissionMessage {
+export interface SaveAndExitMessage {
   schemaVersion: SubmissionEventMessageSchemaVersion
-  category: SubmissionEventMessageCategory
   source: SubmissionEventMessageSource
-  type: SubmissionEventMessageType
-  entityId: string
-  traceId?: string
   createdAt: Date
   messageCreatedAt: Date
-  data: SubmissionMessageData
-}
-
-export interface SaveAndExitMessage extends SubmissionMessage {
   category: SubmissionEventMessageCategory.RUNNER
   type: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT
+  magicLinkId: string
+  data: SaveAndExitMessageData
 }
 
 export type RunnerMessage = SaveAndExitMessage
