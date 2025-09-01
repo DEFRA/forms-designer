@@ -8,8 +8,8 @@ import {
   SubmissionEventMessageType
 } from '~/src/form/form-submission/enums.js'
 import {
+  type SaveAndExitMessage,
   type SaveAndExitMessageData,
-  type SubmissionMessage,
   type SubmitPayload,
   type SubmitRecord,
   type SubmitRecordset
@@ -82,7 +82,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
     security: {
       question: Joi.string()
         .valid(
-          Object.keys(SecurityQuestionsEnum).map((value) => value.toString())
+          ...Object.keys(SecurityQuestionsEnum).map((value) => value.toString())
         )
         .required(),
       answer: Joi.string().required()
@@ -91,7 +91,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
   }
 )
 
-export const submissionMessageSchema = Joi.object<SubmissionMessage>().keys({
+export const submissionMessageSchema = Joi.object<SaveAndExitMessage>().keys({
   schemaVersion: Joi.string()
     .valid(...Object.values(SubmissionEventMessageSchemaVersion))
     .required()
@@ -109,9 +109,6 @@ export const submissionMessageSchema = Joi.object<SubmissionMessage>().keys({
   type: Joi.string()
     .valid(...Object.values(SubmissionEventMessageType))
     .description('Event type'),
-  entityId: Joi.string()
-    .required()
-    .description('The id of the entity the category relates to'),
   createdAt: Joi.date()
     .required()
     .description(
