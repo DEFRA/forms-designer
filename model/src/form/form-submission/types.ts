@@ -97,7 +97,7 @@ export interface SaveAndExitMessageData {
   form: {
     id: string
     slug: string
-    name: string
+    title: string
     status: FormStatus
     isPreview: boolean
   }
