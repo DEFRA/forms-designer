@@ -78,7 +78,13 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
 
 export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
   {
-    formId: Joi.string().required(),
+    form: {
+      id: Joi.string().required(),
+      slug: Joi.string().required(),
+      formName: Joi.string().required(),
+      status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
+      isPreview: Joi.boolean().required()
+    },
     email: Joi.string().required(),
     security: {
       question: Joi.string()
@@ -89,10 +95,6 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
         )
         .required(),
       answer: Joi.string().required()
-    },
-    formStatus: {
-      status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
-      isPreview: Joi.boolean().required()
     },
     state: Joi.object().required()
   }
