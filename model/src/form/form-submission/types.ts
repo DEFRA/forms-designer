@@ -94,15 +94,17 @@ export interface SubmitResponsePayload {
 }
 
 export interface SaveAndExitMessageData {
-  formId: string
+  form: {
+    id: string
+    slug: string
+    title: string
+    status: FormStatus
+    isPreview: boolean
+  }
   email: string
   security: {
     question: SecurityQuestionsEnum
     answer: string
-  }
-  formStatus: {
-    status: FormStatus
-    isPreview: boolean
   }
   state: object
 }

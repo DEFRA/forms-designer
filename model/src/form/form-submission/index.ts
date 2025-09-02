@@ -1,6 +1,7 @@
 import Joi from 'joi'
 
 import { FormStatus } from '~/src/common/enums.js'
+import { slugSchema, titleSchema } from '~/src/form/form-metadata/index.js'
 import {
   SecurityQuestionsEnum,
   SubmissionEventMessageCategory,
@@ -78,7 +79,13 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
 
 export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
   {
-    formId: Joi.string().required(),
+    form: {
+      id: Joi.string().required(),
+      slug: slugSchema,
+      title: titleSchema,
+      status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
+      isPreview: Joi.boolean().required()
+    },
     email: Joi.string().required(),
     security: {
       question: Joi.string()
@@ -89,10 +96,6 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
         )
         .required(),
       answer: Joi.string().required()
-    },
-    formStatus: {
-      status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
-      isPreview: Joi.boolean().required()
     },
     state: Joi.object().required()
   }
