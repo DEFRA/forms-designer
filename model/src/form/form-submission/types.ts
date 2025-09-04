@@ -96,8 +96,6 @@ export interface SubmitResponsePayload {
 export interface SaveAndExitMessageData {
   form: {
     id: string
-    slug: string
-    title: string
     status: FormStatus
     isPreview: boolean
     baseUrl: string

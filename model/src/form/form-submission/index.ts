@@ -1,7 +1,6 @@
 import Joi from 'joi'
 
 import { FormStatus } from '~/src/common/enums.js'
-import { slugSchema, titleSchema } from '~/src/form/form-metadata/index.js'
 import {
   SecurityQuestionsEnum,
   SubmissionEventMessageCategory,
@@ -81,8 +80,6 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
   {
     form: {
       id: Joi.string().required(),
-      slug: slugSchema,
-      title: titleSchema,
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
       baseUrl: Joi.string().required()
