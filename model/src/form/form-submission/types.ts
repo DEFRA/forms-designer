@@ -100,6 +100,7 @@ export interface SaveAndExitMessageData {
     title: string
     status: FormStatus
     isPreview: boolean
+    baseUrl: string
   }
   email: string
   security: {

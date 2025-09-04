@@ -84,7 +84,8 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
       slug: slugSchema,
       title: titleSchema,
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
-      isPreview: Joi.boolean().required()
+      isPreview: Joi.boolean().required(),
+      baseUrl: Joi.string().required()
     },
     email: Joi.string().required(),
     security: {
