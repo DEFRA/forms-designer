@@ -44,7 +44,7 @@
             <span class="govuk-warning-text__assistive">Warning</span>
             <span class="govuk-warning-text__heading">Complex form detected</span>
             <div class="govuk-body-s govuk-!-margin-top-2">
-              This form may require more than 32,000 output tokens to generate. This could result in:
+              This form may require more than 50,000 output tokens to generate. This could result in:
             </div>
             <ul class="govuk-list govuk-list--bullet govuk-body-s govuk-!-margin-top-2">
               <li>Longer generation times</li>
@@ -230,7 +230,7 @@
       // Update estimated time based on progress or complexity warning
       const timeInfo = document.querySelector('.govuk-body-s')
       if (timeInfo) {
-        if (status.estimatedTokens && status.estimatedTokens > 30000) {
+        if (status.estimatedTokens && status.estimatedTokens > 50000) {
           timeInfo.textContent = 'Complex forms may take up to 10 minutes'
           timeInfo.style.color = '#d4351c' // Warning colour
         } else if (this.attempts > 150) { // After 5 minutes

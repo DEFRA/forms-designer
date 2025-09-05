@@ -190,7 +190,7 @@ const schema = joi.object<Config>({
         .object({
           apiKey: joi.string().required(),
           model: joi.string().default('claude-3-5-sonnet-20241022'),
-          maxTokens: joi.number().integer().default(32000),
+          maxTokens: joi.number().integer().default(64000),
           temperature: joi.number().min(0).max(1).default(0.1),
           useDirectGeneration: joi.boolean().default(false),
           evaluationModel: joi.string().default('claude-3-5-haiku-latest')

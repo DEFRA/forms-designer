@@ -22,12 +22,13 @@ export class ClaudeProviderV2 {
     this.apiKey = claudeConfig.apiKey
     this.baseUrl = claudeConfig.baseUrl ?? 'https://api.anthropic.com'
     this.model = claudeConfig.model ?? 'claude-3-5-sonnet-20241022'
-    this.maxTokens = claudeConfig.maxTokens ?? 32000
     this.temperature = claudeConfig.temperature ?? 0.1
     this.enablePromptCaching = claudeConfig.enablePromptCaching ?? true
     this.useDirectGeneration = true // Always use direct for V2
     this.evaluationModel =
       claudeConfig.evaluationModel ?? 'claude-3-5-haiku-latest'
+
+    this.maxTokens = claudeConfig.maxTokens ?? 64000
 
     if (!this.apiKey) {
       throw new Error('Claude API key is required')
@@ -43,6 +44,35 @@ export class ClaudeProviderV2 {
     this.promptBuilder = new PromptBuilderV2()
     this.responseProcessor = new ResponseProcessor()
     this.validator = new AIFormValidator()
+  }
+
+  /**
+   * Check if the model is a Claude 4 variant that supports higher token limits with beta headers
+   * @param {string} model - Model name to check
+   * @returns {boolean} True if model supports beta headers for increased output
+   */
+  isClaude4Model(model) {
+    return (
+      model.includes('claude-sonnet-4') ||
+      model.includes('claude-opus-4') ||
+      model.includes('claude-4')
+    )
+  }
+
+  /**
+   * Get the appropriate beta features for the model
+   * @param {string} model - Model name
+   * @returns {string[]} Array of beta feature names
+   */
+  getBetaFeatures(model) {
+    const betas = []
+
+    // Claude Sonnet 4 supports up to 64k output tokens with beta header
+    if (model.includes('claude-sonnet-4')) {
+      betas.push('output-128k-2025-02-19')
+    }
+
+    return betas
   }
 
   /**
@@ -130,7 +160,7 @@ Count approximately how many:
 3. Conditional logic rules
 4. Lists/options needed
 
-Based on similar government forms, estimate if generating the COMPLETE form as JSON would require more than 25,000 output tokens (roughly 100,000 characters of JSON).
+Based on similar government forms, estimate if generating the COMPLETE form as JSON would require more than 50,000 output tokens (roughly 200,000 characters of JSON).
 
 Respond with ONLY:
 - "FEASIBLE" if it can be generated within token limits
@@ -153,12 +183,12 @@ Then on a new line, provide a brief reason (max 100 words).`
       })
 
       let estimationContent = ''
-      for await (const chunk of estimationStream) {
+      for await (const chunk of /** @type {any} */ (estimationStream)) {
         if (
           chunk.type === 'content_block_delta' &&
           chunk.delta.type === 'text_delta'
         ) {
-          estimationContent += chunk.delta.text
+          estimationContent += String(chunk.delta.text)
         }
       }
 
@@ -169,15 +199,15 @@ Then on a new line, provide a brief reason (max 100 words).`
           canGenerate: true, // Changed: Allow generation but show warning
           isComplex: true,
           warningMessage:
-            'This form appears to be very complex and may require more than 32,000 output tokens to generate. This could result in:\n\n• Longer generation times\n• Higher costs\n• Potential for incomplete generation\n• Risk of hitting token limits\n\nConsider breaking your form into smaller sections for better results.',
-          estimatedTokens: 35000 // Higher estimate for complex forms
+            'This form appears to be very complex and may require more than 50,000 output tokens to generate. This could result in:\n\n• Longer generation times\n• Higher costs\n• Potential for incomplete generation\n• Risk of hitting token limits\n\nConsider breaking your form into smaller sections for better results.',
+          estimatedTokens: 60000 // Higher estimate for complex forms
         }
       }
 
       return {
         canGenerate: true,
         isComplex: false,
-        estimatedTokens: 25000 // Standard estimate
+        estimatedTokens: 40000 // Standard estimate
       }
     } catch (error) {
       // If pre-validation fails, allow generation to proceed (fail gracefully)
@@ -269,25 +299,39 @@ Then on a new line, provide a brief reason (max 100 words).`
       )
 
       // Use streaming for long-running form generation
-      const stream = await this.client.messages.create({
+      const requestOptions = {
         model: this.model,
         max_tokens: this.maxTokens,
         temperature: this.temperature,
         system: systemPrompt,
         messages,
         stream: true
-      })
+      }
+
+      const betaFeatures = this.getBetaFeatures(this.model)
+      let stream
+
+      if (betaFeatures.length > 0) {
+        logger.info(`Using beta features for ${this.model}:`, betaFeatures)
+        const betaOptions = /** @type {any} */ ({
+          ...requestOptions,
+          betas: betaFeatures
+        })
+        stream = await this.client.beta.messages.create(betaOptions)
+      } else {
+        stream = await this.client.messages.create(requestOptions)
+      }
 
       // Collect the full response from the stream
       let fullContent = ''
       let totalUsage = { input_tokens: 0, output_tokens: 0 }
 
-      for await (const chunk of stream) {
+      for await (const chunk of /** @type {any} */ (stream)) {
         if (
           chunk.type === 'content_block_delta' &&
           chunk.delta.type === 'text_delta'
         ) {
-          fullContent += chunk.delta.text
+          fullContent += String(chunk.delta.text)
         } else if (chunk.type === 'message_delta' && chunk.usage) {
           totalUsage = {
             input_tokens: chunk.usage.input_tokens ?? 0,
@@ -440,7 +484,7 @@ Then on a new line, provide a brief reason (max 100 words).`
           )
 
           // Use streaming for refinement calls too
-          const refinementStream = await this.client.messages.create({
+          const refinementOptions = {
             model: this.model,
             max_tokens: this.maxTokens,
             temperature: this.temperature,
@@ -452,18 +496,34 @@ Then on a new line, provide a brief reason (max 100 words).`
               }
             ],
             stream: true
-          })
+          }
+
+          const betaFeatures = this.getBetaFeatures(this.model)
+          let refinementStream
+
+          if (betaFeatures.length > 0) {
+            const betaRefinementOptions = /** @type {any} */ ({
+              ...refinementOptions,
+              betas: betaFeatures
+            })
+            refinementStream = await this.client.beta.messages.create(
+              betaRefinementOptions
+            )
+          } else {
+            refinementStream =
+              await this.client.messages.create(refinementOptions)
+          }
 
           // Collect refinement response from stream
           let refinementContent = ''
           let refinementUsage = { input_tokens: 0, output_tokens: 0 }
 
-          for await (const chunk of refinementStream) {
+          for await (const chunk of /** @type {any} */ (refinementStream)) {
             if (
               chunk.type === 'content_block_delta' &&
               chunk.delta.type === 'text_delta'
             ) {
-              refinementContent += chunk.delta.text
+              refinementContent += String(chunk.delta.text)
             } else if (chunk.type === 'message_delta' && chunk.usage) {
               refinementUsage = {
                 input_tokens: chunk.usage.input_tokens ?? 0,
@@ -497,7 +557,7 @@ Then on a new line, provide a brief reason (max 100 words).`
               `JSON parsing failed, attempting refinement ${refinementAttempts}/${maxRefinements}: ${error.message}`
             )
 
-            const errorStream = await this.client.messages.create({
+            const errorOptions = {
               model: this.model,
               max_tokens: this.maxTokens,
               temperature: this.temperature,
@@ -521,18 +581,32 @@ Generate ONLY valid, complete JSON - no explanations or markdown formatting.`
                 }
               ],
               stream: true
-            })
+            }
+
+            const betaFeatures = this.getBetaFeatures(this.model)
+            let errorStream
+
+            if (betaFeatures.length > 0) {
+              const betaErrorOptions = /** @type {any} */ ({
+                ...errorOptions,
+                betas: betaFeatures
+              })
+              errorStream =
+                await this.client.beta.messages.create(betaErrorOptions)
+            } else {
+              errorStream = await this.client.messages.create(errorOptions)
+            }
 
             // Collect error recovery response from stream
             let errorContent = ''
             let errorUsage = { input_tokens: 0, output_tokens: 0 }
 
-            for await (const chunk of errorStream) {
+            for await (const chunk of /** @type {any} */ (errorStream)) {
               if (
                 chunk.type === 'content_block_delta' &&
                 chunk.delta.type === 'text_delta'
               ) {
-                errorContent += chunk.delta.text
+                errorContent += String(chunk.delta.text)
               } else if (chunk.type === 'message_delta' && chunk.usage) {
                 errorUsage = {
                   input_tokens: chunk.usage.input_tokens ?? 0,
@@ -616,7 +690,7 @@ Generate ONLY valid, complete JSON - no explanations or markdown formatting.`
    */
   async generate(prompt) {
     try {
-      const stream = await this.client.messages.create({
+      const requestOptions = {
         model: this.model,
         max_tokens: 2000,
         temperature: this.temperature,
@@ -627,17 +701,30 @@ Generate ONLY valid, complete JSON - no explanations or markdown formatting.`
           }
         ],
         stream: true
-      })
+      }
+
+      const betaFeatures = this.getBetaFeatures(this.model)
+      let stream
+
+      if (betaFeatures.length > 0) {
+        const betaOptions = /** @type {any} */ ({
+          ...requestOptions,
+          betas: betaFeatures
+        })
+        stream = await this.client.beta.messages.create(betaOptions)
+      } else {
+        stream = await this.client.messages.create(requestOptions)
+      }
 
       let fullContent = ''
       let totalUsage = { input_tokens: 0, output_tokens: 0 }
 
-      for await (const chunk of stream) {
+      for await (const chunk of /** @type {any} */ (stream)) {
         if (
           chunk.type === 'content_block_delta' &&
           chunk.delta.type === 'text_delta'
         ) {
-          fullContent += chunk.delta.text
+          fullContent += String(chunk.delta.text)
         } else if (chunk.type === 'message_delta' && chunk.usage) {
           totalUsage = {
             input_tokens: chunk.usage.input_tokens ?? 0,

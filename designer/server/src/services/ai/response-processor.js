@@ -12,7 +12,6 @@ import { createLogger } from '~/src/common/helpers/logging/logger.js'
 export class ResponseProcessor {
   constructor() {
     this.logger = createLogger()
-    console.log('🏗️  ResponseProcessor initialized')
   }
 
   /**
