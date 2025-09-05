@@ -119,6 +119,24 @@ export interface SaveAndExitMessage {
   data: SaveAndExitMessageData
 }
 
+export interface SaveAndExitRecord {
+  magicLinkId: string
+  form: {
+    id: string
+    status: FormStatus
+    isPreview: boolean
+    baseUrl: string
+  }
+  email: string
+  security: {
+    question: SecurityQuestionsEnum
+    answer: string
+  }
+  state: object
+  invalidPasswordAttempts: number
+  createdAt: Date
+}
+
 export type RunnerMessage = SaveAndExitMessage
 
 export interface RunnerRecordBase {
