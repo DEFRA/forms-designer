@@ -330,17 +330,25 @@ export default [
 
             logger.info('Creating new form with metadata')
 
-            const newForm = await forms.create(
-              {
-                title: metadata.title ?? 'AI Generated Form',
-                organisation: metadata.organisation,
-                teamName: metadata.teamName,
-                teamEmail: metadata.teamEmail
-              },
-              request.auth.credentials.token
-            )
+            console.log('🐛 DEBUG: About to create form with metadata:', {
+              title: metadata.title,
+              organisation: metadata.organisation,
+              teamName: metadata.teamName,
+              teamEmail: metadata.teamEmail
+            })
 
             try {
+              const newForm = await forms.create(
+                {
+                  title: metadata.title ?? 'AI Generated Form',
+                  organisation: metadata.organisation,
+                  teamName: metadata.teamName,
+                  teamEmail: metadata.teamEmail
+                },
+                request.auth.credentials.token
+              )
+
+              console.log('🐛 DEBUG: Form created successfully:', newForm.id)
               const responseProcessor = new ResponseProcessor()
               responseProcessor.fixConditionStructure(formDefinition)
               responseProcessor.ensureRequiredFields(formDefinition)
@@ -398,12 +406,26 @@ export default [
                   : null
               })
 
+              console.log(
+                '🐛 DEBUG: About to update form definition for form:',
+                newForm.id
+              )
+              console.log('🐛 DEBUG: Form definition structure check:', {
+                hasName: 'name' in formDefinition,
+                hasPages: 'pages' in formDefinition,
+                hasConditions: 'conditions' in formDefinition,
+                hasLists: 'lists' in formDefinition,
+                pagesCount: formDefinition.pages?.length,
+                conditionsCount: formDefinition.conditions?.length
+              })
+
               await forms.updateDraftFormDefinition(
                 newForm.id,
                 /** @type {FormDefinition} */ (formDefinition),
                 request.auth.credentials.token
               )
 
+              console.log('🐛 DEBUG: Form definition updated successfully')
               logger.info('Draft form definition updated successfully')
 
               logger.info('Cleaning up temp form')
@@ -417,6 +439,26 @@ export default [
 
               return h.redirect(formOverviewPath(newForm.slug))
             } catch (formsManagerError) {
+              console.log('🐛 DEBUG: Forms manager error caught!')
+              console.log(
+                '🐛 DEBUG: Error type:',
+                formsManagerError instanceof Error
+                  ? formsManagerError.constructor.name
+                  : typeof formsManagerError
+              )
+              console.log(
+                '🐛 DEBUG: Error message:',
+                formsManagerError instanceof Error
+                  ? formsManagerError.message
+                  : String(formsManagerError)
+              )
+              console.log(
+                '🐛 DEBUG: Error stack:',
+                formsManagerError instanceof Error
+                  ? formsManagerError.stack
+                  : 'No stack'
+              )
+
               logger.error(
                 'Forms manager API failed to accept form definition',
                 formsManagerError

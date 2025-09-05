@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-assignment */
+import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -17,10 +17,10 @@ export const ROUTE_PATH_CREATE_AI_APPLY_SUGGESTIONS =
 export const ROUTE_PATH_CREATE_AI_EVALUATE = '/create/ai-describe/evaluate'
 
 const formDescriptionSchema = Joi.object().keys({
-  formDescription: Joi.string().trim().min(20).max(5000).required().messages({
+  formDescription: Joi.string().trim().min(20).max(20000).required().messages({
     'string.empty': 'Enter a description of your form',
     'string.min': 'Description must be at least 20 characters',
-    'string.max': 'Description must be 5000 characters or less',
+    'string.max': 'Description must be 20000 characters or less',
     'any.required': 'Enter a description of your form'
   }),
 
@@ -29,17 +29,17 @@ const formDescriptionSchema = Joi.object().keys({
       complexity: Joi.string()
         .valid('simple', 'medium', 'complex')
         .default('medium'),
-      maxPages: Joi.number().integer().min(1).max(20).default(10),
+      maxPages: Joi.number().integer().min(1).max(100).default(50),
       includeConditionals: Joi.boolean().default(true)
     })
     .default({})
 })
 
 const evaluateDescriptionSchema = Joi.object().keys({
-  formDescription: Joi.string().trim().min(10).max(5000).required().messages({
+  formDescription: Joi.string().trim().min(10).max(20000).required().messages({
     'string.empty': 'Enter a description to evaluate',
     'string.min': 'Description must be at least 10 characters to evaluate',
-    'string.max': 'Description must be 5000 characters or less',
+    'string.max': 'Description must be 20000 characters or less',
     'any.required': 'Enter a description to evaluate'
   })
 })
@@ -72,9 +72,23 @@ export default [
           .code(StatusCodes.SEE_OTHER)
       }
 
-      const validation = yar
+      let validation = yar
         .flash(sessionNames.validationFailure.createForm)
         .at(0)
+
+      if (!validation) {
+        validation = yar.get('tempValidationFailure')
+        if (validation) {
+          yar.clear('tempValidationFailure')
+        }
+      } else {
+        yar.set('tempValidationFailure', validation)
+      }
+
+      console.log(
+        '🐛 DEBUG: GET /create/ai-describe - Retrieved validation:',
+        JSON.stringify(validation, null, 2)
+      )
 
       const successMessage = yar.flash('success').at(0)
       const errorMessage = yar.flash('error').at(0)
@@ -96,7 +110,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -116,6 +130,25 @@ export default [
     async handler(request, h) {
       const { payload, yar, server } = request
       const { formDescription, preferences } = /** @type {any} */ (payload)
+
+      console.log('🐛 DEBUG: POST /create/ai-describe handler called')
+      console.log('🐛 DEBUG: formDescription length:', formDescription?.length)
+      console.log(
+        '🐛 DEBUG: formDescription preview:',
+        formDescription?.substring(0, 100) + '...'
+      )
+      console.log(
+        '🐛 DEBUG: Character count validation - limit: 20000, actual:',
+        formDescription?.length
+      )
+      console.log(
+        '🐛 DEBUG: Over limit?',
+        (formDescription?.length || 0) > 20000
+      )
+      console.log(
+        '🐛 DEBUG: preferences:',
+        JSON.stringify(preferences, null, 2)
+      )
 
       try {
         const aiService = /** @type {any} */ (server.app).aiService
@@ -167,8 +200,25 @@ export default [
             })
         })
 
+        console.log(
+          '🐛 DEBUG: AI generation setup complete, redirecting to progress page'
+        )
         return h.redirect('/create/ai-progress').code(StatusCodes.SEE_OTHER)
       } catch (error) {
+        console.log('🐛 DEBUG: Exception in AI generation!')
+        console.log(
+          '🐛 DEBUG: Error name:',
+          error instanceof Error ? error.name : 'Unknown'
+        )
+        console.log(
+          '🐛 DEBUG: Error message:',
+          error instanceof Error ? error.message : String(error)
+        )
+        console.log(
+          '🐛 DEBUG: Error stack:',
+          error instanceof Error ? error.stack : 'No stack'
+        )
+
         logger.error(error, 'AI form generation failed')
 
         if (error instanceof Error && error.name === 'FormGenerationError') {
@@ -211,8 +261,24 @@ export default [
          * @param {Error} error
          */
         failAction: (request, h, error) => {
+          console.log('🐛 DEBUG: Validation failed!')
+          console.log('🐛 DEBUG: Validation error:', error.message)
+          console.log(
+            '🐛 DEBUG: Error details:',
+            JSON.stringify(error.details, null, 2)
+          )
+          console.log(
+            '🐛 DEBUG: Request payload in failAction:',
+            JSON.stringify(request.payload, null, 2)
+          )
+
           const { yar } = request
           const formErrors = buildErrorDetails(/** @type {any} */ (error))
+
+          console.log(
+            '🐛 DEBUG: Built form errors:',
+            JSON.stringify(formErrors, null, 2)
+          )
 
           yar.flash(sessionNames.validationFailure.createForm, {
             formErrors,
@@ -229,11 +295,11 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       },
       timeout: {
-        server: 600000 // 10 minutes for AI form generation with agentic workflow and validation refinement
+        server: 1200000 // 20 minutes for AI form generation with large complex forms
       }
     }
   },
@@ -287,7 +353,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -370,7 +436,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }

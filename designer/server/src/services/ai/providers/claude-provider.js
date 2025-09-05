@@ -21,7 +21,7 @@ export class ClaudeProvider {
     this.apiKey = claudeConfig.apiKey
     this.baseUrl = claudeConfig.baseUrl ?? 'https://api.anthropic.com'
     this.model = claudeConfig.model ?? 'claude-3-5-sonnet-20241022'
-    this.maxTokens = claudeConfig.maxTokens ?? 8000
+    this.maxTokens = claudeConfig.maxTokens ?? 32000
     this.temperature = claudeConfig.temperature ?? 0.1
     this.useDirectGeneration = claudeConfig.useDirectGeneration ?? false
     this.cache = cache
@@ -32,7 +32,8 @@ export class ClaudeProvider {
 
     this.client = new Anthropic({
       apiKey: this.apiKey,
-      baseURL: this.baseUrl
+      baseURL: this.baseUrl,
+      timeout: 1200000 // 20 minutes default timeout for large form generation
     })
 
     // Initialize prompt builder and validation services
@@ -367,7 +368,7 @@ export class ClaudeProvider {
         description,
         {
           complexity: 'medium',
-          maxPages: 10,
+          maxPages: 50,
           includeConditionals: true
         }
       )

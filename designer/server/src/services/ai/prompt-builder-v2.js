@@ -69,17 +69,22 @@ ${this.schemaManager.getPromptSchemaInfo()}
     const conditionTypes = Object.values(ConditionType).join(', ')
 
     return `
-Create a complete UK government digital service form based on this user description:
+Create a COMPLETE and COMPREHENSIVE UK government digital service form based on this user description. You MUST implement ALL sections and features described by the user.
 
 USER DESCRIPTION:
 "${description}"
 
 PREFERENCES:
 - Complexity: ${preferences.complexity ?? 'medium'}
-- Max pages: ${preferences.maxPages ?? 10}
+- Max pages: ${preferences.maxPages ?? 50}
 - Include conditionals: ${preferences.includeConditionals !== false}
 
-**CRITICAL**: This form MUST follow GDS (Government Digital Service) standards. The #1 rule is ONE QUESTION PER PAGE.
+**CRITICAL REQUIREMENTS:**
+1. Generate the ENTIRE form as described - do not stop at partial implementations
+2. Include ALL sections, workflows, and pages mentioned in the description
+3. Follow GDS (Government Digital Service) standards - ONE QUESTION PER PAGE
+4. Implement ALL conditional logic, branching, and validation rules described
+5. Generate ALL pages from start to finish - this is not an iterative process
 
 AVAILABLE COMPONENT TYPES: ${componentTypes}
 AVAILABLE OPERATORS FOR CONDITIONS: ${operatorNames}

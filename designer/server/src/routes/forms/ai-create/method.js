@@ -1,7 +1,7 @@
+import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import * as scopes from '~/src/common/constants/scopes.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -58,7 +58,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
@@ -152,7 +152,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${scopes.SCOPE_WRITE}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }

@@ -58,12 +58,17 @@ export default [
         const jobStatus = await aiService?.getJobStatus(jobId)
 
         if (!jobStatus) {
+          logger.warn(
+            `Job ${jobId} not found - likely orphaned from server restart`
+          )
           return h
             .response({
-              error: 'Job not found',
-              status: 'not_found'
+              error: 'Job not found - possibly lost due to server restart',
+              status: 'failed',
+              message:
+                'The generation job was lost, possibly due to a server restart. Please try generating your form again.'
             })
-            .code(404)
+            .code(200) // Return 200 so frontend handles it as a failed job, not a polling error
         }
 
         return jobStatus

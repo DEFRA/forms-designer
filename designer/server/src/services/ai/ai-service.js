@@ -324,6 +324,12 @@ export class AIService {
         ) {
           userMessage =
             'We had trouble creating a form that meets government standards. Please try again with clearer requirements.'
+        } else if (
+          error.message.includes('exceeds the maximum complexity') ||
+          error.message.includes('32,000 output tokens') ||
+          error.message.includes('Breaking your form into smaller sections')
+        ) {
+          userMessage = error.message // Use the detailed error message from pre-validation
         }
       }
 

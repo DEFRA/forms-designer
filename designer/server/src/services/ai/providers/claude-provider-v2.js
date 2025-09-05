@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-condition */
 import Anthropic from '@anthropic-ai/sdk'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -21,7 +22,7 @@ export class ClaudeProviderV2 {
     this.apiKey = claudeConfig.apiKey
     this.baseUrl = claudeConfig.baseUrl ?? 'https://api.anthropic.com'
     this.model = claudeConfig.model ?? 'claude-3-5-sonnet-20241022'
-    this.maxTokens = claudeConfig.maxTokens ?? 8000
+    this.maxTokens = claudeConfig.maxTokens ?? 32000
     this.temperature = claudeConfig.temperature ?? 0.1
     this.enablePromptCaching = claudeConfig.enablePromptCaching ?? true
     this.useDirectGeneration = true // Always use direct for V2
@@ -32,7 +33,8 @@ export class ClaudeProviderV2 {
 
     this.client = new Anthropic({
       apiKey: this.apiKey,
-      baseURL: this.baseUrl
+      baseURL: this.baseUrl,
+      timeout: 1200000 // 20 minutes default timeout for large form generation
     })
 
     this.schemaManager = new SchemaManager()
@@ -109,6 +111,77 @@ export class ClaudeProviderV2 {
   }
 
   /**
+   * Pre-validate form complexity using cheaper model to estimate token requirements
+   * @param {string} description
+   * @param {Function} updateProgress
+   * @returns {Promise<{canGenerate: boolean, errorMessage?: string, estimatedTokens?: number}>}
+   */
+  async preValidateFormComplexity(description, updateProgress) {
+    try {
+      const estimationPrompt = `Analyze this form description and estimate the complexity:
+
+"${description}"
+
+Count approximately how many:
+1. Total pages/screens needed
+2. Form components (text fields, dropdowns, etc.)
+3. Conditional logic rules
+4. Lists/options needed
+
+Based on similar government forms, estimate if generating the COMPLETE form as JSON would require more than 25,000 output tokens (roughly 100,000 characters of JSON).
+
+Respond with ONLY:
+- "FEASIBLE" if it can be generated within token limits
+- "TOO_COMPLEX" if it would exceed limits
+
+Then on a new line, provide a brief reason (max 100 words).`
+
+      // Use the cheaper Haiku model for estimation
+      const estimationStream = await this.client.messages.create({
+        model: 'claude-3-5-haiku-latest', // Much cheaper for estimation
+        max_tokens: 1000,
+        temperature: 0.1,
+        messages: [
+          {
+            role: /** @type {const} */ ('user'),
+            content: estimationPrompt
+          }
+        ],
+        stream: true
+      })
+
+      let estimationContent = ''
+      for await (const chunk of estimationStream) {
+        if (
+          chunk.type === 'content_block_delta' &&
+          chunk.delta.type === 'text_delta'
+        ) {
+          estimationContent += chunk.delta.text
+        }
+      }
+
+      const isComplex = estimationContent.toUpperCase().includes('TOO_COMPLEX')
+
+      if (isComplex) {
+        return {
+          canGenerate: false,
+          errorMessage:
+            'Unfortunately, this form description exceeds the maximum complexity that can be generated in a single request. The form would require more than 32,000 output tokens. Please try:\n\n1. Breaking your form into smaller sections\n2. Reducing the number of pages or conditional logic\n3. Simplifying the requirements\n\nOr consider building this form manually using the form designer.'
+        }
+      }
+
+      return {
+        canGenerate: true,
+        estimatedTokens: 25000 // Rough estimate
+      }
+    } catch (error) {
+      // If pre-validation fails, allow generation to proceed (fail gracefully)
+      logger.warn('Pre-validation failed, proceeding with generation:', error)
+      return { canGenerate: true }
+    }
+  }
+
+  /**
    * Generate form using optimized direct approach
    * @param {string} description
    * @param {string} _title
@@ -117,6 +190,19 @@ export class ClaudeProviderV2 {
    */
   async generateFormDirect(description, _title, updateProgress) {
     try {
+      await updateProgress('generation', 'Estimating form complexity...', {
+        step: 1
+      })
+
+      // Pre-validation: Estimate if form will exceed token limits
+      const preValidationResult = await this.preValidateFormComplexity(
+        description,
+        updateProgress
+      )
+      if (!preValidationResult.canGenerate) {
+        throw new Error(preValidationResult.errorMessage)
+      }
+
       await updateProgress('generation', 'Creating your form with AI...', {
         step: 1
       })
@@ -126,7 +212,7 @@ export class ClaudeProviderV2 {
         description,
         {
           complexity: 'medium',
-          maxPages: 10,
+          maxPages: 50,
           includeConditionals: true
         }
       )
@@ -158,14 +244,43 @@ export class ClaudeProviderV2 {
       logger.info(
         `Estimated input tokens for V2 generation: ${estimatedInputTokens.toLocaleString()}`
       )
+      logger.info(
+        `Max output tokens configured: ${this.maxTokens.toLocaleString()}`
+      )
 
-      let response = await this.client.messages.create({
+      // Use streaming for long-running form generation
+      const stream = await this.client.messages.create({
         model: this.model,
         max_tokens: this.maxTokens,
         temperature: this.temperature,
         system: systemPrompt,
-        messages
+        messages,
+        stream: true
       })
+
+      // Collect the full response from the stream
+      let fullContent = ''
+      let totalUsage = { input_tokens: 0, output_tokens: 0 }
+
+      for await (const chunk of stream) {
+        if (
+          chunk.type === 'content_block_delta' &&
+          chunk.delta.type === 'text_delta'
+        ) {
+          fullContent += chunk.delta.text
+        } else if (chunk.type === 'message_delta' && chunk.usage) {
+          totalUsage = {
+            input_tokens: chunk.usage.input_tokens ?? 0,
+            output_tokens: chunk.usage.output_tokens ?? 0
+          }
+        }
+      }
+
+      // Create a response object compatible with existing validation code
+      let response = {
+        content: [{ type: 'text', text: fullContent }],
+        usage: totalUsage
+      }
 
       await updateProgress('processing', 'Processing and validating form...', {
         step: 2
@@ -193,6 +308,23 @@ export class ClaudeProviderV2 {
           const candidateForm = this.responseProcessor.processResponse(
             firstContent.text
           )
+
+          console.log('✅ JSON parsing successful, proceeding to validation')
+          console.log(
+            '📏 Response length:',
+            firstContent.text.length,
+            'characters'
+          )
+
+          // Check if response might be truncated (rough heuristic)
+          if (
+            firstContent.text.length > 45000 &&
+            !firstContent.text.trim().endsWith('}')
+          ) {
+            logger.warn(
+              'Response appears to be truncated - does not end with closing brace'
+            )
+          }
 
           // Log the processed form structure for debugging
           const typedForm = /** @type {any} */ (candidateForm)
@@ -285,7 +417,8 @@ export class ClaudeProviderV2 {
             candidateForm // Pass the already-fixed form
           )
 
-          response = await this.client.messages.create({
+          // Use streaming for refinement calls too
+          const refinementStream = await this.client.messages.create({
             model: this.model,
             max_tokens: this.maxTokens,
             temperature: this.temperature,
@@ -295,8 +428,33 @@ export class ClaudeProviderV2 {
                 role: /** @type {const} */ ('user'),
                 content: refinementPrompt
               }
-            ]
+            ],
+            stream: true
           })
+
+          // Collect refinement response from stream
+          let refinementContent = ''
+          let refinementUsage = { input_tokens: 0, output_tokens: 0 }
+
+          for await (const chunk of refinementStream) {
+            if (
+              chunk.type === 'content_block_delta' &&
+              chunk.delta.type === 'text_delta'
+            ) {
+              refinementContent += chunk.delta.text
+            } else if (chunk.type === 'message_delta' && chunk.usage) {
+              refinementUsage = {
+                input_tokens: chunk.usage.input_tokens ?? 0,
+                output_tokens: chunk.usage.output_tokens ?? 0
+              }
+            }
+          }
+
+          // Update response object for next iteration
+          response = {
+            content: [{ type: 'text', text: refinementContent }],
+            usage: refinementUsage
+          }
 
           await updateProgress(
             'refinement',
@@ -306,14 +464,18 @@ export class ClaudeProviderV2 {
         } catch (error) {
           if (
             error instanceof Error &&
+            (error.message.includes('JSON') ||
+              error.message.includes('parse') ||
+              error.message.includes('Invalid JSON') ||
+              error.message.includes('Expected')) &&
             refinementAttempts < maxRefinements - 1
           ) {
             refinementAttempts++
             logger.warn(
-              `Refinement error, attempt ${refinementAttempts}/${maxRefinements}`
+              `JSON parsing failed, attempting refinement ${refinementAttempts}/${maxRefinements}: ${error.message}`
             )
 
-            response = await this.client.messages.create({
+            const errorStream = await this.client.messages.create({
               model: this.model,
               max_tokens: this.maxTokens,
               temperature: this.temperature,
@@ -321,19 +483,46 @@ export class ClaudeProviderV2 {
               messages: [
                 {
                   role: /** @type {const} */ ('user'),
-                  content: `Generate a valid FormDefinitionV2 for: "${description}"
+                  content: `The previous JSON response failed to parse with this error: ${error.message}
 
-Focus on:
-- Valid UUID format with RANDOM hex values (0-9,a-f)
+This usually means the JSON was truncated or malformed. Please generate a COMPLETE and VALID FormDefinitionV2 for: "${description}"
+
+CRITICAL REQUIREMENTS:
+- Generate COMPLETE JSON - ensure all brackets and braces are properly closed
+- Valid UUID format with RANDOM hex values (0-9,a-f only)
 - Good UUID example: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-- Unique IDs for all elements
-- One question per page
-- Required fields filled
+- All required fields must be present
+- Proper JSON syntax - no trailing commas or missing brackets
+- If the form is large, prioritize core functionality over exhaustive detail
 
-Generate JSON only.`
+Generate ONLY valid, complete JSON - no explanations or markdown formatting.`
                 }
-              ]
+              ],
+              stream: true
             })
+
+            // Collect error recovery response from stream
+            let errorContent = ''
+            let errorUsage = { input_tokens: 0, output_tokens: 0 }
+
+            for await (const chunk of errorStream) {
+              if (
+                chunk.type === 'content_block_delta' &&
+                chunk.delta.type === 'text_delta'
+              ) {
+                errorContent += chunk.delta.text
+              } else if (chunk.type === 'message_delta' && chunk.usage) {
+                errorUsage = {
+                  input_tokens: chunk.usage.input_tokens ?? 0,
+                  output_tokens: chunk.usage.output_tokens ?? 0
+                }
+              }
+            }
+
+            response = {
+              content: [{ type: 'text', text: errorContent }],
+              usage: errorUsage
+            }
           } else {
             throw error
           }
@@ -405,7 +594,7 @@ Generate JSON only.`
    */
   async generate(prompt) {
     try {
-      const response = await this.client.messages.create({
+      const stream = await this.client.messages.create({
         model: this.model,
         max_tokens: 2000,
         temperature: this.temperature,
@@ -414,19 +603,32 @@ Generate JSON only.`
             role: /** @type {const} */ ('user'),
             content: prompt
           }
-        ]
+        ],
+        stream: true
       })
 
-      const firstContent = response.content[0]
-      if (firstContent.type !== 'text') {
-        throw new Error('No valid text content found in AI response')
+      let fullContent = ''
+      let totalUsage = { input_tokens: 0, output_tokens: 0 }
+
+      for await (const chunk of stream) {
+        if (
+          chunk.type === 'content_block_delta' &&
+          chunk.delta.type === 'text_delta'
+        ) {
+          fullContent += chunk.delta.text
+        } else if (chunk.type === 'message_delta' && chunk.usage) {
+          totalUsage = {
+            input_tokens: chunk.usage.input_tokens ?? 0,
+            output_tokens: chunk.usage.output_tokens ?? 0
+          }
+        }
       }
 
       return {
-        content: firstContent.text,
+        content: fullContent,
         usage: {
-          inputTokens: response.usage.input_tokens,
-          outputTokens: response.usage.output_tokens
+          inputTokens: totalUsage.input_tokens,
+          outputTokens: totalUsage.output_tokens
         }
       }
     } catch (error) {
