@@ -26,6 +26,8 @@ export class ClaudeProviderV2 {
     this.temperature = claudeConfig.temperature ?? 0.1
     this.enablePromptCaching = claudeConfig.enablePromptCaching ?? true
     this.useDirectGeneration = true // Always use direct for V2
+    this.evaluationModel =
+      claudeConfig.evaluationModel ?? 'claude-3-5-haiku-latest'
 
     if (!this.apiKey) {
       throw new Error('Claude API key is required')
@@ -113,10 +115,10 @@ export class ClaudeProviderV2 {
   /**
    * Pre-validate form complexity using cheaper model to estimate token requirements
    * @param {string} description
-   * @param {Function} updateProgress
-   * @returns {Promise<{canGenerate: boolean, errorMessage?: string, estimatedTokens?: number}>}
+   * @param {Function} _updateProgress
+   * @returns {Promise<{canGenerate: boolean, isComplex?: boolean, warningMessage?: string, estimatedTokens?: number}>}
    */
-  async preValidateFormComplexity(description, updateProgress) {
+  async preValidateFormComplexity(description, _updateProgress) {
     try {
       const estimationPrompt = `Analyze this form description and estimate the complexity:
 
@@ -136,9 +138,9 @@ Respond with ONLY:
 
 Then on a new line, provide a brief reason (max 100 words).`
 
-      // Use the cheaper Haiku model for estimation
+      // Use the configured evaluation model for estimation
       const estimationStream = await this.client.messages.create({
-        model: 'claude-3-5-haiku-latest', // Much cheaper for estimation
+        model: this.evaluationModel, // Use configured evaluation model
         max_tokens: 1000,
         temperature: 0.1,
         messages: [
@@ -164,20 +166,23 @@ Then on a new line, provide a brief reason (max 100 words).`
 
       if (isComplex) {
         return {
-          canGenerate: false,
-          errorMessage:
-            'Unfortunately, this form description exceeds the maximum complexity that can be generated in a single request. The form would require more than 32,000 output tokens. Please try:\n\n1. Breaking your form into smaller sections\n2. Reducing the number of pages or conditional logic\n3. Simplifying the requirements\n\nOr consider building this form manually using the form designer.'
+          canGenerate: true, // Changed: Allow generation but show warning
+          isComplex: true,
+          warningMessage:
+            'This form appears to be very complex and may require more than 32,000 output tokens to generate. This could result in:\n\n• Longer generation times\n• Higher costs\n• Potential for incomplete generation\n• Risk of hitting token limits\n\nConsider breaking your form into smaller sections for better results.',
+          estimatedTokens: 35000 // Higher estimate for complex forms
         }
       }
 
       return {
         canGenerate: true,
-        estimatedTokens: 25000 // Rough estimate
+        isComplex: false,
+        estimatedTokens: 25000 // Standard estimate
       }
     } catch (error) {
       // If pre-validation fails, allow generation to proceed (fail gracefully)
       logger.warn('Pre-validation failed, proceeding with generation:', error)
-      return { canGenerate: true }
+      return { canGenerate: true, isComplex: false }
     }
   }
 
@@ -199,8 +204,23 @@ Then on a new line, provide a brief reason (max 100 words).`
         description,
         updateProgress
       )
-      if (!preValidationResult.canGenerate) {
-        throw new Error(preValidationResult.errorMessage)
+
+      // Log complexity warning if detected, but continue generation
+      if (preValidationResult.isComplex && preValidationResult.warningMessage) {
+        logger.warn(
+          'Complex form detected:',
+          preValidationResult.warningMessage
+        )
+        logger.info('🔄 Sending complexity warning to frontend')
+        await updateProgress(
+          'complexity_warning',
+          'Complex form detected - proceeding with generation...',
+          {
+            step: 2,
+            warning: preValidationResult.warningMessage,
+            estimatedTokens: preValidationResult.estimatedTokens
+          }
+        )
       }
 
       await updateProgress('generation', 'Creating your form with AI...', {
@@ -309,7 +329,9 @@ Then on a new line, provide a brief reason (max 100 words).`
             firstContent.text
           )
 
+          // eslint-disable-next-line no-console
           console.log('✅ JSON parsing successful, proceeding to validation')
+          // eslint-disable-next-line no-console
           console.log(
             '📏 Response length:',
             firstContent.text.length,

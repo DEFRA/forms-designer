@@ -221,6 +221,8 @@ export class AIService {
       components: 'Adding form fields and components...',
       validation: 'Validating form logic and flow...',
       refinement: 'Refining form structure and validation...',
+      complexity_warning:
+        'Complex form detected - proceeding with generation...',
       finalising: 'Finalising and validating your form...'
     }
 
@@ -242,12 +244,19 @@ export class AIService {
         const displayMessage = progressMapping[step] ?? message
         const progressStep = step === 'ai_generation' ? 'generation' : step
 
-        await this.setJobStatus(jobId, {
+        const statusUpdate = {
           status: 'processing',
           message: displayMessage,
           step: progressStep,
           ...details
-        })
+        }
+
+        // Debug logging for complexity warnings
+        if (step === 'complexity_warning') {
+          this.logger.info('📤 Storing complexity warning in job status')
+        }
+
+        await this.setJobStatus(jobId, statusUpdate)
       }
 
       const result = await this.generateForm(
@@ -329,7 +338,7 @@ export class AIService {
           error.message.includes('32,000 output tokens') ||
           error.message.includes('Breaking your form into smaller sections')
         ) {
-          userMessage = error.message // Use the detailed error message from pre-validation
+          userMessage = error.message // Use the detailed error message from pre-validation (legacy)
         }
       }
 

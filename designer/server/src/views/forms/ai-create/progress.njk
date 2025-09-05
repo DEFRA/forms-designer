@@ -38,6 +38,26 @@
           </div>
         </div>
 
+        <div id="complexity-warning" class="govuk-warning-text" style="display: none;">
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-warning-text__assistive">Warning</span>
+            <span class="govuk-warning-text__heading">Complex form detected</span>
+            <div class="govuk-body-s govuk-!-margin-top-2">
+              This form may require more than 32,000 output tokens to generate. This could result in:
+            </div>
+            <ul class="govuk-list govuk-list--bullet govuk-body-s govuk-!-margin-top-2">
+              <li>Longer generation times</li>
+              <li>Higher costs</li>
+              <li>Potential for incomplete generation</li>
+              <li>Risk of hitting token limits</li>
+            </ul>
+            <div class="govuk-body-s">
+              Consider breaking your form into smaller sections for better results.
+            </div>
+          </strong>
+        </div>
+
         <div id="error-container" class="govuk-error-summary" style="display: none;">
           <div role="alert" aria-labelledby="error-summary-title" tabindex="-1">
             <h2 class="govuk-error-summary__title" id="error-summary-title">
@@ -115,6 +135,7 @@
       this.errorContainer = document.getElementById('error-container')
       this.errorMessage = document.getElementById('error-message')
       this.progressContainer = document.getElementById('progress-container')
+      this.complexityWarning = document.getElementById('complexity-warning')
       this.currentStep = ''
     }
 
@@ -176,6 +197,15 @@
     }
 
     updateUI(status) {
+      // Debug: Log the full status object
+      console.log('📊 Status received:', JSON.stringify(status, null, 2))
+      
+      // Handle complexity warnings
+      if (status.warning) {
+        console.log('⚠️ Complexity warning detected')
+        this.showComplexityWarning()
+      }
+
       if (status.message) {
         // Filter out technical error messages and retry attempts
         let userFriendlyMessage = status.message
@@ -197,11 +227,22 @@
         spinner.style.display = 'flex'
       }
       
-      // Update estimated time based on progress
+      // Update estimated time based on progress or complexity warning
       const timeInfo = document.querySelector('.govuk-body-s')
-      if (timeInfo && this.attempts > 150) { // After 5 minutes
-        timeInfo.textContent = 'Complex forms may take up to 20 minutes'
-        timeInfo.style.color = '#d4351c' // Warning colour
+      if (timeInfo) {
+        if (status.estimatedTokens && status.estimatedTokens > 30000) {
+          timeInfo.textContent = 'Complex forms may take up to 10 minutes'
+          timeInfo.style.color = '#d4351c' // Warning colour
+        } else if (this.attempts > 150) { // After 5 minutes
+          timeInfo.textContent = 'Complex forms may take up to 20 minutes'
+          timeInfo.style.color = '#d4351c' // Warning colour
+        }
+      }
+    }
+
+    showComplexityWarning() {
+      if (this.complexityWarning) {
+        this.complexityWarning.style.display = 'block'
       }
     }
 
