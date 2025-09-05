@@ -80,6 +80,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
   {
     form: {
       id: Joi.string().required(),
+      title: Joi.string().required(),
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
       baseUrl: Joi.string().required()
