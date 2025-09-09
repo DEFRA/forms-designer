@@ -934,20 +934,6 @@ const outputSchema = Joi.object<FormDefinition['output']>()
       .description('Version identifier for the output format')
   })
 
-const versionMetadataSchema = Joi.object<FormDefinition['versionMetadata']>()
-  .description('Version metadata for the form definition')
-  .keys({
-    version: Joi.number()
-      .integer()
-      .positive()
-      .required()
-      .description('Version number of the form'),
-    createdAt: Joi.string()
-      .isoDate()
-      .required()
-      .description('ISO date when this version was created')
-  })
-
 /**
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
@@ -1027,10 +1013,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Email address where form submissions are sent'),
     output: outputSchema
       .optional()
-      .description('Configuration for submission output format'),
-    versionMetadata: versionMetadataSchema
-      .optional()
-      .description('Version metadata for the form definition')
+      .description('Configuration for submission output format')
   })
 
 export const formDefinitionV2Schema = formDefinitionSchema

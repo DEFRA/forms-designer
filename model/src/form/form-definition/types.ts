@@ -174,11 +174,6 @@ export interface ConditionWrapperV2 {
   items: ConditionGroupDataV2
 }
 
-export interface FormVersionMetadata {
-  version: number
-  createdAt: string
-}
-
 /**
  * Interface for `formDefinitionSchema` Joi schema
  */
@@ -201,5 +196,4 @@ export interface FormDefinition {
     audience: 'human' | 'machine'
     version: string
   }
-  versionMetadata?: FormVersionMetadata
 }

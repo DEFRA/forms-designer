@@ -71,6 +71,21 @@ export interface FormMetadataContactOnline {
 }
 
 /**
+ * Interface for version metadata stored in form metadata
+ */
+export interface FormVersionMetadata {
+  /**
+   * The version number
+   */
+  versionNumber: number
+
+  /**
+   * When this version was created
+   */
+  createdAt: Date
+}
+
+/**
  * Interface for contact details (phone, email and online)
  */
 export interface FormMetadataContact {
@@ -173,6 +188,11 @@ export interface FormMetadata {
    * The date the form was last updated
    */
   updatedAt: FormMetadataState['updatedAt']
+
+  /**
+   * Version history for the form
+   */
+  versions?: FormVersionMetadata[]
 }
 
 export type FormByIdInput = Pick<FormMetadata, 'id'>
