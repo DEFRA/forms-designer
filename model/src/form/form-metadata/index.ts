@@ -7,7 +7,8 @@ import {
   type FormMetadataContactEmail,
   type FormMetadataContactOnline,
   type FormMetadataInput,
-  type FormMetadataState
+  type FormMetadataState,
+  type FormVersionMetadata
 } from '~/src/form/form-metadata/types.js'
 
 export const organisations = [
@@ -191,6 +192,21 @@ export const formMetadataStateSchema = Joi.object<FormMetadataState>()
   .description('Metadata about a specific version state (draft or live)')
 
 /**
+ * Joi schema for `FormVersionMetadata` interface
+ * @see {@link FormVersionMetadata}
+ */
+export const formVersionMetadataSchema = Joi.object<FormVersionMetadata>()
+  .keys({
+    versionNumber: Joi.number()
+      .integer()
+      .min(1)
+      .required()
+      .description('The version number'),
+    createdAt: authoredAtSchema.description('When this version was created')
+  })
+  .description('Metadata for a specific version of the form')
+
+/**
  * Joi schema for `FormMetadata` interface
  * @see {@link FormMetadata}
  */
@@ -207,7 +223,13 @@ export const formMetadataSchema = formMetadataInputSchema
     createdAt: authoredAtSchema.description('When the form was first created'),
     createdBy: formMetadataAuthorSchema.description('Who created the form'),
     updatedAt: authoredAtSchema.description('When the form was last updated'),
-    updatedBy: formMetadataAuthorSchema.description('Who last updated the form')
+    updatedBy: formMetadataAuthorSchema.description(
+      'Who last updated the form'
+    ),
+    versions: Joi.array()
+      .items(formVersionMetadataSchema)
+      .optional()
+      .description('Version history for the form')
   })
   .description(
     'Complete metadata for a form, including version information and authoring details'
