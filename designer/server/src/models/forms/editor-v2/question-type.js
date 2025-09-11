@@ -24,7 +24,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   {
     text: 'Written answer',
     hint: {
-      text: 'A short or long answer as test or number'
+      text: 'A short or long answer as text or number'
     },
     value: QuestionTypeSubGroup.WrittenAnswerSubGroup
   },
