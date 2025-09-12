@@ -31,14 +31,15 @@ export function deleteConditionConfirmationPageViewModel(
   const { pages, conditions } = findConditionReferences(definition, conditionId)
 
   const hasReferences = pages.length > 0 || conditions.length > 0
-  const pageHeading = 'Are you sure you want to delete this condition?'
+  const pageHeading = formTitle
+  const bodyHeadingText = 'Are you sure you want to delete this condition?'
   const pageTitle = `${pageHeading} - ${formTitle}`
 
   return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     navigation,
     bodyCaptionText: `Condition: ${condition.displayName}`,
-    bodyHeadingText: pageHeading,
+    bodyHeadingText,
     bodyWarning: hasReferences
       ? {
           html: `Deleting this condition will affect the following pages:<ul class="govuk-list govuk-list--bullet">

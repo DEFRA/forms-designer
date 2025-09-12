@@ -59,7 +59,7 @@ export const protectMetadataEditOfLiveForm = [
         const { auth } = request
         const { token } = auth.credentials
 
-        const [, , slug] = request.url.pathname.split('/')
+        const slug = request.params.slug
         const metadata = await forms.get(slug, token)
 
         if (

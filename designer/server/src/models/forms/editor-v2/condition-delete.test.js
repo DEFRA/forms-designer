@@ -56,11 +56,8 @@ describe('editor-v2 - condition-delete model', () => {
         conditionId
       )
 
-      expect(result.pageTitle).toBe(
-        'Are you sure you want to delete this condition? - Test form'
-      )
       expect(result.pageHeading).toEqual({
-        text: 'Are you sure you want to delete this condition?',
+        text: 'Test form',
         size: 'large'
       })
       expect(result.bodyCaptionText).toBe('Condition: Show if cattle farming')
@@ -96,9 +93,10 @@ describe('editor-v2 - condition-delete model', () => {
         conditionId
       )
 
-      expect(result.pageTitle).toBe(
-        'Are you sure you want to delete this condition? - Test form'
-      )
+      expect(result.pageHeading).toEqual({
+        text: 'Test form',
+        size: 'large'
+      })
       expect(result.bodyWarning).not.toBeNull()
       expect(result.bodyWarning?.html).toContain(
         'Deleting this condition will affect the following pages:'
