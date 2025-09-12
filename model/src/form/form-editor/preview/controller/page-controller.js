@@ -90,7 +90,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
       return false
     }
     // |_ one component and title not highlighted
-    if (this._title.trim() === this._components[0]?.question.trim()) {
+    if (this._title.trim() === this._components[0]?.question?.trim()) {
       return true
     }
     // titles not the same
@@ -140,7 +140,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
   get titleAndFirstTitleSame() {
     return (
       this._components.length > 0 &&
-      this._title.trim() === this._components[0]?.question.trim() &&
+      this._title.trim() === this._components[0]?.question?.trim() &&
       this.components.length === 1 &&
       this._highlighted !== 'title'
     )

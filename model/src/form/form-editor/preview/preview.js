@@ -66,7 +66,7 @@ export class PreviewComponent {
      */
     this._htmlElements = htmlElements
     /**
-     * @type {string}
+     * @type {string | undefined}
      * @private
      */
     this._question = question
@@ -94,7 +94,9 @@ export class PreviewComponent {
 
   get titleText() {
     const optionalText = this._optional ? ' (optional)' : ''
-    return (!this._question ? 'Question' : this._question) + optionalText
+    const questionText =
+      this._question === '' || !this._question ? 'Question' : this._question
+    return questionText + optionalText
   }
 
   /**
@@ -156,14 +158,14 @@ export class PreviewComponent {
   }
 
   /**
-   * @type {string}
+   * @type {string | undefined}
    */
   get question() {
     return this._question
   }
 
   /**
-   * @param {string} value
+   * @param {string | undefined} value
    */
   set question(value) {
     this._question = value
