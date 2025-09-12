@@ -90,7 +90,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
       return false
     }
     // |_ one component and title not highlighted
-    if (this._title.trim() === this._components[0]?.question.trim()) {
+    if (this._title.trim() === this._components[0]?.question?.trim()) {
       return true
     }
     // titles not the same
