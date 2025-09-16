@@ -6,7 +6,8 @@ import {
   authenticationLogoutAutoMapper,
   authenticationLogoutDifferentDevicelMapper,
   authenticationLogoutManualMapper,
-  formDownloadedMapper
+  formDownloadedMapper,
+  formFileDownloadedMapper
 } from '~/src/messaging/mappers/events.js'
 import { publishEvent } from '~/src/messaging/publish-base.js'
 
@@ -70,6 +71,17 @@ export async function publishAuthenticationLogoutDifferentDeviceEvent(user) {
  */
 export async function publishFormDownloadedEvent(formId, slug, user) {
   const auditMessage = formDownloadedMapper({ formId, slug, user })
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
+ * Publish form 'JSON downloaded' event
+ * @param {string} fileId - The form ID
+ * @param {AuditUser} user - The user downloading the form
+ */
+export async function publishFormFileDownloadedEvent(fileId, user) {
+  const auditMessage = formFileDownloadedMapper({ fileId, user })
 
   return validateAndPublishEvent(auditMessage)
 }

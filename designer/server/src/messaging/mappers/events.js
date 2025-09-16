@@ -104,6 +104,29 @@ export function formDownloadedMapper(downloadData) {
 }
 
 /**
+ * @param {{ fileId: string, user: AuditUser }} data
+ * @returns {FormFileDownloadedMessage}
+ */
+export function formFileDownloadedMapper(data) {
+  const { fileId, user } = data
+  const now = new Date()
+
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.FORM,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type: AuditEventMessageType.FORM_FILE_DOWNLOADED,
+    entityId: fileId,
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    messageCreatedAt: now
+  }
+}
+
+/**
  * @typedef {object} FormDownloadData
  * @property {string} formId - The form ID
  * @property {string} slug - The form slug
@@ -111,5 +134,5 @@ export function formDownloadedMapper(downloadData) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage } from '@defra/forms-model'
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadedMessage } from '@defra/forms-model'
  */

@@ -4,9 +4,11 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as userSession from '~/src/common/helpers/auth/get-user-session.js'
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
+import { publishFormFileDownloadedEvent } from '~/src/messaging/publish.js'
 import { errorViewModel } from '~/src/models/errors.js'
 import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
@@ -111,6 +113,9 @@ export default [
           config.fileDownloadPasswordTtl
         )
         logger.info(`File download link created for file ID ${fileId}`)
+
+        const auditUser = mapUserForAudit(auth.credentials.user)
+        await publishFormFileDownloadedEvent(fileId, auditUser)
         return h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
         if (
