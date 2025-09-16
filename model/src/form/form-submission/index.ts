@@ -31,7 +31,9 @@ export const formSubmitRecordSchema = Joi.object<SubmitRecord>({
     .required()
     .allow('')
     .description('User-submitted value for the field, may be empty')
-}).description('Individual field value in a form submission')
+})
+  .label('FormSubmitRecord')
+  .description('Individual field value in a form submission')
 
 /**
  * Joi schema for `SubmitRecordset` interface
@@ -45,12 +47,19 @@ export const formSubmitRecordsetSchema = Joi.object<SubmitRecordset>({
     .required()
     .description('Human-readable title for the repeatable section'),
   value: Joi.array<SubmitRecord[]>()
-    .items(Joi.array<SubmitRecord>().items(formSubmitRecordSchema).required())
+    .items(
+      Joi.array<SubmitRecord>()
+        .items(formSubmitRecordSchema)
+        .required()
+        .label('FormSubmitRecordGroup')
+    )
     .required()
     .description(
       'Array of record arrays, each representing a repeated instance'
     )
-}).description('Collection of repeated field values from a repeatable section')
+})
+  .label('FormSubmitRecordset')
+  .description('Collection of repeated field values from a repeatable section')
 
 /**
  * Joi schema for `SubmitPayload` interface
@@ -74,19 +83,20 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
       .description('Repeatable section values from the form')
   })
   .required()
+  .label('FormSubmitPayload')
   .description('Complete form submission payload structure with all form data')
 
-export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
-  {
-    form: {
+export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>()
+  .keys({
+    form: Joi.object({
       id: Joi.string().required(),
       title: Joi.string().required(),
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
       baseUrl: Joi.string().required()
-    },
+    }).label('SaveAndExitForm'),
     email: Joi.string().required(),
-    security: {
+    security: Joi.object({
       question: Joi.string()
         .valid(
           ...Object.values(SecurityQuestionsEnum).map((value) =>
@@ -95,10 +105,10 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>().keys(
         )
         .required(),
       answer: Joi.string().required()
-    },
+    }).label('SaveAndExitSecurity'),
     state: Joi.object().required()
-  }
-)
+  })
+  .label('SaveAndExitMessageData')
 
 export const submissionMessageSchema = Joi.object<SaveAndExitMessage>().keys({
   schemaVersion: Joi.string()
