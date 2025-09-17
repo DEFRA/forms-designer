@@ -97,10 +97,10 @@ export default [
         return Boom.unauthorized()
       }
 
-      let result
+      let fileStatus
       try {
-        result = await checkFileStatus(fileId)
-        const emailIsCaseSensitive = result.emailIsCaseSensitive
+        fileStatus = await checkFileStatus(fileId)
+        const emailIsCaseSensitive = fileStatus.emailIsCaseSensitive
 
         // If the email isn't case-sensitive,
         // we lowercase the email before sending it to the submission API.
@@ -121,9 +121,9 @@ export default [
         const auditUser = mapUserForAudit(auth.credentials.user)
         await publishFormFileDownloadSuccessEvent(
           fileId,
-          result.filename,
+          fileStatus.filename,
           auditUser,
-          result.form
+          fileStatus.form
         )
         return h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
@@ -150,9 +150,9 @@ export default [
           const auditUser = mapUserForAudit(auth.credentials.user)
           await publishFormFileDownloadFailureEvent(
             fileId,
-            result?.filename ?? 'unknown',
+            fileStatus?.filename ?? 'unknown',
             auditUser,
-            result?.form
+            fileStatus?.form
           )
 
           const validation = {
@@ -170,11 +170,8 @@ export default [
           )
         }
 
-        return Boom.internal(
-          new Error('Failed to download file', {
-            cause: err
-          })
-        )
+        // prettier-ignore
+        return Boom.internal(new Error('Failed to download file', { cause: err }))
       }
     },
     options: {
@@ -189,13 +186,8 @@ export default [
           email: emailSchema
         }).required(),
         failAction: (request, h, err) => {
-          return redirectWithErrors(
-            request,
-            h,
-            err,
-            false,
-            sessionNames.validationFailure.fileDownload
-          )
+          // prettier-ignore
+          return redirectWithErrors(request, h, err, false, sessionNames.validationFailure.fileDownload)
         }
       }
     }
