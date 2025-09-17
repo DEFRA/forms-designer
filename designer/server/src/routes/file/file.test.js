@@ -9,6 +9,7 @@ import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/file.js')
+jest.mock('~/src/messaging/publish-base.js')
 
 describe('File routes', () => {
   /** @type {Server} */
