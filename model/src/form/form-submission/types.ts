@@ -78,6 +78,11 @@ export interface SubmitPayload {
    * The repeaters form answers
    */
   repeaters: SubmitRecordset[]
+
+  /**
+   * The form slug
+   */
+  slug?: string
 }
 
 /**
