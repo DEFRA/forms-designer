@@ -21,6 +21,7 @@ import {
   addCondition,
   addPageAndFirstQuestion,
   addQuestion,
+  buildRepeaterPayload,
   deleteCondition,
   deletePage,
   deleteQuestion,
@@ -546,6 +547,70 @@ describe('editor.js', () => {
         )
 
         expect(result).toEqual({ id: 'c1' })
+      })
+
+      test('preserves repeater settings when schema values are undefined', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const formDefinitionRepeaterNoSchema = /** @type {FormDefinition} */ ({
+          ...formDefinitionRepeater,
+          pages: [
+            {
+              ...formDefinitionRepeater.pages[0],
+              repeat: {
+                options: { name: 'test', title: 'Test' },
+                schema: { min: undefined, max: undefined }
+              }
+            },
+            formDefinitionRepeater.pages[1]
+          ]
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionRepeaterNoSchema,
+          'p1',
+          'c1',
+          { type: ComponentType.TextField }
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+      })
+
+      test('preserves repeater settings when options values are undefined', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const formDefinitionRepeaterNoOptions = /** @type {FormDefinition} */ ({
+          ...formDefinitionRepeater,
+          pages: [
+            {
+              ...formDefinitionRepeater.pages[0],
+              repeat: {
+                options: { name: undefined, title: undefined },
+                schema: { min: 1, max: 5 }
+              }
+            },
+            formDefinitionRepeater.pages[1]
+          ]
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionRepeaterNoOptions,
+          'p1',
+          'c1',
+          { type: ComponentType.TextField }
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
       })
 
       test('returns response body when path should change to first question', async () => {
@@ -1423,6 +1488,117 @@ describe('editor.js', () => {
         await expect(
           addCondition(formId, token, testCondition)
         ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('buildRepeaterPayload', () => {
+    test('should return empty payload when controller type is not Repeat', () => {
+      const page = /** @type {Page} */ ({})
+      const result = buildRepeaterPayload(page, ControllerType.Page)
+      expect(result).toEqual({})
+    })
+
+    test('should return empty payload when controller type is undefined', () => {
+      const page = /** @type {Page} */ ({})
+      const result = buildRepeaterPayload(page, undefined)
+      expect(result).toEqual({})
+    })
+
+    test('should return empty payload when page is undefined', () => {
+      const result = buildRepeaterPayload(undefined, ControllerType.Repeat)
+      expect(result).toEqual({ repeater: 'true' })
+    })
+
+    test('should build payload with all repeater settings when page has complete repeat config', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: 2, max: 10 },
+          options: { title: 'Test Repeater', name: 'test-repeater' }
+        }
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: 2,
+        maxItems: 10,
+        questionSetName: 'Test Repeater'
+      })
+    })
+
+    test('should build payload with only schema when options are missing', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: 1, max: 5 }
+        }
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: 1,
+        maxItems: 5
+      })
+    })
+
+    test('should build payload with only options when schema is missing', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat,
+        repeat: {
+          options: { title: 'Only Options', name: 'only-options' }
+        }
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        questionSetName: 'Only Options'
+      })
+    })
+
+    test('should build payload with only repeater flag when repeat object is missing', () => {
+      const page = /** @type {Page} */ ({
+        controller: ControllerType.Repeat
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true'
+      })
+    })
+
+    test('should handle undefined schema values', () => {
+      const page = {
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: undefined, max: undefined },
+          options: { title: 'Test Title', name: 'test-name' }
+        }
+      }
+      // @ts-expect-error - Intentionally testing edge case with undefined values
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: undefined,
+        maxItems: undefined,
+        questionSetName: 'Test Title'
+      })
+    })
+
+    test('should handle undefined options title', () => {
+      const page = {
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: 3, max: 7 },
+          options: { title: undefined, name: 'test-name' }
+        }
+      }
+      // @ts-expect-error - Intentionally testing edge case with undefined values
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: 3,
+        maxItems: 7,
+        questionSetName: undefined
       })
     })
   })
