@@ -43,7 +43,7 @@ describe('file.js', () => {
       test('returns status code and emailIsCaseSensitive', async () => {
         mockedGetJson.mockResolvedValueOnce({
           response: createMockResponse({ statusCode: StatusCodes.OK }),
-          body: { retrievalKeyIsCaseSensitive: true }
+          body: { retrievalKeyIsCaseSensitive: true, filename: 'my-filename' }
         })
 
         const result = await checkFileStatus(fieldId)
@@ -51,7 +51,9 @@ describe('file.js', () => {
         expect(mockedGetJson).toHaveBeenCalledWith(requestUrl, {})
         expect(result).toEqual({
           statusCode: StatusCodes.OK,
-          emailIsCaseSensitive: true
+          emailIsCaseSensitive: true,
+          filename: 'my-filename',
+          form: undefined
         })
       })
     })
@@ -60,14 +62,16 @@ describe('file.js', () => {
       test('defaults statusCode to INTERNAL_SERVER_ERROR', async () => {
         mockedGetJson.mockResolvedValueOnce({
           response: createMockResponse(),
-          body: { retrievalKeyIsCaseSensitive: false }
+          body: { retrievalKeyIsCaseSensitive: false, filename: 'my-filename' }
         })
 
         const result = await checkFileStatus(fieldId)
 
         expect(result).toEqual({
           statusCode: StatusCodes.INTERNAL_SERVER_ERROR,
-          emailIsCaseSensitive: false
+          emailIsCaseSensitive: false,
+          filename: 'my-filename',
+          form: undefined
         })
       })
     })
@@ -81,7 +85,9 @@ describe('file.js', () => {
 
         expect(result).toEqual({
           statusCode: boomError.output.statusCode,
-          emailIsCaseSensitive: false
+          emailIsCaseSensitive: false,
+          filename: '',
+          form: undefined
         })
       })
     })

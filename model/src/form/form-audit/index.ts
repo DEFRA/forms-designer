@@ -15,8 +15,10 @@ import {
   type AuthenticationMessageData,
   type ChangesMessageData,
   type EntitlementMessageData,
+  type FormAuditMessageData,
   type FormCreatedMessageData,
   type FormDefinitionS3Meta,
+  type FormFileDownloadedMessageData,
   type FormMessageChangesData,
   type FormMessageDataBase,
   type FormNotificationEmailChanges,
@@ -193,6 +195,24 @@ export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
     roles: Joi.array().items(Joi.string())
   }
 )
+
+export const formFileDownloadedMessageData =
+  Joi.object<FormFileDownloadedMessageData>()
+    .keys({
+      fileId: Joi.string().required(),
+      filename: Joi.string().required(),
+      fileLink: Joi.string().required(),
+      form: Joi.object<FormAuditMessageData>({
+        id: Joi.string().allow(''),
+        slug: Joi.string().allow(''),
+        name: Joi.string().allow(''),
+        pagePath: Joi.string().allow('')
+      }).required()
+    })
+    .required()
+    .description(
+      'Schema for FORM_FILE_DOWNLOAD_SUCCESS and FORM_FILE_DOWNLOAD_FAILURE events'
+    )
 
 export const authenticationMessageData =
   Joi.object<AuthenticationMessageData>().keys({
@@ -405,6 +425,15 @@ export const messageSchema = Joi.object<AuditMessage>()
               AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
             ),
           then: authenticationMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(
+              AuditEventMessageType.FORM_FILE_DOWNLOAD_SUCCESS,
+              AuditEventMessageType.FORM_FILE_DOWNLOAD_FAILURE
+            ),
+          then: formFileDownloadedMessageData
         }
       ],
       otherwise: Joi.forbidden()

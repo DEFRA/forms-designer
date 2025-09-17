@@ -8,7 +8,10 @@ import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
-import { publishFormFileDownloadedEvent } from '~/src/messaging/publish.js'
+import {
+  publishFormFileDownloadFailureEvent,
+  publishFormFileDownloadSuccessEvent
+} from '~/src/messaging/publish.js'
 import { errorViewModel } from '~/src/models/errors.js'
 import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
@@ -94,8 +97,9 @@ export default [
         return Boom.unauthorized()
       }
 
+      let result
       try {
-        const result = await checkFileStatus(fileId)
+        result = await checkFileStatus(fileId)
         const emailIsCaseSensitive = result.emailIsCaseSensitive
 
         // If the email isn't case-sensitive,
@@ -115,7 +119,12 @@ export default [
         logger.info(`File download link created for file ID ${fileId}`)
 
         const auditUser = mapUserForAudit(auth.credentials.user)
-        await publishFormFileDownloadedEvent(fileId, auditUser)
+        await publishFormFileDownloadSuccessEvent(
+          fileId,
+          result.filename,
+          auditUser,
+          result.form
+        )
         return h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
         if (
@@ -138,6 +147,14 @@ export default [
           logger.info(
             `[fileAuthFailed] Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key.`
           )
+          const auditUser = mapUserForAudit(auth.credentials.user)
+          await publishFormFileDownloadFailureEvent(
+            fileId,
+            result?.filename ?? 'unknown',
+            auditUser,
+            result?.form
+          )
+
           const validation = {
             formErrors: {
               email: {

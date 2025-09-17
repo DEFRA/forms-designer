@@ -76,16 +76,47 @@ export async function publishFormDownloadedEvent(formId, slug, user) {
 }
 
 /**
- * Publish form 'JSON downloaded' event
- * @param {string} fileId - The form ID
+ * Publish form 'JSON downloaded successful' event
+ * @param {string} fileId - The file ID
+ * @param {string} filename - The filename
  * @param {AuditUser} user - The user downloading the form
+ * @param {FormAuditMessageData} [form] - The form details
  */
-export async function publishFormFileDownloadedEvent(fileId, user) {
-  const auditMessage = formFileDownloadedMapper({ fileId, user })
+export async function publishFormFileDownloadSuccessEvent(
+  fileId,
+  filename,
+  user,
+  form
+) {
+  const auditMessage = formFileDownloadedMapper(
+    { fileId, filename, user, form },
+    true
+  )
 
   return validateAndPublishEvent(auditMessage)
 }
 
 /**
- * @import { AuditMessage, AuditUser } from '@defra/forms-model'
+ * Publish form 'JSON downloaded failure' event
+ * @param {string} fileId - The file ID
+ * @param {string} filename - The filename
+ * @param {AuditUser} user - The user downloading the form
+ * @param {FormAuditMessageData} [form] - The form details
+ */
+export async function publishFormFileDownloadFailureEvent(
+  fileId,
+  filename,
+  user,
+  form
+) {
+  const auditMessage = formFileDownloadedMapper(
+    { fileId, filename, user, form },
+    false
+  )
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
+ * @import { AuditMessage, AuditUser, FormAuditMessageData } from '@defra/forms-model'
  */

@@ -5,6 +5,8 @@ import {
   AuditEventMessageType
 } from '@defra/forms-model'
 
+import config from '~/src/config.js'
+
 /**
  * @param {AuditUser} user
  * @returns {AuthenticationLoginMessage}
@@ -104,10 +106,11 @@ export function formDownloadedMapper(downloadData) {
 }
 
 /**
- * @param {{ fileId: string, user: AuditUser }} data
- * @returns {FormFileDownloadedMessage}
+ * @param {{ fileId: string, filename: string, user: AuditUser, form?: FormAuditMessageData }} data
+ * @param {boolean} isSuccess
+ * @returns { FormFileDownloadSuccessMessage | FormFileDownloadFailureMessage }
  */
-export function formFileDownloadedMapper(data) {
+export function formFileDownloadedMapper(data, isSuccess) {
   const { fileId, user } = data
   const now = new Date()
 
@@ -115,12 +118,20 @@ export function formFileDownloadedMapper(data) {
     schemaVersion: AuditEventMessageSchemaVersion.V1,
     category: AuditEventMessageCategory.FORM,
     source: AuditEventMessageSource.FORMS_DESIGNER,
-    type: AuditEventMessageType.FORM_FILE_DOWNLOADED,
+    type: isSuccess
+      ? AuditEventMessageType.FORM_FILE_DOWNLOAD_SUCCESS
+      : AuditEventMessageType.FORM_FILE_DOWNLOAD_FAILURE,
     entityId: fileId,
     createdAt: now,
     createdBy: {
       id: user.id,
       displayName: user.displayName
+    },
+    data: {
+      fileId,
+      filename: data.filename,
+      fileLink: `${config.appBaseUrl}/file-download/${fileId}`,
+      form: data.form ?? { id: '', slug: '', name: '', pagePath: '' }
     },
     messageCreatedAt: now
   }
@@ -134,5 +145,5 @@ export function formFileDownloadedMapper(data) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadedMessage } from '@defra/forms-model'
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormAuditMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage } from '@defra/forms-model'
  */

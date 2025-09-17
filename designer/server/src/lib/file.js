@@ -9,13 +9,13 @@ const submissionEndpoint = new URL('/file/', config.submissionUrl)
 
 /**
  * @param {string} fieldId
- * @returns {Promise<{ statusCode: StatusCodes, emailIsCaseSensitive: boolean }>}
+ * @returns {Promise<{ statusCode: StatusCodes, emailIsCaseSensitive: boolean, filename: string, form?: FormAuditMessageData }>}
  */
 export async function checkFileStatus(fieldId) {
   const requestUrl = new URL(`./${fieldId}`, submissionEndpoint)
 
   try {
-    /** @type {{ response: import('http').IncomingMessage, body: { retrievalKeyIsCaseSensitive: boolean } }} */
+    /** @type {{ response: import('http').IncomingMessage, body: { retrievalKeyIsCaseSensitive: boolean, filename: string, form: FormAuditMessageData } }} */
     const result = await getJson(requestUrl, {})
 
     const statusCode = /** @type {StatusCodes} */ (
@@ -24,13 +24,17 @@ export async function checkFileStatus(fieldId) {
 
     return {
       statusCode,
-      emailIsCaseSensitive: result.body.retrievalKeyIsCaseSensitive
+      emailIsCaseSensitive: result.body.retrievalKeyIsCaseSensitive,
+      filename: result.body.filename,
+      form: result.body.form
     }
   } catch (err) {
     if (Boom.isBoom(err)) {
       return {
         statusCode: err.output.statusCode,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: '',
+        form: undefined
       }
     }
 
@@ -55,3 +59,7 @@ export async function createFileLink(fileId, retrievalKey, token) {
   })
   return body
 }
+
+/**
+ * @import { FormAuditMessageData } from '@defra/forms-model'
+ */
