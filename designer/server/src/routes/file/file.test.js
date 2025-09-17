@@ -27,7 +27,7 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file1'
       })
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(email)
 
@@ -59,7 +59,7 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file2'
       })
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(undefined)
 
@@ -91,7 +91,7 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.GONE,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file3'
       })
 
       const options = {
@@ -167,7 +167,7 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file6'
       })
 
       jest
@@ -196,10 +196,12 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file7'
       })
 
-      jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
+      jest
+        .mocked(file.createFileLink)
+        .mockRejectedValueOnce(Boom.resourceGone())
 
       const options = {
         method: 'post',
@@ -223,10 +225,10 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file8'
       })
 
-      jest.mocked(file.createFileLink).mockRejectedValue(Boom.forbidden())
+      jest.mocked(file.createFileLink).mockRejectedValueOnce(Boom.forbidden())
 
       const options = {
         method: 'post',
@@ -252,6 +254,40 @@ describe('File routes', () => {
       )
     })
 
+    test('should throw error when other exception', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file9'
+      })
+
+      jest.mocked(file.createFileLink).mockRejectedValueOnce(Boom.badData())
+
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: { email }
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
+
+    test('should show error when invalid payload', async () => {
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: {}
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.SEE_OTHER)
+    })
+
     test('should show unauthorized page when user is unauthorized', async () => {
       const options = {
         method: 'post',
@@ -273,7 +309,7 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: true,
-        filename: 'my-form-file'
+        filename: 'my-form-file11'
       })
 
       jest
@@ -302,7 +338,7 @@ describe('File routes', () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
         emailIsCaseSensitive: false,
-        filename: 'my-form-file'
+        filename: 'my-form-file12'
       })
 
       jest
