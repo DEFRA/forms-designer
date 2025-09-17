@@ -508,6 +508,46 @@ describe('editor.js', () => {
         expect(result).toEqual({ id: '456' })
       })
 
+      test('preserves repeater settings when updating a question on a repeater page', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          title: 'Updated field title',
+          name: 'textField',
+          type: ComponentType.TextField,
+          options: {
+            required: false
+          }
+        })
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          formDefinitionRepeater,
+          'p1',
+          'c1',
+          updatedQuestionDetails
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/c1`,
+            formsEndpoint
+          ),
+          {
+            payload: updatedQuestionDetails,
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+
+        expect(result).toEqual({ id: 'c1' })
+      })
+
       test('returns response body when path should change to first question', async () => {
         mockedPutJson.mockResolvedValueOnce({
           response: createMockResponse(),

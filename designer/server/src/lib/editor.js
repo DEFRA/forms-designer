@@ -154,10 +154,23 @@ export async function updateQuestion(
     // Side-effect to the component within the page
     questionToChange.type = questionDetails.type ?? ComponentType.TextField
   }
+
+  const payload = {}
+  if (origControllerType === ControllerType.Repeat) {
+    payload.repeater = 'true'
+    if (page?.repeat.schema) {
+      payload.minItems = page.repeat.schema.min
+      payload.maxItems = page.repeat.schema.max
+    }
+    if (page?.repeat.options) {
+      payload.questionSetName = page.repeat.options.title
+    }
+  }
+
   const { controllerType: newControllerType } = getControllerTypeAndProperties(
     page,
     hasComponents(page) ? page.components : [],
-    {}
+    payload
   )
   if (
     origControllerType !== newControllerType ||
