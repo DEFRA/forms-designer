@@ -124,6 +124,42 @@ describe('File routes', () => {
 
       expect(result.response.statusCode).toBe(401)
     })
+
+    test('should throw Not Found when download not found', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.NOT_FOUND,
+        emailIsCaseSensitive: false,
+        filename: ''
+      })
+
+      const options = {
+        method: 'GET',
+        url: fileDownloadUrl,
+        auth
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.NOT_FOUND)
+    })
+
+    test('should throw Internal Server Error when download not found', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.CONFLICT,
+        emailIsCaseSensitive: false,
+        filename: ''
+      })
+
+      const options = {
+        method: 'GET',
+        url: fileDownloadUrl,
+        auth
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
   })
 
   describe('POST', () => {
