@@ -613,6 +613,143 @@ describe('editor.js', () => {
         expect(mockedPatchJson).not.toHaveBeenCalled()
       })
 
+      test('does not interfere when page is not a repeater', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const nonRepeaterPage = /** @type {FormDefinition} */ ({
+          ...formDefinition,
+          pages: [
+            {
+              id: 'p1',
+              path: '/page-one',
+              title: 'Page one',
+              section: 'Section 1',
+              controller: undefined, // Not a repeater
+              components: [
+                {
+                  id: 'q1',
+                  type: ComponentType.TextField,
+                  name: 'field1',
+                  title: 'Field 1',
+                  hint: 'Hint text',
+                  options: { required: true },
+                  schema: {}
+                }
+              ],
+              next: [{ path: '/summary' }]
+            }
+          ]
+        })
+
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          title: 'Updated field',
+          name: 'field1',
+          type: ComponentType.TextField,
+          options: { required: false }
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          nonRepeaterPage,
+          'p1',
+          'q1',
+          updatedQuestionDetails
+        )
+
+        // Should NOT call patch (no controller change needed)
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        // Should only update the question, without any repeater payload
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/q1`,
+            formsEndpoint
+          ),
+          {
+            payload: updatedQuestionDetails, // No repeater settings added
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+      })
+
+      test('bug scenario: preserves repeater settings (min:1, max:5) when changing question from mandatory to optional', async () => {
+        // 1. Create page with mandatory question
+        // 2. Make page "Allow multiple responses" with min:1, max:5
+        // 3. Make question optional
+        // Expected: Question is optional AND page still has repeater settings
+
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        // Page with repeater settings (min:1, max:5) and mandatory question
+        const pageWithRepeaterAndMandatoryQuestion =
+          /** @type {FormDefinition} */ ({
+            ...formDefinitionRepeater,
+            pages: [
+              {
+                ...formDefinitionRepeater.pages[0],
+                controller: ControllerType.Repeat,
+                repeat: {
+                  options: { name: 'test-repeater', title: 'Add another' },
+                  schema: { min: 1, max: 5 }
+                },
+                components: [
+                  {
+                    id: 'c1',
+                    type: ComponentType.TextField,
+                    name: 'mandatoryField',
+                    title: 'Mandatory field',
+                    hint: 'This field is mandatory',
+                    options: { required: true }, // Currently mandatory
+                    schema: {}
+                  }
+                ]
+              }
+            ]
+          })
+
+        // User makes the question optional
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          title: 'Mandatory field',
+          name: 'mandatoryField',
+          type: ComponentType.TextField,
+          options: { required: false } // Changed to optional
+        })
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          pageWithRepeaterAndMandatoryQuestion,
+          'p1',
+          'c1',
+          updatedQuestionDetails
+        )
+
+        // Should NOT call patch (which would update page settings and potentially lose repeater)
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        // Should only update the question
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/c1`,
+            formsEndpoint
+          ),
+          {
+            payload: updatedQuestionDetails,
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+
+        expect(result).toEqual({ id: 'c1' })
+        // Repeater settings (min:1, max:5) are preserved - not lost!
+      })
+
       test('returns response body when path should change to first question', async () => {
         mockedPutJson.mockResolvedValueOnce({
           response: createMockResponse(),
@@ -1009,6 +1146,116 @@ describe('editor.js', () => {
       const expectedOptionsRepeater = {
         payload: {
           controller: null,
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptionsRepeater
+      )
+    })
+
+    test('scenario: user unchecks repeater checkbox - removes repeater controller', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await setPageSettings(formId, token, 'p1', formDefinitionRepeater, {
+        pageHeading: 'Page one'
+        // Note: NO 'repeater' property in payload means checkbox is unchecked
+        // This is how the UI sends the payload when user unchecks "Allow multiple responses"
+      })
+
+      const expectedOptions = {
+        payload: {
+          controller: null, // Controller removed
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptions
+      )
+    })
+
+    test('scenario: user checks repeater checkbox - adds repeater controller', async () => {
+      // This demonstrates: Currently non-repeater → changing to repeater
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await setPageSettings(formId, token, 'p1', formDefinition, {
+        pageHeading: 'Page one',
+        repeater: 'true', // User checked "Allow multiple responses"
+        minItems: 1,
+        maxItems: 3,
+        questionSetName: 'Add another item'
+      })
+
+      const expectedOptions = {
+        payload: {
+          controller: ControllerType.Repeat,
+          repeat: {
+            options: {
+              name: expect.any(String),
+              title: 'Add another item'
+            },
+            schema: {
+              min: 1,
+              max: 3
+            }
+          },
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptions
+      )
+    })
+
+    test('updates repeater settings on existing repeater page and preserves name', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      const existingName = /** @type {string} */ (
+        formDefinitionRepeater.pages[0].repeat?.options.name
+      )
+
+      await setPageSettings(formId, token, 'p1', formDefinitionRepeater, {
+        pageHeading: 'Page one',
+        repeater: 'true',
+        minItems: 1,
+        maxItems: 4,
+        questionSetName: 'Updated repeater title'
+      })
+
+      const expectedOptionsRepeater = {
+        payload: {
+          controller: ControllerType.Repeat,
+          repeat: {
+            options: {
+              name: existingName,
+              title: 'Updated repeater title'
+            },
+            schema: {
+              min: 1,
+              max: 4
+            }
+          },
           title: '',
           path: '/this-is-your-first-field'
         },
@@ -1505,7 +1752,7 @@ describe('editor.js', () => {
       expect(result).toEqual({})
     })
 
-    test('should return empty payload when page is undefined', () => {
+    test('should return repeater payload when page is undefined', () => {
       const result = buildRepeaterPayload(undefined, ControllerType.Repeat)
       expect(result).toEqual({ repeater: 'true' })
     })
