@@ -107,7 +107,9 @@ export default [
         if (!emailIsCaseSensitive) {
           email = email.toLowerCase()
         }
+
         const { url } = await createFileLink(fileId, email, token)
+
         await server.methods.state.set(
           credentials.user.id,
           sessionNames.fileDownloadPassword,
@@ -131,9 +133,12 @@ export default [
           logger.info(
             `[fileExpired] File download link expired for file ID ${fileId}`
           )
+
           const pageTitle = 'The link has expired'
+
           return h.view('file/expired', errorViewModel(pageTitle))
         }
+
         if (
           Boom.isBoom(err) &&
           err.output.statusCode === StatusCodes.FORBIDDEN.valueOf()
@@ -141,6 +146,7 @@ export default [
           logger.info(
             `[fileAuthFailed] Failed to download file for file ID ${fileId}. Email ${email} did not match retrieval key.`
           )
+
           const auditUser = mapUserForAudit(auth.credentials.user)
           await publishFormFileDownloadFailureEvent(
             fileId,
