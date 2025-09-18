@@ -7,6 +7,7 @@ import {
   type SubmissionEventMessageType
 } from '~/src/form/form-submission/enums.js'
 import {
+  formDetailsSubmitPayloadSchema,
   formSubmitPayloadSchema,
   formSubmitRecordSchema,
   formSubmitRecordsetSchema
@@ -55,6 +56,17 @@ export interface SubmitRecordset {
 }
 
 /**
+ * Interface for the submission-api `/submit` payload (form property)
+ * @see {@link formDetailsSubmitPayloadSchema}
+ */
+export interface FormDetailsPayload {
+  id?: string
+  slug?: string
+  name?: string
+  pagePath?: string
+}
+
+/**
  * Interface for the submission-api `/submit` payload
  * @see {@link formSubmitPayloadSchema}
  */
@@ -80,9 +92,9 @@ export interface SubmitPayload {
   repeaters: SubmitRecordset[]
 
   /**
-   * The form slug
+   * The form details (optional)
    */
-  slug?: string
+  form?: FormDetailsPayload
 }
 
 /**

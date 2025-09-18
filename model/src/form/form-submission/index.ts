@@ -9,6 +9,7 @@ import {
   SubmissionEventMessageType
 } from '~/src/form/form-submission/enums.js'
 import {
+  type FormDetailsPayload,
   type SaveAndExitMessage,
   type SaveAndExitMessageData,
   type SubmitPayload,
@@ -53,6 +54,20 @@ export const formSubmitRecordsetSchema = Joi.object<SubmitRecordset>({
 }).description('Collection of repeated field values from a repeatable section')
 
 /**
+ * Joi schema for `FormDetailsPayload` interface
+ * @see {@link FormDetailsPayload}
+ */
+export const formDetailsSubmitPayloadSchema =
+  Joi.object<FormDetailsPayload>().keys({
+    id: Joi.string().optional().description('Form unique id (optional)'),
+    slug: Joi.string().optional().description('Form slug (optional)'),
+    name: Joi.string().optional().description('Form name (optional)'),
+    pagePath: Joi.string()
+      .optional()
+      .description('Path to the form page where the uploading is taking place')
+  })
+
+/**
  * Joi schema for `SubmitPayload` interface
  * @see {@link SubmitPayload}
  */
@@ -71,7 +86,8 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
     repeaters: Joi.array<SubmitRecordset>()
       .items(formSubmitRecordsetSchema)
       .required()
-      .description('Repeatable section values from the form')
+      .description('Repeatable section values from the form'),
+    form: formDetailsSubmitPayloadSchema
   })
   .required()
   .description('Complete form submission payload structure with all form data')
