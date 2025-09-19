@@ -1,7 +1,13 @@
-import { Scopes, isFormType } from '@defra/forms-model'
+import { FormDefinitionError, Scopes, isFormType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
+import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
+import {
+  buildConditionUsageMessage,
+  getConditionDependencyContext
+} from '~/src/lib/deletion-helpers.js'
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
+import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-delete.js'
@@ -75,11 +81,77 @@ export default [
       const formId = metadata.id
       const definition = await forms.getDraftFormDefinition(formId, token)
 
-      // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
-      if (questionId && shouldDeleteQuestionOnly(pageId, definition)) {
-        await deleteQuestion(formId, token, pageId, questionId, definition)
-      } else {
-        await deletePage(formId, token, pageId, definition)
+      const dependencyContext = getConditionDependencyContext(
+        definition,
+        pageId,
+        questionId
+      )
+
+      if (dependencyContext.blockingConditions.length) {
+        const componentsForMessage = dependencyContext.blockingComponents.length
+          ? dependencyContext.blockingComponents
+          : dependencyContext.componentsForDeletion
+
+        const message = buildConditionUsageMessage(
+          dependencyContext.deletingQuestionOnly ? 'question' : 'page',
+          componentsForMessage,
+          dependencyContext.blockingConditions
+        )
+
+        return h.view(CONFIRMATION_PAGE_VIEW, {
+          ...viewModel.deleteQuestionConfirmationPageViewModel(
+            metadata,
+            definition,
+            pageId,
+            questionId
+          ),
+          errorList: buildSimpleErrorList([message])
+        })
+      }
+
+      try {
+        if (dependencyContext.deletingQuestionOnly && questionId) {
+          await deleteQuestion(formId, token, pageId, questionId, definition)
+        } else {
+          await deletePage(formId, token, pageId, definition)
+        }
+      } catch (err) {
+        if (
+          isInvalidFormErrorType(
+            err,
+            FormDefinitionError.RefConditionComponentId
+          )
+        ) {
+          const latestDefinition = await forms.getDraftFormDefinition(
+            formId,
+            token
+          )
+          const latestContext = getConditionDependencyContext(
+            latestDefinition,
+            pageId,
+            questionId
+          )
+          const componentsForMessage = latestContext.blockingComponents.length
+            ? latestContext.blockingComponents
+            : latestContext.componentsForDeletion
+          const message = buildConditionUsageMessage(
+            latestContext.deletingQuestionOnly ? 'question' : 'page',
+            componentsForMessage,
+            latestContext.blockingConditions
+          )
+
+          return h.view(CONFIRMATION_PAGE_VIEW, {
+            ...viewModel.deleteQuestionConfirmationPageViewModel(
+              metadata,
+              latestDefinition,
+              pageId,
+              questionId
+            ),
+            errorList: buildSimpleErrorList([message])
+          })
+        }
+
+        throw err
       }
 
       // Redirect POST to GET
@@ -98,6 +170,6 @@ export default [
 ]
 
 /**
- * @import { FormDefinition } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionWrapperV2, FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

@@ -42,5 +42,46 @@ export function findConditionReferences(definition, conditionId) {
 }
 
 /**
+ * Find conditions that reference any of the supplied component IDs
+ * @param {FormDefinition} definition
+ * @param {Set<string>} componentIds
+ */
+export function findConditionsReferencingComponents(definition, componentIds) {
+  /** @type {ConditionWrapperV2[]} */
+  const matchedConditions = []
+  const matchedComponentIds = new Set()
+
+  if (componentIds.size === 0) {
+    return { conditions: matchedConditions, componentIds: matchedComponentIds }
+  }
+
+  for (const condition of definition.conditions) {
+    if (!isConditionWrapperV2(condition)) {
+      continue
+    }
+
+    let hasMatch = false
+
+    for (const item of condition.items) {
+      if (
+        'componentId' in item &&
+        item.componentId &&
+        componentIds.has(item.componentId)
+      ) {
+        matchedComponentIds.add(item.componentId)
+        hasMatch = true
+      }
+    }
+
+    if (hasMatch) {
+      matchedConditions.push(condition)
+    }
+  }
+
+  return { conditions: matchedConditions, componentIds: matchedComponentIds }
+}
+
+/**
  * @import { FormDefinition } from '@defra/forms-model'
+ * @import { ConditionWrapperV2 } from '@defra/forms-model'
  */

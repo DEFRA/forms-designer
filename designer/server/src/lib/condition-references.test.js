@@ -5,7 +5,10 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import { findConditionReferences } from '~/src/lib/condition-references.js'
+import {
+  findConditionReferences,
+  findConditionsReferencingComponents
+} from '~/src/lib/condition-references.js'
 
 describe('condition-references', () => {
   const componentId = 'farm-type-field'
@@ -385,6 +388,113 @@ describe('condition-references', () => {
 
       expect(result.pages).toHaveLength(0)
       expect(result.conditions).toHaveLength(0)
+    })
+  })
+
+  describe('findConditionsReferencingComponents', () => {
+    it('should return empty collections when component ids set is empty', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'page1',
+            components: [testComponent]
+          })
+        ],
+        conditions: [baseCondition]
+      })
+
+      const result = findConditionsReferencingComponents(definition, new Set())
+
+      expect(result.conditions).toHaveLength(0)
+      expect(result.componentIds.size).toBe(0)
+    })
+
+    it('should return conditions that reference the supplied component id', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'page1',
+            components: [testComponent]
+          })
+        ],
+        conditions: [baseCondition]
+      })
+
+      const result = findConditionsReferencingComponents(
+        definition,
+        new Set([componentId])
+      )
+
+      expect(result.conditions).toHaveLength(1)
+      expect(result.conditions[0].id).toBe(conditionId)
+      expect(result.componentIds.has(componentId)).toBe(true)
+    })
+
+    it('should handle multiple component ids and multiple matching conditions', () => {
+      const otherComponentId = 'dairy-output-field'
+      const otherComponent = buildTextFieldComponent({
+        id: otherComponentId,
+        name: 'dairyOutput',
+        title: 'How much milk do you produce?'
+      })
+
+      const anotherCondition = {
+        id: 'another-condition',
+        displayName: 'Milk output condition',
+        items: [
+          {
+            id: 'milk-check',
+            componentId: otherComponentId,
+            operator: OperatorName.Is,
+            type: ConditionType.StringValue,
+            value: 'high'
+          }
+        ]
+      }
+
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'page1',
+            components: [testComponent, otherComponent]
+          })
+        ],
+        conditions: [baseCondition, anotherCondition, referencingCondition]
+      })
+
+      const result = findConditionsReferencingComponents(
+        definition,
+        new Set([componentId, otherComponentId])
+      )
+
+      expect(result.conditions).toHaveLength(2)
+      expect(result.conditions.map((condition) => condition.id)).toEqual([
+        conditionId,
+        'another-condition'
+      ])
+      expect(result.componentIds.has(componentId)).toBe(true)
+      expect(result.componentIds.has(otherComponentId)).toBe(true)
+      expect(result.componentIds.size).toBe(2)
+    })
+
+    it('should ignore conditions that only reference other conditions', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'page1',
+            components: [testComponent]
+          })
+        ],
+        conditions: [baseCondition, referencingCondition]
+      })
+
+      const result = findConditionsReferencingComponents(
+        definition,
+        new Set([componentId])
+      )
+
+      expect(result.conditions).toHaveLength(1)
+      expect(result.conditions[0].id).toBe(conditionId)
     })
   })
 })
