@@ -1108,5 +1108,58 @@ export const testFormDefinitionWithMultipleV2Conditions = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithMultipleV2ConditionsListRef = {
+  ...testFormDefinitionWithMultipleV2Conditions,
+  conditions: [
+    {
+      id: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
+      displayName: 'isBobV2',
+      items: [
+        {
+          id: 'bd071563-1261-4e5c-ab30-05dde59b86f6',
+          componentId: '154271c2-79a2-4b59-b535-d210a13dbfe9',
+          operator: OperatorName.Is,
+          type: ConditionType.StringValue,
+          value: 'bob'
+        }
+      ]
+    },
+    {
+      id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
+      displayName: 'isFaveColourRedV2',
+      items: [
+        {
+          id: '7ccd81c7-6c44-4de2-9c2b-fc917b7e9f35',
+          componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+          operator: OperatorName.Is,
+          type: ConditionType.ListItemRef,
+          value: {
+            listId: '3e470333-c2aa-4bd4-bd1a-738819226a3a',
+            itemId: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7'
+          }
+        }
+      ]
+    },
+    {
+      id: 'c685ae47-a134-485a-a819-b6271644722e',
+      displayName: 'isBobAndFaveColourRedV2',
+      coordinator: Coordinator.AND,
+      items: [
+        {
+          id: 'f54fcebc-f103-451f-8356-1a08f1f32f56',
+          conditionId: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
+        },
+        {
+          id: 'f77a9375-c03f-4365-94b5-edbdbe9e29bd',
+          conditionId: '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
+        }
+      ]
+    }
+  ]
+}
+
+/**
  * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */
