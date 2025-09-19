@@ -401,6 +401,24 @@ export interface DateItem {
   classes: string
 }
 
+export interface ListConflict {
+  conflictItem: {
+    id: string
+    text: string
+  }
+  originalItem?: {
+    id: string
+    text: string
+  }
+  conditionNames: string[]
+  linkableItems: {
+    id?: string
+    text: string
+    value: string | number | boolean
+  }[]
+  closestMatch?: string | number | boolean
+}
+
 export interface QuestionSessionState {
   questionType?: ComponentType
   questionDetails?: Partial<ComponentDef>
@@ -415,6 +433,7 @@ export interface QuestionSessionState {
   isReordering?: boolean
   lastMovedId?: string
   lastMoveDirection?: string
+  listConflicts?: ListConflict[]
 }
 
 export interface ConditionSessionState {

@@ -43,14 +43,14 @@ import {
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import {
+  buildListFromDetails,
+  saveList
+} from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
+import {
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
-import {
-  buildListFromDetails,
-  getListItems,
-  saveList
-} from '~/src/routes/forms/editor-v2/question-details.js'
+import { getListItems } from '~/src/routes/forms/editor-v2/question-details.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -920,6 +920,9 @@ describe('Editor v2 question details routes', () => {
       ]
     })
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
     jest.mocked(upsertList).mockResolvedValue({
       id: listId,
       list,
@@ -929,7 +932,7 @@ describe('Editor v2 question details routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/details',
       auth,
       payload: {
         name,
@@ -947,7 +950,7 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/123456/questions'
+      '/library/my-form-slug/editor-v2/page/p1/questions'
     )
     const [, , , question] = addQuestionMock.mock.calls[0]
     expect(question).toMatchObject({ list: listId })

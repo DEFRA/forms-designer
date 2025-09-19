@@ -2,18 +2,12 @@ import {
   ComponentType,
   FormDefinitionError,
   Scopes,
-  questionDetailsFullSchema,
-  randomId
+  questionDetailsFullSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import {
-  addPageAndFirstQuestion,
-  addQuestion,
-  updateQuestion
-} from '~/src/lib/editor.js'
 import {
   DEFAULT_FIELD_NAME,
   checkBoomError,
@@ -25,7 +19,6 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { populateListIds, upsertList } from '~/src/lib/list.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import {
   buildQuestionSessionState,
@@ -34,11 +27,7 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import {
-  isListComponentType,
-  requiresPageTitle,
-  stringHasValue
-} from '~/src/lib/utils.js'
+import { requiresPageTitle } from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -48,6 +37,10 @@ import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
+import {
+  handleListConflict,
+  saveQuestion
+} from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
 import {
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
@@ -107,74 +100,6 @@ function redirectWithAnchorOrUrl(
       )
     )
     .code(StatusCodes.SEE_OTHER)
-}
-
-/**
- * Maps FormEditorInputQuestion payload to AutoComplete Component
- * @param {Partial<FormEditorInputQuestion>} questionDetails
- * @param {Item[]} listItems
- * @param {FormDefinition} definition
- * @returns {Partial<List>}
- */
-export function buildListFromDetails(questionDetails, listItems, definition) {
-  const listId = stringHasValue(questionDetails.list)
-    ? questionDetails.list
-    : undefined
-  const existingList = definition.lists.find((x) => x.id === listId)
-  return {
-    id: existingList ? existingList.id : undefined,
-    name: existingList ? existingList.name : randomId(),
-    title: `List for question ${questionDetails.name}`,
-    type: 'string',
-    items: listItems.map((item) => {
-      return {
-        id: item.id,
-        text: item.text,
-        hint: item.hint,
-        value: stringHasValue(`${item.value}`) ? item.value : item.text
-      }
-    })
-  }
-}
-
-/**
- * @param {string} formId
- * @param {FormDefinition} definition
- * @param {string} token
- * @param {Partial<ComponentDef>} questionDetails
- * @param {Item[] | undefined } listItems
- * @returns {Promise<undefined|string>}
- */
-export async function saveList(
-  formId,
-  definition,
-  token,
-  questionDetails,
-  listItems
-) {
-  if (!isListComponentType(questionDetails.type ?? ComponentType.TextField)) {
-    return undefined
-  }
-
-  const listMapped = buildListFromDetails(
-    questionDetails,
-    listItems ?? [],
-    definition
-  )
-
-  if (listMapped.id) {
-    // Existing list - match ids against entries
-    listMapped.items = populateListIds(definition, listMapped.id, listItems)
-  }
-
-  const { list, status } = await upsertList(
-    formId,
-    definition,
-    token,
-    listMapped
-  )
-
-  return status === 'created' ? list.id : undefined
 }
 
 /**
@@ -260,60 +185,6 @@ export function overrideStateIfJsEnabled(request) {
     }
   }
   return undefined
-}
-
-/**
- * @param {string} formId
- * @param {string} token
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @param {string} questionId
- * @param {Partial<ComponentDef>} questionDetails
- * @param { Item[] | undefined } listItems
- * @returns {Promise<string>}
- */
-async function saveQuestion(
-  formId,
-  token,
-  definition,
-  pageId,
-  questionId,
-  questionDetails,
-  listItems
-) {
-  // Create or update the list (if this is a Component that uses a List)
-  const listId = await saveList(
-    formId,
-    definition,
-    token,
-    questionDetails,
-    listItems
-  )
-
-  const questDetailsWithList = listId
-    ? { ...questionDetails, list: listId }
-    : questionDetails
-
-  if (pageId === 'new') {
-    const newPage = await addPageAndFirstQuestion(
-      formId,
-      token,
-      questDetailsWithList
-    )
-    return newPage.id ?? 'unknown'
-  } else if (questionId === 'new') {
-    await addQuestion(formId, token, pageId, questDetailsWithList)
-  } else {
-    await updateQuestion(
-      formId,
-      token,
-      definition,
-      pageId,
-      questionId,
-      questDetailsWithList
-    )
-  }
-  return pageId
 }
 
 export default [
@@ -459,7 +330,28 @@ export default [
         )
       }
 
-      const state = getQuestionSessionState(yar, stateId)
+      const state = getQuestionSessionState(yar, stateId) ?? {}
+
+      if (
+        questionId !== 'new' &&
+        questionDetails.type === ComponentType.AutocompleteField
+      ) {
+        state.questionDetails = questionDetails
+
+        const redirectForConflict = handleListConflict(
+          definition,
+          pageId,
+          questionId,
+          payload.autoCompleteOptions,
+          yar,
+          state,
+          stateId
+        )
+        if (redirectForConflict) {
+          const { pathname } = request.url
+          return h.redirect(`${pathname}/resolve`)
+        }
+      }
 
       try {
         const finalPageId = await saveQuestion(
@@ -536,7 +428,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, List, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, List, ListConflict, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

@@ -11,6 +11,7 @@ import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
 import editorConditionsJoin from '~/src/routes/forms/editor-v2/conditions-join.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
+import editorEditListResolve from '~/src/routes/forms/editor-v2/edit-list-resolve.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
@@ -54,6 +55,7 @@ export default [
   editorError,
   editorUpload,
   editorDownload,
+  editorEditListResolve,
   library,
   formLifecycle,
   contactPhone,
