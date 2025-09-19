@@ -136,9 +136,9 @@ describe('Editor v2 edit-list-resolve routes', () => {
       jest
         .mocked(matchLists)
         .mockReturnValueOnce({ additions, deletions: [], listItemsWithIds })
-      // @ts-expect-error - blank list is allowed here
       jest
         .mocked(upsertList)
+        // @ts-expect-error - blank list is allowed here
         .mockResolvedValueOnce({ id: '1', list: [], status: 'updated' })
       const payload = {
         'replaceWith[2]': 'New Item 1',
