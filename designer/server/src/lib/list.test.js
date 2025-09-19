@@ -12,7 +12,7 @@ import {
 import {
   createList,
   deleteList,
-  populateListIds,
+  matchLists,
   removeUniquelyMappedListFromQuestion,
   removeUniquelyMappedListsFromPage,
   updateList,
@@ -251,21 +251,21 @@ describe('list.js', () => {
     })
   })
 
-  describe('populateListIds', () => {
+  describe('matchLists', () => {
     test('should handle blank list', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [])
-      expect(populated).toEqual([])
+      const populated = matchLists(definition, listIdWithItemIds, [])
+      expect(populated.listItemsWithIds).toEqual([])
     })
 
     test('should handle incorrect list ref', () => {
       const { definition } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, 'wrong-list-id', [
+      const populated = matchLists(definition, 'wrong-list-id', [
         { text: 'EnglandChanged', value: 'england' },
         { text: 'ScotandChanged', value: 'scotland' },
         { text: 'WalesChanged', value: 'wales' }
       ])
-      expect(populated).toEqual([
+      expect(populated.listItemsWithIds).toEqual([
         { id: undefined, text: 'EnglandChanged', value: 'england' },
         { id: undefined, text: 'ScotandChanged', value: 'scotland' },
         { id: undefined, text: 'WalesChanged', value: 'wales' }
@@ -274,12 +274,12 @@ describe('list.js', () => {
 
     test('should populate known ids using code value', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [
+      const populated = matchLists(definition, listIdWithItemIds, [
         { text: 'EnglandChanged', value: 'england' },
         { text: 'ScotandChanged', value: 'scotland' },
         { text: 'WalesChanged', value: 'wales' }
       ])
-      expect(populated).toEqual([
+      expect(populated.listItemsWithIds).toEqual([
         { id: 'id1', text: 'EnglandChanged', value: 'england' },
         { id: 'id2', text: 'ScotandChanged', value: 'scotland' },
         { id: 'id3', text: 'WalesChanged', value: 'wales' }
@@ -288,12 +288,12 @@ describe('list.js', () => {
 
     test('should populate known ids using existing ids', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [
+      const populated = matchLists(definition, listIdWithItemIds, [
         { id: 'id1', text: 'England1', value: 'eng1' },
         { id: 'id2', text: 'Scotland2', value: 'scot2' },
         { id: 'id3', text: 'Wales3', value: 'wal3' }
       ])
-      expect(populated).toEqual([
+      expect(populated.listItemsWithIds).toEqual([
         { id: 'id1', text: 'England1', value: 'eng1' },
         { id: 'id2', text: 'Scotland2', value: 'scot2' },
         { id: 'id3', text: 'Wales3', value: 'wal3' }
@@ -302,12 +302,12 @@ describe('list.js', () => {
 
     test('should populate known ids using display text', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [
+      const populated = matchLists(definition, listIdWithItemIds, [
         { text: 'England', value: 'eng' },
         { text: 'Scotland', value: 'scot' },
         { text: 'Wales', value: 'wal' }
       ])
-      expect(populated).toEqual([
+      expect(populated.listItemsWithIds).toEqual([
         { id: 'id1', text: 'England', value: 'eng' },
         { id: 'id2', text: 'Scotland', value: 'scot' },
         { id: 'id3', text: 'Wales', value: 'wal' }
@@ -316,12 +316,12 @@ describe('list.js', () => {
 
     test('should retain hint text if provided', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
-      const populated = populateListIds(definition, listIdWithItemIds, [
+      const populated = matchLists(definition, listIdWithItemIds, [
         { text: 'England', value: 'eng', hint: { text: 'help' } },
         { text: 'Scotland', value: 'scot' },
         { text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }
       ])
-      expect(populated).toEqual([
+      expect(populated.listItemsWithIds).toEqual([
         { id: 'id1', text: 'England', value: 'eng', hint: { text: 'help' } },
         { id: 'id2', text: 'Scotland', value: 'scot' },
         { id: 'id3', text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }

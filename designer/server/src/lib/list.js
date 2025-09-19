@@ -145,43 +145,6 @@ export async function removeUniquelyMappedListsFromPage(
  * @param {FormDefinition} definition
  * @param { string | undefined } listRef
  * @param { Item[] | undefined } listItems
- * @returns {Item[]}
- */
-export function populateListIds(definition, listRef, listItems) {
-  /**
-   * Matches list items against existing items (if they exist)
-   * This method handles the following scenarios:
-   * 1. When editing an individual option (e.g. checkbox or radio), an ID will be present so this is used initially to find a match
-   * 2. When editing an autocomplete (or possibly checkbox or radio if we have implemented textarea editing). Here we do not have any IDs to pass,
-   * just a text value (and possibly code value), so we try to match on 'code' first, then 'text' if not matched on 'code'.
-   * @param {Item[]} listItems
-   * @param {Item} item
-   */
-  function populateExistingId(listItems, item) {
-    const found =
-      listItems.find((i) => i.id === item.id) ?? // for when we are editing individual items
-      listItems.find((i) => i.value === item.value) ?? // for when no IDs present in submitted data (see note on method)
-      listItems.find((i) => i.text === item.text) // for when no IDs present in submitted data (see note on method)
-    return {
-      id: found?.id,
-      text: item.text,
-      value: item.value,
-      hint: item.hint
-    }
-  }
-
-  const existingList = definition.lists.find((x) => x.id === listRef)
-  const existingListItems = existingList?.items ?? []
-
-  return /** @type {Item[]} */ (
-    listItems?.map((x) => populateExistingId(existingListItems, x))
-  )
-}
-
-/**
- * @param {FormDefinition} definition
- * @param { string | undefined } listRef
- * @param { Item[] | undefined } listItems
  * @returns {{ additions: Item[], deletions: Item[], listItemsWithIds: Item[] }}
  */
 export function matchLists(definition, listRef, listItems) {

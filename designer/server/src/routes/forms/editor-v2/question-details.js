@@ -153,6 +153,24 @@ export function validatePreSchema(request, h) {
 }
 
 /**
+ * @param {string} questionId
+ * @param { ComponentType | undefined } questionType
+ */
+export function isExistingAutocomplete(questionId, questionType) {
+  return (
+    questionId !== 'new' && questionType === ComponentType.AutocompleteField
+  )
+}
+
+/**
+ * @param {string} questionId
+ * @param { Page | undefined } page
+ */
+export function missingPageTitleForMultipleQuestions(questionId, page) {
+  return questionId === 'new' && requiresPageTitle(page)
+}
+
+/**
  * @param { Request | Request<{ Payload: FormEditorInputQuestionDetails } > } request
  */
 export function overrideStateIfJsEnabled(request) {
@@ -322,7 +340,7 @@ export default [
       )
 
       // Ensure there's a page title when adding multiple questions
-      if (questionId === 'new' && requiresPageTitle(page)) {
+      if (missingPageTitleForMultipleQuestions(questionId, page)) {
         return dispatchToPageTitle(
           request,
           h,
@@ -332,10 +350,7 @@ export default [
 
       const state = getQuestionSessionState(yar, stateId) ?? {}
 
-      if (
-        questionId !== 'new' &&
-        questionDetails.type === ComponentType.AutocompleteField
-      ) {
+      if (isExistingAutocomplete(questionId, questionDetails.type)) {
         state.questionDetails = questionDetails
 
         const redirectForConflict = handleListConflict(
@@ -428,7 +443,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, Item, List, ListConflict, ListItem, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails, Item, ListItem, Page, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
