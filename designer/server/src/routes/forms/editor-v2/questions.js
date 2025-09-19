@@ -1,4 +1,6 @@
 import {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS,
   Scopes,
   guidanceTextSchema,
   maxItemsSchema,
@@ -60,23 +62,26 @@ export const schema = Joi.object().keys({
   }),
   guidanceText: guidanceTextSchema.optional().allow(''),
   repeater: repeaterSchema,
-  minItems: minItemsSchema.label('Min').when('repeater', {
+  minItems: minItemsSchema.when('repeater', {
     is: 'true',
     then: Joi.required().messages({
       'any.required':
         'Enter the minimum number of times someone can answer these questions',
-      'number.min': 'Enter a number greater than or equal to 1'
+      'number.min': `Enter a number greater than or equal to ${MIN_NUMBER_OF_REPEAT_ITEMS}`
     })
   }),
-  maxItems: maxItemsSchema.label('Max').when('repeater', {
+  maxItems: maxItemsSchema.when('repeater', {
     is: 'true',
-    then: Joi.number().min(Joi.ref('minItems')).required().messages({
-      'any.required':
-        'Enter the maximum number of times someone can answer these questions',
-      'number.min':
-        'The maximum number cannot be lower than the minimum number',
-      'number.max': 'Enter a number less than or equal to 25'
-    })
+    then: Joi.number()
+      .min(Joi.ref('minItems'))
+      .required()
+      .messages({
+        'any.required':
+          'Enter the maximum number of times someone can answer these questions',
+        'number.min':
+          'The maximum number cannot be lower than the minimum number',
+        'number.max': `Enter a number less than or equal to ${MAX_NUMBER_OF_REPEAT_ITEMS}`
+      })
   }),
   questionSetName: questionSetNameSchema.when('repeater', {
     is: 'true',
