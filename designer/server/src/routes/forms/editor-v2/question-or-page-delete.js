@@ -3,10 +3,10 @@ import { StatusCodes } from 'http-status-codes'
 
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
-  buildConditionUsageMessage,
-  getConditionDependencyContext
+  buildConditionDependencyErrorView,
+  getConditionDependencyContext,
+  performDeletion
 } from '~/src/lib/deletion-helpers.js'
-import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
@@ -27,6 +27,70 @@ export function shouldDeleteQuestionOnly(pageId, definition) {
   const components = getComponentsOnPageFromDefinition(definition, pageId)
   const formComponents = components.filter((c) => isFormType(c.type))
   return formComponents.length > 1
+}
+
+/**
+ * Builds error response for condition dependency blocking deletion
+ * @param {any} h
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string | undefined} questionId
+ * @param {DependencyContext} dependencyContext
+ */
+function buildConditionErrorResponse(
+  h,
+  metadata,
+  definition,
+  pageId,
+  questionId,
+  dependencyContext
+) {
+  const { message } = buildConditionDependencyErrorView(dependencyContext)
+
+  return h.view(CONFIRMATION_PAGE_VIEW, {
+    ...viewModel.deleteQuestionConfirmationPageViewModel(
+      metadata,
+      definition,
+      pageId,
+      questionId
+    ),
+    errorList: buildSimpleErrorList([message])
+  })
+}
+
+/**
+ * Handles race condition where conditions were added after initial check
+ * @param {any} h
+ * @param {string} formId
+ * @param {string} token
+ * @param {FormMetadata} metadata
+ * @param {string} pageId
+ * @param {string | undefined} questionId
+ */
+async function handleConditionRaceCondition(
+  h,
+  formId,
+  token,
+  metadata,
+  pageId,
+  questionId
+) {
+  const latestDefinition = await forms.getDraftFormDefinition(formId, token)
+  const latestContext = getConditionDependencyContext(
+    latestDefinition,
+    pageId,
+    questionId
+  )
+
+  return buildConditionErrorResponse(
+    h,
+    metadata,
+    latestDefinition,
+    pageId,
+    questionId,
+    latestContext
+  )
 }
 
 export default [
@@ -88,67 +152,41 @@ export default [
       )
 
       if (dependencyContext.blockingConditions.length) {
-        const componentsForMessage = dependencyContext.blockingComponents.length
-          ? dependencyContext.blockingComponents
-          : dependencyContext.componentsForDeletion
-
-        const message = buildConditionUsageMessage(
-          dependencyContext.deletingQuestionOnly ? 'question' : 'page',
-          componentsForMessage,
-          dependencyContext.blockingConditions
+        return buildConditionErrorResponse(
+          h,
+          metadata,
+          definition,
+          pageId,
+          questionId,
+          dependencyContext
         )
-
-        return h.view(CONFIRMATION_PAGE_VIEW, {
-          ...viewModel.deleteQuestionConfirmationPageViewModel(
-            metadata,
-            definition,
-            pageId,
-            questionId
-          ),
-          errorList: buildSimpleErrorList([message])
-        })
       }
 
       try {
-        if (dependencyContext.deletingQuestionOnly && questionId) {
-          await deleteQuestion(formId, token, pageId, questionId, definition)
-        } else {
-          await deletePage(formId, token, pageId, definition)
-        }
+        await performDeletion(
+          formId,
+          token,
+          pageId,
+          questionId,
+          definition,
+          dependencyContext.deletingQuestionOnly
+        )
       } catch (err) {
+        // Handle race condition where conditions were added after initial check
         if (
           isInvalidFormErrorType(
             err,
             FormDefinitionError.RefConditionComponentId
           )
         ) {
-          const latestDefinition = await forms.getDraftFormDefinition(
+          return handleConditionRaceCondition(
+            h,
             formId,
-            token
-          )
-          const latestContext = getConditionDependencyContext(
-            latestDefinition,
+            token,
+            metadata,
             pageId,
             questionId
           )
-          const componentsForMessage = latestContext.blockingComponents.length
-            ? latestContext.blockingComponents
-            : latestContext.componentsForDeletion
-          const message = buildConditionUsageMessage(
-            latestContext.deletingQuestionOnly ? 'question' : 'page',
-            componentsForMessage,
-            latestContext.blockingConditions
-          )
-
-          return h.view(CONFIRMATION_PAGE_VIEW, {
-            ...viewModel.deleteQuestionConfirmationPageViewModel(
-              metadata,
-              latestDefinition,
-              pageId,
-              questionId
-            ),
-            errorList: buildSimpleErrorList([message])
-          })
         }
 
         throw err
@@ -170,6 +208,7 @@ export default [
 ]
 
 /**
- * @import { ComponentDef, ConditionWrapperV2, FormDefinition } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { DependencyContext } from '~/src/lib/deletion-helpers.js'
  */

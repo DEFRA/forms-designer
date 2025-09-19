@@ -6,6 +6,7 @@ import {
   buildTextFieldComponent
 } from '~/src/__stubs__/form-definition.js'
 import {
+  buildConditionDependencyErrorView,
   buildConditionUsageMessage,
   getConditionDependencyContext
 } from '~/src/lib/deletion-helpers.js'
@@ -471,6 +472,49 @@ describe('deletion helpers', () => {
 
       expect(context.blockingConditions).toHaveLength(0)
       expect(context.blockingComponents).toHaveLength(0)
+    })
+  })
+
+  describe('buildConditionDependencyErrorView', () => {
+    const mockComponent = buildTextFieldComponent({
+      id: 'field1',
+      name: 'field1',
+      title: 'Test Component'
+    })
+
+    const mockCondition = {
+      id: 'cond1',
+      displayName: 'Test Condition',
+      items: []
+    }
+
+    it('should build error view with message and components', () => {
+      const dependencyContext = {
+        deletingQuestionOnly: true,
+        blockingComponents: [mockComponent],
+        componentsForDeletion: [mockComponent],
+        blockingConditions: [mockCondition]
+      }
+
+      const result = buildConditionDependencyErrorView(dependencyContext)
+
+      expect(result.message).toBe(
+        'The question \'Test Component\' cannot be deleted because it is used in the condition "Test Condition". Update or delete that condition first.'
+      )
+      expect(result.componentsForMessage).toEqual([mockComponent])
+    })
+
+    it('should use components for deletion when no blocking components', () => {
+      const dependencyContext = {
+        deletingQuestionOnly: false,
+        blockingComponents: [],
+        componentsForDeletion: [mockComponent],
+        blockingConditions: [mockCondition]
+      }
+
+      const result = buildConditionDependencyErrorView(dependencyContext)
+
+      expect(result.componentsForMessage).toEqual([mockComponent])
     })
   })
 })

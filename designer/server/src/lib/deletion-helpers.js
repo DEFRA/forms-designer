@@ -2,6 +2,7 @@ import { isFormType } from '@defra/forms-model'
 
 import { formatList } from '~/src/common/helpers/format.js'
 import { findConditionsReferencingComponents } from '~/src/lib/condition-references.js'
+import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
 
 /**
@@ -46,9 +47,11 @@ export function buildConditionUsageMessage(target, components, conditions) {
     return `${questionDescriptor} cannot be deleted because it is used in ${conditionPhrase}. Update or delete ${conditionPronoun} first.`
   }
 
+  const questionPrefix =
+    componentNames.length === 1 ? 'The question' : 'The questions'
   const componentLabel =
     componentNames.length > 0
-      ? `${componentNames.length === 1 ? 'The question' : 'The questions'} ${formatList(
+      ? `${questionPrefix} ${formatList(
           componentNames.map((name) => `'${name}'`)
         )}`
       : 'Questions on this page'
@@ -95,6 +98,59 @@ export function getConditionDependencyContext(definition, pageId, questionId) {
     blockingComponents
   }
 }
+
+/**
+ * Builds error view model for condition dependency blocking deletion
+ * @param {DependencyContext} dependencyContext
+ */
+export function buildConditionDependencyErrorView(dependencyContext) {
+  const componentsForMessage = dependencyContext.blockingComponents.length
+    ? dependencyContext.blockingComponents
+    : dependencyContext.componentsForDeletion
+
+  const message = buildConditionUsageMessage(
+    dependencyContext.deletingQuestionOnly ? 'question' : 'page',
+    componentsForMessage,
+    dependencyContext.blockingConditions
+  )
+
+  return {
+    message,
+    componentsForMessage
+  }
+}
+
+/**
+ * Handles the actual deletion operation (question or page)
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string | undefined} questionId
+ * @param {FormDefinition} definition
+ * @param {boolean} deletingQuestionOnly
+ */
+export async function performDeletion(
+  formId,
+  token,
+  pageId,
+  questionId,
+  definition,
+  deletingQuestionOnly
+) {
+  if (deletingQuestionOnly && questionId) {
+    await deleteQuestion(formId, token, pageId, questionId, definition)
+  } else {
+    await deletePage(formId, token, pageId, definition)
+  }
+}
+
+/**
+ * @typedef {object} DependencyContext
+ * @property {boolean} deletingQuestionOnly - Whether we're deleting a single question vs entire page
+ * @property {ComponentDef[]} componentsForDeletion - Components that would be deleted
+ * @property {ConditionWrapperV2[]} blockingConditions - Conditions that prevent deletion
+ * @property {ComponentDef[]} blockingComponents - Components that are referenced by conditions
+ */
 
 /**
  * @import { ComponentDef, ConditionWrapperV2, FormDefinition } from '@defra/forms-model'
