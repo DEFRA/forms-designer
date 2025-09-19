@@ -1,3 +1,8 @@
+import {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS
+} from '@defra/forms-model'
+
 export const pageHeadingAndGuidanceHTML = `
 <div>
   <div class="govuk-checkboxes__item">
@@ -81,7 +86,7 @@ export const pageHeadingAndGuidanceHTML = `
         Set the minimum and maximum number of responses you will accept
       </legend>
         <div class="govuk-hint">
-      The range must be between 1 and 25
+      The range must be between ${MIN_NUMBER_OF_REPEAT_ITEMS} and ${MAX_NUMBER_OF_REPEAT_ITEMS}
     </div>
 
         <div class="govuk-form-group">
@@ -252,7 +257,7 @@ export const repeaterPageHTML = /** @type {string} */ (
     Set the minimum and maximum number of responses you will accept
   </legend>
     <div class="govuk-hint">
-  The range must be between 1 and 25
+  The range must be between ${MIN_NUMBER_OF_REPEAT_ITEMS} and ${MAX_NUMBER_OF_REPEAT_ITEMS}
 </div>
 
     <div class="govuk-form-group">
