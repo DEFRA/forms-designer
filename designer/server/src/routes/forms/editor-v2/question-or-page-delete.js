@@ -5,7 +5,8 @@ import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.j
 import {
   buildConditionDependencyErrorView,
   getConditionDependencyContext,
-  performDeletion
+  performPageDeletion,
+  performQuestionDeletion
 } from '~/src/lib/deletion-helpers.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -163,14 +164,17 @@ export default [
       }
 
       try {
-        await performDeletion(
-          formId,
-          token,
-          pageId,
-          questionId,
-          definition,
-          dependencyContext.deletingQuestionOnly
-        )
+        if (dependencyContext.deletingQuestionOnly && questionId) {
+          await performQuestionDeletion(
+            formId,
+            token,
+            pageId,
+            questionId,
+            definition
+          )
+        } else {
+          await performPageDeletion(formId, token, pageId, definition)
+        }
       } catch (err) {
         // Handle race condition where conditions were added after initial check
         if (

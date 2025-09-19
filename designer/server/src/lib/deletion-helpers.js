@@ -121,27 +121,32 @@ export function buildConditionDependencyErrorView(dependencyContext) {
 }
 
 /**
- * Handles the actual deletion operation (question or page)
+ * Deletes a specific question from a page
  * @param {string} formId
  * @param {string} token
  * @param {string} pageId
- * @param {string | undefined} questionId
+ * @param {string} questionId
  * @param {FormDefinition} definition
- * @param {boolean} deletingQuestionOnly
  */
-export async function performDeletion(
+export async function performQuestionDeletion(
   formId,
   token,
   pageId,
   questionId,
-  definition,
-  deletingQuestionOnly
+  definition
 ) {
-  if (deletingQuestionOnly && questionId) {
-    await deleteQuestion(formId, token, pageId, questionId, definition)
-  } else {
-    await deletePage(formId, token, pageId, definition)
-  }
+  await deleteQuestion(formId, token, pageId, questionId, definition)
+}
+
+/**
+ * Deletes an entire page
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ */
+export async function performPageDeletion(formId, token, pageId, definition) {
+  await deletePage(formId, token, pageId, definition)
 }
 
 /**

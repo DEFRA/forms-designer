@@ -8,8 +8,13 @@ import {
 import {
   buildConditionDependencyErrorView,
   buildConditionUsageMessage,
-  getConditionDependencyContext
+  getConditionDependencyContext,
+  performPageDeletion,
+  performQuestionDeletion
 } from '~/src/lib/deletion-helpers.js'
+import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
+
+jest.mock('~/src/lib/editor.js')
 
 describe('deletion helpers', () => {
   describe('buildConditionUsageMessage', () => {
@@ -515,6 +520,53 @@ describe('deletion helpers', () => {
       const result = buildConditionDependencyErrorView(dependencyContext)
 
       expect(result.componentsForMessage).toEqual([mockComponent])
+    })
+  })
+
+  describe('performQuestionDeletion', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should call deleteQuestion with correct parameters', async () => {
+      const definition = buildDefinition()
+
+      await performQuestionDeletion(
+        'formId',
+        'token',
+        'pageId',
+        'questionId',
+        definition
+      )
+
+      expect(deleteQuestion).toHaveBeenCalledWith(
+        'formId',
+        'token',
+        'pageId',
+        'questionId',
+        definition
+      )
+      expect(deletePage).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('performPageDeletion', () => {
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it('should call deletePage with correct parameters', async () => {
+      const definition = buildDefinition()
+
+      await performPageDeletion('formId', 'token', 'pageId', definition)
+
+      expect(deletePage).toHaveBeenCalledWith(
+        'formId',
+        'token',
+        'pageId',
+        definition
+      )
+      expect(deleteQuestion).not.toHaveBeenCalled()
     })
   })
 })
