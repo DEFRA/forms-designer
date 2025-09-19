@@ -1,4 +1,8 @@
-import { buildDefinition, buildList } from '~/src/__stubs__/form-definition.js'
+import {
+  buildDefinition,
+  buildList,
+  testFormDefinitionWithMultipleV2ConditionsListRef
+} from '~/src/__stubs__/form-definition.js'
 import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
 import {
   baseOptions,
@@ -16,7 +20,8 @@ import {
   removeUniquelyMappedListFromQuestion,
   removeUniquelyMappedListsFromPage,
   updateList,
-  upsertList
+  upsertList,
+  usedInConditions
 } from '~/src/lib/list.js'
 
 jest.mock('~/src/lib/fetch.js')
@@ -325,6 +330,73 @@ describe('list.js', () => {
         { id: 'id1', text: 'England', value: 'eng', hint: { text: 'help' } },
         { id: 'id2', text: 'Scotland', value: 'scot' },
         { id: 'id3', text: 'Wales', value: 'wal', hint: { text: 'cymorth' } }
+      ])
+    })
+
+    test('should identify additions and deletions (for autocomplete)', () => {
+      const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
+      const populated = matchLists(definition, listIdWithItemIds, [
+        { id: undefined, text: 'England1', value: 'england1' },
+        { id: undefined, text: 'Scotland', value: 'scotland' },
+        { id: undefined, text: 'Wales', value: 'wales' }
+      ])
+      expect(populated.additions).toEqual([
+        { id: undefined, text: 'England1', value: 'england1' }
+      ])
+      expect(populated.deletions).toEqual([
+        { id: 'id1', text: 'England', value: 'england' }
+      ])
+      expect(populated.listItemsWithIds).toEqual([
+        { id: undefined, text: 'England1', value: 'england1' },
+        { id: 'id2', text: 'Scotland', value: 'scotland' },
+        { id: 'id3', text: 'Wales', value: 'wales' }
+      ])
+    })
+  })
+
+  describe('usedInCondition', () => {
+    // const listItems = [
+    //     { id: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7', text: 'Red', value: 'red' },
+    //     { id: '689d3f66-88f7-4dc0-b199-841b72393c19', text: 'Blue', value: 'blue' },
+    //     { id: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171', text: 'Green', value: 'green' }
+    //   ]
+    const listItems = [
+      {
+        id: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
+        text: 'Red1',
+        value: 'red1'
+      },
+      {
+        id: '689d3f66-88f7-4dc0-b199-841b72393c19',
+        text: 'Blue',
+        value: 'blue'
+      },
+      {
+        id: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171',
+        text: 'Green',
+        value: 'green'
+      }
+    ]
+    test('should handle no conditions', () => {
+      const { definition } = listStubs.exampleWithListItemIds
+      const conditions = usedInConditions(
+        definition,
+        listItems,
+        'listWithItemIds'
+      )
+      expect(conditions).toEqual([])
+    })
+
+    test('should handle ListItemRef conditions', () => {
+      const definition = testFormDefinitionWithMultipleV2ConditionsListRef
+      const listName = '3e470333-c2aa-4bd4-bd1a-738819226a3a'
+      const conditions = usedInConditions(definition, listItems, listName)
+      expect(conditions).toEqual([
+        {
+          displayName: 'isFaveColourRedV2',
+          entryText: 'Red',
+          itemId: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7'
+        }
       ])
     })
   })

@@ -1,5 +1,6 @@
 import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
@@ -122,12 +123,17 @@ export default [
           entity: 'user',
           scope: [`+${Scopes.FormEdit}`]
         }
+      },
+      validate: {
+        payload: Joi.object({
+          replaceWith: Joi.object().required()
+        })
       }
     }
   })
 ]
 
 /**
- * @import { Item, ListItem } from '@defra/forms-model'
+ * @import { Item } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
