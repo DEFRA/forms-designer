@@ -80,7 +80,9 @@ export function editListResolveViewModel(
       text: metadata.title
     },
     question,
-    conflicts: listConflicts,
+    conflicts: listConflicts.sort((conflictA, conflictB) =>
+      conflictA.conflictItem.text.localeCompare(conflictB.conflictItem.text)
+    ),
     errorList: buildErrorList(validation?.formErrors),
     notification
   }
