@@ -150,6 +150,25 @@ export async function performPageDeletion(formId, token, pageId, definition) {
 }
 
 /**
+ * Determines if the operation should delete only a question or the entire page
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string | undefined} questionId
+ */
+export function shouldDeleteQuestionOnly(definition, pageId, questionId) {
+  if (!questionId) {
+    return false
+  }
+
+  const components = getComponentsOnPageFromDefinition(definition, pageId)
+  const formComponents = components.filter((component) =>
+    isFormType(component.type)
+  )
+
+  return formComponents.length > 1
+}
+
+/**
  * @typedef {object} DependencyContext
  * @property {boolean} deletingQuestionOnly - Whether we're deleting a single question vs entire page
  * @property {ComponentDef[]} componentsForDeletion - Components that would be deleted

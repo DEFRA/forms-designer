@@ -10,7 +10,8 @@ import {
   buildConditionUsageMessage,
   getConditionDependencyContext,
   performPageDeletion,
-  performQuestionDeletion
+  performQuestionDeletion,
+  shouldDeleteQuestionOnly
 } from '~/src/lib/deletion-helpers.js'
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 
@@ -567,6 +568,106 @@ describe('deletion helpers', () => {
         definition
       )
       expect(deleteQuestion).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('shouldDeleteQuestionOnly', () => {
+    it('should return false when no questionId is provided', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'pageId',
+            components: [
+              buildTextFieldComponent({ id: 'q1', title: 'Question 1' }),
+              buildTextFieldComponent({ id: 'q2', title: 'Question 2' })
+            ]
+          })
+        ]
+      })
+
+      const result = shouldDeleteQuestionOnly(definition, 'pageId', undefined)
+      expect(result).toBe(false)
+    })
+
+    it('should return false when page has only one form component', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'pageId',
+            components: [
+              buildTextFieldComponent({ id: 'q1', title: 'Question 1' })
+            ]
+          })
+        ]
+      })
+
+      const result = shouldDeleteQuestionOnly(definition, 'pageId', 'q1')
+      expect(result).toBe(false)
+    })
+
+    it('should return true when page has multiple form components and questionId is provided', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'pageId',
+            components: [
+              buildTextFieldComponent({ id: 'q1', title: 'Question 1' }),
+              buildTextFieldComponent({ id: 'q2', title: 'Question 2' })
+            ]
+          })
+        ]
+      })
+
+      const result = shouldDeleteQuestionOnly(definition, 'pageId', 'q1')
+      expect(result).toBe(true)
+    })
+
+    it('should return true when page has multiple form components with guidance', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'pageId',
+            components: [
+              buildTextFieldComponent({ id: 'q1', title: 'Question 1' }),
+              buildTextFieldComponent({ id: 'q2', title: 'Question 2' }),
+              {
+                id: 'guidance1',
+                name: 'guidance1',
+                title: 'Guidance',
+                type: ComponentType.Html,
+                options: {},
+                content: '<p>Some guidance text</p>'
+              }
+            ]
+          })
+        ]
+      })
+
+      const result = shouldDeleteQuestionOnly(definition, 'pageId', 'q1')
+      expect(result).toBe(true)
+    })
+
+    it('should return false when page has only guidance components', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'pageId',
+            components: [
+              {
+                id: 'guidance1',
+                name: 'guidance1',
+                title: 'Guidance',
+                type: ComponentType.Html,
+                options: {},
+                content: '<p>Some guidance text</p>'
+              }
+            ]
+          })
+        ]
+      })
+
+      const result = shouldDeleteQuestionOnly(definition, 'pageId', 'guidance1')
+      expect(result).toBe(false)
     })
   })
 })

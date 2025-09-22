@@ -1,4 +1,4 @@
-import { FormDefinitionError, Scopes, isFormType } from '@defra/forms-model'
+import { FormDefinitionError, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -6,29 +6,16 @@ import {
   buildConditionDependencyErrorView,
   getConditionDependencyContext,
   performPageDeletion,
-  performQuestionDeletion
+  performQuestionDeletion,
+  shouldDeleteQuestionOnly
 } from '~/src/lib/deletion-helpers.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-delete.js'
 import { editorv2Path } from '~/src/models/links.js'
 
 const ROUTE_FULL_PATH_PAGE = `/library/{slug}/editor-v2/page/{pageId}/delete/{questionId?}`
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
-
-/**
- * @param {string} pageId
- * @param {FormDefinition} definition
- * @returns {boolean}
- */
-export function shouldDeleteQuestionOnly(pageId, definition) {
-  // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
-
-  const components = getComponentsOnPageFromDefinition(definition, pageId)
-  const formComponents = components.filter((c) => isFormType(c.type))
-  return formComponents.length > 1
-}
 
 /**
  * Builds error response for condition dependency blocking deletion
@@ -164,7 +151,13 @@ export default [
       }
 
       try {
-        if (dependencyContext.deletingQuestionOnly && questionId) {
+        const isQuestionDeletion = shouldDeleteQuestionOnly(
+          definition,
+          pageId,
+          questionId
+        )
+
+        if (isQuestionDeletion && questionId) {
           await performQuestionDeletion(
             formId,
             token,
@@ -176,7 +169,6 @@ export default [
           await performPageDeletion(formId, token, pageId, definition)
         }
       } catch (err) {
-        // Handle race condition where conditions were added after initial check
         if (
           isInvalidFormErrorType(
             err,
