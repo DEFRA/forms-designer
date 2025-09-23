@@ -114,8 +114,8 @@ export default [
           }
 
           return h.response({ ok: true }).code(StatusCodes.NO_CONTENT)
-        } catch (error) {
-          logger.error(error)
+        } catch (err) {
+          logger.error(err)
           return h
             .response({ ok: false })
             .code(StatusCodes.INTERNAL_SERVER_ERROR)

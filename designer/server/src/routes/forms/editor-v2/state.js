@@ -70,12 +70,12 @@ export default [
     options: {
       validate: {
         payload: schema,
-        failAction: (_request, h, error) => {
+        failAction: (_request, h, err) => {
           logger.error(
-            error,
+            err,
             'Invalid session contents when trying to save list entries in session'
           )
-          return h.response(`error: ${error}`)
+          return h.response(`error: ${err}`)
         }
       },
       auth: {

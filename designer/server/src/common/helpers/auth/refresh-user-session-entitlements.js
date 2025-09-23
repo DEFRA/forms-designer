@@ -46,20 +46,20 @@ export async function refreshUserSessionEntitlements(request, userId, token) {
       logger.info(`Successfully refreshed entitlements for user ${userId}`)
 
       return existingSession.scope
-    } catch (error) {
-      logger.warn(
-        `Failed to fetch entitlements for user ${userId}, dropping session`,
-        error
+    } catch (err) {
+      logger.error(
+        err,
+        `Failed to fetch entitlements for user ${userId}, dropping session`
       )
       await server.methods.session.drop(userId)
-      throw error
+      throw err
     }
-  } catch (error) {
+  } catch (err) {
     logger.error(
-      `Error refreshing session entitlements for user ${userId}`,
-      error
+      err,
+      `Error refreshing session entitlements for user ${userId}`
     )
-    throw error
+    throw err
   }
 }
 
