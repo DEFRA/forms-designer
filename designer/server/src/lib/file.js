@@ -9,13 +9,13 @@ const submissionEndpoint = new URL('/file/', config.submissionUrl)
 
 /**
  * @param {string} fieldId
- * @returns {Promise<{ statusCode: StatusCodes, emailIsCaseSensitive: boolean }>}
+ * @returns {Promise<{ statusCode: StatusCodes, emailIsCaseSensitive: boolean, filename: string }>}
  */
 export async function checkFileStatus(fieldId) {
   const requestUrl = new URL(`./${fieldId}`, submissionEndpoint)
 
   try {
-    /** @type {{ response: import('http').IncomingMessage, body: { retrievalKeyIsCaseSensitive: boolean } }} */
+    /** @type {{ response: import('http').IncomingMessage, body: { retrievalKeyIsCaseSensitive: boolean, filename: string } }} */
     const result = await getJson(requestUrl, {})
 
     const statusCode = /** @type {StatusCodes} */ (
@@ -24,13 +24,15 @@ export async function checkFileStatus(fieldId) {
 
     return {
       statusCode,
-      emailIsCaseSensitive: result.body.retrievalKeyIsCaseSensitive
+      emailIsCaseSensitive: result.body.retrievalKeyIsCaseSensitive,
+      filename: result.body.filename
     }
   } catch (err) {
     if (Boom.isBoom(err)) {
       return {
         statusCode: err.output.statusCode,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: ''
       }
     }
 

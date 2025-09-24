@@ -9,6 +9,7 @@ import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/file.js')
+jest.mock('~/src/messaging/publish-base.js')
 
 describe('File routes', () => {
   /** @type {Server} */
@@ -25,7 +26,8 @@ describe('File routes', () => {
     test('should show file download page with email (from cache) when file status response is 200', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file1'
       })
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(email)
 
@@ -56,7 +58,8 @@ describe('File routes', () => {
     test('should show file download page for user to enter email when file status response is 200', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file2'
       })
       jest.spyOn(server.methods.state, 'get').mockResolvedValue(undefined)
 
@@ -87,7 +90,8 @@ describe('File routes', () => {
     test('should show link expired page when response is 410', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.GONE,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file3'
       })
 
       const options = {
@@ -120,13 +124,50 @@ describe('File routes', () => {
 
       expect(result.response.statusCode).toBe(401)
     })
+
+    test('should throw Not Found when download not found', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.NOT_FOUND,
+        emailIsCaseSensitive: false,
+        filename: ''
+      })
+
+      const options = {
+        method: 'GET',
+        url: fileDownloadUrl,
+        auth
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.NOT_FOUND)
+    })
+
+    test('should throw Internal Server Error when download not found', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.CONFLICT,
+        emailIsCaseSensitive: false,
+        filename: ''
+      })
+
+      const options = {
+        method: 'GET',
+        url: fileDownloadUrl,
+        auth
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
   })
 
   describe('POST', () => {
     test('should show file is downloading page', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file6'
       })
 
       jest
@@ -154,10 +195,13 @@ describe('File routes', () => {
     test('should show link expired page when download file link response is 410', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file7'
       })
 
-      jest.mocked(file.createFileLink).mockRejectedValue(Boom.resourceGone())
+      jest
+        .mocked(file.createFileLink)
+        .mockRejectedValueOnce(Boom.resourceGone())
 
       const options = {
         method: 'post',
@@ -180,10 +224,11 @@ describe('File routes', () => {
     test('should show error when email is not for download file', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file8'
       })
 
-      jest.mocked(file.createFileLink).mockRejectedValue(Boom.forbidden())
+      jest.mocked(file.createFileLink).mockRejectedValueOnce(Boom.forbidden())
 
       const options = {
         method: 'post',
@@ -209,6 +254,40 @@ describe('File routes', () => {
       )
     })
 
+    test('should throw error when other exception', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file9'
+      })
+
+      jest.mocked(file.createFileLink).mockRejectedValueOnce(Boom.badData())
+
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: { email }
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
+
+    test('should show error when invalid payload', async () => {
+      const options = {
+        method: 'post',
+        url: fileDownloadUrl,
+        auth,
+        payload: {}
+      }
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(StatusCodes.SEE_OTHER)
+    })
+
     test('should show unauthorized page when user is unauthorized', async () => {
       const options = {
         method: 'post',
@@ -229,7 +308,8 @@ describe('File routes', () => {
 
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: true
+        emailIsCaseSensitive: true,
+        filename: 'my-form-file11'
       })
 
       jest
@@ -257,7 +337,8 @@ describe('File routes', () => {
 
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
         statusCode: StatusCodes.OK,
-        emailIsCaseSensitive: false
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file12'
       })
 
       jest

@@ -131,6 +131,12 @@ export interface FormUploadedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormUploadedChanges>
 }
 
+export interface FormFileDownloadedMessageData {
+  fileId: string
+  filename: string
+  fileLink: string
+}
+
 export interface FormDefinitionS3Meta {
   fileId: string
   filename: string
@@ -159,6 +165,7 @@ export type FormMessageChangesData =
 export type FormMessageActivitiesData =
   | FormCreatedMessageData
   | FormMessageDataBase
+  | FormFileDownloadedMessageData
 
 export interface EntitlementMessageData {
   userId: string
@@ -301,6 +308,18 @@ export interface FormDownloadedMessage extends DesignerMessageBase {
   data: FormMessageDataBase
 }
 
+export interface FormFileDownloadSuccessMessage extends DesignerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_FILE_DOWNLOAD_SUCCESS
+  data: FormFileDownloadedMessageData
+}
+
+export interface FormFileDownloadFailureMessage extends DesignerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_FILE_DOWNLOAD_FAILURE
+  data: FormFileDownloadedMessageData
+}
+
 export interface FormDraftCreatedFromLiveMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE
@@ -387,6 +406,8 @@ export type AuditMessage =
   | FormSubmissionGuidanceUpdatedMessage
   | FormUploadedMessage
   | FormDownloadedMessage
+  | FormFileDownloadSuccessMessage
+  | FormFileDownloadFailureMessage
   | FormDraftCreatedFromLiveMessage
   | FormLiveCreatedFromDraftMessage
   | FormDraftDeletedMessage

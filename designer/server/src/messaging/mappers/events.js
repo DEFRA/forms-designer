@@ -5,6 +5,8 @@ import {
   AuditEventMessageType
 } from '@defra/forms-model'
 
+import config from '~/src/config.js'
+
 /**
  * @param {AuditUser} user
  * @returns {AuthenticationLoginMessage}
@@ -104,6 +106,37 @@ export function formDownloadedMapper(downloadData) {
 }
 
 /**
+ * @param {{ fileId: string, filename: string, user: AuditUser }} data
+ * @param {boolean} isSuccess
+ * @returns { FormFileDownloadSuccessMessage | FormFileDownloadFailureMessage }
+ */
+export function formFileDownloadedMapper(data, isSuccess) {
+  const { fileId, user } = data
+  const now = new Date()
+
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.FORM,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type: isSuccess
+      ? AuditEventMessageType.FORM_FILE_DOWNLOAD_SUCCESS
+      : AuditEventMessageType.FORM_FILE_DOWNLOAD_FAILURE,
+    entityId: fileId,
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    data: {
+      fileId,
+      filename: data.filename,
+      fileLink: `${config.appBaseUrl}/file-download/${fileId}`
+    },
+    messageCreatedAt: now
+  }
+}
+
+/**
  * @typedef {object} FormDownloadData
  * @property {string} formId - The form ID
  * @property {string} slug - The form slug
@@ -111,5 +144,5 @@ export function formDownloadedMapper(downloadData) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage } from '@defra/forms-model'
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage } from '@defra/forms-model'
  */

@@ -3,6 +3,7 @@ import {
   ControllerType,
   hasComponents,
   hasComponentsEvenIfNoNext,
+  hasRepeater,
   includesFileUploadField,
   isFormType,
   randomId
@@ -154,10 +155,13 @@ export async function updateQuestion(
     // Side-effect to the component within the page
     questionToChange.type = questionDetails.type ?? ComponentType.TextField
   }
+
+  const payload = buildRepeaterPayload(page, origControllerType)
+
   const { controllerType: newControllerType } = getControllerTypeAndProperties(
     page,
     hasComponents(page) ? page.components : [],
-    {}
+    payload
   )
   if (
     origControllerType !== newControllerType ||
@@ -263,6 +267,30 @@ export async function insertUpdateOrDeleteGuidance(
       })
     }
   }
+}
+
+/**
+ * Build payload for preserving repeater settings during question updates
+ * @param {Page | undefined} page
+ * @param {ControllerType | undefined} controllerType
+ * @returns {Partial<FormEditorInputPageSettings>}
+ */
+export function buildRepeaterPayload(page, controllerType) {
+  const payload = {}
+  if (controllerType === ControllerType.Repeat) {
+    payload.repeater = 'true'
+    const repeat = hasRepeater(page) ? page.repeat : undefined
+    const schema = repeat?.schema
+    if (schema) {
+      payload.minItems = schema.min
+      payload.maxItems = schema.max
+    }
+    const options = repeat?.options
+    if (options) {
+      payload.questionSetName = options.title
+    }
+  }
+  return payload
 }
 
 /**
