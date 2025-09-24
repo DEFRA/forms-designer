@@ -4,6 +4,7 @@
 {% from "pages-panel-left/macro.njk" import appPagesPanelLeft %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -26,11 +27,19 @@
   {% endif %}
 
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-full">
-      {% if pages | length > 0 %}
+    {%- include "../views/forms/editor-v2/partials/conditions-filter.njk" -%}
+
+    {% set pageCount = pages | length %}
+    <div class="{{ conditions.rightPanelClass }}">
+      {% if pageCount > 0 %}
         <div class="govuk-grid-row govuk-!-margin-bottom-0">
           <div class="govuk-grid-column-one-half">
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0 app-pages-header__title">{{ pages | length }} page{{ 's' if pages | length != 1 else '' }}</h2>
+
+            <h2 class="govuk-heading-m govuk-!-margin-bottom-0 app-pages-header__title">
+            {% if pageCount > 1 %}
+            {{ pageCount - 1 }} page{{ 's' if pageCount > 2 else '' }}
+            {% endif %}
+            </h2>
           </div>
           <div class="govuk-grid-column-one-half govuk-!-margin-bottom-6">
             {% if rightSideActions %}
@@ -51,9 +60,6 @@
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-0 govuk-!-margin-bottom-5">
       {% endif %}
     </div>
-  </div>
-
-  <div class="govuk-grid-row">
     <div class="govuk-grid-column-full govuk-grid-column-one-half-from-desktop">
       <form class="form">
           {% for page in pages %}
