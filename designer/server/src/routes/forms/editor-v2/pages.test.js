@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import {
   buildDefinition,
+  testFormDefinitionWithMultipleV2Conditions,
   testFormDefinitionWithSinglePage,
   testFormDefinitionWithSummaryOnly
 } from '~/src/__stubs__/form-definition.js'
@@ -172,6 +173,97 @@ describe('Editor v2 pages routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/migrate')
+  })
+
+  test('GET - should filter pages based on selected conditions', async () => {
+    const definition = buildDefinition({
+      ...testFormDefinitionWithMultipleV2Conditions,
+      engine: Engine.V2,
+      schema: SchemaVersion.V2
+    })
+    definition.pages[2].condition = '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
+
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(definition)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/pages?filter=4a82930a-b8f5-498c-adae-6158bb2aeeb5',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mainHeading = container.getByRole('heading', { level: 1 })
+    const $pageTitles = container.getAllByRole('heading', { level: 2 })
+
+    expect($mainHeading).toHaveTextContent('Add and edit pages')
+
+    expect($pageTitles[0]).toHaveTextContent('1 page')
+    expect($pageTitles[1]).toHaveTextContent('Fave animal')
+    expect($pageTitles[2]).toHaveTextContent('End pages')
+    expect($pageTitles[3]).toHaveTextContent('Check your answers')
+  })
+
+  test('POST - should create filter based on selected conditions', async () => {
+    const payload = {
+      conditionsFilter: ['cond1', 'cond2']
+    }
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/pages',
+      auth,
+      payload
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/pages?filter=cond1,cond2'
+    )
+  })
+
+  test('POST - should create empty filter', async () => {
+    const payload = {
+      conditionsFilter: undefined
+    }
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/pages',
+      auth,
+      payload
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
+  test('POST - should create single entry filter', async () => {
+    const payload = {
+      conditionsFilter: 'singleCondition'
+    }
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/pages',
+      auth,
+      payload
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/pages?filter=singleCondition'
+    )
   })
 })
 
