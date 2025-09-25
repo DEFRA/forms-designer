@@ -286,10 +286,12 @@ function buildConditionsFilter(definition, filter) {
   )
 
   // Find all condition ids that are assigned to at least one page
-  const assignedConditionIds = definition.pages
-    .filter(({ condition }) => condition !== undefined)
-    .map((x) => x.condition)
-    .filter(Boolean)
+  const assignedConditionIds = new Set(
+    definition.pages
+      .filter(({ condition }) => condition !== undefined)
+      .map((x) => x.condition)
+      .filter(Boolean)
+  )
 
   return {
     show: conditions.length > 0,
@@ -312,7 +314,7 @@ function buildConditionsFilter(definition, filter) {
       },
       items: conditions.map((cond) => {
         const valueStr = 'id' in cond ? cond.id : cond.name
-        const assignedToAPage = assignedConditionIds.includes(valueStr)
+        const assignedToAPage = assignedConditionIds.has(valueStr)
         return {
           text: assignedToAPage
             ? cond.displayName
