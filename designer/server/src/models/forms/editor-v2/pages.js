@@ -285,6 +285,12 @@ function buildConditionsFilter(definition, filter) {
     condA.displayName.localeCompare(condB.displayName)
   )
 
+  // Find all condition ids that are assigned to at least one page
+  const assignedConditionIds = definition.pages
+    .filter(({ condition }) => condition !== undefined)
+    .map((x) => x.condition)
+    .filter(Boolean)
+
   return {
     show: conditions.length > 0,
     rightPanelClass: conditions.length
@@ -306,10 +312,14 @@ function buildConditionsFilter(definition, filter) {
       },
       items: conditions.map((cond) => {
         const valueStr = 'id' in cond ? cond.id : cond.name
+        const assignedToAPage = assignedConditionIds.includes(valueStr)
         return {
-          text: cond.displayName,
+          text: assignedToAPage
+            ? cond.displayName
+            : `${cond.displayName} (not assigned)`,
           value: valueStr,
-          checked: filter.includes(valueStr)
+          checked: filter.includes(valueStr),
+          disabled: !assignedToAPage
         }
       })
     }

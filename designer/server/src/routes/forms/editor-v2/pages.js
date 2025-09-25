@@ -95,7 +95,7 @@ export default [
         .redirect(
           editorv2Path(
             slug,
-            filterQuery !== '' ? `pages?filter=${filterQuery}` : 'pages'
+            filterQuery.length ? `pages?filter=${filterQuery}` : 'pages'
           )
         )
         .code(StatusCodes.SEE_OTHER)
