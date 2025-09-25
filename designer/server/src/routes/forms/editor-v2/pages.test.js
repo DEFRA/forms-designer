@@ -87,13 +87,13 @@ describe('Editor v2 pages routes', () => {
           next: [{ path: '/page-two' }]
         },
         {
-          id: 'p1',
+          id: 'p2',
           path: '/page-two',
           title: 'Page two',
           section: 'section',
           components: [
             {
-              id: 'c1',
+              id: 'c2',
               type: ComponentType.TextField,
               name: 'textField',
               title: 'This is your second field',
@@ -105,7 +105,7 @@ describe('Editor v2 pages routes', () => {
           next: [{ path: '/summary' }]
         },
         {
-          id: 'c2',
+          id: 'p3',
           title: 'Summary',
           path: '/summary',
           controller: ControllerType.Summary

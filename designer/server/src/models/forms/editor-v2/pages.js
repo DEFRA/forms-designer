@@ -173,9 +173,12 @@ export function mapPageData(slug, definition, filterOptions) {
       .map((page) => {
         const isEndPage = page.controller === ControllerType.Summary
         const isExitPage = page.controller === ControllerType.Terminal
+        const pageNum = definition.pages.findIndex((p) => p.id === page.id) + 1
+
         if (page.title === '') {
           return {
             ...page,
+            pageNum,
             title: hasComponents(page) ? page.components[0].title : '',
             questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
             isEndPage,
@@ -185,6 +188,7 @@ export function mapPageData(slug, definition, filterOptions) {
         }
         return {
           ...page,
+          pageNum,
           questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
           isEndPage,
           isExitPage,
