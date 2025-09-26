@@ -88,6 +88,35 @@ describe('Editor v2 question details routes', () => {
       '/library/my-form-slug/editor-v2/page/1/questions'
     )
   })
+
+  test('POST - should error if no page title and adding second question', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.get).mockResolvedValue(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValue(testFormDefinitionWithOneQuestionNoPageTitle)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/details',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: 'Short desc',
+        questionType: 'TextField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
 })
 
 /**

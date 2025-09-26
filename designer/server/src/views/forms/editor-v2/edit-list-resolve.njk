@@ -1,0 +1,79 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+  backLink: backLink,
+  useNewMasthead: true
+}) %}
+
+    <form class="form" method="post">
+
+      <p class="govuk-body">You have removed a list item with a condition attached. Replace the list item to prevent your form from breaking.</p>
+
+      <h2 class="govuk-heading-m">List: {{ question.title }}</h2>
+
+      <table class="govuk-table app-conditions-table">
+        <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">Original item</th>
+            <th scope="col" class="govuk-table__header">Replace with</th>
+            <th scope="col" class="govuk-table__header">Conditions using this item</th>
+          </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+          {% for conflict in conflicts %}
+          <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ conflict.conflictItem.text }}</td>
+            <td class="govuk-table__cell">
+              {{ govukSelect({
+                id: "replaceWith[" + conflict.conflictItem.id + "]",
+                name: "replaceWith[" + conflict.conflictItem.id + "]",
+                items: conflict.linkableItems,
+                formGroup: {
+                  classes: 'govuk-!-margin-bottom-0'
+                },
+                value: conflict.closestMatch
+                })
+              }}
+            </td>
+            <td class="govuk-table__cell">
+            {% for conditionName in conflict.conditionNames %}
+            <div>'{{ conditionName }}'</div>
+            {% endfor %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <div class="govuk-button-group govuk-!-margin-top-6">
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+        <a href="{{ backLink.href }}" class="govuk-link govuk-link--no-visited-state">
+          Cancel
+        </a>
+      </div>
+
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
