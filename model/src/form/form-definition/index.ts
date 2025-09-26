@@ -260,6 +260,9 @@ const conditionSchema = Joi.object<ConditionData>()
       )
   })
 
+export const MIN_NUMBER_OF_REPEAT_ITEMS = 1
+export const MAX_NUMBER_OF_REPEAT_ITEMS = 200
+
 export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   .description('Condition definition')
   .keys({
@@ -581,10 +584,13 @@ const repeatSchema = Joi.object<RepeatSchema>()
   .keys({
     min: Joi.number()
       .empty('')
+      .min(MIN_NUMBER_OF_REPEAT_ITEMS)
       .required()
       .description('Minimum number of repetitions required'),
     max: Joi.number()
       .empty('')
+      .min(Joi.ref('min'))
+      .max(MAX_NUMBER_OF_REPEAT_ITEMS)
       .required()
       .description('Maximum number of repetitions allowed')
   })
