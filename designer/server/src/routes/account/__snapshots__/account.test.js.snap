@@ -162,7 +162,6 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
 
 
 
-
   <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
 
 
@@ -219,6 +218,8 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
 
   
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">

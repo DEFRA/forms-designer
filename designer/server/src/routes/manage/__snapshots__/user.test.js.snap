@@ -162,7 +162,6 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 
 
 
-
   <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
 
 
@@ -251,6 +250,8 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 
   
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
@@ -478,7 +479,6 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 
 
 
-
   <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
 
   <form method="post" novalidate>
@@ -537,6 +537,8 @@ exports[`Create and edit user routes GET /manage/users should render view when d
   </form>
 
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
@@ -764,7 +766,6 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 
 
 
-
   <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
 
 
@@ -862,6 +863,8 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 
   
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">

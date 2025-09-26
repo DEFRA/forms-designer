@@ -47,6 +47,14 @@
 {% endblock %}
 
 {% block footer %}
+  {% set feedbackRowHtml = "" %}
+
+  {% if ["alpha", "beta"].includes(config.phase) %}
+    {% set feedbackRowHtml %}
+      <strong class="govuk-tag govuk-phase-banner__content__tag">{{ config.phase | title }}</strong>This is a new service. Help us improve it and <a class="govuk-footer__link" href="mailto:defraforms@defra.gov.uk">give your feedback by email</a>.
+    {% endset %}
+  {% endif %}
+
   {{ govukFooter({
     containerClasses: "app-width-container--wide",
     meta: {
@@ -63,7 +71,8 @@
           href: "https://www.gov.uk/help/privacy-notice",
           text: "Privacy"
         }
-      ]
+      ],
+      html: feedbackRowHtml
     }
   }) }}
 {% endblock %}
