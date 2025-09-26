@@ -42,7 +42,7 @@ function insertGuidanceAtTop(components) {
 describe('editor-v2 - pages model', () => {
   describe('mapPageData', () => {
     test('should return unchanged definition if no pages', () => {
-      const res = mapPageData('slug', testFormDefinitionWithNoPages)
+      const res = mapPageData('slug', testFormDefinitionWithNoPages, undefined)
       expect(res).toEqual(testFormDefinitionWithNoPages)
     })
     test('should populate page title from first question title', () => {
@@ -50,7 +50,7 @@ describe('editor-v2 - pages model', () => {
         ...testFormDefinitionWithTwoQuestions
       }
       definitionWithNoPageTitles.pages[0].title = ''
-      const res = mapPageData('slug', definitionWithNoPageTitles)
+      const res = mapPageData('slug', definitionWithNoPageTitles, undefined)
       expect(res.pages[0].title).toBe('This is your first question')
     })
     test('should populate page titles from first question title on multiple pages', () => {
@@ -59,9 +59,22 @@ describe('editor-v2 - pages model', () => {
       }
       definitionWithNoPageTitles.pages[0].title = ''
       definitionWithNoPageTitles.pages[1].title = ''
-      const res = mapPageData('slug', definitionWithNoPageTitles)
+      const res = mapPageData('slug', definitionWithNoPageTitles, undefined)
       expect(res.pages[0].title).toBe('This is your first question')
       expect(res.pages[1].title).toBe('This is your first question - page two')
+    })
+    test('should filter pages based on filtered conditions', () => {
+      const definitionWithConditions = {
+        ...testFormDefinitionWithMultipleV2Conditions
+      }
+      // @ts-expect-error - condition v2
+      definitionWithConditions.pages[2].condition =
+        '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
+      const res = mapPageData('slug', definitionWithConditions, [
+        '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
+      ])
+      expect(res.pages[0].title).toBe('Fave animal')
+      expect(res.pages[1].title).toBe('Summary')
     })
   })
 

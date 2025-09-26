@@ -152,8 +152,9 @@ export function mapQuestionRows(definition, page) {
 /**
  * @param {string} slug
  * @param {FormDefinition} definition
+ * @param { string[] | undefined } filterOptions
  */
-export function mapPageData(slug, definition) {
+export function mapPageData(slug, definition, filterOptions) {
   if (!definition.pages.length) {
     return definition
   }
@@ -162,27 +163,38 @@ export function mapPageData(slug, definition) {
 
   return {
     ...definition,
-    pages: definition.pages.map((page) => {
-      const isEndPage = page.controller === ControllerType.Summary
-      const isExitPage = page.controller === ControllerType.Terminal
-      if (page.title === '') {
+    pages: definition.pages
+      .filter(
+        (p) =>
+          !filterOptions?.length ||
+          p.controller === ControllerType.Summary ||
+          filterOptions.includes(p.condition ?? 'unknown')
+      )
+      .map((page) => {
+        const isEndPage = page.controller === ControllerType.Summary
+        const isExitPage = page.controller === ControllerType.Terminal
+        const pageNum = definition.pages.findIndex((p) => p.id === page.id) + 1
+
+        if (page.title === '') {
+          return {
+            ...page,
+            pageNum,
+            title: hasComponents(page) ? page.components[0].title : '',
+            questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
+            isEndPage,
+            isExitPage,
+            editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
+          }
+        }
         return {
           ...page,
-          title: hasComponents(page) ? page.components[0].title : '',
+          pageNum,
           questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
           isEndPage,
           isExitPage,
           editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
         }
-      }
-      return {
-        ...page,
-        questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
-        isEndPage,
-        isExitPage,
-        editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
-      }
-    })
+      })
   }
 }
 
@@ -268,6 +280,59 @@ function buildRightSideActions(slug) {
 }
 
 /**
+ * Build conditions filter (left panel)
+ * @param {FormDefinition} definition
+ * @param { string[] } filter
+ */
+function buildConditionsFilter(definition, filter) {
+  const conditions = definition.conditions.sort((condA, condB) =>
+    condA.displayName.localeCompare(condB.displayName)
+  )
+
+  // Find all condition ids that are assigned to at least one page
+  const assignedConditionIds = new Set(
+    definition.pages
+      .filter(({ condition }) => condition !== undefined)
+      .map((x) => x.condition)
+      .filter(Boolean)
+  )
+
+  return {
+    show: conditions.length > 0,
+    rightPanelClass: conditions.length
+      ? 'govuk-grid-column-three-quarters'
+      : 'govuk-grid-column-full',
+    applied: filter.map(
+      (condId) =>
+        conditions.find((c) => 'id' in c && c.id === condId)?.displayName
+    ),
+    available: {
+      name: 'conditionsFilter',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Filter pages by condition',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      items: conditions.map((cond) => {
+        const valueStr = 'id' in cond ? cond.id : cond.name
+        const assignedToAPage = assignedConditionIds.has(valueStr)
+        return {
+          text: assignedToAPage
+            ? cond.displayName
+            : `${cond.displayName} (not assigned)`,
+          value: valueStr,
+          checked: filter.includes(valueStr),
+          disabled: !assignedToAPage
+        }
+      })
+    }
+  }
+}
+
+/**
  * Add conditional actions based on page count
  * @param {Array<any>} pageActions
  * @param {number} numOfNonSummaryPages
@@ -313,9 +378,10 @@ function buildPageHeadings(metadata) {
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param { string[] } filter
  * @param {string[]} [notification]
  */
-export function pagesViewModel(metadata, definition, notification) {
+export function pagesViewModel(metadata, definition, filter, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -327,6 +393,7 @@ export function pagesViewModel(metadata, definition, notification) {
 
   const pageActions = buildPageActions(metadata.slug)
   const rightSideActions = buildRightSideActions(metadata.slug)
+  const conditions = buildConditionsFilter(definition, filter)
 
   const numOfNonSummaryPages = definition.pages.filter(
     (x) => x.controller !== ControllerType.Summary
@@ -340,7 +407,7 @@ export function pagesViewModel(metadata, definition, notification) {
   )
 
   const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
-  const mappedData = mapPageData(metadata.slug, definition)
+  const mappedData = mapPageData(metadata.slug, definition, filter)
 
   const pageListModel = {
     ...mappedData,
@@ -352,6 +419,7 @@ export function pagesViewModel(metadata, definition, notification) {
     pageCaption,
     pageActions,
     rightSideActions,
+    conditions,
     notification
   }
 
