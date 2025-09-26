@@ -1,3 +1,8 @@
+import {
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import {
@@ -264,6 +269,64 @@ describe('Editor v2 question delete routes', () => {
       definition
     )
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
+  test('POST - should show friendly error when page contains a component used in a condition', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const cause = [
+      {
+        id: FormDefinitionError.RefConditionComponentId,
+        type: FormDefinitionErrorType.Ref,
+        detail: { path: ['conditions', 0, 'items', 0, 'componentId'] },
+        message: '"conditions[0].items[0].componentId" must be [ref:root:pages]'
+      }
+    ]
+
+    const refComponentError = Boom.boomify(
+      new Error('component referenced in condition', { cause }),
+      { data: { error: 'InvalidFormDefinitionError' } }
+    )
+
+    jest.mocked(deletePage).mockRejectedValueOnce(refComponentError)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth
+    }
+
+    const { container, response } = await renderResponse(server, options)
+
+    expect(response.statusCode).toBe(StatusCodes.OK)
+    const $errorMessage = container.getByText(
+      'This page cannot be deleted because one or more of its questions are used in a condition. Remove those references before deleting this page.'
+    )
+    expect($errorMessage).toBeInTheDocument()
+  })
+
+  test('POST - should rethrow non RefConditionComponentId errors', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    jest.mocked(deletePage).mockRejectedValueOnce(Boom.badRequest('Bad'))
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth
+    }
+
+    const { response } = await renderResponse(server, options)
+
+    expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
   })
 })
 
