@@ -160,6 +160,7 @@ export interface UkAddressFieldComponent extends FormFieldBase {
   type: ComponentType.UkAddressField
   options: FormFieldBase['options'] & {
     hideTitle?: boolean
+    usePostcodeLookup?: boolean
   }
 }
 
