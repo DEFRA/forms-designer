@@ -360,6 +360,7 @@ export function getFieldValue(
         getListFromComponent(questionFields, definition)?.items
       )
     case 'usePostcodeLookup': {
+      // TODO: Should need this type casting
       return `${/** @type {UkAddressFieldComponent | undefined} */ (questionFields)?.options.usePostcodeLookup === true}`
     }
   }
