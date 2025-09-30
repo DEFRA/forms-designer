@@ -361,6 +361,9 @@ function getAdditionalOptions(payload) {
   if (payload.maxPast !== undefined) {
     additionalOptions.maxDaysInPast = payload.maxPast
   }
+  if (payload.usePostcodeLookup !== undefined) {
+    additionalOptions.usePostcodeLookup = payload.usePostcodeLookup === 'true'
+  }
   return additionalOptions
 }
 
