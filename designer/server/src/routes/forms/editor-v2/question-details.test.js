@@ -961,7 +961,6 @@ describe('Editor v2 question details routes', () => {
       testFormDefinitionWithRadioQuestionAndList
     )
     const component = definition.pages[0].components[0]
-    // @ts-expect-error - change component type
     component.type = ComponentType.AutocompleteField
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

@@ -24,6 +24,42 @@ export function buildQuestionPage(partialPage = {}) {
 }
 
 /**
+ * @param {Partial<PageFileUpload>} [partialPage]
+ * @returns {PageFileUpload}
+ */
+export function buildFileUploadPage(partialPage = {}) {
+  return {
+    id: 'ffefd409-f3f4-49fe-882e-6e89f44631b1',
+    title: 'Page one',
+    path: '/page-one',
+    next: [],
+    components: [],
+    controller: ControllerType.FileUpload,
+    ...partialPage
+  }
+}
+
+/**
+ * @param {Partial<PageRepeat>} [partialPage]
+ * @returns {PageRepeat}
+ */
+export function buildRepeaterPage(partialPage = {}) {
+  return {
+    id: 'eeefd409-f3f4-49fe-882e-6e89f44631b1',
+    title: 'Page repeat',
+    path: '/page-repeat',
+    next: [],
+    components: [],
+    controller: ControllerType.Repeat,
+    repeat: {
+      schema: { min: 1, max: 5 },
+      options: { title: 'Pizza', name: 'xdGhbu' }
+    },
+    ...partialPage
+  }
+}
+
+/**
  * @param {Partial<PageSummary>} [partialSummaryPage]
  */
 export function buildSummaryPage(partialSummaryPage = {}) {
@@ -33,6 +69,7 @@ export function buildSummaryPage(partialSummaryPage = {}) {
     title: 'Summary',
     path: ControllerPath.Summary,
     controller: ControllerType.Summary,
+    components: [],
     ...partialSummaryPage
   }
   return page
@@ -113,6 +150,22 @@ export function buildCheckboxComponent(partialListComponent) {
     list: 'CheckboxList',
     options: {},
     ...partialListComponent
+  }
+}
+
+/**
+ * @param {Partial<MarkdownComponent>} partialComponent
+ * @returns {MarkdownComponent}
+ */
+export function buildMarkdownComponent(partialComponent) {
+  return {
+    id: '45678',
+    type: ComponentType.Markdown,
+    name: 'html-guidance',
+    title: 'html-title',
+    content: 'Original guidance',
+    options: {},
+    ...partialComponent
   }
 }
 
@@ -220,548 +273,354 @@ export const testFormDefinitionWithSinglePage = buildDefinition({
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithSummaryOnly = {
-  name: 'Test form',
+export const testFormDefinitionWithSummaryOnly = buildDefinition({
   pages: [
-    {
-      id: 'p1',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    buildSummaryPage({
+      id: 'p1'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithoutSummary = {
-  name: 'Test form',
+export const testFormDefinitionWithoutSummary = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
-      path: '/page-one',
-      title: 'Page one',
       section: 'section',
       components: [
-        {
-          type: ComponentType.TextField,
+        buildTextFieldComponent({
+          id: 'c1',
           name: 'textField',
           title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
+          hint: 'Help text'
+        })
       ],
       next: [{ path: '/summary' }]
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithTwoQuestions = {
-  name: 'Test form',
+export const testFormDefinitionWithTwoQuestions = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
-      path: '/page-one',
-      title: 'Page one',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
+          hint: 'Help text'
+        }),
+        buildTextFieldComponent({
           id: 'q2',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your second question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
+          hint: 'Help text'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'p2'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithTwoPagesAndQuestions = {
-  name: 'Test form',
+export const testFormDefinitionWithTwoPagesAndQuestions = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
-      path: '/page-one',
-      title: 'Page one',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
+          hint: 'Help text'
+        }),
+        buildTextFieldComponent({
           id: 'q2',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your second question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
+          hint: 'Help text'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
+    }),
+    buildQuestionPage({
       id: 'p2',
       path: '/page-two',
       title: 'Page two',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first question - page two',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
+          hint: 'Help text'
+        }),
+        buildTextFieldComponent({
           id: 'q2',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your second question - page two',
           hint: 'Help text',
           options: {
             required: false
-          },
-          schema: {}
-        }
+          }
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p3',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'p3'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithNoQuestions = {
-  name: 'Test form',
+export const testFormDefinitionWithNoQuestions = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
-      path: '/page-one',
-      title: 'Page one',
       section: 'section',
       components: [],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'p2'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithNoPages = {
-  name: 'Test form',
-  pages: [],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+export const testFormDefinitionWithNoPages = buildDefinition({})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithExistingGuidance = {
-  name: 'Test form',
+export const testFormDefinitionWithExistingGuidance = buildDefinition({
   pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
-      section: 'section',
+    buildQuestionPage({
       id: '12345',
+      section: 'section',
+      components: [buildMarkdownComponent({})],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'c2'
+    })
+  ]
+})
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithComponentsAndLeadingGuidance =
+  buildDefinition({
+    pages: [
+      buildQuestionPage({
+        id: '12345',
+        section: 'section',
+        components: [
+          buildMarkdownComponent({
+            id: '04132d25-a648-43ae-9d5d-6fa410ae8d99'
+          }),
+          buildTextFieldComponent({
+            id: 'cda48ac2-91b1-47a8-ba14-8480b5d2c86f'
+          }),
+          buildTextFieldComponent({
+            id: '43425d8e-4832-4ed1-a574-1d29fd63cf3c',
+            title: 'This is your second question - page two',
+            options: {
+              required: false
+            }
+          })
+        ],
+        next: [{ path: '/summary' }]
+      }),
+      buildSummaryPage({
+        id: 'p2'
+      })
+    ]
+  })
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithExistingSummaryDeclaration = buildDefinition(
+  {
+    pages: [
+      buildQuestionPage({
+        id: 'p1',
+        section: 'section',
+        components: [
+          buildTextFieldComponent({
+            title: 'This is your first field'
+          })
+        ],
+        next: [{ path: '/summary' }]
+      }),
+      buildSummaryPage({
+        id: 'p2',
+        components: [
+          buildMarkdownComponent({
+            id: '45678',
+            content: 'Declaration text'
+          })
+        ]
+      })
+    ]
+  }
+)
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithMissingPageIds = buildDefinition({
+  pages: [
+    buildQuestionPage({
+      id: undefined,
+      section: 'section',
       components: [
-        {
-          id: '45678',
-          type: ComponentType.Markdown,
-          name: 'html-guidance',
-          title: 'html-title',
-          content: 'Original guidance',
-          options: {}
-        }
+        buildTextFieldComponent({
+          id: 'q1',
+          title: 'This is your first question'
+        }),
+        buildTextFieldComponent({
+          id: 'q2',
+          title: 'This is your second question'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
-
-/**
- * @satisfies {FormDefinition}
- */
-export const testFormDefinitionWithComponentsAndLeadingGuidance = {
-  name: 'Test form',
-  pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
+    }),
+    buildQuestionPage({
+      id: undefined,
       section: 'section',
-      id: '12345',
       components: [
-        {
-          id: '04132d25-a648-43ae-9d5d-6fa410ae8d99',
-          type: ComponentType.Markdown,
-          name: 'html-guidance',
-          title: 'html-title',
-          content: 'Original guidance',
-          options: {}
-        },
-        {
-          id: 'cda48ac2-91b1-47a8-ba14-8480b5d2c86f',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
-          id: '43425d8e-4832-4ed1-a574-1d29fd63cf3c',
-          type: ComponentType.TextField,
-          name: 'textField',
+        buildTextFieldComponent({
+          id: 'q1',
+          title: 'This is your first question - page two'
+        }),
+        buildTextFieldComponent({
+          id: 'q2',
           title: 'This is your second question - page two',
-          hint: 'Help text',
           options: {
             required: false
-          },
-          schema: {}
-        }
+          }
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: undefined
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithExistingSummaryDeclaration = {
-  name: 'Test form',
+export const testFormDefinitionWithAGuidancePage = buildDefinition({
   pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
-      section: 'section',
+    buildQuestionPage({
       id: 'p1',
+      section: 'section',
       components: [
-        {
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
+        buildMarkdownComponent({
+          id: 'c1'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: [
-        {
-          id: '45678',
-          type: ComponentType.Markdown,
-          name: 'html-declaration',
-          title: 'html-title',
-          content: 'Declaration text',
-          options: {}
-        }
-      ]
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'c2'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithMissingPageIds = {
-  name: 'Test form',
+export const testFormDefinitionWithFileUploadPage = buildDefinition({
   pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
-      section: 'section',
-      components: [
-        {
-          id: 'q1',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
-          id: 'q2',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your second question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
-      ],
-      next: [{ path: '/summary' }]
-    },
-    {
-      path: '/page-two',
-      title: 'Page two',
-      section: 'section',
-      components: [
-        {
-          id: 'q1',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first question - page two',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
-          id: 'q2',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your second question - page two',
-          hint: 'Help text',
-          options: {
-            required: false
-          },
-          schema: {}
-        }
-      ],
-      next: [{ path: '/summary' }]
-    },
-    {
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
-
-/**
- * @satisfies {FormDefinition}
- */
-export const testFormDefinitionWithAGuidancePage = {
-  name: 'Test form',
-  pages: [
-    {
-      path: '/page-one',
-      title: 'Page one',
-      section: 'section',
-      id: 'p1',
-      components: [
-        {
-          id: 'c1',
-          type: ComponentType.Markdown,
-          name: 'html-guidance',
-          title: 'html-title',
-          content: 'Original guidance',
-          options: {}
-        }
-      ],
-      next: [{ path: '/summary' }]
-    },
-    {
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
-
-/**
- * @satisfies {FormDefinition}
- */
-export const testFormDefinitionWithFileUploadPage = {
-  name: 'Test form',
-  pages: [
-    {
+    buildFileUploadPage({
       id: 'p1',
       path: '/file-upload',
       title: 'Upload a file',
       controller: ControllerType.FileUpload,
       section: 'section',
       components: [
-        {
+        buildFileUploadComponent({
           id: 'q1',
-          type: ComponentType.FileUploadField,
           name: 'fileUpload',
-          title: 'Upload a file',
-          options: {},
-          schema: {}
-        }
+          title: 'Upload a file'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
+    }),
+    buildQuestionPage({
       id: 'p2',
       path: '/page-two',
       title: 'Page two',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first question - page two',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
+          title: 'This is your first question - page two'
+        }),
+        buildTextFieldComponent({
           id: 'q2',
-          type: ComponentType.TextField,
-          name: 'textField',
           title: 'This is your second question - page two',
-          hint: 'Help text',
           options: {
             required: false
-          },
-          schema: {}
-        }
+          }
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p3',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'p3'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithRadioQuestionAndList = {
-  name: 'Test form',
+export const testFormDefinitionWithRadioQuestionAndList = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
       path: '/radio-question',
       title: 'Radio question',
       section: 'section',
       components: [
-        {
+        buildRadioComponent({
           id: 'q1',
-          type: ComponentType.RadiosField,
           name: 'radio-field',
           title: 'Select a colour',
-          options: {},
           list: 'my-list-guid'
-        }
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
+    }),
+    buildSummaryPage({
+      id: 'p2'
+    })
   ],
-  conditions: [],
-  sections: [],
   lists: [
     {
       id: 'my-list-guid',
@@ -775,233 +634,178 @@ export const testFormDefinitionWithRadioQuestionAndList = {
       ]
     }
   ]
-}
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithRadioQuestionAndMislinkedList = {
-  name: 'Test form',
-  pages: [
-    {
-      id: 'p1',
-      path: '/radio-question',
-      title: 'Radio question',
-      section: 'section',
-      components: [
-        {
-          id: 'q1',
-          type: ComponentType.RadiosField,
-          name: 'radio-field',
-          title: 'Select a colour',
-          options: {},
-          list: 'my-list-guid'
-        }
-      ],
-      next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: [
-    {
-      id: 'my-list-guid-invalid',
-      name: 'my-list',
-      title: 'my list title',
-      type: 'string',
-      items: []
-    }
-  ]
-}
+export const testFormDefinitionWithRadioQuestionAndMislinkedList =
+  buildDefinition({
+    pages: [
+      buildQuestionPage({
+        id: 'p1',
+        path: '/radio-question',
+        title: 'Radio question',
+        section: 'section',
+        components: [
+          buildRadioComponent({
+            id: 'q1',
+            name: 'radio-field',
+            title: 'Select a colour',
+            list: 'my-list-guid'
+          })
+        ],
+        next: [{ path: '/summary' }]
+      }),
+      buildSummaryPage({
+        id: 'p2'
+      })
+    ],
+    lists: [
+      {
+        id: 'my-list-guid-invalid',
+        name: 'my-list',
+        title: 'my list title',
+        type: 'string',
+        items: []
+      }
+    ]
+  })
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithOneQuestionNoPageTitle = {
-  name: 'Test form',
+export const testFormDefinitionWithOneQuestionNoPageTitle = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
-      path: '/page-one',
       title: '',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first question',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
+          title: 'This is your first question'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'c2'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithRepeater = {
-  name: 'Test form',
+export const testFormDefinitionWithRepeater = buildDefinition({
   pages: [
-    {
-      id: 'p1',
+    buildRepeaterPage({
       path: '/pizza',
       title: 'Pizza',
-      controller: ControllerType.Repeat,
       repeat: {
         schema: { min: 1, max: 5 },
         options: { title: 'Pizza', name: 'xdGhbu' }
       },
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
           name: 'toppings',
-          title: 'Toppings',
-          options: {},
-          schema: {}
-        }
+          title: 'Toppings'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
+    }),
+    buildQuestionPage({
       id: 'p2',
       path: '/page-two',
       title: 'Page two',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'q1',
-          type: ComponentType.TextField,
-          name: 'textField',
-          title: 'This is your first question - page two',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        },
-        {
+          title: 'This is your first question - page two'
+        }),
+        buildTextFieldComponent({
           id: 'q2',
-          type: ComponentType.TextField,
-          name: 'textField',
           title: 'This is your second question - page two',
-          hint: 'Help text',
           options: {
             required: false
-          },
-          schema: {}
-        }
+          }
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'p3',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: []
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'p3'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithMultipleV2Conditions = {
+export const testFormDefinitionWithMultipleV2Conditions = buildDefinition({
   name: 'Form name',
   startPage: '/summary',
   pages: [
-    {
+    buildQuestionPage({
+      id: '449c053b-9201-4312-9a75-187ac1b720eb',
       title: 'What is your full name',
       path: '/what-is-your-full-name',
       components: [
-        {
-          type: ComponentType.TextField,
+        buildTextFieldComponent({
+          id: '154271c2-79a2-4b59-b535-d210a13dbfe9',
           title: 'What is your full name',
           name: 'RRwYht',
           shortDescription: 'What is your full name',
-          hint: '',
           options: {
             required: true
-          },
-          schema: {},
-          id: '154271c2-79a2-4b59-b535-d210a13dbfe9'
-        }
+          }
+        })
       ],
-      next: [],
-      id: '449c053b-9201-4312-9a75-187ac1b720eb'
-    },
-    {
+      next: []
+    }),
+    buildQuestionPage({
+      id: '2c3122b6-bf57-42c9-ab1b-6f67e8575703',
       title: 'Fave color',
       path: '/fave-color',
       components: [
-        {
-          type: ComponentType.RadiosField,
+        buildRadioComponent({
+          id: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
           title: 'What is your favourite color',
           name: 'nUaCCW',
           shortDescription: 'Fave color',
-          hint: '',
           options: {
             required: true
           },
-          list: '3e470333-c2aa-4bd4-bd1a-738819226a3a',
-          id: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2'
-        }
+          list: '3e470333-c2aa-4bd4-bd1a-738819226a3a'
+        })
       ],
-      next: [],
-      id: '2c3122b6-bf57-42c9-ab1b-6f67e8575703'
-    },
-    {
+      next: []
+    }),
+    buildQuestionPage({
+      id: '86ea4ba-ae3b-4324-9acd-3a3f347cb0ec',
       title: 'Fave animal',
       path: '/fave-animal',
       components: [
-        {
-          type: ComponentType.CheckboxesField,
+        buildRadioComponent({
+          id: 'f0f67bf7-cdbb-4247-9f3c-8cd919183968',
           title: 'What is your favourite animal',
           name: 'nUaCCW',
           shortDescription: 'Fave animal',
-          hint: '',
           options: {
             required: true
           },
-          list: '0e047f83-dbb6-4c82-b709-f9dbaddf8644',
-          id: 'f0f67bf7-cdbb-4247-9f3c-8cd919183968'
-        }
+          list: '0e047f83-dbb6-4c82-b709-f9dbaddf8644'
+        })
       ],
-      next: [],
-      id: 'a86ea4ba-ae3b-4324-9acd-3a3f347cb0ec'
-    },
-    {
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary,
-      components: [],
+      next: []
+    }),
+    buildSummaryPage({
       id: '0ee40b39-fcae-4012-8725-7e3f5f75f88c'
-    }
+    })
   ],
   conditions: [
     {
@@ -1102,61 +906,62 @@ export const testFormDefinitionWithMultipleV2Conditions = {
     }
   ],
   engine: Engine.V2
-}
+})
 
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithMultipleV2ConditionsListRef = {
-  ...testFormDefinitionWithMultipleV2Conditions,
-  conditions: [
-    {
-      id: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
-      displayName: 'isBobV2',
-      items: [
-        {
-          id: 'bd071563-1261-4e5c-ab30-05dde59b86f6',
-          componentId: '154271c2-79a2-4b59-b535-d210a13dbfe9',
-          operator: OperatorName.Is,
-          type: ConditionType.StringValue,
-          value: 'bob'
-        }
-      ]
-    },
-    {
-      id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
-      displayName: 'isFaveColourRedV2',
-      items: [
-        {
-          id: '7ccd81c7-6c44-4de2-9c2b-fc917b7e9f35',
-          componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
-          operator: OperatorName.Is,
-          type: ConditionType.ListItemRef,
-          value: {
-            listId: '3e470333-c2aa-4bd4-bd1a-738819226a3a',
-            itemId: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7'
+export const testFormDefinitionWithMultipleV2ConditionsListRef =
+  buildDefinition({
+    ...testFormDefinitionWithMultipleV2Conditions,
+    conditions: [
+      {
+        id: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2',
+        displayName: 'isBobV2',
+        items: [
+          {
+            id: 'bd071563-1261-4e5c-ab30-05dde59b86f6',
+            componentId: '154271c2-79a2-4b59-b535-d210a13dbfe9',
+            operator: OperatorName.Is,
+            type: ConditionType.StringValue,
+            value: 'bob'
           }
-        }
-      ]
-    },
-    {
-      id: 'c685ae47-a134-485a-a819-b6271644722e',
-      displayName: 'isBobAndFaveColourRedV2',
-      coordinator: Coordinator.AND,
-      items: [
-        {
-          id: 'f54fcebc-f103-451f-8356-1a08f1f32f56',
-          conditionId: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
-        },
-        {
-          id: 'f77a9375-c03f-4365-94b5-edbdbe9e29bd',
-          conditionId: '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
-        }
-      ]
-    }
-  ]
-}
+        ]
+      },
+      {
+        id: '4a82930a-b8f5-498c-adae-6158bb2aeeb5',
+        displayName: 'isFaveColourRedV2',
+        items: [
+          {
+            id: '7ccd81c7-6c44-4de2-9c2b-fc917b7e9f35',
+            componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+            operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
+            value: {
+              listId: '3e470333-c2aa-4bd4-bd1a-738819226a3a',
+              itemId: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7'
+            }
+          }
+        ]
+      },
+      {
+        id: 'c685ae47-a134-485a-a819-b6271644722e',
+        displayName: 'isBobAndFaveColourRedV2',
+        coordinator: Coordinator.AND,
+        items: [
+          {
+            id: 'f54fcebc-f103-451f-8356-1a08f1f32f56',
+            conditionId: 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
+          },
+          {
+            id: 'f77a9375-c03f-4365-94b5-edbdbe9e29bd',
+            conditionId: '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
+          }
+        ]
+      }
+    ]
+  })
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, PageQuestion, PageSummary, PageFileUpload, PageRepeat, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
  */
