@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto'
+import { randomUUID } from 'node:crypto'
 
 import { ComponentType, randomId } from '@defra/forms-model'
 
@@ -208,11 +208,11 @@ export function handleListConflict(
     )
 
     // Populate condition names
-    dedupedConflicts.forEach((conf) => {
+    for (const conf of dedupedConflicts) {
       conf.conditionNames = affectedConditions
         .filter((x) => x.conflictItem.id === conf.conflictItem.id)
         .map((y) => y.conditionNames[0])
-    })
+    }
 
     setQuestionSessionState(yar, stateId, {
       ...state,

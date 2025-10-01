@@ -14,7 +14,7 @@ export function findClosestMatch(item, possibleItems) {
     distance: 1000,
     item: possibleItems[0]
   }
-  possibleItems.forEach((poss) => {
+  for (const poss of possibleItems) {
     const distance = levenshtein(
       item.text.toLowerCase(),
       poss.text.toLowerCase()
@@ -25,7 +25,7 @@ export function findClosestMatch(item, possibleItems) {
         item: poss
       }
     }
-  })
+  }
   return closest
 }
 

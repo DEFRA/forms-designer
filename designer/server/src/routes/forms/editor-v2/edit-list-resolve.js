@@ -87,12 +87,13 @@ export default [
       const listItems = state?.listItems
 
       // Apply value replacement
-      Object.entries(replaceWith).forEach(([replaceId, replaceValue]) => {
-        const item = listItems?.find((x) => x.id === replaceId)
-        if (item) {
-          item.value = replaceValue
-          item.text = replaceValue
+      const replaceWithMap = new Map(Object.entries(replaceWith))
+      const updatedListItems = (listItems ?? []).map((item) => {
+        if (item.id && replaceWithMap.has(item.id)) {
+          const replaceValue = replaceWithMap.get(item.id)
+          return { ...item, value: replaceValue, text: replaceValue }
         }
+        return item
       })
 
       // Get details
@@ -105,7 +106,7 @@ export default [
         pageId,
         questionId,
         state?.questionDetails ?? {},
-        /** @type {Item[]} */ (listItems)
+        /** @type {Item[]} */ (updatedListItems)
       )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
