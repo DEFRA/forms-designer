@@ -66,7 +66,7 @@ export function editListResolveViewModel(
     }
   })
 
-  const sortedConflicts = listConflictsWithMatches.sort(
+  const sortedConflicts = listConflictsWithMatches.toSorted(
     (conflictA, conflictB) =>
       conflictA.conflictItem.text.localeCompare(conflictB.conflictItem.text)
   )

@@ -15,7 +15,7 @@ import {
 export function buildQuestionPage(partialPage = {}) {
   return {
     id: 'ffefd409-f3f4-49fe-882e-6e89f44631b1',
-    title: 'Page One',
+    title: 'Page one',
     path: '/page-one',
     next: [],
     components: [],
@@ -184,41 +184,38 @@ export function buildList(partialList = {}) {
   }
 }
 
+// buildDefinition(definitionPartial = {}) {
+//   return {
+//     name: 'Test form',
+//     pages: [],
+//     conditions: [],
+//     sections: [],
+//     lists: [],
+//     ...definitionPartial
+//   }
 /**
  * @satisfies {FormDefinition}
  */
-export const testFormDefinitionWithSinglePage = {
-  name: 'Test form',
+export const testFormDefinitionWithSinglePage = buildDefinition({
   pages: [
-    {
+    buildQuestionPage({
       id: 'p1',
-      path: '/page-one',
-      title: 'Page one',
       section: 'section',
       components: [
-        {
+        buildTextFieldComponent({
           id: 'c1',
-          type: ComponentType.TextField,
           name: 'textField',
           title: 'This is your first field',
-          hint: 'Help text',
-          options: {},
-          schema: {}
-        }
+          hint: 'Help text'
+        })
       ],
       next: [{ path: '/summary' }]
-    },
-    {
-      id: 'c2',
-      title: 'Summary',
-      path: '/summary',
-      controller: ControllerType.Summary
-    }
-  ],
-  conditions: [],
-  sections: [],
-  lists: []
-}
+    }),
+    buildSummaryPage({
+      id: 'c2'
+    })
+  ]
+})
 
 /**
  * @satisfies {FormDefinition}
