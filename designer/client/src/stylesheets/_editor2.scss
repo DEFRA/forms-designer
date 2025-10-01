@@ -1,5 +1,22 @@
 @use "govuk-frontend" as *;
 
+.govuk-width-container {
+  max-width: 1800px;
+  margin-right: auto;
+  margin-left: auto;
+  padding-right: $govuk-gutter;
+  padding-left: $govuk-gutter;
+
+  @include govuk-media-query($from: desktop) {
+    padding-right: $govuk-gutter * 2;
+    padding-left: $govuk-gutter * 2;
+  }
+}
+
+.govuk-width-container--default {
+  @include govuk-width-container;
+}
+
 // Components
 .app-vertical-divider {
   color: #b1b4b6;
@@ -133,6 +150,10 @@
 .app-pages-header {
   &__title {
     margin-top: 10px;
+
+    @include govuk-media-query($from: desktop) {
+      float: left;
+    }
   }
 
   &__actions {
@@ -140,7 +161,7 @@
     display: flex;
     gap: 8px;
     justify-content: flex-end;
-    margin-bottom: 0;
+    margin-bottom: 10px;
   }
 
   &__action-button {

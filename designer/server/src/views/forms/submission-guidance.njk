@@ -3,6 +3,7 @@
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% block beforeContent %}
   <div class="govuk-width-container app-width-container--wide">
@@ -30,6 +31,21 @@
       <p class="govuk-body govuk-!-margin-bottom-6">
         The email confirmation will also include the contact details you provide for the form, and the date and time of submission.
       </p>
+
+      <h2 class="govuk-heading-m">Where this text is shown</h2>
+      <p class="govuk-body">
+        The information you include here appears on the form submission page under the heading 'What happens next'.
+      </p>
+
+      <p class="govuk-body">
+        The text also appears in the form submission confirmation email. Users can opt-in to receive a confirmation email
+        at the end of the form. Emails are sent automatically using GOV.UK Notify.
+      </p>
+
+      {{ govukWarningText({
+        html: 'If you use markdown to format the text, <a class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank" href="https://www.notifications.service.gov.uk/using-notify/formatting">check the formatting restrictions for GOV.UK Notify (opens in new tab)</a>',
+        iconFallbackText: "Warning"
+      }) }}
 
       {{ govukTextarea({
         label: {
