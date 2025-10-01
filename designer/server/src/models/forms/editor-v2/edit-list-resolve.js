@@ -1,33 +1,8 @@
-import levenshtein from 'js-levenshtein'
+import { closest } from 'fastest-levenshtein'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
-
-/**
- * Find the nearest text match to auto-select the most likely changed item
- * @param {{ id: string, text: string }} item
- * @param {{ id?: string, text: string, value: string | number | boolean }[]} possibleItems
- */
-export function findClosestMatch(item, possibleItems) {
-  let closest = {
-    distance: 1000,
-    item: possibleItems[0]
-  }
-  for (const poss of possibleItems) {
-    const distance = levenshtein(
-      item.text.toLowerCase(),
-      poss.text.toLowerCase()
-    )
-    if (distance < closest.distance) {
-      closest = {
-        distance,
-        item: poss
-      }
-    }
-  }
-  return closest
-}
 
 /**
  * Model to represent confirmation page dialog for a given form.
@@ -58,8 +33,10 @@ export function editListResolveViewModel(
   )
 
   const listConflictsWithMatches = listConflicts.map((conf) => {
-    const closestMatch = findClosestMatch(conf.conflictItem, conf.linkableItems)
-      .item.value
+    const closestMatch = closest(
+      conf.conflictItem.text,
+      conf.linkableItems.map((x) => x.text)
+    )
     return {
       ...conf,
       closestMatch
