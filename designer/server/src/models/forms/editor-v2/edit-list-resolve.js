@@ -57,12 +57,19 @@ export function editListResolveViewModel(
     'Editor'
   )
 
-  listConflicts.forEach((conf) => {
-    conf.closestMatch = findClosestMatch(
-      conf.conflictItem,
-      conf.linkableItems
-    ).item.value
+  const listConflictsWithMatches = listConflicts.map((conf) => {
+    const closestMatch = findClosestMatch(conf.conflictItem, conf.linkableItems)
+      .item.value
+    return {
+      ...conf,
+      closestMatch
+    }
   })
+
+  const sortedConflicts = listConflictsWithMatches.sort(
+    (conflictA, conflictB) =>
+      conflictA.conflictItem.text.localeCompare(conflictB.conflictItem.text)
+  )
 
   return {
     backLink: {
@@ -80,9 +87,7 @@ export function editListResolveViewModel(
       text: metadata.title
     },
     question,
-    conflicts: listConflicts.sort((conflictA, conflictB) =>
-      conflictA.conflictItem.text.localeCompare(conflictB.conflictItem.text)
-    ),
+    conflicts: sortedConflicts,
     errorList: buildErrorList(validation?.formErrors),
     notification
   }
