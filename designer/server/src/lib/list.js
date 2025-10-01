@@ -179,12 +179,12 @@ export function matchLists(definition, listRef, listItems) {
   const incomingListMapped =
     listItems?.map((x) => ({ text: x.text, value: x.value })) ?? []
 
-  const existingListValues = existingListMapped.map((x) => x.value)
-  const incomingListValues = incomingListMapped.map((x) => x.value)
+  const existingListValues = new Set(existingListMapped.map((x) => x.value))
+  const incomingListValues = new Set(incomingListMapped.map((x) => x.value))
 
   const additions = /** @type {Item[]} */ (
     incomingListMapped
-      .filter((x) => !existingListValues.includes(x.value))
+      .filter((x) => !existingListValues.has(x.value))
       .map((y) => ({
         id: undefined,
         text: y.text,
@@ -194,7 +194,7 @@ export function matchLists(definition, listRef, listItems) {
 
   const deletions = /** @type {Item[]} */ (
     existingListMapped
-      .filter((x) => !incomingListValues.includes(x.value))
+      .filter((x) => !incomingListValues.has(x.value))
       .map((x) => populateExistingId(existingListItems, x))
   )
 
