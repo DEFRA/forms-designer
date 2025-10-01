@@ -71,18 +71,22 @@ describe('editor-v2 - pages model', () => {
         testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[0]
       )
+
       const resPageTwoQuestions = mapQuestionRows(
         testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[1]
       )
+
       const resPageSummaryQuestions = mapQuestionRows(
         testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[2]
       )
+
       const resPageSummaryExistingMarkdown = mapQuestionRows(
         testFormDefinitionWithExistingSummaryDeclaration,
         testFormDefinitionWithExistingSummaryDeclaration.pages[1]
       )
+
       const resPageSummaryRepeater = mapQuestionRows(
         testFormDefinitionWithRepeater,
         testFormDefinitionWithRepeater.pages[0]
