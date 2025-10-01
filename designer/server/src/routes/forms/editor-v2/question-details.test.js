@@ -960,6 +960,7 @@ describe('Editor v2 question details routes', () => {
     const definition = structuredClone(
       testFormDefinitionWithRadioQuestionAndList
     )
+    // @ts-expect-error - coerce page type that has components
     const component = definition.pages[0].components[0]
     component.type = ComponentType.AutocompleteField
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
