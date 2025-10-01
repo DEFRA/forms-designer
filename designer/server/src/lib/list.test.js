@@ -355,11 +355,6 @@ describe('list.js', () => {
   })
 
   describe('usedInCondition', () => {
-    // const listItems = [
-    //     { id: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7', text: 'Red', value: 'red' },
-    //     { id: '689d3f66-88f7-4dc0-b199-841b72393c19', text: 'Blue', value: 'blue' },
-    //     { id: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171', text: 'Green', value: 'green' }
-    //   ]
     const listItems = [
       {
         id: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
