@@ -1,0 +1,198 @@
+@use "./variables/colours" as *;
+
+.defra-forms-website {
+
+  .govuk-width-container {
+    max-width: 1800px;
+    padding-left: 60px;
+    padding-right: 60px;
+  }
+
+  .one-login-header,
+  .govuk-service-navigation {
+    background-color: $defra-brand-colour;
+  }
+
+  .govuk-service-navigation {
+    border-top: 1px solid #ffffff;
+    border-bottom-color: #ffffff;
+
+    .govuk-service-navigation__link {
+      font-weight: 700;
+
+      &:link,
+      &:active,
+      &:visited,
+      &:hover {
+        color: #ffffff;
+      }
+    }
+  }
+
+  .x-govuk-masthead {
+    background-color: $defra-brand-colour;
+
+    .govuk-heading-xl {
+      color: #ffffff;
+    }
+  }
+
+  .govuk-main-wrapper {
+    background-color: $defra-brand-colour;
+  }
+
+  .govuk-footer {
+    border-top-color: $defra-brand-colour;
+  }
+}
+
+.govuk-card {
+  margin-bottom: 20px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #008938;
+  box-sizing: border-box;
+
+  @media (min-width: 40.0625em) {
+      margin-bottom: 30px;
+      padding-bottom: 30px;
+  }
+
+  &--feature {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: all 0.2s ease-in-out;
+    border: 2px solid #b1b4b6;
+    background-color: #ffffff;
+  }
+
+  &__flex-container {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  &__flex-item {
+    display: flex;
+    overflow: hidden;
+  }
+
+  &--contained {
+    background-color: #f8f8f8;
+
+    &--on-background {
+      background-color: #fff;
+    }
+  }
+
+  &--borderless {
+    border: 0;
+    padding-bottom: 0;
+  }
+
+  &--selectable {
+    position: relative;
+
+    h3 {
+      color: #008938;
+    }
+
+    a {
+      position: relative;
+      z-index: 1;
+    }
+
+    &:hover {
+      background-color: #008938;
+
+      > .govuk-card__content > h3,
+      > .govuk-card__content > p,
+      > .govuk-card__content > h3 > a,
+      > .govuk-card__actions > ul > li > a {
+        color: #fff !important;
+      }
+
+      > .govuk-card__content > h3 > a:hover,
+      > .govuk-card__actions > ul > li > a:hover {
+        color: #9eceea !important;
+      }
+    }
+
+    > a {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+      z-index: 0;
+
+      &:focus {
+        background-color: initial !important;
+      }
+    }
+  }
+
+  &__hero {
+    line-height: 0;
+
+    img {
+      max-width: 100%;
+    }
+  }
+
+  &__content {
+    padding-top: 15px;
+    padding-bottom: 0;
+
+    @media (min-width: 40.0625em) {
+      padding-top: 20px;
+    }
+
+    p {
+      margin-bottom: 0;
+    }
+
+    p + p {
+      margin-top: 15px;
+
+      @media (min-width: 40.0625em) {
+        margin-top: 20px;
+      }
+    }
+  }
+
+  &--contained .govuk-card__content {
+    padding-left: 15px;
+    padding-right: 15px;
+
+    @media (min-width: 40.0625em) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  &__actions {
+    padding-top: 15px;
+    padding-bottom: 0;
+
+    @media (min-width: 40.0625em) {
+      padding-top: 20px;
+    }
+  }
+
+  &--contained .govuk-card__actions {
+    padding-left: 15px;
+    padding-right: 15px;
+
+    @media (min-width: 40.0625em) {
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+  }
+
+  .govuk-card__actions > .govuk-c-button {
+    margin-bottom: 0;
+  }
+}
+
+
+

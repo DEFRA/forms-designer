@@ -266,6 +266,9 @@ export default /** @type {Configuration} */ ({
         join(govukFrontendLegacyPath, 'govuk')
       ],
 
+      // Alias node_modules for xgov-uk
+      node_modules: join(import.meta.dirname, 'node_modules'),
+
       // Alias legacy React to latest
       react: reactPath
     },

@@ -1,6 +1,7 @@
 {% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 {% from "service-header/macro.njk" import appServiceHeader %}
 {% from "tag-env/macro.njk" import appTagEnv %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
 
 {%- set productName %}
   Forms Designer {{ appTagEnv({ env: config.cdpEnvironment }) }}
@@ -37,3 +38,4 @@
   }) }}
 </div>
 {% endif %}
+

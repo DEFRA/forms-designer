@@ -1,0 +1,67 @@
+{%- set bodyClasses = "defra-forms-website" -%}
+{% extends "govuk/template.njk" %}
+
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
+{% from "heading/macro.njk" import appHeading %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+
+{% block head %}
+  <meta name="application-name" content="@defra/forms-designer" {{- govukAttributes({
+    "data-environment": {
+      value: config.cdpEnvironment,
+      optional: true
+    },
+    "data-version": {
+      value: config.serviceVersion,
+      optional: true
+    }
+  }) }}>
+
+  <link href="{{ getAssetPath("stylesheets/application.scss") }}" rel="stylesheet">
+{% endblock %}
+
+{% block header %}
+  {% include "partials/forms-website-navigation.njk" %}
+{% endblock %}
+adsfd
+{% block pageTitle -%}
+  {{ "Error: " if errorList | length }}{{ pageTitle }} - {{ config.serviceName }}
+{%- endblock %}
+
+{% block main %}
+  <main class="govuk-main-wrapper {%- if mainClasses %} {{ mainClasses }}{% endif %}" id="main-head-content" {%- if mainLang %} lang="{{ mainLang }}"{% endif %}>
+    {% block mainStart %}{% endblock %}
+
+    {% block content %}{% endblock %}
+
+    {% block mainEnd %}{% endblock %}
+  </main>
+{% endblock %}
+
+{% block footer %}
+  {{ govukFooter({
+    containerClasses: "app-width-container--wide",
+    meta: {
+      items: [
+        {
+          href: "/help/accessibility-statement",
+          text: "Accessibility statement"
+        },
+        {
+          href: "/help/cookies",
+          text: "Cookies"
+        },
+        {
+          href: "https://www.gov.uk/help/privacy-notice",
+          text: "Privacy"
+        }
+      ]
+    }
+  }) }}
+{% endblock %}
+
+{% block bodyEnd %}
+  <script type="module" src="{{ getAssetPath("application.js") }}"></script>
+{% endblock %}
