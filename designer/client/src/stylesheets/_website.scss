@@ -1,4 +1,5 @@
 @use "./variables/colours" as *;
+@use "govuk-frontend" as *;
 
 $homePageBreakpoint: 1220px;
 
@@ -42,7 +43,7 @@ $homePageBreakpoint: 1220px;
     }
 
     &__title {
-      @media (min-width: var(--govuk-breakpoint-tablet)) {
+      @include govuk-media-query($from: tablet) {
         margin-top: 30px;
       }
     }
@@ -142,7 +143,7 @@ $homePageBreakpoint: 1220px;
   }
 
   &--with-top-padding {
-    @media (min-width: var(--govuk-breakpoint-tablet)) {
+    @include govuk-media-query($from: tablet) {
       padding-top: 60px;
     }
   }
@@ -156,7 +157,7 @@ $homePageBreakpoint: 1220px;
   justify-items: start;
   margin-top: 20px;
 
-  @media (min-width: var(--govuk-breakpoint-tablet)) {
+  @include govuk-media-query($from: tablet) {
     grid-template-columns: repeat(3, 1fr);
     gap: 4rem;
     align-items: center;
@@ -181,13 +182,13 @@ $homePageBreakpoint: 1220px;
   gap: 16px;
 
   /* tablet */
-  @media (min-width: var(--govuk-breakpoint-tablet)) {
+  @include govuk-media-query($from: tablet) {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
   }
 
   /* desktop */
-  @media (min-width: var(--govuk-frontend-breakpoint-desktop)) {
+  @include govuk-media-query($from: desktop) {
     grid-template-columns: repeat(3, 1fr);
     gap: 24px;
   }
@@ -341,7 +342,7 @@ $homePageBreakpoint: 1220px;
   border-bottom: 3px solid #008938;
   box-sizing: border-box;
 
-  @media (min-width: var(--govuk-breakpoint-tablet)) {
+  @include govuk-media-query($from: tablet) {
     margin-bottom: 30px;
     padding-bottom: 30px;
   }
@@ -432,7 +433,7 @@ $homePageBreakpoint: 1220px;
     padding-top: 15px;
     padding-bottom: 0;
 
-    @media (min-width: var(--govuk-breakpoint-tablet)) {
+    @include govuk-media-query($from: tablet) {
       padding-top: 20px;
     }
 
@@ -443,7 +444,7 @@ $homePageBreakpoint: 1220px;
     p + p {
       margin-top: 15px;
 
-      @media (min-width: var(--govuk-breakpoint-tablet)) {
+      @include govuk-media-query($from: tablet) {
         margin-top: 20px;
       }
     }
@@ -453,7 +454,7 @@ $homePageBreakpoint: 1220px;
     padding-left: 15px;
     padding-right: 15px;
 
-    @media (min-width: var(--govuk-breakpoint-tablet)) {
+    @include govuk-media-query($from: tablet) {
       padding-left: 20px;
       padding-right: 20px;
     }
@@ -463,7 +464,7 @@ $homePageBreakpoint: 1220px;
     padding-top: 15px;
     padding-bottom: 0;
 
-    @media (min-width: var(--govuk-breakpoint-tablet)var(--govuk-breakpoint-tablet)var(--govuk-breakpoint-tablet)var(--govuk-breakpoint-tablet)) {
+    @include govuk-media-query($from: tablet) {
       padding-top: 20px;
     }
   }
@@ -472,7 +473,7 @@ $homePageBreakpoint: 1220px;
     padding-left: 15px;
     padding-right: 15px;
 
-    @media (min-width: var(--govuk-breakpoint-tablet)) {
+    @include govuk-media-query($from: tablet) {
       padding-left: 20px;
       padding-right: 20px;
     }
