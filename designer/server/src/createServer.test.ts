@@ -87,7 +87,7 @@ describe('Server tests', () => {
 
     await renderResponse(server, options)
 
-    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    const $phaseBanner = document.querySelector('.govuk-footer__meta-custom')
     const $phaseBannerTag = $phaseBanner?.querySelector('.govuk-tag')
 
     expect($phaseBanner).toBeInTheDocument()
@@ -106,7 +106,7 @@ describe('Server tests', () => {
 
     await renderResponse(server, options)
 
-    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    const $phaseBanner = document.querySelector('.govuk-footer__meta-custom')
     expect($phaseBanner).not.toBeInTheDocument()
   })
 
@@ -121,7 +121,7 @@ describe('Server tests', () => {
 
     await renderResponse(server, options)
 
-    const $phaseBanner = document.querySelector('.govuk-phase-banner')
+    const $phaseBanner = document.querySelector('.govuk-footer__meta-custom')
     expect($phaseBanner).not.toBeInTheDocument()
   })
 

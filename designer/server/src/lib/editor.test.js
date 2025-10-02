@@ -21,6 +21,7 @@ import {
   addCondition,
   addPageAndFirstQuestion,
   addQuestion,
+  buildRepeaterPayload,
   deleteCondition,
   deletePage,
   deleteQuestion,
@@ -508,6 +509,247 @@ describe('editor.js', () => {
         expect(result).toEqual({ id: '456' })
       })
 
+      test('preserves repeater settings when updating a question on a repeater page', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          title: 'Updated field title',
+          name: 'textField',
+          type: ComponentType.TextField,
+          options: {
+            required: false
+          }
+        })
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          formDefinitionRepeater,
+          'p1',
+          'c1',
+          updatedQuestionDetails
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/c1`,
+            formsEndpoint
+          ),
+          {
+            payload: updatedQuestionDetails,
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+
+        expect(result).toEqual({ id: 'c1' })
+      })
+
+      test('preserves repeater settings when schema values are undefined', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const formDefinitionRepeaterNoSchema = /** @type {FormDefinition} */ ({
+          ...formDefinitionRepeater,
+          pages: [
+            {
+              ...formDefinitionRepeater.pages[0],
+              repeat: {
+                options: { name: 'test', title: 'Test' },
+                schema: { min: undefined, max: undefined }
+              }
+            },
+            formDefinitionRepeater.pages[1]
+          ]
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionRepeaterNoSchema,
+          'p1',
+          'c1',
+          { type: ComponentType.TextField }
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+      })
+
+      test('preserves repeater settings when options values are undefined', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const formDefinitionRepeaterNoOptions = /** @type {FormDefinition} */ ({
+          ...formDefinitionRepeater,
+          pages: [
+            {
+              ...formDefinitionRepeater.pages[0],
+              repeat: {
+                options: { name: undefined, title: undefined },
+                schema: { min: 1, max: 5 }
+              }
+            },
+            formDefinitionRepeater.pages[1]
+          ]
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionRepeaterNoOptions,
+          'p1',
+          'c1',
+          { type: ComponentType.TextField }
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+      })
+
+      test('does not interfere when page is not a repeater', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: '456' }
+        })
+
+        const nonRepeaterPage = /** @type {FormDefinition} */ ({
+          ...formDefinition,
+          pages: [
+            {
+              id: 'p1',
+              path: '/page-one',
+              title: 'Page one',
+              section: 'Section 1',
+              controller: undefined, // Not a repeater
+              components: [
+                {
+                  id: 'q1',
+                  type: ComponentType.TextField,
+                  name: 'field1',
+                  title: 'Field 1',
+                  hint: 'Hint text',
+                  options: { required: true },
+                  schema: {}
+                }
+              ],
+              next: [{ path: '/summary' }]
+            }
+          ]
+        })
+
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          title: 'Updated field',
+          name: 'field1',
+          type: ComponentType.TextField,
+          options: { required: false }
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          nonRepeaterPage,
+          'p1',
+          'q1',
+          updatedQuestionDetails
+        )
+
+        // Should NOT call patch (no controller change needed)
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        // Should only update the question, without any repeater payload
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/q1`,
+            formsEndpoint
+          ),
+          {
+            payload: updatedQuestionDetails, // No repeater settings added
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+      })
+
+      test('bug scenario: preserves repeater settings (min:1, max:5) when changing question from mandatory to optional', async () => {
+        // 1. Create page with mandatory question
+        // 2. Make page "Allow multiple responses" with min:1, max:5
+        // 3. Make question optional
+        // Expected: Question is optional AND page still has repeater settings
+
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        // Page with repeater settings (min:1, max:5) and mandatory question
+        const pageWithRepeaterAndMandatoryQuestion =
+          /** @type {FormDefinition} */ ({
+            ...formDefinitionRepeater,
+            pages: [
+              {
+                ...formDefinitionRepeater.pages[0],
+                controller: ControllerType.Repeat,
+                repeat: {
+                  options: { name: 'test-repeater', title: 'Add another' },
+                  schema: { min: 1, max: 5 }
+                },
+                components: [
+                  {
+                    id: 'c1',
+                    type: ComponentType.TextField,
+                    name: 'mandatoryField',
+                    title: 'Mandatory field',
+                    hint: 'This field is mandatory',
+                    options: { required: true }, // Currently mandatory
+                    schema: {}
+                  }
+                ]
+              }
+            ]
+          })
+
+        // User makes the question optional
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          title: 'Mandatory field',
+          name: 'mandatoryField',
+          type: ComponentType.TextField,
+          options: { required: false } // Changed to optional
+        })
+
+        const result = await updateQuestion(
+          formId,
+          token,
+          pageWithRepeaterAndMandatoryQuestion,
+          'p1',
+          'c1',
+          updatedQuestionDetails
+        )
+
+        // Should NOT call patch (which would update page settings and potentially lose repeater)
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        // Should only update the question
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/c1`,
+            formsEndpoint
+          ),
+          {
+            payload: updatedQuestionDetails,
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+
+        expect(result).toEqual({ id: 'c1' })
+        // Repeater settings (min:1, max:5) are preserved - not lost!
+      })
+
       test('returns response body when path should change to first question', async () => {
         mockedPutJson.mockResolvedValueOnce({
           response: createMockResponse(),
@@ -904,6 +1146,116 @@ describe('editor.js', () => {
       const expectedOptionsRepeater = {
         payload: {
           controller: null,
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptionsRepeater
+      )
+    })
+
+    test('scenario: user unchecks repeater checkbox - removes repeater controller', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await setPageSettings(formId, token, 'p1', formDefinitionRepeater, {
+        pageHeading: 'Page one'
+        // Note: NO 'repeater' property in payload means checkbox is unchecked
+        // This is how the UI sends the payload when user unchecks "Allow multiple responses"
+      })
+
+      const expectedOptions = {
+        payload: {
+          controller: null, // Controller removed
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptions
+      )
+    })
+
+    test('scenario: user checks repeater checkbox - adds repeater controller', async () => {
+      // This demonstrates: Currently non-repeater → changing to repeater
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await setPageSettings(formId, token, 'p1', formDefinition, {
+        pageHeading: 'Page one',
+        repeater: 'true', // User checked "Allow multiple responses"
+        minItems: 1,
+        maxItems: 3,
+        questionSetName: 'Add another item'
+      })
+
+      const expectedOptions = {
+        payload: {
+          controller: ControllerType.Repeat,
+          repeat: {
+            options: {
+              name: expect.any(String),
+              title: 'Add another item'
+            },
+            schema: {
+              min: 1,
+              max: 3
+            }
+          },
+          title: '',
+          path: '/this-is-your-first-field'
+        },
+        headers: { Authorization: `Bearer ${token}` }
+      }
+
+      expect(mockedPatchJson).toHaveBeenCalledWith(
+        pageRequestUrl,
+        expectedOptions
+      )
+    })
+
+    test('updates repeater settings on existing repeater page and preserves name', async () => {
+      mockedPatchJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      const existingName = /** @type {string} */ (
+        formDefinitionRepeater.pages[0].repeat?.options.name
+      )
+
+      await setPageSettings(formId, token, 'p1', formDefinitionRepeater, {
+        pageHeading: 'Page one',
+        repeater: 'true',
+        minItems: 1,
+        maxItems: 4,
+        questionSetName: 'Updated repeater title'
+      })
+
+      const expectedOptionsRepeater = {
+        payload: {
+          controller: ControllerType.Repeat,
+          repeat: {
+            options: {
+              name: existingName,
+              title: 'Updated repeater title'
+            },
+            schema: {
+              min: 1,
+              max: 4
+            }
+          },
           title: '',
           path: '/this-is-your-first-field'
         },
@@ -1383,6 +1735,117 @@ describe('editor.js', () => {
         await expect(
           addCondition(formId, token, testCondition)
         ).rejects.toThrow(testError)
+      })
+    })
+  })
+
+  describe('buildRepeaterPayload', () => {
+    test('should return empty payload when controller type is not Repeat', () => {
+      const page = /** @type {Page} */ ({})
+      const result = buildRepeaterPayload(page, ControllerType.Page)
+      expect(result).toEqual({})
+    })
+
+    test('should return empty payload when controller type is undefined', () => {
+      const page = /** @type {Page} */ ({})
+      const result = buildRepeaterPayload(page, undefined)
+      expect(result).toEqual({})
+    })
+
+    test('should return repeater payload when page is undefined', () => {
+      const result = buildRepeaterPayload(undefined, ControllerType.Repeat)
+      expect(result).toEqual({ repeater: 'true' })
+    })
+
+    test('should build payload with all repeater settings when page has complete repeat config', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: 2, max: 10 },
+          options: { title: 'Test Repeater', name: 'test-repeater' }
+        }
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: 2,
+        maxItems: 10,
+        questionSetName: 'Test Repeater'
+      })
+    })
+
+    test('should build payload with only schema when options are missing', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: 1, max: 5 }
+        }
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: 1,
+        maxItems: 5
+      })
+    })
+
+    test('should build payload with only options when schema is missing', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat,
+        repeat: {
+          options: { title: 'Only Options', name: 'only-options' }
+        }
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        questionSetName: 'Only Options'
+      })
+    })
+
+    test('should build payload with only repeater flag when repeat object is missing', () => {
+      const page = /** @type {Page} */ ({
+        controller: ControllerType.Repeat
+      })
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true'
+      })
+    })
+
+    test('should handle undefined schema values', () => {
+      const page = {
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: undefined, max: undefined },
+          options: { title: 'Test Title', name: 'test-name' }
+        }
+      }
+      // @ts-expect-error - Intentionally testing edge case with undefined values
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: undefined,
+        maxItems: undefined,
+        questionSetName: 'Test Title'
+      })
+    })
+
+    test('should handle undefined options title', () => {
+      const page = {
+        controller: ControllerType.Repeat,
+        repeat: {
+          schema: { min: 3, max: 7 },
+          options: { title: undefined, name: 'test-name' }
+        }
+      }
+      // @ts-expect-error - Intentionally testing edge case with undefined values
+      const result = buildRepeaterPayload(page, ControllerType.Repeat)
+      expect(result).toEqual({
+        repeater: 'true',
+        minItems: 3,
+        maxItems: 7,
+        questionSetName: undefined
       })
     })
   })

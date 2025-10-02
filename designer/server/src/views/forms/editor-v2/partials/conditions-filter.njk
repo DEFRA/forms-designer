@@ -1,0 +1,49 @@
+{% if conditions.show %}
+<div class="govuk-grid-column-one-quarter">
+  <form class="form" method="post">
+    <aside id="condition-filters" class="app-search__filters">
+      {% if conditions.applied | length %}
+      <div id="selected-filters" class="govuk-inset-text govuk-!-margin-top-2" style="display: block;">
+        <h3 id="applied-filters-heading" class="govuk-heading-s">Applied filters:</h3>
+        <ul class="govuk-list govuk-list--bullet govuk-list--spaced" id="filter-summary">
+        {% for conditionName in conditions.applied %}
+          <li>{{ conditionName }}</li>
+        {% endfor %}</ul>
+      </div>
+      {% endif %}
+      <h2 id="search-filters-heading" class="govuk-heading-m govuk-!-margin-bottom-4">Filter pages by condition</h2>
+      <div id="search-buttons--header-top" class="govuk-button-group govuk-!-margin-bottom-4">
+        {{ govukButton({
+          text: 'Apply filters'
+        }) }}
+
+        <a href="?" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-govuk-button-init="">
+          Clear filters
+        </a>
+      </div>
+      <div aria-labelledby="applied-filters-heading">
+        <h3 id="applied-filters-heading" style="display: none;" class="govuk-heading-s">Applied filters:</h3>
+        {{ govukCheckboxes(conditions.available) }}
+      </div>
+      <div id="search-buttons--header-bottom" class="govuk-button-group govuk-!-margin-bottom-4">
+        {{ govukButton({
+          text: 'Apply filters'
+        }) }}
+
+        <a href="?" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-govuk-button-init="">
+          Clear filters
+        </a>
+      </div>
+      {% if conditions.notAvailable | length %}
+      <div class="govuk-!-margin-top-4" aria-labelledby="unapplied-filters-heading">
+        <h3 id="unapplied-filters-heading" class="govuk-heading-m">Conditions not applied to pages</h3>
+        <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
+        {% for notAvailableLabel in conditions.notAvailable %}
+          <li class="govuk-hint">{{ notAvailableLabel }}</li>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </aside>
+  </form>
+</div>
+{% endif %}

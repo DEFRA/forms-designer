@@ -1,5 +1,3 @@
-import upperFirst from 'lodash/upperFirst.js'
-
 import { renderView } from '~/test/helpers/component-helpers.js'
 
 describe('Navigation partial', () => {
@@ -102,53 +100,6 @@ describe('Navigation partial', () => {
       const $navigation = document.querySelector(selectorNavigation)
 
       expect($navigation).not.toBeInTheDocument()
-    })
-  })
-
-  describe('Phase banner', () => {
-    const selectorPhaseBanner = '.govuk-phase-banner'
-    const selectorTag = '.govuk-tag'
-
-    it.each([
-      {
-        context: {
-          config: { phase: 'alpha' }
-        }
-      },
-      {
-        context: {
-          config: { phase: 'beta' }
-        }
-      }
-    ])(
-      "should render for '$context.config.phase' phase (via config)",
-      ({ context }) => {
-        renderView('partials/navigation.njk', { context })
-
-        const $phaseBanner = document.querySelector(selectorPhaseBanner)
-        const $phaseTag = $phaseBanner?.querySelector(selectorTag)
-
-        expect($phaseBanner).toBeInTheDocument()
-        expect($phaseTag).toContainHTML(upperFirst(context.config.phase))
-      }
-    )
-
-    it("should not render for 'live' phase (via config)", () => {
-      renderView('partials/navigation.njk', {
-        context: {
-          config: { phase: 'live' }
-        }
-      })
-
-      const $phaseBanner = document.querySelector(selectorPhaseBanner)
-      expect($phaseBanner).not.toBeInTheDocument()
-    })
-
-    it('should not render by default', () => {
-      renderView('partials/navigation.njk')
-
-      const $phaseBanner = document.querySelector(selectorPhaseBanner)
-      expect($phaseBanner).not.toBeInTheDocument()
     })
   })
 })

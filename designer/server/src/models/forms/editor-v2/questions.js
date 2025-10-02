@@ -2,6 +2,8 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS,
   PreviewPageController,
   hasComponents,
   isFormType,
@@ -137,7 +139,7 @@ function questionsRepeaterFields(repeaterSettings, validation) {
         classes: 'govuk-!-margin-bottom-6'
       },
       hint: {
-        text: 'The range must be between 1 and 25'
+        text: `The range must be between ${MIN_NUMBER_OF_REPEAT_ITEMS} and ${MAX_NUMBER_OF_REPEAT_ITEMS}`
       },
       minItems: {
         label: {

@@ -1,3 +1,4 @@
+import { getErrorMessage } from '@defra/forms-model'
 import { Cluster, Redis } from 'ioredis'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -61,8 +62,8 @@ function buildRedisClient() {
     )
   })
 
-  redisClient.on('error', (error) => {
-    logger.error(error, `Redis connection error ${error}.`)
+  redisClient.on('error', (err) => {
+    logger.error(err, `Redis connection error ${getErrorMessage(err)}.`)
   })
 
   return redisClient

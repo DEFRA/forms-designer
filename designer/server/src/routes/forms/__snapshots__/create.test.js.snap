@@ -150,7 +150,6 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 </header>
 
 
-
   <div class="govuk-width-container app-width-container--wide">
     <a href="/create/title" class="govuk-back-link">Back</a>
 
@@ -243,6 +242,8 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
   </div>
 
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
@@ -458,7 +459,6 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
 </header>
 
 
-
   <div class="govuk-width-container app-width-container--wide">
     <a href="/create/organisation" class="govuk-back-link">Back</a>
 
@@ -517,6 +517,8 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
   </form>
 
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
@@ -732,7 +734,6 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
 </header>
 
 
-
   <div class="govuk-width-container app-width-container--wide">
     <a href="/library" class="govuk-back-link">Back to forms library</a>
 
@@ -768,6 +769,8 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
   </div>
 
   </main>
+
+
 
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">

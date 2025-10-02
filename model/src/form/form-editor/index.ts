@@ -2,6 +2,10 @@ import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
 
 import { ComponentType } from '~/src/components/enums.js'
 import {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS
+} from '~/src/form/form-definition/index.js'
+import {
   type FormEditorInputCheckAnswersSettings,
   type FormEditorInputPage,
   type FormEditorInputPageSettings,
@@ -246,12 +250,12 @@ export const repeaterSchema = Joi.string()
 
 export const minItemsSchema = Joi.number()
   .empty('')
-  .min(1)
+  .min(MIN_NUMBER_OF_REPEAT_ITEMS)
   .description('The minimum number of repeater items')
 
 export const maxItemsSchema = Joi.number()
   .empty('')
-  .max(25)
+  .max(MAX_NUMBER_OF_REPEAT_ITEMS)
   .description('The maximum number of repeater items')
 
 export const questionSetNameSchema = Joi.string()

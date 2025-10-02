@@ -76,8 +76,8 @@ export async function deleteUser(request, userId) {
 
   try {
     await server.methods.session.drop(userId)
-  } catch (error) {
-    logger.error(error, `Error dropping session for user ${userId}`)
+  } catch (err) {
+    logger.error(err, `Error dropping session for user ${userId}`)
   }
 
   if (isSelfDeletion) {
