@@ -157,6 +157,7 @@ describe('Editor v2 question delete routes', () => {
   test('GET - should render correct content in the view when a page has no components', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     const definition = structuredClone(testFormDefinitionWithNoQuestions)
+    // @ts-expect-error - coerce types
     delete definition.pages[0].next
     jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(definition)
 

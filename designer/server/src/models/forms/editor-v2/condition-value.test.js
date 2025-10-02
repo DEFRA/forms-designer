@@ -104,6 +104,7 @@ describe('editor-v2 - condition-value', () => {
         }
       })
       const selectedComponent =
+        // @ts-expect-error - coerce page type that has components
         testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
       const valueField = buildValueField(
         ConditionType.ListItemRef,
@@ -151,6 +152,7 @@ describe('editor-v2 - condition-value', () => {
         value: {}
       })
       const selectedComponent =
+        // @ts-expect-error - coerce page type that has components
         testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
       const valueField = /** @type {{ id: string, value: any }} */ (
         buildValueField(

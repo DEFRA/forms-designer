@@ -23,7 +23,6 @@ describe('editor-v2 - condition-check-changes', () => {
       const definition = structuredClone(
         testFormDefinitionWithMultipleV2Conditions
       )
-      // @ts-expect-error - condition may not exist on page
       definition.pages[2].condition = 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
       expect(
         getImpactedPages(definition, 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2')
@@ -34,11 +33,8 @@ describe('editor-v2 - condition-check-changes', () => {
       const definition = structuredClone(
         testFormDefinitionWithMultipleV2Conditions
       )
-      // @ts-expect-error - condition may not exist on page
       definition.pages[0].condition = 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
-      // @ts-expect-error - condition may not exist on page
       definition.pages[1].condition = 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
-      // @ts-expect-error - condition may not exist on page
       definition.pages[2].condition = 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
       expect(
         getImpactedPages(definition, 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2')
@@ -214,7 +210,6 @@ describe('editor-v2 - condition-check-changes', () => {
 
     test('should include impacted pages warning', () => {
       const definitionWithConditionUsed = structuredClone(definition)
-      // @ts-expect-error - condition may not exist on page
       definitionWithConditionUsed.pages[1].condition = 'joined-condition'
 
       const result = conditionCheckChangesViewModel(

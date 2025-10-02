@@ -1,3 +1,5 @@
+import { ConditionType } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
@@ -143,15 +145,10 @@ export async function removeUniquelyMappedListsFromPage(
  * @param {FormDefinition} definition
  * @param { string | undefined } listRef
  * @param { Item[] | undefined } listItems
- * @returns {Item[]}
+ * @returns {{ additions: Item[], deletions: Item[], listItemsWithIds: Item[] }}
  */
-export function populateListIds(definition, listRef, listItems) {
+export function matchLists(definition, listRef, listItems) {
   /**
-   * Matches list items against existing items (if they exist)
-   * This method handles the following scenarios:
-   * 1. When editing an individual option (e.g. checkbox or radio), an ID will be present so this is used initially to find a match
-   * 2. When editing an autocomplete (or possibly checkbox or radio if we have implemented textarea editing). Here we do not have any IDs to pass,
-   * just a text value (and possibly code value), so we try to match on 'code' first, then 'text' if not matched on 'code'.
    * @param {Item[]} listItems
    * @param {Item} item
    */
@@ -171,11 +168,74 @@ export function populateListIds(definition, listRef, listItems) {
   const existingList = definition.lists.find((x) => x.id === listRef)
   const existingListItems = existingList?.items ?? []
 
-  return /** @type {Item[]} */ (
+  const listItemsWithIds = /** @type {Item[]} */ (
     listItems?.map((x) => populateExistingId(existingListItems, x))
   )
+
+  const existingListMapped = existingListItems.map((x) => ({
+    text: x.text,
+    value: x.value
+  }))
+  const incomingListMapped =
+    listItems?.map((x) => ({ text: x.text, value: x.value })) ?? []
+
+  const existingListValues = new Set(existingListMapped.map((x) => x.value))
+  const incomingListValues = new Set(incomingListMapped.map((x) => x.value))
+
+  const additions = /** @type {Item[]} */ (
+    incomingListMapped
+      .filter((x) => !existingListValues.has(x.value))
+      .map((y) => ({
+        id: undefined,
+        text: y.text,
+        value: y.value.toString()
+      }))
+  )
+
+  const deletions = /** @type {Item[]} */ (
+    existingListMapped
+      .filter((x) => !incomingListValues.has(x.value))
+      .map((x) => populateExistingId(existingListItems, x))
+  )
+
+  return { additions, deletions, listItemsWithIds }
 }
 
 /**
- * @import { FormDefinition, FormEditorInputQuestion, Item, List } from '@defra/forms-model'
+ * @param {FormDefinition} definition
+ * @param {Item[]} listItems
+ * @param {string} listName
+ */
+export function usedInConditions(definition, listItems, listName) {
+  const conditions = /** @type {ConditionWrapperV2[]} */ (definition.conditions)
+  if (conditions.length === 0) {
+    return []
+  }
+  const listItemIds = listItems
+    .map((item) => item.id)
+    .filter((x) => x !== undefined)
+  const breakableConditions = conditions.filter((cond) =>
+    cond.items.some((item) =>
+      'type' in item ? item.type === ConditionType.ListItemRef : false
+    )
+  )
+  const brokenConditions = []
+  const listRows = definition.lists.find((x) => x.id === listName)?.items
+  for (const itemId of listItemIds) {
+    for (const condition of breakableConditions) {
+      // @ts-expect-error - itemId takes some unnecessary coercing of types to satisfy tslint
+      if (condition.items.some((item) => item.value.itemId === itemId)) {
+        brokenConditions.push({
+          displayName: condition.displayName,
+          itemId,
+          entryText: listRows?.find((x) => x.id === itemId)?.text
+        })
+      }
+    }
+  }
+  return brokenConditions
+}
+
+/**
+ * @import { ConditionWrapperV2, FormDefinition, Item, List } from '@defra/forms-model'
  */

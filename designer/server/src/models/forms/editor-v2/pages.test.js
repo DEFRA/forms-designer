@@ -86,18 +86,22 @@ describe('editor-v2 - pages model', () => {
         testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[0]
       )
+
       const resPageTwoQuestions = mapQuestionRows(
         testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[1]
       )
+
       const resPageSummaryQuestions = mapQuestionRows(
         testFormDefinitionWithTwoPagesAndQuestions,
         testFormDefinitionWithTwoPagesAndQuestions.pages[2]
       )
+
       const resPageSummaryExistingMarkdown = mapQuestionRows(
         testFormDefinitionWithExistingSummaryDeclaration,
         testFormDefinitionWithExistingSummaryDeclaration.pages[1]
       )
+
       const resPageSummaryRepeater = mapQuestionRows(
         testFormDefinitionWithRepeater,
         testFormDefinitionWithRepeater.pages[0]
@@ -107,7 +111,6 @@ describe('editor-v2 - pages model', () => {
         testFormDefinitionWithMultipleV2Conditions
       )
       // Assign a condition to first page
-      // @ts-expect-error - condition may not exist on page
       conditionTestDefinition.pages[0].condition =
         'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
 
@@ -191,22 +194,22 @@ describe('editor-v2 - pages model', () => {
 
   describe('hideFirstGuidance', () => {
     test('should return unchanged page if no guidance components at first position', () => {
-      const [page1, page2] = testFormDefinitionWithTwoQuestions.pages
+      const [page1, page2] = /** @type {PageQuestion[]} */ (
+        testFormDefinitionWithTwoQuestions.pages
+      )
       const page1Res = /** @type {PageQuestion} */ (hideFirstGuidance(page1))
-      expect(page1Res.components).toEqual(
-        testFormDefinitionWithTwoQuestions.pages[0].components
-      )
+      expect(page1Res.components).toEqual(page1.components)
       const page2Res = /** @type {PageQuestion} */ (hideFirstGuidance(page2))
-      expect(page2Res.components).toEqual(
-        testFormDefinitionWithTwoQuestions.pages[1].components
-      )
+      expect(page2Res.components).toEqual(page2.components)
     })
 
     test('should hide guidance component if at first position', () => {
       const testFormWithTwoGuidances = {
         ...testFormDefinitionWithTwoPagesAndQuestions
       }
-      const [page1, page2, page3] = testFormWithTwoGuidances.pages
+      const [page1, page2, page3] = /** @type {PageQuestion[]} */ (
+        testFormWithTwoGuidances.pages
+      )
       const blankPage = testFormDefinitionWithNoQuestions.pages[0]
       insertGuidanceAtTop(page1.components)
       insertGuidanceAtTop(page2.components)

@@ -35,7 +35,7 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { upsertList } from '~/src/lib/list.js'
+import { matchLists, upsertList, usedInConditions } from '~/src/lib/list.js'
 import {
   buildQuestionSessionState,
   createQuestionSessionState,
@@ -43,14 +43,14 @@ import {
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import {
+  buildListFromDetails,
+  saveList
+} from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
+import {
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
-import {
-  buildListFromDetails,
-  getListItems,
-  saveList
-} from '~/src/routes/forms/editor-v2/question-details.js'
+import { getListItems } from '~/src/routes/forms/editor-v2/question-details.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -920,6 +920,9 @@ describe('Editor v2 question details routes', () => {
       ]
     })
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
     jest.mocked(upsertList).mockResolvedValue({
       id: listId,
       list,
@@ -929,7 +932,7 @@ describe('Editor v2 question details routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/123456/question/new/details',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/details',
       auth,
       payload: {
         name,
@@ -947,10 +950,52 @@ describe('Editor v2 question details routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/123456/questions'
+      '/library/my-form-slug/editor-v2/page/p1/questions'
     )
     const [, , , question] = addQuestionMock.mock.calls[0]
     expect(question).toMatchObject({ list: listId })
+  })
+
+  test('POST - should update autocomplete and forward to resolve conflicts', async () => {
+    const definition = structuredClone(
+      testFormDefinitionWithRadioQuestionAndList
+    )
+    // @ts-expect-error - coerce page type that has components
+    const component = definition.pages[0].components[0]
+    component.type = ComponentType.AutocompleteField
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithRadioQuestionAndList)
+    jest.mocked(matchLists).mockReturnValueOnce({
+      additions: [],
+      deletions: [],
+      listItemsWithIds: []
+    })
+    // @ts-expect-error - just need a single row in the array. Not bothered about structure for this test
+    jest.mocked(usedInConditions).mockReturnValueOnce([{}])
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/details',
+      auth,
+      payload: {
+        name: component.name,
+        question: 'Autocomplete',
+        hintText: '',
+        autoCompleteOptions: 'English:en-gb\r\nFrench:fr-Fr',
+        shortDescription: 'autocomplete',
+        questionType: 'AutocompleteField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/q1/details/resolve'
+    )
   })
 
   describe('saveList', () => {
