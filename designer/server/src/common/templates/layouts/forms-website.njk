@@ -50,13 +50,14 @@
 
 {% block footer %}
   {% set phaseBanner %}
-
+  {% if ["alpha", "beta"].includes(config.phase) %}
   {{ govukPhaseBanner({
     tag: {
       text: "Beta"
     },
     html: 'This is a new service. Help us improve it and <a class="govuk-footer__link" href="mailto:defraforms@defra.gov.uk">give your feedback by email</a>.'
   }) }}
+  {% endif %}
 
   {% endset -%}
   {{ govukFooter({

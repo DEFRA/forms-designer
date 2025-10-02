@@ -18,20 +18,19 @@
           Make it easier for the public to submit information to Defra.
         </p>
         {{ govukButton({
-        text: "Sign in",
-        classes: 'govuk-button--inverse',
-        href: "/library",
-        isStartButton: true
+          text: "Sign in",
+          classes: 'govuk-button--inverse',
+          href: "/library",
+          isStartButton: true
         })}}
       </div>
       <div class="govuk-grid-column-one-third-from-desktop">
 
-        <div class="govuk-card govuk-card--feature govuk-!-margin-top-6" style="background-color:transparent; border: 1px solid #EFF6F3; margin: 0; padding: 0; min-height: fit-content; max-height: fit-content">
-          <div class="govuk-card__content" style="padding: 20px;">
+        <div class="govuk-card govuk-card--feature govuk-!-margin-top-6 govuk-!-margin-bottom-6" style="">
+          <div class="govuk-card__content">
 
             <h2 class="govuk-card__heading govuk-heading-m" style="margin-top: 0; ">
-              <a href="/titan-mvp-1.2/product-pages/release-notes" class="govuk-link govuk-link--no-visited-state govuk-link--inverse" style="color: white !important;">What's
-                new</a>
+              <a href="#" class="govuk-link govuk-link--no-visited-state govuk-link--inverse">What's new</a>
             </h2>
             <div class="govuk-!-text-align-left govuk-!-margin-bottom-2">
               <time class="govuk-body-s" datetime="2025-06-14T14:01:00.000Z" style="color: white!important;">14 June 2025</time>
@@ -50,7 +49,7 @@
 {% block content %}
 <div class="govuk-width-container">
   <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
       {% set coreFeatures %}
         {%- include "website/home/core-features.njk" -%}
       {% endset -%}
@@ -97,9 +96,9 @@
         ]
       }) }}
     </div>
-    <div class="govuk-grid-column-two-thirds">
+    <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
       <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
           <h2 class="govuk-heading-l">Who's using Defra Forms</h2>
         </div>
         <div class="govuk-grid-column-full organisations-grid">

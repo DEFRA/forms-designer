@@ -48,20 +48,11 @@
     adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
     accountName: authedUser.displayName if isAuthenticated,
     accountLink: accountLinkUrl,
-    classes: "",
     signOutLink: "/auth/sign-out",
     homepageLink: "/"
   }) }}
 
-  {% if ["alpha", "beta"].includes(config.phase) %}
-  <div class="govuk-width-container app-width-container--wide">
-    {{ govukPhaseBanner({
-      tag: { text: config.phase | title },
-      html: 'This is a new service. Help us improve it and <a class="govuk-link" href="mailto:defraforms@defra.gov.uk">give your feedback by email</a>.'
-    }) }}
-  </div>
-  {% endif %}
-  {{ govukServiceNavigation({
+{#  {{ govukServiceNavigation({
     classes: "govuk-service-navigation--full-width",
     navigation: navigation
-  }) }}
+  }) }} #}

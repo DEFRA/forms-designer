@@ -1,6 +1,5 @@
 {#
 Component options:
-  - classes (string): Additional classes for the header
   - organisationName (string): The name of the organisation
   - productName (string): The name of the product
   - serviceName (string): The name of the service (optional)
@@ -32,7 +31,6 @@ Component options:
 {%- set accountLink = params.accountLink if params.accountLink else "https://home.account.gov.uk/" -%}
 {%- set homepageLink = params.homepageLink if params.homepageLink else "https://www.gov.uk/" -%}
 {%- set signOutLink = params.signOutLink if params.signOutLink else "https://home.account.gov.uk/sign-out" -%}
-{%- set headerClass = params.classes if params.classes else "" -%}
 {%- macro littlePersonIcon(modifier="default") -%}
   {%- set class = "focus" if modifier == "focus" else "default" %}
   {%- set backgroundColour = "black" if modifier == "focus" else "white" %}
@@ -46,7 +44,7 @@ Component options:
             </svg>
           </span>
 {%- endmacro -%}
-<header class="cross-service-header {{ headerClass }}" role="banner" data-module="one-login-header">
+<header class="cross-service-header" role="banner" data-module="one-login-header">
   <div class="one-login-header" data-one-login-header-nav>
     <div class="one-login-header__container govuk-width-container app-width-container--wide">
       <div class="one-login-header__logo">

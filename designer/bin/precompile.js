@@ -10,14 +10,10 @@ const env = new Environment([])
  * @param {string} output
  */
 export function precompileFn(cmdpath, output) {
-  let preCompiled
-  try {
-    preCompiled = precompile(cmdpath, {
-      env: env,
-      include: ['\\.njk$'],
-      exclude: []
-    })
-  } catch (e) {}
-
+  const preCompiled = precompile(cmdpath, {
+    env: env,
+    include: ['\\.njk$'],
+    exclude: []
+  })
   fs.writeFileSync(output, minify_sync(preCompiled).code)
 }
