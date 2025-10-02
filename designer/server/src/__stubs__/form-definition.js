@@ -1108,5 +1108,29 @@ export const testFormDefinitionWithMultipleV2Conditions = {
 }
 
 /**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithMultipleV2ConditionsWithUnassigned =
+  buildDefinition({
+    ...testFormDefinitionWithMultipleV2Conditions,
+    conditions: [
+      ...testFormDefinitionWithMultipleV2Conditions.conditions,
+      {
+        id: 'aae9f931-e151-4dd6-a2b9-68a03f3537e2',
+        displayName: 'isUnassigned',
+        items: [
+          {
+            id: 'aa071563-1261-4e5c-ab30-05dde59b86f6',
+            operator: OperatorName.Is,
+            type: ConditionType.StringValue,
+            value: 'unassigned',
+            componentId: '154271c2-79a2-4b59-b535-d210a13dbfe9'
+          }
+        ]
+      }
+    ]
+  })
+
+/**
  * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
  */

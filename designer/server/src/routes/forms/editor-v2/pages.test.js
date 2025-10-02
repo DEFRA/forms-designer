@@ -199,10 +199,11 @@ describe('Editor v2 pages routes', () => {
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
 
-    expect($pageTitles[0]).toHaveTextContent('1 page')
-    expect($pageTitles[1]).toHaveTextContent('Fave animal')
-    expect($pageTitles[2]).toHaveTextContent('End pages')
-    expect($pageTitles[3]).toHaveTextContent('Check your answers')
+    expect($pageTitles[0]).toHaveTextContent('Filter pages by condition')
+    expect($pageTitles[1]).toHaveTextContent('1 page')
+    expect($pageTitles[2]).toHaveTextContent('Fave animal')
+    expect($pageTitles[3]).toHaveTextContent('End pages')
+    expect($pageTitles[4]).toHaveTextContent('Check your answers')
   })
 
   test('POST - should create filter based on selected conditions', async () => {

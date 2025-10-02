@@ -284,7 +284,7 @@ function buildRightSideActions(slug) {
  * @param {FormDefinition} definition
  * @param { string[] } filter
  */
-function buildConditionsFilter(definition, filter) {
+export function buildConditionsFilter(definition, filter) {
   const conditions = definition.conditions.sort((condA, condB) =>
     condA.displayName.localeCompare(condB.displayName)
   )
@@ -309,26 +309,27 @@ function buildConditionsFilter(definition, filter) {
     available: {
       name: 'conditionsFilter',
       classes: 'govuk-checkboxes--small',
-      fieldset: {
-        legend: {
-          text: 'Filter pages by condition',
-          isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
-        }
-      },
-      items: conditions.map((cond) => {
+      items: conditions
+        .map((cond) => {
+          const valueStr = 'id' in cond ? cond.id : cond.name
+          return assignedConditionIds.has(valueStr)
+            ? {
+                text: cond.displayName,
+                value: valueStr,
+                checked: filter.includes(valueStr)
+              }
+            : undefined
+        })
+        .filter(Boolean)
+    },
+    notAvailable: conditions
+      .map((cond) => {
         const valueStr = 'id' in cond ? cond.id : cond.name
-        const assignedToAPage = assignedConditionIds.has(valueStr)
-        return {
-          text: assignedToAPage
-            ? cond.displayName
-            : `${cond.displayName} (not assigned)`,
-          value: valueStr,
-          checked: filter.includes(valueStr),
-          disabled: !assignedToAPage
-        }
+        return !assignedConditionIds.has(valueStr)
+          ? cond.displayName
+          : undefined
       })
-    }
+      .filter(Boolean)
   }
 }
 
