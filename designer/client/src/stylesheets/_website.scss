@@ -34,9 +34,10 @@ $home-page-breakpoint: 1220px;
     }
   }
 
-  .x-govuk-masthead {
+  .app-masthead {
     background-color: $defra-brand-colour;
     padding-bottom: 1px;
+    margin-bottom: 0;
 
     .govuk-heading-xl {
       color: #ffffff;

@@ -1,50 +1,46 @@
 {% extends "layouts/forms-website.njk" %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
-{% from "x-govuk/components/masthead/macro.njk" import xGovukMasthead %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-<div class="x-govuk-masthead x-govuk-masthead--inverse">
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
+{% set mastheadBtn %}
+{{ govukButton({
+  text: "Sign in",
+  classes: 'govuk-button--inverse',
+  href: "/library",
+  isStartButton: true
+})}}
+{% endset -%}
+{% call appMasthead({
+  heading: {
+    text: "Create and publish Defra forms on GOV.UK"
+  },
+  description: {
+    text: "Make it easier for the public to submit information to Defra."
+  },
+  html: mastheadBtn
+}) %}
+<div class="govuk-grid-column-one-third-from-desktop">
+  <div class="govuk-card govuk-card--feature govuk-!-margin-top-6 govuk-!-margin-bottom-6" style="">
+    <div class="govuk-card__content">
 
-      <div class="govuk-grid-column-two-thirds-from-desktop">
-
-        <h1 class="x-govuk-masthead__title">
-          Create and publish Defra forms on GOV.UK
-        </h1>
-        <p class="x-govuk-masthead__description">
-          Make it easier for the public to submit information to Defra.
-        </p>
-        {{ govukButton({
-          text: "Sign in",
-          classes: 'govuk-button--inverse',
-          href: "/library",
-          isStartButton: true
-        })}}
+      <h2 class="govuk-card__heading govuk-heading-m" style="margin-top: 0; ">
+        <a href="#" class="govuk-link govuk-link--no-visited-state govuk-link--inverse">What's new</a>
+      </h2>
+      <div class="govuk-!-text-align-left govuk-!-margin-bottom-2">
+        <time class="govuk-body-s" datetime="2025-06-14T14:01:00.000Z" style="color: white!important;">14 June 2025</time>
       </div>
-      <div class="govuk-grid-column-one-third-from-desktop">
 
-        <div class="govuk-card govuk-card--feature govuk-!-margin-top-6 govuk-!-margin-bottom-6" style="">
-          <div class="govuk-card__content">
-
-            <h2 class="govuk-card__heading govuk-heading-m" style="margin-top: 0; ">
-              <a href="#" class="govuk-link govuk-link--no-visited-state govuk-link--inverse">What's new</a>
-            </h2>
-            <div class="govuk-!-text-align-left govuk-!-margin-bottom-2">
-              <time class="govuk-body-s" datetime="2025-06-14T14:01:00.000Z" style="color: white!important;">14 June 2025</time>
-            </div>
-
-            <p class="govuk-body" style="color: white!important;">
-              New conditions and accessibility improvements and updates to preview panel functionality.
-            </p>
-          </div>
-        </div>
-      </div>
+      <p class="govuk-body" style="color: white!important;">
+        New conditions and accessibility improvements and updates to preview panel functionality.
+      </p>
     </div>
   </div>
 </div>
+{%- endcall %}
+
 {% endblock %}
 {% block content %}
 <div class="govuk-width-container">
