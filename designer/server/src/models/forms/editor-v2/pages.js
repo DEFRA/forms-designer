@@ -284,7 +284,7 @@ function buildRightSideActions(slug) {
  * @param {FormDefinition} definition
  * @param { string[] } filter
  */
-function buildConditionsFilter(definition, filter) {
+export function buildConditionsFilter(definition, filter) {
   const conditions = definition.conditions.sort((condA, condB) =>
     condA.displayName.localeCompare(condB.displayName)
   )
