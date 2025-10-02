@@ -166,68 +166,68 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 <div class="govuk-grid-column-two-thirds">
         <div class="govuk-form-group">
   <fieldset class="govuk-fieldset">
-    <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-      <h1 class="govuk-fieldset__heading">
-        Choose a lead organisation for this form
-      </h1>
-    </legend>
-    <div class="govuk-radios" data-module="govuk-radios">
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation" name="organisation" type="radio" value="Animal and Plant Health Agency – APHA">
-        <label class="govuk-label govuk-radios__label" for="organisation">
-          Animal and Plant Health Agency – APHA
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-2" name="organisation" type="radio" value="Centre for Environment, Fisheries and Aquaculture Science – Cefas">
-        <label class="govuk-label govuk-radios__label" for="organisation-2">
-          Centre for Environment, Fisheries and Aquaculture Science – Cefas
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-3" name="organisation" type="radio" value="Defra">
-        <label class="govuk-label govuk-radios__label" for="organisation-3">
-          Defra
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-4" name="organisation" type="radio" value="Environment Agency">
-        <label class="govuk-label govuk-radios__label" for="organisation-4">
-          Environment Agency
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-5" name="organisation" type="radio" value="Forestry Commission">
-        <label class="govuk-label govuk-radios__label" for="organisation-5">
-          Forestry Commission
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-6" name="organisation" type="radio" value="Marine Management Organisation – MMO">
-        <label class="govuk-label govuk-radios__label" for="organisation-6">
-          Marine Management Organisation – MMO
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-7" name="organisation" type="radio" value="Natural England">
-        <label class="govuk-label govuk-radios__label" for="organisation-7">
-          Natural England
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-8" name="organisation" type="radio" value="Rural Payments Agency – RPA">
-        <label class="govuk-label govuk-radios__label" for="organisation-8">
-          Rural Payments Agency – RPA
-        </label>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="organisation-9" name="organisation" type="radio" value="Veterinary Medicines Directorate – VMD">
-        <label class="govuk-label govuk-radios__label" for="organisation-9">
-          Veterinary Medicines Directorate – VMD
-        </label>
-      </div>
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-fieldset__heading">
+      Choose a lead organisation for this form
+    </h1>
+  </legend>
+  <div class="govuk-radios" data-module="govuk-radios">
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation" name="organisation" type="radio" value="Animal and Plant Health Agency – APHA">
+      <label class="govuk-label govuk-radios__label" for="organisation">
+        Animal and Plant Health Agency – APHA
+      </label>
     </div>
-  </fieldset>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-2" name="organisation" type="radio" value="Centre for Environment, Fisheries and Aquaculture Science – Cefas">
+      <label class="govuk-label govuk-radios__label" for="organisation-2">
+        Centre for Environment, Fisheries and Aquaculture Science – Cefas
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-3" name="organisation" type="radio" value="Defra">
+      <label class="govuk-label govuk-radios__label" for="organisation-3">
+        Defra
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-4" name="organisation" type="radio" value="Environment Agency">
+      <label class="govuk-label govuk-radios__label" for="organisation-4">
+        Environment Agency
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-5" name="organisation" type="radio" value="Forestry Commission">
+      <label class="govuk-label govuk-radios__label" for="organisation-5">
+        Forestry Commission
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-6" name="organisation" type="radio" value="Marine Management Organisation – MMO">
+      <label class="govuk-label govuk-radios__label" for="organisation-6">
+        Marine Management Organisation – MMO
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-7" name="organisation" type="radio" value="Natural England">
+      <label class="govuk-label govuk-radios__label" for="organisation-7">
+        Natural England
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-8" name="organisation" type="radio" value="Rural Payments Agency – RPA">
+      <label class="govuk-label govuk-radios__label" for="organisation-8">
+        Rural Payments Agency – RPA
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="organisation-9" name="organisation" type="radio" value="Veterinary Medicines Directorate – VMD">
+      <label class="govuk-label govuk-radios__label" for="organisation-9">
+        Veterinary Medicines Directorate – VMD
+      </label>
+    </div>
+  </div>
+</fieldset>
 </div>
 
 
