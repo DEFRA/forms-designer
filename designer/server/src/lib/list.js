@@ -216,8 +216,7 @@ export function usedInConditions(definition, listItems, listName) {
   // Remove listItems and revalidate to determine if any breaking changes
   const list = definitionCopy.lists.find((x) => x.id === listName)
   if (list) {
-    const listRows = list.items
-    const updatedList = listRows.filter(
+    const updatedList = list.items.filter(
       (x) => !listItemIds.has(/** @type {string} */ (x.id))
     )
     list.items = updatedList
