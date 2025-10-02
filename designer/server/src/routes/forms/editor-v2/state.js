@@ -1,4 +1,5 @@
 import { Scopes, getErrorMessage } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
@@ -75,7 +76,10 @@ export default [
             err,
             'Invalid session contents when trying to save list entries in session'
           )
-          return h.response(`error: ${getErrorMessage(err)}`).takeover()
+          return h
+            .response(`error: ${getErrorMessage(err)}`)
+            .code(StatusCodes.INTERNAL_SERVER_ERROR)
+            .takeover()
         }
       },
       auth: {
