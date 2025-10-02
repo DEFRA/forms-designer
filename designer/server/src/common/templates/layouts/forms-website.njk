@@ -6,6 +6,7 @@
 {% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
 {% from "heading/macro.njk" import appHeading %}
 {% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
 
 {% block head %}
   <meta name="application-name" content="@defra/forms-designer" {{- govukAttributes({
@@ -48,9 +49,20 @@
 {% endblock %}
 
 {% block footer %}
+  {% set phaseBanner %}
+
+  {{ govukPhaseBanner({
+    tag: {
+      text: "Beta"
+    },
+    html: 'This is a new service. Help us improve it and <a class="govuk-footer__link" href="mailto:defraforms@defra.gov.uk">give your feedback by email</a>.'
+  }) }}
+
+  {% endset -%}
   {{ govukFooter({
     containerClasses: "app-width-container--wide",
     meta: {
+      html: phaseBanner,
       items: [
         {
           href: "/help/accessibility-statement",

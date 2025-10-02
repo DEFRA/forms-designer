@@ -1,0 +1,19 @@
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% set insetText %}
+<p class="govuk-body govuk-!-margin-bottom-0">
+  <a href="/features" class="govuk-link--no-visited-state">View
+    full feature list and
+    upcoming features</a>
+</p>
+{% endset -%}
+<hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+<div class="govuk-!-margin-top-6">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukInsetText({
+        html: insetText
+      }) }}
+    </div>
+  </div>
+</div>
