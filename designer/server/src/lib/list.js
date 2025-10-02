@@ -1,4 +1,4 @@
-import { ConditionType } from '@defra/forms-model'
+import { formDefinitionV2Schema } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -207,25 +207,43 @@ export function matchLists(definition, listRef, listItems) {
  * @param {string} listName
  */
 export function usedInConditions(definition, listItems, listName) {
-  const conditions = /** @type {ConditionWrapperV2[]} */ (definition.conditions)
-  if (conditions.length === 0) {
+  const definitionCopy = structuredClone(definition)
+
+  const listItemIds = new Set(
+    listItems.map((item) => item.id).filter((x) => x !== undefined)
+  )
+
+  // Remove listItems and revalidate to determine if any breaking changes
+  const list = definitionCopy.lists.find((x) => x.id === listName)
+  if (list) {
+    const listRows = list.items
+    const updatedList = listRows.filter(
+      (x) => !listItemIds.has(/** @type {string} */ (x.id))
+    )
+    list.items = updatedList
+  }
+
+  const { error } = formDefinitionV2Schema.validate(definitionCopy, {
+    abortEarly: false
+  })
+
+  if (!error || error.details.length === 0) {
     return []
   }
 
-  const listItemIds = listItems
-    .map((item) => item.id)
-    .filter((x) => x !== undefined)
+  const errorRowNums = new Set(error.details.map((det) => det.path[1]))
 
-  const breakableConditions = conditions.filter((cond) =>
-    cond.items.some((item) =>
-      'type' in item ? item.type === ConditionType.ListItemRef : false
-    )
+  const conditions = /** @type {ConditionWrapperV2[]} */ (
+    definitionCopy.conditions
+  )
+  const failedConditions = conditions.filter((_cond, idx) =>
+    errorRowNums.has(idx)
   )
 
   const brokenConditions = []
   const listRows = definition.lists.find((x) => x.id === listName)?.items
   for (const itemId of listItemIds) {
-    for (const condition of breakableConditions) {
+    for (const condition of failedConditions) {
       // @ts-expect-error - itemId takes some unnecessary coercing of types to satisfy tslint
       if (condition.items.some((item) => item.value.itemId === itemId)) {
         brokenConditions.push({

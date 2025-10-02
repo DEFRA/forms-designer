@@ -786,7 +786,7 @@ export const testFormDefinitionWithMultipleV2Conditions = buildDefinition({
       next: []
     }),
     buildQuestionPage({
-      id: '86ea4ba-ae3b-4324-9acd-3a3f347cb0ec',
+      id: '86ea4baf-ae3b-4324-9acd-3a3f347cb0ec',
       title: 'Fave animal',
       path: '/fave-animal',
       components: [
