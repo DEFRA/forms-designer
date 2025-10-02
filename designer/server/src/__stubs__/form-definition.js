@@ -237,15 +237,6 @@ export function buildList(partialList = {}) {
   }
 }
 
-// buildDefinition(definitionPartial = {}) {
-//   return {
-//     name: 'Test form',
-//     pages: [],
-//     conditions: [],
-//     sections: [],
-//     lists: [],
-//     ...definitionPartial
-//   }
 /**
  * @satisfies {FormDefinition}
  */
@@ -972,7 +963,7 @@ export const testFormDefinitionWithMultipleV2ConditionsWithUnassigned =
       ...testFormDefinitionWithMultipleV2Conditions.conditions,
       {
         id: 'aae9f931-e151-4dd6-a2b9-68a03f3537e2',
-        displayName: 'isUnassigned',
+        displayName: 'isUnassignedCond',
         items: [
           {
             id: 'aa071563-1261-4e5c-ab30-05dde59b86f6',
@@ -987,5 +978,5 @@ export const testFormDefinitionWithMultipleV2ConditionsWithUnassigned =
   })
 
 /**
- * @import { FormDefinition, PageQuestion, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
  */

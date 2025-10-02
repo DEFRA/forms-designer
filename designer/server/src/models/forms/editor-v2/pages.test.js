@@ -69,7 +69,6 @@ describe('editor-v2 - pages model', () => {
       const definitionWithConditions = {
         ...testFormDefinitionWithMultipleV2Conditions
       }
-      // @ts-expect-error - condition v2
       definitionWithConditions.pages[2].condition =
         '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
       const res = mapPageData('slug', definitionWithConditions, [
@@ -361,7 +360,7 @@ describe('editor-v2 - pages model', () => {
       expect(res.notAvailable).toEqual([
         'isBobAndFaveColourRedV2',
         'isBobV2',
-        'isUnassigned'
+        'isUnassignedCond'
       ])
     })
   })
