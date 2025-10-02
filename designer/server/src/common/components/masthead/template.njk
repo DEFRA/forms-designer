@@ -26,7 +26,9 @@
       {% endif %}
         {{ params.html | safe if params.html else params.text }}
       </div>
+      {% if caller %}
       {{ caller() }}
+      {% endif %}
     </div>
   </div>
 </div>
