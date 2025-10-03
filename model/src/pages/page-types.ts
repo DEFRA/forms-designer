@@ -57,6 +57,13 @@ export const PageTypes: readonly Page[] = Object.freeze([
     components: []
   },
   {
+    title: 'Summary page',
+    path: ControllerPath.Summary,
+    controller: ControllerType.SummaryWithConfirmationEmail,
+    section: undefined,
+    components: []
+  },
+  {
     title: 'Status page',
     path: ControllerPath.Status,
     controller: ControllerType.Status,
