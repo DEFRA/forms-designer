@@ -26,6 +26,10 @@ export const ControllerTypes = [
     path: './pages/summary.js'
   },
   {
+    name: ControllerType.SummaryWithConfirmationEmail,
+    path: './pages/summary-with-confirmation-email.js'
+  },
+  {
     name: ControllerType.Status,
     path: './pages/status.js'
   }
