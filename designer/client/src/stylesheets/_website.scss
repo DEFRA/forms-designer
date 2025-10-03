@@ -66,9 +66,12 @@ $home-page-breakpoint: 1220px;
       &__content a {
         &:link,
         &:hover,
-        &:visited,
-        &:checked {
+        &:visited {
           color: #ffffff;
+        }
+
+        &:focus {
+          color: govuk-colour("black");
         }
       }
     }
