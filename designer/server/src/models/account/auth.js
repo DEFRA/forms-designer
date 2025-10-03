@@ -1,6 +1,8 @@
 import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { getNameForRole } from '~/src/models/account/role-mapper.js'
+import content from '~/src/routes/website/content.js'
+import { pageNavigationBase } from '~/src/routes/website.js'
 
 export function signedOutViewModel() {
   const pageTitle = 'You have signed out'
@@ -28,8 +30,12 @@ export function signInViewModel(options) {
     })
   }
 
+  const { home } = content
+
   return {
     pageTitle,
+    content: home,
+    pageNavigation: pageNavigationBase,
     pageHeading: {
       text: pageTitle,
       size: 'large'

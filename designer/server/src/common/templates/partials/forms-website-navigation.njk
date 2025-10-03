@@ -18,29 +18,6 @@
   ] -%}
 {%- endif -%}
 
-{%- set navigation = [
-    {
-      href: "/about",
-      text: "About"
-    },
-    {
-      href: "/get-started",
-      text: "Get started"
-    },
-    {
-      href: "/features",
-      text: "Features"
-    },
-    {
-      href: "/resources",
-      text: 'Resources'
-    },
-    {
-      href: "/support",
-      text: 'Support'
-    }
-  ] -%}
-
   {{ appServiceHeader({
     organisationName: "Defra",
     productName: productName | safe | trim,
@@ -52,7 +29,7 @@
     homepageLink: "/"
   }) }}
 
-{#  {{ govukServiceNavigation({
+  {{ govukServiceNavigation({
     classes: "govuk-service-navigation--full-width",
-    navigation: navigation
-  }) }} #}
+    navigation: pageNavigation
+  }) }}
