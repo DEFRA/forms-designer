@@ -24,8 +24,11 @@
           {{ params.description.html | safe if params.description.html else params.description.text }}
         </p>
       {% endif %}
-        {{ caller() if caller else (params.html | safe if params.html else params.text) }}
+        {{ params.html | safe if params.html else params.text }}
       </div>
+      {% if caller %}
+      {{ caller() }}
+      {% endif %}
     </div>
   </div>
 </div>

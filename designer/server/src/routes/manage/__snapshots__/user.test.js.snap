@@ -207,30 +207,30 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 
     <div class="govuk-form-group">
   <fieldset class="govuk-fieldset">
-    <legend class="govuk-fieldset__legend">
-      Choose role
-    </legend>
-    <div class="govuk-radios" data-module="govuk-radios">
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" aria-describedby="userRole-item-hint">
-        <label class="govuk-label govuk-radios__label" for="userRole">
-          Admin
-        </label>
-        <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
-          Can publish and delete forms and manage users
-        </div>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator" aria-describedby="userRole-2-item-hint">
-        <label class="govuk-label govuk-radios__label" for="userRole-2">
-          Form creator
-        </label>
-        <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
-          Can create and edit existing forms only
-        </div>
+  <legend class="govuk-fieldset__legend">
+    Choose role
+  </legend>
+  <div class="govuk-radios" data-module="govuk-radios">
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" aria-describedby="userRole-item-hint">
+      <label class="govuk-label govuk-radios__label" for="userRole">
+        Admin
+      </label>
+      <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
+        Can publish and delete forms and manage users
       </div>
     </div>
-  </fieldset>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator" aria-describedby="userRole-2-item-hint">
+      <label class="govuk-label govuk-radios__label" for="userRole-2">
+        Form creator
+      </label>
+      <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
+        Can create and edit existing forms only
+      </div>
+    </div>
+  </div>
+</fieldset>
 </div>
 
 
@@ -811,30 +811,30 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 
     <div class="govuk-form-group">
   <fieldset class="govuk-fieldset">
-    <legend class="govuk-fieldset__legend">
-      Choose role
-    </legend>
-    <div class="govuk-radios" data-module="govuk-radios">
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" checked aria-describedby="userRole-item-hint">
-        <label class="govuk-label govuk-radios__label" for="userRole">
-          Admin
-        </label>
-        <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
-          Can publish and delete forms and manage users
-        </div>
-      </div>
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator" aria-describedby="userRole-2-item-hint">
-        <label class="govuk-label govuk-radios__label" for="userRole-2">
-          Form creator
-        </label>
-        <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
-          Can create and edit existing forms only
-        </div>
+  <legend class="govuk-fieldset__legend">
+    Choose role
+  </legend>
+  <div class="govuk-radios" data-module="govuk-radios">
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="userRole" name="userRole" type="radio" value="admin" checked aria-describedby="userRole-item-hint">
+      <label class="govuk-label govuk-radios__label" for="userRole">
+        Admin
+      </label>
+      <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
+        Can publish and delete forms and manage users
       </div>
     </div>
-  </fieldset>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="userRole-2" name="userRole" type="radio" value="form-creator" aria-describedby="userRole-2-item-hint">
+      <label class="govuk-label govuk-radios__label" for="userRole-2">
+        Form creator
+      </label>
+      <div id="userRole-2-item-hint" class="govuk-hint govuk-radios__hint">
+        Can create and edit existing forms only
+      </div>
+    </div>
+  </div>
+</fieldset>
 </div>
 
 

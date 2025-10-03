@@ -15,6 +15,5 @@ export function precompileFn(cmdpath, output) {
     include: ['\\.njk$'],
     exclude: []
   })
-
   fs.writeFileSync(output, minify_sync(preCompiled).code)
 }

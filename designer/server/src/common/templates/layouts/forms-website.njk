@@ -1,0 +1,13 @@
+{%- set bodyClasses = "defra-forms-website" -%}
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/macros/attributes.njk" import govukAttributes %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "breadcrumbs/macro.njk" import appBreadcrumbs %}
+{% from "heading/macro.njk" import appHeading %}
+{% from "govuk/components/service-navigation/macro.njk" import govukServiceNavigation %}
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+
+{% block header %}
+  {% include "partials/forms-website-navigation.njk" %}
+{% endblock %}
