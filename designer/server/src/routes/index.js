@@ -6,5 +6,16 @@ import health from '~/src/routes/health.js'
 import help from '~/src/routes/help.js'
 import home from '~/src/routes/home.js'
 import manage from '~/src/routes/manage/index.js'
+import website from '~/src/routes/website/index.js'
 
-export default [account, assets, forms, health, home, help, file, manage].flat()
+export default [
+  account,
+  assets,
+  forms,
+  health,
+  home,
+  help,
+  file,
+  manage,
+  website
+].flat()

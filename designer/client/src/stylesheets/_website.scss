@@ -10,17 +10,18 @@ $home-page-breakpoint: 1220px;
     padding-right: 60px;
   }
 
-  .one-login-header,
-  .govuk-service-navigation {
-    background-color: $defra-brand-colour;
-  }
-
   .one-login-header {
+    background-color: $defra-brand-colour;
     border-bottom: 1px solid #ffffff;
   }
 
   .govuk-service-navigation {
     border-bottom-color: #ffffff;
+    background-color: #ffffff;
+
+    &__item--active {
+      border-bottom: 5px solid $defra-brand-colour;
+    }
 
     .govuk-service-navigation__link {
       font-weight: 700;
@@ -29,7 +30,20 @@ $home-page-breakpoint: 1220px;
       &:active,
       &:visited,
       &:hover {
-        color: #ffffff;
+        color: $defra-brand-colour;
+      }
+    }
+
+    &--green {
+      background-color: $defra-brand-colour;
+
+      .govuk-service-navigation__link {
+        &:link,
+        &:active,
+        &:visited,
+        &:hover {
+          color: #ffffff;
+        }
       }
     }
   }

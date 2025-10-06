@@ -1,0 +1,51 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "About the Defra Forms team"
+  },
+  description: {
+    text: "The Defra Forms project aims to tackle Defra Group’s reliance on paper (document-based) forms. The Defra Forms team is a multidisciplinary team in the Digital, Data and Technology Services (DDTS) directorate."
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+
+      <p class="govuk-body">
+        We enable digital transformation at Defra in two ways:
+      </p>
+      <ol class="govuk-list govuk-list--number">
+        <li>We provide strategic form consultancy for select ALBs to understand how to design good digital
+          forms, and how to change processes to make them work better for staff and the public.</li>
+        <li>We built a powerful digital form builder called the <a href="/titan-mvp-1.2/product-pages/get-started" class="govuk-link govuk-link--no-visited-state">Defra Form
+          Designer</a> that enables complex data collection, automation and integration with Defra
+          systems.
+        </li>
+      </ol>
+
+
+      <p class="govuk-body">
+        We've published several blogs about our work, including:
+      </p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li><a href="https://defradigital.blog.gov.uk/2024/12/12/transforming-defra-together-the-journey-from-paper-to-online-forms/" class="govuk-link govuk-link--no-visited-state">Transforming Defra together: the journey
+          from paper to online forms</a>
+        </li>
+        <li><a href="https://defradigital.blog.gov.uk/2024/09/26/how-we-are-leading-a-bold-and-innovative-approach-to-online-forms/" class="govuk-link govuk-link--no-visited-state">How we are leading a bold and innovative
+          approach to online forms</a>
+        </li>
+        <li><a href="https://defradigital.blog.gov.uk/2024/04/19/being-assessed-and-assessing-a-tale-of-two-perspectives-part-one/" class="govuk-link govuk-link--no-visited-state">Being assessed and assessing – a tale of two
+          perspectives: Part one</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

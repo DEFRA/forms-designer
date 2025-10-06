@@ -1,3 +1,5 @@
+import { AssertionError } from 'assert'
+
 import { within } from '@testing-library/dom'
 
 import { createServer } from '~/src/createServer.js'
@@ -25,12 +27,26 @@ describe('Health check route', () => {
     const { container, document } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', { level: 1 })
-    const $whatsNewText = document
-      .querySelector('.app-masthead .govuk-card__content .govuk-body')
-      .textContent.trim()
+    const $whatsNewTextObj = document.querySelector(
+      '.app-masthead .govuk-card__content .govuk-body'
+    )
+
+    if (
+      $whatsNewTextObj?.textContent === undefined ||
+      $whatsNewTextObj.textContent === null
+    ) {
+      throw new AssertionError({ message: '$whatsNewTextObj is missing' })
+    }
     const $time = document.querySelector(
       '.app-masthead .govuk-card__content time'
     )
+
+    if ($time === null) {
+      throw new AssertionError({ message: '$time is null' })
+    }
+
+    const $whatsNewText = $whatsNewTextObj.textContent.trim()
+
     const $timeIso = $time.getAttribute('datetime')
     const $navigation = container.getByRole('navigation', { name: 'Menu' })
     const menus = ['About', 'Get started', 'Features', 'Resources', 'Support']
@@ -43,22 +59,27 @@ describe('Health check route', () => {
       'Create and publish Defra forms on GOV.UK'
     )
     expect($whatsNewText.length).toBeTruthy()
+    // @ts-expect-error - testing for invalid input
     expect(new Date($timeIso)).not.toBeNaN()
+  })
 
-    // remove
-    expect($timeIso).toBe('2025-06-14T14:01:00.000Z')
-    // remove
-    expect(
-      document.querySelector('.app-masthead .govuk-card__content').textContent
-    ).toContain('14 June 2025')
-    // remove
-    expect(
-      document
-        .querySelector('.app-masthead .govuk-card__content .govuk-body')
-        .textContent.trim()
-    ).toBe(
-      'New conditions and accessibility improvements and updates to preview panel functionality.'
-    )
+  test('/about should shows the Defra Forms Website About page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/about'
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    const $navigation = container.getByRole('navigation', { name: 'Menu' })
+    const menus = ['About', 'Get started', 'Features', 'Resources', 'Support']
+    const $navigationItems = within($navigation).getAllByRole('link')
+
+    menus.forEach((item, idx) => {
+      expect($navigationItems[idx]).toHaveTextContent(item)
+    })
+    expect($heading).toHaveTextContent('About the Defra Forms team')
   })
 })
 

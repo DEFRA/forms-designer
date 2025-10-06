@@ -18,18 +18,20 @@
   ] -%}
 {%- endif -%}
 
-  {{ appServiceHeader({
-    organisationName: "Defra",
-    productName: productName | safe | trim,
-    navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)),
-    adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
-    accountName: authedUser.displayName if isAuthenticated,
-    accountLink: accountLinkUrl,
-    signOutLink: "/auth/sign-out",
-    homepageLink: "/"
-  }) }}
+{{ appServiceHeader({
+  organisationName: "Defra",
+  productName: productName | safe | trim,
+  navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)),
+  adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
+  accountName: authedUser.displayName if isAuthenticated,
+  accountLink: accountLinkUrl,
+  signOutLink: "/auth/sign-out",
+  homepageLink: "/"
+}) }}
 
-  {{ govukServiceNavigation({
-    classes: "govuk-service-navigation--full-width",
-    navigation: pageNavigation
-  }) }}
+{%- set navigationClasses = "govuk-service-navigation--green" if displayHomeNav else "" -%}
+
+{{ govukServiceNavigation({
+  classes: navigationClasses,
+  navigation: pageNavigation
+}) }}

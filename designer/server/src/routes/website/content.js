@@ -1,5 +1,9 @@
 export default {
   home: {
+    mastHead: {
+      heading: 'Create and publish Defra forms on GOV.UK',
+      description: 'Create and publish Defra forms on GOV.UK'
+    },
     whatsNew: {
       date: {
         text: '14 June 2025',
