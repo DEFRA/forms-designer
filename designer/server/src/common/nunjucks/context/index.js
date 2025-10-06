@@ -3,7 +3,6 @@ import { basename, join } from 'node:path'
 
 import { Scopes } from '@defra/forms-model'
 
-import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   getUserSession,
   hasAdminRole
@@ -44,19 +43,6 @@ export async function context(request) {
     isAdmin = hasAdminRole(credentials.user)
   }
 
-  const badRequestErrorList = request?.yar?.flash(
-    sessionNames.badRequestErrorList
-  )
-
-  // hapi seems to be bugged when using flash, it for some reason isn't being committed
-  // we've added a dummy hapi response toolkit here so we can force an incomplete commit,
-  // which seems to work, although it's mind blowingly bad.
-  // @ts-expect-error -- this isn't good code and I have no idea why it's required
-  await request?.yar?.commit({
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    state: () => {}
-  })
-
   return {
     breadcrumbs: [],
     config: {
@@ -77,8 +63,7 @@ export async function context(request) {
     helpers: {
       buildFormUrl,
       buildPreviewUrl
-    },
-    badRequestErrorList
+    }
   }
 }
 

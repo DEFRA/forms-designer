@@ -27,9 +27,24 @@ interface StateCache {
   set: (id: string, key: string, value: string, ttl?: number) => Promise<void>
 }
 
+/**
+ * Type for view responses from Vision plugin.
+ * The @hapi/vision plugin extends responses with a 'view' variety
+ * but this isn't included in the base Hapi TypeScript definitions.
+ */
+export interface ViewResponse {
+  variety: 'view'
+  source: {
+    context?: Record<string, unknown>
+    [key: string]: unknown
+  }
+  [key: string]: unknown
+}
+
 declare module '@hapi/hapi' {
   // Here we are decorating Hapi interface types with
   // props from plugins which doesn't export @types
+
   interface Server {
     method(name: 'session.drop', method: UserSessionCache['drop']): void
     method(name: 'session.get', method: UserSessionCache['get']): void

@@ -1,3 +1,8 @@
+import {
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import {
@@ -24,6 +29,10 @@ describe('Editor v2 question delete routes', () => {
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+  })
+
+  afterAll(async () => {
+    await server.stop()
   })
 
   test('GET - should render correct content in the view when deleting a page', async () => {
@@ -265,6 +274,107 @@ describe('Editor v2 question delete routes', () => {
       definition
     )
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
+  test('POST - should handle error when deleting page with component referenced in condition', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const cause = [
+      {
+        id: FormDefinitionError.RefConditionComponentId,
+        type: FormDefinitionErrorType.Ref,
+        detail: { path: ['conditions', 0, 'items', 0, 'componentId'] },
+        message: '"conditions[0].items[0].componentId" must be [ref:root:pages]'
+      }
+    ]
+
+    const refComponentError = Boom.badRequest(
+      'component referenced in condition'
+    )
+    refComponentError.data = { error: 'InvalidFormDefinitionError', cause }
+
+    jest.mocked(deletePage).mockRejectedValueOnce(refComponentError)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth,
+      headers: {
+        referer: '/library/my-form-slug/editor-v2/page/p1/delete'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/delete'
+    )
+  })
+
+  test('POST - should handle error when deleting question referenced in condition', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const cause = [
+      {
+        id: FormDefinitionError.RefConditionComponentId,
+        type: FormDefinitionErrorType.Ref,
+        detail: { path: ['conditions', 0, 'items', 0, 'componentId'] },
+        message: '"conditions[0].items[0].componentId" must be [ref:root:pages]'
+      }
+    ]
+
+    const refComponentError = Boom.badRequest(
+      'component referenced in condition'
+    )
+    refComponentError.data = { error: 'InvalidFormDefinitionError', cause }
+
+    jest.mocked(deleteQuestion).mockRejectedValueOnce(refComponentError)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete/q1',
+      auth,
+      headers: {
+        referer: '/library/my-form-slug/editor-v2/page/p1/delete/q1'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/delete/q1'
+    )
+  })
+
+  test('POST - should re-throw non RefConditionComponentId errors', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    jest.mocked(deletePage).mockRejectedValueOnce(Boom.badRequest('Bad'))
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth
+    }
+
+    const { response } = await renderResponse(server, options)
+
+    expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
   })
 })
 
