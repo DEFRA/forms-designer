@@ -1,0 +1,58 @@
+{% from "govuk/components/phase-banner/macro.njk" import govukPhaseBanner %}
+{% from "service-header/macro.njk" import appServiceHeader %}
+{% from "tag-env/macro.njk" import appTagEnv %}
+
+{%- set productName %}
+  Forms Designer {{ appTagEnv({ env: config.cdpEnvironment }) }}
+{% endset -%}
+
+{%- set accountLinkUrl = "/auth/account" if (isAuthenticated and config.featureFlagUseEntitlementApi) else "/library" -%}
+
+{%- set adminNavigation = [] -%}
+{%- if isAuthenticated and isAdmin -%}
+  {%- set adminNavigation = [
+    {
+      text: "Manage users",
+      url: "/manage/users"
+    }
+  ] -%}
+{%- endif -%}
+
+{%- set navigation = [
+    {
+      href: "/about",
+      text: "About"
+    },
+    {
+      href: "/get-started",
+      text: "Get started"
+    },
+    {
+      href: "/features",
+      text: "Features"
+    },
+    {
+      href: "/resources",
+      text: 'Resources'
+    },
+    {
+      href: "/support",
+      text: 'Support'
+    }
+  ] -%}
+
+  {{ appServiceHeader({
+    organisationName: "Defra",
+    productName: productName | safe | trim,
+    navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)),
+    adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
+    accountName: authedUser.displayName if isAuthenticated,
+    accountLink: accountLinkUrl,
+    signOutLink: "/auth/sign-out",
+    homepageLink: "/"
+  }) }}
+
+{#  {{ govukServiceNavigation({
+    classes: "govuk-service-navigation--full-width",
+    navigation: navigation
+  }) }} #}

@@ -11,6 +11,6 @@ export enum ControllerType {
   FileUpload = 'FileUploadPageController',
   Terminal = 'TerminalPageController',
   Summary = 'SummaryPageController',
-  SummaryWithConfirmationEmail = 'SummaryWithConfirmationEmail',
+  SummaryWithConfirmationEmail = 'SummaryPageWithConfirmationEmailController',
   Status = 'StatusPageController'
 }

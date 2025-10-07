@@ -6,6 +6,13 @@ import { userEvent } from '@testing-library/user-event'
 import { Menu } from '~/src/components/Menu/Menu.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers'
 
+beforeAll(() => {
+  document.documentElement.style.setProperty(
+    '--govuk-breakpoint-tablet',
+    '768px'
+  )
+})
+
 describe('Menu', () => {
   const data = {
     pages: [],

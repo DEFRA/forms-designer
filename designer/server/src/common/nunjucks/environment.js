@@ -13,7 +13,13 @@ export const environment = nunjucks.configure(
     join(config.appDir, 'common/templates'),
     join(config.appDir, 'common/components'),
     join(config.clientSrc, 'views'),
-    join(dirname(resolvePkg.sync('govuk-frontend/package.json')), 'dist')
+    join(dirname(resolvePkg.sync('govuk-frontend/package.json')), 'dist'),
+    join(
+      dirname(
+        resolvePkg.sync('@x-govuk/govuk-prototype-components/package.json')
+      ),
+      'src'
+    )
   ],
   {
     trimBlocks: true,

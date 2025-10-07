@@ -1,0 +1,133 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{% set mastheadBtn %}
+{{ govukButton({
+  text: "Sign in",
+  classes: 'govuk-button--inverse',
+  href: "/library",
+  isStartButton: true
+})}}
+{% endset -%}
+{% call appMasthead({
+  heading: {
+    text: "Create and publish Defra forms on GOV.UK"
+  },
+  description: {
+    text: "Make it easier for the public to submit information to Defra."
+  },
+  html: mastheadBtn
+}) %}
+<div class="govuk-grid-column-one-third-from-desktop">
+  <div class="govuk-card govuk-card--feature govuk-!-margin-top-6 govuk-!-margin-bottom-6" style="">
+    <div class="govuk-card__content">
+
+      <h2 class="govuk-card__heading govuk-heading-m" style="margin-top: 0; ">
+        <a href="#" class="govuk-link govuk-link--no-visited-state govuk-link--inverse">What's new</a>
+      </h2>
+      <div class="govuk-!-text-align-left govuk-!-margin-bottom-2">
+        <time class="govuk-body-s" datetime="2025-06-14T14:01:00.000Z" style="color: white!important;">14 June 2025</time>
+      </div>
+
+      <p class="govuk-body" style="color: white!important;">
+        New conditions and accessibility improvements and updates to preview panel functionality.
+      </p>
+    </div>
+  </div>
+</div>
+{%- endcall %}
+
+{% endblock %}
+{% block content %}
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
+      {% set coreFeatures %}
+        {%- include "website/home/core-features.njk" -%}
+      {% endset -%}
+      {% set userExperience %}
+        {%- include "website/home/user-experience.njk" -%}
+      {% endset -%}
+      {% set advancedPatterns %}
+        {%- include "website/home/advanced-patterns.njk" -%}
+      {% endset -%}
+      {% set developerToolkit %}
+        {%- include "website/home/developer-toolkit.njk" -%}
+      {% endset -%}
+
+      {{ govukTabs({
+        items: [
+          {
+            label: "Core features",
+            id: "core-features",
+            panel: {
+              html: coreFeatures
+            }
+          },
+          {
+            label: "User experience",
+            id: "user-experience",
+            panel: {
+              html: userExperience
+            }
+          },
+          {
+            label: "Advanced patterns",
+            id: "advanced-patterns",
+            panel: {
+              html: advancedPatterns
+            }
+          },
+          {
+            label: "Developer-toolkit",
+            id: "developer-toolkit",
+            panel: {
+              html: developerToolkit
+            }
+          }
+        ]
+      }) }}
+    </div>
+    <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
+          <h2 class="govuk-heading-l">Who's using Defra Forms</h2>
+        </div>
+        <div class="govuk-grid-column-full organisations-grid">
+          <div class="content-section__image organisations-grid__logo">
+            <div class="defra-logo">
+              <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
+                <span>Department<br>for Environment,<br>Food &amp;
+                    Rural
+                    Affairs</span>
+              </div>
+            </div>
+          </div>
+          <div class="content-section__image organisations-grid__logo">
+            <div class="defra-logo">
+              <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
+                <span>Rural<br>Payments<br>Agency</span>
+              </div>
+            </div>
+          </div>
+          <div class="content-section__image organisations-grid__logo">
+            <div class="defra-logo">
+              <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
+                  <span>Animal &amp;<br>Plant
+                      Health<br>Agency</span>
+              </div>
+            </div>
+          </div>
+          <img src="/assets/images/food-standards-agency.svg" alt="Food Standards Agency – FSA" class="content-section__image organisations-grid__logo">
+          <img src="/assets/images/environment-agency.svg" alt="Environment Agency – EA" class="content-section__image organisations-grid__logo">
+          <img src="/assets/images/natural-england.svg" alt="Natural England" class="content-section__image organisations-grid__logo">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
