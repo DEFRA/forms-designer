@@ -125,6 +125,11 @@ export const notificationEmailAddressSchema = Joi.string()
   .trim()
   .description('Email address to receive form submission notifications')
 
+export const userConfirmationEmailAddressSchema = Joi.string()
+  .email()
+  .trim()
+  .description('Email address to receive form submission confirmations')
+
 export const authoredAtSchema = Joi.date()
   .iso()
   .required()
