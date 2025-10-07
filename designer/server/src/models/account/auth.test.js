@@ -35,11 +35,47 @@ describe('Auth view models', () => {
       const result = signInViewModel()
 
       expect(result).toEqual({
+        content: {
+          mastHead: {
+            description: 'Create and publish Defra forms on GOV.UK',
+            heading: 'Create and publish Defra forms on GOV.UK'
+          },
+          whatsNew: {
+            date: {
+              iso: '2025-06-14T14:01:00.000Z',
+              text: '14 June 2025'
+            },
+            text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+          }
+        },
+        displayHomeNav: true,
         pageTitle: 'Sign in to Forms Designer',
         pageHeading: {
           text: 'Sign in to Forms Designer',
           size: 'large'
         },
+        pageNavigation: [
+          {
+            href: '/about',
+            text: 'About'
+          },
+          {
+            href: '/get-started',
+            text: 'Get started'
+          },
+          {
+            href: '/features',
+            text: 'Features'
+          },
+          {
+            href: '/resources',
+            text: 'Resources'
+          },
+          {
+            href: '/support',
+            text: 'Support'
+          }
+        ],
         errorList: []
       })
     })
@@ -48,11 +84,47 @@ describe('Auth view models', () => {
       const result = signInViewModel({ hasFailedAuthorisation: true })
 
       expect(result).toEqual({
+        content: {
+          mastHead: {
+            description: 'Create and publish Defra forms on GOV.UK',
+            heading: 'Create and publish Defra forms on GOV.UK'
+          },
+          whatsNew: {
+            date: {
+              iso: '2025-06-14T14:01:00.000Z',
+              text: '14 June 2025'
+            },
+            text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+          }
+        },
+        displayHomeNav: true,
         pageTitle: 'Sign in to Forms Designer',
         pageHeading: {
           text: 'Sign in to Forms Designer',
           size: 'large'
         },
+        pageNavigation: [
+          {
+            href: '/about',
+            text: 'About'
+          },
+          {
+            href: '/get-started',
+            text: 'Get started'
+          },
+          {
+            href: '/features',
+            text: 'Features'
+          },
+          {
+            href: '/resources',
+            text: 'Resources'
+          },
+          {
+            href: '/support',
+            text: 'Support'
+          }
+        ],
         errorList: [
           {
             html: `We could not sign you in. Please contact the system administrator for help,
@@ -66,11 +138,47 @@ describe('Auth view models', () => {
       const result = signInViewModel({ hasFailedAuthorisation: false })
 
       expect(result).toEqual({
+        content: {
+          mastHead: {
+            description: 'Create and publish Defra forms on GOV.UK',
+            heading: 'Create and publish Defra forms on GOV.UK'
+          },
+          whatsNew: {
+            date: {
+              iso: '2025-06-14T14:01:00.000Z',
+              text: '14 June 2025'
+            },
+            text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+          }
+        },
+        displayHomeNav: true,
         pageTitle: 'Sign in to Forms Designer',
         pageHeading: {
           text: 'Sign in to Forms Designer',
           size: 'large'
         },
+        pageNavigation: [
+          {
+            href: '/about',
+            text: 'About'
+          },
+          {
+            href: '/get-started',
+            text: 'Get started'
+          },
+          {
+            href: '/features',
+            text: 'Features'
+          },
+          {
+            href: '/resources',
+            text: 'Resources'
+          },
+          {
+            href: '/support',
+            text: 'Support'
+          }
+        ],
         errorList: []
       })
     })

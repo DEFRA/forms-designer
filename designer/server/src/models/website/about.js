@@ -1,24 +1,13 @@
-import {
-  WebsiteLevel1Routes,
-  pageNavigationBase
-} from '~/src/routes/website/index.js'
+import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
+import { WebsiteLevel1Routes } from '~/src/routes/website/index.js'
 
 export function websiteAboutModel() {
-  const pageNavigation = pageNavigationBase.map((item) => {
-    if (item.href === WebsiteLevel1Routes.ABOUT) {
-      return {
-        ...item,
-        active: true
-      }
-    }
-    return item
-  })
   return {
     pageTitle: 'Defra Forms: About the Defra Forms team',
-    pageNavigation,
+    pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.ABOUT),
     pageHeading: {
-      text: 'Defra Forms: About the Defra Forms team',
-      size: 'large'
+      text: 'About the Defra Forms team',
+      description: 'large'
     }
   }
 }

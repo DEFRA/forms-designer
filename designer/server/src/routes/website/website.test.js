@@ -81,6 +81,36 @@ describe('Health check route', () => {
     })
     expect($heading).toHaveTextContent('About the Defra Forms team')
   })
+
+  test('/get-started should load get access page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/get-started'
+    }
+
+    const { container } = await renderResponse(server, options)
+    const $heading = container.getByRole('heading', { level: 1 })
+    const $main = container.getByRole('main')
+    const [, $firstSubMenu] = within($main).getAllByRole('link')
+    const $nav = container.getByRole('navigation', {
+      name: 'Pagination'
+    })
+
+    expect($heading).toHaveTextContent('Get access to the Defra Form Designer')
+    const [$nextLink] = within($nav).getAllByRole('link')
+    expect($firstSubMenu).toHaveTextContent(
+      'Get access to the Defra Form Designer'
+    )
+    expect($firstSubMenu).toHaveProperty(
+      'href',
+      expect.stringContaining('/get-started/get-access')
+    )
+    expect($nextLink).toHaveTextContent('Make a form live checklist')
+    expect($nextLink).toHaveProperty(
+      'href',
+      expect.stringContaining('/get-started/get-access')
+    )
+  })
 })
 
 /**

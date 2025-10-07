@@ -114,6 +114,19 @@ $home-page-breakpoint: 1220px;
       width: 100%;
     }
   }
+
+  .x-govuk-sub-navigation {
+    &__section-item--current {
+      border-left-color: $defra-brand-colour;
+    }
+
+    &__link:link,
+    &__link:visited,
+    &__link:active,
+    &__link:hover {
+      color: $defra-brand-colour;
+    }
+  }
 }
 
 .content-section {
