@@ -158,7 +158,7 @@ jobs:
               body += `### ❌ Some acceptance tests failed\n\n`;
             }
 
-            body += `[View Details](${runUrl}) | [Artifacts](${runUrl})`;
+            body += `[View Details](${runUrl})`;
 
             const { data: comments } = await github.rest.issues.listComments({
               owner: context.repo.owner,
