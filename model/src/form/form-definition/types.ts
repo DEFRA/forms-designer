@@ -105,6 +105,13 @@ export interface PageSummary extends PageBase {
   components?: ComponentDef[]
 }
 
+export interface PageSummaryWithConfirmationEmail extends PageBase {
+  path: ControllerPath.Summary | string
+  controller: ControllerType.SummaryWithConfirmationEmail
+  section?: undefined
+  components?: ComponentDef[]
+}
+
 export interface PageStatus extends PageBase {
   path: ControllerPath.Status | string
   controller: ControllerType.Status
@@ -118,6 +125,7 @@ export type Page =
   | PageFileUpload
   | PageRepeat
   | PageSummary
+  | PageSummaryWithConfirmationEmail
   | PageStatus
 
 export interface Section {
