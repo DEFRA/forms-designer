@@ -36,7 +36,10 @@ export function signInViewModel(options) {
     pageTitle,
     displayHomeNav: true,
     content: home,
-    pageNavigation: pageNavigationBase,
+    pageNavigation: pageNavigationBase.map(({ param, ...m }) => ({
+      ...m,
+      href: `/${param}`
+    })),
     pageHeading: {
       text: pageTitle,
       size: 'large'

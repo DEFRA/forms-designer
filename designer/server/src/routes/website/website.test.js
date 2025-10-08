@@ -103,12 +103,45 @@ describe('Health check route', () => {
     )
     expect($firstSubMenu).toHaveProperty(
       'href',
-      expect.stringContaining('/get-started/get-access')
+      expect.stringContaining('/get-started')
     )
     expect($nextLink).toHaveTextContent('Make a form live checklist')
     expect($nextLink).toHaveProperty(
       'href',
-      expect.stringContaining('/get-started/get-access')
+      expect.stringContaining('/get-started/make-form-live-checklist')
+    )
+  })
+
+  test('/get-started/make-form-live-checklist should load Make a form live checklist', async () => {
+    const options = {
+      method: 'GET',
+      url: '/get-started/make-form-live-checklist'
+    }
+
+    const { container } = await renderResponse(server, options)
+    const $heading = container.getByRole('heading', { level: 1 })
+    const $main = container.getByRole('main')
+    const [, , $secondSubMenu] = within($main).getAllByRole('link')
+    const $nav = container.getByRole('navigation', {
+      name: 'Pagination'
+    })
+
+    expect($heading).toHaveTextContent('Make a form live checklist')
+    const [$prevLink, $nextLink] = within($nav).getAllByRole('link')
+    expect($secondSubMenu).toHaveTextContent('Make a form live checklist')
+    expect($secondSubMenu).toHaveProperty(
+      'href',
+      expect.stringContaining('/get-started/make-form-live-checklist')
+    )
+    expect($prevLink).toHaveTextContent('Get access to the Defra Form Designer')
+    expect($prevLink).toHaveProperty(
+      'href',
+      expect.stringContaining('/get-started')
+    )
+    expect($nextLink).toHaveTextContent('Form suitability criteria')
+    expect($nextLink).toHaveProperty(
+      'href',
+      expect.stringContaining('/get-started/form-suitability-criteria')
     )
   })
 })

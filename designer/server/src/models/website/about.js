@@ -1,5 +1,5 @@
 import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
-import { WebsiteLevel1Routes } from '~/src/routes/website/index.js'
+import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 
 export function websiteAboutModel() {
   return {

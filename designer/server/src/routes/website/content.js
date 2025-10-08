@@ -2,7 +2,7 @@ import {
   Level2GetStartedMenu,
   Level2ResourcesMenu,
   WebsiteLevel1Routes
-} from '~/src/routes/website/index.js'
+} from '~/src/routes/website/constants.js'
 
 export default {
   home: {
@@ -22,23 +22,23 @@ export default {
     menus: [
       {
         text: 'Get started',
-        href: WebsiteLevel1Routes.GET_STARTED,
+        param: WebsiteLevel1Routes.GET_STARTED,
         parent: true,
         children: [
           {
-            href: Level2GetStartedMenu.GET_ACCESS,
+            param: Level2GetStartedMenu.GET_ACCESS,
             text: 'Get access to the Defra Form Designer'
           },
           {
-            href: Level2GetStartedMenu.MAKE_FORM_LIVE,
+            param: Level2GetStartedMenu.MAKE_FORM_LIVE,
             text: 'Make a form live checklist'
           },
           {
-            href: Level2GetStartedMenu.FORM_SUITABILITY,
+            param: Level2GetStartedMenu.FORM_SUITABILITY,
             text: 'Form suitability criteria'
           },
           {
-            href: Level2GetStartedMenu.MEASURING_SUCCESS,
+            param: Level2GetStartedMenu.MEASURING_SUCCESS,
             text: 'Measuring the success of your form'
           }
         ]
@@ -49,40 +49,40 @@ export default {
     menus: [
       {
         text: 'Good form design guide',
-        href: WebsiteLevel1Routes.RESOURCES,
+        param: WebsiteLevel1Routes.RESOURCES,
         current: true,
         parent: true,
         children: [
           {
-            href: Level2ResourcesMenu.DOES_IT_NEED,
+            param: Level2ResourcesMenu.DOES_IT_NEED,
             text: 'Does this need to be a form?'
           },
           {
-            href: Level2ResourcesMenu.ACCESSIBILITY,
+            param: Level2ResourcesMenu.ACCESSIBILITY,
             text: 'Accessibility and inclusion'
           },
           {
-            href: Level2ResourcesMenu.SMES,
+            param: Level2ResourcesMenu.SMES,
             text: 'Working with subject matter experts (SMEs)'
           },
           {
-            href: Level2ResourcesMenu.QUESTION_PROTOCOLS,
+            param: Level2ResourcesMenu.QUESTION_PROTOCOLS,
             text: 'Question protocols'
           },
           {
-            href: Level2ResourcesMenu.PROTOTYPING,
+            param: Level2ResourcesMenu.PROTOTYPING,
             text: 'Prototyping a form'
           },
           {
-            href: Level2ResourcesMenu.FORM_PAGES_GOVUK,
+            param: Level2ResourcesMenu.FORM_PAGES_GOVUK,
             text: 'Form pages on GOV.UK'
           },
           {
-            href: Level2ResourcesMenu.PEER_REVIEWING,
+            param: Level2ResourcesMenu.PEER_REVIEWING,
             text: 'Peer reviewing forms'
           },
           {
-            href: Level2ResourcesMenu.PRIVACY_NOTICES,
+            param: Level2ResourcesMenu.PRIVACY_NOTICES,
             text: 'Privacy notices'
           }
         ]
