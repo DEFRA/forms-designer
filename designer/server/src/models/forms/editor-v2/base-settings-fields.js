@@ -360,7 +360,10 @@ export function getFieldValue(
         getListFromComponent(questionFields, definition)?.items
       )
     case 'usePostcodeLookup': {
-      return `${/** @type {UkAddressFieldComponent | undefined} */ (questionFields)?.options.usePostcodeLookup === true}`
+      const addressField = /** @type {UkAddressFieldComponent | undefined} */ (
+        questionFields
+      )
+      return `${addressField?.options.usePostcodeLookup === true}`
     }
   }
   return undefined
