@@ -173,6 +173,7 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(autoCompleteRes).toEqual(expectedResult)
     })
   })
+
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
       expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
@@ -465,6 +466,5 @@ describe('editor-v2 - advanced settings fields model', () => {
 })
 
 /**
- * @import { FormEditor, InputFieldsComponentsDef } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { InputFieldsComponentsDef } from '@defra/forms-model'
  */
