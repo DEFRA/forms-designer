@@ -274,6 +274,11 @@ export interface FormEditor {
    * Denotes if page is an Exit Page
    */
   exitPage: boolean
+
+  /**
+   * Denotes if the UK address question supports postcode lookup
+   */
+  usePostcodeLookup: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -322,6 +327,7 @@ export type FormEditorInputQuestion = Pick<
   | 'list'
   | 'listItemsData'
   | 'jsEnabled'
+  | 'usePostcodeLookup'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -452,6 +458,7 @@ export interface GovukFieldItem {
   text?: string
   value?: string
   checked?: boolean
+  hint?: { text?: string; html?: string; classes?: string }
 }
 
 export interface GovukSummaryListRow {
@@ -512,6 +519,7 @@ export interface FormEditorGovukField {
   tabularDataTypes?: GovukField
   radiosOrCheckboxes?: GovukField
   autoCompleteOptions?: GovukField
+  usePostcodeLookup?: GovukField
   errorMessage?: { text: string }
 }
 
