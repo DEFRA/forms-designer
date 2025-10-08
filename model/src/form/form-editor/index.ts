@@ -347,6 +347,14 @@ export const jsEnabledSchema = Joi.string()
   .allow('false', 'true')
   .description('Flag to show if Javascript is enabled or not')
 
+export const usePostcodeLookupSchema = Joi.string()
+  .trim()
+  .optional()
+  .valid('', 'true')
+  .description(
+    'Indicates whether a UK address component supports postcode lookup. Empty string or "true" values are accepted.'
+  )
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -529,7 +537,8 @@ export const questionDetailsFullSchema = {
   rowsSchema,
   shortDescriptionSchema,
   suffixSchema,
-  tabularDataTypesSchema
+  tabularDataTypesSchema,
+  usePostcodeLookupSchema
 }
 
 export const formEditorInputPageKeys = {
