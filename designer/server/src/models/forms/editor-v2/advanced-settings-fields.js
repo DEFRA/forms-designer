@@ -362,7 +362,9 @@ function getAdditionalOptions(payload) {
     additionalOptions.maxDaysInPast = payload.maxPast
   }
   if (payload.usePostcodeLookup !== undefined) {
-    additionalOptions.usePostcodeLookup = payload.usePostcodeLookup === 'true'
+    additionalOptions.usePostcodeLookup = isCheckboxSelected(
+      payload.usePostcodeLookup
+    )
   }
   return additionalOptions
 }
