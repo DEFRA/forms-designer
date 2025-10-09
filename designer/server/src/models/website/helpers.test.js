@@ -1,11 +1,36 @@
 import { getSubmenuPaginatorMap } from '~/src/models/website/helpers.js'
-import { Level2GetStartedMenu } from '~/src/routes/website/constants.js'
-import content from '~/src/routes/website/content.js'
+import {
+  Level2GetStartedMenu,
+  WebsiteLevel1Routes
+} from '~/src/routes/website/constants.js'
 
 describe('helpers', () => {
   describe('getSubmenuPaginatorMap', () => {
     it('should zip the menus', () => {
-      const zippedMenus = getSubmenuPaginatorMap(content.getStarted.menus[0])
+      const menuStub = {
+        text: 'Get started',
+        param: WebsiteLevel1Routes.GET_STARTED,
+        parent: true,
+        children: [
+          {
+            param: Level2GetStartedMenu.GET_ACCESS,
+            text: 'Get access to the Defra Form Designer'
+          },
+          {
+            param: Level2GetStartedMenu.MAKE_FORM_LIVE,
+            text: 'Make a form live checklist'
+          },
+          {
+            param: Level2GetStartedMenu.FORM_SUITABILITY,
+            text: 'Form suitability criteria'
+          },
+          {
+            param: Level2GetStartedMenu.MEASURING_SUCCESS,
+            text: 'Measuring the success of your form'
+          }
+        ]
+      }
+      const zippedMenus = getSubmenuPaginatorMap(menuStub)
 
       expect([...zippedMenus.entries()]).toEqual([
         [
