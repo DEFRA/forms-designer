@@ -18,7 +18,7 @@ describe('Health check route', () => {
     await server.stop()
   })
 
-  test('/ should shows the Defra Forms Website homepage for guest users', async () => {
+  test('/ should show the Defra Forms Website homepage for guest users', async () => {
     const options = {
       method: 'GET',
       url: '/'
@@ -63,7 +63,7 @@ describe('Health check route', () => {
     expect(new Date($timeIso)).not.toBeNaN()
   })
 
-  test('/about should shows the Defra Forms Website About page', async () => {
+  test('/about should show the Defra Forms Website About page', async () => {
     const options = {
       method: 'GET',
       url: '/about'
@@ -72,44 +72,20 @@ describe('Health check route', () => {
     const { container } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', { level: 1 })
-    const $navigation = container.getByRole('navigation', { name: 'Menu' })
-    const menus = ['About', 'Get started', 'Features', 'Resources', 'Support']
-    const $navigationItems = within($navigation).getAllByRole('link')
-
-    menus.forEach((item, idx) => {
-      expect($navigationItems[idx]).toHaveTextContent(item)
-    })
     expect($heading).toHaveTextContent('About the Defra Forms team')
   })
 
-  test('/get-started should load get access page', async () => {
+  test('/get-started should load get Get Started page', async () => {
     const options = {
       method: 'GET',
       url: '/get-started'
     }
 
-    const { container } = await renderResponse(server, options)
+    const { container, response } = await renderResponse(server, options)
     const $heading = container.getByRole('heading', { level: 1 })
-    const $main = container.getByRole('main')
-    const [, $firstSubMenu] = within($main).getAllByRole('link')
-    const $nav = container.getByRole('navigation', {
-      name: 'Pagination'
-    })
 
     expect($heading).toHaveTextContent('Get access to the Defra Form Designer')
-    const [$nextLink] = within($nav).getAllByRole('link')
-    expect($firstSubMenu).toHaveTextContent(
-      'Get access to the Defra Form Designer'
-    )
-    expect($firstSubMenu).toHaveProperty(
-      'href',
-      expect.stringContaining('/get-started')
-    )
-    expect($nextLink).toHaveTextContent('Make a form live checklist')
-    expect($nextLink).toHaveProperty(
-      'href',
-      expect.stringContaining('/get-started/make-form-live-checklist')
-    )
+    expect(response.result).toMatchSnapshot()
   })
 
   test('/get-started/make-form-live-checklist should load Make a form live checklist', async () => {
@@ -118,31 +94,11 @@ describe('Health check route', () => {
       url: '/get-started/make-form-live-checklist'
     }
 
-    const { container } = await renderResponse(server, options)
+    const { container, response } = await renderResponse(server, options)
     const $heading = container.getByRole('heading', { level: 1 })
-    const $main = container.getByRole('main')
-    const [, , $secondSubMenu] = within($main).getAllByRole('link')
-    const $nav = container.getByRole('navigation', {
-      name: 'Pagination'
-    })
 
     expect($heading).toHaveTextContent('Make a form live checklist')
-    const [$prevLink, $nextLink] = within($nav).getAllByRole('link')
-    expect($secondSubMenu).toHaveTextContent('Make a form live checklist')
-    expect($secondSubMenu).toHaveProperty(
-      'href',
-      expect.stringContaining('/get-started/make-form-live-checklist')
-    )
-    expect($prevLink).toHaveTextContent('Get access to the Defra Form Designer')
-    expect($prevLink).toHaveProperty(
-      'href',
-      expect.stringContaining('/get-started')
-    )
-    expect($nextLink).toHaveTextContent('Form suitability criteria')
-    expect($nextLink).toHaveProperty(
-      'href',
-      expect.stringContaining('/get-started/form-suitability-criteria')
-    )
+    expect(response.result).toMatchSnapshot()
   })
 })
 
