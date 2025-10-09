@@ -119,7 +119,8 @@ npm run build --workspace=model
 ```
 
 2. Restart your terminal/command prompt
+3. Test PR comment
 
-3. In VS Code, press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) and search for "Developer: Reload Window"
+4. In VS Code, press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) and search for "Developer: Reload Window"
 
 This might be needed as the model package needs to be rebuilt to generate new TypeScript type definitions and compiled JavaScript files. Without these steps, you may see TS errors about missing types, especially after rebasing with main.
