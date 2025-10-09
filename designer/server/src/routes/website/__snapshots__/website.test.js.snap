@@ -948,3 +948,1029 @@ Support
 </html>
 "
 `;
+
+exports[`Health check route /resources should load Does this need to be... page 1`] = `
+"<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <head>
+    <meta charset="utf-8">
+    <title>Defra Forms: Does this need to be a form? - Forms designer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c">
+
+      <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
+      <link rel="icon" sizes="any" href="/assets/images/favicon.svg" type="image/svg+xml">
+      <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
+      <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
+      <link rel="manifest" href="/assets/manifest.json">
+
+  <meta name="application-name" content="@defra/forms-designer" data-environment="local">
+
+  <link href="/stylesheets/application.scss" rel="stylesheet">
+
+  </head>
+  <body class="govuk-template__body defra-forms-website">
+    <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+
+      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+
+<header class="cross-service-header" role="banner" data-module="one-login-header">
+  <div class="one-login-header" data-one-login-header-nav>
+    <div class="one-login-header__container govuk-width-container app-width-container--wide">
+      <div class="one-login-header__logo">
+        <a href="/" class="one-login-header__link one-login-header__link--homepage">
+          <span class="one-login-header__logotype">
+            <!--[if gt IE 8]><!-->
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="one-login-header__logotype-crown"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 32 30"
+                height="30"
+                width="32">
+                <path fill="currentColor" fill-rule="evenodd" d="M22.6 10.4c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4m-5.9 6.7c-.9.4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4m10.8-3.7c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s0 2-1 2.4m3.3 4.8c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4M17 4.7l2.3 1.2V2.5l-2.3.7-.2-.2.9-3h-3.4l.9 3-.2.2c-.1.1-2.3-.7-2.3-.7v3.4L15 4.7c.1.1.1.2.2.2l-1.3 4c-.1.2-.1.4-.1.6 0 1.1.8 2 1.9 2.2h.7c1-.2 1.9-1.1 1.9-2.1 0-.2 0-.4-.1-.6l-1.3-4c-.1-.2 0-.2.1-.3m-7.6 5.7c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s0 2 1 2.4m-5 3c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s.1 2 1 2.4m-3.2 4.8c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s0 2 1 2.4m14.8 11c4.4 0 8.6.3 12.3.8 1.1-4.5 2.4-7 3.7-8.8l-2.5-.9c.2 1.3.3 1.9 0 2.7-.4-.4-.8-1.1-1.1-2.3l-1.2 4c.7-.5 1.3-.8 2-.9-1.1 2.5-2.6 3.1-3.5 3-1.1-.2-1.7-1.2-1.5-2.1.3-1.2 1.5-1.5 2.1-.1 1.1-2.3-.8-3-2-2.3 1.9-1.9 2.1-3.5.6-5.6-2.1 1.6-2.1 3.2-1.2 5.5-1.2-1.4-3.2-.6-2.5 1.6.9-1.4 2.1-.5 1.9.8-.2 1.1-1.7 2.1-3.5 1.9-2.7-.2-2.9-2.1-2.9-3.6.7-.1 1.9.5 2.9 1.9l.4-4.3c-1.1 1.1-2.1 1.4-3.2 1.4.4-1.2 2.1-3 2.1-3h-5.4s1.7 1.9 2.1 3c-1.1 0-2.1-.2-3.2-1.4l.4 4.3c1-1.4 2.2-2 2.9-1.9-.1 1.5-.2 3.4-2.9 3.6-1.9.2-3.4-.8-3.5-1.9-.2-1.3 1-2.2 1.9-.8.7-2.3-1.2-3-2.5-1.6.9-2.2.9-3.9-1.2-5.5-1.5 2-1.3 3.7.6 5.6-1.2-.7-3.1 0-2 2.3.6-1.4 1.8-1.1 2.1.1.2.9-.3 1.9-1.5 2.1-.9.2-2.4-.5-3.5-3 .6 0 1.2.3 2 .9l-1.2-4c-.3 1.1-.7 1.9-1.1 2.3-.3-.8-.2-1.4 0-2.7l-2.9.9C1.3 23 2.6 25.5 3.7 30c3.7-.5 7.9-.8 12.3-.8"></path>
+            </svg>
+            <!--<![endif]-->
+            <span class="one-login-header__logotype-text">
+              Defra
+            </span>
+            <span class="one-login-header__product-name">
+              Forms Designer <strong class="govuk-tag govuk-tag--green app-tag--env">
+  Local
+</strong>
+            </span>
+          </span>
+        </a>
+      </div>
+      <button type="button"
+        aria-controls="one-login-header__nav"
+        aria-label="Show account menu"
+        data-open-class="cross-service-header__button--open"
+        data-label-for-show="Show account menu"
+        data-label-for-hide="Hide account menu"
+        aria-expanded="false"
+        class="cross-service-header__button cross-service-header__button--one-login js-x-header-toggle">
+        <span class="cross-service-header__button-content">Account</span>
+                    <span class="cross-service-header__button-icon cross-service-header__button-icon--default">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+              <circle cx="11" cy="11" r="11" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.29297 18.8487C4.23255 15.4753 7.32741 13 11.0004 13C14.6731 13 17.7678 15.4749 18.7076 18.848C17.8058 19.7338 16.752 20.4654 15.5889 21H11.0004H6.41097C5.24819 20.4655 4.19463 19.7342 3.29297 18.8487Z" fill="#008531"/>
+              <circle cx="11" cy="7.75" r="3.75" fill="#008531"/>
+              <circle cx="11" cy="11" r="10" stroke="white" stroke-width="2"/>
+            </svg>
+          </span>
+                    <span class="cross-service-header__button-icon cross-service-header__button-icon--focus">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+              <circle cx="11" cy="11" r="11" fill="black"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.29297 18.8487C4.23255 15.4753 7.32741 13 11.0004 13C14.6731 13 17.7678 15.4749 18.7076 18.848C17.8058 19.7338 16.752 20.4654 15.5889 21H11.0004H6.41097C5.24819 20.4655 4.19463 19.7342 3.29297 18.8487Z" fill="white"/>
+              <circle cx="11" cy="7.75" r="3.75" fill="white"/>
+              <circle cx="11" cy="11" r="10" stroke="black" stroke-width="2"/>
+            </svg>
+          </span>
+      </button>
+      <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
+        <ul class="one-login-header__nav__list">
+          <li class="one-login-header__nav__list-item">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+              <span class="one-login-header__nav__link-content">
+                Sign in
+              </span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+  <div class="govuk-service-navigation"
+data-module="govuk-service-navigation"
+>
+      <div class="govuk-width-container">
+
+    <div class="govuk-service-navigation__container">
+      
+
+      
+        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+            Menu
+          </button>
+
+          <ul class="govuk-service-navigation__list" id="navigation" >
+
+            
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/about">
+                                    
+About
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/get-started">
+                                    
+Get started
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/features">
+                                    
+Features
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+                  <a class="govuk-service-navigation__link" href="/resources" aria-current="true">
+                                    
+                  <strong class="govuk-service-navigation__active-fallback">Resources</strong>
+
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/support">
+                                    
+Support
+                  </a>
+              </li>
+
+            </ul>
+        </nav>
+    </div>
+
+    </div>
+
+  </div>
+
+
+  
+<div class="app-masthead">
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h1 class="app-masthead__heading govuk-heading-xl">
+          <span class="app-masthead__caption govuk-caption-l">Good form design guide</span>
+          Does this need to be a form?
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <main class="govuk-main-wrapper" id="main-head-content">
+
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+<nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+  <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
+  <ul class="x-govuk-sub-navigation__section">
+    <li class="x-govuk-sub-navigation__section-item x-govuk-sub-navigation__section-item--current">
+      <a class="x-govuk-sub-navigation__link" href="/resources">Good form design guide</a>
+      <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/does-this-need-to-be-a-form" aria-current="true">Does this need to be a form?</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/accessibility-and-inclusion">Accessibility and inclusion</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/working-with-subject-matter-experts">Working with subject matter experts (SMEs)</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/question-protocols">Question protocols</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/prototyping-a-form">Prototyping a form</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/form-pages-on-govuk">Form pages on GOV.UK</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/peer-reviewing-forms">Peer reviewing forms</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/privacy-notices">Privacy notices</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+</div>
+    <div class="govuk-grid-column-two-thirds">
+  <p class="govuk-body">There are lots of reasons to make an online form. But make sure you're not duplicating
+    data by checking if:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>an existing Defra group form (paper or online) collects the information you need</li>
+    <li>an existing form can be adapted instead of making a new form</li>
+  </ul>
+
+  <h2 id="when-you-might-need-a-service-assessment" class="govuk-heading-l">When you might need a service
+    assessment</h2>
+  <p class="govuk-body">If you expect more than 10,000 submissions per year, you may need to create a service
+    instead. A service is subject to assessments and has a dedicated team. <a href="https://www.gov.uk/service-manual/service-assessments/check-if-need-to-meet-service-standard" class="govuk-link" target="_blank">Check if you need to meet the service standard</a>.</p>
+  <p class="govuk-body">You won't need an assessment if you're:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>using an assured form building tool (like the Defra Form Designer or GOV.UK Forms) to create a form,
+      and</li>
+    <li>expecting to get fewer than 10,000 transactions per year</li>
+  </ul>
+  <p class="govuk-body">This reflects the fact that forms created using an assured form building platform have
+    government standards 'built in'. See <a href="https://www.gov.uk/service-manual/service-standard/point-9-create-a-secure-service" class="govuk-link" target="_blank">Service standard – secure service</a> for more information.</p>
+  <p class="govuk-body">Even if you're using an assured form building platform, you may want to follow an
+    assurance process for forms with a higher degree of reputational or financial risk. This will be a
+    lighter touch process than a service assessment - for example, it might be an expert review carried out
+    by a design or content professional.</p>
+        <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
+  <div class="govuk-pagination__next">
+    <a class="govuk-link govuk-pagination__link" href="/resources/accessibility-and-inclusion" rel="next">
+      <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+        <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+      </svg>
+      <span class="govuk-pagination__link-title">
+        Next<span class="govuk-visually-hidden"> page</span>
+      </span>
+      <span class="govuk-visually-hidden">:</span>
+      <span class="govuk-pagination__link-label">Accessibility and inclusion</span>
+    </a>
+  </div>
+</nav>
+
+    </div>
+  </div>
+</div>
+
+
+  </main>
+
+
+
+  <footer class="govuk-footer">
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support links</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/help/accessibility-statement">
+              Accessibility statement
+            </a>
+          </li>
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/help/cookies">
+              Cookies
+            </a>
+          </li>
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
+              Privacy
+            </a>
+          </li>
+        </ul>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="govuk-footer__licence-logo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 483.2 195.7"
+          height="17"
+          width="41"
+        >
+          <path
+            fill="currentColor"
+            d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+          />
+        </svg>
+        <span class="govuk-footer__licence-description">
+          All content is available under the
+          <a
+            class="govuk-footer__link"
+            href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+            rel="license"
+          >Open Government Licence v3.0</a>, except where otherwise stated
+        </span>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a
+          class="govuk-footer__link govuk-footer__copyright-logo"
+          href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+        >
+          © Crown copyright
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script type="module" src="/application.js"></script>
+  </body>
+</html>
+"
+`;
+
+exports[`Health check route /resources/accessibility-and-inclusion should load Accessibility and inclusion page 1`] = `
+"<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <head>
+    <meta charset="utf-8">
+    <title>Defra Forms: Accessibility and inclusion - Forms designer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c">
+
+      <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
+      <link rel="icon" sizes="any" href="/assets/images/favicon.svg" type="image/svg+xml">
+      <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
+      <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
+      <link rel="manifest" href="/assets/manifest.json">
+
+  <meta name="application-name" content="@defra/forms-designer" data-environment="local">
+
+  <link href="/stylesheets/application.scss" rel="stylesheet">
+
+  </head>
+  <body class="govuk-template__body defra-forms-website">
+    <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+
+      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+
+<header class="cross-service-header" role="banner" data-module="one-login-header">
+  <div class="one-login-header" data-one-login-header-nav>
+    <div class="one-login-header__container govuk-width-container app-width-container--wide">
+      <div class="one-login-header__logo">
+        <a href="/" class="one-login-header__link one-login-header__link--homepage">
+          <span class="one-login-header__logotype">
+            <!--[if gt IE 8]><!-->
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="one-login-header__logotype-crown"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 32 30"
+                height="30"
+                width="32">
+                <path fill="currentColor" fill-rule="evenodd" d="M22.6 10.4c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4m-5.9 6.7c-.9.4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4m10.8-3.7c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s0 2-1 2.4m3.3 4.8c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4M17 4.7l2.3 1.2V2.5l-2.3.7-.2-.2.9-3h-3.4l.9 3-.2.2c-.1.1-2.3-.7-2.3-.7v3.4L15 4.7c.1.1.1.2.2.2l-1.3 4c-.1.2-.1.4-.1.6 0 1.1.8 2 1.9 2.2h.7c1-.2 1.9-1.1 1.9-2.1 0-.2 0-.4-.1-.6l-1.3-4c-.1-.2 0-.2.1-.3m-7.6 5.7c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s0 2 1 2.4m-5 3c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s.1 2 1 2.4m-3.2 4.8c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s0 2 1 2.4m14.8 11c4.4 0 8.6.3 12.3.8 1.1-4.5 2.4-7 3.7-8.8l-2.5-.9c.2 1.3.3 1.9 0 2.7-.4-.4-.8-1.1-1.1-2.3l-1.2 4c.7-.5 1.3-.8 2-.9-1.1 2.5-2.6 3.1-3.5 3-1.1-.2-1.7-1.2-1.5-2.1.3-1.2 1.5-1.5 2.1-.1 1.1-2.3-.8-3-2-2.3 1.9-1.9 2.1-3.5.6-5.6-2.1 1.6-2.1 3.2-1.2 5.5-1.2-1.4-3.2-.6-2.5 1.6.9-1.4 2.1-.5 1.9.8-.2 1.1-1.7 2.1-3.5 1.9-2.7-.2-2.9-2.1-2.9-3.6.7-.1 1.9.5 2.9 1.9l.4-4.3c-1.1 1.1-2.1 1.4-3.2 1.4.4-1.2 2.1-3 2.1-3h-5.4s1.7 1.9 2.1 3c-1.1 0-2.1-.2-3.2-1.4l.4 4.3c1-1.4 2.2-2 2.9-1.9-.1 1.5-.2 3.4-2.9 3.6-1.9.2-3.4-.8-3.5-1.9-.2-1.3 1-2.2 1.9-.8.7-2.3-1.2-3-2.5-1.6.9-2.2.9-3.9-1.2-5.5-1.5 2-1.3 3.7.6 5.6-1.2-.7-3.1 0-2 2.3.6-1.4 1.8-1.1 2.1.1.2.9-.3 1.9-1.5 2.1-.9.2-2.4-.5-3.5-3 .6 0 1.2.3 2 .9l-1.2-4c-.3 1.1-.7 1.9-1.1 2.3-.3-.8-.2-1.4 0-2.7l-2.9.9C1.3 23 2.6 25.5 3.7 30c3.7-.5 7.9-.8 12.3-.8"></path>
+            </svg>
+            <!--<![endif]-->
+            <span class="one-login-header__logotype-text">
+              Defra
+            </span>
+            <span class="one-login-header__product-name">
+              Forms Designer <strong class="govuk-tag govuk-tag--green app-tag--env">
+  Local
+</strong>
+            </span>
+          </span>
+        </a>
+      </div>
+      <button type="button"
+        aria-controls="one-login-header__nav"
+        aria-label="Show account menu"
+        data-open-class="cross-service-header__button--open"
+        data-label-for-show="Show account menu"
+        data-label-for-hide="Hide account menu"
+        aria-expanded="false"
+        class="cross-service-header__button cross-service-header__button--one-login js-x-header-toggle">
+        <span class="cross-service-header__button-content">Account</span>
+                    <span class="cross-service-header__button-icon cross-service-header__button-icon--default">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+              <circle cx="11" cy="11" r="11" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.29297 18.8487C4.23255 15.4753 7.32741 13 11.0004 13C14.6731 13 17.7678 15.4749 18.7076 18.848C17.8058 19.7338 16.752 20.4654 15.5889 21H11.0004H6.41097C5.24819 20.4655 4.19463 19.7342 3.29297 18.8487Z" fill="#008531"/>
+              <circle cx="11" cy="7.75" r="3.75" fill="#008531"/>
+              <circle cx="11" cy="11" r="10" stroke="white" stroke-width="2"/>
+            </svg>
+          </span>
+                    <span class="cross-service-header__button-icon cross-service-header__button-icon--focus">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+              <circle cx="11" cy="11" r="11" fill="black"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.29297 18.8487C4.23255 15.4753 7.32741 13 11.0004 13C14.6731 13 17.7678 15.4749 18.7076 18.848C17.8058 19.7338 16.752 20.4654 15.5889 21H11.0004H6.41097C5.24819 20.4655 4.19463 19.7342 3.29297 18.8487Z" fill="white"/>
+              <circle cx="11" cy="7.75" r="3.75" fill="white"/>
+              <circle cx="11" cy="11" r="10" stroke="black" stroke-width="2"/>
+            </svg>
+          </span>
+      </button>
+      <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
+        <ul class="one-login-header__nav__list">
+          <li class="one-login-header__nav__list-item">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+              <span class="one-login-header__nav__link-content">
+                Sign in
+              </span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+  <div class="govuk-service-navigation"
+data-module="govuk-service-navigation"
+>
+      <div class="govuk-width-container">
+
+    <div class="govuk-service-navigation__container">
+      
+
+      
+        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+            Menu
+          </button>
+
+          <ul class="govuk-service-navigation__list" id="navigation" >
+
+            
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/about">
+                                    
+About
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/get-started">
+                                    
+Get started
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/features">
+                                    
+Features
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+                  <a class="govuk-service-navigation__link" href="/resources" aria-current="true">
+                                    
+                  <strong class="govuk-service-navigation__active-fallback">Resources</strong>
+
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/support">
+                                    
+Support
+                  </a>
+              </li>
+
+            </ul>
+        </nav>
+    </div>
+
+    </div>
+
+  </div>
+
+
+  
+<div class="app-masthead">
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h1 class="app-masthead__heading govuk-heading-xl">
+          <span class="app-masthead__caption govuk-caption-l">Good form design guide</span>
+          Accessibility and inclusion
+        </h1>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <main class="govuk-main-wrapper" id="main-head-content">
+
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+<nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
+  <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
+  <ul class="x-govuk-sub-navigation__section">
+    <li class="x-govuk-sub-navigation__section-item x-govuk-sub-navigation__section-item--current">
+      <a class="x-govuk-sub-navigation__link" href="/resources">Good form design guide</a>
+      <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/does-this-need-to-be-a-form">Does this need to be a form?</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/accessibility-and-inclusion" aria-current="true">Accessibility and inclusion</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/working-with-subject-matter-experts">Working with subject matter experts (SMEs)</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/question-protocols">Question protocols</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/prototyping-a-form">Prototyping a form</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/form-pages-on-govuk">Form pages on GOV.UK</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/peer-reviewing-forms">Peer reviewing forms</a>
+        </li>
+        <li class="x-govuk-sub-navigation__section-item">
+          <a class="x-govuk-sub-navigation__link" href="/resources/privacy-notices">Privacy notices</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</nav>
+
+
+</div>
+    <div class="govuk-grid-column-two-thirds">
+  <p class="govuk-body">Approximately 1 in 4 people (24%) in the UK have a disability or long-term impairment.
+  </p>
+  <p class="govuk-body">This stat does not include:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>unreported disabilities</li>
+    <li>neurodiversity (such as Autism or ADHD)</li>
+    <li>temporary impairments (for example, a person with an arm injury)</li>
+    <li>situational impairments (for example, a new parent holding a baby)</li>
+  </ul>
+  <p class="govuk-body">You can estimate how many disabled people might use your form.</p>
+
+  <h2 id="common-usability-problems-in-forms" class="govuk-heading-l">Common usability problems in forms</h2>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>Length and complexity</li>
+    <li>Inconsistent design</li>
+    <li>Confusing error messages</li>
+    <li>Getting timed out</li>
+    <li>Lack of guidance or examples</li>
+    <li>Unhelpful hint text</li>
+    <li>Poor mobile optimisation</li>
+    <li>Expectations not managed</li>
+  </ul>
+
+  <h2 id="different-access-needs-can-clash" class="govuk-heading-l">Different access needs can clash</h2>
+  <p class="govuk-body">Consider this scenario.</p>
+  <p class="govuk-body">User 1 needs all the information on one page. They'll forget what they have read if
+    they need to switch between pages.</p>
+  <p class="govuk-body">User 2 finds all the information on one page overwhelming. They need to have separate
+    pages that break up the information.</p>
+  <p class="govuk-body">It's tricky to cater to both users in this instance. Do what you can, with the
+    information you have and the technology available.</p>
+  <p class="govuk-body"><a href="https://medium.com/content-at-scope/designing-content-for-conflicting-access-needs-8bc33cc69e13" class="govuk-link" target="_blank">Chloe Tear's blog</a> has more information on what to do when different access
+    needs
+    clash.</p>
+
+  <h2 id="making-accessible-forms" class="govuk-heading-l">Making accessible forms</h2>
+  <p class="govuk-body">Since 23 September 2018 all public sector websites and apps need to meet accessibility
+    standards and publish an accessibility statement. Online forms also need to comply with the standards.
+    See the <a href="https://www.gov.uk/guidance/guidance-and-tools-for-digital-accessibility" class="govuk-link" target="_blank">Gov.uk accessibility guidance</a> for more information. You may also need to <a href="https://www.gov.uk/service-manual/service-assessments/check-if-need-to-meet-service-standard" class="govuk-link" target="_blank">check if you need to meet the service standard</a>.
+  </p>
+  <p class="govuk-body">Stick to tried and tested methods when designing a form. Follow the <a href="https://www.gov.uk/guidance/government-design-principles" class="govuk-link" target="_blank">Government design
+    principles</a>.</p>
+  <p class="govuk-body">You should also:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>write questions and guidance in plain English</li>
+    <li>make things as simple as possible</li>
+    <li>write clear start pages (how users will find your form on GOV.UK) or update existing pages and
+      qualifying information</li>
+    <li>bookmark the <a href="https://defra.sharepoint.com/sites/Defraintranet/SitePages/Accessibility-rules-information-on-the-web.aspx" class="govuk-link" target="_blank">Defra accessibility intranet page</a></li>
+    <li>check the <a href="https://www.gov.uk/service-manual/design/form-structure" class="govuk-link" target="_blank">guidance for structuring forms</a></li>
+  </ul>
+
+  <h2 id="accessibility-statement-for-forms" class="govuk-heading-l">Accessibility statement for forms</h2>
+  <p class="govuk-body">If you use a government form building tool like the Defra Form Designer or GOV.UK
+    Forms, your form is usually covered by the tool's accessibility statement. See <a href="https://www.gov.uk/guidance/make-your-website-or-app-accessible-and-publish-an-accessibility-statement" class="govuk-link" target="_blank">Gov.uk guidance</a> for more information.</p>
+
+  <h2 id="assistive-technology" class="govuk-heading-l">Assistive technology</h2>
+  <p class="govuk-body">Some people might use assistive technology to complete online forms. You can:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li><a href="https://business.scope.org.uk/assistive-technology-devices-definitions-how-disabled-people-use-the-web/" class="govuk-link" target="_blank">learn about assistive technology</a></li>
+    <li><a href="https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities" class="govuk-link" target="_blank">research your form with disabled people and assistive technology users</a>
+    </li>
+    <li>ask the Defra accessibility team to audit your form, you can email them at <a href="mailto:accessibility@defra.gov.uk" class="govuk-link">accessibility@defra.gov.uk</a></li>
+  </ul>
+  <p class="govuk-body">If you need help testing the accessibility of your form, contact the quality,
+    assurance and test team at <a href="mailto:qatestresourcing@defra.gov.uk" class="govuk-link">qatestresourcing@defra.gov.uk</a>.</p>
+
+  <h2 id="asking-for-personal-information" class="govuk-heading-l">Asking for personal information</h2>
+  <p class="govuk-body">Consider the sensitives around personal questions. 'Easy' questions might be hard for
+    some people to answer. Don't assume people can complete a form independently. They may need help from:
+  </p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>friends and family</li>
+    <li>teachers or social workers</li>
+    <li>charities and citizens advice</li>
+    <li>farm management companies</li>
+    <li>accountants</li>
+  </ul>
+  <p class="govuk-body">If asking for personal data is a legal requirement, ask only for what the law
+    requires.</p>
+  <p class="govuk-body">Learn more about <a href="https://www.gov.uk/government/publications/working-definition-of-trauma-informed-practice/working-definition-of-trauma-informed-practice" class="govuk-link" target="_blank">trauma informed practice</a>.</p>
+
+  <h2 id="assisted-digital" class="govuk-heading-l">Assisted digital</h2>
+  <p class="govuk-body">Some people might need help getting online.</p>
+  <p class="govuk-body">Helping people use your online form is known as providing 'assisted digital support'.
+  </p>
+  <p class="govuk-body">You can provide assisted digital support:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>in person</li>
+    <li>on the telephone</li>
+    <li>via webchat</li>
+  </ul>
+  <p class="govuk-body">You should give users information about assisted digital support via:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>your online service - for example on a GOV.UK start page or within your form</li>
+    <li>other communications - letters, emails, posters, leaflets, social media, forums, radio advertising,
+      online advertising, third party face to face support channels</li>
+  </ul>
+  <p class="govuk-body">Read more about <a href="https://www.gov.uk/service-manual/helping-people-to-use-your-service/assisted-digital-support-introduction" class="govuk-link" target="_blank">providing assisted digital support</a>.</p>
+
+  <h2 id="when-to-use-a-paper-form" class="govuk-heading-l">When to use a paper form</h2>
+  <p class="govuk-body">Offer a paper version of an online form if your research suggests users need it. If
+    you don't have any research, you can do desk research to find articles like <a href="https://www.effortmark.co.uk/people-persist-using-paper-forms/" class="govuk-link" target="_blank">why people
+      prefer to use
+      paper forms</a>.</p>
+  <p class="govuk-body">Review the paper form for accessibility. Use the <a href="https://defra.sharepoint.com/:w:/r/teams/Team811/_layouts/15/Doc.aspx?sourcedoc=%7b3DDE61DE-5CF9-4B25-9CC8-5AA71A981CCC%7d&amp;file=Accessible%20form%20template%20v1.3.docx&amp;action=default&amp;mobileredirect=true" class="govuk-link" target="_blank">accessible form template</a> for forms in
+    Word. Check the <a href="https://defra.sharepoint.com/:w:/r/teams/Team811/_layouts/15/Doc.aspx?sourcedoc=%7b185D76D6-0304-4D03-B2E0-02315905CCA6%7d&amp;file=PDF%20forms%20accessibility_INCOMPLETE%20DRAFT.docx&amp;action=default&amp;mobileredirect=true" class="govuk-link" target="_blank">guidance for making accessible PDFs</a>.</p>
+        <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
+  <div class="govuk-pagination__prev">
+    <a class="govuk-link govuk-pagination__link" href="/resources/does-this-need-to-be-a-form" rel="prev">
+      <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+        <path d="m6.5938-0.0078125-6.7266 6.7266 6.7441 6.4062 1.377-1.449-4.1856-3.9768h12.896v-2h-12.984l4.2931-4.293-1.414-1.414z"></path>
+      </svg>
+      <span class="govuk-pagination__link-title">
+        Previous<span class="govuk-visually-hidden"> page</span>
+      </span>
+      <span class="govuk-visually-hidden">:</span>
+      <span class="govuk-pagination__link-label">Does this need to be a form?</span>
+    </a>
+  </div>
+  <div class="govuk-pagination__next">
+    <a class="govuk-link govuk-pagination__link" href="/resources/working-with-subject-matter-experts" rel="next">
+      <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
+        <path d="m8.107-0.0078125-1.4136 1.414 4.2926 4.293h-12.986v2h12.896l-4.1855 3.9766 1.377 1.4492 6.7441-6.4062-6.7246-6.7266z"></path>
+      </svg>
+      <span class="govuk-pagination__link-title">
+        Next<span class="govuk-visually-hidden"> page</span>
+      </span>
+      <span class="govuk-visually-hidden">:</span>
+      <span class="govuk-pagination__link-label">Working with subject matter experts (SMEs)</span>
+    </a>
+  </div>
+</nav>
+
+    </div>
+  </div>
+</div>
+
+
+  </main>
+
+
+
+  <footer class="govuk-footer">
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support links</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/help/accessibility-statement">
+              Accessibility statement
+            </a>
+          </li>
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/help/cookies">
+              Cookies
+            </a>
+          </li>
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
+              Privacy
+            </a>
+          </li>
+        </ul>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="govuk-footer__licence-logo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 483.2 195.7"
+          height="17"
+          width="41"
+        >
+          <path
+            fill="currentColor"
+            d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+          />
+        </svg>
+        <span class="govuk-footer__licence-description">
+          All content is available under the
+          <a
+            class="govuk-footer__link"
+            href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+            rel="license"
+          >Open Government Licence v3.0</a>, except where otherwise stated
+        </span>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a
+          class="govuk-footer__link govuk-footer__copyright-logo"
+          href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+        >
+          © Crown copyright
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script type="module" src="/application.js"></script>
+  </body>
+</html>
+"
+`;
+
+exports[`Health check route /support should shows the Defra Forms Website Support page 1`] = `
+"<!DOCTYPE html>
+<html lang="en" class="govuk-template">
+  <head>
+    <meta charset="utf-8">
+    <title>Defra Forms: Support - Forms designer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#0b0c0c">
+
+      <link rel="icon" sizes="48x48" href="/assets/images/favicon.ico">
+      <link rel="icon" sizes="any" href="/assets/images/favicon.svg" type="image/svg+xml">
+      <link rel="mask-icon" href="/assets/images/govuk-icon-mask.svg" color="#0b0c0c">
+      <link rel="apple-touch-icon" href="/assets/images/govuk-icon-180.png">
+      <link rel="manifest" href="/assets/manifest.json">
+
+  <meta name="application-name" content="@defra/forms-designer" data-environment="local">
+
+  <link href="/stylesheets/application.scss" rel="stylesheet">
+
+  </head>
+  <body class="govuk-template__body defra-forms-website">
+    <script>document.body.className += ' js-enabled' + ('noModule' in HTMLScriptElement.prototype ? ' govuk-frontend-supported' : '');</script>
+
+      <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+
+
+<header class="cross-service-header" role="banner" data-module="one-login-header">
+  <div class="one-login-header" data-one-login-header-nav>
+    <div class="one-login-header__container govuk-width-container app-width-container--wide">
+      <div class="one-login-header__logo">
+        <a href="/" class="one-login-header__link one-login-header__link--homepage">
+          <span class="one-login-header__logotype">
+            <!--[if gt IE 8]><!-->
+              <svg
+                aria-hidden="true"
+                focusable="false"
+                class="one-login-header__logotype-crown"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 32 30"
+                height="30"
+                width="32">
+                <path fill="currentColor" fill-rule="evenodd" d="M22.6 10.4c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4m-5.9 6.7c-.9.4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4m10.8-3.7c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s0 2-1 2.4m3.3 4.8c-1 .4-2-.1-2.4-1-.4-.9.1-2 1-2.4.9-.4 2 .1 2.4 1s-.1 2-1 2.4M17 4.7l2.3 1.2V2.5l-2.3.7-.2-.2.9-3h-3.4l.9 3-.2.2c-.1.1-2.3-.7-2.3-.7v3.4L15 4.7c.1.1.1.2.2.2l-1.3 4c-.1.2-.1.4-.1.6 0 1.1.8 2 1.9 2.2h.7c1-.2 1.9-1.1 1.9-2.1 0-.2 0-.4-.1-.6l-1.3-4c-.1-.2 0-.2.1-.3m-7.6 5.7c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s0 2 1 2.4m-5 3c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s.1 2 1 2.4m-3.2 4.8c.9.4 2-.1 2.4-1 .4-.9-.1-2-1-2.4-.9-.4-2 .1-2.4 1s0 2 1 2.4m14.8 11c4.4 0 8.6.3 12.3.8 1.1-4.5 2.4-7 3.7-8.8l-2.5-.9c.2 1.3.3 1.9 0 2.7-.4-.4-.8-1.1-1.1-2.3l-1.2 4c.7-.5 1.3-.8 2-.9-1.1 2.5-2.6 3.1-3.5 3-1.1-.2-1.7-1.2-1.5-2.1.3-1.2 1.5-1.5 2.1-.1 1.1-2.3-.8-3-2-2.3 1.9-1.9 2.1-3.5.6-5.6-2.1 1.6-2.1 3.2-1.2 5.5-1.2-1.4-3.2-.6-2.5 1.6.9-1.4 2.1-.5 1.9.8-.2 1.1-1.7 2.1-3.5 1.9-2.7-.2-2.9-2.1-2.9-3.6.7-.1 1.9.5 2.9 1.9l.4-4.3c-1.1 1.1-2.1 1.4-3.2 1.4.4-1.2 2.1-3 2.1-3h-5.4s1.7 1.9 2.1 3c-1.1 0-2.1-.2-3.2-1.4l.4 4.3c1-1.4 2.2-2 2.9-1.9-.1 1.5-.2 3.4-2.9 3.6-1.9.2-3.4-.8-3.5-1.9-.2-1.3 1-2.2 1.9-.8.7-2.3-1.2-3-2.5-1.6.9-2.2.9-3.9-1.2-5.5-1.5 2-1.3 3.7.6 5.6-1.2-.7-3.1 0-2 2.3.6-1.4 1.8-1.1 2.1.1.2.9-.3 1.9-1.5 2.1-.9.2-2.4-.5-3.5-3 .6 0 1.2.3 2 .9l-1.2-4c-.3 1.1-.7 1.9-1.1 2.3-.3-.8-.2-1.4 0-2.7l-2.9.9C1.3 23 2.6 25.5 3.7 30c3.7-.5 7.9-.8 12.3-.8"></path>
+            </svg>
+            <!--<![endif]-->
+            <span class="one-login-header__logotype-text">
+              Defra
+            </span>
+            <span class="one-login-header__product-name">
+              Forms Designer <strong class="govuk-tag govuk-tag--green app-tag--env">
+  Local
+</strong>
+            </span>
+          </span>
+        </a>
+      </div>
+      <button type="button"
+        aria-controls="one-login-header__nav"
+        aria-label="Show account menu"
+        data-open-class="cross-service-header__button--open"
+        data-label-for-show="Show account menu"
+        data-label-for-hide="Hide account menu"
+        aria-expanded="false"
+        class="cross-service-header__button cross-service-header__button--one-login js-x-header-toggle">
+        <span class="cross-service-header__button-content">Account</span>
+                    <span class="cross-service-header__button-icon cross-service-header__button-icon--default">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+              <circle cx="11" cy="11" r="11" fill="white"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.29297 18.8487C4.23255 15.4753 7.32741 13 11.0004 13C14.6731 13 17.7678 15.4749 18.7076 18.848C17.8058 19.7338 16.752 20.4654 15.5889 21H11.0004H6.41097C5.24819 20.4655 4.19463 19.7342 3.29297 18.8487Z" fill="#008531"/>
+              <circle cx="11" cy="7.75" r="3.75" fill="#008531"/>
+              <circle cx="11" cy="11" r="10" stroke="white" stroke-width="2"/>
+            </svg>
+          </span>
+                    <span class="cross-service-header__button-icon cross-service-header__button-icon--focus">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg" focusable="false" aria-hidden="true">
+              <circle cx="11" cy="11" r="11" fill="black"/>
+              <path fill-rule="evenodd" clip-rule="evenodd" d="M3.29297 18.8487C4.23255 15.4753 7.32741 13 11.0004 13C14.6731 13 17.7678 15.4749 18.7076 18.848C17.8058 19.7338 16.752 20.4654 15.5889 21H11.0004H6.41097C5.24819 20.4655 4.19463 19.7342 3.29297 18.8487Z" fill="white"/>
+              <circle cx="11" cy="7.75" r="3.75" fill="white"/>
+              <circle cx="11" cy="11" r="10" stroke="black" stroke-width="2"/>
+            </svg>
+          </span>
+      </button>
+      <nav aria-label="Account menu" class="one-login-header__nav" data-open-class="one-login-header__nav--open" id="one-login-header__nav">
+        <ul class="one-login-header__nav__list">
+          <li class="one-login-header__nav__list-item">
+            <a class="one-login-header__nav__link one-login-header__nav__link--one-login" href="/library">
+              <span class="one-login-header__nav__link-content">
+                Sign in
+              </span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+  <div class="govuk-service-navigation"
+data-module="govuk-service-navigation"
+>
+      <div class="govuk-width-container">
+
+    <div class="govuk-service-navigation__container">
+      
+
+      
+        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
+          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
+            Menu
+          </button>
+
+          <ul class="govuk-service-navigation__list" id="navigation" >
+
+            
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/about">
+                                    
+About
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/get-started">
+                                    
+Get started
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/features">
+                                    
+Features
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item">
+                  <a class="govuk-service-navigation__link" href="/resources">
+                                    
+Resources
+                  </a>
+              </li>
+
+              
+              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
+                  <a class="govuk-service-navigation__link" href="/support" aria-current="true">
+                                    
+                  <strong class="govuk-service-navigation__active-fallback">Support</strong>
+
+                  </a>
+              </li>
+
+            </ul>
+        </nav>
+    </div>
+
+    </div>
+
+  </div>
+
+
+
+<div class="app-masthead">
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        <h1 class="app-masthead__heading govuk-heading-xl">
+          Support
+        </h1>
+        <p class="app-masthead__description govuk-body-l">
+          If you're taking part in private beta, ask for support by sending a message to the <a href="https://teams.microsoft.com/l/channel/19:sLNy297i1n0fiPYsGJb3UoOITYURp7PtMx8iFwEfJWs1%40thread.tacv2/General?groupId=346d8ebd-c7b8-47d3-b178-e6a9b31c8fc2&amp;tenantId=770a2450-0227-4c62-90c7-4e38537f1102" class="govuk-link govuk-link--inverse govuk-link--no-visited-state">Microsoft Teams channel</a> or <a href="https://defra-digital-team.slack.com/archives/C080WP62PJP" class="govuk-link govuk-link--inverse govuk-link--no-visited-state">Defra Slack channel</a>.
+
+        </p>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+
+  <main class="govuk-main-wrapper" id="main-head-content">
+
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l">Support hours</h2>
+      <p class="govuk-body">We are available to support you between 9am and 5pm Monday to Friday.</p>
+
+      <h2 class="govuk-heading-l">General questions</h2>
+      <p class="govuk-body">For general questions about Defra Forms, use the shared mailbox at <a href="mailto:defraforms@defra.gov.uk" class="govuk-link">defraforms@defra.gov.uk</a>.</p>
+    </div>
+  </div>
+</div>
+
+  </main>
+
+
+
+  <footer class="govuk-footer">
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-footer__meta">
+      <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
+        <h2 class="govuk-visually-hidden">Support links</h2>
+        <ul class="govuk-footer__inline-list">
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/help/accessibility-statement">
+              Accessibility statement
+            </a>
+          </li>
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="/help/cookies">
+              Cookies
+            </a>
+          </li>
+          <li class="govuk-footer__inline-list-item">
+            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
+              Privacy
+            </a>
+          </li>
+        </ul>
+        <svg
+          aria-hidden="true"
+          focusable="false"
+          class="govuk-footer__licence-logo"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 483.2 195.7"
+          height="17"
+          width="41"
+        >
+          <path
+            fill="currentColor"
+            d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145"
+          />
+        </svg>
+        <span class="govuk-footer__licence-description">
+          All content is available under the
+          <a
+            class="govuk-footer__link"
+            href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/"
+            rel="license"
+          >Open Government Licence v3.0</a>, except where otherwise stated
+        </span>
+      </div>
+      <div class="govuk-footer__meta-item">
+        <a
+          class="govuk-footer__link govuk-footer__copyright-logo"
+          href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/"
+        >
+          © Crown copyright
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+
+  <script type="module" src="/application.js"></script>
+  </body>
+</html>
+"
+`;

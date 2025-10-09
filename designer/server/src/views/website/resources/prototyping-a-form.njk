@@ -1,0 +1,36 @@
+{% extends "website/left-nav-layout.njk" %}
+
+{% block textPanel %}
+  <p class="govuk-body">Before creating your form, it's useful to first develop a wireframe version of the
+    form. You can do this in Mural. Use one Sticky per question, and map out any routing (for example, for
+    yes/no questions).</p>
+  <p class="govuk-body">Prototyping helps you to:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>show the user's journey clearly</li>
+    <li>decide where grouping makes sense</li>
+    <li>reduce unnecessary pages</li>
+    <li>avoid redundant questions</li>
+    <li>talk through the form with SMEs and stakeholders</li>
+  </ul>
+  <p class="govuk-body">See an example of a form wireframe.</p>
+
+  <h2 id="avoid-routing" class="govuk-heading-l">Avoid routing</h2>
+  <p class="govuk-body">Routing adds complexity and should be used sparingly.</p>
+  <p class="govuk-body">It's a good idea to:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>keep users on a single, predictable path</li>
+    <li>reduce the number of decision points</li>
+  </ul>
+  <p class="govuk-body">If a route changes the context or focus of the form, consider making multiple context
+    specific forms instead - the data will be more valuable.</p>
+
+  <h2 id="avoid-duplicating-questions" class="govuk-heading-l">Avoid duplicating questions</h2>
+  <p class="govuk-body">Reducing duplicate questions improves efficiency and the user experience.</p>
+  <p class="govuk-body">Avoid duplication by:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>only asking for information once</li>
+    <li>reusing data across different steps</li>
+    <li>allowing users to review and confirm assumed information</li>
+    <li>removing optional fields unless critical</li>
+  </ul>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends "website/left-nav-layout.njk" %}
+
+{% block textPanel %}
+  <h2 id="designing-a-start-page-for-your-form" class="govuk-heading-l">Designing a start page for your form
+  </h2>
+  <p class="govuk-body">Use a detailed guide template not a form page in Whitehall.</p>
+  <p class="govuk-body">Form pages add attachments to the top of the page. But ideally, the paper form should
+    go underneath the 'Start Now' button.</p>
+  <p class="govuk-body">If there's an existing form template page for a paper-based form, we recommend
+    unpublishing it and redirecting it to a new detailed guide template.</p>
+  <p class="govuk-body">Here is a example start page for a form using the detailed guide template.</p>
+
+  <h2 id="including-a-start-page-button-on-an-existing-guidance-page" class="govuk-heading-l">Including a
+    start page button on an existing guidance page</h2>
+  <p class="govuk-body">You can add a 'Start now' button to an existing guidance page on GOV.UK for the form
+    you're working on.</p>
+  <p class="govuk-body">Start page buttons should only appear once and be used at the start of your form.</p>
+  <p class="govuk-body">Use <a href="https://govspeak-preview.publishing.service.gov.uk/guide" class="govuk-link" target="_blank">Govspeak</a> (a simplified version of Markdown) to format the button.</p>
+  <p class="govuk-body">Consider the position of the 'Start now' button and how it might change if the content
+    is amended. Get sign off of the start page early on so that it hold things up when the form is otherwise
+    ready to be published.</p>
+  <p class="govuk-body">Where appropriate, speak to other content designers who may have recently updated the
+    content, to find out about upcoming amends or improvements. See <a href="https://www.gov.uk/guidance/content-design/writing-for-gov-uk" class="govuk-link" target="_blank">Content
+      design guidance</a> for more information.</p>
+
+  <h2 id="start-page-layout" class="govuk-heading-l">Start page layout</h2>
+  <p class="govuk-body">We recommend using a clear structure for your form start page. Say who should use the
+    form in the page summary. Here's an example from a live form.</p>
+  <p class="govuk-body">"Fire and rescue services in England can use this service to request a pump service or
+    environmental protection equipment from the Environment Agency."</p>
+  <p class="govuk-body">The form start page should also include:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>a form introduction including links to any related guidance</li>
+    <li>a before you start section that lists anything users will need like a reference number or documents
+      before they start</li>
+    <li>an 'Other ways to apply' section if there's a paper form</li>
+    <li>a 'Get help' section where we add the support details</li>
+    <li>terms and conditions section if needed</li>
+  </ul>
+  <p class="govuk-body">Use this template if you're sending a form by email instead of hosting on a GOV.UK
+    start page.</p>
+
+  <h2 id="what-form-guidance-should-go-on-a-govuk-page" class="govuk-heading-l">What form guidance should go
+    on a GOV.UK page</h2>
+  <p class="govuk-body">Guidance for filling in the form should be built into the form, not separate to the
+    form. Do
+    not have a separate 'how to fill in this form guide' document. It's hard for users to refer back and
+    forward between tabs or documents. See <a href="https://www.gov.uk/service-manual/design/form-structure" class="govuk-link" target="_blank">Service manual: structuring forms</a> for more information.</p>
+  <p class="govuk-body">Guidance to be read before completing the form must be listed in a before you start
+    section. Avoid referring people out of the form.</p>
+  <p class="govuk-body">Guidance for each section must be in that section.</p>
+  <p class="govuk-body">Do not link to guidance that could be added to the form - for example a couple of
+    sentences within a guide on GOV.UK. Instead, extract the text and add it to the form.</p>
+  <p class="govuk-body">Do not put guidance text next to a question that is not related to the actual
+    question.</p>
+{% endblock %}
