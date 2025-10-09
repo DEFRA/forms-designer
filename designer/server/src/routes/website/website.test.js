@@ -101,7 +101,7 @@ describe('Health check route', () => {
     expect(response.result).toMatchSnapshot()
   })
 
-  test('/resources should load Make a form live checklist', async () => {
+  test('/resources should load Does this need to be... page', async () => {
     const options = {
       method: 'GET',
       url: '/resources'
@@ -111,6 +111,16 @@ describe('Health check route', () => {
     const $heading = container.getByRole('heading', { level: 1 })
 
     expect($heading).toHaveTextContent('Does this need to be a form?')
+    expect(response.result).toMatchSnapshot()
+  })
+
+  test('/resources/accessibility-and-inclusion should load Accessibility and inclusion page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/resources/accessibility-and-inclusion'
+    }
+
+    const { response } = await renderResponse(server, options)
     expect(response.result).toMatchSnapshot()
   })
 
