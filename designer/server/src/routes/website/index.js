@@ -37,7 +37,7 @@ export default /** @satisfies {ServerRoute[]} */ ([
   {
     method: 'GET',
     path: `/${WebsiteLevel1Routes.ABOUT}`,
-    handler(request, h) {
+    handler(_request, h) {
       const aboutModel = websiteAboutModel()
       return h.view('website/about', aboutModel)
     },
@@ -50,7 +50,7 @@ export default /** @satisfies {ServerRoute[]} */ ([
   {
     method: 'GET',
     path: `/${WebsiteLevel1Routes.GET_STARTED}`,
-    handler(request, h) {
+    handler(_request, h) {
       const aboutModel = websiteGetStartedModel(Level2GetStartedMenu.GET_ACCESS)
       return h.view('website/get-started/index', aboutModel)
     },
