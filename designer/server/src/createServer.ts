@@ -26,7 +26,6 @@ import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
 import errorPage from '~/src/plugins/error-pages/index.js'
-import flashContext from '~/src/plugins/flash-context.js'
 import router from '~/src/plugins/router.js'
 
 const logger = createLogger()
@@ -213,7 +212,6 @@ export async function createServer() {
   await server.register(requestLogger)
   await server.register(requestTracing)
   await server.register(errorPage)
-  await server.register(flashContext)
 
   return server
 }

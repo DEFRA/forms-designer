@@ -13,18 +13,20 @@ describe('handleBadRequest', () => {
     mockRequest = {
       headers: {},
       yar: {
-        flash: jest.fn()
+        flash: jest.fn(),
+        clear: jest.fn(),
+        commit: jest.fn().mockResolvedValue(undefined)
       }
     }
     mockH = {
-      redirect: jest.fn()
+      redirect: jest.fn().mockReturnValue(null)
     }
     mockResponse = {
       data: undefined
     }
   })
 
-  it('should set error details and redirect if response is a Boom with form definition errors and referer header exists', () => {
+  it('should set error details and redirect if response is a Boom with form definition errors and referer header exists', async () => {
     mockRequest.headers.referer = '/previous-page'
     mockResponse.data = {
       error: 'InvalidFormDefinitionError',
@@ -34,8 +36,11 @@ describe('handleBadRequest', () => {
       ]
     }
 
-    handleBadRequest(mockRequest, mockH, mockResponse)
+    await handleBadRequest(mockRequest, mockH, mockResponse)
 
+    expect(mockRequest.yar.clear).toHaveBeenCalledWith(
+      sessionNames.badRequestErrorList
+    )
     expect(mockRequest.yar.flash).toHaveBeenCalledWith(
       sessionNames.badRequestErrorList,
       [
@@ -47,10 +52,11 @@ describe('handleBadRequest', () => {
         }
       ]
     )
+    expect(mockRequest.yar.commit).toHaveBeenCalledWith(mockH)
     expect(mockH.redirect).toHaveBeenCalledWith('/previous-page')
   })
 
-  it('should set error details and return null if referer header does not exist', () => {
+  it('should set error details and return null if referer header does not exist', async () => {
     mockResponse.data = {
       error: 'InvalidFormDefinitionError',
       cause: [
@@ -58,8 +64,11 @@ describe('handleBadRequest', () => {
       ]
     }
 
-    const result = handleBadRequest(mockRequest, mockH, mockResponse)
+    const result = await handleBadRequest(mockRequest, mockH, mockResponse)
 
+    expect(mockRequest.yar.clear).toHaveBeenCalledWith(
+      sessionNames.badRequestErrorList
+    )
     expect(mockRequest.yar.flash).toHaveBeenCalledWith(
       sessionNames.badRequestErrorList,
       [
@@ -68,41 +77,46 @@ describe('handleBadRequest', () => {
         }
       ]
     )
+    expect(mockRequest.yar.commit).toHaveBeenCalledWith(mockH)
     expect(mockH.redirect).not.toHaveBeenCalled()
     expect(result).toBeNull()
   })
 
-  it('should return null and not set error details if response.data is missing', () => {
+  it('should return null and not set error details if response.data is missing', async () => {
     mockResponse.data = undefined
 
-    const result = handleBadRequest(mockRequest, mockH, mockResponse)
+    const result = await handleBadRequest(mockRequest, mockH, mockResponse)
 
+    expect(mockRequest.yar.clear).not.toHaveBeenCalled()
     expect(mockRequest.yar.flash).not.toHaveBeenCalled()
+    expect(mockRequest.yar.commit).not.toHaveBeenCalled()
     expect(mockH.redirect).not.toHaveBeenCalled()
     expect(result).toBeNull()
   })
 
-  it('should return null and not set error details if response.data.error is not InvalidFormDefinitionError', () => {
+  it('should return null and not set error details if response.data.error is not InvalidFormDefinitionError', async () => {
     mockResponse.data = {
       error: 'SomeOtherError',
       cause: []
     }
 
-    const result = handleBadRequest(mockRequest, mockH, mockResponse)
+    const result = await handleBadRequest(mockRequest, mockH, mockResponse)
 
+    expect(mockRequest.yar.clear).not.toHaveBeenCalled()
     expect(mockRequest.yar.flash).not.toHaveBeenCalled()
+    expect(mockRequest.yar.commit).not.toHaveBeenCalled()
     expect(mockH.redirect).not.toHaveBeenCalled()
     expect(result).toBeNull()
   })
 
-  it('should handle unknown error ids', () => {
+  it('should handle unknown error ids', async () => {
     mockRequest.headers.referer = '/somewhere'
     mockResponse.data = {
       error: 'InvalidFormDefinitionError',
       cause: [{ id: 'unknown_error_id', message: 'Something went wrong' }]
     }
 
-    handleBadRequest(mockRequest, mockH, mockResponse)
+    await handleBadRequest(mockRequest, mockH, mockResponse)
 
     expect(mockRequest.yar.flash).toHaveBeenCalledWith(
       sessionNames.badRequestErrorList,
@@ -112,6 +126,7 @@ describe('handleBadRequest', () => {
         }
       ]
     )
+    expect(mockRequest.yar.commit).toHaveBeenCalledWith(mockH)
     expect(mockH.redirect).toHaveBeenCalledWith('/somewhere')
   })
 })

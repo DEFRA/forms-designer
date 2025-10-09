@@ -35,14 +35,13 @@ export default {
             const errorMessage = errorCodes.get(statusCode)
 
             if (statusCode === StatusCodes.BAD_REQUEST.valueOf()) {
-              const badRequestResponseOverride = handleBadRequest(
+              const badRequestResponseOverride = await handleBadRequest(
                 request,
                 h,
                 response
               )
 
               if (badRequestResponseOverride) {
-                await request.yar.commit(h) // yar normally does this as a onPreResponse handler, but since we're overriding this handle we're preventing the default yar behaviour
                 return badRequestResponseOverride
               }
             }
@@ -67,7 +66,6 @@ export default {
             )
 
             if (errorMessage) {
-              await request.yar.commit(h)
               return h
                 .view(statusCode.toString(), errorViewModel(errorMessage))
                 .code(statusCode)

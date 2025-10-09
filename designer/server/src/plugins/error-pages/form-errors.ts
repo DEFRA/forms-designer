@@ -50,7 +50,7 @@ const formErrorsToMessages = {
     'There is a problem with the form definition. Check your changes and try again.'
 }
 
-export function handleBadRequest(
+export async function handleBadRequest(
   request: Request,
   h: ResponseToolkit,
   response: Boom
@@ -58,11 +58,16 @@ export function handleBadRequest(
   if (response.data && isBoomFormDefinitionErrorCause(response)) {
     const errorDetails = buildErrorDetails(response.data.cause)
 
+    request.yar.clear(sessionNames.badRequestErrorList)
     request.yar.flash(sessionNames.badRequestErrorList, errorDetails)
+
+    await request.yar.commit(h)
 
     if (request.headers.referer) {
       return h.redirect(request.headers.referer)
     }
+
+    return null
   }
 
   return null
