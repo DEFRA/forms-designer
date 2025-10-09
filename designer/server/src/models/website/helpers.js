@@ -27,6 +27,7 @@ import { pageNavigationBase } from '~/src/routes/website/index.js'
  * @param { WebsiteLevel1Routes } route
  * @returns {{
  *   href: WebsiteLevel1Routes | string
+ *   active?: boolean
  *   text: string
  * }[]}
  */
