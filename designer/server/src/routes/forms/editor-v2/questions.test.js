@@ -310,13 +310,16 @@ describe('Editor v2 questions routes', () => {
 
   test('POST - should throw if not boom 409 from API', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
     jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw new Error('Some other API error')
     })
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
       payload
     }

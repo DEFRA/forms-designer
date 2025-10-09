@@ -196,6 +196,38 @@ describe('Editor v2 question delete routes', () => {
     )
   })
 
+  test('GET - should handle badRequestErrorList from session flash messages', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const mockFlashMessages = [
+      { text: 'Error message 1', href: '#field1' },
+      { text: 'Error message 2', href: '#field2' }
+    ]
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth: {
+        ...auth,
+        credentials: {
+          ...auth.credentials,
+          yar: {
+            id: 'session-id',
+            flash: jest.fn().mockReturnValue(mockFlashMessages)
+          }
+        }
+      }
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mainHeading = container.getByRole('heading', { level: 1 })
+    expect($mainHeading).toHaveTextContent('Test form')
+  })
+
   test('POST - should delete page and redirect to pages list', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

@@ -56,14 +56,7 @@ export default {
                 .code(statusCode)
             }
 
-            const logLevel =
-              statusCode === StatusCodes.NOT_FOUND.valueOf() ? 'info' : 'error'
-            request.logger[logLevel](
-              response,
-              statusCode === StatusCodes.NOT_FOUND.valueOf()
-                ? 'Resource not found'
-                : 'Unhandled error found'
-            )
+            request.logger.error(response, 'Unhandled error found')
 
             if (errorMessage) {
               return h
