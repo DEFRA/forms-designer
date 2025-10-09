@@ -10,7 +10,13 @@ export default {
       files: ['**/*.scss'],
       rules: {
         'function-url-scheme-allowed-list': ['data', '/^https/'],
-        'max-nesting-depth': [3, { ignore: ['pseudo-classes'] }]
+        'max-nesting-depth': [
+          4,
+          {
+            ignore: ['pseudo-classes', 'blockless-at-rules'],
+            ignoreAtRules: ['include']
+          }
+        ]
       }
     }
   ]

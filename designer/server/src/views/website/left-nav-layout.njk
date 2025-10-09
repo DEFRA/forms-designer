@@ -1,0 +1,26 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+{% from "govuk/components/pagination/macro.njk" import govukPagination %}
+
+{% set description = { html: descriptionHtml } if descriptionHtml else { text: pageHeading.description } %}
+
+{% block beforeContent %}
+  {{ appMasthead(masthead) }}
+{% endblock -%}
+
+{% block content %}
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+      {%- include "website/sub-navigation.njk" -%}
+    </div>
+    <div class="govuk-grid-column-two-thirds">
+      {% block textPanel %}{% endblock %}
+      {% if pagination %}
+        {{ govukPagination(pagination) }}
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

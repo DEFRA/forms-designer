@@ -13,6 +13,7 @@
   isStartButton: true
 })}}
 {% endset -%}
+
 {% call appMasthead({
   heading: {
     text: "Create and publish Defra forms on GOV.UK"
@@ -30,12 +31,10 @@
         <a href="#" class="govuk-link govuk-link--no-visited-state govuk-link--inverse">What's new</a>
       </h2>
       <div class="govuk-!-text-align-left govuk-!-margin-bottom-2">
-        <time class="govuk-body-s" datetime="2025-06-14T14:01:00.000Z" style="color: white!important;">14 June 2025</time>
+        <time class="govuk-body-s" datetime="{{ content.whatsNew.date.iso }}" style="color: white!important;">{{ content.whatsNew.date.text }}</time>
       </div>
 
-      <p class="govuk-body" style="color: white!important;">
-        New conditions and accessibility improvements and updates to preview panel functionality.
-      </p>
+      <p class="govuk-body" style="color: white!important;">{{ content.whatsNew.text }}</p>
     </div>
   </div>
 </div>
