@@ -1137,7 +1137,7 @@ Support
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
   <ul class="x-govuk-sub-navigation__section">
     <li class="x-govuk-sub-navigation__section-item x-govuk-sub-navigation__section-item--current">
-      <a class="x-govuk-sub-navigation__link" href="/resources" aria-current="true">Good form design guide</a>
+      <a class="x-govuk-sub-navigation__link" href="/resources">Good form design guide</a>
       <ul class="x-govuk-sub-navigation__section x-govuk-sub-navigation__section--nested">
         <li class="x-govuk-sub-navigation__section-item">
           <a class="x-govuk-sub-navigation__link" href="/resources/does-this-need-to-be-a-form" aria-current="true">Does this need to be a form?</a>

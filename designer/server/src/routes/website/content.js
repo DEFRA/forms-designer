@@ -50,7 +50,6 @@ export default {
       {
         text: 'Good form design guide',
         param: WebsiteLevel1Routes.RESOURCES,
-        current: true,
         parent: true,
         children: [
           {
