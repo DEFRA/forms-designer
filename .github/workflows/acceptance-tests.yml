@@ -172,7 +172,7 @@ jobs:
             } else {
               // Tests failed - create or update comment
               const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
-              
+
               const body = `## 🧪 Acceptance Test Results\n\n` +
                           `### ❌ Some acceptance tests failed\n\n` +
                           `[View Details](${runUrl})`;
