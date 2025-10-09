@@ -9,7 +9,8 @@
 
 {% block content %}
   {% call appPageBody({
-    heading: pageHeading
+    heading: pageHeading,
+    errorList: badRequestErrorList
   }) %}
     {% if contentHtml %}
         {{ contentHtml | safe }}
