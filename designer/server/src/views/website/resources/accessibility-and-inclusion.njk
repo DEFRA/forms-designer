@@ -1,0 +1,111 @@
+{% extends "website/left-nav-layout.njk" %}
+
+{% block textPanel %}
+  <p class="govuk-body">Approximately 1 in 4 people (24%) in the UK have a disability or long-term impairment.
+  </p>
+  <p class="govuk-body">This stat does not include:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>unreported disabilities</li>
+    <li>neurodiversity (such as Autism or ADHD)</li>
+    <li>temporary impairments (for example, a person with an arm injury)</li>
+    <li>situational impairments (for example, a new parent holding a baby)</li>
+  </ul>
+  <p class="govuk-body">You can estimate how many disabled people might use your form.</p>
+
+  <h2 id="common-usability-problems-in-forms" class="govuk-heading-l">Common usability problems in forms</h2>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>Length and complexity</li>
+    <li>Inconsistent design</li>
+    <li>Confusing error messages</li>
+    <li>Getting timed out</li>
+    <li>Lack of guidance or examples</li>
+    <li>Unhelpful hint text</li>
+    <li>Poor mobile optimisation</li>
+    <li>Expectations not managed</li>
+  </ul>
+
+  <h2 id="different-access-needs-can-clash" class="govuk-heading-l">Different access needs can clash</h2>
+  <p class="govuk-body">Consider this scenario.</p>
+  <p class="govuk-body">User 1 needs all the information on one page. They'll forget what they have read if
+    they need to switch between pages.</p>
+  <p class="govuk-body">User 2 finds all the information on one page overwhelming. They need to have separate
+    pages that break up the information.</p>
+  <p class="govuk-body">It's tricky to cater to both users in this instance. Do what you can, with the
+    information you have and the technology available.</p>
+  <p class="govuk-body"><a href="https://medium.com/content-at-scope/designing-content-for-conflicting-access-needs-8bc33cc69e13" class="govuk-link" target="_blank">Chloe Tear's blog</a> has more information on what to do when different access
+    needs
+    clash.</p>
+
+  <h2 id="making-accessible-forms" class="govuk-heading-l">Making accessible forms</h2>
+  <p class="govuk-body">Since 23 September 2018 all public sector websites and apps need to meet accessibility
+    standards and publish an accessibility statement. Online forms also need to comply with the standards.
+    See the <a href="https://www.gov.uk/guidance/guidance-and-tools-for-digital-accessibility" class="govuk-link" target="_blank">Gov.uk accessibility guidance</a> for more information. You may also need to <a href="https://www.gov.uk/service-manual/service-assessments/check-if-need-to-meet-service-standard" class="govuk-link" target="_blank">check if you need to meet the service standard</a>.
+  </p>
+  <p class="govuk-body">Stick to tried and tested methods when designing a form. Follow the <a href="https://www.gov.uk/guidance/government-design-principles" class="govuk-link" target="_blank">Government design
+    principles</a>.</p>
+  <p class="govuk-body">You should also:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>write questions and guidance in plain English</li>
+    <li>make things as simple as possible</li>
+    <li>write clear start pages (how users will find your form on GOV.UK) or update existing pages and
+      qualifying information</li>
+    <li>bookmark the <a href="https://defra.sharepoint.com/sites/Defraintranet/SitePages/Accessibility-rules-information-on-the-web.aspx" class="govuk-link" target="_blank">Defra accessibility intranet page</a></li>
+    <li>check the <a href="https://www.gov.uk/service-manual/design/form-structure" class="govuk-link" target="_blank">guidance for structuring forms</a></li>
+  </ul>
+
+  <h2 id="accessibility-statement-for-forms" class="govuk-heading-l">Accessibility statement for forms</h2>
+  <p class="govuk-body">If you use a government form building tool like the Defra Form Designer or GOV.UK
+    Forms, your form is usually covered by the tool's accessibility statement. See <a href="https://www.gov.uk/guidance/make-your-website-or-app-accessible-and-publish-an-accessibility-statement" class="govuk-link" target="_blank">Gov.uk guidance</a> for more information.</p>
+
+  <h2 id="assistive-technology" class="govuk-heading-l">Assistive technology</h2>
+  <p class="govuk-body">Some people might use assistive technology to complete online forms. You can:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li><a href="https://business.scope.org.uk/assistive-technology-devices-definitions-how-disabled-people-use-the-web/" class="govuk-link" target="_blank">learn about assistive technology</a></li>
+    <li><a href="https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities" class="govuk-link" target="_blank">research your form with disabled people and assistive technology users</a>
+    </li>
+    <li>ask the Defra accessibility team to audit your form, you can email them at <a href="mailto:accessibility@defra.gov.uk" class="govuk-link">accessibility@defra.gov.uk</a></li>
+  </ul>
+  <p class="govuk-body">If you need help testing the accessibility of your form, contact the quality,
+    assurance and test team at <a href="mailto:qatestresourcing@defra.gov.uk" class="govuk-link">qatestresourcing@defra.gov.uk</a>.</p>
+
+  <h2 id="asking-for-personal-information" class="govuk-heading-l">Asking for personal information</h2>
+  <p class="govuk-body">Consider the sensitives around personal questions. 'Easy' questions might be hard for
+    some people to answer. Don't assume people can complete a form independently. They may need help from:
+  </p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>friends and family</li>
+    <li>teachers or social workers</li>
+    <li>charities and citizens advice</li>
+    <li>farm management companies</li>
+    <li>accountants</li>
+  </ul>
+  <p class="govuk-body">If asking for personal data is a legal requirement, ask only for what the law
+    requires.</p>
+  <p class="govuk-body">Learn more about <a href="https://www.gov.uk/government/publications/working-definition-of-trauma-informed-practice/working-definition-of-trauma-informed-practice" class="govuk-link" target="_blank">trauma informed practice</a>.</p>
+
+  <h2 id="assisted-digital" class="govuk-heading-l">Assisted digital</h2>
+  <p class="govuk-body">Some people might need help getting online.</p>
+  <p class="govuk-body">Helping people use your online form is known as providing 'assisted digital support'.
+  </p>
+  <p class="govuk-body">You can provide assisted digital support:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>in person</li>
+    <li>on the telephone</li>
+    <li>via webchat</li>
+  </ul>
+  <p class="govuk-body">You should give users information about assisted digital support via:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>your online service - for example on a GOV.UK start page or within your form</li>
+    <li>other communications - letters, emails, posters, leaflets, social media, forums, radio advertising,
+      online advertising, third party face to face support channels</li>
+  </ul>
+  <p class="govuk-body">Read more about <a href="https://www.gov.uk/service-manual/helping-people-to-use-your-service/assisted-digital-support-introduction" class="govuk-link" target="_blank">providing assisted digital support</a>.</p>
+
+  <h2 id="when-to-use-a-paper-form" class="govuk-heading-l">When to use a paper form</h2>
+  <p class="govuk-body">Offer a paper version of an online form if your research suggests users need it. If
+    you don't have any research, you can do desk research to find articles like <a href="https://www.effortmark.co.uk/people-persist-using-paper-forms/" class="govuk-link" target="_blank">why people
+      prefer to use
+      paper forms</a>.</p>
+  <p class="govuk-body">Review the paper form for accessibility. Use the <a href="https://defra.sharepoint.com/:w:/r/teams/Team811/_layouts/15/Doc.aspx?sourcedoc=%7b3DDE61DE-5CF9-4B25-9CC8-5AA71A981CCC%7d&amp;file=Accessible%20form%20template%20v1.3.docx&amp;action=default&amp;mobileredirect=true" class="govuk-link" target="_blank">accessible form template</a> for forms in
+    Word. Check the <a href="https://defra.sharepoint.com/:w:/r/teams/Team811/_layouts/15/Doc.aspx?sourcedoc=%7b185D76D6-0304-4D03-B2E0-02315905CCA6%7d&amp;file=PDF%20forms%20accessibility_INCOMPLETE%20DRAFT.docx&amp;action=default&amp;mobileredirect=true" class="govuk-link" target="_blank">guidance for making accessible PDFs</a>.</p>
+{% endblock %}

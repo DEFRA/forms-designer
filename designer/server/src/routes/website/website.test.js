@@ -101,16 +101,30 @@ describe('Health check route', () => {
     expect(response.result).toMatchSnapshot()
   })
 
+  test('/resources should load Make a form live checklist', async () => {
+    const options = {
+      method: 'GET',
+      url: '/resources'
+    }
+
+    const { container, response } = await renderResponse(server, options)
+    const $heading = container.getByRole('heading', { level: 1 })
+
+    expect($heading).toHaveTextContent('Does this need to be a form?')
+    expect(response.result).toMatchSnapshot()
+  })
+
   test('/support should shows the Defra Forms Website Support page', async () => {
     const options = {
       method: 'GET',
       url: '/support'
     }
 
-    const { container } = await renderResponse(server, options)
+    const { container, response } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', { level: 1 })
     expect($heading).toHaveTextContent('Support')
+    expect(response.result).toMatchSnapshot()
   })
 })
 

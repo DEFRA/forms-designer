@@ -1,0 +1,27 @@
+{% extends "website/left-nav-layout.njk" %}
+
+{% block textPanel %}
+  <p class="govuk-body">There are lots of reasons to make an online form. But make sure you're not duplicating
+    data by checking if:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>an existing Defra group form (paper or online) collects the information you need</li>
+    <li>an existing form can be adapted instead of making a new form</li>
+  </ul>
+
+  <h2 id="when-you-might-need-a-service-assessment" class="govuk-heading-l">When you might need a service
+    assessment</h2>
+  <p class="govuk-body">If you expect more than 10,000 submissions per year, you may need to create a service
+    instead. A service is subject to assessments and has a dedicated team. <a href="https://www.gov.uk/service-manual/service-assessments/check-if-need-to-meet-service-standard" class="govuk-link" target="_blank">Check if you need to meet the service standard</a>.</p>
+  <p class="govuk-body">You won't need an assessment if you're:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>using an assured form building tool (like the Defra Form Designer or GOV.UK Forms) to create a form,
+      and</li>
+    <li>expecting to get fewer than 10,000 transactions per year</li>
+  </ul>
+  <p class="govuk-body">This reflects the fact that forms created using an assured form building platform have
+    government standards 'built in'. See <a href="https://www.gov.uk/service-manual/service-standard/point-9-create-a-secure-service" class="govuk-link" target="_blank">Service standard – secure service</a> for more information.</p>
+  <p class="govuk-body">Even if you're using an assured form building platform, you may want to follow an
+    assurance process for forms with a higher degree of reputational or financial risk. This will be a
+    lighter touch process than a service assessment - for example, it might be an expert review carried out
+    by a design or content professional.</p>
+{% endblock %}
