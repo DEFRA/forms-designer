@@ -93,6 +93,7 @@ jobs:
           fi
 
       - name: Run acceptance tests
+        id: acceptance-tests
         shell: bash
         run: |
           cd forms-acceptance-tests
@@ -160,7 +161,9 @@ jobs:
               comment.body.includes('🧪 Acceptance Test Results')
             );
 
-            if (context.job.status === 'success') {
+            const testsPassed = '${{ steps.acceptance-tests.outcome }}' === 'success';
+
+            if (testsPassed) {
               // Tests passed - delete any existing failure comment
               if (botComment) {
                 await github.rest.issues.deleteComment({
