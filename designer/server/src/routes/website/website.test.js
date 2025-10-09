@@ -144,6 +144,18 @@ describe('Health check route', () => {
       expect.stringContaining('/get-started/form-suitability-criteria')
     )
   })
+
+  test('/support should shows the Defra Forms Website Support page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/support'
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent('Support')
+  })
 })
 
 /**
