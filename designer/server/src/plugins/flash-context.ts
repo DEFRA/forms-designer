@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import {
   type Request,
   type ResponseToolkit,
@@ -24,7 +25,7 @@ export default {
       server.ext('onPreResponse', (request: Request, h: ResponseToolkit) => {
         const response = request.response
 
-        if ('isBoom' in response && response.isBoom) {
+        if (Boom.isBoom(response)) {
           return h.continue
         }
 
@@ -36,7 +37,8 @@ export default {
           // Only process if yar session is available
           // Some routes (like /favicon.ico) may have yar as null
           const yar = (request as { yar?: Yar | null }).yar
-          if (yar) {
+
+          if (yar?.id) {
             const badRequestErrorList = yar.flash(
               sessionNames.badRequestErrorList
             )

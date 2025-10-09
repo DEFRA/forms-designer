@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import {
   type Request,
   type ResponseToolkit,
@@ -27,7 +28,7 @@ export default {
         async (request: Request, h: ResponseToolkit) => {
           const response = request.response
 
-          if ('isBoom' in response && response.isBoom) {
+          if (Boom.isBoom(response)) {
             // An error was raised during
             // processing the request
             const statusCode = response.output.statusCode
