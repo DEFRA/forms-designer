@@ -100,6 +100,18 @@ describe('Health check route', () => {
     expect($heading).toHaveTextContent('Make a form live checklist')
     expect(response.result).toMatchSnapshot()
   })
+
+  test('/support should shows the Defra Forms Website Support page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/support'
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent('Support')
+  })
 })
 
 /**

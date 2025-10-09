@@ -1,0 +1,31 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% set description %}
+If you're taking part in private beta, ask for support by sending a message to the <a href="https://teams.microsoft.com/l/channel/19:sLNy297i1n0fiPYsGJb3UoOITYURp7PtMx8iFwEfJWs1%40thread.tacv2/General?groupId=346d8ebd-c7b8-47d3-b178-e6a9b31c8fc2&amp;tenantId=770a2450-0227-4c62-90c7-4e38537f1102" class="govuk-link govuk-link--inverse govuk-link--no-visited-state">Microsoft Teams channel</a> or <a href="https://defra-digital-team.slack.com/archives/C080WP62PJP" class="govuk-link govuk-link--inverse govuk-link--no-visited-state">Defra Slack channel</a>.
+{% endset -%}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: pageHeading.text
+  },
+  description: {
+    html: description
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      <h2 class="govuk-heading-l">Support hours</h2>
+      <p class="govuk-body">We are available to support you between 9am and 5pm Monday to Friday.</p>
+
+      <h2 class="govuk-heading-l">General questions</h2>
+      <p class="govuk-body">For general questions about Defra Forms, use the shared mailbox at <a href="mailto:defraforms@defra.gov.uk" class="govuk-link">defraforms@defra.gov.uk</a>.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

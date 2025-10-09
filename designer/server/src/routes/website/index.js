@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { websiteAboutModel } from '~/src/models/website/about.js'
 import { websiteGetStartedModel } from '~/src/models/website/get-started.js'
+import { websiteSupportModel } from '~/src/models/website/support.js'
 import {
   Level2GetStartedMenu,
   WebsiteLevel1Routes
@@ -77,6 +78,19 @@ export default /** @satisfies {ServerRoute[]} */ ([
         params: Joi.object().keys({
           subMenu: Joi.string().valid(...Object.values(Level2GetStartedMenu))
         })
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: `/${WebsiteLevel1Routes.SUPPORT}`,
+    handler(_request, h) {
+      const supportModel = websiteSupportModel()
+      return h.view('website/support', supportModel)
+    },
+    options: {
+      auth: {
+        mode: 'try'
       }
     }
   }
