@@ -572,14 +572,8 @@ $home-page-breakpoint: 1220px;
     border: 0.0625rem solid;
     border-radius: 50%;
     vertical-align: text-top;
-  }
 
-  &--large .app-step-nav__chevron {
-    vertical-align: top;
-  }
-
-  &__chevron {
-    &:after {
+    &::after {
       content: "";
       box-sizing: border-box;
       display: block;
@@ -602,6 +596,10 @@ $home-page-breakpoint: 1220px;
     }
   }
 
+  &--large .app-step-nav__chevron {
+    vertical-align: top;
+  }
+
   &__button {
     color: #1d70b8;
     cursor: pointer;
@@ -617,7 +615,7 @@ $home-page-breakpoint: 1220px;
         background: #0b0c0c;
       }
 
-      .app-step-nav__chevron:after {
+      .app-step-nav__chevron::after {
         color: #f3f2f1;
       }
 
@@ -635,7 +633,7 @@ $home-page-breakpoint: 1220px;
       background: #0b0c0c;
     }
 
-    &:focus .app-step-nav__chevron:after {
+    &:focus .app-step-nav__chevron::after {
       color: #ffdd00;
     }
 
@@ -648,10 +646,7 @@ $home-page-breakpoint: 1220px;
         0 -2px #ffdd00,
         0 4px #0b0c0c;
       text-decoration: none;
-    }
 
-    &:focus .app-step-nav____title-text-focus,
-    &:focus .app-step-nav__toggle-link-focus {
       @supports not (text-wrap: balance) {
         -webkit-box-decoration-break: clone;
         box-decoration-break: clone;
@@ -719,7 +714,7 @@ $home-page-breakpoint: 1220px;
     position: relative;
     z-index: 1;
     margin: 0.5em 0 14px;
-    padding: 5px 0 5px;
+    padding: 5px 0;
 
     @media print {
       font-family: sans-serif;
@@ -780,7 +775,7 @@ $home-page-breakpoint: 1220px;
     }
 
     &--all {
-      min-width: 6.2142857143em;
+      min-width: 6.2143em;
 
       .app-step-nav--large & {
         min-width: 6.25em;
@@ -802,7 +797,7 @@ $home-page-breakpoint: 1220px;
       padding-left: 3.75em;
     }
 
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       z-index: 2;
@@ -811,7 +806,7 @@ $home-page-breakpoint: 1220px;
       border-left: solid 1px #b1b4b6;
       background: #ffffff;
       left: 0;
-      margin-left: 0.90625em;
+      margin-left: 0.9063em;
       top: 0.9375em;
 
       @include govuk-media-query($from: tablet) {
@@ -821,7 +816,7 @@ $home-page-breakpoint: 1220px;
       }
     }
 
-    &:last-child:before {
+    &:last-child::before {
       content: "";
       position: absolute;
       z-index: 6;
@@ -840,7 +835,7 @@ $home-page-breakpoint: 1220px;
       }
     }
 
-    &:last-child:after {
+    &:last-child::after {
       height: -webkit-calc(100% - 15px);
       height: calc(100% - 15px);
 
@@ -849,14 +844,14 @@ $home-page-breakpoint: 1220px;
       }
     }
 
-    &:last-child .app-step-nav__help:after {
+    &:last-child .app-step-nav__help::after {
       height: 100%;
     }
 
-    &--active:last-child:before,
+    &--active:last-child::before,
     &--active .app-step-nav__circle--number,
-    &--active:after,
-    &--active .app-step-nav__help:after {
+    &--active::after,
+    &--active .app-step-nav__help::after {
       border-color: #0b0c0c;
     }
   }
@@ -877,8 +872,8 @@ $home-page-breakpoint: 1220px;
     .app-step-nav--large & {
       @include govuk-media-query($from: tablet) {
         top: 11px;
-        width: 1.8421052632em;
-        height: 1.8421052632em;
+        width: 1.8421em;
+        height: 1.8421em;
       }
     }
 
@@ -936,8 +931,8 @@ $home-page-breakpoint: 1220px;
       font-weight: bold;
       line-height: 28px;
       left: 3px;
-      width: 1.5789473684em;
-      height: 1.5789473684em;
+      width: 1.5789em;
+      height: 1.5789em;
 
       @media print {
         font-family: sans-serif;
@@ -966,8 +961,8 @@ $home-page-breakpoint: 1220px;
         }
 
         @include govuk-media-query($from: tablet) {
-          width: 1.4583333333em;
-          height: 1.4583333333em;
+          width: 1.4583em;
+          height: 1.4583em;
         }
       }
     }
@@ -987,27 +982,27 @@ $home-page-breakpoint: 1220px;
 
     &-step-label,
     &-step-colon {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      -webkit-clip-path: inset(50%) !important;
-      clip-path: inset(50%) !important;
-      border: 0 !important;
-      white-space: nowrap !important;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      -webkit-clip-path: inset(50%);
+      clip-path: inset(50%);
+      border: 0;
+      white-space: nowrap;
       -webkit-user-select: none;
       -ms-user-select: none;
       user-select: none;
 
       &::before {
-        content: " ";
+        content: "\00a0";
       }
 
       &::after {
-        content: " ";
+        content: "\00a0";
       }
     }
   }
@@ -1191,11 +1186,11 @@ $home-page-breakpoint: 1220px;
       margin-left: 20px;
       list-style: disc;
 
-      .app-step-nav__list-item--active:before {
+      .app-step-nav__list-item--active::before {
         left: -65px;
 
-        @include govuk-media-query($from: tablet) {
-          .app-step-nav--large & {
+        .app-step-nav--large & {
+          @include govuk-media-query($from: tablet) {
             left: -80px;
           }
         }
@@ -1258,27 +1253,27 @@ $home-page-breakpoint: 1220px;
     }
 
     &-active-context {
-      position: absolute !important;
-      width: 1px !important;
-      height: 1px !important;
-      margin: 0 !important;
-      padding: 0 !important;
-      overflow: hidden !important;
-      clip: rect(0 0 0 0) !important;
-      -webkit-clip-path: inset(50%) !important;
-      clip-path: inset(50%) !important;
-      border: 0 !important;
-      white-space: nowrap !important;
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      -webkit-clip-path: inset(50%);
+      clip-path: inset(50%);
+      border: 0;
+      white-space: nowrap;
       -webkit-user-select: none;
       -ms-user-select: none;
       user-select: none;
 
       &::before {
-        content: " ";
+        content: "\00a0";
       }
 
       &::after {
-        content: " ";
+        content: "\00a0";
       }
     }
   }
@@ -1286,7 +1281,7 @@ $home-page-breakpoint: 1220px;
   &__list-item--active {
     position: relative;
 
-    &:before {
+    &::before {
       box-sizing: border-box;
       content: "";
       position: absolute;
@@ -1333,8 +1328,8 @@ $home-page-breakpoint: 1220px;
     font-weight: normal;
     color: #505a5f;
 
-    &:before {
-      content: " – ";
+    &::before {
+      content: " –\00a0";
     }
   }
 
@@ -1342,13 +1337,13 @@ $home-page-breakpoint: 1220px;
     &--number {
       background-color: #00823b;
       border-color: #00823b;
-      color: white;
+      color: #ffffff;
       font-weight: bold;
       text-shadow: none;
     }
 
     &-background {
-      color: white;
+      color: #ffffff;
       font-weight: bold;
       text-shadow: none;
     }
@@ -1360,11 +1355,11 @@ $home-page-breakpoint: 1220px;
       border-color: #00823b;
     }
 
-    &:after {
+    &::after {
       border-left-color: #00823b;
     }
 
-    &:last-child:before {
+    &:last-child::before {
       border-bottom-color: #00823b;
     }
   }
@@ -1373,7 +1368,7 @@ $home-page-breakpoint: 1220px;
     border-top-color: #00823b;
   }
 
-  .app-step-nav__list-item--active:before {
+  .app-step-nav__list-item--active::before {
     background-color: #00823b;
   }
 }
