@@ -14,6 +14,7 @@ import {
   getErrorTemplates,
   getExtraFields,
   getListDetails,
+  handleAutocomplete,
   hasDataOrErrorForDisplay,
   mapToQuestionDetails,
   overrideFormValuesForEnhancedAction,
@@ -678,9 +679,62 @@ describe('editor-v2 - question details model', () => {
       expect(result.questionType).toBe(ComponentType.TextField)
     })
   })
+
+  describe('handleAutocomplete', () => {
+    test('should ignore if not autocomplete', () => {
+      const lists = /** @type {List[]} */ ([])
+      const state = {
+        listItems: [{ text: 'item1', value: 'item1' }]
+      }
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.TextField
+      })
+      expect(handleAutocomplete(question, state, lists)).toEqual(lists)
+    })
+
+    test('should ignore if no state', () => {
+      const lists = /** @type {List[]} */ ([])
+      const state = {}
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.AutocompleteField
+      })
+      expect(handleAutocomplete(question, state, lists)).toEqual(lists)
+    })
+
+    test('should process', () => {
+      const lists = /** @type {List[]} */ ([
+        {
+          id: 'my-list-id',
+          name: 'my-list-name',
+          type: 'string',
+          title: 'List for test question',
+          items: [
+            { id: 'id1', text: 'Item 1', value: 'item1' },
+            { id: 'id2', text: 'Item 2', value: 'item2' }
+          ]
+        }
+      ])
+      const state = {
+        listItems: [{ id: 'id3', text: 'Item 3', value: 'item3' }]
+      }
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.AutocompleteField,
+        list: 'my-list-id'
+      })
+      expect(handleAutocomplete(question, state, lists)).toEqual([
+        {
+          id: 'my-list-id',
+          name: 'my-list-name',
+          type: 'string',
+          title: 'List for test question',
+          items: [{ id: 'id3', text: 'Item 3', value: 'item3' }]
+        }
+      ])
+    })
+  })
 })
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormEditor, GovukField, InputFieldsComponentsDef, List } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

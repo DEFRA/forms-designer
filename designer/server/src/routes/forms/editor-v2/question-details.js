@@ -34,6 +34,7 @@ import {
 } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
+import { cannotResolveAllItems } from '~/src/models/forms/editor-v2/edit-list-resolve.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
@@ -205,6 +206,27 @@ export function overrideStateIfJsEnabled(request) {
   return undefined
 }
 
+/**
+ * @param { Request | Request<any> } request
+ * @param {ResponseToolkit<any>} h - the response toolkit
+ * @param {string} stateId
+ */
+export function chooseResolutionRoute(request, h, stateId) {
+  const state = getQuestionSessionState(request.yar, stateId) ?? {}
+  const notResolvable = cannotResolveAllItems(state.listConflicts)
+  if (notResolvable) {
+    const joiErr = createJoiError(
+      'autoCompleteOptions',
+      'Add a new option to replace the one you deleted, or delete the condition that uses it.'
+    )
+
+    return redirectWithErrors(request, h, joiErr, errorKey, '#')
+  }
+
+  const { pathname } = request.url
+  return h.redirect(`${pathname}/resolve`).code(StatusCodes.SEE_OTHER)
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }>}
@@ -363,8 +385,7 @@ export default [
           stateId
         )
         if (redirectForConflict) {
-          const { pathname } = request.url
-          return h.redirect(`${pathname}/resolve`)
+          return chooseResolutionRoute(request, h, stateId)
         }
       }
 

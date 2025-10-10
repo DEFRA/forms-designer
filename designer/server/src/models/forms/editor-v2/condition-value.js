@@ -220,7 +220,7 @@ function buildListItemValueField(
     },
     classes: GOVUK_RADIOS_SMALL,
     value: valueObj?.itemId,
-    items: getListFromComponent(selectedComponent, definition)?.items.map(
+    items: getListFromComponent(selectedComponent, definition.lists)?.items.map(
       (itm, idx2) => {
         return {
           text: itm.text,

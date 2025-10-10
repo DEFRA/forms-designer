@@ -65,7 +65,7 @@ describe('editor-v2 - advanced settings fields model', () => {
           undefined,
           ComponentType.TextField,
           undefined,
-          buildDefinition()
+          buildDefinition().lists
         )
       ).toEqual(expectedArray)
     })
@@ -124,7 +124,7 @@ describe('editor-v2 - advanced settings fields model', () => {
           }),
           ComponentType.TextField,
           undefined,
-          buildDefinition()
+          buildDefinition().lists
         )
       ).toEqual(expectedArray)
     })

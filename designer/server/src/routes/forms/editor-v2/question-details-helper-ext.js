@@ -170,7 +170,7 @@ export function handleListConflict(
     /** @type {Item[]} */ (listElements)
   )
 
-  setQuestionSessionState(yar, stateId, {
+  const newState = {
     ...state,
     listItems: listItemsWithIds.map((item) => {
       return {
@@ -178,7 +178,8 @@ export function handleListConflict(
         id: item.id ?? randomUUID()
       }
     })
-  })
+  }
+  setQuestionSessionState(yar, stateId, newState)
 
   const conditions = usedInConditions(definition, deletions, listName)
   if (conditions.length) {
@@ -215,7 +216,7 @@ export function handleListConflict(
     }
 
     setQuestionSessionState(yar, stateId, {
-      ...state,
+      ...newState,
       listConflicts: dedupedConflicts
     })
     return true
