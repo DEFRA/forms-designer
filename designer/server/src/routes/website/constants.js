@@ -38,3 +38,53 @@ export const Level2ResourcesMenu = {
   PEER_REVIEWING: 'peer-reviewing-forms',
   PRIVACY_NOTICES: 'privacy-notices'
 }
+
+/**
+ * Enum for get Resources menus.
+ * @readonly
+ * @enum {string}
+ */
+export const FeatureIcons = {
+  LIBRARY: 'library',
+  FORM_INFO: 'formInfo',
+  PAGE_TYPES: 'pageTypes',
+  ERROR_MESSAGES: 'errorMessages',
+  ANSWER_LIMITS: 'answerLimits',
+  FORM_GUIDANCE: 'formGuidance',
+  CONDITIONS: 'conditions',
+  FORM_DECLARATION: 'formDeclaration',
+  TEXT_NUMBERS: 'textNumbers',
+  FILE_UPLOAD: 'fileUpload',
+  YES_NO: 'yesNo',
+  REPEATING_QUESTIONS: 'repeatingQuestions',
+  PREVIEW: 'preview',
+  SUBMITTED_FORMS: 'submittedForms',
+  CONFIRMATION_EMAILS: 'confirmationEmails',
+  SAVE_EXIT: 'saveExit',
+  USER_MANAGEMENT: 'userManagement',
+  AUDITING: 'auditing',
+  API_INTEGRATION: 'apiIntegration',
+  PAGE_SECTIONS: 'pageSections',
+  CUSTOM_STYLING: 'customStyling',
+  EDIT: 'edit',
+  PAGE_TEMPLATES: 'pageTemplates',
+  DATA_OUTPUT: 'dataOutput',
+  FREE_HOSTING: 'freeHosting',
+  SELF_HOSTED: 'selfHosted',
+  INTEGRATION: 'integration',
+  AVAILABLE: 'available',
+  NOT_AVAILABLE: 'notAvailable',
+  SOME_AVAILABLE: 'someAvailable',
+  API_FIRST: 'apiFirst'
+}
+
+/**
+ * Enum for get Resources menus.
+ * @readonly
+ * @enum {string}
+ */
+export const FeatureComparisonIcons = {
+  AVAILABLE: 'available',
+  NOT_AVAILABLE: 'notAvailable',
+  SOME_AVAILABLE: 'someAvailable'
+}

@@ -88,6 +88,11 @@ $home-page-breakpoint: 1220px;
           color: govuk-colour("black");
         }
       }
+
+      .govuk-body,
+      .govuk-body-s {
+        color: #ffffff;
+      }
     }
   }
 
@@ -127,6 +132,29 @@ $home-page-breakpoint: 1220px;
       color: $defra-brand-colour;
     }
   }
+
+  .x-govuk-related-navigation {
+    border-top-color: $defra-brand-colour;
+  }
+
+  // Enhanced styling inspired by Notion's visual concepts while maintaining GOV.UK Design System */
+  .govuk-grid-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  // Grid layout follows natural document order for accessibility */
+  .govuk-grid-column-full,
+  .govuk-grid-column-one-third-from-desktop {
+    display: flex;
+  }
+}
+
+.govuk-inset-text--cta {
+  border-left: 4px solid #00703c;
+  background-color: #f3f2f1;
+  padding: 1.5rem;
+  margin: 2rem 0;
 }
 
 .content-section {
@@ -378,6 +406,20 @@ $home-page-breakpoint: 1220px;
     padding-bottom: 30px;
   }
 
+  &__header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d8dde0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      color: #0b0c0c;
+    }
+  }
+
   &--feature {
     width: 100%;
     display: flex;
@@ -516,6 +558,15 @@ $home-page-breakpoint: 1220px;
 
   .govuk-card__actions > .govuk-c-button {
     margin-bottom: 0;
+  }
+
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
   }
 }
 

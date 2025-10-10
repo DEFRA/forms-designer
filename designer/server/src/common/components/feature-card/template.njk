@@ -1,0 +1,15 @@
+{% from "feature-svg/macro.njk" import featureSvg %}
+
+<div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+  <div class="govuk-card govuk-card--contained govuk-card--feature">
+    <div class="govuk-card__content">
+      <div class="govuk-card__header">
+        <div class="feature-icon">
+          {{ featureSvg(params.icon) }}
+        </div>
+        <h3 class="govuk-heading-s">{{ params.heading }}</h3>
+      </div>
+      {{ params.markdown | markdown | safe }}
+    </div>
+  </div>
+</div>

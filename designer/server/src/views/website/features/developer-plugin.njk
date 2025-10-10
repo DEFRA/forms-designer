@@ -1,0 +1,48 @@
+{% from "feature-card/macro.njk" import featureCard %}
+
+<h2 class="govuk-heading-l govuk-!-margin-top-4">Developer Plugin</h2>
+
+<p class="govuk-body">Learn more about the <a href="https://defra.github.io/forms-engine-plugin/" class="govuk-link" target="_blank">Forms engine
+  plugin</a>.</p>
+
+<p class="govuk-body">A lightweight form building tool designed for developers who want to
+  integrate
+  form capabilities directly into their existing applications and systems.</p>
+
+
+<!-- Key Features -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Key Features</h3>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  {% for card in features.developerPlugin.keyFeatures %}
+  {{ featureCard(card) }}
+  {% endfor %}
+</div>
+
+<!-- Use Cases -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h3 class="govuk-heading-m govuk-!-margin-top-6">Perfect for</h3>
+  </div>
+</div>
+
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full govuk-grid-column-one-half">
+    <ul class="govuk-list govuk-list--bullet">
+      <li>Web applications requiring embedded forms</li>
+      <li>Internal tools and dashboards</li>
+      <li>Customer portals and self-service systems</li>
+      <li>Multi-tenant SaaS applications</li>
+
+
+      <li>Applications with custom authentication</li>
+      <li>Systems requiring real-time form updates</li>
+      <li>Applications needing custom validation rules</li>
+      <li>High-traffic websites and applications</li>
+    </ul>
+  </div>
+</div>
