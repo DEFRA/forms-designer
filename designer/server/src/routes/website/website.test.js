@@ -101,6 +101,19 @@ describe('Health check route', () => {
     expect(response.result).toMatchSnapshot()
   })
 
+  test('/features should shows the Defra Forms Website Features', async () => {
+    const options = {
+      method: 'GET',
+      url: '/features'
+    }
+
+    const { container, response } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent('Features')
+    expect(response.result).toMatchSnapshot()
+  })
+
   test('/resources should load Does this need to be... page', async () => {
     const options = {
       method: 'GET',

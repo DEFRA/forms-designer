@@ -1,6 +1,7 @@
 import Joi from 'joi'
 
 import { websiteAboutModel } from '~/src/models/website/about.js'
+import { websiteFeaturesModel } from '~/src/models/website/features.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
 import {
@@ -133,6 +134,19 @@ export default /** @satisfies {ServerRoute[]} */ ([
         params: Joi.object().keys({
           subMenu: Joi.string().valid(...Object.values(Level2ResourcesMenu))
         })
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: `/${WebsiteLevel1Routes.FEATURES}`,
+    handler(_request, h) {
+      const featuresModel = websiteFeaturesModel()
+      return h.view('website/features/index', featuresModel)
+    },
+    options: {
+      auth: {
+        mode: 'try'
       }
     }
   },

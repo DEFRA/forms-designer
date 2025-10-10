@@ -1,0 +1,83 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "x-govuk/components/related-navigation/macro.njk" import xGovukRelatedNavigation %}
+
+{% set description %}
+  The Defra Form Designer is in private beta. We're working on some <a href="#coming-soon" class="govuk-link govuk-link--inverse govuk-link--no-visited-state">
+  exciting features</a> right now.
+{% endset -%}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Features"
+  },
+  description: {
+    html: description
+  }
+}) }}
+{% endblock -%}
+{% set formsDesigner %}
+  {%- include "website/features/forms-designer.njk" -%}
+{% endset -%}
+{% set developerPlugin %}
+  {%- include "website/features/developer-plugin.njk" -%}
+{% endset -%}
+{% set compare %}
+  {%- include "website/features/compare.njk" -%}
+{% endset -%}
+
+{% block content %}
+<div class="govuk-width-container">
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
+      {{ govukTabs({
+        items: [
+          {
+            label: "Forms Designer",
+            id: "forms-designer",
+            panel: {
+              html: formsDesigner
+            }
+          },
+          {
+            label: "Developer Plugin",
+            id: "developer-plugin",
+            panel: {
+              html: developerPlugin
+            }
+          },
+          {
+            label: "Compare",
+            id: "compare",
+            panel: {
+              html: compare
+            }
+          }
+        ]
+      }) }}
+    </div>
+    <div class="govuk-grid-column-one-third">
+      <div class="x-govuk-related-navigation">
+        <nav class="x-govuk-related-navigation__nav-section" aria-labelledby="related-navigation-related-content">
+          <h2 class="x-govuk-related-navigation__main-heading" id="related-navigation-related-content">Related content</h2>
+          <ul class="x-govuk-related-navigation__link-list">
+            <li class="x-govuk-related-navigation__link">
+              <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://dxt-prototype-682ae311ff10.herokuapp.com/index">Design history</a>
+              <p class="govuk-body-s">We record user research findings and design changes.</p>
+            </li>
+            <li class="x-govuk-related-navigation__link">
+              <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://submit-form-to-defra.service.gov.uk/preview/live/register-as-a-unicorn-breeder">Register as a unicorn breeder demo form</a>
+              <p class="govuk-body-s">Try the Register as a unicorn breeder demo form to find out
+                how we
+                can
+                capture information.</p>
+            </li>
+          </ul>
+        </nav>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
