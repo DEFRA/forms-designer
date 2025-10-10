@@ -956,7 +956,7 @@ describe('Editor v2 question details routes', () => {
     expect(question).toMatchObject({ list: listId })
   })
 
-  test('POST - should update autocomplete and forward to resolve conflicts', async () => {
+  test('POST - should update autocomplete and forward back to self with conlfict error', async () => {
     const definition = structuredClone(
       testFormDefinitionWithRadioQuestionAndList
     )
@@ -971,6 +971,83 @@ describe('Editor v2 question details routes', () => {
       additions: [],
       deletions: [],
       listItemsWithIds: []
+    })
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionAutocomplete)
+    // @ts-expect-error - just need a single row in the array. Not bothered about structure for this test
+    jest.mocked(usedInConditions).mockReturnValueOnce([{}])
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/details',
+      auth,
+      payload: {
+        name: component.name,
+        question: 'Autocomplete',
+        hintText: '',
+        autoCompleteOptions: 'English:en-gb\r\nFrench:fr-Fr',
+        shortDescription: 'autocomplete',
+        questionType: 'AutocompleteField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      new Joi.ValidationError(
+        'Before you can save your changes, you need to add a new list item to replace the one you deleted.',
+        [],
+        undefined
+      ),
+      'questionDetailsValidationFailure'
+    )
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/q1/details#'
+    )
+  })
+
+  test('POST - should update autocomplete and forward to resolve screen', async () => {
+    const definition = structuredClone(
+      testFormDefinitionWithRadioQuestionAndList
+    )
+    // @ts-expect-error - coerce page type that has components
+    const component = definition.pages[0].components[0]
+    component.type = ComponentType.AutocompleteField
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithRadioQuestionAndList)
+    jest.mocked(matchLists).mockReturnValueOnce({
+      additions: [],
+      deletions: [],
+      listItemsWithIds: []
+    })
+    jest.mocked(getQuestionSessionState).mockReturnValue({
+      ...simpleSessionAutocomplete,
+      listConflicts: [
+        {
+          conflictItem: {
+            id: 'item1',
+            text: 'Brown'
+          },
+          originalItem: {
+            id: 'item-orig',
+            text: 'Blue'
+          },
+          conditionNames: ['cond1', 'cond2'],
+          linkableItems: [
+            {
+              text: 'Green',
+              value: 'Green'
+            }
+          ]
+        }
+      ]
     })
     // @ts-expect-error - just need a single row in the array. Not bothered about structure for this test
     jest.mocked(usedInConditions).mockReturnValueOnce([{}])
@@ -992,7 +1069,8 @@ describe('Editor v2 question details routes', () => {
       response: { headers, statusCode }
     } = await renderResponse(server, options)
 
-    expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(addErrorsToSession).not.toHaveBeenCalled()
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/p1/question/q1/details/resolve'
     )

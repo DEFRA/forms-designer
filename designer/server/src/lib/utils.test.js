@@ -6,7 +6,6 @@ import {
   buildDefinition,
   buildList,
   buildListItem,
-  buildQuestionPage,
   buildTextFieldComponent,
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithTwoPagesAndQuestions
@@ -147,37 +146,25 @@ describe('utils', () => {
         id: 'af1ed4f1-ef37-4e35-a5da-210f9e5fc336',
         list: list.id
       })
-      const page = buildQuestionPage({
-        components: [autoCompleteComponent]
-      })
-      const definition = buildDefinition({
-        pages: [page],
-        lists: [list]
-      })
-      const foundList = getListFromComponent(autoCompleteComponent, definition)
+      const lists = [list]
+      const foundList = getListFromComponent(autoCompleteComponent, lists)
       expect(foundList).toEqual(list)
     })
 
     it('should return undefined when not found', () => {
       const textFieldComponent = buildTextFieldComponent()
-      const page = buildQuestionPage({
-        components: [textFieldComponent]
-      })
-      const definition = buildDefinition({
-        pages: [page]
-      })
-      const foundList = getListFromComponent(textFieldComponent, definition)
+      const foundList = getListFromComponent(textFieldComponent, [])
       expect(foundList).toBeUndefined()
     })
 
     it('should return undefined component is undefined', () => {
-      expect(getListFromComponent(undefined, buildDefinition())).toBeUndefined()
+      expect(getListFromComponent(undefined, [])).toBeUndefined()
     })
 
     it('should return yes/no list', () => {
       const yesNoList = getListFromComponent(
         /** @type {ComponentDef} */ ({ type: ComponentType.YesNoField }),
-        buildDefinition()
+        buildDefinition().lists
       )
       expect(yesNoList?.id).toBe(yesNoListId)
     })

@@ -312,15 +312,10 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
  * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
  * @param { FormComponentsDef | undefined } questionFields
  * @param { ValidationFailure<FormEditor> | undefined } validation
- * @param {FormDefinition} definition
+ * @param {List[]} lists
  * @returns {GovukField['value']}
  */
-export function getFieldValue(
-  fieldName,
-  questionFields,
-  validation,
-  definition
-) {
+export function getFieldValue(fieldName, questionFields, validation, lists) {
   const validationResult = validation?.formValues[fieldName]
 
   if (validationResult || validationResult === '') {
@@ -341,7 +336,7 @@ export function getFieldValue(
       return questionFields?.shortDescription
     case 'autoCompleteOptions':
       return mapListToTextareaStr(
-        getListFromComponent(questionFields, definition)?.items
+        getListFromComponent(questionFields, lists)?.items
       )
   }
   return undefined
@@ -406,23 +401,13 @@ export function getQuestionFieldList(questionType) {
  * @param { InputFieldsComponentsDef | undefined } questionFields
  * @param { ComponentType | undefined } questionType
  * @param { ValidationFailure<FormEditor> | undefined } validation
- * @param {FormDefinition} definition
+ * @param {List[]} lists
  * @returns {GovukField[]}
  */
-export function getFieldList(
-  questionFields,
-  questionType,
-  validation,
-  definition
-) {
+export function getFieldList(questionFields, questionType, validation, lists) {
   const questionFieldList = getQuestionFieldList(questionType)
   return questionFieldList.map((fieldName) => {
-    const value = getFieldValue(
-      fieldName,
-      questionFields,
-      validation,
-      definition
-    )
+    const value = getFieldValue(fieldName, questionFields, validation, lists)
 
     const field = {
       ...allBaseSettingsFields[fieldName],
@@ -484,6 +469,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, List } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
