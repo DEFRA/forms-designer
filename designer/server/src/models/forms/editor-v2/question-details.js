@@ -254,7 +254,7 @@ export function handleAutocomplete(question, state, lists) {
   if (question.type !== ComponentType.AutocompleteField) {
     return lists
   }
-  const list = lists.find((list) => list.id === question.list)
+  const list = lists.find((lst) => lst.id === question.list)
   if (list && state?.listItems) {
     list.items = /** @type {Item[]} */ (
       state.listItems.map((item) => ({
