@@ -1423,3 +1423,61 @@ $home-page-breakpoint: 1220px;
     background-color: #00823b;
   }
 }
+
+.feature-partial-small {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #cce2d8 50%, #d4351c 50%);
+  background-size: cover;
+  vertical-align: middle;
+  line-height: 0;
+}
+
+.govuk-tag--dark-red {
+  background-color: #d4351c;
+  color: #ffffff;
+}
+
+.comparison {
+  // Vertical-only scrolling container
+  &-scroll {
+    max-height: 70vh;
+    // adjust as needed
+    overflow-y: auto;
+    // vertical scroll only
+    overflow-x: hidden;
+    // ignore horizontal
+  }
+
+  &-table {
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f3f2f1;
+      box-shadow: 0 2px 0 #d8dde0;
+    }
+
+    .feature-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+
+      .govuk-table__header & {
+        font-weight: 500;
+      }
+
+      svg {
+        flex-shrink: 0;
+      }
+    }
+
+    .govuk-tag {
+      min-width: 2rem;
+      text-align: center;
+      display: inline-block;
+    }
+  }
+}

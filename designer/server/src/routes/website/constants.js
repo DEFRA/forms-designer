@@ -75,7 +75,9 @@ export const FeatureIcons = {
   AVAILABLE: 'available',
   NOT_AVAILABLE: 'notAvailable',
   SOME_AVAILABLE: 'someAvailable',
-  API_FIRST: 'apiFirst'
+  API_FIRST: 'apiFirst',
+  PENCIL: 'pencil',
+  PENCIL_BOX: 'pencilBox'
 }
 
 /**

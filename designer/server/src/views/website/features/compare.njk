@@ -1,1 +1,83 @@
+{% from "feature-svg/macro.njk" import featureSvg %}
+
 <h2 class="govuk-heading-l ">Compare Form Designer vs Developer Plugin</h2>
+
+<div class="govuk-body-s govuk-!-margin-top-4" style="color:#6b7280;">
+  <strong>Legend:</strong>
+  <span class="govuk-tag govuk-tag--green" style="margin-left:1rem; vertical-align:middle;">✓</span>
+  Available
+  <span class="govuk-tag govuk-tag--red govuk-tag--dark-red" style="margin-left:1rem; vertical-align:middle;">—</span>
+  Not available
+  <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+  <span class="govuk-visually-hidden">Partially met</span>
+  Some features available
+</div>
+
+<!-- Product Overview Cards -->
+
+
+<!-- Feature Comparison Table -->
+<!-- Feature Comparison Table -->
+
+
+<table class="govuk-table govuk-!-margin-bottom-6 comparison-table">
+  <caption class="govuk-visually-hidden">Feature comparison: Form Designer vs Developer
+    Plugin
+  </caption>
+
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Feature</th>
+    <th scope="col" class="govuk-table__header">Form Designer</th>
+    <th scope="col" class="govuk-table__header">Developer Plugin</th>
+  </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+  {% for section in features.compare.table %}
+    <tr class="govuk-table__row comparison-category-header">
+      <th scope="colgroup" colspan="3" class="govuk-table__header">{{ section.title }}</th>
+    </tr>
+    {% for row in section.children %}
+      <tr class="govuk-table__row">
+        <th scope="row" colspan="1" class="govuk-table__header">
+          <span class="feature-info">
+              {{ featureSvg(row.icon) }}
+              {{ row.title }}
+          </span>
+          <span class="govuk-body-s govuk-!-margin-top-1">{{ row.description }}</span>
+        </th>
+        <td class="govuk-table__cell">
+          {% if row.designer == 'available' %}
+          <span class="govuk-tag govuk-tag--green">✓</span>
+          {% elif row.designer == 'notAvailable' %}
+          <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+          {% elif row.designer == 'someAvailable' %}
+          <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+          {% endif %}
+        </td>
+        <td class="govuk-table__cell">
+          {% if row.plugin == 'available' %}
+          <span class="govuk-tag govuk-tag--green">✓</span>
+          {% elif row.plugin == 'notAvailable' %}
+          <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+          {% elif row.plugin == 'someAvailable' %}
+          <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+          {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Legend for the comparison table -->
+<div class="govuk-body-s govuk-!-margin-top-4" style="color:#6b7280;">
+  <strong>Legend:</strong>
+  <span class="govuk-tag govuk-tag--green" style="margin-left:1rem; vertical-align:middle;">✓</span> Available
+  <span class="govuk-tag govuk-tag--red govuk-tag--dark-red" style="margin-left:1rem; vertical-align:middle;">—</span>
+  Not available
+  <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+  <span class="govuk-visually-hidden">Partially met</span>
+  Some features available
+</div>
