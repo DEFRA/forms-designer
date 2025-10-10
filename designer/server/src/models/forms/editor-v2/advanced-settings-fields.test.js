@@ -109,7 +109,8 @@ describe('editor-v2 - advanced settings fields model', () => {
         minLength: '5',
         maxLength: '15',
         regex: 'regex',
-        precision: '2'
+        precision: '2',
+        usePostcodeLookup: 'true'
       })
       expect(res).toEqual({
         type: 'type',
@@ -124,7 +125,8 @@ describe('editor-v2 - advanced settings fields model', () => {
           prefix: 'prefix',
           suffix: 'suffix',
           maxDaysInFuture: '50',
-          maxDaysInPast: '100'
+          maxDaysInPast: '100',
+          usePostcodeLookup: true
         },
         schema: {
           min: '5',
