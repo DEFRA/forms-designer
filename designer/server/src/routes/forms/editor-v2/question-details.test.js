@@ -1000,7 +1000,7 @@ describe('Editor v2 question details routes', () => {
       expect.anything(),
       // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       new Joi.ValidationError(
-        'Before you can save your changes, you need to add a new list item to replace the one you deleted.',
+        'Add a new option to replace the one you deleted, or delete the condition that uses it.',
         [],
         undefined
       ),

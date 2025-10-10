@@ -217,7 +217,7 @@ export function chooseResolutionRoute(request, h, stateId) {
   if (notResolvable) {
     const joiErr = createJoiError(
       'autoCompleteOptions',
-      'Before you can save your changes, you need to add a new list item to replace the one you deleted.'
+      'Add a new option to replace the one you deleted, or delete the condition that uses it.'
     )
 
     return redirectWithErrors(request, h, joiErr, errorKey, '#')
