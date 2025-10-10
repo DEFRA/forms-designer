@@ -1,7 +1,10 @@
-import { Scopes, isFormType } from '@defra/forms-model'
+import { FormDefinitionError, Scopes, isFormType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
+import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
+import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-delete.js'
@@ -31,7 +34,7 @@ export default [
     method: 'GET',
     path: ROUTE_FULL_PATH_PAGE,
     async handler(request, h) {
-      const { params, auth } = request
+      const { params, auth, yar } = request
       const { token } = auth.credentials
       const { slug, pageId, questionId } = params
 
@@ -39,13 +42,18 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
+      const badRequestErrorList = yar.id
+        ? yar.flash(sessionNames.badRequestErrorList)
+        : []
+
       return h.view(
         CONFIRMATION_PAGE_VIEW,
         viewModel.deleteQuestionConfirmationPageViewModel(
           metadata,
           definition,
           pageId,
-          questionId
+          questionId,
+          badRequestErrorList
         )
       )
     },
@@ -75,15 +83,43 @@ export default [
       const formId = metadata.id
       const definition = await forms.getDraftFormDefinition(formId, token)
 
-      // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
-      if (questionId && shouldDeleteQuestionOnly(pageId, definition)) {
-        await deleteQuestion(formId, token, pageId, questionId, definition)
-      } else {
-        await deletePage(formId, token, pageId, definition)
-      }
+      try {
+        // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
+        if (questionId && shouldDeleteQuestionOnly(pageId, definition)) {
+          await deleteQuestion(formId, token, pageId, questionId, definition)
+        } else {
+          await deletePage(formId, token, pageId, definition)
+        }
 
-      // Redirect POST to GET
-      return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
+        // Redirect POST to GET
+        return h
+          .redirect(editorv2Path(slug, 'pages'))
+          .code(StatusCodes.SEE_OTHER)
+      } catch (err) {
+        if (
+          isInvalidFormErrorType(
+            err,
+            FormDefinitionError.RefConditionComponentId
+          )
+        ) {
+          const errorList = buildSimpleErrorList([
+            'A condition is using a question on this page. Remove the condition before re-attempting its removal.'
+          ])
+
+          return h.view(CONFIRMATION_PAGE_VIEW, {
+            ...viewModel.deleteQuestionConfirmationPageViewModel(
+              metadata,
+              definition,
+              pageId,
+              questionId
+            ),
+            errorList
+          })
+        }
+
+        // Re-throw other errors to be handled by the error-pages plugin
+        throw err
+      }
     },
     options: {
       auth: {

@@ -25,7 +25,7 @@ import { requestTracing } from '~/src/common/helpers/request-tracing.js'
 import { sessionManager } from '~/src/common/helpers/session-manager.js'
 import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
-import errorPage from '~/src/plugins/errorPage.js'
+import errorPage from '~/src/plugins/error-pages/index.js'
 import router from '~/src/plugins/router.js'
 
 const logger = createLogger()

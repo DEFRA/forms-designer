@@ -16,7 +16,7 @@
       caption: pageCaption,
       useNewMasthead: useNewMasthead,
       backLink: backLink,
-      errorList: errorList
+      errorList: (errorList | default([])).concat((badRequestErrorList | default([])))
     }) %}
       {% if warning %}
         {{ govukWarningText(warning) }}

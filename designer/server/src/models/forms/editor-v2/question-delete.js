@@ -79,12 +79,14 @@ export function determineCancelPath(questionOrPage, components, questionId) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} [questionId]
+ * @param {ErrorDetailsItem[]} [badRequestErrorList]
  */
 export function deleteQuestionConfirmationPageViewModel(
   metadata,
   definition,
   pageId,
-  questionId
+  questionId,
+  badRequestErrorList = []
 ) {
   const formTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
@@ -120,7 +122,8 @@ export function deleteQuestionConfirmationPageViewModel(
         text: 'Cancel',
         classes: 'govuk-button--secondary'
       }
-    ]
+    ],
+    badRequestErrorList
   }
 }
 
@@ -183,4 +186,5 @@ export function deleteListItemConfirmationPageViewModel(
 
 /**
  * @import { ComponentDef, FormDefinition, FormMetadata, Page, QuestionSessionState } from '@defra/forms-model'
+ * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */
