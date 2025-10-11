@@ -7,7 +7,8 @@ import {
   hasContent,
   hasFormComponents,
   hasFormField,
-  hasNext
+  hasNext,
+  isSummaryPage
 } from '@defra/forms-model'
 
 import { findPathsTo } from '~/src/data/page/findPathsTo.js'
@@ -90,7 +91,9 @@ export function isControllerAllowed(data, page) {
 
   // Check if we already have a summary page
   const hasSummaryPage = pages.some(({ controller }) => {
-    return controllerNameFromPath(controller) === ControllerType.Summary
+    return isSummaryPage(
+      /** @type {Page} */ ({ controller: controllerNameFromPath(controller) })
+    )
   })
 
   // Check if we have a link from another page
@@ -119,10 +122,7 @@ export function isControllerAllowed(data, page) {
    * @param {Page} pageType
    */
   const isSummaryPageHidden = (pageType) => {
-    return (
-      pageType.controller === ControllerType.Summary &&
-      (hasSummaryPage || hasLinkTo)
-    )
+    return isSummaryPage(pageType) && (hasSummaryPage || hasLinkTo)
   }
 
   /**

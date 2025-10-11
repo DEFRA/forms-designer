@@ -17,8 +17,10 @@ export {
   hasRepeater,
   includesFileUploadField,
   isControllerName,
+  isSummaryPage,
   omitFileUploadComponent,
-  showRepeaterSettings
+  showRepeaterSettings,
+  summaryPageControllers
 } from '~/src/pages/helpers.js'
 
 export { ControllerPath, ControllerType } from '~/src/pages/enums.js'

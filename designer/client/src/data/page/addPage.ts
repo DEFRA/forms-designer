@@ -1,6 +1,7 @@
 import {
   ControllerType,
   Engine,
+  isSummaryPage,
   type FormDefinition,
   type Page
 } from '@defra/forms-model'
@@ -24,7 +25,7 @@ export function addPage(data: FormDefinition, page: Page) {
         const lastPage = data.pages.at(data.pages.length - 1)
 
         // If the last page is a "Summary" page, add this new page before it
-        if (lastPage?.controller === ControllerType.Summary) {
+        if (isSummaryPage(lastPage)) {
           definition.pages.splice(data.pages.length - 1, 0, page)
         } else {
           definition.pages.push(page)

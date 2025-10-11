@@ -2,7 +2,8 @@ import {
   ControllerType,
   hasComponents,
   hasComponentsEvenIfNoNext,
-  hasConditionSupport
+  hasConditionSupport,
+  isSummaryPage
 } from '@defra/forms-model'
 
 import { stringHasValue } from '~/src/lib/utils.js'
@@ -32,7 +33,7 @@ export function constructReorderPage(page, focus) {
  * @param {Page[]} pages
  */
 export function excludeEndPages(pages) {
-  return pages.filter((page) => page.controller !== ControllerType.Summary)
+  return pages.filter((page) => !isSummaryPage(page))
 }
 
 /**
