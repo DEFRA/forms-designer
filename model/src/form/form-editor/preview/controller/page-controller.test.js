@@ -209,9 +209,9 @@ describe('page-controller', () => {
       const { pageController } = buildController()
       const expectedPageComponent = {
         model: {
-          id: 'inputField',
+          id: expect.stringContaining('inputField'),
           classes: '',
-          name: 'inputField',
+          name: expect.stringContaining('inputField'),
           label: {
             classes: 'govuk-label--m',
             text: 'Question title'

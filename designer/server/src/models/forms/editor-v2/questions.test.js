@@ -366,12 +366,12 @@ describe('editor-v2 - questions model', () => {
                 classes: '',
                 text: ''
               },
-              id: 'inputField',
+              id: expect.stringContaining('inputField'),
               label: {
                 classes: 'govuk-label--m',
                 text: 'What type of farming do you do?'
               },
-              name: 'inputField'
+              name: expect.stringContaining('inputField')
             },
             questionType: 'TextField'
           }
@@ -412,12 +412,12 @@ describe('editor-v2 - questions model', () => {
                 classes: '',
                 text: ''
               },
-              id: 'inputField',
+              id: expect.stringContaining('inputField'),
               label: {
                 classes: 'govuk-label--l',
                 text: 'What type of farming do you do?'
               },
-              name: 'inputField'
+              name: expect.stringContaining('inputField')
             },
             questionType: ComponentType.TextField
           }

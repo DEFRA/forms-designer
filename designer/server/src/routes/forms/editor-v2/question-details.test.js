@@ -172,7 +172,7 @@ describe('Editor v2 question details routes', () => {
     expect($cardHeading).toHaveClass('govuk-heading-l')
     expect($previewHeading).toHaveTextContent('This is your first field')
     expect($previewHeading).toBeInstanceOf(HTMLLabelElement)
-    expect($previewHeading.getAttribute('for')).toBe('inputField')
+    expect($previewHeading.getAttribute('for')).toContain('inputField')
 
     expect($actions).toHaveLength(5)
     expect($actions[2]).toHaveTextContent('Preview error messages')

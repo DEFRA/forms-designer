@@ -77,9 +77,9 @@ describe('question', () => {
       const res = SetupPreview.Question()
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         classes: '',
-        name: 'inputField',
+        name: expect.stringContaining('inputField'),
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'
@@ -122,9 +122,9 @@ describe('question', () => {
       res.hintText = ''
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         classes: '',
-        name: 'inputField',
+        name: expect.stringContaining('inputField'),
         label: {
           text: 'Question',
           classes: 'govuk-label--l'

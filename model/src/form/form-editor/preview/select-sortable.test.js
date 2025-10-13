@@ -15,8 +15,8 @@ describe('SelectSortableQuestion', () => {
     const renderer = new QuestionRendererStub(jest.fn())
     const select = new SelectSortableQuestion(elements, renderer)
     expect(select.renderInput).toEqual({
-      id: 'inputField',
-      name: 'inputField',
+      id: expect.stringContaining('inputField'),
+      name: expect.stringContaining('inputField'),
       label: {
         text: 'Which quest would you like to pick?',
         classes: 'govuk-label--l'
@@ -74,8 +74,8 @@ describe('SelectSortableQuestion', () => {
     const renderer = new QuestionRendererStub(jest.fn())
     const select = new SelectSortableQuestion(elements, renderer)
     expect(select.renderInput).toEqual({
-      id: 'inputField',
-      name: 'inputField',
+      id: expect.stringContaining('inputField'),
+      name: expect.stringContaining('inputField'),
       label: {
         text: 'Which quest would you like to pick?',
         classes: 'govuk-label--l'

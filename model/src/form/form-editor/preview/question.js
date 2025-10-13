@@ -1,3 +1,4 @@
+import { randomId } from '~/src/common/random-id.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { ComponentElements } from '~/src/form/form-editor/preview/component-elements.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
@@ -57,7 +58,7 @@ export class Question extends PreviewComponent {
    * @type {string}
    * @protected
    */
-  _fieldName = 'inputField'
+  _fieldName = `inputField${randomId()}`
 
   /**
    * @param {QuestionElements} htmlElements
