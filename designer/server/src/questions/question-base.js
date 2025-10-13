@@ -72,9 +72,16 @@ export class QuestionBase {
     const questionFieldsOverride = /** @type {ComponentDef} */ (
       state?.questionDetails ?? details.question
     )
-    const basePageFields = this.applyValuesAndErrors(validation, definition)
-
-    // getFieldList(
+    const basePageFields = this.applyValuesAndErrors(
+      this.baseFields,
+      validation,
+      questionFieldsOverride
+    )
+    const extraFields = this.applyValuesAndErrors(
+      this.advancedFields,
+      validation,
+      questionFieldsOverride
+    )
 
     const uploadFields = {}
     const enhancedFieldList = /** @type {GovukField[]} */ ([])
@@ -97,7 +104,7 @@ export class QuestionBase {
       questionId,
       basePageFields,
       uploadFields,
-      extraFields: this.advancedFields,
+      extraFields,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       errorTemplates,
       cardTitle: `Question ${details.questionNum}`,
@@ -126,11 +133,12 @@ export class QuestionBase {
   }
 
   /**
+   * @param {GovukField[]} fields
    * @param { ValidationFailure<FormEditor> | undefined } validation
-   * @param {FormDefinition} definition
+   * @param {ComponentDef} questionFields
    * @returns {GovukField[]}
    */
-  applyValuesAndErrors(validation, definition) {
+  applyValuesAndErrors(fields, validation, questionFields) {
     return this.baseFields.map(({ name }) => {
       const fieldName =
         /** @type { keyof Omit<FormEditorGovukField, 'errorMessage'> } */ (name)
@@ -140,7 +148,7 @@ export class QuestionBase {
         // @ts-expect-error - temporary disable linting
         fieldDef,
         validation,
-        definition
+        questionFields
       )
 
       const field = {
