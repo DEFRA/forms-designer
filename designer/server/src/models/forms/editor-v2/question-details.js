@@ -266,7 +266,6 @@ export function questionDetailsViewModel(
   const questionType = state?.questionType
   // prettier-ignore
   const details = getDetails(metadata, definition, pageId, questionId, questionType)
-  const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
   )
@@ -292,7 +291,7 @@ export function questionDetailsViewModel(
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
-  const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
+  const pageTitle = `Edit question ${details.questionNum} - ${details.pageTitle}`
   const errorTemplates = getErrorTemplates(questionType)
 
   return {

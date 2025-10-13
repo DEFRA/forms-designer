@@ -27,7 +27,10 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { requiresPageTitle } from '~/src/lib/utils.js'
+import {
+  getComponentFromDefinition,
+  requiresPageTitle
+} from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -36,6 +39,7 @@ import { baseSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { createQuestionClass } from '~/src/questions/index.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
   handleListConflict,
@@ -255,6 +259,32 @@ export default [
         pageId,
         questionId
       )
+
+      const component = getComponentFromDefinition(
+        definition,
+        pageId,
+        questionId
+      )
+      const questionType =
+        state?.questionDetails?.type ??
+        state?.questionType ??
+        component?.type ??
+        ComponentType.Html
+      const questionClass = createQuestionClass(questionType)
+      if (questionClass) {
+        return h.view(
+          'forms/editor-v2/question-details',
+          questionClass.getViewModel(
+            metadata,
+            definition,
+            pageId,
+            questionId,
+            stateId,
+            validation,
+            state
+          )
+        )
+      }
 
       // Intercept operations if say a radio or checkbox
       const redirectAnchorOrUrl = handleEnhancedActionOnGet(yar, stateId, query)
