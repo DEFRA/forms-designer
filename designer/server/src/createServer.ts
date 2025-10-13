@@ -213,5 +213,16 @@ export async function createServer() {
   await server.register(requestTracing)
   await server.register(errorPage)
 
+  server.ext('onPreResponse', (request: Request, h: ResponseToolkit) => {
+    const { response } = request
+
+    if ('isBoom' in response) {
+      return h.continue
+    }
+
+    response.header('x-robots-tag', 'noindex, nofollow')
+    return h.continue
+  })
+
   return server
 }

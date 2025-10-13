@@ -16,7 +16,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -333,7 +333,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -620,7 +620,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>

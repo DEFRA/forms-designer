@@ -16,7 +16,7 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -325,7 +325,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -600,7 +600,7 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>

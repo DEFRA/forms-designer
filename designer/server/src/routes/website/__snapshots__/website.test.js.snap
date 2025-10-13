@@ -16,7 +16,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -162,6 +162,7 @@ Support
 
   </div>
 
+  <meta name="robots" content="noindex, nofollow">
 
 
 <div class="app-masthead">
@@ -1394,7 +1395,7 @@ exports[`Health check route /get-started should load get Get Started page 1`] = 
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -1540,6 +1541,7 @@ Support
 
   </div>
 
+  <meta name="robots" content="noindex, nofollow">
 
   
 <div class="app-masthead">
@@ -1699,7 +1701,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -1845,6 +1847,7 @@ Support
 
   </div>
 
+  <meta name="robots" content="noindex, nofollow">
 
   
 <div class="app-masthead">
@@ -2343,7 +2346,7 @@ exports[`Health check route /resources should load Does this need to be... page 
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -2489,6 +2492,7 @@ Support
 
   </div>
 
+  <meta name="robots" content="noindex, nofollow">
 
   
 <div class="app-masthead">
@@ -2676,7 +2680,7 @@ exports[`Health check route /resources/accessibility-and-inclusion should load A
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -2822,6 +2826,7 @@ Support
 
   </div>
 
+  <meta name="robots" content="noindex, nofollow">
 
   
 <div class="app-masthead">
@@ -3105,7 +3110,7 @@ exports[`Health check route /support should shows the Defra Forms Website Suppor
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -3251,6 +3256,7 @@ Resources
 
   </div>
 
+  <meta name="robots" content="noindex, nofollow">
 
 
 <div class="app-masthead">
