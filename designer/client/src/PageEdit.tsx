@@ -8,7 +8,6 @@ import {
   hasFormComponents,
   hasNext,
   hasRepeater,
-  isSummaryPage,
   randomId,
   slugify,
   type Page
@@ -274,7 +273,7 @@ export class PageEdit extends Component<Props, State> {
     }
 
     // Path '/summary' not allowed
-    if (!isSummaryPage({ controller } as Page)) {
+    if (controller !== ControllerType.Summary) {
       errors.path ??= validateCustom('page-path', path, {
         message: 'page.errors.pathSummary',
         schema: schema.string().disallow(ControllerPath.Summary)
