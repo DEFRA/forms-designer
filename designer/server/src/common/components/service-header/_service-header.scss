@@ -152,8 +152,8 @@ $defra-link-colour-hover: govuk-shade($defra-link-colour, 50%);
 .one-login-header {
   @include govuk-font($size: 19);
   color: govuk-colour("white");
-  background: govuk-colour("black");
-  border-bottom: govuk-spacing(2) solid $defra-brand-colour;
+  background: $defra-brand-colour;
+  border-bottom: 1px solid $defra-brand-colour;
   position: relative;
 }
 
