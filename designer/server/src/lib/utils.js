@@ -167,10 +167,10 @@ export function isListComponent(component) {
 /**
  * Finds the list in the component, if it exists
  * @param { ComponentDef | undefined } component
- * @param {List[]} lists
+ * @param {FormDefinition} definition
  * @returns { List | undefined }
  */
-export function getListFromComponent(component, lists) {
+export function getListFromComponent(component, definition) {
   if (!component) {
     return undefined
   }
@@ -182,7 +182,7 @@ export function getListFromComponent(component, lists) {
   const listId = hasListField(component) ? component.list : undefined
 
   if (listId) {
-    return lists.find((list) => list.id === listId)
+    return definition.lists.find((list) => list.id === listId)
   }
 
   return undefined
@@ -219,7 +219,7 @@ export function findUniquelyMappedList(definition, pageId, componentId) {
 
   const { id } = component
 
-  const list = getListFromComponent(component, definition.lists)
+  const list = getListFromComponent(component, definition)
 
   if (!list) {
     return undefined

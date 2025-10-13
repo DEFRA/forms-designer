@@ -682,38 +682,44 @@ describe('editor-v2 - question details model', () => {
 
   describe('handleAutocomplete', () => {
     test('should ignore if not autocomplete', () => {
-      const lists = /** @type {List[]} */ ([])
+      const definition = buildDefinition()
       const state = {
         listItems: [{ text: 'item1', value: 'item1' }]
       }
       const question = /** @type {ComponentDef} */ ({
         type: ComponentType.TextField
       })
-      expect(handleAutocomplete(question, state, lists)).toEqual(lists)
+      expect(handleAutocomplete(question, state, definition)).toEqual(
+        definition
+      )
     })
 
     test('should ignore if no state', () => {
-      const lists = /** @type {List[]} */ ([])
+      const definition = buildDefinition()
       const state = {}
       const question = /** @type {ComponentDef} */ ({
         type: ComponentType.AutocompleteField
       })
-      expect(handleAutocomplete(question, state, lists)).toEqual(lists)
+      expect(handleAutocomplete(question, state, definition)).toEqual(
+        definition
+      )
     })
 
     test('should process', () => {
-      const lists = /** @type {List[]} */ ([
-        {
-          id: 'my-list-id',
-          name: 'my-list-name',
-          type: 'string',
-          title: 'List for test question',
-          items: [
-            { id: 'id1', text: 'Item 1', value: 'item1' },
-            { id: 'id2', text: 'Item 2', value: 'item2' }
-          ]
-        }
-      ])
+      const definition = buildDefinition({
+        lists: /** @type {List[]} */ ([
+          {
+            id: 'my-list-id',
+            name: 'my-list-name',
+            type: 'string',
+            title: 'List for test question',
+            items: [
+              { id: 'id1', text: 'Item 1', value: 'item1' },
+              { id: 'id2', text: 'Item 2', value: 'item2' }
+            ]
+          }
+        ])
+      })
       const state = {
         listItems: [{ id: 'id3', text: 'Item 3', value: 'item3' }]
       }
@@ -721,7 +727,7 @@ describe('editor-v2 - question details model', () => {
         type: ComponentType.AutocompleteField,
         list: 'my-list-id'
       })
-      expect(handleAutocomplete(question, state, lists)).toEqual([
+      expect(handleAutocomplete(question, state, definition).lists).toEqual([
         {
           id: 'my-list-id',
           name: 'my-list-name',

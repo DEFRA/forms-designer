@@ -248,13 +248,13 @@ export function getSkipLink() {
 /**
  * @param {ComponentDef} question
  * @param { QuestionSessionState | undefined } state
- * @param {List[]} lists
+ * @param {FormDefinition} definition
  */
-export function handleAutocomplete(question, state, lists) {
+export function handleAutocomplete(question, state, definition) {
   if (question.type !== ComponentType.AutocompleteField) {
-    return lists
+    return definition
   }
-  const list = lists.find((lst) => lst.id === question.list)
+  const list = definition.lists.find((lst) => lst.id === question.list)
   if (list && state?.listItems) {
     list.items = /** @type {Item[]} */ (
       state.listItems.map((item) => ({
@@ -264,7 +264,7 @@ export function handleAutocomplete(question, state, lists) {
       }))
     )
   }
-  return lists
+  return definition
 }
 
 /**
@@ -296,7 +296,7 @@ export function questionDetailsViewModel(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
     validation,
-    handleAutocomplete(questionFieldsOverride, state, definition.lists)
+    handleAutocomplete(questionFieldsOverride, state, definition)
   )
   const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
   const extraFields = /** @type {GovukField[]} */ (
