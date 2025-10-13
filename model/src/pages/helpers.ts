@@ -187,3 +187,14 @@ export function getPageFromDefinition(
 ): Page | undefined {
   return definition.pages.find((x) => x.id === pageId)
 }
+
+export const summaryPageControllers = [
+  ControllerType.Summary,
+  ControllerType.SummaryWithConfirmationEmail
+]
+
+export function isSummaryPage(page: Page | undefined) {
+  return summaryPageControllers.includes(
+    page?.controller ?? ControllerType.Page
+  )
+}
