@@ -218,19 +218,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M8 9H16M8 12H16M8 15H13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/library.svg" alt="Icon for Library of existing forms" role="img" />
             </div>
             <h3 class="govuk-heading-s">Library of existing forms</h3>
           </div>
@@ -246,20 +234,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M12 16V12M12 8H12.01" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/form-info.svg" alt="Icon for Form information" role="img" />
             </div>
             <h3 class="govuk-heading-s">Form information</h3>
           </div>
@@ -292,25 +267,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="6" width="6" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="11" width="6" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="16" width="6" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="14" y="6" width="5" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="14" y="11" width="5" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="14" y="16" width="5" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/page-types.svg" alt="Icon for Page types" role="img" />
             </div>
             <h3 class="govuk-heading-s">Page types</h3>
           </div>
@@ -333,20 +290,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.54 21H20.46A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M12 9V13M12 17H12.01" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/error-messages.svg" alt="Icon for Error messages" role="img" />
             </div>
             <h3 class="govuk-heading-s">Error messages</h3>
           </div>
@@ -362,20 +306,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="6" width="18" height="12" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M7 10H17M7 14H13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/answer-limits.svg" alt="Icon for Answer limits" role="img" />
             </div>
             <h3 class="govuk-heading-s">Answer limits</h3>
           </div>
@@ -391,21 +322,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M9.09 9C9.3251 8.33167 9.78915 7.76811 10.4 7.40921C11.0108 7.05031 11.7289 6.91894 12.4272 7.03871C13.1255 7.15849 13.7588 7.52252 14.2151 8.06375C14.6713 8.60499 14.9211 9.29202 14.92 10C14.92 12 11.92 13 11.92 13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M12 17H12.01" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/form-guidance.svg" alt="Icon for Form guidance" role="img" />
             </div>
             <h3 class="govuk-heading-s">Form guidance</h3>
           </div>
@@ -421,23 +338,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M12 20V12M12 12L8 8M12 12L16 8" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <circle cx="12" cy="20" r="1.5" fill="#0B0C0C" />
-      <circle cx="8" cy="8" r="1.5" fill="#0B0C0C" />
-      <circle cx="16" cy="8" r="1.5" fill="#0B0C0C" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/conditions.svg" alt="Icon for Conditions" role="img" />
             </div>
             <h3 class="govuk-heading-s">Conditions</h3>
           </div>
@@ -453,23 +354,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="1" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M6 7H15M6 9H15M6 11H12" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-      <circle cx="12" cy="16" r="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <circle cx="12" cy="16" r="1" stroke="#0B0C0C" stroke-width="1" fill="none" />
-      <path d="M12 13L12 15M10 16L14 16" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/form-declaration.svg" alt="Icon for Form declaration" role="img" />
             </div>
             <h3 class="govuk-heading-s">Form declaration</h3>
           </div>
@@ -495,21 +380,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <text x="6" y="10" font-family="Arial" font-size="6" fill="#0B0C0C" font-weight="bold">Aa</text>
-      <text x="6" y="18" font-family="Arial" font-size="6" fill="#0B0C0C" font-weight="bold">123</text>
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/text-numbers.svg" alt="Icon for Text &amp; Numbers" role="img" />
             </div>
             <h3 class="govuk-heading-s">Text &amp; Numbers</h3>
           </div>
@@ -534,21 +405,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M21 15V19C21 19.5304 20.7893 20.0391 20.4142 20.4142C20.0391 20.7893 19.5304 21 19 21H5C4.46957 21 3.96086 20.7893 3.58579 20.4142C3.21071 20.0391 3 19.5304 3 19V15" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M7 10L12 15L17 10" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M12 15V3" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/file-upload.svg" alt="Icon for File upload" role="img" />
             </div>
             <h3 class="govuk-heading-s">File upload</h3>
           </div>
@@ -574,19 +431,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/yes-no.svg" alt="Icon for Yes or no" role="img" />
             </div>
             <h3 class="govuk-heading-s">Yes or no</h3>
           </div>
@@ -618,21 +463,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="4" y="4" width="8" height="12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="12" y="8" width="8" height="12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M8 8H12M8 10H12M8 12H10" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/repeating-questions.svg" alt="Icon for Repeating questions" role="img" />
             </div>
             <h3 class="govuk-heading-s">Repeating questions</h3>
           </div>
@@ -648,20 +479,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M1 12S5 4 12 4S23 12 23 12S19 20 12 20S1 12 1 12Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <circle cx="12" cy="12" r="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/preview.svg" alt="Icon for Previewing a form" role="img" />
             </div>
             <h3 class="govuk-heading-s">Previewing a form</h3>
           </div>
@@ -677,20 +495,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <polyline points="22,6 12,13 2,6" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="Icon for Submitted forms" role="img" />
             </div>
             <h3 class="govuk-heading-s">Submitted forms</h3>
           </div>
@@ -719,20 +524,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <polyline points="22,6 12,13 2,6" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
             </div>
             <h3 class="govuk-heading-s">Confirmation emails</h3>
           </div>
@@ -754,19 +546,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M19 21L12 16L5 21V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H17C17.5304 3 18.0391 3.21071 18.4142 3.58579C18.7893 3.96086 19 4.46957 19 5V21Z" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/save-exit.svg" alt="Icon for Save and exit" role="img" />
             </div>
             <h3 class="govuk-heading-s">Save and exit</h3>
           </div>
@@ -782,20 +562,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M20 21V19C20 17.9391 19.5786 16.9217 18.8284 16.1716C18.0783 15.4214 17.0609 15 16 15H8C6.93913 15 5.92172 15.4214 5.17157 16.1716C4.42143 16.9217 4 17.9391 4 19V21" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <circle cx="12" cy="7" r="4" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/user-management.svg" alt="Icon for User management" role="img" />
             </div>
             <h3 class="govuk-heading-s">User management</h3>
           </div>
@@ -811,22 +578,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M14 2V8H20" stroke="#0B0C0C" stroke-width="2" />
-      <path d="M16 13H8M16 17H8M10 9H8" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/auditing.svg" alt="Icon for Auditing" role="img" />
             </div>
             <h3 class="govuk-heading-s">Auditing</h3>
           </div>
@@ -842,21 +594,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M2 17L12 22L22 17" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M2 12L12 17L22 12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for API integration" role="img" />
             </div>
             <h3 class="govuk-heading-s">API integration</h3>
           </div>
@@ -872,22 +610,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="6" width="3" height="12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="11" y="6" width="3" height="12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="16" y="6" width="3" height="12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/page-sections.svg" alt="Icon for Page sections" role="img" />
             </div>
             <h3 class="govuk-heading-s">Page sections</h3>
           </div>
@@ -903,21 +626,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-      <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M14 2V8H20" stroke="#0B0C0C" stroke-width="2" />
-      <path d="M16 13H8M16 17H8M10 9H8" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/data-output.svg" alt="Icon for Data output" role="img" />
             </div>
             <h3 class="govuk-heading-s">Data output</h3>
           </div>
@@ -958,21 +667,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M12 2L2 7L12 12L22 7L12 2Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M2 17L12 22L22 17" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M2 12L12 17L22 12" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for Seamless Integration" role="img" />
             </div>
             <h3 class="govuk-heading-s">Seamless Integration</h3>
           </div>
@@ -988,22 +683,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M8 3H5C3.9 3 3 3.9 3 5V19C3 20.1 3.9 21 5 21H19C20.1 21 21 20.1 21 19V16" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M15 3H21V9" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M10 14L8 16L10 18" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-      <path d="M14 10L16 12L14 14" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/api-first.svg" alt="Icon for API-first Design" role="img" />
             </div>
             <h3 class="govuk-heading-s">API-first Design</h3>
           </div>
@@ -1019,20 +699,7 @@ Support
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              
-    
-    
-    
-    
-    
-    
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M7 10H17M7 14H13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
-    
+              <img src="/assets/images/website/svgs/custom-styling.svg" alt="Icon for Custom Styling" role="img" />
             </div>
             <h3 class="govuk-heading-s">Custom Styling</h3>
           </div>
@@ -1071,23 +738,16 @@ Support
   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="compare">
     <h2 class="govuk-heading-l ">Compare Form Designer vs Developer Plugin</h2>
     
-    <div class="govuk-body-s govuk-!-margin-top-4" style="color:#6b7280;">
+    <div class="govuk-body-s govuk-!-margin-top-4 comparison-legend">
       <strong>Legend:</strong>
-      <span class="govuk-tag govuk-tag--green" style="margin-left:1rem; vertical-align:middle;">✓</span>
+      <span class="govuk-tag govuk-tag--green">✓</span>
       Available
-      <span class="govuk-tag govuk-tag--red govuk-tag--dark-red" style="margin-left:1rem; vertical-align:middle;">—</span>
+      <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
       Not available
-      <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+      <span class="feature-partial-small" aria-hidden="true"></span>
       <span class="govuk-visually-hidden">Partially met</span>
       Some features available
     </div>
-    
-    <!-- Product Overview Cards -->
-    
-    
-    <!-- Feature Comparison Table -->
-    <!-- Feature Comparison Table -->
-    
     
     <table class="govuk-table govuk-!-margin-bottom-6 comparison-table">
       <caption class="govuk-visually-hidden">Feature comparison: Form Designer vs Developer
@@ -1127,10 +787,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Search for forms by title, keyword, author and status.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1144,21 +806,18 @@ Support
     
     
     
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M12 16V12M12 8H12.01" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
     
                   Form information
               </span>
               <span class="govuk-body-s govuk-!-margin-top-1">Manage form metadata, titles, descriptions and settings.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1182,10 +841,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Forms can be persisted and loaded in any service of your choosing. Example options: filesystem, database, API, etc.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
@@ -1202,21 +863,18 @@ Support
     
     
     
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none"></rect>
-      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="#0B0C0C" stroke-width="2" fill="none"></path>
-    </svg>
-    
     
                   Visual form editor
               </span>
               <span class="govuk-body-s govuk-!-margin-top-1">Work on your form with a web-based graphical user interface. Live previews, etc.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1229,16 +887,6 @@ Support
     
     
     
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="6" width="6" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="11" width="6" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="6" y="16" width="6" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="14" y="6" width="5" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="14" y="11" width="5" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <rect x="14" y="16" width="5" height="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-    </svg>
     
     
                   Page types
@@ -1246,10 +894,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Standard page types for common form patterns and layouts.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1262,11 +912,6 @@ Support
     
     
     
-    
-    <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none"></rect>
-      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="#0B0C0C" stroke-width="2" fill="none"></path>
-    </svg>
     
     
                   Custom page types
@@ -1274,10 +919,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Developers can build bespoke pages using Javascript and Nunjucks, e.g. custom visuals, calls out to backend APIs, etc.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1290,11 +937,6 @@ Support
     
     
     
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M10.29 3.86L1.82 18A2 2 0 0 0 3.54 21H20.46A2 2 0 0 0 22.18 18L13.71 3.86A2 2 0 0 0 10.29 3.86Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M12 9V13M12 17H12.01" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
     
     
                   Error messages
@@ -1302,10 +944,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1"> Customisable validation error messages for form fields.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1318,11 +962,6 @@ Support
     
     
     
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="6" width="18" height="12" rx="2" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M7 10H17M7 14H13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
     
     
                   Answer limits
@@ -1330,10 +969,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Set character limits and validation rules for text input fields.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1347,22 +988,18 @@ Support
     
     
     
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <circle cx="12" cy="12" r="10" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M9.09 9C9.3251 8.33167 9.78915 7.76811 10.4 7.40921C11.0108 7.05031 11.7289 6.91894 12.4272 7.03871C13.1255 7.15849 13.7588 7.52252 14.2151 8.06375C14.6713 8.60499 14.9211 9.29202 14.92 10C14.92 12 11.92 13 11.92 13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-      <path d="M12 17H12.01" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-    </svg>
-    
     
                   Form guidance
               </span>
               <span class="govuk-body-s govuk-!-margin-top-1">Add help text and guidance to help users complete forms correctly.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1390,10 +1027,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Show or hide questions and pages based on previous answers.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1406,14 +1045,6 @@ Support
     
     
     
-    
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="1" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M6 7H15M6 9H15M6 11H12" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-      <circle cx="12" cy="16" r="3" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <circle cx="12" cy="16" r="1" stroke="#0B0C0C" stroke-width="1" fill="none" />
-      <path d="M12 13L12 15M10 16L14 16" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
     
     
                   Form declaration
@@ -1421,10 +1052,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Legal declarations and terms that users must agree to before submitting.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1438,21 +1071,18 @@ Support
     
     
     
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-      <path d="M4 4H20C21.1 4 22 4.9 22 6V18C22 19.1 21.1 20 20 20H4C2.9 20 2 19.1 2 18V6C2 4.9 2.9 4 4 4Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-      <path d="M7 10H17M7 14H13" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
-    </svg>
-    
     
                   Fully customisable page content
               </span>
               <span class="govuk-body-s govuk-!-margin-top-1">Form designer allows you to add questions (input fields, selection fields) on a page. Developer plugin allows you to add components (input fields, selection fields, guidance, HTML, etc) to a page. Developer plugin does not enforce the order of these components.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
@@ -1481,10 +1111,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Standard text input fields for names, addresses, numbers and other alphanumeric data.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1510,10 +1142,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Allow users to upload documents, images and other files as part of their form submission.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
@@ -1540,10 +1174,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Simple radio button selection for yes/no questions and confirmations.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
@@ -1572,10 +1208,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Allow users to add multiple instances of the same question, such as multiple addresses or dependents.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1600,10 +1238,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Test how your form looks and behaves before publishing it to users.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1628,10 +1268,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">View and manage form submissions from users, including data export and analysis.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1655,10 +1297,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Trigger API calls on certain events, e.g. loading or saving a page. Change page visuals with code, e.g. using previous answers, API responses, etc.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1684,10 +1328,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Reusable page layouts and designs that can be applied across multiple forms.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
@@ -1715,10 +1361,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Automatically send confirmation emails to users after they submit a form.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1742,10 +1390,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">The plugin offers an API so save and return can function, however service teams using the plugin are responsible for integrating with this and providing the user interface (e.g. implementing a portal with user auth that allows them to resume an application, or their own magic link implementation, etc). Only the hosted Designer offers a complete end-to-end save and exit feature.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+                <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1770,10 +1420,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Manage user accounts, permissions and access controls for form administration.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1800,10 +1452,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Track changes and maintain audit trails for compliance and governance purposes.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1829,10 +1483,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Connect forms to external systems and services through REST APIs and webhooks.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1859,10 +1515,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Organise form content into logical sections for better user experience and navigation.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1888,10 +1546,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Export form submissions in various formats including JSON, CSV and PDF for analysis and processing.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
@@ -1918,10 +1578,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Defra Forms team take care of hosting the service so it&#39;s always accessible by members of the public. We take care of hosting, monitoring, maintenance, running costs, etc.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1947,10 +1609,12 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Service teams take care of hosting the form themselves, either as a standalone form or integrated into their existing service.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
           <tr class="govuk-table__row">
@@ -1982,22 +1646,24 @@ Support
               <span class="govuk-body-s govuk-!-margin-top-1">Forms can be embedded in existing applications.</span>
             </th>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
             </td>
             <td class="govuk-table__cell">
-              <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
             </td>
         </tr>
       </tbody>
     </table>
     
     <!-- Legend for the comparison table -->
-    <div class="govuk-body-s govuk-!-margin-top-4" style="color:#6b7280;">
+    <div class="govuk-body-s govuk-!-margin-top-4 comparison-legend">
       <strong>Legend:</strong>
-      <span class="govuk-tag govuk-tag--green" style="margin-left:1rem; vertical-align:middle;">✓</span> Available
-      <span class="govuk-tag govuk-tag--red govuk-tag--dark-red" style="margin-left:1rem; vertical-align:middle;">—</span>
+      <span class="govuk-tag govuk-tag--green">✓</span> Available
+      <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
       Not available
-      <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+      <span class="feature-partial-small" aria-hidden="true"></span>
       <span class="govuk-visually-hidden">Partially met</span>
       Some features available
     </div>
