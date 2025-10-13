@@ -28,6 +28,7 @@ import {
   hasFormComponents,
   hasNext,
   hasRepeater,
+  isSummaryPage,
   omitFileUploadComponent,
   showRepeaterSettings
 } from '~/src/pages/helpers.js'
@@ -439,6 +440,35 @@ describe('helpers', () => {
         pages: []
       })
       expect(getPageFromDefinition(definition, pageId)).toBeUndefined()
+    })
+  })
+
+  describe('isSummaryPage', () => {
+    it('should return true for SummaryController', () => {
+      const page = {
+        controller: ControllerType.Summary,
+        path: '/summary',
+        title: 'Summary'
+      } as Page
+      expect(isSummaryPage(page)).toBe(true)
+    })
+
+    it('should return true for SummaryWithConfirmationEmailController', () => {
+      const page = {
+        controller: ControllerType.SummaryWithConfirmationEmail,
+        path: '/summary',
+        title: 'Summary'
+      } as Page
+      expect(isSummaryPage(page)).toBe(true)
+    })
+
+    it('should return false for non-summary controller', () => {
+      const page = {
+        controller: ControllerType.Page,
+        path: '/other',
+        title: 'Other'
+      } as Page
+      expect(isSummaryPage(page)).toBe(false)
     })
   })
 })

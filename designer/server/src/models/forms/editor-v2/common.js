@@ -1,11 +1,11 @@
 import {
   ConditionsModel,
-  ControllerType,
   convertConditionWrapperFromV2,
   hasComponents,
   hasComponentsEvenIfNoNext,
   isConditionWrapperV2,
-  isFormType
+  isFormType,
+  isSummaryPage
 } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -28,10 +28,7 @@ export const CHANGES_SAVED_SUCCESSFULLY = 'Changes saved successfully'
  */
 export function getPageNum(definition, pageId) {
   if (pageId === 'new') {
-    return (
-      definition.pages.filter((x) => x.controller !== ControllerType.Summary)
-        .length + 1
-    )
+    return definition.pages.filter((x) => !isSummaryPage(x)).length + 1
   }
   const pageIdx = definition.pages.findIndex((x) => x.id === pageId)
   return pageIdx + 1
