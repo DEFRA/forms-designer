@@ -1480,4 +1480,22 @@ $home-page-breakpoint: 1220px;
       display: inline-block;
     }
   }
+
+  &-legend {
+    color: #6b7280;
+
+    .govuk-tag--green {
+      margin-left: 1rem;
+      vertical-align: middle;
+    }
+
+    .govuk-tag--dark-red {
+      margin-left: 1rem;
+      vertical-align: middle;
+    }
+
+    .feature-partial-small {
+      margin-left: 1rem;
+    }
+  }
 }
