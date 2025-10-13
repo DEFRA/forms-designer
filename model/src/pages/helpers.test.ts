@@ -465,8 +465,8 @@ describe('helpers', () => {
     it('should return false for non-summary controller', () => {
       const page = {
         controller: ControllerType.Page,
-        path: '/summary',
-        title: 'Summary'
+        path: '/other',
+        title: 'Other'
       } as Page
       expect(isSummaryPage(page)).toBe(false)
     })
