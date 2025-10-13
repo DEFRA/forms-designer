@@ -88,6 +88,11 @@ $home-page-breakpoint: 1220px;
           color: govuk-colour("black");
         }
       }
+
+      .govuk-body,
+      .govuk-body-s {
+        color: #ffffff;
+      }
     }
   }
 
@@ -127,6 +132,29 @@ $home-page-breakpoint: 1220px;
       color: $defra-brand-colour;
     }
   }
+
+  .x-govuk-related-navigation {
+    border-top-color: $defra-brand-colour;
+  }
+
+  // Enhanced styling inspired by Notion's visual concepts while maintaining GOV.UK Design System */
+  .govuk-grid-row {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  // Grid layout follows natural document order for accessibility */
+  .govuk-grid-column-full,
+  .govuk-grid-column-one-third-from-desktop {
+    display: flex;
+  }
+}
+
+.govuk-inset-text--cta {
+  border-left: 4px solid #00703c;
+  background-color: #f3f2f1;
+  padding: 1.5rem;
+  margin: 2rem 0;
 }
 
 .content-section {
@@ -378,6 +406,20 @@ $home-page-breakpoint: 1220px;
     padding-bottom: 30px;
   }
 
+  &__header {
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #d8dde0;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+
+    h3 {
+      margin: 0;
+      color: #0b0c0c;
+    }
+  }
+
   &--feature {
     width: 100%;
     display: flex;
@@ -516,6 +558,15 @@ $home-page-breakpoint: 1220px;
 
   .govuk-card__actions > .govuk-c-button {
     margin-bottom: 0;
+  }
+
+  .feature-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
   }
 }
 
@@ -1370,5 +1421,81 @@ $home-page-breakpoint: 1220px;
 
   .app-step-nav__list-item--active::before {
     background-color: #00823b;
+  }
+}
+
+.feature-partial-small {
+  display: inline-block;
+  width: 2rem;
+  height: 2rem;
+  background: linear-gradient(135deg, #cce2d8 50%, #d4351c 50%);
+  background-size: cover;
+  vertical-align: middle;
+  line-height: 0;
+}
+
+.govuk-tag--dark-red {
+  background-color: #d4351c;
+  color: #ffffff;
+}
+
+.comparison {
+  // Vertical-only scrolling container
+  &-scroll {
+    max-height: 70vh;
+    // adjust as needed
+    overflow-y: auto;
+    // vertical scroll only
+    overflow-x: hidden;
+    // ignore horizontal
+  }
+
+  &-table {
+    thead th {
+      position: sticky;
+      top: 0;
+      z-index: 2;
+      background: #f3f2f1;
+      box-shadow: 0 2px 0 #d8dde0;
+    }
+
+    .feature-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 500;
+
+      .govuk-table__header & {
+        font-weight: 500;
+      }
+
+      svg {
+        flex-shrink: 0;
+      }
+    }
+
+    .govuk-tag {
+      min-width: 2rem;
+      text-align: center;
+      display: inline-block;
+    }
+  }
+
+  &-legend {
+    color: #6b7280;
+
+    .govuk-tag--green {
+      margin-left: 1rem;
+      vertical-align: middle;
+    }
+
+    .govuk-tag--dark-red {
+      margin-left: 1rem;
+      vertical-align: middle;
+    }
+
+    .feature-partial-small {
+      margin-left: 1rem;
+    }
   }
 }

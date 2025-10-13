@@ -3,6 +3,7 @@ import {
   Level2ResourcesMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
+import features from '~/src/routes/website/content/features.js'
 
 export default {
   home: {
@@ -87,5 +88,6 @@ export default {
         ]
       }
     ]
-  }
+  },
+  features
 }

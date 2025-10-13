@@ -4,7 +4,8 @@ import {
   FormStatus,
   hasComponents,
   hasComponentsEvenIfNoNext,
-  isFormType
+  isFormType,
+  isSummaryPage
 } from '@defra/forms-model'
 
 import {
@@ -119,7 +120,7 @@ export function mapQuestionRows(definition, page) {
     /** @type {string} */ (page.id)
   )
 
-  const isSummary = page.controller === ControllerType.Summary
+  const isSummary = isSummaryPage(page)
 
   const rows = components.map((comp, idx) =>
     comp.type === ComponentType.Markdown
@@ -167,11 +168,11 @@ export function mapPageData(slug, definition, filterOptions) {
       .filter(
         (p) =>
           !filterOptions?.length ||
-          p.controller === ControllerType.Summary ||
+          isSummaryPage(p) ||
           filterOptions.includes(p.condition ?? 'unknown')
       )
       .map((page) => {
-        const isEndPage = page.controller === ControllerType.Summary
+        const isEndPage = isSummaryPage(page)
         const isExitPage = page.controller === ControllerType.Terminal
         const pageNum = definition.pages.findIndex((p) => p.id === page.id) + 1
 
@@ -204,7 +205,7 @@ export function mapPageData(slug, definition, filterOptions) {
  * @param {Page} page
  */
 export function hideFirstGuidance(page) {
-  if (page.controller === ControllerType.Summary) {
+  if (isSummaryPage(page)) {
     return page
   }
 
@@ -397,7 +398,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   const conditions = buildConditionsFilter(definition, filter)
 
   const numOfNonSummaryPages = definition.pages.filter(
-    (x) => x.controller !== ControllerType.Summary
+    (x) => !isSummaryPage(x)
   ).length
 
   addConditionalActions(
