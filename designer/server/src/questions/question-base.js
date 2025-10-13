@@ -72,7 +72,7 @@ export class QuestionBase {
     const questionFieldsOverride = /** @type {ComponentDef} */ (
       state?.questionDetails ?? details.question
     )
-    // const basePageFields = this.applyValuesAndErrors(validation, definition)
+    const basePageFields = this.applyValuesAndErrors(validation, definition)
 
     // getFieldList(
 
@@ -95,7 +95,7 @@ export class QuestionBase {
       ...baseModelFields(metadata.slug, pageTitle, pageHeading),
       name: details.question.name || randomId(),
       questionId,
-      baseFields: this.baseFields,
+      basePageFields,
       uploadFields,
       extraFields: this.advancedFields,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
@@ -134,17 +134,17 @@ export class QuestionBase {
     return this.baseFields.map(({ name }) => {
       const fieldName =
         /** @type { keyof Omit<FormEditorGovukField, 'errorMessage'> } */ (name)
-      const fields = this.baseFields.find((x) => x.name === name)
+      const fieldDef = this.baseFields.find((x) => x.name === name)
       const value = getFieldValue(
         fieldName,
         // @ts-expect-error - temporary disable linting
-        fields,
+        fieldDef,
         validation,
         definition
       )
 
       const field = {
-        ...fields,
+        ...fieldDef,
         ...insertValidationErrors(validation?.formErrors[fieldName]),
         value
       }

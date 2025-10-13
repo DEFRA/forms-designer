@@ -1,5 +1,10 @@
 import { QuestionBase } from '~/src/questions/question-base.js'
-import { classes, max, min, regex } from '~/src/questions/question-fields.js'
+import {
+  classes,
+  maxLength,
+  minLength,
+  regex
+} from '~/src/questions/question-fields.js'
 
 export class TextField extends QuestionBase {
   /**
@@ -9,7 +14,7 @@ export class TextField extends QuestionBase {
     super(type)
 
     /** @type {Record<string, GovukField>} */
-    this.advancedFields = [min, max, regex, classes]
+    this.advancedFields = [minLength, maxLength, regex, classes]
   }
 }
 

@@ -272,18 +272,16 @@ export default [
         ComponentType.Html
       const questionClass = createQuestionClass(questionType)
       if (questionClass) {
-        return h.view(
-          'forms/editor-v2/question-details',
-          questionClass.getViewModel(
-            metadata,
-            definition,
-            pageId,
-            questionId,
-            stateId,
-            validation,
-            state
-          )
+        const model2 = questionClass.getViewModel(
+          metadata,
+          definition,
+          pageId,
+          questionId,
+          stateId,
+          validation,
+          state
         )
+        return h.view('forms/editor-v2/question-details', model2)
       }
 
       // Intercept operations if say a radio or checkbox

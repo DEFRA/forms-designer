@@ -29,6 +29,10 @@ export const questionOptional = {
   name: 'questionOptional',
   id: 'questionOptional',
   classes: 'govuk-checkboxes--small',
+  // @ts-expect-error - TODO correct the type
+  options: {
+    required: false
+  },
   items: [
     {
       value: 'true',
@@ -50,6 +54,33 @@ export const shortDescription = {
   hint: {
     text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
   }
+}
+
+/** @type {GovukField} */
+export const minLength = {
+  name: 'minLength',
+  id: 'minLength',
+  label: {
+    text: 'Minimum character length (optional)',
+    classes: GOVUK_LABEL__M
+  },
+  hint: {
+    text: 'The minimum number of characters users can enter'
+  },
+  classes: GOVUK_INPUT_WIDTH_3
+}
+
+export const maxLength = {
+  name: 'maxLength',
+  id: 'maxLength',
+  label: {
+    text: 'Maximum character length (optional)',
+    classes: GOVUK_LABEL__M
+  },
+  hint: {
+    text: 'The maximum number of characters users can enter'
+  },
+  classes: GOVUK_INPUT_WIDTH_3
 }
 
 /** @type {GovukField} */
@@ -103,5 +134,5 @@ export const regex = {
 }
 
 /**
- * @import { GovukField } from '@defra/forms-model'
+ * @import { ComponentDef, GovukField } from '@defra/forms-model'
  */
