@@ -37,10 +37,10 @@ export function editListResolveViewModel(
       conf.conflictItem.text,
       conf.linkableItems.map((x) => x.text)
     )
-    return {
+    return /** @type {ListConflict} */ ({
       ...conf,
       closestMatch
-    }
+    })
   })
 
   const sortedConflicts = listConflictsWithMatches.toSorted(
@@ -68,6 +68,14 @@ export function editListResolveViewModel(
     errorList: buildErrorList(validation?.formErrors),
     notification
   }
+}
+
+/**
+ * @param { ListConflict[] | undefined } conflicts
+ * @returns {boolean}
+ */
+export function cannotResolveAllItems(conflicts) {
+  return !conflicts || conflicts.some((conf) => !conf.linkableItems.length)
 }
 
 /**

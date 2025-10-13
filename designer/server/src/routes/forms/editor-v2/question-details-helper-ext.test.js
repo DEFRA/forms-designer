@@ -68,7 +68,8 @@ describe('Editor v2 question details helper ext routes', () => {
                 }
               ]
             }
-          ]
+          ],
+          listItems: []
         }
       )
     })
