@@ -1,4 +1,3 @@
-{% from "feature-svg/macro.njk" import featureSvg %}
 {% from "comparison-label/macro.njk" import comparisonLabel %}
 
 <h2 class="govuk-heading-l ">Compare Form Designer vs Developer Plugin</h2>
@@ -36,7 +35,7 @@
       <tr class="govuk-table__row">
         <th scope="row" colspan="1" class="govuk-table__header">
           <span class="feature-info">
-              {{ featureSvg(row.icon) }}
+          <img src="/assets/images/website/svgs/{{ row.icon }}.svg" alt="Icon for {{ row.title }}" role="img" />
               {{ row.title }}
           </span>
           <span class="govuk-body-s govuk-!-margin-top-1">{{ row.description }}</span>
