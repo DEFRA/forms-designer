@@ -31,7 +31,9 @@
 
 {%- set navigationClasses = "govuk-service-navigation--green" if displayHomeNav else "" -%}
 
+{% if not isLoggedIn %}
 {{ govukServiceNavigation({
   classes: navigationClasses,
   navigation: pageNavigation
 }) }}
+{% endif %}

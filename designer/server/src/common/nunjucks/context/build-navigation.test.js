@@ -11,6 +11,11 @@ describe('#buildNavigation', () => {
         isActive: false,
         text: 'Forms library',
         url: '/library'
+      },
+      {
+        isActive: false,
+        text: 'Support',
+        url: '/support'
       }
     ])
   })

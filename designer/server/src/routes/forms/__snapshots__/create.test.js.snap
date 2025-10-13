@@ -140,6 +140,12 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
                 <a class="service-header__nav-list-item-link"                  href="/library">
                   Forms library
                 </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
               </li>            </ul>
           </nav>
         </div>
@@ -449,6 +455,12 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
                 <a class="service-header__nav-list-item-link"                  href="/library">
                   Forms library
                 </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
               </li>            </ul>
           </nav>
         </div>
@@ -723,6 +735,12 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/library">
                   Forms library
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
                 </a>
               </li>            </ul>
           </nav>

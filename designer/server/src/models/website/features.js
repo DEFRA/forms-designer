@@ -2,8 +2,12 @@ import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
 import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 import content from '~/src/routes/website/content.js'
 
-export function websiteFeaturesModel() {
+/**
+ * @param {boolean} isLoggedIn
+ */
+export function websiteFeaturesModel(isLoggedIn) {
   return {
+    isLoggedIn,
     pageTitle: 'Defra Forms: Features',
     pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.FEATURES),
     pageHeading: {

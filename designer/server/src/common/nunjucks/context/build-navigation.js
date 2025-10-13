@@ -1,4 +1,4 @@
-import { formsLibraryPath } from '~/src/models/links.js'
+import { formsLibraryPath, formsSupportPath } from '~/src/models/links.js'
 
 /**
  * @param {string} text
@@ -20,6 +20,9 @@ export function buildNavigation(request) {
   return [
     buildEntry('Forms library', formsLibraryPath, {
       isActive: !!request?.path?.startsWith(formsLibraryPath)
+    }),
+    buildEntry('Support', formsSupportPath, {
+      isActive: !!request?.path?.startsWith(formsSupportPath)
     })
   ]
 }
