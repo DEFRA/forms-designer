@@ -1,5 +1,6 @@
-<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-  <rect x="4" y="3" width="16" height="6" rx="1" stroke="#0B0C0C" stroke-width="2" fill="none" />
-  <rect x="4" y="10" width="16" height="6" rx="1" stroke="#0B0C0C" stroke-width="2" fill="none" />
-  <rect x="4" y="17" width="16" height="4" rx="1" stroke="#0B0C0C" stroke-width="2" fill="none" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width=".53cm" height=".59cm" viewBox="0 0 15 16.67">
+  <rect x=".83" y=".83" width="13.33" height="5" rx=".83" ry=".83" style="fill: none; stroke: #0b0c0c; stroke-miterlimit: 3.33; stroke-width: 1.67px;"/>
+  <rect x=".83" y="6.67" width="13.33" height="5" rx=".83" ry=".83" style="fill: none; stroke: #0b0c0c; stroke-miterlimit: 3.33; stroke-width: 1.67px;"/>
+  <rect x=".83" y="12.5" width="13.33" height="3.33" rx=".83" ry=".83" style="fill: none; stroke: #0b0c0c; stroke-miterlimit: 3.33; stroke-width: 1.67px;"/>
 </svg>

@@ -283,7 +283,7 @@ export default {
         title: 'Information Types',
         children: [
           {
-            icon: 'textNumbers',
+            icon: FeatureIcons.TEXT_NUMBERS,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Text & Numbers',
@@ -291,7 +291,7 @@ export default {
               'Standard text input fields for names, addresses, numbers and other alphanumeric data.'
           },
           {
-            icon: 'fileUpload',
+            icon: FeatureIcons.FILE_UPLOAD,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'File upload',
@@ -304,7 +304,7 @@ export default {
         title: 'Selecting from a list',
         children: [
           {
-            icon: 'yesNo',
+            icon: FeatureIcons.YES_NO,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Yes or no',
@@ -317,7 +317,7 @@ export default {
         title: 'Advanced Features',
         children: [
           {
-            icon: 'repeatingQuestions',
+            icon: FeatureIcons.REPEATING_QUESTIONS,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Repeating questions',
@@ -325,7 +325,7 @@ export default {
               'Allow users to add multiple instances of the same question, such as multiple addresses or dependents.'
           },
           {
-            icon: 'preview',
+            icon: FeatureIcons.PREVIEW,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.NOT_AVAILABLE,
             title: 'Previewing a form',
@@ -333,7 +333,7 @@ export default {
               'Test how your form looks and behaves before publishing it to users.'
           },
           {
-            icon: 'submittedForms',
+            icon: FeatureIcons.SUBMITTED_FORMS,
             designer: FeatureComparisonIcons.NOT_AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Submitted forms',
@@ -341,7 +341,7 @@ export default {
               'View and manage form submissions from users, including data export and analysis.'
           },
           {
-            icon: 'pencil',
+            icon: FeatureIcons.PENCIL,
             designer: FeatureComparisonIcons.NOT_AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Page events',
@@ -349,7 +349,7 @@ export default {
               'Trigger API calls on certain events, e.g. loading or saving a page. Change page visuals with code, e.g. using previous answers, API responses, etc.'
           },
           {
-            icon: 'pageTemplates',
+            icon: FeatureIcons.PAGE_TEMPLATES,
             designer: FeatureComparisonIcons.NOT_AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Page templates',
@@ -362,7 +362,7 @@ export default {
         title: 'Features coming soon',
         children: [
           {
-            icon: 'confirmationEmails',
+            icon: FeatureIcons.CONFIRMATION_EMAILS,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Confirmation emails',
@@ -370,7 +370,7 @@ export default {
               'Automatically send confirmation emails to users after they submit a form.'
           },
           {
-            icon: 'saveExit',
+            icon: FeatureIcons.SAVE_EXIT,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: 'someAvailable',
             title: 'Save and exit',
@@ -378,7 +378,7 @@ export default {
               'The plugin offers an API so save and return can function, however service teams using the plugin are responsible for integrating with this and providing the user interface (e.g. implementing a portal with user auth that allows them to resume an application, or their own magic link implementation, etc). Only the hosted Designer offers a complete end-to-end save and exit feature.'
           },
           {
-            icon: 'userManagement',
+            icon: FeatureIcons.USER_MANAGEMENT,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.NOT_AVAILABLE,
             title: 'User management',
@@ -386,7 +386,7 @@ export default {
               'Manage user accounts, permissions and access controls for form administration.'
           },
           {
-            icon: 'auditing',
+            icon: FeatureIcons.AUDITING,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.NOT_AVAILABLE,
             title: 'Auditing',
@@ -394,7 +394,7 @@ export default {
               'Track changes and maintain audit trails for compliance and governance purposes.'
           },
           {
-            icon: 'apiIntegration',
+            icon: FeatureIcons.API_INTEGRATION,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'API integration',
@@ -402,7 +402,7 @@ export default {
               'Connect forms to external systems and services through REST APIs and webhooks.'
           },
           {
-            icon: 'pageSections',
+            icon: FeatureIcons.PAGE_SECTIONS,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Page sections',
@@ -410,7 +410,7 @@ export default {
               'Organise form content into logical sections for better user experience and navigation.'
           },
           {
-            icon: 'dataOutput',
+            icon: FeatureIcons.DATA_OUTPUT,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Data output',
@@ -423,7 +423,7 @@ export default {
         title: 'Deployment',
         children: [
           {
-            icon: 'freeHosting',
+            icon: FeatureIcons.FREE_HOSTING,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.NOT_AVAILABLE,
             title: 'Free hosting',
@@ -431,7 +431,7 @@ export default {
               "Defra Forms team take care of hosting the service so it's always accessible by members of the public. We take care of hosting, monitoring, maintenance, running costs, etc."
           },
           {
-            icon: 'selfHosted',
+            icon: FeatureIcons.SELF_HOSTED,
             designer: FeatureComparisonIcons.NOT_AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Self-hosted',
@@ -439,7 +439,7 @@ export default {
               'Service teams take care of hosting the form themselves, either as a standalone form or integrated into their existing service.'
           },
           {
-            icon: 'integration',
+            icon: FeatureIcons.INTEGRATION,
             designer: FeatureComparisonIcons.NOT_AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Integration into existing applications',

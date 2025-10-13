@@ -1,5 +1,6 @@
-<svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true">
-  <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="#0B0C0C" stroke-width="2" fill="none" />
-  <path d="M14 2V8H20" stroke="#0B0C0C" stroke-width="2" />
-  <path d="M16 13H8M16 17H8M10 9H8" stroke="#0B0C0C" stroke-width="2" stroke-linecap="round" />
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" width=".53cm" height=".65cm" viewBox="0 0 15 18.33">
+  <path d="M9.17.83H2.5c-.92,0-1.67.75-1.67,1.67v13.33c0,.92.75,1.67,1.67,1.67h10c.92,0,1.67-.75,1.67-1.67V5.83L9.17.83Z" style="fill: none; stroke: #0b0c0c; stroke-miterlimit: 3.33; stroke-width: 1.67px;"/>
+  <path d="M9.17.83v5h5" style="stroke: #0b0c0c; stroke-miterlimit: 3.33; stroke-width: 1.67px;"/>
+  <path d="M10.83,10h-6.67M10.83,13.33h-6.67M5.83,6.67h-1.67" style="stroke: #0b0c0c; stroke-linecap: round; stroke-miterlimit: 3.33; stroke-width: 1.67px;"/>
 </svg>
