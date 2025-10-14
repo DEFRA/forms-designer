@@ -3,11 +3,11 @@ import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 import content from '~/src/routes/website/content.js'
 
 /**
- * @param {boolean} isLoggedIn
+ * @param {boolean} isGuest
  */
-export function websiteFeaturesModel(isLoggedIn) {
+export function websiteFeaturesModel(isGuest) {
   return {
-    isLoggedIn,
+    isGuest,
     pageTitle: 'Defra Forms: Features',
     pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.FEATURES),
     pageHeading: {

@@ -55,23 +55,21 @@
     {% endset %}
   {% endif %}
 
+  {% set accessibilityFooterItem =  {
+    href: "/help/accessibility-statement",
+    text: "Accessibility statement"
+  }%}
+  {% set cookieFooterItem =  {
+    href: "/help/cookies",
+    text: "Cookies"
+  }%}
+
+  {% set footerItems = [accessibilityFooterItem,cookieFooterItem] if isGuest else [accessibilityFooterItem] %}
+
   {{ govukFooter({
     containerClasses: "app-width-container--wide",
     meta: {
-      items: [
-        {
-          href: "/help/accessibility-statement",
-          text: "Accessibility statement"
-        },
-        {
-          href: "/help/cookies",
-          text: "Cookies"
-        },
-        {
-          href: "https://www.gov.uk/help/privacy-notice",
-          text: "Privacy"
-        }
-      ],
+      items: footerItems,
       html: feedbackRowHtml
     }
   }) }}

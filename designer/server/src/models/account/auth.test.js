@@ -76,7 +76,8 @@ describe('Auth view models', () => {
             text: 'Support'
           }
         ],
-        errorList: []
+        errorList: [],
+        isGuest: true
       })
     })
 
@@ -130,7 +131,8 @@ describe('Auth view models', () => {
             html: `We could not sign you in. Please contact the system administrator for help,
       <a href="mailto:steven.thomas@defra.gov.uk" class="govuk-link">steven.thomas@defra.gov.uk</a>`
           }
-        ]
+        ],
+        isGuest: true
       })
     })
 
@@ -179,7 +181,8 @@ describe('Auth view models', () => {
             text: 'Support'
           }
         ],
-        errorList: []
+        errorList: [],
+        isGuest: true
       })
     })
   })

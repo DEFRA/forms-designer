@@ -43,8 +43,8 @@ export default /** @satisfies {ServerRoute[]} */ ([
     method: 'GET',
     path: `/${WebsiteLevel1Routes.ABOUT}`,
     handler(request, h) {
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteAboutModel(isLoggedIn)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      const aboutModel = websiteAboutModel(isGuest)
       return h.view('website/about', aboutModel)
     },
     options: {
@@ -57,13 +57,13 @@ export default /** @satisfies {ServerRoute[]} */ ([
     method: 'GET',
     path: `/${WebsiteLevel1Routes.GET_STARTED}`,
     handler(request, h) {
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
       const aboutModel = websiteSubmenuModel(
         WebsiteLevel1Routes.GET_STARTED,
         Level2GetStartedMenu.GET_ACCESS,
         content.getStarted.menus,
         'Getting started guide',
-        isLoggedIn
+        isGuest
       )
       return h.view('website/get-started/index', aboutModel)
     },
@@ -79,13 +79,13 @@ export default /** @satisfies {ServerRoute[]} */ ([
     handler(request, h) {
       const { params } = request
       const { subMenu } = params
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
       const aboutModel = websiteSubmenuModel(
         WebsiteLevel1Routes.GET_STARTED,
         subMenu,
         content.getStarted.menus,
         'Getting started guide',
-        isLoggedIn
+        isGuest
       )
       return h.view(`website/get-started/${subMenu}`, aboutModel)
     },
@@ -104,13 +104,13 @@ export default /** @satisfies {ServerRoute[]} */ ([
     method: 'GET',
     path: `/${WebsiteLevel1Routes.RESOURCES}`,
     handler(request, h) {
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
       const resourceModel = websiteSubmenuModel(
         WebsiteLevel1Routes.RESOURCES,
         Level2ResourcesMenu.DOES_IT_NEED,
         content.resources.menus,
         'Good form design guide',
-        isLoggedIn
+        isGuest
       )
       return h.view('website/resources/index', resourceModel)
     },
@@ -124,7 +124,7 @@ export default /** @satisfies {ServerRoute[]} */ ([
     method: 'GET',
     path: `/${WebsiteLevel1Routes.RESOURCES}/{subMenu}`,
     handler(request, h) {
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
       const { params } = request
       const { subMenu } = params
       const aboutModel = websiteSubmenuModel(
@@ -132,7 +132,7 @@ export default /** @satisfies {ServerRoute[]} */ ([
         subMenu,
         content.resources.menus,
         'Good form design guide',
-        isLoggedIn
+        isGuest
       )
       return h.view(`website/resources/${subMenu}`, aboutModel)
     },
@@ -151,8 +151,8 @@ export default /** @satisfies {ServerRoute[]} */ ([
     method: 'GET',
     path: `/${WebsiteLevel1Routes.FEATURES}`,
     handler(request, h) {
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
-      const featuresModel = websiteFeaturesModel(isLoggedIn)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      const featuresModel = websiteFeaturesModel(isGuest)
       return h.view('website/features/index', featuresModel)
     },
     options: {
@@ -165,8 +165,8 @@ export default /** @satisfies {ServerRoute[]} */ ([
     method: 'GET',
     path: `/${WebsiteLevel1Routes.SUPPORT}`,
     handler(request, h) {
-      const isLoggedIn = hasAuthenticated(request.auth.credentials)
-      const supportModel = websiteSupportModel(isLoggedIn)
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      const supportModel = websiteSupportModel(isGuest)
       return h.view('website/support', supportModel)
     },
     options: {

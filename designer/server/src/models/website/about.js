@@ -2,11 +2,11 @@ import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
 import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 
 /**
- * @param {boolean} isLoggedIn
+ * @param {boolean} isGuest
  */
-export function websiteAboutModel(isLoggedIn) {
+export function websiteAboutModel(isGuest) {
   return {
-    isLoggedIn,
+    isGuest,
     pageTitle: 'Defra Forms: About the Defra Forms team',
     pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.ABOUT),
     pageHeading: {

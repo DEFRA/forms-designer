@@ -33,6 +33,7 @@ export function signInViewModel(options) {
   const { home } = content
 
   return {
+    isGuest: true,
     pageTitle,
     displayHomeNav: true,
     content: home,
