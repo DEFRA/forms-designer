@@ -1,6 +1,7 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
+import { buildCombinedId } from '~/src/form/form-editor/preview/utils.js'
 
 /**
  * Simple extension of Question that uses fieldset instead of label - not exported
@@ -13,10 +14,8 @@ export class FieldsetQuestion extends Question {
   componentType = ComponentType.TextField
 
   get renderInput() {
-    const idSuffix = this._id ? `-${this._id}` : ''
-
     return {
-      id: `${this._fieldName}${idSuffix}`,
+      id: buildCombinedId(this._fieldName, this._id),
       name: this._fieldName,
       fieldset: this.fieldSet,
       hint: this.hint,
