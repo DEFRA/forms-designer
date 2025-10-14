@@ -61,14 +61,13 @@
                                 <p class="govuk-body govuk-!-margin-bottom-0">{{ pageConditionPresentationString or "'How do you want to receive your order?' is 'delivery'" }}</p>
                               </div>
                               <div class="app-condition-applied__actions">
-                                <a href="#" class="govuk-link govuk-link--no-visited-state" onclick="document.getElementById('remove-condition-form').submit(); return false;">Remove</a>
+                                <form method="post" action="{{ pageConditionsApiUrl }}">
+                                  <input type="hidden" name="action" value="remove">
+                                  <button type="submit" class="govuk-link govuk-link--no-visited-state">Remove</button>
+                                </form>
                               </div>
                             </div>
                           </div>
-
-                          <form id="remove-condition-form" method="post" action="{{ pageConditionsApiUrl }}" style="display: none;">
-                            <input type="hidden" name="action" value="remove">
-                          </form>
                         {% endif %}
 
                         <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>

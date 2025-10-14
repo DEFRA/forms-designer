@@ -246,11 +246,11 @@ describe('Editor v2 conditions routes', () => {
 
         const $mainHeading = container.getByRole('heading', { level: 1 })
         const $conditionDisplay = container.getByText('Show if cattle farming')
-        const $removeLink = container.getByRole('link', {
+        const $removeButton = container.getByRole('button', {
           name: 'Remove'
         })
 
-        expect($removeLink).toBeInTheDocument()
+        expect($removeButton).toBeInTheDocument()
         expect($mainHeading).toHaveTextContent('Test form')
         expect($conditionDisplay).toBeInTheDocument()
       })

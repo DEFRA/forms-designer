@@ -42,7 +42,8 @@ $app-action-icon-large-offset: math.div($app-action-icon-large, 20);
   }
 }
 
-.govuk-link[type="button"] {
+.govuk-link[type="button"],
+.govuk-link[type="submit"] {
   @extend %app-button-link;
   padding: 0;
 
