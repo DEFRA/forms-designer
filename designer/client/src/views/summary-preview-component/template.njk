@@ -3,9 +3,11 @@
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 
 <div>
+  {% if params.pageTitle.text %}
   <h2 class="govuk-heading-l">
     {{ params.pageTitle.text }}
   </h2>
+  {% endif %}
   {{ govukSummaryList(params.componentRows)}}
   {% for component in params.components %}
     {% if loop.index0 === 0 %}
