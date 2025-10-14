@@ -1,6 +1,10 @@
 export const backToFormOverviewLinkText = 'Back to form overview'
 export const backToFormsLibraryLinkText = 'Back to forms library'
 export const formsLibraryPath = '/library'
+export const formsAboutPath = '/about'
+export const formsGetStartedPath = '/get-started'
+export const formsFeaturesPath = '/features'
+export const formsResourcesPath = '/resources'
 export const formsSupportPath = '/support'
 
 /**

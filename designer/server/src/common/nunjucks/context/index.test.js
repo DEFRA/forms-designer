@@ -92,11 +92,23 @@ describe('Nunjucks context', () => {
     it('should include navigation array', async () => {
       const { navigation } = await context(null)
 
-      expect(navigation).toHaveLength(2)
+      expect(navigation).toHaveLength(6)
       expect(navigation[0]).toMatchObject({
         text: 'Forms library'
       })
       expect(navigation[1]).toMatchObject({
+        text: 'About'
+      })
+      expect(navigation[2]).toMatchObject({
+        text: 'Get started'
+      })
+      expect(navigation[3]).toMatchObject({
+        text: 'Features'
+      })
+      expect(navigation[4]).toMatchObject({
+        text: 'Resources'
+      })
+      expect(navigation[5]).toMatchObject({
         text: 'Support'
       })
     })
