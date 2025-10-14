@@ -1315,6 +1315,8 @@ Support
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -1329,11 +1331,6 @@ Support
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -1621,6 +1618,8 @@ Support
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -1635,11 +1634,6 @@ Support
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -2266,6 +2260,8 @@ Support
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -2280,11 +2276,6 @@ Support
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -2600,6 +2591,8 @@ Support
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -2614,11 +2607,6 @@ Support
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -3030,6 +3018,8 @@ Support
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -3044,11 +3034,6 @@ Support
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -3295,6 +3280,8 @@ Resources
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -3309,11 +3296,6 @@ Resources
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/cookies">
               Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>

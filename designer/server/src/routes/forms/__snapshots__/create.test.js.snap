@@ -143,6 +143,30 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/support">
                   Support
                 </a>
@@ -251,6 +275,8 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -260,16 +286,6 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -458,6 +474,30 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/support">
                   Support
                 </a>
@@ -532,6 +572,8 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -541,16 +583,6 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -739,6 +771,30 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/support">
                   Support
                 </a>
@@ -790,6 +846,8 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -799,16 +857,6 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>

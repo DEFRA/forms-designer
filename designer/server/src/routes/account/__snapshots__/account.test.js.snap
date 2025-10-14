@@ -221,6 +221,8 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -230,16 +232,6 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
