@@ -3,7 +3,6 @@ import { FormStatus, randomId } from '@defra/forms-model'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
-import { getFieldValue } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
@@ -15,7 +14,8 @@ import { getPreviewModel } from '~/src/models/forms/editor-v2/question-details/p
 import {
   getDetails,
   getErrorTemplates,
-  getSkipLink
+  getSkipLink,
+  hasDataOrErrorForDisplay
 } from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import {
@@ -29,10 +29,10 @@ export class QuestionBase {
   /** @type {ComponentType} */
   type
 
-  /** @type {GovukField[]} */
+  /** @type {DesignerField[]} */
   baseFields
 
-  /** @type {GovukField[]} */
+  /** @type {DesignerField[]} */
   advancedFields = []
 
   /**
@@ -62,7 +62,7 @@ export class QuestionBase {
     validation,
     state
   ) {
-    const details = getDetails(
+    const headerDetails = getDetails(
       metadata,
       definition,
       pageId,
@@ -70,7 +70,7 @@ export class QuestionBase {
       this.type
     )
     const questionFieldsOverride = /** @type {ComponentDef} */ (
-      state?.questionDetails ?? details.question
+      state?.questionDetails ?? headerDetails.question
     )
     const basePageFields = this.applyValuesAndErrors(
       this.baseFields,
@@ -86,13 +86,13 @@ export class QuestionBase {
     const uploadFields = {}
     const enhancedFieldList = /** @type {GovukField[]} */ ([])
     const errorList = buildErrorList(validation?.formErrors)
-    const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
-    const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
+    const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${headerDetails.pagePath}?force`
+    const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${headerDetails.pagePath}/${questionFieldsOverride.id}`
     const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
     const deleteUrl = `${urlPageBase}/delete/${questionId}`
     const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
-    const pageHeading = details.pageTitle
-    const pageTitle = `Edit question ${details.questionNum} - ${details.pageTitle}`
+    const pageHeading = headerDetails.pageTitle
+    const pageTitle = `Edit question ${headerDetails.questionNum} - ${headerDetails.pageTitle}`
     const errorTemplates = getErrorTemplates(this.type)
 
     return {
@@ -100,18 +100,18 @@ export class QuestionBase {
       state,
       enhancedFields: enhancedFieldList,
       ...baseModelFields(metadata.slug, pageTitle, pageHeading),
-      name: details.question.name || randomId(),
+      name: headerDetails.question.name || randomId(),
       questionId,
       basePageFields,
       uploadFields,
       extraFields,
       // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       errorTemplates,
-      cardTitle: `Question ${details.questionNum}`,
-      cardCaption: `Page ${details.pageNum}`,
-      cardHeading: `Edit question ${details.questionNum}`,
+      cardTitle: `Question ${headerDetails.questionNum}`,
+      cardCaption: `Page ${headerDetails.pageNum}`,
+      cardHeading: `Edit question ${headerDetails.questionNum}`,
       cardId: 'edit-question',
-      navigation: details.navigation,
+      navigation: headerDetails.navigation,
       errorList,
       formErrors: validation?.formErrors,
       formValues: validation?.formValues,
@@ -126,57 +126,55 @@ export class QuestionBase {
       previewErrorsUrl,
       deleteUrl,
       skipLink: getSkipLink(),
-      isOpen: false,
+      isOpen: hasDataOrErrorForDisplay(
+        extraFields.map((x) => /** @type {string} */ (x.name)),
+        errorList,
+        extraFields
+      ),
       getFieldType: (/** @type {GovukField} */ field) =>
         getFieldComponentType(field)
     }
   }
 
   /**
-   * @param {GovukField[]} fields
+   * @param {DesignerField[]} fields
    * @param { ValidationFailure<FormEditor> | undefined } validation
    * @param {ComponentDef} questionFields
-   * @returns {GovukField[]}
+   * @returns {DesignerField[]}
    */
   applyValuesAndErrors(fields, validation, questionFields) {
-    return this.baseFields.map(({ name }) => {
+    return fields.map((field) => {
       const fieldName =
-        /** @type { keyof Omit<FormEditorGovukField, 'errorMessage'> } */ (name)
-      const fieldDef = this.baseFields.find((x) => x.name === name)
-      const value = getFieldValue(
-        fieldName,
-        // @ts-expect-error - temporary disable linting
-        fieldDef,
-        validation,
-        questionFields
-      )
-
-      const field = {
-        ...fieldDef,
-        ...insertValidationErrors(validation?.formErrors[fieldName]),
-        value
-      }
+        /** @type { keyof Omit<FormEditorGovukField, 'errorMessage'> } */ (
+          field.name
+        )
+      const value =
+        validation?.formValues[fieldName] ??
+        field.designer.getValue(questionFields)
 
       if (field.items) {
         // Handle checkbox/radio selections
-        const strValue = typeof value === 'string' ? value.toString() : ''
+        const strValue = typeof value !== 'object' ? value?.toString() : ''
         return {
           ...field,
           items: field.items.map((cb) => ({
             ...cb,
             checked: cb.value === strValue
-          }))
+          })),
+          ...insertValidationErrors(validation?.formErrors[fieldName])
         }
       }
-      return {
+
+      return /** @type {DesignerField} */ ({
         ...field,
+        ...insertValidationErrors(validation?.formErrors[fieldName]),
         value
-      }
+      })
     })
   }
 }
 
 /**
- * @import { ComponentDef, ComponentType, FormEditorGovukField, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
- * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ComponentDef, ComponentType, DesignerField, FormEditorGovukField, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

@@ -1,19 +1,25 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const question = {
   name: 'question',
   id: 'question',
   label: {
     text: 'Question',
     classes: GOVUK_LABEL__M
+  },
+  designer: {
+    type: ComponentType.TextField,
+    getValue: (comp) => comp?.title
   }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const hintText = {
   name: 'hintText',
   id: 'hintText',
@@ -21,28 +27,32 @@ export const hintText = {
     text: 'Hint text (optional)',
     classes: GOVUK_LABEL__M
   },
-  rows: 3
+  rows: 3,
+  designer: {
+    type: ComponentType.MultilineTextField,
+    getValue: (comp) => comp?.hint
+  }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const questionOptional = {
   name: 'questionOptional',
   id: 'questionOptional',
   classes: 'govuk-checkboxes--small',
-  // @ts-expect-error - TODO correct the type
-  options: {
-    required: false
-  },
   items: [
     {
       value: 'true',
       text: 'Make this question optional',
       checked: false
     }
-  ]
+  ],
+  designer: {
+    type: ComponentType.CheckboxesField,
+    getValue: (comp) => comp?.options.required === false
+  }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const shortDescription = {
   id: 'shortDescription',
   name: 'shortDescription',
@@ -53,10 +63,14 @@ export const shortDescription = {
   },
   hint: {
     text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+  },
+  designer: {
+    type: ComponentType.TextField,
+    getValue: (comp) => comp?.shortDescription
   }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const minLength = {
   name: 'minLength',
   id: 'minLength',
@@ -67,9 +81,14 @@ export const minLength = {
   hint: {
     text: 'The minimum number of characters users can enter'
   },
-  classes: GOVUK_INPUT_WIDTH_3
+  classes: GOVUK_INPUT_WIDTH_3,
+  designer: {
+    type: ComponentType.TextField,
+    getValue: (comp) => comp?.schema.min
+  }
 }
 
+/** @type {DesignerField} */
 export const maxLength = {
   name: 'maxLength',
   id: 'maxLength',
@@ -80,10 +99,14 @@ export const maxLength = {
   hint: {
     text: 'The maximum number of characters users can enter'
   },
-  classes: GOVUK_INPUT_WIDTH_3
+  classes: GOVUK_INPUT_WIDTH_3,
+  designer: {
+    type: ComponentType.TextField,
+    getValue: (comp) => comp?.schema.max
+  }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const min = {
   name: 'min',
   id: 'min',
@@ -91,10 +114,14 @@ export const min = {
     text: 'Lowest number users can enter (optional)',
     classes: GOVUK_LABEL__M
   },
-  classes: GOVUK_INPUT_WIDTH_3
+  classes: GOVUK_INPUT_WIDTH_3,
+  designer: {
+    type: ComponentType.TextField,
+    getValue: (comp) => comp?.schema.min
+  }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const max = {
   name: 'max',
   id: 'max',
@@ -102,10 +129,14 @@ export const max = {
     text: 'Highest number users can enter (optional)',
     classes: GOVUK_LABEL__M
   },
-  classes: GOVUK_INPUT_WIDTH_3
+  classes: GOVUK_INPUT_WIDTH_3,
+  designer: {
+    type: ComponentType.TextField,
+    getValue: (comp) => comp?.schema.max
+  }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const classes = {
   name: 'classes',
   id: 'classes',
@@ -116,10 +147,14 @@ export const classes = {
   hint: {
     text: 'Apply CSS classes to this field. For example, ‘govuk-input govuk-!-width-full’'
   },
-  rows: 1
+  rows: 1,
+  designer: {
+    type: ComponentType.MultilineTextField,
+    getValue: (comp) => comp?.options.classes
+  }
 }
 
-/** @type {GovukField} */
+/** @type {DesignerField} */
 export const regex = {
   name: 'regex',
   id: 'regex',
@@ -130,9 +165,13 @@ export const regex = {
   hint: {
     text: 'Specifies a regular expression to validate users’ inputs. Use JavaScript syntax'
   },
-  rows: 3
+  rows: 3,
+  designer: {
+    type: ComponentType.MultilineTextField,
+    getValue: (comp) => comp?.schema.regex
+  }
 }
 
 /**
- * @import { ComponentDef, GovukField } from '@defra/forms-model'
+ * @import { DesignerField } from '@defra/forms-model'
  */

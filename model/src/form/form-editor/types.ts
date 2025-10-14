@@ -556,3 +556,13 @@ export interface ErrorPreviewFieldMappingDef {
   min?: { fieldName: string; placeholder: string }
   max?: { fieldName: string; placeholder: string }
 }
+
+export type DesignerField = GovukField & {
+  designer: {
+    type: ComponentType
+    getValue: (
+      comp: ComponentDef | undefined
+    ) => string | number | boolean | Date | undefined
+  }
+  errorMessage?: { text: string }
+}
