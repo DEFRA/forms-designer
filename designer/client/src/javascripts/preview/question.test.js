@@ -79,7 +79,7 @@ describe('question', () => {
       expect(res.renderInput).toEqual({
         id: expect.stringContaining('inputField'),
         classes: '',
-        name: expect.stringContaining('inputField'),
+        name: 'inputField',
         label: {
           text: 'Which quest would you like to pick?',
           classes: 'govuk-label--l'
@@ -124,7 +124,7 @@ describe('question', () => {
       expect(res.renderInput).toEqual({
         id: expect.stringContaining('inputField'),
         classes: '',
-        name: expect.stringContaining('inputField'),
+        name: 'inputField',
         label: {
           text: 'Question',
           classes: 'govuk-label--l'

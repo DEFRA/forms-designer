@@ -354,7 +354,7 @@ describe('editor-v2 - questions model', () => {
             model: {
               classes: '',
               content: '<p>Some info</p>\n',
-              id: 'markdown',
+              id: expect.stringContaining('markdown'),
               name: 'markdown'
             },
             questionType: 'Markdown'
@@ -371,7 +371,7 @@ describe('editor-v2 - questions model', () => {
                 classes: 'govuk-label--m',
                 text: 'What type of farming do you do?'
               },
-              name: expect.stringContaining('inputField')
+              name: 'inputField'
             },
             questionType: 'TextField'
           }
@@ -417,7 +417,7 @@ describe('editor-v2 - questions model', () => {
                 classes: 'govuk-label--l',
                 text: 'What type of farming do you do?'
               },
-              name: expect.stringContaining('inputField')
+              name: 'inputField'
             },
             questionType: ComponentType.TextField
           }

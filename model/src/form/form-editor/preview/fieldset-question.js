@@ -13,8 +13,10 @@ export class FieldsetQuestion extends Question {
   componentType = ComponentType.TextField
 
   get renderInput() {
+    const idSuffix = this._id ? `-${this._id}` : ''
+
     return {
-      id: this._fieldName,
+      id: `${this._fieldName}${idSuffix}`,
       name: this._fieldName,
       fieldset: this.fieldSet,
       hint: this.hint,

@@ -15,7 +15,7 @@ describe('fieldset-question', () => {
     const dateInput = new DummyFieldsetClass(elements, renderer)
     expect(dateInput.renderInput).toEqual({
       id: expect.stringContaining('inputField'),
-      name: expect.stringContaining('inputField'),
+      name: 'inputField',
       classes: '',
       fieldset: {
         legend: {
@@ -40,7 +40,7 @@ describe('fieldset-question', () => {
     dateInput.highlightContent()
     expect(dateInput.renderInput).toEqual({
       id: expect.stringContaining('inputField'),
-      name: expect.stringContaining('inputField'),
+      name: 'inputField',
       classes: 'highlight',
       fieldset: {
         legend: {

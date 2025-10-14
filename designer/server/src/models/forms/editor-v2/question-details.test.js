@@ -615,7 +615,7 @@ describe('editor-v2 - question details model', () => {
           classes: 'govuk-label--l',
           text: 'Upload a file'
         },
-        name: expect.stringContaining('inputField')
+        name: 'inputField'
       })
     })
 

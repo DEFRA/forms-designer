@@ -67,8 +67,10 @@ export class AutocompleteQuestion extends AutocompleteListQuestion {
   }
 
   get renderInput() {
+    const idSuffix = this._id ? `-${this._id}` : ''
+
     return {
-      id: this._fieldName,
+      id: `${this._fieldName}${idSuffix}`,
       name: this._fieldName,
       attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       hint: this.hint,

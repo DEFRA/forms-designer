@@ -17,7 +17,7 @@ describe('question', () => {
       const res = new Question(questionElements, renderer)
       expect(res.renderInput).toEqual({
         id: expect.stringContaining('inputField'),
-        name: expect.stringContaining('inputField'),
+        name: 'inputField',
         classes: '',
         label: {
           text: 'Which quest would you like to pick?',
@@ -58,7 +58,7 @@ describe('question', () => {
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
         id: expect.stringContaining('inputField'),
-        name: expect.stringContaining('inputField'),
+        name: 'inputField',
         classes: '',
         label: {
           text: 'Question',

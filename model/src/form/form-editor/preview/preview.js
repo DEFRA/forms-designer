@@ -136,8 +136,10 @@ export class PreviewComponent {
    * @protected
    */
   _renderInput() {
+    const idSuffix = this._id ? `-${this._id}` : ''
+
     return {
-      id: this._fieldName,
+      id: `${this._fieldName}${idSuffix}`,
       name: this._fieldName,
       classes: this._highlighted ? HIGHLIGHT_CLASS : ''
     }

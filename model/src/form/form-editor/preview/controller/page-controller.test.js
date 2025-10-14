@@ -211,7 +211,7 @@ describe('page-controller', () => {
         model: {
           id: expect.stringContaining('inputField'),
           classes: '',
-          name: expect.stringContaining('inputField'),
+          name: 'inputField',
           label: {
             classes: 'govuk-label--m',
             text: 'Question title'
@@ -265,7 +265,7 @@ describe('page-controller', () => {
             classes: '',
             text: ''
           },
-          id: 'selectInput',
+          id: expect.stringContaining('selectInput'),
           items: [
             {
               hint: undefined,

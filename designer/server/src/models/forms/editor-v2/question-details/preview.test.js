@@ -450,7 +450,7 @@ describe('preview', () => {
         classes: 'govuk-label--l',
         text: 'Short answer (optional)'
       },
-      name: expect.stringContaining('inputField')
+      name: 'inputField'
     })
 
     const fieldSetModelBase = /** @type {QuestionBaseModel} */ ({
@@ -511,7 +511,7 @@ describe('preview', () => {
           classes: 'govuk-label--l',
           text: 'Short answer (optional)'
         },
-        name: expect.stringContaining('inputField')
+        name: 'inputField'
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -563,7 +563,7 @@ describe('preview', () => {
 
       expect(previewModel).toEqual({
         id: expect.stringContaining('inputField'),
-        name: expect.stringContaining('inputField'),
+        name: 'inputField',
         label: {
           classes: 'govuk-label--l',
           text: 'Short answer (optional)'
