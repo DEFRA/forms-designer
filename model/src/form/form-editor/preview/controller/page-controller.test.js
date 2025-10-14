@@ -214,6 +214,7 @@ describe('page-controller', () => {
           name: 'inputField',
           label: {
             classes: 'govuk-label--m',
+            isPageHeading: true,
             text: 'Question title'
           },
           hint: {
@@ -230,6 +231,7 @@ describe('page-controller', () => {
           fieldset: {
             legend: {
               classes: 'govuk-fieldset__legend--m',
+              isPageHeading: true,
               text: 'List component'
             }
           },
@@ -259,6 +261,7 @@ describe('page-controller', () => {
           classes: '',
           label: {
             classes: 'govuk-label--m',
+            isPageHeading: true,
             text: 'Select component'
           },
           hint: {
