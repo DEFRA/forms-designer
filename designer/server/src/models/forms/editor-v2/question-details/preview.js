@@ -100,6 +100,11 @@ export class QuestionPreviewElements {
    * @type {string}
    */
   autocompleteOptions = ''
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  _usePostcodeLookup = false
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 

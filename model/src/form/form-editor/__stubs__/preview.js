@@ -96,18 +96,32 @@ export class QuestionPreviewElements {
    * @private
    */
   _items = []
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  _usePostcodeLookup = false
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
    * @param {BaseSettings} baseSettings
    */
-  constructor({ question, hintText, optional, shortDesc, items, content }) {
+  constructor({
+    question,
+    hintText,
+    optional,
+    shortDesc,
+    usePostcodeLookup,
+    items,
+    content
+  }) {
     this._question = question
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
     this._items = items
     this._content = content
+    this._usePostcodeLookup = usePostcodeLookup ?? false
   }
 
   /**
@@ -119,6 +133,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      usePostcodeLookup: this._usePostcodeLookup,
       items: this._items,
       content: this._content
     }

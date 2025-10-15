@@ -36,12 +36,39 @@ export class UkAddressQuestion extends FieldsetQuestion {
   _fieldName = 'addressField'
   _usePostcodeLookup = false
 
+  /**
+   * @param {QuestionElements} htmlElements
+   * @param {QuestionRenderer} questionRenderer
+   */
+  constructor(htmlElements, questionRenderer) {
+    super(htmlElements, questionRenderer)
+    this._usePostcodeLookup = htmlElements.values.usePostcodeLookup ?? false
+  }
+
   get usePostcodeLookup() {
     return this._usePostcodeLookup
+  }
+
+  /**
+   * @param {boolean} val
+   */
+  set usePostcodeLookup(val) {
+    this._usePostcodeLookup = val
+    this.render()
+  }
+
+  /**
+   * @protected
+   */
+  _renderInput() {
+    return {
+      ...super._renderInput(),
+      usePostcodeLookup: this.usePostcodeLookup
+    }
   }
 }
 
 /**
- * @import { BaseSettings, QuestionElements } from '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  * @import { FormComponentsDef } from '~/src/components/types.js'
  */
