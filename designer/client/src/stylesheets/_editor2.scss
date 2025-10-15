@@ -48,6 +48,10 @@
   &__actions {
     margin-left: govuk-spacing(4);
     flex-shrink: 0;
+
+    form {
+      display: inline;
+    }
   }
 }
 
