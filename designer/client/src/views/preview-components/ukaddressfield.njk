@@ -1,10 +1,47 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
 
 <fieldset class="govuk-fieldset {{ model.classes }}">
   <legend class="govuk-fieldset__legend {{ model.fieldset.legend.classes }}" id="question-label-output">
     {{ model.fieldset.legend.text }}
   </legend>
   <div class="govuk-hint {{ model.hint.classes }}" id="hint-text-output">{{ model.hint.text }}</div>
+  {% if model.usePostcodeLookup %}
+  {{ govukInput({
+    label: {
+      text: "Postcode"
+    },
+    hint: {
+      text: "For example, AA3 1AB"
+    },
+    id: "postcode",
+    name: "postcode"
+  }) }}
+  
+  {{ govukInput({
+    label: {
+      text: "Building number or name (optional)"
+    },
+    hint: {
+      text: "For example, 15 or Prospect Cottage"
+    },
+    id: "postcodeBuildingNumberOrName",
+    name: "postcodeBuildingNumberOrName"
+  }) }}
+
+<div class="govuk-button-group">
+  {{ govukButton({
+    text: "Find address"
+  }) }}
+  {{ govukButton({
+    text: "Enter address manually"
+  }) }}
+  or
+  <a href="#" class="govuk-link govuk-link--no-visited-state">enter address manually</a>
+</div>
+
+
+  {% else %}
   {{ govukInput({
     label: {
       text: "Address line 1"
@@ -36,5 +73,6 @@
     id: "postcode",
     name: "postcode"
   }) }}
+  {% endif %}
 
 </fieldset>
