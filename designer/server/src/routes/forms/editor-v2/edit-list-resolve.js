@@ -90,9 +90,9 @@ export default [
 
       // Create a map but switch places of key/value
       const replaceWithMap = new Map()
-      Object.entries(replaceWith).forEach(([k, v]) => {
+      for (const [k, v] of Object.entries(replaceWith)) {
         replaceWithMap.set(v, k)
-      })
+      }
 
       // Replace ids of user-selected replacements
       const updatedListItems = /** @type {Item[]} */ (
