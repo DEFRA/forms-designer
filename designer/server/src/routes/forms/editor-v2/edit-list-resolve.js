@@ -84,20 +84,27 @@ export default [
 
       const state = getQuestionSessionState(yar, stateId)
 
-      const listItems = state?.listItems
+      // Get details and last-saved list items
+      const { metadata, definition } = await getFormPage(slug, pageId, token)
+      const postedListItems = state?.listItems ?? []
 
-      // Apply value replacement
-      const replaceWithMap = new Map(Object.entries(replaceWith))
-      const updatedListItems = (listItems ?? []).map((item) => {
-        if (item.id && replaceWithMap.has(item.id)) {
-          const replaceValue = replaceWithMap.get(item.id)
-          return { ...item, value: replaceValue, text: replaceValue }
-        }
-        return item
+      // Create a map but switch places of key/value
+      const replaceWithMap = new Map()
+      Object.entries(replaceWith).forEach(([k, v]) => {
+        replaceWithMap.set(v, k)
       })
 
-      // Get details
-      const { metadata, definition } = await getFormPage(slug, pageId, token)
+      // Replace ids of user-selected replacements
+      const updatedListItems = /** @type {Item[]} */ (
+        postedListItems.map((item) => {
+          const value = /** @type { string | undefined } */ (item.value)
+          if (value && replaceWithMap.has(value)) {
+            const replaceValue = replaceWithMap.get(item.value)
+            return { ...item, id: replaceValue }
+          }
+          return item
+        })
+      )
 
       await saveQuestion(
         metadata.id,
@@ -106,7 +113,7 @@ export default [
         pageId,
         questionId,
         state?.questionDetails ?? {},
-        /** @type {Item[]} */ (updatedListItems)
+        updatedListItems
       )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
