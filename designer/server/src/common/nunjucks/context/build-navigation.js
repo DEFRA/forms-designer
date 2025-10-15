@@ -70,7 +70,7 @@ export function buildNavigation(request) {
       isActive: !!request?.path?.startsWith(formsSupportPath)
     })
   ]
-    .filter(({ isVisible }) => isVisible)
+    .filter(({ isVisible: isVisibleFilter }) => isVisibleFilter)
     .map(({ isVisible: _isVisible, ...entry }) => {
       return entry
     })
