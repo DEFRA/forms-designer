@@ -7,69 +7,70 @@
   </legend>
   <div class="govuk-hint {{ model.hint.classes }}" id="hint-text-output">{{ model.hint.text }}</div>
   {% if model.usePostcodeLookup %}
-  {{ govukInput({
-    label: {
-      text: "Postcode"
-    },
-    hint: {
-      text: "For example, AA3 1AB"
-    },
-    id: "postcode",
-    name: "postcode"
-  }) }}
+    {{ govukInput({
+      label: {
+        text: "Postcode"
+      },
+      hint: {
+        text: "For example, AA3 1AB"
+      },
+      id: "postcode",
+      name: "postcode"
+    }) }}
 
-  {{ govukInput({
-    label: {
-      text: "Building number or name (optional)"
-    },
-    hint: {
-      text: "For example, 15 or Prospect Cottage"
-    },
-    id: "postcodeBuildingNumberOrName",
-    name: "postcodeBuildingNumberOrName"
-  }) }}
+    {{ govukInput({
+      label: {
+        text: "Building number or name (optional)"
+      },
+      hint: {
+        text: "For example, 15 or Prospect Cottage"
+      },
+      id: "postcodeBuildingNumberOrName",
+      name: "postcodeBuildingNumberOrName"
+    }) }}
 
-<div class="govuk-button-group">
-  {{ govukButton({
-    text: "Find address",
-    classes: "govuk-!-margin-right-1"
-  }) }}
-  or&nbsp;<a href="#" class="govuk-link govuk-link--no-visited-state">enter address manually</a>
-</div>
-
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: "Find address",
+        classes: "govuk-!-margin-right-1"
+      }) }}
+      or&nbsp;<a href="#" class="govuk-link govuk-link--no-visited-state">enter address manually</a>
+    </div>
 
   {% else %}
-  {{ govukInput({
-    label: {
-      text: "Address line 1"
-    },
-    id: "addressLine1",
-    name: "addressLine1"
-  }) }}
 
-  {{ govukInput({
-    label: {
-      text: "Address line 2 (optional)"
-    },
-    id: "addressLine2",
-    name: "addressLine2"
-  }) }}
+    {{ govukInput({
+      label: {
+        text: "Address line 1"
+      },
+      id: "addressLine1",
+      name: "addressLine1"
+    }) }}
 
-  {{ govukInput({
-    label: {
-      text: "Town or city"
-    },
-    id: "town",
-    name: "town"
-  }) }}
+    {{ govukInput({
+      label: {
+        text: "Address line 2 (optional)"
+      },
+      id: "addressLine2",
+      name: "addressLine2"
+    }) }}
 
-  {{ govukInput({
-    label: {
-      text: "Postcode"
-    },
-    id: "postcode",
-    name: "postcode"
-  }) }}
+    {{ govukInput({
+      label: {
+        text: "Town or city"
+      },
+      id: "town",
+      name: "town"
+    }) }}
+
+    {{ govukInput({
+      label: {
+        text: "Postcode"
+      },
+      id: "postcode",
+      name: "postcode"
+    }) }}
+
   {% endif %}
 
 </fieldset>

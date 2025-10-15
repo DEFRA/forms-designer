@@ -8,7 +8,7 @@ import { QuestionComponentElements } from '~/src/form/form-editor/preview/questi
  */
 export class UkAddressComponentPreviewElements extends QuestionComponentElements {
   /**
-   * @param {FormComponentsDef & { options: { usePostcodeLookup: boolean } }} component
+   * @param {UkAddressFieldComponent} component
    */
   constructor(component) {
     super(component)
@@ -70,5 +70,5 @@ export class UkAddressQuestion extends FieldsetQuestion {
 
 /**
  * @import { BaseSettings, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { FormComponentsDef } from '~/src/components/types.js'
+ * @import { FormComponentsDef, UkAddressFieldComponent } from '~/src/components/types.js'
  */
