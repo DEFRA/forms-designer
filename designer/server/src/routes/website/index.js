@@ -3,6 +3,7 @@ import Joi from 'joi'
 import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
 import { websiteAboutModel } from '~/src/models/website/about.js'
 import { websiteFeaturesModel } from '~/src/models/website/features.js'
+import { websiteServicesModel } from '~/src/models/website/services.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
 import {
@@ -16,6 +17,10 @@ import content from '~/src/routes/website/content.js'
  * @type {{ param: WebsiteLevel1Routes | string; text: string; active?: boolean }[]}
  */
 export const pageNavigationBase = [
+  {
+    param: WebsiteLevel1Routes.SERVICES,
+    text: 'Services'
+  },
   {
     param: WebsiteLevel1Routes.ABOUT,
     text: 'About'
@@ -38,7 +43,36 @@ export const pageNavigationBase = [
   }
 ]
 
+const [_, ...pageNavigationGuestBase] = pageNavigationBase
+
+export const pageNavigationGuest = [
+  {
+    param: '',
+    text: 'Services'
+  },
+  ...pageNavigationGuestBase
+]
+
 export default /** @satisfies {ServerRoute[]} */ ([
+  {
+    method: 'GET',
+    path: `/${WebsiteLevel1Routes.SERVICES}`,
+    handler(request, h) {
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+
+      if (isGuest) {
+        return h.redirect('/')
+      }
+
+      const servicesModel = websiteServicesModel(isGuest)
+      return h.view('website/index', servicesModel)
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      }
+    }
+  },
   {
     method: 'GET',
     path: `/${WebsiteLevel1Routes.ABOUT}`,

@@ -4,6 +4,7 @@ import {
   formsGetStartedPath,
   formsLibraryPath,
   formsResourcesPath,
+  formsServicesPath,
   formsSupportPath,
   formsWebsitePaths
 } from '~/src/models/links.js'
@@ -43,6 +44,11 @@ export function buildNavigation(request) {
   return [
     buildEntry('Forms library', formsLibraryPath, {
       isActive: !!request?.path?.startsWith(formsLibraryPath)
+    }),
+    buildEntry('Services', formsServicesPath, {
+      isActive:
+        !!request?.path?.startsWith(formsServicesPath) || request?.path === '/',
+      isVisible: isVisible(request?.path, formsServicesPath)
     }),
     buildEntry('About', formsAboutPath, {
       isActive: !!request?.path?.startsWith(formsAboutPath),

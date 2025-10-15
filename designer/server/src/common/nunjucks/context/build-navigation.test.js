@@ -37,7 +37,7 @@ describe('build-navigation', () => {
       ])
     })
 
-    it('should provide expected navigation details', () => {
+    it('should provide expected navigation details on /about', () => {
       expect(buildNavigation(mockRequest({ path: '/about' }))).toEqual([
         {
           isActive: false,

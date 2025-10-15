@@ -56,6 +56,11 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
+            active: true,
+            href: '/',
+            text: 'Services'
+          },
+          {
             href: '/about',
             text: 'About'
           },
@@ -105,6 +110,11 @@ describe('Auth view models', () => {
           size: 'large'
         },
         pageNavigation: [
+          {
+            active: true,
+            href: '/',
+            text: 'Services'
+          },
           {
             href: '/about',
             text: 'About'
@@ -160,6 +170,11 @@ describe('Auth view models', () => {
           size: 'large'
         },
         pageNavigation: [
+          {
+            active: true,
+            href: '/',
+            text: 'Services'
+          },
           {
             href: '/about',
             text: 'About'

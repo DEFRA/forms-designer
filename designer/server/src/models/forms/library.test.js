@@ -9,7 +9,11 @@ import {
   listViewModel,
   overviewViewModel
 } from '~/src/models/forms/library.js'
-import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
+import {
+  formOverviewPath,
+  formsLibraryPath,
+  formsSupportPath
+} from '~/src/models/links.js'
 
 describe('Forms Library Models', () => {
   const formSlug = 'test-form-slug'
@@ -92,7 +96,8 @@ describe('Forms Library Models', () => {
         expect(navigation).toEqual([
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: true }),
-          buildEntry('Editor', `${formPath}/editor`, { isActive: false })
+          buildEntry('Editor', `${formPath}/editor`, { isActive: false }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
 
@@ -109,7 +114,8 @@ describe('Forms Library Models', () => {
           buildEntry('Overview', formPath, { isActive: true }),
           buildEntry('Editor', `${formPath}/editor-v2/pages`, {
             isActive: false
-          })
+          }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
 
@@ -124,7 +130,8 @@ describe('Forms Library Models', () => {
         expect(navigation).toEqual([
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: false }),
-          buildEntry('Editor', `${formPath}/editor`, { isActive: true })
+          buildEntry('Editor', `${formPath}/editor`, { isActive: true }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
 
@@ -141,7 +148,8 @@ describe('Forms Library Models', () => {
           buildEntry('Overview', formPath, { isActive: false }),
           buildEntry('Editor', `${formPath}/editor-v2/pages`, {
             isActive: true
-          })
+          }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
     })
@@ -157,7 +165,8 @@ describe('Forms Library Models', () => {
 
         expect(navigation).toEqual([
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
-          buildEntry('Overview', formPath, { isActive: true })
+          buildEntry('Overview', formPath, { isActive: true }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
 
@@ -171,7 +180,8 @@ describe('Forms Library Models', () => {
 
         expect(navigation).toEqual([
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
-          buildEntry('Overview', formPath, { isActive: false })
+          buildEntry('Overview', formPath, { isActive: false }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
     })
@@ -188,7 +198,8 @@ describe('Forms Library Models', () => {
         expect(navigation).toEqual([
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: false }),
-          buildEntry('Editor', `${formPath}/editor`, { isActive: false })
+          buildEntry('Editor', `${formPath}/editor`, { isActive: false }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
     })
@@ -204,7 +215,8 @@ describe('Forms Library Models', () => {
         expect(navigation).toEqual([
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: false }),
-          buildEntry('Editor', `${formPath}/editor`, { isActive: false })
+          buildEntry('Editor', `${formPath}/editor`, { isActive: false }),
+          buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
     })

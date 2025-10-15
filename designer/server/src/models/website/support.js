@@ -9,7 +9,10 @@ export function websiteSupportModel(isGuest) {
   return {
     isGuest,
     pageTitle: `Defra Forms: ${title}`,
-    pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.SUPPORT),
+    pageNavigation: getWebsitePageNavigation(
+      WebsiteLevel1Routes.SUPPORT,
+      isGuest
+    ),
     pageHeading: {
       text: title,
       description: 'large'

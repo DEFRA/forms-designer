@@ -1,6 +1,6 @@
 export const backToFormOverviewLinkText = 'Back to form overview'
 export const backToFormsLibraryLinkText = 'Back to forms library'
-export const formsServices = '/services'
+export const formsServicesPath = '/services'
 export const formsLibraryPath = '/library'
 export const formsAboutPath = '/about'
 export const formsGetStartedPath = '/get-started'
@@ -9,7 +9,7 @@ export const formsResourcesPath = '/resources'
 export const formsSupportPath = '/support'
 
 export const formsWebsitePaths = [
-  formsServices,
+  formsServicesPath,
   formsAboutPath,
   formsGetStartedPath,
   formsFeaturesPath,

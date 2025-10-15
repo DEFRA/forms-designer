@@ -26,7 +26,7 @@ export function websiteSubmenuModel(
   return {
     isGuest,
     pageTitle: `Defra Forms: ${titleText}`,
-    pageNavigation: getWebsitePageNavigation(level1Menu),
+    pageNavigation: getWebsitePageNavigation(level1Menu, isGuest),
     pageHeading: {
       text: `Defra Forms: ${titleText}`,
       size: 'large',

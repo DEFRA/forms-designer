@@ -9,7 +9,10 @@ export function websiteFeaturesModel(isGuest) {
   return {
     isGuest,
     pageTitle: 'Defra Forms: Features',
-    pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.FEATURES),
+    pageNavigation: getWebsitePageNavigation(
+      WebsiteLevel1Routes.FEATURES,
+      isGuest
+    ),
     pageHeading: {
       text: 'Features',
       description: 'large'

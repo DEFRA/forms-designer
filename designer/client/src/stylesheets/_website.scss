@@ -45,6 +45,10 @@ $home-page-breakpoint: 1220px;
           color: #ffffff;
         }
       }
+
+      .govuk-service-navigation__item--active {
+        border-bottom-color: #ffffff;
+      }
     }
   }
 

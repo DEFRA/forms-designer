@@ -1,8 +1,10 @@
 import { AssertionError } from 'assert'
 
 import { within } from '@testing-library/dom'
+import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 describe('Health check route', () => {
@@ -49,7 +51,14 @@ describe('Health check route', () => {
 
     const $timeIso = $time.getAttribute('datetime')
     const $navigation = container.getByRole('navigation', { name: 'Menu' })
-    const menus = ['About', 'Get started', 'Features', 'Resources', 'Support']
+    const menus = [
+      'Services',
+      'About',
+      'Get started',
+      'Features',
+      'Resources',
+      'Support'
+    ]
     const $navigationItems = within($navigation).getAllByRole('link')
 
     menus.forEach((item, idx) => {
@@ -63,10 +72,25 @@ describe('Health check route', () => {
     expect(new Date($timeIso)).not.toBeNaN()
   })
 
-  test('/services should show the Defra Forms Website Services page', async () => {
+  test('/services should redirect to home when not logged in', async () => {
     const options = {
       method: 'GET',
       url: '/services'
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(headers.location).toBe('/')
+  })
+
+  test('/services should show the Defra Forms Website Services page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/services',
+      auth
     }
 
     const { container } = await renderResponse(server, options)

@@ -8,7 +8,10 @@ export function websiteAboutModel(isGuest) {
   return {
     isGuest,
     pageTitle: 'Defra Forms: About the Defra Forms team',
-    pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.ABOUT),
+    pageNavigation: getWebsitePageNavigation(
+      WebsiteLevel1Routes.ABOUT,
+      isGuest
+    ),
     pageHeading: {
       text: 'About the Defra Forms team',
       description: 'large'
