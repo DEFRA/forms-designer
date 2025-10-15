@@ -63,6 +63,20 @@ describe('Health check route', () => {
     expect(new Date($timeIso)).not.toBeNaN()
   })
 
+  test('/services should show the Defra Forms Website Services page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/services'
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent(
+      'Create and publish Defra forms on GOV.UK'
+    )
+  })
+
   test('/about should show the Defra Forms Website About page', async () => {
     const options = {
       method: 'GET',
