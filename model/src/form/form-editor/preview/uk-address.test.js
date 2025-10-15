@@ -61,4 +61,31 @@ describe('address', () => {
       expect(res.usePostcodeLookup).toBeTruthy()
     })
   })
+
+  it('should create class and set usePostcodeLookup to false', () => {
+    const elements = new QuestionPreviewElements({
+      ...baseElements,
+      usePostcodeLookup: true
+    })
+    const renderer = new QuestionRendererStub(jest.fn())
+    const question = new UkAddressQuestion(elements, renderer)
+    question.usePostcodeLookup = false
+    expect(question.renderInput).toEqual({
+      id: 'addressField',
+      name: 'addressField',
+      classes: '',
+      fieldset: {
+        legend: {
+          classes: 'govuk-fieldset__legend--l',
+          text: 'Which quest would you like to pick?'
+        }
+      },
+      hint: {
+        text: 'Choose one adventure that best suits you.',
+        classes: ''
+      },
+      usePostcodeLookup: false
+    })
+    expect(question.usePostcodeLookup).toBeFalsy()
+  })
 })

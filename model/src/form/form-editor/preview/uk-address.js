@@ -70,5 +70,5 @@ export class UkAddressQuestion extends FieldsetQuestion {
 
 /**
  * @import { BaseSettings, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
- * @import { FormComponentsDef, UkAddressFieldComponent } from '~/src/components/types.js'
+ * @import { UkAddressFieldComponent } from '~/src/components/types.js'
  */
