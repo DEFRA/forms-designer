@@ -204,4 +204,9 @@ export interface FormDefinition {
     audience: 'human' | 'machine'
     version: string
   }
+  outputs?: {
+    audience: 'human' | 'machine'
+    version: string
+    emailAddress: string
+  }[]
 }
