@@ -60,6 +60,20 @@ describe('preview', () => {
       }
     ]
   }
+
+  const usePostcodeLookup = {
+    name: 'usePostcodeLookup',
+    id: 'usePostcodeLookup',
+    classes: 'govuk-checkboxes--small',
+    items: [
+      {
+        value: 'true',
+        text: 'Use postcode lookup',
+        checked: true
+      }
+    ]
+  }
+
   const shortDescription = {
     id: 'shortDescription',
     name: 'shortDescription',
@@ -119,7 +133,8 @@ describe('preview', () => {
     question,
     hintText,
     questionOptional,
-    shortDescription
+    shortDescription,
+    usePostcodeLookup
   ]
 
   describe('getValueAsString', () => {
@@ -139,6 +154,40 @@ describe('preview', () => {
   describe('getCheckedValue', () => {
     it('should return checked value given questionOptional', () => {
       expect(getCheckedValue(questionOptional)).toBe(true)
+    })
+
+    it('should return checked value given usePostcodeLookup', () => {
+      expect(getCheckedValue(usePostcodeLookup)).toBe(true)
+    })
+
+    it('should return false given questionOptional is not checked', () => {
+      expect(
+        getCheckedValue({
+          ...questionOptional,
+          items: [
+            {
+              value: 'true',
+              text: 'Make this question optional',
+              checked: false
+            }
+          ]
+        })
+      ).toBe(false)
+    })
+
+    it('should return false given usePostcodeLookup is not checked', () => {
+      expect(
+        getCheckedValue({
+          ...usePostcodeLookup,
+          items: [
+            {
+              value: 'true',
+              text: 'Use postcode lookup',
+              checked: false
+            }
+          ]
+        })
+      ).toBe(false)
     })
 
     it('should return false given not questionOptional', () => {
@@ -196,6 +245,7 @@ describe('preview', () => {
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
+        usePostcodeLookup: true,
         items: []
       })
     })
@@ -209,6 +259,7 @@ describe('preview', () => {
         content: '',
         optional: false,
         shortDesc: '',
+        usePostcodeLookup: false,
         items: []
       })
     })
@@ -766,7 +817,8 @@ describe('preview', () => {
           }
         },
         name: 'addressField',
-        classes: ''
+        classes: '',
+        usePostcodeLookup: false
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })

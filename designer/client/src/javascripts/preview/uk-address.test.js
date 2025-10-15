@@ -29,7 +29,8 @@ describe('address', () => {
         hint: {
           text: 'Choose one adventure that best suits you.',
           classes: ''
-        }
+        },
+        usePostcodeLookup: false
       })
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')
