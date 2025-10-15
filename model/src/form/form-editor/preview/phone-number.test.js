@@ -18,7 +18,8 @@ describe('phone number', () => {
         classes: '',
         label: {
           text: 'Which quest would you like to pick?',
-          classes: 'govuk-label--l'
+          classes: 'govuk-label--l',
+          isPageHeading: true
         },
         hint: {
           text: 'Choose one adventure that best suits you.',

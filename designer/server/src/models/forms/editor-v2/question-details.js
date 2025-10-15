@@ -246,6 +246,28 @@ export function getSkipLink() {
 }
 
 /**
+ * @param {ComponentDef} question
+ * @param { QuestionSessionState | undefined } state
+ * @param {FormDefinition} definition
+ */
+export function handleAutocomplete(question, state, definition) {
+  if (question.type !== ComponentType.AutocompleteField) {
+    return definition
+  }
+  const list = definition.lists.find((lst) => lst.id === question.list)
+  if (list && state?.listItems) {
+    list.items = /** @type {Item[]} */ (
+      state.listItems.map((item) => ({
+        id: item.id,
+        text: item.text,
+        value: item.value
+      }))
+    )
+  }
+  return definition
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -274,7 +296,7 @@ export function questionDetailsViewModel(
     /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
     validation,
-    definition
+    handleAutocomplete(questionFieldsOverride, state, definition)
   )
   const uploadFields = getFileUploadFields(questionFieldsOverride, validation)
   const extraFields = /** @type {GovukField[]} */ (
@@ -333,6 +355,6 @@ export function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, List, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

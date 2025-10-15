@@ -21,7 +21,7 @@
 
     <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
       <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
-        <dl class="govuk-summary-list">
+        <dl class="govuk-summary-list" role="presentation">
           <div class="govuk-summary-list__row">
             <dd class="govuk-summary-list__value">
               <div class="govuk-grid-row" id="page-settings-container-1">
@@ -29,7 +29,7 @@
                   <div class="govuk-summary-card__content">
 
                     <div class="app-tab-container">
-                      <a href="{{ backLink.href }}" class="editor-card-title app-tab-link">{{ cardTitle }}</a>
+                      <a href="{{ backLink.href }}" class="editor-card-title app-tab-link" aria-label="{{ cardTitle }} settings">{{ cardTitle }}</a>
                       {%- include "../views/forms/editor-v2/partials/page-navigation-tabs.njk" -%}
                     </div>
 
@@ -61,14 +61,13 @@
                                 <p class="govuk-body govuk-!-margin-bottom-0">{{ pageConditionPresentationString or "'How do you want to receive your order?' is 'delivery'" }}</p>
                               </div>
                               <div class="app-condition-applied__actions">
-                                <a href="#" class="govuk-link govuk-link--no-visited-state" onclick="document.getElementById('remove-condition-form').submit(); return false;">Remove</a>
+                                <form method="post" action="{{ pageConditionsApiUrl }}">
+                                  <input type="hidden" name="action" value="remove">
+                                  <button type="submit" class="govuk-link govuk-link--no-visited-state">Remove</button>
+                                </form>
                               </div>
                             </div>
                           </div>
-
-                          <form id="remove-condition-form" method="post" action="{{ pageConditionsApiUrl }}" style="display: none;">
-                            <input type="hidden" name="action" value="remove">
-                          </form>
                         {% endif %}
 
                         <span class="govuk-caption-m">{{ pageSpecificHeading }}</span>

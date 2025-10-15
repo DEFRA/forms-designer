@@ -97,6 +97,7 @@ describe('list', () => {
   const expectedList = [
     {
       id: list1Id,
+      hint: undefined,
       text: 'Treasure Hunting',
       value: 'Treasure Hunting',
       label: {
@@ -106,6 +107,7 @@ describe('list', () => {
     },
     {
       id: list2Id,
+      hint: undefined,
       text: 'Rescuing the princess',
       value: 'Rescuing the princess',
       label: {
@@ -115,6 +117,7 @@ describe('list', () => {
     },
     {
       id: list3Id,
+      hint: undefined,
       text: 'Saving a city',
       value: 'Saving a city',
       label: {
@@ -124,6 +127,7 @@ describe('list', () => {
     },
     {
       id: list4Id,
+      hint: undefined,
       text: 'Defeating the baron',
       value: 'Defeating the baron',
       label: {
@@ -302,7 +306,8 @@ describe('list', () => {
         fieldset: {
           legend: {
             text: 'Which quest would you like to pick?',
-            classes: 'govuk-fieldset__legend--l'
+            classes: 'govuk-fieldset__legend--l',
+            isPageHeading: true
           }
         },
         hint: {

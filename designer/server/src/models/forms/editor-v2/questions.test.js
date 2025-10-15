@@ -369,6 +369,7 @@ describe('editor-v2 - questions model', () => {
               id: 'inputField',
               label: {
                 classes: 'govuk-label--m',
+                isPageHeading: true,
                 text: 'What type of farming do you do?'
               },
               name: 'inputField'
@@ -415,6 +416,7 @@ describe('editor-v2 - questions model', () => {
               id: 'inputField',
               label: {
                 classes: 'govuk-label--l',
+                isPageHeading: true,
                 text: 'What type of farming do you do?'
               },
               name: 'inputField'

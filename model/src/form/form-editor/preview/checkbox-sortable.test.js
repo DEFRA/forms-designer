@@ -21,6 +21,7 @@ describe('CheckboxSortableQuestion', () => {
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',
+          isPageHeading: true,
           text: 'Which quest would you like to pick?'
         }
       },
