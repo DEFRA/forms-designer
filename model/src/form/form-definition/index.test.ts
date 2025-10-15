@@ -561,7 +561,7 @@ describe('Form definition schema', () => {
         })
       })
 
-      it('should not validate if there are duplicate list ids', () => {
+      it('should reject if there are duplicate list ids', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,
           lists: [
@@ -583,7 +583,7 @@ describe('Form definition schema', () => {
         )
       })
 
-      it('should not validate if one outputs email is badly configured', () => {
+      it('should reject if one outputs email is badly configured', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,
           lists: [list],
@@ -601,7 +601,7 @@ describe('Form definition schema', () => {
         )
       })
 
-      it('should validate if many outputs configured', () => {
+      it('should allow many outputs configured', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,
           lists: [list],
