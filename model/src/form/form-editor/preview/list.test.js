@@ -211,7 +211,8 @@ describe('list', () => {
         fieldset: {
           legend: {
             text: 'Which quest would you like to pick?',
-            classes: 'govuk-fieldset__legend--l'
+            classes: 'govuk-fieldset__legend--l',
+            isPageHeading: true
           }
         },
         hint: {
@@ -240,7 +241,8 @@ describe('list', () => {
         fieldset: {
           legend: {
             text: 'Which quest would you like to pick?',
-            classes: 'govuk-fieldset__legend--l'
+            classes: 'govuk-fieldset__legend--l',
+            isPageHeading: true
           }
         },
         hint: {

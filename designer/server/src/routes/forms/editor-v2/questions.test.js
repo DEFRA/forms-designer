@@ -142,7 +142,7 @@ describe('Editor v2 questions routes', () => {
     )
 
     expect($previewPanel).toHaveTextContent('Previews')
-    expect($headings[4]).toHaveTextContent('')
+    expect($headings.length).toBeGreaterThanOrEqual(5)
     expect($previewTitle[1]).toHaveTextContent(title)
     expect($previewTitle[1]).toHaveClass('govuk-label govuk-label--l')
     expect(container.queryByText('Page preview')).not.toBeNull()

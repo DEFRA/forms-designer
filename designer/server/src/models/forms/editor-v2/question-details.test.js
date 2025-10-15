@@ -613,6 +613,7 @@ describe('editor-v2 - question details model', () => {
         id: 'inputField',
         label: {
           classes: 'govuk-label--l',
+          isPageHeading: true,
           text: 'Upload a file'
         },
         name: 'inputField'

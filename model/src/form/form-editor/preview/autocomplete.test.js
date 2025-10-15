@@ -26,6 +26,7 @@ describe('AutoCompleteQuestion', () => {
       name: 'autoCompleteField',
       label: {
         classes: 'govuk-label--l',
+        isPageHeading: true,
         text: 'Which quest would you like to pick?'
       },
       hint: {
@@ -83,6 +84,7 @@ describe('AutoCompleteQuestion', () => {
       name: 'autoCompleteField',
       label: {
         classes: 'govuk-label--l',
+        isPageHeading: true,
         text: 'Which quest would you like to pick?'
       },
       hint: {

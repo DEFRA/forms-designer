@@ -448,6 +448,7 @@ describe('preview', () => {
       id: 'inputField',
       label: {
         classes: 'govuk-label--l',
+        isPageHeading: true,
         text: 'Short answer (optional)'
       },
       name: 'inputField'
@@ -463,6 +464,7 @@ describe('preview', () => {
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         }
       },
@@ -481,6 +483,7 @@ describe('preview', () => {
       fieldset: {
         legend: {
           classes: 'govuk-fieldset__legend--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         }
       },
@@ -509,6 +512,7 @@ describe('preview', () => {
         id: 'inputField',
         label: {
           classes: 'govuk-label--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         },
         name: 'inputField'
@@ -566,6 +570,7 @@ describe('preview', () => {
         name: 'inputField',
         label: {
           classes: 'govuk-label--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         },
         hint: {
@@ -676,6 +681,7 @@ describe('preview', () => {
         },
         label: {
           classes: 'govuk-label--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         },
         hint: {
@@ -740,6 +746,7 @@ describe('preview', () => {
         id: 'emailAddressField',
         label: {
           classes: 'govuk-label--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         },
         name: 'emailAddressField'
@@ -762,6 +769,7 @@ describe('preview', () => {
         fieldset: {
           legend: {
             classes: 'govuk-fieldset__legend--l',
+            isPageHeading: true,
             text: 'Short answer (optional)'
           }
         },
@@ -786,6 +794,7 @@ describe('preview', () => {
         id: 'phoneNumberField',
         label: {
           classes: 'govuk-label--l',
+          isPageHeading: true,
           text: 'Short answer (optional)'
         },
         name: 'phoneNumberField'
@@ -813,6 +822,7 @@ describe('preview', () => {
         items: [
           {
             id: 'c0f36d53-7591-4a5b-93a3-22d492a80bd6',
+            hint: undefined,
             label: {
               classes: '',
               text: 'Hydrogen'
@@ -822,6 +832,7 @@ describe('preview', () => {
           },
           {
             id: '6b2ee8a2-0d40-405b-93d9-c9e8ffa0d025',
+            hint: undefined,
             label: {
               classes: '',
               text: 'Helium'
@@ -831,6 +842,7 @@ describe('preview', () => {
           },
           {
             id: 'cff0706e-6755-4c73-9d2a-64db754c7484',
+            hint: undefined,
             label: {
               classes: '',
               text: 'Lithium'
