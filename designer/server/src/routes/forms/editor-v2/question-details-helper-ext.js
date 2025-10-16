@@ -188,6 +188,7 @@ export function handleListConflict(
           },
           conditionNames: [cond.displayName],
           linkableItems: deletions
+            .filter((d) => d.id === cond.itemId)
             .concat(additions)
             .filter((x) => x.text !== cond.entryText)
             .sort(({ text: itemA }, { text: itemB }) =>
