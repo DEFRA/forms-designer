@@ -42,7 +42,6 @@ export enum FormDefinitionError {
   RefPageCondition = 'ref_page_condition',
   RefConditionComponentId = 'ref_condition_component_id',
   RefConditionListId = 'ref_condition_list_id',
-  RefConditionListItemId = 'ref_condition_list_item_id',
   RefConditionItemId = 'ref_condition_item_id',
   RefConditionConditionId = 'ref_condition_condition_id',
   RefPageComponentList = 'ref_page_component_list',
