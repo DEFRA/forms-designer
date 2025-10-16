@@ -14,7 +14,7 @@ import {
   SupportingEvidenceQuestion,
   UkAddressQuestion,
   YesNoQuestion,
-  govukFieldIsQuestionOptional,
+  govukFieldIsChecked,
   govukFieldValueIsString
 } from '@defra/forms-model'
 
@@ -34,7 +34,7 @@ export function getValueAsString(val) {
  * @returns {boolean}
  */
 export function getCheckedValue(govukField) {
-  if (govukFieldIsQuestionOptional(govukField)) {
+  if (govukFieldIsChecked(govukField)) {
     return govukField.items[0].checked
   }
   return false
@@ -100,6 +100,11 @@ export class QuestionPreviewElements {
    * @type {string}
    */
   autocompleteOptions = ''
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  _usePostcodeLookup = false
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -120,6 +125,8 @@ export class QuestionPreviewElements {
         this._shortDesc = getValueAsString(field)
       } else if (field.name === 'autoCompleteOptions') {
         this.autocompleteOptions = getValueAsString(field)
+      } else if (field.name === 'usePostcodeLookup') {
+        this._usePostcodeLookup = getCheckedValue(field)
       } else {
         // sonarlint
       }
@@ -133,6 +140,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      usePostcodeLookup: this._usePostcodeLookup,
       largeTitle: this._largeTitle,
       items: this._items,
       content: this._content

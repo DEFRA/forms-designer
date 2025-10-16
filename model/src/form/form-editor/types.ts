@@ -506,6 +506,17 @@ export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
   ]
 }
 
+export type GovukFieldUsePostcodeLookup = Omit<GovukField, 'name' | 'items'> & {
+  name: 'usePostcodeLookup'
+  items: [
+    {
+      text?: string
+      value?: string
+      checked: boolean
+    }
+  ]
+}
+
 export type GovukStringField = Omit<GovukField, 'value'> & { value: string }
 
 export interface FormEditorGovukField {

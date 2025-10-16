@@ -12,7 +12,11 @@ export class FieldsetQuestion extends Question {
    */
   componentType = ComponentType.TextField
 
-  get renderInput() {
+  /**
+   * @protected
+   * @returns {QuestionBaseModel}
+   */
+  _renderInput() {
     return {
       id: this._fieldName,
       name: this._fieldName,
@@ -23,3 +27,7 @@ export class FieldsetQuestion extends Question {
     }
   }
 }
+
+/**
+ * @import { QuestionBaseModel } from '~/src/form/form-editor/macros/types.js'
+ */

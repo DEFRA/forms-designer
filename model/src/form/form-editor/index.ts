@@ -12,6 +12,7 @@ import {
   type FormEditorInputQuestion,
   type GovukField,
   type GovukFieldQuestionOptional,
+  type GovukFieldUsePostcodeLookup,
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
 
@@ -615,10 +616,13 @@ export function govukFieldValueIsString(
   ].includes(`${govukField.name}`)
 }
 
-export function govukFieldIsQuestionOptional(
+export function govukFieldIsChecked(
   govukField: GovukField
-): govukField is GovukFieldQuestionOptional {
-  if (govukField.name !== 'questionOptional') {
+): govukField is GovukFieldQuestionOptional | GovukFieldUsePostcodeLookup {
+  if (
+    govukField.name !== 'questionOptional' &&
+    govukField.name !== 'usePostcodeLookup'
+  ) {
     return false
   }
   const checkedValue = govukField.items?.[0].checked

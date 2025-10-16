@@ -23,6 +23,7 @@ export interface BaseSettings {
   items: ListElement[]
   content: string
   attributes?: Record<string, string>
+  usePostcodeLookup?: boolean
 }
 
 export interface DefaultComponent {

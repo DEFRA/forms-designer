@@ -35,6 +35,10 @@ import {
   RadioSortableEventListeners,
   RadioSortableQuestionElements
 } from '~/src/javascripts/preview/radio-sortable.js'
+import {
+  UkAddressDomElements,
+  UkAddressEventListeners
+} from '~/src/javascripts/preview/uk-address'
 
 export const SetupPreview =
   /** @type {Record<ComponentType|'Question'|'ListSortable', () => PreviewQuestion>} */ ({
@@ -171,16 +175,16 @@ export const SetupPreview =
      * @returns {UkAddressQuestion}
      */
     UkAddressField: () => {
-      const questionElements = new QuestionDomElements()
+      const questionElements = new UkAddressDomElements()
       const nunjucksRenderer = new NunjucksRenderer(questionElements)
       const address = new UkAddressQuestion(questionElements, nunjucksRenderer)
-      const listeners = new EventListeners(address, questionElements)
+      const listeners = new UkAddressEventListeners(address, questionElements)
       listeners.setupListeners()
 
       return address
     },
     /**
-     * @returns {UkAddressQuestion}
+     * @returns {YesNoQuestion}
      */
     YesNoField: () => {
       const questionElements = new QuestionDomElements()

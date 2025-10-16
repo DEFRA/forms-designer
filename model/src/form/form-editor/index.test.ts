@@ -3,7 +3,7 @@ import { ValidationError } from 'joi'
 import {
   autoCompleteOptionsSchema,
   customValidator,
-  govukFieldIsQuestionOptional,
+  govukFieldIsChecked,
   govukFieldValueIsString
 } from '~/src/form/form-editor/index.js'
 import { type GovukField } from '~/src/form/form-editor/types.js'
@@ -169,18 +169,18 @@ describe('index', () => {
       })
     })
 
-    describe('govukFieldIsQuestionOptional', () => {
+    describe('govukFieldIsChecked', () => {
       it('should return true if it is a questionOptional field', () => {
-        expect(govukFieldIsQuestionOptional(questionOptionalField)).toBe(true)
+        expect(govukFieldIsChecked(questionOptionalField)).toBe(true)
       })
 
       it('should return false if it is not a questionOptional field', () => {
-        expect(govukFieldIsQuestionOptional(hintTextField)).toBe(false)
+        expect(govukFieldIsChecked(hintTextField)).toBe(false)
       })
 
       it('should return false if it is not a valid questionOptional field', () => {
         expect(
-          govukFieldIsQuestionOptional({
+          govukFieldIsChecked({
             ...questionOptionalField,
             items: undefined
           })
