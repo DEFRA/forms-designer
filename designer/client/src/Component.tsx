@@ -200,6 +200,14 @@ export function FileUploadField() {
   )
 }
 
+export function DeclarationField() {
+  return (
+    <ComponentField className="app-field-input">
+      <span className="app-field-prefix app-field-prefix--declaration" />
+    </ComponentField>
+  )
+}
+
 export const componentTypes = {
   [ComponentType.TextField]: TextField,
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
@@ -219,7 +227,8 @@ export const componentTypes = {
   [ComponentType.Markdown]: Markdown,
   [ComponentType.InsetText]: InsetText,
   [ComponentType.List]: List,
-  [ComponentType.FileUploadField]: FileUploadField
+  [ComponentType.FileUploadField]: FileUploadField,
+  [ComponentType.DeclarationField]: DeclarationField
 }
 
 interface Props {
