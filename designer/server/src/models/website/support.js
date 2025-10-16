@@ -1,11 +1,18 @@
 import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
 import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 
-export function websiteSupportModel() {
+/**
+ * @param {boolean} isGuest
+ */
+export function websiteSupportModel(isGuest) {
   const title = 'Support'
   return {
+    isGuest,
     pageTitle: `Defra Forms: ${title}`,
-    pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.SUPPORT),
+    pageNavigation: getWebsitePageNavigation(
+      WebsiteLevel1Routes.SUPPORT,
+      isGuest
+    ),
     pageHeading: {
       text: title,
       description: 'large'

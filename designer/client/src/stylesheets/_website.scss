@@ -45,6 +45,10 @@ $home-page-breakpoint: 1220px;
           color: #ffffff;
         }
       }
+
+      .govuk-service-navigation__item--active {
+        border-bottom-color: #ffffff;
+      }
     }
   }
 
@@ -208,7 +212,8 @@ $home-page-breakpoint: 1220px;
   }
 }
 
-.organisations-grid {
+.organisations-grid,
+.defra-forms-website .organisations-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 4rem;

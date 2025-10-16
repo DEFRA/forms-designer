@@ -139,6 +139,7 @@ describe('Server tests', () => {
     expect(statusCode).toBe(200)
     expect(headers['x-frame-options']).toBe('DENY')
     expect(headers['x-content-type-options']).toBe('nosniff')
+    expect(headers['x-robots-tag']).toBe('noindex, nofollow')
     expect(headers['x-xss-protection']).toBe('1; mode=block')
   })
 

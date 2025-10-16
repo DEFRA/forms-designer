@@ -1,3 +1,6 @@
+import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
+import { websiteCookiesModel } from '~/src/models/cookies.js'
+
 export default [
   /**
    * @satisfies {ServerRoute}
@@ -22,7 +25,8 @@ export default [
     method: 'GET',
     path: '/help/cookies',
     handler(request, h) {
-      return h.view('cookies')
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      return h.view('cookies', websiteCookiesModel(isGuest))
     },
     options: {
       auth: {

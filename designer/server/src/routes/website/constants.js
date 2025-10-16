@@ -5,6 +5,7 @@
  */
 export const WebsiteLevel1Routes = {
   HOME: '',
+  SERVICES: 'services',
   ABOUT: 'about',
   GET_STARTED: 'get-started',
   FEATURES: 'features',

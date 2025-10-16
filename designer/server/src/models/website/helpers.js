@@ -1,4 +1,7 @@
-import { pageNavigationBase } from '~/src/routes/website/index.js'
+import {
+  pageNavigationBase,
+  pageNavigationGuest
+} from '~/src/routes/website/index.js'
 
 /**
  * @typedef {{
@@ -24,15 +27,17 @@ import { pageNavigationBase } from '~/src/routes/website/index.js'
 
 /**
  *
- * @param { WebsiteLevel1Routes } route
+ * @param { WebsiteLevel1Routes | undefined } route
+ * @param {boolean} isGuest
  * @returns {{
  *   href: WebsiteLevel1Routes | string
  *   active?: boolean
  *   text: string
  * }[]}
  */
-export function getWebsitePageNavigation(route) {
-  return pageNavigationBase.map(({ param, ...item }) => {
+export function getWebsitePageNavigation(route, isGuest) {
+  const pageNavigation = isGuest ? pageNavigationGuest : pageNavigationBase
+  return pageNavigation.map(({ param, ...item }) => {
     const href = `/${param}`
     if (param === route) {
       return {

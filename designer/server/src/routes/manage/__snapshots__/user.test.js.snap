@@ -16,7 +16,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -253,6 +253,8 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -262,16 +264,6 @@ exports[`Create and edit user routes GET /manage/users should render view when c
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -333,7 +325,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -540,6 +532,8 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -549,16 +543,6 @@ exports[`Create and edit user routes GET /manage/users should render view when d
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -620,7 +604,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -866,6 +850,8 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -875,16 +861,6 @@ exports[`Create and edit user routes GET /manage/users should render view when e
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>

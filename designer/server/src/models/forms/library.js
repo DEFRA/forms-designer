@@ -7,7 +7,8 @@ import {
   formOverviewBackLink,
   formOverviewPath,
   formsLibraryBackLink,
-  formsLibraryPath
+  formsLibraryPath,
+  formsSupportPath
 } from '~/src/models/links.js'
 
 /**
@@ -355,8 +356,10 @@ export function getFormSpecificNavigation(
     navigationItems.push(['Editor', draftEditorLink])
   }
 
-  return navigationItems.map((item) =>
-    buildEntry(item[0], item[1], { isActive: item[0] === activePage })
+  navigationItems.push(['Support', formsSupportPath])
+
+  return navigationItems.map(([menuName, path]) =>
+    buildEntry(menuName, path, { isActive: menuName === activePage })
   )
 }
 

@@ -11,7 +11,11 @@ import {
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
-import { editorv2Path, formsLibraryPath } from '~/src/models/links.js'
+import {
+  editorv2Path,
+  formsLibraryPath,
+  formsSupportPath
+} from '~/src/models/links.js'
 
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 export const BACK_TO_MANAGE_CONDITIONS = 'Back to conditions'
@@ -87,11 +91,12 @@ export function getFormSpecificNavigation(
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath],
-    ['Editor', `${formPath}/editor-v2/pages`]
+    ['Editor', `${formPath}/editor-v2/pages`],
+    ['Support', formsSupportPath]
   ]
 
-  return navigationItems.map((item) =>
-    buildEntry(item[0], item[1], { isActive: item[0] === activePage })
+  return navigationItems.map(([menuName, path]) =>
+    buildEntry(menuName, path, { isActive: menuName === activePage })
   )
 }
 
