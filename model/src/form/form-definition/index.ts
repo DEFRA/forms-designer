@@ -1019,7 +1019,27 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Email address where form submissions are sent'),
     output: outputSchema
       .optional()
-      .description('Configuration for submission output format')
+      .description('Configuration for submission output format'),
+    outputs: Joi.array()
+      .items({
+        emailAddress: Joi.string()
+          .trim()
+          .email({ tlds: { allow: ['uk'] } })
+          .description('Email address where form submissions are sent'),
+        audience: Joi.string()
+          .trim()
+          .valid('human', 'machine')
+          .required()
+          .description(
+            'Target audience for the output (human readable or machine processable)'
+          ),
+        version: Joi.string()
+          .trim()
+          .required()
+          .description('Version identifier for the output format')
+      })
+      .optional()
+      .description('One or more email targets/types for submission emails')
   })
 
 export const formDefinitionV2Schema = formDefinitionSchema

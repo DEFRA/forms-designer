@@ -182,6 +182,14 @@ export interface ConditionWrapperV2 {
   items: ConditionGroupDataV2
 }
 
+export type OutputAudience = 'human' | 'machine'
+
+export interface Output {
+  audience: OutputAudience
+  version: string
+  emailAddress: string
+}
+
 /**
  * Interface for `formDefinitionSchema` Joi schema
  */
@@ -199,9 +207,10 @@ export interface FormDefinition {
   declaration?: string // Deprecated in v2
   skipSummary?: never
   metadata?: Record<string, unknown>
-  outputEmail?: string
+  outputEmail?: string // Deprecated
   output?: {
-    audience: 'human' | 'machine'
+    audience: OutputAudience
     version: string
   }
+  outputs?: Output[]
 }
