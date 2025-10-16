@@ -561,7 +561,7 @@ describe('Form definition schema', () => {
         })
       })
 
-      it('should not validate if there are duplicate list ids', () => {
+      it('should reject if there are duplicate list ids', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,
           lists: [
@@ -581,6 +581,50 @@ describe('Form definition schema', () => {
         expect(validated.error).toEqual(
           new ValidationError('"lists[1]" contains a duplicate value', [], {})
         )
+      })
+
+      it('should reject if one outputs email is badly configured', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            { emailAddress: 'bad-email', audience: 'human', version: '1' }
+          ]
+        })
+
+        expect(validated.error).toEqual(
+          new ValidationError(
+            '"outputs[0].emailAddress" must be a valid email',
+            [],
+            {}
+          )
+        )
+      })
+
+      it('should allow many outputs configured', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'human',
+              version: '1'
+            },
+            {
+              emailAddress: 'good-email2@test.co.uk',
+              audience: 'machine',
+              version: '1'
+            },
+            {
+              emailAddress: 'good-email3@test.co.uk',
+              audience: 'machine',
+              version: '2'
+            }
+          ]
+        })
+
+        expect(validated.error).toBeUndefined()
       })
     })
   })
