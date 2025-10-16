@@ -194,10 +194,11 @@ Support
 
   <main class="govuk-main-wrapper" id="main-head-content">
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <div class="govuk-tabs" data-module="govuk-tabs">
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="govuk-tabs" data-module="govuk-tabs">
   <h2 class="govuk-tabs__title">
     Contents
   </h2>
@@ -1295,25 +1296,26 @@ Support
   </div>
 </div>
 
-    </div>
-    <div class="govuk-grid-column-one-third">
-      <div class="x-govuk-related-navigation">
-        <nav class="x-govuk-related-navigation__nav-section" aria-labelledby="related-navigation-related-content">
-          <h2 class="x-govuk-related-navigation__main-heading" id="related-navigation-related-content">Related content</h2>
-          <ul class="x-govuk-related-navigation__link-list">
-            <li class="x-govuk-related-navigation__link">
-              <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://dxt-prototype-682ae311ff10.herokuapp.com/index">Design history</a>
-              <p class="govuk-body-s">We record user research findings and design changes.</p>
-            </li>
-            <li class="x-govuk-related-navigation__link">
-              <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://submit-form-to-defra.service.gov.uk/preview/live/register-as-a-unicorn-breeder">Register as a unicorn breeder demo form</a>
-              <p class="govuk-body-s">Try the Register as a unicorn breeder demo form to find out
-                how we
-                can
-                capture information.</p>
-            </li>
-          </ul>
-        </nav>
+      </div>
+      <div class="govuk-grid-column-one-third">
+        <div class="x-govuk-related-navigation">
+          <nav class="x-govuk-related-navigation__nav-section" aria-labelledby="related-navigation-related-content">
+            <h2 class="x-govuk-related-navigation__main-heading" id="related-navigation-related-content">Related content</h2>
+            <ul class="x-govuk-related-navigation__link-list">
+              <li class="x-govuk-related-navigation__link">
+                <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://dxt-prototype-682ae311ff10.herokuapp.com/index">Design history</a>
+                <p class="govuk-body-s">We record user research findings and design changes.</p>
+              </li>
+              <li class="x-govuk-related-navigation__link">
+                <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://submit-form-to-defra.service.gov.uk/preview/live/register-as-a-unicorn-breeder">Register as a unicorn breeder demo form</a>
+                <p class="govuk-body-s">Try the Register as a unicorn breeder demo form to find out
+                  how we
+                  can
+                  capture information.</p>
+              </li>
+            </ul>
+          </nav>
+        </div>
       </div>
     </div>
   </div>
@@ -1574,9 +1576,10 @@ Support
 
   <main class="govuk-main-wrapper" id="main-head-content">
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
 <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
   <ul class="x-govuk-sub-navigation__section">
@@ -1602,7 +1605,7 @@ Support
 
 
 </div>
-    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-grid-column-two-thirds">
 <p class="govuk-body-l">If you'd like to be considered as a private beta user and you work in a UCD
   profession,
   <a href="/support" class="govuk-link">contact us</a> and we'll add you to
@@ -1610,7 +1613,7 @@ Support
   waiting list.
 </p>
 
-        <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
+          <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
   <div class="govuk-pagination__next">
     <a class="govuk-link govuk-pagination__link" href="/get-started/make-form-live-checklist" rel="next">
       <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
@@ -1625,10 +1628,10 @@ Support
   </div>
 </nav>
 
+      </div>
     </div>
   </div>
 </div>
-
 
   </main>
 
@@ -1885,9 +1888,10 @@ Support
 
   <main class="govuk-main-wrapper" id="main-head-content">
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
 <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
   <ul class="x-govuk-sub-navigation__section">
@@ -1913,7 +1917,7 @@ Support
 
 
 </div>
-    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-grid-column-two-thirds">
 
 <p class="govuk-body">If you have access to the Defra Form Designer, follow the steps in this checklist to
   create a form and make it live.</p>
@@ -2248,7 +2252,7 @@ Support
   </ol>
 </div>
 
-        <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
+          <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
   <div class="govuk-pagination__prev">
     <a class="govuk-link govuk-pagination__link" href="/get-started/get-access" rel="prev">
       <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
@@ -2275,10 +2279,10 @@ Support
   </div>
 </nav>
 
+      </div>
     </div>
   </div>
 </div>
-
 
   </main>
 
@@ -2535,9 +2539,10 @@ Support
 
   <main class="govuk-main-wrapper" id="main-head-content">
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
 <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
   <ul class="x-govuk-sub-navigation__section">
@@ -2575,7 +2580,7 @@ Support
 
 
 </div>
-    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-grid-column-two-thirds">
   <p class="govuk-body">There are lots of reasons to make an online form. But make sure you're not duplicating
     data by checking if:</p>
   <ul class="govuk-list govuk-list--bullet">
@@ -2599,7 +2604,7 @@ Support
     assurance process for forms with a higher degree of reputational or financial risk. This will be a
     lighter touch process than a service assessment - for example, it might be an expert review carried out
     by a design or content professional.</p>
-        <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
+          <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
   <div class="govuk-pagination__next">
     <a class="govuk-link govuk-pagination__link" href="/resources/accessibility-and-inclusion" rel="next">
       <svg class="govuk-pagination__icon govuk-pagination__icon--next" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
@@ -2614,10 +2619,10 @@ Support
   </div>
 </nav>
 
+      </div>
     </div>
   </div>
 </div>
-
 
   </main>
 
@@ -2874,9 +2879,10 @@ Support
 
   <main class="govuk-main-wrapper" id="main-head-content">
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
 <nav class="x-govuk-sub-navigation" aria-labelledby="sub-navigation-heading">
   <h2 class="govuk-visually-hidden" id="sub-navigation-heading">Pages in this section</h2>
   <ul class="x-govuk-sub-navigation__section">
@@ -2914,7 +2920,7 @@ Support
 
 
 </div>
-    <div class="govuk-grid-column-two-thirds">
+      <div class="govuk-grid-column-two-thirds">
   <p class="govuk-body">Approximately 1 in 4 people (24%) in the UK have a disability or long-term impairment.
   </p>
   <p class="govuk-body">This stat does not include:</p>
@@ -3022,7 +3028,7 @@ Support
       paper forms</a>.</p>
   <p class="govuk-body">Review the paper form for accessibility. Use the <a href="https://defra.sharepoint.com/:w:/r/teams/Team811/_layouts/15/Doc.aspx?sourcedoc=%7b3DDE61DE-5CF9-4B25-9CC8-5AA71A981CCC%7d&amp;file=Accessible%20form%20template%20v1.3.docx&amp;action=default&amp;mobileredirect=true" class="govuk-link" target="_blank">accessible form template</a> for forms in
     Word. Check the <a href="https://defra.sharepoint.com/:w:/r/teams/Team811/_layouts/15/Doc.aspx?sourcedoc=%7b185D76D6-0304-4D03-B2E0-02315905CCA6%7d&amp;file=PDF%20forms%20accessibility_INCOMPLETE%20DRAFT.docx&amp;action=default&amp;mobileredirect=true" class="govuk-link" target="_blank">guidance for making accessible PDFs</a>.</p>
-        <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
+          <nav class="govuk-pagination govuk-pagination--block" aria-label="Pagination">
   <div class="govuk-pagination__prev">
     <a class="govuk-link govuk-pagination__link" href="/resources/does-this-need-to-be-a-form" rel="prev">
       <svg class="govuk-pagination__icon govuk-pagination__icon--prev" xmlns="http://www.w3.org/2000/svg" height="13" width="15" aria-hidden="true" focusable="false" viewBox="0 0 15 13">
@@ -3049,10 +3055,10 @@ Support
   </div>
 </nav>
 
+      </div>
     </div>
   </div>
 </div>
-
 
   </main>
 
@@ -3312,14 +3318,16 @@ Resources
 
   <main class="govuk-main-wrapper" id="main-head-content">
 
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h2 class="govuk-heading-l">Support hours</h2>
-      <p class="govuk-body">We are available to support you between 9am and 5pm Monday to Friday.</p>
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <h2 class="govuk-heading-l">Support hours</h2>
+        <p class="govuk-body">We are available to support you between 9am and 5pm Monday to Friday.</p>
 
-      <h2 class="govuk-heading-l">General questions</h2>
-      <p class="govuk-body">For general questions about Defra Forms, use the shared mailbox at <a href="mailto:defraforms@defra.gov.uk" class="govuk-link">defraforms@defra.gov.uk</a>.</p>
+        <h2 class="govuk-heading-l">General questions</h2>
+        <p class="govuk-body">For general questions about Defra Forms, use the shared mailbox at <a href="mailto:defraforms@defra.gov.uk" class="govuk-link">defraforms@defra.gov.uk</a>.</p>
+      </div>
     </div>
   </div>
 </div>

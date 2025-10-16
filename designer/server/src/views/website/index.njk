@@ -42,88 +42,90 @@
 
 {% endblock %}
 {% block content %}
-<div class="govuk-width-container">
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
-      {% set coreFeatures %}
-        {%- include "website/home/core-features.njk" -%}
-      {% endset -%}
-      {% set userExperience %}
-        {%- include "website/home/user-experience.njk" -%}
-      {% endset -%}
-      {% set advancedPatterns %}
-        {%- include "website/home/advanced-patterns.njk" -%}
-      {% endset -%}
-      {% set developerToolkit %}
-        {%- include "website/home/developer-toolkit.njk" -%}
-      {% endset -%}
+<div id="main-content">
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
+        {% set coreFeatures %}
+          {%- include "website/home/core-features.njk" -%}
+        {% endset -%}
+        {% set userExperience %}
+          {%- include "website/home/user-experience.njk" -%}
+        {% endset -%}
+        {% set advancedPatterns %}
+          {%- include "website/home/advanced-patterns.njk" -%}
+        {% endset -%}
+        {% set developerToolkit %}
+          {%- include "website/home/developer-toolkit.njk" -%}
+        {% endset -%}
 
-      {{ govukTabs({
-        items: [
-          {
-            label: "Core features",
-            id: "core-features",
-            panel: {
-              html: coreFeatures
+        {{ govukTabs({
+          items: [
+            {
+              label: "Core features",
+              id: "core-features",
+              panel: {
+                html: coreFeatures
+              }
+            },
+            {
+              label: "User experience",
+              id: "user-experience",
+              panel: {
+                html: userExperience
+              }
+            },
+            {
+              label: "Advanced patterns",
+              id: "advanced-patterns",
+              panel: {
+                html: advancedPatterns
+              }
+            },
+            {
+              label: "Developer-toolkit",
+              id: "developer-toolkit",
+              panel: {
+                html: developerToolkit
+              }
             }
-          },
-          {
-            label: "User experience",
-            id: "user-experience",
-            panel: {
-              html: userExperience
-            }
-          },
-          {
-            label: "Advanced patterns",
-            id: "advanced-patterns",
-            panel: {
-              html: advancedPatterns
-            }
-          },
-          {
-            label: "Developer-toolkit",
-            id: "developer-toolkit",
-            panel: {
-              html: developerToolkit
-            }
-          }
-        ]
-      }) }}
-    </div>
-    <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
-          <h2 class="govuk-heading-l">Who's using Defra Forms</h2>
-        </div>
-        <div class="govuk-grid-column-full organisations-grid">
-          <div class="content-section__image organisations-grid__logo">
-            <div class="defra-logo">
-              <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
-                <span>Department<br>for Environment,<br>Food &amp;
-                    Rural
-                    Affairs</span>
+          ]
+        }) }}
+      </div>
+      <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-two-thirds-from-desktop defra-forms-website-custom-tab-grid">
+            <h2 class="govuk-heading-l">Who's using Defra Forms</h2>
+          </div>
+          <div class="govuk-grid-column-full organisations-grid">
+            <div class="content-section__image organisations-grid__logo">
+              <div class="defra-logo">
+                <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
+                  <span>Department<br>for Environment,<br>Food &amp;
+                      Rural
+                      Affairs</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="content-section__image organisations-grid__logo">
-            <div class="defra-logo">
-              <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
-                <span>Rural<br>Payments<br>Agency</span>
+            <div class="content-section__image organisations-grid__logo">
+              <div class="defra-logo">
+                <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
+                  <span>Rural<br>Payments<br>Agency</span>
+                </div>
               </div>
             </div>
-          </div>
-          <div class="content-section__image organisations-grid__logo">
-            <div class="defra-logo">
-              <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
-                  <span>Animal &amp;<br>Plant
-                      Health<br>Agency</span>
+            <div class="content-section__image organisations-grid__logo">
+              <div class="defra-logo">
+                <div class="defra-logo-border--container defra-logo-border-color defra-logo-crest">
+                    <span>Animal &amp;<br>Plant
+                        Health<br>Agency</span>
+                </div>
               </div>
             </div>
+            <img src="/assets/images/food-standards-agency.svg" alt="Food Standards Agency – FSA" class="content-section__image organisations-grid__logo">
+            <img src="/assets/images/environment-agency.svg" alt="Environment Agency – EA" class="content-section__image organisations-grid__logo">
+            <img src="/assets/images/natural-england.svg" alt="Natural England" class="content-section__image organisations-grid__logo">
           </div>
-          <img src="/assets/images/food-standards-agency.svg" alt="Food Standards Agency – FSA" class="content-section__image organisations-grid__logo">
-          <img src="/assets/images/environment-agency.svg" alt="Environment Agency – EA" class="content-section__image organisations-grid__logo">
-          <img src="/assets/images/natural-england.svg" alt="Natural England" class="content-section__image organisations-grid__logo">
         </div>
       </div>
     </div>
