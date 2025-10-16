@@ -55,7 +55,8 @@ export function isConditionalType(
     ComponentType.NumberField,
     ComponentType.SelectField,
     ComponentType.TextField,
-    ComponentType.YesNoField
+    ComponentType.YesNoField,
+    ComponentType.DeclarationField
   ]
 
   return !!type && allowedTypes.includes(type)
@@ -165,7 +166,8 @@ export function hasSelectionFields(
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
     ComponentType.SelectField,
-    ComponentType.YesNoField
+    ComponentType.YesNoField,
+    ComponentType.DeclarationField
   ]
 
   return !!component?.type && allowedTypes.includes(component.type)
