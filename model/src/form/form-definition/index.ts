@@ -363,6 +363,21 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
           reason: 'does not support conditions'
         })
   })
+  .custom((value, helpers) => {
+    if (value.type === ConditionType.ListItemRef) {
+      const { listId, itemId } = value.value
+      const [, , , definition] = helpers.state.ancestors
+      const list = definition.lists.find((list) => list.id === listId)
+
+      if (!list) {
+        return helpers.error('List not found')
+      }
+
+      const itemIdExists = list.items.some((item) => item.id === itemId)
+      return itemIdExists ? value : helpers.error('oops')
+    }
+    return value
+  })
   .messages({
     'custom.incompatible': 'Incompatible data value'
   })

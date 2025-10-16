@@ -7,19 +7,25 @@ import {
   buildFileUploadComponent,
   buildHtmlComponent,
   buildInsetTextComponent,
+  buildList,
+  buildListItem,
   buildMarkdownComponent,
   buildMonthYearFieldComponent,
   buildMultilineTextFieldComponent,
   buildNumberFieldComponent,
+  buildRadioComponent,
   buildRadiosComponent,
   buildTelephoneNumberFieldComponent,
   buildTextFieldComponent,
   buildUkAddressFieldComponent
 } from '~/src/__stubs__/components.js'
+import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
   buildFileUploadPage,
   buildQuestionPage,
-  buildRepeaterPage
+  buildRepeaterPage,
+  buildSummaryPage,
+  buildTerminalPage
 } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
@@ -673,6 +679,146 @@ describe('Form definition schema', () => {
         expect(validated.error).toEqual(
           new ValidationError('Incompatible data value', [], {})
         )
+      })
+
+      it('should fail validation when conditional integrity on items within list is lost', () => {
+        const definition1 = buildDefinition({
+          name: 'Conditional Reference Check',
+          startPage: '/summary',
+          pages: [
+            buildQuestionPage({
+              title: '',
+              path: '/which-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which option?',
+                  name: 'YJBELu',
+                  shortDescription: 'test question',
+                  list: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9',
+                  options: {
+                    required: true
+                  },
+                  id: '921d7b38-39da-475c-94de-ee40651fd9fb'
+                })
+              ],
+              id: '3eb4ed6e-d6d2-4e4d-a706-9f004ba1f0d3'
+            }),
+            buildQuestionPage({
+              title: '',
+              path: '/which-second-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which second option?',
+                  name: 'amkCpy',
+                  shortDescription: 'Which second option?',
+                  options: {
+                    required: true
+                  },
+                  list: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60',
+                  id: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc'
+                })
+              ],
+              id: 'c875cb03-0005-4a18-8b29-07c01ad2845a'
+            }),
+            buildTerminalPage({
+              title: 'Exit page',
+              path: '/exit-page',
+              components: [
+                buildMarkdownComponent({
+                  content: 'adfadfdf',
+                  name: 'UJSPTf',
+                  id: '84f21209-fcd9-42e7-9386-6e335f37aabe'
+                })
+              ],
+              id: '2d643436-0970-437c-afb6-37b10c57db49',
+              condition: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }),
+            buildSummaryPage({
+              id: '449a45f6-4541-4a46-91bd-8b8931b07b50',
+              title: 'Summary',
+              path: '/summary'
+            })
+          ],
+          conditions: [
+            {
+              items: [
+                {
+                  id: '747fac5a-59dc-499a-9136-7d8d67309de4',
+                  componentId: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc',
+                  operator: OperatorName.Is,
+                  value: {
+                    itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                    listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+                  },
+                  type: ConditionType.ListItemRef
+                }
+              ],
+              displayName: 'fourth option',
+              id: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }
+          ],
+          lists: [
+            buildList({
+              name: 'sGxjdK',
+              title: 'List for question YJBELu',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: '1c1f88e8-ca26-4dd4-83d9-4af98637a13f',
+                  text: 'Option 1',
+                  value: 'Option 1'
+                }),
+                buildListItem({
+                  id: '688a6a38-632a-4da4-95ae-245c60c67d1c',
+                  text: 'Option 2',
+                  value: 'Option 2'
+                }),
+                buildListItem({
+                  id: 'd9e1794e-2463-4f12-99c1-974c6880624f',
+                  text: 'Option 3',
+                  value: 'Option 3'
+                }),
+                buildListItem({
+                  id: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                })
+              ],
+              id: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9'
+            }),
+            buildList({
+              name: 'dNYuPT',
+              title: 'List for question amkCpy',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: 'f98db97a-527b-408e-889e-1efff3e6d545',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                }),
+                buildListItem({
+                  id: '7914c48b-5a62-42bb-b63e-54209c459b57',
+                  text: 'Option 5',
+                  value: 'Option 5'
+                }),
+                buildListItem({
+                  id: '5b615f6b-4895-4833-845a-e1fcf8eff8f0',
+                  text: 'Option 6',
+                  value: 'Option 6'
+                }),
+                buildListItem({
+                  id: '288122a9-ca33-4533-b79e-a347ac2e484e',
+                  text: 'Option 7',
+                  value: 'Option 7'
+                })
+              ],
+              id: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+            })
+          ]
+        })
+
+        const { error } = formDefinitionV2Schema.validate(definition1)
+        expect(error).toBeDefined()
       })
     })
   })
