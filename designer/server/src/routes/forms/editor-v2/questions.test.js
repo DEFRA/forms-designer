@@ -142,7 +142,7 @@ describe('Editor v2 questions routes', () => {
     )
 
     expect($previewPanel).toHaveTextContent('Previews')
-    expect($headings[4]).toHaveTextContent('')
+    expect($headings.length).toBeGreaterThanOrEqual(5)
     expect($previewTitle[1]).toHaveTextContent(title)
     expect($previewTitle[1]).toHaveClass('govuk-label govuk-label--l')
     expect(container.queryByText('Page preview')).not.toBeNull()
@@ -310,13 +310,16 @@ describe('Editor v2 questions routes', () => {
 
   test('POST - should throw if not boom 409 from API', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
     jest.mocked(setPageSettings).mockImplementationOnce(() => {
       throw new Error('Some other API error')
     })
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/1/questions',
+      url: '/library/my-form-slug/editor-v2/page/p1/questions',
       auth,
       payload
     }

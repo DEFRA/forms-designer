@@ -126,6 +126,10 @@ export default [
         yar.flash(sessionNames.successNotification).at(0)
       )
 
+      const badRequestErrorList = yar.id
+        ? yar.flash(sessionNames.badRequestErrorList)
+        : []
+
       return h.view(
         'forms/editor-v2/questions',
         viewModel.questionsViewModel(
@@ -138,7 +142,8 @@ export default [
             focus: focusObj
           },
           validation,
-          notification
+          notification,
+          badRequestErrorList
         )
       )
     },

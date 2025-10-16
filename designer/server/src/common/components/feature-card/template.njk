@@ -1,0 +1,13 @@
+<div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+  <div class="govuk-card govuk-card--contained govuk-card--feature">
+    <div class="govuk-card__content">
+      <div class="govuk-card__header">
+        <div class="feature-icon">
+          <img src="/assets/images/website/svgs/{{ params.icon }}.svg" alt="Icon for {{ params.heading }}" role="img" />
+        </div>
+        <h3 class="govuk-heading-s">{{ params.heading }}</h3>
+      </div>
+      {{ params.markdown | markdown | safe }}
+    </div>
+  </div>
+</div>

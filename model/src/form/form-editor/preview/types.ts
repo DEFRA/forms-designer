@@ -30,6 +30,7 @@ export interface DefaultComponent {
   id?: string
   text: string
   classes: string
+  isPageHeading?: boolean
 }
 
 export interface GovukFieldset {

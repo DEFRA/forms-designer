@@ -415,6 +415,7 @@ export function getItemOrder(itemOrder, components) {
  * @param {{ questionOrder?: string, action?: string, focus?: { button: string | undefined, itemId: string | undefined }}} reorderDetails
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
+ * @param {ErrorDetailsItem[]} [badRequestErrorList]
  */
 export function questionsViewModel(
   metadata,
@@ -422,7 +423,8 @@ export function questionsViewModel(
   pageId,
   reorderDetails,
   validation,
-  notification
+  notification,
+  badRequestErrorList = []
 ) {
   const { formValues, formErrors } = validation ?? {}
   const { pageIdx, page, components } = extractPageData(definition, pageId)
@@ -462,6 +464,7 @@ export function questionsViewModel(
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
+    badRequestErrorList,
     questionRows: mapQuestionRows(
       components,
       baseUrl,
@@ -486,4 +489,5 @@ export function questionsViewModel(
 /**
  * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  */

@@ -41,8 +41,7 @@ describe('Editor v2 question details helper ext routes', () => {
         'stateId'
       )
       expect(res).toBe(true)
-      expect(setQuestionSessionState).toHaveBeenNthCalledWith(
-        2,
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
         expect.anything(),
         'stateId',
         {
@@ -68,7 +67,8 @@ describe('Editor v2 question details helper ext routes', () => {
                 }
               ]
             }
-          ]
+          ],
+          listItems: []
         }
       )
     })
@@ -102,7 +102,7 @@ describe('Editor v2 question details helper ext routes', () => {
         'stateId'
       )
       expect(res).toBe(false)
-      expect(setQuestionSessionState).toHaveBeenCalledTimes(1)
+      expect(setQuestionSessionState).not.toHaveBeenCalled()
     })
   })
 })

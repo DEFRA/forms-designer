@@ -106,7 +106,8 @@ export class PreviewComponent {
   get label() {
     return {
       text: this.titleText,
-      classes: 'govuk-label--l' + this.getHighlight('question')
+      classes: 'govuk-label--l' + this.getHighlight('question'),
+      isPageHeading: !!this._question?.trim()
     }
   }
 
@@ -118,7 +119,8 @@ export class PreviewComponent {
     return {
       legend: {
         text: this.titleText,
-        classes: 'govuk-fieldset__legend--l' + this.getHighlight('question')
+        classes: 'govuk-fieldset__legend--l' + this.getHighlight('question'),
+        isPageHeading: !!this._question?.trim()
       }
     }
   }

@@ -1,6 +1,5 @@
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
-{#
 {% set insetText %}
 <p class="govuk-body govuk-!-margin-bottom-0">
   <a href="/features" class="govuk-link--no-visited-state">View
@@ -13,9 +12,9 @@
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       {{ govukInsetText({
-        html: insetText
+        html: insetText,
+        classes: 'govuk-inset-text--cta'
       }) }}
     </div>
   </div>
 </div>
-#}

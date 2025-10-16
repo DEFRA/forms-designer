@@ -6,15 +6,15 @@ import { testFormDefinitionWithRadioQuestionAndList } from '~/src/__stubs__/form
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
-import { matchLists, upsertList } from '~/src/lib/list.js'
 import { getQuestionSessionState } from '~/src/lib/session-helper.js'
+import { saveQuestion } from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/session-helper.js')
-jest.mock('~/src/lib/list.js')
+jest.mock('~/src/routes/forms/editor-v2/question-details-helper-ext.js')
 
 describe('Editor v2 edit-list-resolve routes', () => {
   /** @type {Server} */
@@ -107,8 +107,9 @@ describe('Editor v2 edit-list-resolve routes', () => {
     ])
 
     const listItems = /** @type {ListItem[]} */ ([
-      { id: '2', text: 'original-item' },
-      { id: '2-2', text: 'original-item-2' }
+      { id: '2-old', text: 'New Item 1', value: 'New Item 1' },
+      { id: '2-2-old', text: 'New Item 2', value: 'New Item 2' },
+      { id: 'new-id', text: 'New Item 3', value: 'New Item 3' }
     ])
 
     const questionDetails = {
@@ -117,29 +118,12 @@ describe('Editor v2 edit-list-resolve routes', () => {
       list: 'my-list-guid'
     }
 
-    const additions = [
-      { text: 'New Item 1', value: 'New Item 1' },
-      { text: 'New Item 2', value: 'New Item 2' }
-    ]
-
-    const listItemsWithIds = [
-      { id: '2', text: 'original-item', value: 'original-item' },
-      { id: '2-2', text: 'original-item-2', value: 'original-=item-2' }
-    ]
-
     test('should replace multiple list values', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce(testForm)
       jest
         .mocked(getQuestionSessionState)
         .mockReturnValueOnce({ listConflicts, listItems, questionDetails })
-      jest
-        .mocked(matchLists)
-        .mockReturnValueOnce({ additions, deletions: [], listItemsWithIds })
-      jest
-        .mocked(upsertList)
-        // @ts-expect-error - blank list is allowed here
-        .mockResolvedValueOnce({ id: '1', list: [], status: 'updated' })
       const payload = {
         'replaceWith[2]': 'New Item 1',
         'replaceWith[2-2]': 'New Item 2'
@@ -154,28 +138,30 @@ describe('Editor v2 edit-list-resolve routes', () => {
       const { response } = await renderResponse(server, options)
 
       expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(upsertList).toHaveBeenCalledWith(
+      expect(saveQuestion).toHaveBeenCalledWith(
         expect.anything(),
         expect.anything(),
         expect.anything(),
-        {
-          id: 'my-list-guid',
-          items: [
-            {
-              id: '2',
-              text: 'original-item',
-              value: 'original-item'
-            },
-            {
-              id: '2-2',
-              text: 'original-item-2',
-              value: 'original-=item-2'
-            }
-          ],
-          name: 'my-list',
-          title: 'List for question undefined',
-          type: 'string'
-        }
+        expect.anything(),
+        expect.anything(),
+        expect.anything(),
+        [
+          {
+            id: '2',
+            text: 'New Item 1',
+            value: 'New Item 1'
+          },
+          {
+            id: '2-2',
+            text: 'New Item 2',
+            value: 'New Item 2'
+          },
+          {
+            id: 'new-id',
+            text: 'New Item 3',
+            value: 'New Item 3'
+          }
+        ]
       )
     })
   })

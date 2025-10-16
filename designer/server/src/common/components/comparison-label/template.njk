@@ -1,0 +1,7 @@
+{% if row[key] == 'available' %}
+  <span class="govuk-tag govuk-tag--green">✓</span>
+{% elif row[key]== 'notAvailable' %}
+  <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+{% elif row[key]== 'someAvailable' %}
+  <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+{% endif %}

@@ -1,0 +1,64 @@
+{% from "comparison-label/macro.njk" import comparisonLabel %}
+
+<h2 class="govuk-heading-l ">Compare Form Designer vs Developer Plugin</h2>
+
+<div class="govuk-body-s govuk-!-margin-top-4 comparison-legend">
+  <strong>Legend:</strong>
+  <span class="govuk-tag govuk-tag--green">✓</span>
+  Available
+  <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+  Not available
+  <span class="feature-partial-small" aria-hidden="true"></span>
+  <span class="govuk-visually-hidden">Partially met</span>
+  Some features available
+</div>
+
+<table class="govuk-table govuk-!-margin-bottom-6 comparison-table">
+  <caption class="govuk-visually-hidden">Feature comparison: Form Designer vs Developer
+    Plugin
+  </caption>
+
+  <thead class="govuk-table__head">
+  <tr class="govuk-table__row">
+    <th scope="col" class="govuk-table__header govuk-!-width-one-half">Feature</th>
+    <th scope="col" class="govuk-table__header">Form Designer</th>
+    <th scope="col" class="govuk-table__header">Developer Plugin</th>
+  </tr>
+  </thead>
+
+  <tbody class="govuk-table__body">
+  {% for section in features.compare.table %}
+    <tr class="govuk-table__row comparison-category-header">
+      <th scope="colgroup" colspan="3" class="govuk-table__header">{{ section.title }}</th>
+    </tr>
+    {% for row in section.children %}
+      <tr class="govuk-table__row">
+        <th scope="row" colspan="1" class="govuk-table__header">
+          <span class="feature-info">
+          <img src="/assets/images/website/svgs/{{ row.icon }}.svg" alt="Icon for {{ row.title }}" role="img" />
+              {{ row.title }}
+          </span>
+          <span class="govuk-body-s govuk-!-margin-top-1">{{ row.description }}</span>
+        </th>
+        <td class="govuk-table__cell">
+          {{ comparisonLabel(row, 'designer') }}
+        </td>
+        <td class="govuk-table__cell">
+          {{ comparisonLabel(row, 'plugin') }}
+        </td>
+    </tr>
+    {% endfor %}
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Legend for the comparison table -->
+<div class="govuk-body-s govuk-!-margin-top-4 comparison-legend">
+  <strong>Legend:</strong>
+  <span class="govuk-tag govuk-tag--green">✓</span> Available
+  <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+  Not available
+  <span class="feature-partial-small" aria-hidden="true"></span>
+  <span class="govuk-visually-hidden">Partially met</span>
+  Some features available
+</div>
