@@ -27,7 +27,7 @@ import {
 
 /**
  *
- * @param { WebsiteLevel1Routes } route
+ * @param { WebsiteLevel1Routes | undefined } route
  * @param {boolean} isGuest
  * @returns {{
  *   href: WebsiteLevel1Routes | string
