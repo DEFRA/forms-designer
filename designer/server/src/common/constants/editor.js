@@ -71,7 +71,8 @@ export const QuestionBaseSettings = {
   ImageTypes: 'imageTypes',
   TabularDataTypes: 'tabularDataTypes',
   RadiosOrCheckboxes: 'radiosOrCheckboxes',
-  AutoCompleteOptions: 'autoCompleteOptions'
+  AutoCompleteOptions: 'autoCompleteOptions',
+  UsePostcodeLookup: 'usePostcodeLookup'
 }
 
 /**
