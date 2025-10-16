@@ -87,30 +87,8 @@ export class UkAddressEventListeners extends EventListeners {
 
     return [...listeners, usePostcodeLookupCheckbox]
   }
-
-  /**
-   * @returns {ListenerRow[]}
-   * @protected
-   */
-  get _customListeners() {
-    return []
-  }
-
-  /**
-   * @protected
-   * @returns {ListenerRow[]}
-   */
-  get listeners() {
-    return this._getListeners()
-  }
-
-  setupListeners() {
-    for (const [el, cb, type] of this.listeners) {
-      this.inputEventListener(el, cb, type)
-    }
-  }
 }
 
 /**
- * @import { ListenerRow, ListElement, ListItemReadonly, BaseSettings, QuestionElements, QuestionBaseModel, GovukFieldset, DefaultComponent, QuestionRenderer, Question, UkAddressQuestion } from '@defra/forms-model'
+ * @import { ListenerRow, ListElement, BaseSettings, QuestionElements, UkAddressQuestion } from '@defra/forms-model'
  */
