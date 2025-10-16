@@ -187,7 +187,13 @@ export function handleListConflict(
             text: cond.entryText ?? ''
           },
           conditionNames: [cond.displayName],
+          // 'linkableItems' is the list of possible options that the user can assign the new condition value to.
+          // The list is made up of:
+          // - any items that have been added by the user
+          // - any items that have been deleted by the user AND were linked to one or more conditions
+          // - exclude any items that match in the list of original items
           linkableItems: deletions
+            .filter((d) => d.id === cond.itemId)
             .concat(additions)
             .filter((x) => x.text !== cond.entryText)
             .sort(({ text: itemA }, { text: itemB }) =>

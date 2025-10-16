@@ -30,7 +30,10 @@ describe('Editor v2 question details helper ext routes', () => {
   describe('handleListConflict', () => {
     test('should construct list of conflicts', () => {
       const definition = testFormDefinitionWithMultipleV2ConditionsListRef
-      const listElements = /** @type {Item[]} */ ([])
+      const listElements = /** @type {Item[]} */ ([
+        { id: 'new1-id', text: 'new1', value: 'new1' },
+        { id: 'new2-id', text: 'new2', value: 'new2' }
+      ])
       const res = handleListConflict(
         definition,
         '2c3122b6-bf57-42c9-ab1b-6f67e8575703',
@@ -54,21 +57,32 @@ describe('Editor v2 question details helper ext routes', () => {
               },
               linkableItems: [
                 {
-                  hint: undefined,
-                  id: '689d3f66-88f7-4dc0-b199-841b72393c19',
-                  text: 'Blue',
-                  value: 'blue'
+                  id: undefined,
+                  text: 'new1',
+                  value: 'new1'
                 },
                 {
-                  hint: undefined,
-                  id: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171',
-                  text: 'Green',
-                  value: 'green'
+                  id: undefined,
+                  text: 'new2',
+                  value: 'new2'
                 }
               ]
             }
           ],
-          listItems: []
+          listItems: [
+            {
+              id: expect.any(String),
+              text: 'new1',
+              hint: undefined,
+              value: 'new1'
+            },
+            {
+              id: expect.any(String),
+              text: 'new2',
+              hint: undefined,
+              value: 'new2'
+            }
+          ]
         }
       )
     })
