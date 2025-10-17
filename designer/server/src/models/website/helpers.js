@@ -30,23 +30,23 @@ import {
  * @param { WebsiteLevel1Routes | undefined } route
  * @param {boolean} isGuest
  * @returns {{
- *   href: WebsiteLevel1Routes | string
- *   active?: boolean
+ *   url: WebsiteLevel1Routes | string
+ *   isActive?: boolean
  *   text: string
  * }[]}
  */
 export function getWebsitePageNavigation(route, isGuest) {
   const pageNavigation = isGuest ? pageNavigationGuest : pageNavigationBase
   return pageNavigation.map(({ param, ...item }) => {
-    const href = `/${param}`
+    const url = `/${param}`
     if (param === route) {
       return {
         ...item,
-        href,
-        active: true
+        url,
+        isActive: true
       }
     }
-    return { ...item, href }
+    return { ...item, url }
   })
 }
 

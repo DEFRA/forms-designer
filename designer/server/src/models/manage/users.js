@@ -5,6 +5,7 @@ import {
   getNameForRole
 } from '~/src/models/account/role-mapper.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
+import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 
 const editUrl = '/manage/users/'
 const MANAGE_USERS_TEXT = 'Manage users'
@@ -20,6 +21,11 @@ export function getTabs() {
       text: MANAGE_USERS_TEXT,
       url: editUrl,
       isActive: true
+    },
+    {
+      text: 'Support',
+      url: `/${WebsiteLevel1Routes.SUPPORT}`,
+      isActive: false
     }
   ]
 }

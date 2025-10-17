@@ -21,7 +21,7 @@
 {{ appServiceHeader({
   organisationName: "Defra",
   productName: productName | safe | trim,
-  navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)),
+  navigationItems: navigation if (isAuthenticated and (isFormsUser or isAdmin)) else pageNavigation,
   adminNavigation: adminNavigation if (isAuthenticated and isAdmin),
   accountName: authedUser.displayName if isAuthenticated,
   accountLink: accountLinkUrl,
@@ -29,10 +29,3 @@
   homepageLink: "/"
 }) }}
 
-{%- set navigationClasses = "govuk-service-navigation--green" if displayHomeNav else "" -%}
-{% if isGuest %}
-{{ govukServiceNavigation({
-  classes: navigationClasses,
-  navigation: pageNavigation
-}) }}
-{% endif %}

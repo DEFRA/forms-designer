@@ -56,28 +56,28 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
-            active: true,
-            href: '/',
+            isActive: true,
+            url: '/',
             text: 'Services'
           },
           {
-            href: '/about',
+            url: '/about',
             text: 'About'
           },
           {
-            href: '/get-started',
+            url: '/get-started',
             text: 'Get started'
           },
           {
-            href: '/features',
+            url: '/features',
             text: 'Features'
           },
           {
-            href: '/resources',
+            url: '/resources',
             text: 'Resources'
           },
           {
-            href: '/support',
+            url: '/support',
             text: 'Support'
           }
         ],
@@ -111,28 +111,28 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
-            active: true,
-            href: '/',
+            isActive: true,
+            url: '/',
             text: 'Services'
           },
           {
-            href: '/about',
+            url: '/about',
             text: 'About'
           },
           {
-            href: '/get-started',
+            url: '/get-started',
             text: 'Get started'
           },
           {
-            href: '/features',
+            url: '/features',
             text: 'Features'
           },
           {
-            href: '/resources',
+            url: '/resources',
             text: 'Resources'
           },
           {
-            href: '/support',
+            url: '/support',
             text: 'Support'
           }
         ],
@@ -171,28 +171,28 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
-            active: true,
-            href: '/',
+            isActive: true,
+            url: '/',
             text: 'Services'
           },
           {
-            href: '/about',
+            url: '/about',
             text: 'About'
           },
           {
-            href: '/get-started',
+            url: '/get-started',
             text: 'Get started'
           },
           {
-            href: '/features',
+            url: '/features',
             text: 'Features'
           },
           {
-            href: '/resources',
+            url: '/resources',
             text: 'Resources'
           },
           {
-            href: '/support',
+            url: '/support',
             text: 'Support'
           }
         ],
@@ -222,6 +222,11 @@ describe('Auth view models', () => {
             text: 'My account',
             url: '/auth/account',
             isActive: true
+          },
+          {
+            text: 'Support',
+            url: '/support',
+            isActive: false
           }
         ],
         pageTitle: 'My account',
@@ -279,6 +284,11 @@ describe('Auth view models', () => {
         {
           text: 'Manage users',
           url: '/manage/users',
+          isActive: false
+        },
+        {
+          text: 'Support',
+          url: '/support',
           isActive: false
         }
       ])

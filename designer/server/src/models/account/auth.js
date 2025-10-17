@@ -3,6 +3,7 @@ import config from '~/src/config.js'
 import { getNameForRole } from '~/src/models/account/role-mapper.js'
 import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
 import { websiteServicesBase } from '~/src/models/website/services.js'
+import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 import content from '~/src/routes/website/content.js'
 
 export function signedOutViewModel() {
@@ -67,6 +68,12 @@ export function accountViewModel(user) {
       isActive: false
     })
   }
+
+  navigation.push({
+    text: 'Support',
+    url: `/${WebsiteLevel1Routes.SUPPORT}`,
+    isActive: false
+  })
 
   return {
     navigation,

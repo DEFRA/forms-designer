@@ -7,6 +7,7 @@ import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 export function websiteCookiesModel(isGuest) {
   return {
     isGuest,
+    displayHomeNav: true,
     pageNavigation: getWebsitePageNavigation(
       WebsiteLevel1Routes.SERVICES,
       isGuest
