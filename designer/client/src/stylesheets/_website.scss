@@ -32,6 +32,17 @@ $home-page-breakpoint: 1220px;
       &:hover {
         color: $defra-brand-colour;
       }
+
+      &:focus {
+        color: $govuk-focus-text-colour;
+        background-color: $govuk-focus-colour;
+        box-shadow:
+          0 -2px $govuk-focus-colour,
+          0 4px $govuk-focus-text-colour;
+        border-color: $govuk-focus-text-colour;
+        outline: 3px solid transparent;
+        outline-offset: 0;
+      }
     }
 
     &--green {
@@ -43,6 +54,10 @@ $home-page-breakpoint: 1220px;
         &:visited,
         &:hover {
           color: #ffffff;
+        }
+
+        &:focus {
+          color: $govuk-focus-text-colour;
         }
       }
 
@@ -129,11 +144,17 @@ $home-page-breakpoint: 1220px;
       border-left-color: $defra-brand-colour;
     }
 
-    &__link:link,
-    &__link:visited,
-    &__link:active,
-    &__link:hover {
-      color: $defra-brand-colour;
+    &__link {
+      &:link,
+      &:visited,
+      &:active,
+      &:hover {
+        color: $defra-brand-colour;
+      }
+
+      &:focus {
+        color: $govuk-focus-text-colour;
+      }
     }
   }
 
@@ -1502,5 +1523,11 @@ $home-page-breakpoint: 1220px;
     .feature-partial-small {
       margin-left: 1rem;
     }
+  }
+}
+
+.collapse-first-p-margin {
+  p:first-child {
+    margin-top: 0;
   }
 }
