@@ -222,6 +222,11 @@ describe('Auth view models', () => {
             text: 'My account',
             url: '/auth/account',
             isActive: true
+          },
+          {
+            text: 'Support',
+            url: '/support',
+            isActive: false
           }
         ],
         pageTitle: 'My account',
@@ -279,6 +284,11 @@ describe('Auth view models', () => {
         {
           text: 'Manage users',
           url: '/manage/users',
+          isActive: false
+        },
+        {
+          text: 'Support',
+          url: '/support',
           isActive: false
         }
       ])
