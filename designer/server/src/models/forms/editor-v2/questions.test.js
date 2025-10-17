@@ -354,7 +354,7 @@ describe('editor-v2 - questions model', () => {
             model: {
               classes: '',
               content: '<p>Some info</p>\n',
-              id: 'markdown',
+              id: expect.stringContaining('markdown'),
               name: 'markdown'
             },
             questionType: 'Markdown'
@@ -366,7 +366,7 @@ describe('editor-v2 - questions model', () => {
                 classes: '',
                 text: ''
               },
-              id: 'inputField',
+              id: expect.stringContaining('inputField'),
               label: {
                 classes: 'govuk-label--m',
                 isPageHeading: true,
@@ -413,7 +413,7 @@ describe('editor-v2 - questions model', () => {
                 classes: '',
                 text: ''
               },
-              id: 'inputField',
+              id: expect.stringContaining('inputField'),
               label: {
                 classes: 'govuk-label--l',
                 isPageHeading: true,

@@ -2,6 +2,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import { autoCompleteOptionsSchema } from '~/src/form/form-editor/index.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import { Question } from '~/src/form/form-editor/preview/question.js'
+import { buildCombinedId } from '~/src/form/form-editor/preview/utils.js'
 
 export class AutocompleteListQuestion extends Question {
   /**
@@ -68,7 +69,7 @@ export class AutocompleteQuestion extends AutocompleteListQuestion {
 
   get renderInput() {
     return {
-      id: this._fieldName,
+      id: buildCombinedId(this._fieldName, this._id),
       name: this._fieldName,
       attributes: { 'data-module': 'govuk-accessible-autocomplete' },
       hint: this.hint,
