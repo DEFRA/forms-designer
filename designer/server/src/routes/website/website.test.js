@@ -50,7 +50,7 @@ describe('Health check route', () => {
     const $whatsNewText = $whatsNewTextObj.textContent.trim()
 
     const $timeIso = $time.getAttribute('datetime')
-    const $navigation = container.getByRole('navigation', { name: 'Menu' })
+    const $navigation = container.getByRole('navigation', { name: 'menu' })
     const menus = [
       'Services',
       'About',

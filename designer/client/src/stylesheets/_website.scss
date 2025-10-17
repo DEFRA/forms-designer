@@ -90,6 +90,15 @@ $home-page-breakpoint: 1220px;
         border-bottom-color: #ffffff;
       }
     }
+
+    .cross-service-header__button.cross-service-header__button--service-header,
+    .cross-service-header__button.cross-service-header__button--service-header:focus:not(:focus-visible) {
+      color: #ffffff;
+    }
+
+    .service-header__nav-list-item.service-header__nav-list-item--active {
+      border-left-color: #ffffff;
+    }
   }
 
   .app-masthead {

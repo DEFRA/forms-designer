@@ -94,81 +94,70 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item service-header__nav-list-item--active">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/get-started">
-                                    
-Get started
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                  <a class="govuk-service-navigation__link" href="/features" aria-current="true">
-                                    
-                  <strong class="govuk-service-navigation__active-fallback">Features</strong>
-
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/resources">
-                                    
-Resources
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/support">
-                                    
-Support
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
@@ -1480,81 +1469,70 @@ exports[`Health check route /get-started should load get Get Started page 1`] = 
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item service-header__nav-list-item--active">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                  <a class="govuk-service-navigation__link" href="/get-started" aria-current="true">
-                                    
-                  <strong class="govuk-service-navigation__active-fallback">Get started</strong>
-
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/features">
-                                    
-Features
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/resources">
-                                    
-Resources
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/support">
-                                    
-Support
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
@@ -1792,81 +1770,70 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item service-header__nav-list-item--active">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                  <a class="govuk-service-navigation__link" href="/get-started" aria-current="true">
-                                    
-                  <strong class="govuk-service-navigation__active-fallback">Get started</strong>
-
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/features">
-                                    
-Features
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/resources">
-                                    
-Resources
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/support">
-                                    
-Support
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
@@ -2443,81 +2410,70 @@ exports[`Health check route /resources should load Does this need to be... page 
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item service-header__nav-list-item--active">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/get-started">
-                                    
-Get started
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/features">
-                                    
-Features
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                  <a class="govuk-service-navigation__link" href="/resources" aria-current="true">
-                                    
-                  <strong class="govuk-service-navigation__active-fallback">Resources</strong>
-
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/support">
-                                    
-Support
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
@@ -2783,81 +2739,70 @@ exports[`Health check route /resources/accessibility-and-inclusion should load A
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item service-header__nav-list-item--active">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/get-started">
-                                    
-Get started
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/features">
-                                    
-Features
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                  <a class="govuk-service-navigation__link" href="/resources" aria-current="true">
-                                    
-                  <strong class="govuk-service-navigation__active-fallback">Resources</strong>
-
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/support">
-                                    
-Support
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
@@ -3219,81 +3164,70 @@ exports[`Health check route /support should shows the Defra Forms Website Suppor
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item service-header__nav-list-item--active">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"aria-current="page"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/get-started">
-                                    
-Get started
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/features">
-                                    
-Features
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/resources">
-                                    
-Resources
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item govuk-service-navigation__item--active">
-                  <a class="govuk-service-navigation__link" href="/support" aria-current="true">
-                                    
-                  <strong class="govuk-service-navigation__active-fallback">Support</strong>
-
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
@@ -3491,80 +3425,70 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
       </nav>
     </div>
   </div>
+  <!-- Start of service navigation -->
+  <div class="service-header" data-one-login-header-nav>
+    <div class="govuk-width-container app-width-container--wide">
+      <div class="service-header__container">        <div>
+          <!-- Label the toggle button appropriately (you might want to use the name of your service) to provide support for screen reader users -->
+          <button type="button"
+            aria-controls="service-header__nav"
+            data-open-class="cross-service-header__button--open"
+            aria-label="Show service navigation menu"
+            data-label-for-show="Show service navigation menu"
+            data-label-for-hide="Hide service navigation menu"
+            data-text-for-show="Menu"
+            data-text-for-hide="Close"
+            aria-expanded="false"
+            class="cross-service-header__button cross-service-header__button--service-header js-x-header-toggle">
+            <span class="service-header__button-content">Menu</span>
+          </button>
+          <!-- Important! Label your navigation appropriately! When there are multiple navigation landmarks on a page, additional labelling is required to provide support for screen reader users -->
+          <nav aria-label=" menu">
+            <ul class="service-header__nav-list service-header__nav" id="service-header__nav" data-open-class="service-header__nav--open">              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/">
+                  Services
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/about">
+                  About
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/get-started">
+                  Get started
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
+              </li>            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- End of service navigation -->
 </header>
 
-  <div class="govuk-service-navigation"
-data-module="govuk-service-navigation"
->
-      <div class="govuk-width-container">
-
-    <div class="govuk-service-navigation__container">
-      
-
-      
-        <nav aria-label="Menu" class="govuk-service-navigation__wrapper">
-          <button type="button" class="govuk-service-navigation__toggle govuk-js-service-navigation-toggle" aria-controls="navigation" hidden>
-            Menu
-          </button>
-
-          <ul class="govuk-service-navigation__list" id="navigation" >
-
-            
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/">
-                                    
-Services
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/about">
-                                    
-About
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/get-started">
-                                    
-Get started
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/features">
-                                    
-Features
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/resources">
-                                    
-Resources
-                  </a>
-              </li>
-
-              
-              <li class="govuk-service-navigation__item">
-                  <a class="govuk-service-navigation__link" href="/support">
-                                    
-Support
-                  </a>
-              </li>
-
-            </ul>
-        </nav>
-    </div>
-
-    </div>
-
-  </div>
 
   <meta name="robots" content="noindex, nofollow">
 
