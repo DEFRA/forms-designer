@@ -139,6 +139,14 @@ export interface YesNoFieldComponent extends FormFieldBase {
   }
 }
 
+export interface DeclarationFieldComponent extends FormFieldBase {
+  type: ComponentType.DeclarationField
+  content: string
+  options: FormFieldBase['options'] & {
+    condition?: string
+  }
+}
+
 export interface MultilineTextFieldComponent extends FormFieldBase {
   type: ComponentType.MultilineTextField
   options: FormFieldBase['options'] & {
@@ -281,7 +289,10 @@ export type ContentComponentsDef =
 
 // Components that render lists
 export type ListComponentsDef =
-  | Exclude<SelectionComponentsDef, YesNoFieldComponent>
+  | Exclude<
+      SelectionComponentsDef,
+      YesNoFieldComponent | DeclarationFieldComponent
+    >
   | ListComponent
 
 // Components that have selection fields
@@ -291,6 +302,7 @@ export type SelectionComponentsDef =
   | RadiosFieldComponent
   | SelectFieldComponent
   | YesNoFieldComponent
+  | DeclarationFieldComponent
 
 // Components that have condition support
 export type ConditionalComponentsDef = Exclude<

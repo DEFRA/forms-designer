@@ -426,6 +426,14 @@ describe('preview', () => {
       )
       expect(previewModel).toBeInstanceOf(SelectSortableQuestion)
     })
+
+    it('should get DeclarationField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.DeclarationField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
   })
 
   describe('getPreviewModel', () => {

@@ -161,7 +161,9 @@ jobs:
               comment.body.includes('🧪 Acceptance Test Results')
             );
 
-            const testsPassed = '${{ steps.acceptance-tests.outcome }}' === 'success';
+            const testOutcome = '${{ steps.acceptance-tests.outcome }}';
+            const testsPassed = testOutcome === 'success';
+            const testsRan = testOutcome === 'success' || testOutcome === 'failure';
 
             if (testsPassed) {
               // Tests passed - delete any existing failure comment
@@ -172,8 +174,8 @@ jobs:
                   comment_id: botComment.id,
                 });
               }
-            } else {
-              // Tests failed - create or update comment
+            } else if (testsRan) {
+              // Tests ran but failed - create or update comment
               const runUrl = `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`;
 
               const body = `## 🧪 Acceptance Test Results\n\n` +
@@ -196,6 +198,7 @@ jobs:
                 });
               }
             }
+            // If tests were skipped (testsRan is false), don't post any comment
 
       - name: Cleanup
         if: always()

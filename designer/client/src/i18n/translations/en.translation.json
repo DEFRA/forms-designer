@@ -205,7 +205,9 @@
     "YesNoField": "YesNo",
     "YesNoField_info": "Allows users to answer either ’Yes’ or ‘No’",
     "FileUploadField": "File upload",
-    "FileUploadField_info": "Allows a user to upload files"
+    "FileUploadField_info": "Allows a user to upload files",
+    "DeclarationField": "Declaration",
+    "DeclarationField_info": "A declaration field for users to confirm information"
   },
   "fileUploadFieldEditComponent": {
     "helpTextField": {

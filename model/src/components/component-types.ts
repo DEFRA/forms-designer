@@ -143,5 +143,13 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     type: ComponentType.List,
     list: '',
     options: {}
+  },
+  {
+    name: 'DeclarationField',
+    title: 'Declaration',
+    type: ComponentType.DeclarationField,
+    hint: '',
+    content: '',
+    options: {}
   }
 ])
