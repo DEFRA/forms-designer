@@ -1,4 +1,4 @@
-{%- set bodyClasses = "defra-forms-website" -%}
+{%- set bodyClasses = "defra-forms-website defra-forms-website--home" if displayHomeNav else "defra-forms-website" -%}
 {% extends "layouts/page.njk" %}
 
 {% from "govuk/macros/attributes.njk" import govukAttributes %}
@@ -10,4 +10,5 @@
 
 {% block header %}
   {% include "partials/forms-website-navigation.njk" %}
+  <meta name="robots" content="noindex, nofollow">
 {% endblock %}

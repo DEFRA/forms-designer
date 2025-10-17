@@ -6,14 +6,7 @@ If you're taking part in private beta, ask for support by sending a message to t
 {% endset -%}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: pageHeading.text
-  },
-  description: {
-    html: description
-  }
-}) }}
+{{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -21,11 +14,25 @@ If you're taking part in private beta, ask for support by sending a message to t
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <h2 class="govuk-heading-l">Support hours</h2>
-        <p class="govuk-body">We are available to support you between 9am and 5pm Monday to Friday.</p>
-
-        <h2 class="govuk-heading-l">General questions</h2>
-        <p class="govuk-body">For general questions about Defra Forms, use the shared mailbox at <a href="mailto:defraforms@defra.gov.uk" class="govuk-link">defraforms@defra.gov.uk</a>.</p>
+        {% for month in latest %}
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">{{ month.when }}</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+          {% for update in month.updates %}
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">{{ update.product }}</td>
+            <td class="govuk-table__cell collapse-first-p-margin">{{ update.content | markdown | safe }}</td>
+          </tr>
+          {% endfor %}
+          </tbody>
+        </table>
+        {% endfor %}
       </div>
     </div>
   </div>

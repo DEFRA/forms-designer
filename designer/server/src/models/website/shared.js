@@ -10,20 +10,23 @@ import {
  * @param { Level2GetStartedMenu | Level2ResourcesMenu } level2Menu
  * @param { (Omit<XGovContentSubNavigationItem, 'children'> & { children: XGovContentSubNavigationItem[] })[] } contentMenus
  * @param { string } caption
+ * @param {boolean} isGuest
  */
 export function websiteSubmenuModel(
   level1Menu,
   level2Menu,
   contentMenus,
-  caption
+  caption,
+  isGuest
 ) {
   const [subMenuParent] = contentMenus
   const { text: titleText } =
     subMenuParent.children.find(({ param }) => param === level2Menu) ?? {}
 
   return {
+    isGuest,
     pageTitle: `Defra Forms: ${titleText}`,
-    pageNavigation: getWebsitePageNavigation(level1Menu),
+    pageNavigation: getWebsitePageNavigation(level1Menu, isGuest),
     pageHeading: {
       text: `Defra Forms: ${titleText}`,
       size: 'large',

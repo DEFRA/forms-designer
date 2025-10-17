@@ -16,7 +16,7 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -139,6 +139,12 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/library">
                   Forms library
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
                 </a>
               </li>            </ul>
           </nav>
@@ -245,6 +251,8 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -254,16 +262,6 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -325,7 +323,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -448,6 +446,12 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/library">
                   Forms library
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
                 </a>
               </li>            </ul>
           </nav>
@@ -520,6 +524,8 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -529,16 +535,6 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>
@@ -600,7 +596,7 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
       <link rel="manifest" href="/assets/manifest.json">
 
   <meta name="application-name" content="@defra/forms-designer" data-environment="local">
-
+  <meta name="robots" content="noindex, nofollow">
   <link href="/stylesheets/application.scss" rel="stylesheet">
 
   </head>
@@ -724,6 +720,12 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
                 <a class="service-header__nav-list-item-link"                  href="/library">
                   Forms library
                 </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/support">
+                  Support
+                </a>
               </li>            </ul>
           </nav>
         </div>
@@ -772,6 +774,8 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
 
 
 
+
+
   <footer class="govuk-footer">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-footer__meta">
@@ -781,16 +785,6 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
           <li class="govuk-footer__inline-list-item">
             <a class="govuk-footer__link" href="/help/accessibility-statement">
               Accessibility statement
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="/help/cookies">
-              Cookies
-            </a>
-          </li>
-          <li class="govuk-footer__inline-list-item">
-            <a class="govuk-footer__link" href="https://www.gov.uk/help/privacy-notice">
-              Privacy
             </a>
           </li>
         </ul>

@@ -56,27 +56,33 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
-            href: '/about',
+            isActive: true,
+            url: '/',
+            text: 'Services'
+          },
+          {
+            url: '/about',
             text: 'About'
           },
           {
-            href: '/get-started',
+            url: '/get-started',
             text: 'Get started'
           },
           {
-            href: '/features',
+            url: '/features',
             text: 'Features'
           },
           {
-            href: '/resources',
+            url: '/resources',
             text: 'Resources'
           },
           {
-            href: '/support',
+            url: '/support',
             text: 'Support'
           }
         ],
-        errorList: []
+        errorList: [],
+        isGuest: true
       })
     })
 
@@ -105,23 +111,28 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
-            href: '/about',
+            isActive: true,
+            url: '/',
+            text: 'Services'
+          },
+          {
+            url: '/about',
             text: 'About'
           },
           {
-            href: '/get-started',
+            url: '/get-started',
             text: 'Get started'
           },
           {
-            href: '/features',
+            url: '/features',
             text: 'Features'
           },
           {
-            href: '/resources',
+            url: '/resources',
             text: 'Resources'
           },
           {
-            href: '/support',
+            url: '/support',
             text: 'Support'
           }
         ],
@@ -130,7 +141,8 @@ describe('Auth view models', () => {
             html: `We could not sign you in. Please contact the system administrator for help,
       <a href="mailto:steven.thomas@defra.gov.uk" class="govuk-link">steven.thomas@defra.gov.uk</a>`
           }
-        ]
+        ],
+        isGuest: true
       })
     })
 
@@ -159,27 +171,33 @@ describe('Auth view models', () => {
         },
         pageNavigation: [
           {
-            href: '/about',
+            isActive: true,
+            url: '/',
+            text: 'Services'
+          },
+          {
+            url: '/about',
             text: 'About'
           },
           {
-            href: '/get-started',
+            url: '/get-started',
             text: 'Get started'
           },
           {
-            href: '/features',
+            url: '/features',
             text: 'Features'
           },
           {
-            href: '/resources',
+            url: '/resources',
             text: 'Resources'
           },
           {
-            href: '/support',
+            url: '/support',
             text: 'Support'
           }
         ],
-        errorList: []
+        errorList: [],
+        isGuest: true
       })
     })
   })
@@ -204,6 +222,11 @@ describe('Auth view models', () => {
             text: 'My account',
             url: '/auth/account',
             isActive: true
+          },
+          {
+            text: 'Support',
+            url: '/support',
+            isActive: false
           }
         ],
         pageTitle: 'My account',
@@ -261,6 +284,11 @@ describe('Auth view models', () => {
         {
           text: 'Manage users',
           url: '/manage/users',
+          isActive: false
+        },
+        {
+          text: 'Support',
+          url: '/support',
           isActive: false
         }
       ])

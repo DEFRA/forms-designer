@@ -110,6 +110,7 @@ export default {
     featuresComingSoon: [
       {
         heading: 'Confirmation emails',
+        classes: 'govuk-card--coming-soon',
         icon: FeatureIcons.CONFIRMATION_EMAILS,
         markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
 - name of form

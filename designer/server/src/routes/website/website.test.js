@@ -1,8 +1,10 @@
 import { AssertionError } from 'assert'
 
 import { within } from '@testing-library/dom'
+import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
+import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 describe('Health check route', () => {
@@ -48,8 +50,15 @@ describe('Health check route', () => {
     const $whatsNewText = $whatsNewTextObj.textContent.trim()
 
     const $timeIso = $time.getAttribute('datetime')
-    const $navigation = container.getByRole('navigation', { name: 'Menu' })
-    const menus = ['About', 'Get started', 'Features', 'Resources', 'Support']
+    const $navigation = container.getByRole('navigation', { name: 'menu' })
+    const menus = [
+      'Services',
+      'About',
+      'Get started',
+      'Features',
+      'Resources',
+      'Support'
+    ]
     const $navigationItems = within($navigation).getAllByRole('link')
 
     menus.forEach((item, idx) => {
@@ -61,6 +70,35 @@ describe('Health check route', () => {
     expect($whatsNewText.length).toBeTruthy()
     // @ts-expect-error - testing for invalid input
     expect(new Date($timeIso)).not.toBeNaN()
+  })
+
+  test('/services should redirect to home when not logged in', async () => {
+    const options = {
+      method: 'GET',
+      url: '/services'
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(headers.location).toBe('/')
+  })
+
+  test('/services should show the Defra Forms Website Services page', async () => {
+    const options = {
+      method: 'GET',
+      url: '/services',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent(
+      'Create and publish Defra forms on GOV.UK'
+    )
   })
 
   test('/about should show the Defra Forms Website About page', async () => {
@@ -147,6 +185,19 @@ describe('Health check route', () => {
 
     const $heading = container.getByRole('heading', { level: 1 })
     expect($heading).toHaveTextContent('Support')
+    expect(response.result).toMatchSnapshot()
+  })
+
+  test("/whats-new should show the What's new page", async () => {
+    const options = {
+      method: 'GET',
+      url: '/whats-new'
+    }
+
+    const { container, response } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent('Updates')
     expect(response.result).toMatchSnapshot()
   })
 })

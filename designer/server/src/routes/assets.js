@@ -12,7 +12,7 @@ export default [
     options: {
       auth: false,
       handler: {
-        file: 'server/public/static/robots.txt'
+        file: join(config.appDir, 'public', 'static', 'robots.txt')
       }
     }
   }),
