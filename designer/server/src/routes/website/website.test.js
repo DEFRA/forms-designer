@@ -187,6 +187,19 @@ describe('Health check route', () => {
     expect($heading).toHaveTextContent('Support')
     expect(response.result).toMatchSnapshot()
   })
+
+  test("/whats-new should show the What's new page", async () => {
+    const options = {
+      method: 'GET',
+      url: '/whats-new'
+    }
+
+    const { container, response } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', { level: 1 })
+    expect($heading).toHaveTextContent('Updates')
+    expect(response.result).toMatchSnapshot()
+  })
 })
 
 /**

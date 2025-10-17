@@ -4,6 +4,7 @@ import {
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
 import features from '~/src/routes/website/content/features.js'
+import { whatsNewLatest } from '~/src/routes/website/content/whatsNew.js'
 
 export default {
   home: {
@@ -18,6 +19,14 @@ export default {
       },
       text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
     }
+  },
+  whatsNew: {
+    mastHead: {
+      heading: 'Updates',
+      caption: "What's new",
+      description: 'Updates to the Defra Form Designer and Developer Plugin.'
+    },
+    latest: whatsNewLatest
   },
   getStarted: {
     menus: [

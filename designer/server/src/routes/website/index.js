@@ -6,6 +6,7 @@ import { websiteFeaturesModel } from '~/src/models/website/features.js'
 import { websiteServicesModel } from '~/src/models/website/services.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
+import { websiteWhatsNewModel } from '~/src/models/website/whats-new.js'
 import {
   Level2GetStartedMenu,
   Level2ResourcesMenu,
@@ -66,6 +67,20 @@ export default /** @satisfies {ServerRoute[]} */ ([
 
       const servicesModel = websiteServicesModel(isGuest)
       return h.view('website/index', servicesModel)
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: `/${WebsiteLevel1Routes.WHATS_NEW}`,
+    handler(request, h) {
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      const whatsNewModel = websiteWhatsNewModel(isGuest)
+      return h.view('website/whats-new', whatsNewModel)
     },
     options: {
       auth: {
