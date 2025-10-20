@@ -26,7 +26,10 @@ import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
 import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
 import { ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
 import { SupportingEvidenceQuestion } from '~/src/form/form-editor/preview/supporting-evidence.js'
-import { UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
+import {
+  UkAddressComponentPreviewElements,
+  UkAddressQuestion
+} from '~/src/form/form-editor/preview/uk-address.js'
 import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
 /**
@@ -73,6 +76,8 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
       ) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new SelectComponentElements(component, list)
+      } else if (component.type === ComponentType.UkAddressField) {
+        questionElements = new UkAddressComponentPreviewElements(component)
       } else if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new ListComponentElements(component, list)
