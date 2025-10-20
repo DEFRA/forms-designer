@@ -1,8 +1,9 @@
 import JoiDate from '@joi/date'
-import JoiBase, { type LanguageMessages } from 'joi'
+import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
+import { isConditionalType } from '~/src/components/helpers.js'
 import {
   type ComponentDef,
   type ContentComponentsDef,
@@ -315,6 +316,30 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       .description(
         'Value to compare the field against, either fixed or relative date'
       )
+  })
+  .custom((value: ConditionDataV2, helpers: CustomHelpers<ConditionDataV2>) => {
+    const { componentId } = value
+    const definition = helpers.state.ancestors.find(
+      (item: FormDefinition) =>
+        'name' in item && 'pages' in item && 'conditions' in item
+    )
+    const foundComponents = (definition as FormDefinition).pages.map((page) =>
+      'components' in page
+        ? page.components?.find((comp) => comp.id === componentId)
+        : undefined
+    )
+    const foundComponentHandlesConditions = foundComponents.length
+      ? isConditionalType(foundComponents[0]?.type)
+      : false
+
+    return foundComponentHandlesConditions
+      ? value
+      : helpers.error('any.ref', {
+          arg: 'componentType',
+          ref: componentId,
+          errorType: 'testing',
+          reason: `does not support conditions`
+        })
   })
 
 const conditionGroupSchema = Joi.object<ConditionGroupData>()

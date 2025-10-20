@@ -38,6 +38,8 @@ const formErrorsToMessages = {
     'This page is referenced by a condition. Remove the condition before making changes to this page.',
   ref_condition_component_id:
     'A condition is using a question on this page. Remove the condition before re-attempting its removal.',
+  ref_condition_component_type:
+    'New question type does not support conditions. Remove the condition or choose a question type that supports conditions.',
   ref_condition_list_id:
     'A condition is using a list in this form. Remove the condition before making changes to the list.',
   ref_condition_item_id:

@@ -432,6 +432,19 @@ export default [
             'autoCompleteOptions',
             `A list item used by condition '${conditionName}' has been deleted from the list.`
           )
+          return redirectWithErrors(request, h, joiErr, errorKey, '#')
+        }
+
+        if (
+          isInvalidFormErrorType(
+            err,
+            FormDefinitionError.RefConditionComponentType
+          )
+        ) {
+          const joiErr = createJoiError(
+            'general',
+            `The requested question type does not support conditions`
+          )
 
           return redirectWithErrors(request, h, joiErr, errorKey, '#')
         }

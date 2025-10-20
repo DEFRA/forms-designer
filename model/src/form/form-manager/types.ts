@@ -40,6 +40,7 @@ export enum FormDefinitionError {
   UniqueListItemValue = 'unique_list_item_value',
   RefPageCondition = 'ref_page_condition',
   RefConditionComponentId = 'ref_condition_component_id',
+  RefConditionComponentType = 'ref_condition_component_type',
   RefConditionListId = 'ref_condition_list_id',
   RefConditionItemId = 'ref_condition_item_id',
   RefConditionConditionId = 'ref_condition_condition_id',
@@ -118,6 +119,10 @@ export const formDefinitionErrors: FormDefinitionErrors = {
   },
   [FormDefinitionError.RefConditionComponentId]: {
     key: 'componentId',
+    type: FormDefinitionErrorType.Ref
+  },
+  [FormDefinitionError.RefConditionComponentType]: {
+    key: 'componentType',
     type: FormDefinitionErrorType.Ref
   },
   [FormDefinitionError.RefConditionListId]: {

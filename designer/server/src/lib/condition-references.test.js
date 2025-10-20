@@ -1,14 +1,11 @@
-import { ComponentType, ConditionType, OperatorName } from '@defra/forms-model'
+import { ConditionType, OperatorName } from '@defra/forms-model'
 import {
   buildDefinition,
   buildQuestionPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import {
-  findConditionReferences,
-  questionTypeChangeWillBreakCondition
-} from '~/src/lib/condition-references.js'
+import { findConditionReferences } from '~/src/lib/condition-references.js'
 
 describe('condition-references', () => {
   const componentId = 'farm-type-field'
@@ -388,68 +385,6 @@ describe('condition-references', () => {
 
       expect(result.pages).toHaveLength(0)
       expect(result.conditions).toHaveLength(0)
-    })
-  })
-
-  describe('questionTypeChangeWillBreakCondition', () => {
-    it('should return true when condition attached and new type does not handle conditions', () => {
-      const definition = buildDefinition({
-        pages: [
-          buildQuestionPage({
-            id: 'page1',
-            components: [testComponent]
-          })
-        ],
-        conditions: [baseCondition]
-      })
-
-      expect(
-        questionTypeChangeWillBreakCondition(
-          testComponent,
-          ComponentType.UkAddressField,
-          definition
-        )
-      ).toBe(true)
-    })
-
-    it('should return false when condition attached and new type allows conditions', () => {
-      const definition = buildDefinition({
-        pages: [
-          buildQuestionPage({
-            id: 'page1',
-            components: [testComponent]
-          })
-        ],
-        conditions: [baseCondition]
-      })
-
-      expect(
-        questionTypeChangeWillBreakCondition(
-          testComponent,
-          ComponentType.RadiosField,
-          definition
-        )
-      ).toBe(false)
-    })
-
-    it('should return false when no conditions attached', () => {
-      const definition = buildDefinition({
-        pages: [
-          buildQuestionPage({
-            id: 'page1',
-            components: [testComponent]
-          })
-        ],
-        conditions: []
-      })
-
-      expect(
-        questionTypeChangeWillBreakCondition(
-          testComponent,
-          ComponentType.UkAddressField,
-          definition
-        )
-      ).toBe(false)
     })
   })
 })
