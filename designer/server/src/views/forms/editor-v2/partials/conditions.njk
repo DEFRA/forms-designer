@@ -24,6 +24,8 @@
     html: conditionsContent
   }) }}
 
-  <a href="{{ baseUrl }}/conditions" class="govuk-button" role="button" draggable="false" data-module="govuk-button">
-    Manage conditions
-  </a>
+  {% if questionId !== 'new' %}
+    <a href="{{ baseUrl }}/conditions" class="govuk-button" role="button" draggable="false" data-module="govuk-button">
+      Manage conditions
+    </a>
+  {% endif %}
