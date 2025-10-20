@@ -8,8 +8,10 @@ import {
   isFormType,
   randomId
 } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 
 import config from '~/src/config.js'
+import { questionTypeChangeWillBreakCondition } from '~/src/lib/condition-references.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
   removeUniquelyMappedListFromQuestion,
@@ -152,6 +154,17 @@ export async function updateQuestion(
   const components = hasComponents(page) ? page.components : []
   const questionToChange = components.find((x) => x.id === questionId)
   if (questionToChange) {
+    if (
+      questionTypeChangeWillBreakCondition(
+        questionToChange,
+        questionDetails.type,
+        definition
+      )
+    ) {
+      const errorText =
+        'New question type does not support conditions. Either remove the condition or select a question type that supports conditions.'
+      throw Boom.badRequest(errorText, { message: errorText })
+    }
     // Side-effect to the component within the page
     questionToChange.type = questionDetails.type ?? ComponentType.TextField
   }
