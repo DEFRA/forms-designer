@@ -66,6 +66,11 @@ export interface FormEditor {
   shortDescription: string
 
   /**
+   * The value of checkbox to reveal instruction text field
+   */
+  giveInstructions: string
+
+  /**
    * The instruction text for location components (optional)
    */
   instructionText: string
@@ -343,6 +348,7 @@ export type FormEditorInputQuestion = Pick<
   | 'listItemsData'
   | 'jsEnabled'
   | 'usePostcodeLookup'
+  | 'giveInstructions'
   | 'instructionText'
 >
 
