@@ -172,7 +172,80 @@ describe('editor-v2 - advanced settings fields model', () => {
       const autoCompleteRes = res.find((x) => x.name === 'autoCompleteOptions')
       expect(autoCompleteRes).toEqual(expectedResult)
     })
+
+    it('should get the postcode lookup field for a UKAddressComponent', () => {
+      const expectedArray = [
+        {
+          name: 'question',
+          id: 'question',
+          label: {
+            text: 'Question',
+            classes: GOVUK_LABEL__M
+          },
+          value: undefined
+        },
+        {
+          name: 'hintText',
+          id: 'hintText',
+          label: {
+            text: 'Hint text (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          rows: 3,
+          value: undefined
+        },
+        {
+          name: 'questionOptional',
+          id: 'questionOptional',
+          classes: 'govuk-checkboxes--small',
+          items: [
+            {
+              value: 'true',
+              text: 'Make this question optional',
+              checked: false
+            }
+          ]
+        },
+        {
+          name: 'usePostcodeLookup',
+          id: 'usePostcodeLookup',
+          classes: 'govuk-checkboxes--small',
+          items: [
+            {
+              value: 'true',
+              text: 'Use postcode lookup',
+              hint: {
+                text: 'Allow users to search for an address using a postcode'
+              },
+              checked: false
+            }
+          ]
+        },
+        {
+          id: 'shortDescription',
+          name: 'shortDescription',
+          idPrefix: 'shortDescription',
+          label: {
+            text: 'Short description',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+          },
+          value: undefined
+        }
+      ]
+      expect(
+        getFieldList(
+          undefined,
+          ComponentType.UkAddressField,
+          undefined,
+          buildDefinition()
+        )
+      ).toEqual(expectedArray)
+    })
   })
+
   describe('getFieldComponentType', () => {
     test('should throw if invalid or not implemented field type', () => {
       expect(() => getFieldComponentType({ name: ComponentType.Html })).toThrow(
@@ -439,7 +512,7 @@ describe('editor-v2 - advanced settings fields model', () => {
   })
 
   describe('getQuestionFieldList', () => {
-    test('should return TextField for MinLength', () => {
+    test('should return fileTypes for FileUploadField', () => {
       const fileUploadFields = getQuestionFieldList(
         ComponentType.FileUploadField
       )
@@ -461,10 +534,16 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(res[0]).toBe('question')
       expect(res[4]).toBe('radiosOrCheckboxes')
     })
+
+    test('should return usePostcodeLookup for UkAddressField', () => {
+      const ukAddressField = getQuestionFieldList(ComponentType.UkAddressField)
+      expect(ukAddressField).toHaveLength(5)
+      expect(ukAddressField[0]).toBe('question')
+      expect(ukAddressField[3]).toBe('usePostcodeLookup')
+    })
   })
 })
 
 /**
- * @import { FormEditor, InputFieldsComponentsDef } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { InputFieldsComponentsDef } from '@defra/forms-model'
  */

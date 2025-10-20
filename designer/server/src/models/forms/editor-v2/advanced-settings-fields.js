@@ -361,6 +361,11 @@ function getAdditionalOptions(payload) {
   if (payload.maxPast !== undefined) {
     additionalOptions.maxDaysInPast = payload.maxPast
   }
+  if (payload.usePostcodeLookup !== undefined) {
+    additionalOptions.usePostcodeLookup = isCheckboxSelected(
+      payload.usePostcodeLookup
+    )
+  }
   return additionalOptions
 }
 
