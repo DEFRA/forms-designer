@@ -61,9 +61,11 @@
                         text: buttonText
                       }) }}
 
+                      {% if questionId !== 'new' %}
                       <a href="{{ baseUrl }}/delete/{{ questionId }}" class="govuk-link govuk-link--no-visited-state">
                         Delete page
                       </a>
+                      {% endif %}
                     </div>
 
                   </form>
