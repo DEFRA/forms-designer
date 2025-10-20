@@ -31,6 +31,11 @@ export interface FormEditor {
   dateSub: string
 
   /**
+   * The sub-type of location
+   */
+  locationSub: string
+
+  /**
    * The sub-type of lists
    */
   listSub: string
@@ -59,6 +64,11 @@ export interface FormEditor {
    * The short description of the question
    */
   shortDescription: string
+
+  /**
+   * The instruction text for location components (optional)
+   */
+  instructionText: string
 
   /**
    * The value of checkbox to reveal heading and guidance section
@@ -283,7 +293,12 @@ export interface FormEditor {
 
 export type FormEditorInputPage = Pick<
   FormEditor,
-  'pageType' | 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'
+  | 'pageType'
+  | 'questionType'
+  | 'writtenAnswerSub'
+  | 'dateSub'
+  | 'locationSub'
+  | 'listSub'
 >
 
 export type FormEditorInputCheckAnswersSettings = Pick<
@@ -328,6 +343,7 @@ export type FormEditorInputQuestion = Pick<
   | 'listItemsData'
   | 'jsEnabled'
   | 'usePostcodeLookup'
+  | 'instructionText'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -522,6 +538,7 @@ export type GovukStringField = Omit<GovukField, 'value'> & { value: string }
 export interface FormEditorGovukField {
   question?: GovukField
   hintText?: GovukField
+  instructionText?: GovukField
   questionOptional?: GovukField
   shortDescription?: GovukField
   fileTypes?: GovukField
