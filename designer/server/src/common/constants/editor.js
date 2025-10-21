@@ -57,6 +57,22 @@ export const QuestionTypeDescriptions =
     {
       type: ComponentType.SelectField,
       description: 'List: select'
+    },
+    {
+      type: ComponentType.EastingNorthingField,
+      description: 'Location: Easting and northing'
+    },
+    {
+      type: ComponentType.OsGridRefField,
+      description: 'Location: Ordnance Survey (OS) grid reference'
+    },
+    {
+      type: ComponentType.NationalGridFieldNumberField,
+      description: 'Location: National Grid field number'
+    },
+    {
+      type: ComponentType.LatLongField,
+      description: 'Location: Latitude and longitude'
     }
   ])
 
@@ -95,7 +111,9 @@ export const QuestionAdvancedSettings =
     Prefix: 'prefix',
     Suffix: 'suffix',
     Regex: 'regex',
-    Rows: 'rows'
+    Rows: 'rows',
+    GiveInstructions: 'giveInstructions',
+    InstructionText: 'instructionText'
   }
 
 /**

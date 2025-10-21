@@ -8,6 +8,7 @@ import {
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
+import { getDefaultLocationHint } from '~/src/models/forms/editor-v2/location-hint-defaults.js'
 
 const MIN_FILES_ERROR_MESSAGE =
   'Minimum file count must be a whole number between 1 and 25'
@@ -67,6 +68,26 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MinFiles,
       QuestionAdvancedSettings.MaxFiles,
       QuestionAdvancedSettings.ExactFiles
+    ],
+    EastingNorthingField: [
+      QuestionAdvancedSettings.GiveInstructions,
+      QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.Classes
+    ],
+    OsGridRefField: [
+      QuestionAdvancedSettings.GiveInstructions,
+      QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.Classes
+    ],
+    NationalGridFieldNumberField: [
+      QuestionAdvancedSettings.GiveInstructions,
+      QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.Classes
+    ],
+    LatLongField: [
+      QuestionAdvancedSettings.GiveInstructions,
+      QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.Classes
     ]
   })
 
@@ -245,9 +266,33 @@ export const allAdvancedSettingsFields =
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: "For example, a symbol or abbreviation for the type of information you’re asking for, like,'per item' or 'Kg'"
+        text: "For example, a symbol or abbreviation for the type of information you're asking for, like,'per item' or 'Kg'"
       },
       classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.GiveInstructions]: {
+      name: 'giveInstructions',
+      id: 'giveInstructions',
+      classes: 'govuk-checkboxes--small',
+      items: [
+        {
+          value: 'true',
+          text: 'Give instructions to help users answer this question',
+          checked: false
+        }
+      ]
+    },
+    [QuestionAdvancedSettings.InstructionText]: {
+      name: 'instructionText',
+      id: 'instructionText',
+      label: {
+        text: 'Instructions to help users answer this question',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'You can use markdown formatting.'
+      },
+      rows: 8
     }
   })
 
@@ -336,7 +381,9 @@ export const allSpecificSchemas = Joi.object().keys({
   rows: questionDetailsFullSchema.rowsSchema.messages({
     '*': 'Enter a positive whole number'
   }),
-  classes: questionDetailsFullSchema.classesSchema
+  classes: questionDetailsFullSchema.classesSchema,
+  giveInstructions: Joi.string().optional().allow(''),
+  instructionText: questionDetailsFullSchema.instructionTextSchema
 })
 
 /**
@@ -366,6 +413,9 @@ function getAdditionalOptions(payload) {
     additionalOptions.usePostcodeLookup = isCheckboxSelected(
       payload.usePostcodeLookup
     )
+  }
+  if (isCheckboxSelected(payload.giveInstructions) && payload.instructionText) {
+    additionalOptions.instructionText = payload.instructionText
   }
   return additionalOptions
 }
@@ -459,12 +509,27 @@ export function mapBaseQuestionDetails(payload) {
   const additionalSchema = getAdditionalSchema(payload)
   const extraRootFields = mapExtraRootFields(payload)
 
+  // Set default hint text for location fields if no hint is provided
+  let hintText = payload.hintText
+  if (!hintText && payload.questionType) {
+    const locationFieldTypes = [
+      ComponentType.EastingNorthingField,
+      ComponentType.OsGridRefField,
+      ComponentType.NationalGridFieldNumberField,
+      ComponentType.LatLongField
+    ]
+    const questionType = /** @type {ComponentType} */ (payload.questionType)
+    if (locationFieldTypes.includes(questionType)) {
+      hintText = getDefaultLocationHint(questionType)
+    }
+  }
+
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
     title: payload.question,
     name: payload.name,
     shortDescription: payload.shortDescription,
-    hint: payload.hintText,
+    hint: hintText,
     ...extraRootFields,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
