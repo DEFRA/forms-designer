@@ -24,6 +24,7 @@ import {
   type RelativeDateValueData,
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
+import { isFormDefinition } from '~/src/form/form-definition/helpers.js'
 import {
   SchemaVersion,
   type ConditionWrapper,
@@ -333,11 +334,11 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     // Validation may not have been fired on the full FormDefinition
     // therefore we are unable to verify at this point, but the 'save'
     // will eventually validate the full FormDefinition
-    if (!definition) {
+    if (!isFormDefinition(definition)) {
       return value
     }
 
-    const foundComponents = (definition as FormDefinition).pages
+    const foundComponents = definition.pages
       .map((page) =>
         hasComponentsEvenIfNoNext(page)
           ? page.components.find((comp) => comp.id === componentId)
