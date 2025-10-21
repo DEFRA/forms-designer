@@ -202,7 +202,7 @@ export function FileUploadField() {
 
 export function EastingNorthingField() {
   return (
-    <ComponentField className="app-group">
+    <ComponentField className="app-group" data-field-type="easting-northing">
       <span className="app-field-input-s" />
       <span className="app-field-input-s" />
     </ComponentField>
@@ -210,16 +210,23 @@ export function EastingNorthingField() {
 }
 
 export function OsGridRefField() {
-  return <ComponentField className="app-field-input" />
+  return (
+    <ComponentField className="app-field-input" data-field-type="os-grid-ref" />
+  )
 }
 
 export function NationalGridFieldNumberField() {
-  return <ComponentField className="app-field-input" />
+  return (
+    <ComponentField
+      className="app-field-input"
+      data-field-type="national-grid"
+    />
+  )
 }
 
 export function LatLongField() {
   return (
-    <ComponentField className="app-group">
+    <ComponentField className="app-group" data-field-type="lat-long">
       <span className="app-field-input-s" />
       <span className="app-field-input-s" />
     </ComponentField>
