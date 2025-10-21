@@ -43,7 +43,10 @@ import {
   type Section
 } from '~/src/form/form-definition/types.js'
 import { checkErrors } from '~/src/form/form-manager/errors.js'
-import { FormDefinitionError } from '~/src/form/form-manager/types.js'
+import {
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '~/src/form/form-manager/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
@@ -323,11 +326,22 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       (item: FormDefinition) =>
         'name' in item && 'pages' in item && 'conditions' in item
     )
-    const foundComponents = (definition as FormDefinition).pages.map((page) =>
-      'components' in page
-        ? page.components?.find((comp) => comp.id === componentId)
-        : undefined
-    )
+
+    // Validation may not have been fired on the full FormDefinition
+    // therefore we are unable to verify at this point, but the 'save'
+    // will eventually validate the full FormDefinition
+    if (!definition) {
+      return value
+    }
+
+    const foundComponents = (definition as FormDefinition).pages
+      .map((page) =>
+        'components' in page
+          ? page.components?.find((comp) => comp.id === componentId)
+          : undefined
+      )
+      .filter(Boolean)
+
     const foundComponentHandlesConditions = foundComponents.length
       ? isConditionalType(foundComponents[0]?.type)
       : false
@@ -335,9 +349,9 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     return foundComponentHandlesConditions
       ? value
       : helpers.error('any.ref', {
-          arg: 'componentType',
-          ref: componentId,
-          errorType: 'testing',
+          key: 'componentId',
+          errorType: FormDefinitionErrorType.Ref,
+          errorCode: FormDefinitionError.RefConditionComponentType,
           reason: `does not support conditions`
         })
   })
