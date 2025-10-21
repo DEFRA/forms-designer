@@ -738,6 +738,58 @@ describe('Editor v2 question details routes', () => {
     )
   })
 
+  test('POST - should error if is an InvalidFormErrorType of type Condition Ref Type', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionTextField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(updateQuestion).mockImplementationOnce(() => {
+      throw buildInvalidFormDefinitionError(
+        '"conditions[2].items[0]"  references  which does not support conditions',
+        [
+          {
+            id: FormDefinitionError.RefConditionComponentType,
+            detail: { path: ['items', 1] },
+            message:
+              '"conditions[2].items[0]"  references  which does not support conditions',
+            type: FormDefinitionErrorType.Ref
+          }
+        ]
+      )
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/1/question/1/details',
+      auth,
+      payload: {
+        name: '12345',
+        question: 'Question text',
+        shortDescription: 'Short desc',
+        questionType: 'UkAddressField'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/1/question/1/details#'
+    )
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      new Joi.ValidationError(
+        'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
+        [],
+        undefined
+      ),
+      'questionDetailsValidationFailure'
+    )
+  })
+
   test('POST - should error if not 409 boom error from API', async () => {
     jest.mocked(getQuestionSessionState).mockReturnValue(simpleSessionTextField)
     jest

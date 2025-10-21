@@ -443,7 +443,7 @@ export default [
         ) {
           const joiErr = createJoiError(
             DEFAULT_FIELD_NAME,
-            `The requested question type does not support conditions`
+            'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.'
           )
 
           return redirectWithErrors(request, h, joiErr, errorKey, '#')
