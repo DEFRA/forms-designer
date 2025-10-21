@@ -442,7 +442,7 @@ export default [
           )
         ) {
           const joiErr = createJoiError(
-            'general',
+            DEFAULT_FIELD_NAME,
             `The requested question type does not support conditions`
           )
 
