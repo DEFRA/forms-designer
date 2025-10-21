@@ -52,7 +52,8 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Max,
       QuestionAdvancedSettings.Precision,
       QuestionAdvancedSettings.Prefix,
-      QuestionAdvancedSettings.Suffix
+      QuestionAdvancedSettings.Suffix,
+      QuestionAdvancedSettings.Classes
     ],
     UkAddressField: [],
     TelephoneNumberField: [QuestionAdvancedSettings.Classes],
