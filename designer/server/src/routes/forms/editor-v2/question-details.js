@@ -37,6 +37,7 @@ import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.
 import { cannotResolveAllItems } from '~/src/models/forms/editor-v2/edit-list-resolve.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { formErrorsToMessages } from '~/src/plugins/error-pages/form-errors.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
   handleListConflict,
@@ -443,7 +444,7 @@ export default [
         ) {
           const joiErr = createJoiError(
             DEFAULT_FIELD_NAME,
-            'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.'
+            formErrorsToMessages[FormDefinitionError.RefConditionComponentType]
           )
 
           return redirectWithErrors(request, h, joiErr, errorKey, '#')

@@ -640,7 +640,7 @@ describe('Form definition schema', () => {
 
         expect(validated.error).toEqual(
           new ValidationError(
-            '"conditions[2].items[0]"  references  which does not support conditions',
+            '"conditions[2].items[0]" componentId references "69272c34-5acb-42cd-b9fe-38ad58e3a524" which does not support conditions',
             [],
             {}
           )

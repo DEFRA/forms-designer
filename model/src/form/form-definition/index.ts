@@ -48,7 +48,10 @@ import {
   FormDefinitionErrorType
 } from '~/src/form/form-manager/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
-import { hasComponents } from '~/src/pages/helpers.js'
+import {
+  hasComponents,
+  hasComponentsEvenIfNoNext
+} from '~/src/pages/helpers.js'
 
 const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
@@ -336,8 +339,8 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
 
     const foundComponents = (definition as FormDefinition).pages
       .map((page) =>
-        'components' in page
-          ? page.components?.find((comp) => comp.id === componentId)
+        hasComponentsEvenIfNoNext(page)
+          ? page.components.find((comp) => comp.id === componentId)
           : undefined
       )
       .filter(Boolean)
@@ -349,7 +352,8 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
     return foundComponentHandlesConditions
       ? value
       : helpers.error('any.ref', {
-          key: 'componentId',
+          arg: 'componentId',
+          ref: componentId,
           errorType: FormDefinitionErrorType.Ref,
           errorCode: FormDefinitionError.RefConditionComponentType,
           reason: `does not support conditions`
