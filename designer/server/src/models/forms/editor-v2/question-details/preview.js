@@ -318,6 +318,34 @@ export const ModelFactory =
      */
     FileUploadField: (questionElements) => {
       return new SupportingEvidenceQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    EastingNorthingField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    OsGridRefField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    NationalGridFieldNumberField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    LatLongField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
     }
   })
 

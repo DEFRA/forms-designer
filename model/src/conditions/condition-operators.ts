@@ -80,7 +80,11 @@ export const customOperators = {
   [ComponentType.EmailAddressField]: withDefaults(textFieldOperators),
   [ComponentType.TelephoneNumberField]: defaultOperators,
   [ComponentType.SelectField]: defaultOperators,
-  [ComponentType.YesNoField]: defaultOperators
+  [ComponentType.YesNoField]: defaultOperators,
+  [ComponentType.EastingNorthingField]: defaultOperators,
+  [ComponentType.OsGridRefField]: defaultOperators,
+  [ComponentType.NationalGridFieldNumberField]: defaultOperators,
+  [ComponentType.LatLongField]: defaultOperators
 }
 
 export function getOperatorNames(fieldType?: ConditionalComponentType) {
