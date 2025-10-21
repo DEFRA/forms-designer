@@ -355,8 +355,8 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       : helpers.error('any.ref', {
           arg: 'componentId',
           ref: componentId,
-          errorType: FormDefinitionErrorType.Ref,
-          errorCode: FormDefinitionError.RefConditionComponentType,
+          errorType: FormDefinitionErrorType.Incompatible,
+          errorCode: FormDefinitionError.IncompatibleConditionComponentType,
           reason: `does not support conditions`
         })
   })

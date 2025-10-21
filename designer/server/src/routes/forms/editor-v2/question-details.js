@@ -439,12 +439,14 @@ export default [
         if (
           isInvalidFormErrorType(
             err,
-            FormDefinitionError.RefConditionComponentType
+            FormDefinitionError.IncompatibleConditionComponentType
           )
         ) {
           const joiErr = createJoiError(
             DEFAULT_FIELD_NAME,
-            formErrorsToMessages[FormDefinitionError.RefConditionComponentType]
+            formErrorsToMessages[
+              FormDefinitionError.IncompatibleConditionComponentType
+            ]
           )
 
           return redirectWithErrors(request, h, joiErr, errorKey, '#')

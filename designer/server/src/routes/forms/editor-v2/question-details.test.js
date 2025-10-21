@@ -800,7 +800,7 @@ describe('Editor v2 question details routes', () => {
         '"conditions[2].items[0]"  references  which does not support conditions',
         [
           {
-            id: FormDefinitionError.RefConditionComponentType,
+            id: FormDefinitionError.IncompatibleConditionComponentType,
             detail: { path: ['items', 1] },
             message:
               '"conditions[2].items[0]"  references  which does not support conditions',

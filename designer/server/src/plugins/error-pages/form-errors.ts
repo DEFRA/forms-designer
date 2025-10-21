@@ -41,8 +41,6 @@ export const formErrorsToMessages = {
     'This page is referenced by a condition. Remove the condition before making changes to this page.',
   [FormDefinitionError.RefConditionComponentId]:
     'A condition is using a question on this page. Remove the condition before re-attempting its removal.',
-  [FormDefinitionError.RefConditionComponentType]:
-    'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
   [FormDefinitionError.RefConditionListId]:
     'A condition is using a list in this form. Remove the condition before making changes to the list.',
   [FormDefinitionError.RefConditionItemId]:
@@ -51,6 +49,8 @@ export const formErrorsToMessages = {
     'A condition is using another condition. Remove the reference before making changes.',
   [FormDefinitionError.RefPageComponentList]:
     'A question on this page is using a list. Remove the reference before making changes to the list.',
+  [FormDefinitionError.IncompatibleConditionComponentType]:
+    'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
   [FormDefinitionError.Other]:
     'There is a problem with the form definition. Check your changes and try again.'
 }
