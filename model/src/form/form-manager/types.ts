@@ -19,7 +19,8 @@ export interface AddComponentQueryOptions {
 export enum FormDefinitionErrorType {
   Unique = 'unique', // Unique constraint
   Ref = 'ref', // Referential integrity
-  Type = 'type' // General schema type error
+  Type = 'type', // General schema type error
+  Incompatible = 'incompatible' // Data values/types that are not compatible
 }
 
 // Enum for errors that can exist in a form definition
@@ -122,8 +123,8 @@ export const formDefinitionErrors: FormDefinitionErrors = {
     type: FormDefinitionErrorType.Ref
   },
   [FormDefinitionError.RefConditionComponentType]: {
-    key: 'componentType',
-    type: FormDefinitionErrorType.Ref
+    key: 'componentId',
+    type: FormDefinitionErrorType.Incompatible
   },
   [FormDefinitionError.RefConditionListId]: {
     key: 'listId',
