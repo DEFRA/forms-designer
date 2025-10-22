@@ -1,6 +1,5 @@
 import {
   ComponentType,
-  FormDefinitionError,
   Scopes,
   questionDetailsFullSchema
 } from '@defra/forms-model'
@@ -9,11 +8,9 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
-  DEFAULT_FIELD_NAME,
   checkBoomError,
   createJoiError,
-  isInvalidFormErrorType,
-  unpackErrorToken
+  handleInvalidFormErrors
 } from '~/src/lib/error-boom-helper.js'
 import {
   dispatchToPageTitle,
@@ -37,7 +34,6 @@ import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.
 import { cannotResolveAllItems } from '~/src/models/forms/editor-v2/edit-list-resolve.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { formErrorsToMessages } from '~/src/plugins/error-pages/form-errors.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
   handleListConflict,
@@ -410,45 +406,8 @@ export default [
           .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        if (
-          isInvalidFormErrorType(err, FormDefinitionError.UniqueListItemValue)
-        ) {
-          const joiErr = createJoiError(
-            DEFAULT_FIELD_NAME,
-            'Each item must have a unique identifier - enter a different identifier for this item.'
-          )
-
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
-        }
-
-        if (
-          isInvalidFormErrorType(err, FormDefinitionError.RefConditionItemId)
-        ) {
-          const conditionName = unpackErrorToken(
-            err,
-            'conditions',
-            definition.conditions.map((x) => x.displayName)
-          )
-          const joiErr = createJoiError(
-            'autoCompleteOptions',
-            `A list item used by condition '${conditionName}' has been deleted from the list.`
-          )
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
-        }
-
-        if (
-          isInvalidFormErrorType(
-            err,
-            FormDefinitionError.IncompatibleConditionComponentType
-          )
-        ) {
-          const joiErr = createJoiError(
-            DEFAULT_FIELD_NAME,
-            formErrorsToMessages[
-              FormDefinitionError.IncompatibleConditionComponentType
-            ]
-          )
-
+        const joiErr = handleInvalidFormErrors(err, definition)
+        if (joiErr) {
           return redirectWithErrors(request, h, joiErr, errorKey, '#')
         }
 
