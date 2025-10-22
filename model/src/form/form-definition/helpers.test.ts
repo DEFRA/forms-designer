@@ -1,4 +1,5 @@
 import { isFormDefinition } from '~/src/form/form-definition/helpers.js'
+import { type FormDefinition } from '~/src/form/form-definition/types.js'
 
 describe('helpers', () => {
   describe('isFormDefinition', () => {
@@ -7,7 +8,7 @@ describe('helpers', () => {
         name: 'form name',
         conditions: [],
         pages: []
-      }
+      } as unknown as FormDefinition
       expect(isFormDefinition(def)).toBe(true)
     })
 
@@ -20,7 +21,7 @@ describe('helpers', () => {
       const def = {
         conditions: [],
         pages: []
-      }
+      } as unknown as FormDefinition
       expect(isFormDefinition(def)).toBe(false)
     })
   })

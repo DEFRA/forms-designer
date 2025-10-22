@@ -797,13 +797,16 @@ describe('Editor v2 question details routes', () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(updateQuestion).mockImplementationOnce(() => {
       throw buildInvalidFormDefinitionError(
-        '"conditions[2].items[0]"  references  which does not support conditions',
+        '"conditions[2].items[0]" does not support conditions',
         [
           {
             id: FormDefinitionError.IncompatibleConditionComponentType,
-            detail: { path: ['items', 1] },
-            message:
-              '"conditions[2].items[0]"  references  which does not support conditions',
+            detail: {
+              path: ['items', 1],
+              object: {},
+              reason: 'does not support conditions'
+            },
+            message: '"conditions[2].items[0]" does not support conditions',
             type: FormDefinitionErrorType.Incompatible
           }
         ]
