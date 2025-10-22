@@ -145,7 +145,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormPublish}`]
+          scope: [`+${Scopes.FormEdit}`]
         }
       }
     }
