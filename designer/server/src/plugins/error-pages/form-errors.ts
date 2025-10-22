@@ -5,7 +5,7 @@ import {
 import { type Boom } from '@hapi/boom'
 import { type Request, type ResponseToolkit } from '@hapi/hapi'
 
-import { sessionNames } from '~//src/common/constants/session-names.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { type ErrorDetailsItem } from '~/src/common/helpers/types.js'
 
 export const formErrorsToMessages = {

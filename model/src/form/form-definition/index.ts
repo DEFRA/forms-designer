@@ -326,15 +326,14 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   })
   .custom((value: ConditionDataV2, helpers: CustomHelpers<ConditionDataV2>) => {
     const { componentId } = value
-    const definition = helpers.state.ancestors.find(
-      (item: FormDefinition) =>
-        'name' in item && 'pages' in item && 'conditions' in item
-    )
+    const definition = helpers.state.ancestors.find(isFormDefinition) as
+      | FormDefinition
+      | undefined
 
     // Validation may not have been fired on the full FormDefinition
     // therefore we are unable to verify at this point, but the 'save'
     // will eventually validate the full FormDefinition
-    if (!isFormDefinition(definition)) {
+    if (!definition) {
       return value
     }
 
@@ -352,13 +351,19 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
 
     return foundComponentHandlesConditions
       ? value
-      : helpers.error('any.ref', {
-          arg: 'componentId',
-          ref: componentId,
+      : helpers.error('any.incompatible', {
+          object: {
+            key: 'componentType',
+            value: foundComponents[0]?.type,
+            id: foundComponents[0]?.id
+          },
           errorType: FormDefinitionErrorType.Incompatible,
           errorCode: FormDefinitionError.IncompatibleConditionComponentType,
-          reason: `does not support conditions`
+          reason: 'does not support conditions'
         })
+  })
+  .messages({
+    'any.incompatible': 'Incompatible data value'
   })
 
 const conditionGroupSchema = Joi.object<ConditionGroupData>()
