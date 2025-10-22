@@ -209,7 +209,7 @@ describe('page-controller', () => {
       const { pageController } = buildController()
       const expectedPageComponent = {
         model: {
-          id: 'inputField',
+          id: expect.stringContaining('inputField'),
           classes: '',
           name: 'inputField',
           label: {
@@ -268,7 +268,7 @@ describe('page-controller', () => {
             classes: '',
             text: ''
           },
-          id: 'selectInput',
+          id: expect.stringContaining('selectInput'),
           items: [
             {
               hint: undefined,

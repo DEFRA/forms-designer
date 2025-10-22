@@ -2,6 +2,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
+import { buildCombinedId } from '~/src/form/form-editor/preview/utils.js'
 
 export class SelectQuestion extends ListQuestion {
   _questionTemplate = PreviewComponent.PATH + 'selectfield.njk'
@@ -35,7 +36,7 @@ export class SelectQuestion extends ListQuestion {
     const highlightedClass = this._highlighted ? HIGHLIGHT_CLASS : ''
 
     return {
-      id: this._fieldName,
+      id: buildCombinedId(this._fieldName, this._id),
       name: this._fieldName,
       hint: this.hint,
       label: this.label,

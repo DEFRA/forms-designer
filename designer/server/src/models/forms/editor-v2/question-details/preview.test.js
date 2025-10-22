@@ -496,7 +496,7 @@ describe('preview', () => {
         classes: '',
         text: ''
       },
-      id: 'inputField',
+      id: expect.stringContaining('inputField'),
       label: {
         classes: 'govuk-label--l',
         isPageHeading: true,
@@ -560,7 +560,7 @@ describe('preview', () => {
           classes: '',
           text: ''
         },
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         label: {
           classes: 'govuk-label--l',
           isPageHeading: true,
@@ -617,7 +617,7 @@ describe('preview', () => {
       )
 
       expect(previewModel).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         name: 'inputField',
         label: {
           classes: 'govuk-label--l',

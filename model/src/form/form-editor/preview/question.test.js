@@ -16,7 +16,7 @@ describe('question', () => {
     it('should create class', () => {
       const res = new Question(questionElements, renderer)
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         name: 'inputField',
         classes: '',
         label: {
@@ -58,7 +58,7 @@ describe('question', () => {
       res.hintText = ''
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         name: 'inputField',
         classes: '',
         label: {
@@ -117,7 +117,3 @@ describe('question', () => {
     })
   })
 })
-
-/**
- * @import { TextFieldComponent } from '~/src/components/types.js'
- */

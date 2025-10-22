@@ -77,7 +77,7 @@ describe('question', () => {
       const res = SetupPreview.Question()
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         classes: '',
         name: 'inputField',
         label: {
@@ -123,7 +123,7 @@ describe('question', () => {
       res.hintText = ''
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         classes: '',
         name: 'inputField',
         label: {

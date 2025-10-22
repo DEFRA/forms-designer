@@ -34,6 +34,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
     const questions = components.map(
       mapComponentToPreviewQuestion(questionRenderer, definition)
     )
+
     const firstQuestion = /** @type { Markdown | undefined | Question }  */ (
       questions.shift()
     )
