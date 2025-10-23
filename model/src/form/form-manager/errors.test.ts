@@ -835,6 +835,10 @@ describe('validation errors', () => {
     const component = buildUkAddressFieldComponent({
       id: componentId
     })
+    const componentId2 = '33344018-ea0f-45f7-9843-aacbf2be72ad'
+    const component2 = buildTextFieldComponent({
+      id: componentId2
+    })
 
     it('should handle invalid component type for condition', () => {
       const def = buildDefinition({
@@ -843,7 +847,7 @@ describe('validation errors', () => {
           buildQuestionPage({
             id: pageId2,
             path: '/page-two',
-            components: [component]
+            components: [component, component2]
           })
         ],
         conditions: [
@@ -851,6 +855,13 @@ describe('validation errors', () => {
             id: '881296f9-d753-4b5b-8b61-6de387787cbd',
             displayName: 'cond1',
             items: [
+              {
+                id: '11472f07-bae0-4287-b26a-893fdd941603',
+                componentId: componentId2,
+                operator: OperatorName.Is,
+                type: ConditionType.Value,
+                value: 'Test'
+              },
               {
                 id: '29472f07-bae0-4287-b26a-893fdd941603',
                 componentId,
@@ -873,11 +884,21 @@ describe('validation errors', () => {
         {
           id: FormDefinitionError.IncompatibleConditionComponentType,
           detail: {
-            path: ['conditions', 0, 'items', 0],
-            object: {
-              id: componentId,
-              key: 'componentType',
-              value: 'UkAddressField'
+            path: ['conditions', 0, 'items', 1],
+            key: 1,
+            valueKey: 'componentId',
+            label: 'conditions[0].items[1]',
+            value: componentId,
+            incompatibleObject: {
+              key: 'type',
+              value: {
+                id: componentId,
+                type: 'UkAddressField',
+                name: 'UkAddressFieldComponent',
+                title: 'UkAddressFieldComponent',
+                options: {},
+                schema: {}
+              }
             },
             reason: 'does not support conditions'
           },
@@ -895,18 +916,18 @@ describe('validation errors', () => {
       const errorsToPass = [
         {
           local: {
-            key: 'componentType'
+            key: 'componentId'
           },
-          code: 'any.incompatible'
+          code: 'custom.incompatible'
         }
       ] as ErrorReport[]
       expect(errors(errorsToPass)).toEqual([
         {
-          code: 'any.incompatible',
+          code: 'custom.incompatible',
           local: {
             errorType: 'incompatible',
             errorCode: 'incompatible_condition_component_type',
-            key: 'componentType'
+            key: 'componentId'
           }
         }
       ])

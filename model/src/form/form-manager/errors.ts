@@ -52,7 +52,7 @@ export const checkErrors = (
 
         if (
           errorDetails.type === FormDefinitionErrorType.Incompatible &&
-          err.code === 'any.incompatible' &&
+          err.code === 'custom.incompatible' &&
           keyMatch === errorDetails.key
         ) {
           err.local.errorCode = formError
@@ -115,7 +115,11 @@ export function getErrors(
           message: detail.message,
           detail: {
             path: detail.path,
-            object: detail.context.object,
+            key: detail.context.key,
+            valueKey: detail.context.valueKey,
+            value: detail.context.value,
+            label: detail.context.label,
+            incompatibleObject: detail.context.incompatibleObject,
             reason: detail.context.reason
           }
         }

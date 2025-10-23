@@ -139,7 +139,7 @@ export const formDefinitionErrors: FormDefinitionErrors = {
     type: FormDefinitionErrorType.Ref
   },
   [FormDefinitionError.IncompatibleConditionComponentType]: {
-    key: 'componentType',
+    key: 'componentId',
     type: FormDefinitionErrorType.Incompatible
   },
   [FormDefinitionError.Other]: {
@@ -162,10 +162,10 @@ export interface FormDefinitionErrorCauseDetailRef {
 
 export interface FormDefinitionErrorCauseDetailIncompatible {
   path: FormDefinitionErrorCauseDetailPath
-  object: {
+  valueKey?: string
+  incompatibleObject: {
     key?: string
-    value?: string
-    id?: string
+    value?: unknown
   }
   reason: string
 }

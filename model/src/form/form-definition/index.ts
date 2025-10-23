@@ -351,19 +351,20 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
 
     return foundComponentHandlesConditions
       ? value
-      : helpers.error('any.incompatible', {
-          object: {
-            key: 'componentType',
-            value: foundComponents[0]?.type,
-            id: foundComponents[0]?.id
+      : helpers.error('custom.incompatible', {
+          incompatibleObject: {
+            key: 'type',
+            value: foundComponents[0]
           },
+          valueKey: 'componentId',
+          value: componentId,
           errorType: FormDefinitionErrorType.Incompatible,
           errorCode: FormDefinitionError.IncompatibleConditionComponentType,
           reason: 'does not support conditions'
         })
   })
   .messages({
-    'any.incompatible': 'Incompatible data value'
+    'custom.incompatible': 'Incompatible data value'
   })
 
 const conditionGroupSchema = Joi.object<ConditionGroupData>()
