@@ -803,7 +803,7 @@ describe('Editor v2 question details routes', () => {
             id: FormDefinitionError.IncompatibleConditionComponentType,
             detail: {
               path: ['items', 1],
-              object: {},
+              incompatibleObject: {},
               reason: 'does not support conditions'
             },
             message: '"conditions[2].items[0]" does not support conditions',
