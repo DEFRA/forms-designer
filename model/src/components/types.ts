@@ -252,7 +252,13 @@ export interface SelectFieldComponent extends ListFieldBase {
   }
 }
 
-export type ComponentDef = FormComponentsDef | ContentComponentsDef
+export interface ComposableComponent {
+  before?: ComponentDef | ComponentDef[]
+  after?: ComponentDef | ComponentDef[]
+}
+
+export type ComponentDef = (FormComponentsDef | ContentComponentsDef) &
+  Partial<ComposableComponent>
 
 // Components that render form fields
 export type FormComponentsDef =

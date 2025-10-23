@@ -1,0 +1,52 @@
+{
+  "name": "composable components 2",
+  "engine": "V2",
+  "schema": 2,
+  "startPage": "/summary",
+  "pages": [
+    {
+      "title": "",
+      "path": "/whats-your-email",
+      "components": [
+        {
+          "type": "EmailAddressField",
+          "title": "whats your email?",
+          "name": "UzHJfU",
+          "shortDescription": "xcvbxcvb",
+          "hint": "sdfsdfsdf",
+          "options": {
+            "required": true
+          },
+          "schema": {},
+          "id": "40c77003-aafe-42c0-9bd8-635623875b7a",
+          "before": {
+            "type": "InsetText",
+            "name": "email_notice",
+            "title": "Important",
+            "content": "We will only use your email address to send you a confirmation of your submission.",
+            "options": {}
+          },
+          "after": {
+            "type": "Details",
+            "name": "email_help",
+            "title": "Why we need your email",
+            "content": "Your email address helps us: Send you confirmation of receipt. Contact you if we need more information. Keep you updated on the progress of your application.",
+            "options": {}
+          }
+        }
+      ],
+      "next": [],
+      "id": "bd251184-230f-459f-864a-f07b7f0236fc"
+    },
+    {
+      "id": "449a45f6-4541-4a46-91bd-8b8931b07b50",
+      "title": "Summary",
+      "path": "/summary",
+      "controller": "SummaryPageWithConfirmationEmailController",
+      "next": []
+    }
+  ],
+  "conditions": [],
+  "sections": [],
+  "lists": []
+}
