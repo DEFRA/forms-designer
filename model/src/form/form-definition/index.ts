@@ -1,5 +1,5 @@
 import JoiDate from '@joi/date'
-import JoiBase, { type LanguageMessages } from 'joi'
+import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
@@ -42,7 +42,10 @@ import {
   type Section
 } from '~/src/form/form-definition/types.js'
 import { checkErrors } from '~/src/form/form-manager/errors.js'
-import { FormDefinitionError } from '~/src/form/form-manager/types.js'
+import {
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '~/src/form/form-manager/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
@@ -162,6 +165,39 @@ const conditionListItemRefDataSchemaV2 =
         .description('The id of the list item')
         .error(checkErrors(FormDefinitionError.RefConditionItemId))
     })
+    .custom(
+      (
+        value: ConditionListItemRefValueDataV2,
+        helpers: CustomHelpers<ConditionListItemRefValueDataV2>
+      ) => {
+        const { listId, itemId } = value
+        const [, , , , definition] = helpers.state.ancestors
+        const list = (definition as FormDefinition).lists.find(
+          (list) => list.id === listId
+        )
+
+        if (!list) {
+          return helpers.error('any.ref', {
+            arg: 'listId',
+            ref: listId,
+            reason: 'does not exist',
+            errorType: FormDefinitionErrorType.Ref,
+            errorCode: FormDefinitionError.RefConditionListId
+          })
+        }
+
+        const itemIdExists = list.items.some((item) => item.id === itemId)
+        return itemIdExists
+          ? value
+          : helpers.error('any.ref', {
+              arg: 'itemId',
+              ref: itemId,
+              reason: `does not exist in list ${listId}`,
+              errorType: FormDefinitionErrorType.Ref,
+              errorCode: FormDefinitionError.RefConditionItemId
+            })
+      }
+    )
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
   .description('Relative date specification for date-based conditions')
