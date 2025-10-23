@@ -1,4 +1,9 @@
-import { getPageTitle, isConditionWrapperV2 } from '@defra/forms-model'
+import {
+  getPageTitle,
+  hasFormComponents,
+  isConditionWrapperV2,
+  isSummaryPage
+} from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
@@ -6,7 +11,8 @@ import {
   baseModelFields,
   getFormSpecificNavigation,
   getPageConditionDetails,
-  getPageNum
+  getPageNum,
+  getReferencedComponentNamesV2
 } from '~/src/models/forms/editor-v2/common.js'
 import { buildConditionEditor } from '~/src/models/forms/editor-v2/condition-helper.js'
 import {
@@ -24,6 +30,43 @@ export function getConditionsData(definition) {
   return definition.conditions
     .filter(isConditionWrapperV2)
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
+}
+
+/**
+ * Construct a list of applicable conditions i.e. those that reference questions from previous pages
+ * @param {FormDefinition} definition
+ * @param {ConditionWrapperV2[]} allConditions
+ * @param {number} currentPageNum
+ * @returns {ConditionWrapperV2[]}
+ */
+export function getPreceedingConditions(
+  definition,
+  allConditions,
+  currentPageNum
+) {
+  // Create a map of what components reside on what page
+  /** @type {Map<string, number>} */
+  const componentPage = new Map()
+  for (const [index, page] of definition.pages
+    .filter((p) => !isSummaryPage(p))
+    .entries()) {
+    for (const component of hasFormComponents(page) ? page.components : []) {
+      componentPage.set(component.name, index + 1)
+    }
+  }
+
+  const conds = allConditions.map((cond) => {
+    const pages = getReferencedComponentNamesV2(cond, definition).map(
+      (x) => componentPage.get(x) ?? 0
+    )
+    return {
+      maxPageNum: Math.max(...pages),
+      condition: cond
+    }
+  })
+  return conds
+    .filter((cond) => cond.maxPageNum < currentPageNum)
+    .map((x) => x.condition)
 }
 
 /**
@@ -55,6 +98,11 @@ export function pageConditionsViewModel(
   const pageNum = getPageNum(definition, pageId)
   const conditionDetails = getPageConditionDetails(definition, pageId)
   const allConditions = getConditionsData(definition)
+  const allPrecedingConditions = getPreceedingConditions(
+    definition,
+    allConditions,
+    pageNum
+  )
   const errorList = buildErrorList(validation?.formErrors)
 
   const cardTitle = `Page ${pageNum}`
@@ -105,6 +153,7 @@ export function pageConditionsViewModel(
     pageConditionPresentationString:
       conditionDetails.pageConditionPresentationString,
     allConditions,
+    allPrecedingConditions,
     conditionsManagerPath,
     pageConditionsApiUrl,
     conditionEditor: {

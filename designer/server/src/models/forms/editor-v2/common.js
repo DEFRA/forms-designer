@@ -174,12 +174,12 @@ export function tickBoxes(items, selectedItems) {
 }
 
 /**
- * Gets the presentation string for a V2 condition wrapper
+ * Convert the condition to a V1 wrapper
  * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
  * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
- * @returns {string} The presentation string for the condition
+ * @returns {ConditionWrapper} condition as V1
  */
-export function toPresentationStringV2(conditionWrapper, definition) {
+export function getConditionAsV1(conditionWrapper, definition) {
   const { pages, conditions, lists } = definition
   const components = pages.flatMap((p) =>
     hasComponentsEvenIfNoNext(p) ? p.components : []
@@ -198,10 +198,17 @@ export function toPresentationStringV2(conditionWrapper, definition) {
       v2Conditions.find((condition) => condition.id === conditionId)
   }
 
-  const conditionAsV1 = convertConditionWrapperFromV2(
-    conditionWrapper,
-    accessors
-  )
+  return convertConditionWrapperFromV2(conditionWrapper, accessors)
+}
+
+/**
+ * Gets the presentation string for a V2 condition wrapper
+ * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
+ * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
+ * @returns {string} The presentation string for the condition
+ */
+export function toPresentationStringV2(conditionWrapper, definition) {
+  const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
   return ConditionsModel.from(conditionAsV1.value).toPresentationString()
 }
 
@@ -212,30 +219,21 @@ export function toPresentationStringV2(conditionWrapper, definition) {
  * @returns {string} The presentation HTML for the condition
  */
 export function toPresentationHtmlV2(conditionWrapper, definition) {
-  const { pages, conditions, lists } = definition
-
-  const components = pages.flatMap((p) =>
-    hasComponentsEvenIfNoNext(p) ? p.components : []
-  )
-
-  const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
-    conditions.filter(isConditionWrapperV2)
-  )
-
-  /** @type {RuntimeFormModel} */
-  const accessors = {
-    getListById: (listId) => lists.find((list) => list.id === listId),
-    getComponentById: (componentId) =>
-      components.find((component) => component.id === componentId),
-    getConditionById: (conditionId) =>
-      v2Conditions.find((condition) => condition.id === conditionId)
-  }
-
-  const conditionAsV1 = convertConditionWrapperFromV2(
-    conditionWrapper,
-    accessors
-  )
+  const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
   return ConditionsModel.from(conditionAsV1.value).toPresentationHtml()
+}
+
+/**
+ * Gets the highest page where questions of a condition are sourced from
+ * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
+ * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
+ * @returns {string[]} list of component names
+ */
+export function getReferencedComponentNamesV2(conditionWrapper, definition) {
+  const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
+  return conditionAsV1.value.conditions
+    .map((cond) => ('field' in cond ? cond.field.name : undefined))
+    .filter((elem) => elem !== undefined)
 }
 
 /**
@@ -271,5 +269,5 @@ export function getPageConditionDetails(definition, pageId) {
 }
 
 /**
- * @import { ComponentDef, ConditionDetails, FormMetadata, FormDefinition, FormStatus, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionDetails, ConditionWrapper, FormMetadata, FormDefinition, FormStatus, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
  */
