@@ -52,8 +52,8 @@ export const checkErrors = (
 
         if (
           errorDetails.type === FormDefinitionErrorType.Incompatible &&
-          err.code === 'custom.incompatible' &&
-          keyMatch === errorDetails.key
+          err.code === 'custom.incompatible'
+          // Match any key
         ) {
           err.local.errorCode = formError
           err.local.errorType = FormDefinitionErrorType.Incompatible
