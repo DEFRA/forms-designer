@@ -15,16 +15,24 @@ import { getDefaultLocationHint } from '~/src/models/forms/editor-v2/location-hi
  * @returns {Partial<FileUploadFieldComponent>}
  */
 export function mapFileUploadQuestionDetails(payload) {
-  const baseQuestionDetails = mapBaseQuestionDetails(payload)
+  const additionalOptions = getAdditionalOptions(payload)
+  const additionalSchema = getAdditionalSchema(payload)
+  const extraRootFields = mapExtraRootFields(payload)
   const fileTypes = mapPayloadToFileMimeTypes(payload)
 
   return {
-    ...baseQuestionDetails,
     type: ComponentType.FileUploadField,
+    title: payload.question,
+    name: payload.name,
+    shortDescription: payload.shortDescription,
+    hint: payload.hintText,
+    ...extraRootFields,
     options: {
-      ...baseQuestionDetails.options,
+      required: !isCheckboxSelected(payload.questionOptional),
+      ...additionalOptions,
       ...fileTypes
-    }
+    },
+    schema: { ...additionalSchema }
   }
 }
 
@@ -51,22 +59,24 @@ export function mapBaseQuestionDetails(payload) {
   const additionalSchema = getAdditionalSchema(payload)
   const extraRootFields = mapExtraRootFields(payload)
 
+  const locationFieldTypes = [
+    ComponentType.EastingNorthingField,
+    ComponentType.OsGridRefField,
+    ComponentType.NationalGridFieldNumberField,
+    ComponentType.LatLongField
+  ]
+
+  const questionType = /** @type {ComponentType} */ (payload.questionType)
+  const isLocationField =
+    payload.questionType && locationFieldTypes.includes(questionType)
+
   // Set default hint text for location fields if no hint is provided
   let hintText = payload.hintText
-  if (!hintText && payload.questionType) {
-    const locationFieldTypes = [
-      ComponentType.EastingNorthingField,
-      ComponentType.OsGridRefField,
-      ComponentType.NationalGridFieldNumberField,
-      ComponentType.LatLongField
-    ]
-    const questionType = /** @type {ComponentType} */ (payload.questionType)
-    if (locationFieldTypes.includes(questionType)) {
-      hintText = getDefaultLocationHint(questionType)
-    }
+  if (!hintText && isLocationField) {
+    hintText = getDefaultLocationHint(questionType)
   }
 
-  return /** @type {Partial<ComponentDef>} */ ({
+  const baseComponent = {
     type: payload.questionType,
     title: payload.question,
     name: payload.name,
@@ -76,9 +86,17 @@ export function mapBaseQuestionDetails(payload) {
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions
-    },
-    schema: { ...additionalSchema }
-  })
+    }
+  }
+
+  if (!isLocationField) {
+    return /** @type {Partial<ComponentDef>} */ ({
+      ...baseComponent,
+      schema: { ...additionalSchema }
+    })
+  }
+
+  return /** @type {Partial<ComponentDef>} */ (baseComponent)
 }
 
 /**
