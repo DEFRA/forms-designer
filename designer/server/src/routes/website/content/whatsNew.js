@@ -19,7 +19,7 @@ export const whatsNewLatest = [
 - showcase the features available in our Form Designer application and developer plugin
 - provide a step-by-step guide to getting started with Defra Forms and making a form live
 - offer a collection of resources to support form creation
-        
+
 Confirmation emails for form submissions:
 - members of the public can now request confirmation emails when submitting a form.
 - this feature is automatically enabled for all newly created forms and is available as an opt-in for existing forms.
