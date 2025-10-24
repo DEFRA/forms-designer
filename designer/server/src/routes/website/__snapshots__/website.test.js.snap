@@ -3518,6 +3518,36 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
           <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">October 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">Form Designer</td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite. <a class="govuk-link" href="https://forms.defra.gov.uk">https://forms.defra.gov.uk</a> has been launched to:</p>
+<ul>
+<li>describe our offering</li>
+<li>showcase the features available in our Form Designer application and developer plugin</li>
+<li>provide a step-by-step guide to getting started with Defra Forms and making a form live</li>
+<li>offer a collection of resources to support form creation</li>
+</ul>
+<p>Confirmation emails for form submissions:</p>
+<ul>
+<li>members of the public can now request confirmation emails when submitting a form.</li>
+<li>this feature is automatically enabled for all newly created forms and is available as an opt-in for existing forms.</li>
+<li>we&#39;ll be rolling this out to all forms soon. If you&#39;d like this enabled for an existing form as a priority, please reach out to us.</li>
+<li>improved error messaging:</li>
+<li>we&#39;ve enhanced the error messages shown when deleting questions, pages, or list items that are referenced in conditions.</li>
+</ul>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--l">July 2025</caption>
           <thead class="govuk-table__head">
           <tr class="govuk-table__row">
@@ -3530,16 +3560,16 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
             <td class="govuk-table__cell">Form Designer</td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>Final updates for conditions:</p>
 <ul>
-<li>Delete Conditions</li>
-<li>Create and Manage Combined Conditions</li>
-<li>Apply Conditions to a Guidance Page</li>
-<li>View the Conditions Listing Page</li>
+<li>delete conditions</li>
+<li>create and manage combined conditions</li>
+<li>apply conditions to a guidance page</li>
+<li>view the conditions listing page</li>
 </ul>
 <p>Enhancements to Interactive Preview Panel:</p>
 <ul>
-<li>Better keyboard navigation using skip links</li>
-<li>Termination Pages</li>
-<li>Fixes for defects like lost repeater settings and hint text</li>
+<li>better keyboard navigation using skip links</li>
+<li>termination pages</li>
+<li>fixes for defects like lost repeater settings and hint text</li>
 </ul>
 </td>
           </tr>
@@ -3568,16 +3598,16 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
             <td class="govuk-table__cell">Form Designer</td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>Final updates for conditions:</p>
 <ul>
-<li>Delete Conditions</li>
-<li>Create and Manage Combined Conditions</li>
-<li>Apply Conditions to a Guidance Page</li>
-<li>View the Conditions Listing Page</li>
+<li>delete conditions</li>
+<li>create and manage combined conditions</li>
+<li>apply conditions to a guidance page</li>
+<li>view the conditions listing page</li>
 </ul>
 <p>Enhancements to Interactive Preview Panel:</p>
 <ul>
-<li>Better keyboard navigation using skip links</li>
-<li>Termination Pages</li>
-<li>Fixes for defects like lost repeater settings and hint text</li>
+<li>better keyboard navigation using skip links</li>
+<li>termination pages</li>
+<li>fixes for defects like lost repeater settings and hint text</li>
 </ul>
 </td>
           </tr>
@@ -3597,9 +3627,9 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
             <td class="govuk-table__cell collapse-first-p-margin"><p>Service moved to new domain <a class="govuk-link" href="https://forms.defra.gov.uk/">https://forms.defra.gov.uk/</a> to improve access for colleagues across different ALBs.</p>
 <p>No disruption expected:</p>
 <ul>
-<li>Forms and files remain</li>
-<li>System functions normally</li>
-<li>Old links will be automatically redirected</li>
+<li>forms and files remain</li>
+<li>system functions normally</li>
+<li>old links will be automatically redirected</li>
 </ul>
 </td>
           </tr>
