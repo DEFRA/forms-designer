@@ -1,9 +1,4 @@
-import {
-  getPageTitle,
-  hasFormComponents,
-  isConditionWrapperV2,
-  isSummaryPage
-} from '@defra/forms-model'
+import { getPageTitle, isConditionWrapperV2 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
@@ -14,7 +9,10 @@ import {
   getPageNum,
   getReferencedComponentNamesV2
 } from '~/src/models/forms/editor-v2/common.js'
-import { buildConditionEditor } from '~/src/models/forms/editor-v2/condition-helper.js'
+import {
+  buildConditionEditor,
+  getComponentItems
+} from '~/src/models/forms/editor-v2/condition-helper.js'
 import {
   determineEditUrl,
   isGuidancePage
@@ -33,7 +31,7 @@ export function getConditionsData(definition) {
 }
 
 /**
- * Construct a list of applicable conditions i.e. those that reference questions from previous pages
+ * Construct a list of applicable conditions i.e. those whose referenced questions are all from previous pages
  * @param {FormDefinition} definition
  * @param {ConditionWrapperV2[]} allConditions
  * @param {number} currentPageNum
@@ -47,14 +45,17 @@ export function getPreceedingConditions(
   // Create a map of what components reside on what page
   /** @type {Map<string, number>} */
   const componentPage = new Map()
-  for (const [index, page] of definition.pages
-    .filter((p) => !isSummaryPage(p))
-    .entries()) {
-    for (const component of hasFormComponents(page) ? page.components : []) {
-      componentPage.set(component.name, index + 1)
+  for (const { number, components } of getComponentItems(definition)) {
+    for (const component of components) {
+      componentPage.set(component.name, number)
     }
   }
 
+  if (componentPage.size === 0) {
+    return []
+  }
+
+  // Find the latest page of where a condition's components are
   const conds = allConditions.map((cond) => {
     const pages = getReferencedComponentNamesV2(cond, definition).map(
       (x) => componentPage.get(x) ?? 0
@@ -64,6 +65,8 @@ export function getPreceedingConditions(
       condition: cond
     }
   })
+
+  // Return conditions where all related questions are on preceding pages
   return conds
     .filter((cond) => cond.maxPageNum < currentPageNum)
     .map((x) => x.condition)
