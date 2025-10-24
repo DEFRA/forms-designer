@@ -26,6 +26,7 @@ export class ComponentElements {
       hintText: '',
       optional: !required,
       shortDesc: '',
+      userClasses: '',
       items: [],
       content: ''
     }

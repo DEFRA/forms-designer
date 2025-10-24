@@ -24,7 +24,8 @@ describe('Long Answer', () => {
       hint: {
         text: 'Choose one adventure that best suits you.',
         classes: ''
-      }
+      },
+      previewClasses: ''
     })
   })
 })

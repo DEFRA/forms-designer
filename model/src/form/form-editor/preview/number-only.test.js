@@ -25,7 +25,8 @@ describe('NumberOnly', () => {
         text: 'Choose one adventure that best suits you.',
         classes: ''
       },
-      type: 'number'
+      type: 'number',
+      previewClasses: ''
     })
   })
 })

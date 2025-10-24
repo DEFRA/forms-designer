@@ -241,6 +241,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
+        userClasses: '',
         content: '',
         largeTitle: true,
         optional: true,
@@ -255,6 +256,7 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
+        userClasses: '',
         largeTitle: true,
         content: '',
         optional: false,
@@ -502,7 +504,8 @@ describe('preview', () => {
         isPageHeading: true,
         text: 'Short answer (optional)'
       },
-      name: 'inputField'
+      name: 'inputField',
+      previewClasses: ''
     })
 
     const fieldSetModelBase = /** @type {QuestionBaseModel} */ ({
@@ -566,7 +569,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'inputField'
+        name: 'inputField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -800,7 +804,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'emailAddressField'
+        name: 'emailAddressField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -849,7 +854,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'phoneNumberField'
+        name: 'phoneNumberField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })

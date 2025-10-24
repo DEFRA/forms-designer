@@ -24,7 +24,8 @@ describe('Supporting Evidence', () => {
       hint: {
         text: 'Choose one adventure that best suits you.',
         classes: ''
-      }
+      },
+      previewClasses: ''
     })
   })
 })

@@ -27,7 +27,8 @@ describe('question', () => {
         hint: {
           text: 'Choose one adventure that best suits you.',
           classes: ''
-        }
+        },
+        previewClasses: ''
       })
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')
@@ -69,7 +70,8 @@ describe('question', () => {
         hint: {
           text: 'Hint text',
           classes: ' highlight'
-        }
+        },
+        previewClasses: ''
       })
     })
 
@@ -98,6 +100,7 @@ describe('question', () => {
       expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
+        userClasses: '',
         optional: true,
         content: '',
         shortDesc: 'shortDesc',
@@ -109,6 +112,7 @@ describe('question', () => {
       expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
+        userClasses: '',
         optional: true,
         content: '',
         shortDesc: 'shortDesc',

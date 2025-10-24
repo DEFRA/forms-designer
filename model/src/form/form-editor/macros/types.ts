@@ -55,6 +55,7 @@ export interface QuestionBaseModel {
   formGroup?: FormGroupAfterInput
   type?: 'text' | 'number' | 'boolean'
   classes?: string
+  previewClasses?: string
 }
 
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {

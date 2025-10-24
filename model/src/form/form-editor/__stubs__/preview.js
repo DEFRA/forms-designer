@@ -89,6 +89,11 @@ export class QuestionPreviewElements {
    * @type {string}
    * @protected
    */
+  _userClasses = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _content = ''
   /**
    *
@@ -111,6 +116,7 @@ export class QuestionPreviewElements {
     hintText,
     optional,
     shortDesc,
+    userClasses,
     usePostcodeLookup,
     items,
     content
@@ -119,6 +125,7 @@ export class QuestionPreviewElements {
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
+    this._userClasses = userClasses
     this._items = items
     this._content = content
     this._usePostcodeLookup = usePostcodeLookup ?? false
@@ -133,6 +140,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      userClasses: this._userClasses,
       usePostcodeLookup: this._usePostcodeLookup,
       items: this._items,
       content: this._content
@@ -204,6 +212,7 @@ export const baseElements = /** @type {BaseSettings} */ ({
   optional: false,
   question: 'Which quest would you like to pick?',
   hintText: 'Choose one adventure that best suits you.',
+  userClasses: '',
   shortDesc: '',
   content: '',
   largeTitle: true
