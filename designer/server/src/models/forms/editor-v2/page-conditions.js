@@ -76,6 +76,30 @@ export function getPreceedingConditions(
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
+ */
+export function getBaseDetails(metadata, definition, pageId) {
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+  const page = getPageFromDefinition(definition, pageId)
+  const pageNum = getPageNum(definition, pageId)
+  const conditionDetails = getPageConditionDetails(definition, pageId)
+  return {
+    navigation,
+    page,
+    pageNum,
+    conditionDetails
+  }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} pageId
  * @param {ConditionSessionState} state
  * @param {{ creating?: boolean }} options
  * @param {ValidationFailure<any>} [validation]
@@ -90,16 +114,11 @@ export function pageConditionsViewModel(
   validation,
   notification
 ) {
-  const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(
-    formPath,
+  const { navigation, page, pageNum, conditionDetails } = getBaseDetails(
     metadata,
     definition,
-    'Editor'
+    pageId
   )
-  const page = getPageFromDefinition(definition, pageId)
-  const pageNum = getPageNum(definition, pageId)
-  const conditionDetails = getPageConditionDetails(definition, pageId)
   const allConditions = getConditionsData(definition)
   const allPrecedingConditions = getPreceedingConditions(
     definition,
