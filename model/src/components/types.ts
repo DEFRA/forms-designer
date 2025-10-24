@@ -172,6 +172,16 @@ export interface EastingNorthingFieldComponent extends FormFieldBase {
     condition?: string
     customValidationMessage?: string
   }
+  schema?: {
+    easting?: {
+      min?: number
+      max?: number
+    }
+    northing?: {
+      min?: number
+      max?: number
+    }
+  }
 }
 
 export interface OsGridRefFieldComponent extends FormFieldBase {
@@ -195,6 +205,16 @@ export interface LatLongFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
+  }
+  schema?: {
+    latitude?: {
+      min?: number
+      max?: number
+    }
+    longitude?: {
+      min?: number
+      max?: number
+    }
   }
 }
 
