@@ -541,7 +541,14 @@ export const componentSchema = Joi.object<ComponentDef>()
       .optional()
       .description(
         'Reference to a predefined list of options for select components'
-      )
+      ),
+    // Just for the spike: Composable components - allow before/after
+    before: Joi.any()
+      .optional()
+      .description('Component(s) to render before this component'),
+    after: Joi.any()
+      .optional()
+      .description('Component(s) to render after this component')
   })
   .unknown(true)
 
