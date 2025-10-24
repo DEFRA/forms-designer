@@ -199,8 +199,19 @@ export default [
           )
         )
 
+      // Get existing state to check if type changed
+      const existingState = getQuestionSessionState(yar, stateId)
+      const typeChanged =
+        existingState?.questionType &&
+        existingState.questionType !== suppliedQuestionType
+
+      // Update question type in session
       mergeQuestionSessionState(yar, stateId, {
-        questionType: suppliedQuestionType
+        questionType: suppliedQuestionType,
+        // Clear questionDetails if type changed to force regeneration with new defaults
+        questionDetails: typeChanged
+          ? undefined
+          : existingState?.questionDetails
       })
 
       // Redirect to next page

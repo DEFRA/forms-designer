@@ -18,6 +18,10 @@ import {
   GOVUK_LABEL__M,
   tickBoxes
 } from '~/src/models/forms/editor-v2/common.js'
+import {
+  getDefaultLocationHint,
+  locationHintDefaults
+} from '~/src/models/forms/editor-v2/location-hint-defaults.js'
 
 const TABULAR_DATA = 'tabular-data'
 const DOCUMENTS = 'documents'
@@ -386,15 +390,61 @@ const fieldMappingFunctions =
  * @param { FormComponentsDef | undefined } questionFields
  * @param { ValidationFailure<FormEditor> | undefined } validation
  * @param {FormDefinition} definition
+ * @param {ComponentType | undefined} currentQuestionType
  * @returns {GovukField['value']}
  */
 export function getFieldValue(
   fieldName,
   questionFields,
   validation,
-  definition
+  definition,
+  currentQuestionType
 ) {
   const validationResult = validation?.formValues[fieldName]
+
+  // Special handling for hintText with location fields
+  if (fieldName === 'hintText') {
+    const locationFieldTypes = [
+      ComponentType.EastingNorthingField,
+      ComponentType.OsGridRefField,
+      ComponentType.NationalGridFieldNumberField,
+      ComponentType.LatLongField
+    ]
+
+    // Use currentQuestionType if provided (handles type changes), otherwise fall back to stored type
+    const questionType = currentQuestionType ?? questionFields?.type
+
+    // If this is a location field
+    if (questionType && locationFieldTypes.includes(questionType)) {
+      const allLocationHints = Object.values(locationHintDefaults)
+
+      // If validation result exists and matches another location type's default, use the correct default
+      if (
+        validationResult &&
+        typeof validationResult === 'string' &&
+        allLocationHints.includes(validationResult)
+      ) {
+        return getDefaultLocationHint(questionType)
+      }
+
+      // If stored hint matches a different location type's default, use new default
+      if (
+        questionFields?.hint &&
+        allLocationHints.includes(questionFields.hint)
+      ) {
+        return getDefaultLocationHint(questionType)
+      }
+
+      // Otherwise use validation result if exists, or stored hint, or default
+      if (validationResult || validationResult === '') {
+        return validationResult
+      }
+      if (questionFields?.hint) {
+        return questionFields.hint
+      }
+      return getDefaultLocationHint(questionType)
+    }
+  }
 
   if (validationResult || validationResult === '') {
     if (fieldName === 'autoCompleteOptions') {
@@ -459,6 +509,13 @@ export const radiosOrCheckboxesFields =
     QuestionBaseSettings.RadiosOrCheckboxes
   ])
 
+export const locationFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.Question,
+  QuestionBaseSettings.HintText,
+  QuestionBaseSettings.QuestionOptional,
+  QuestionBaseSettings.ShortDescription
+])
+
 /**
  * @param { ComponentType | undefined } questionType
  * @returns {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]}
@@ -483,6 +540,14 @@ export function getQuestionFieldList(questionType) {
   ) {
     return radiosOrCheckboxesFields
   }
+  if (
+    questionType === ComponentType.EastingNorthingField ||
+    questionType === ComponentType.OsGridRefField ||
+    questionType === ComponentType.NationalGridFieldNumberField ||
+    questionType === ComponentType.LatLongField
+  ) {
+    return locationFields
+  }
   return baseQuestionFields
 }
 
@@ -505,7 +570,8 @@ export function getFieldList(
       fieldName,
       questionFields,
       validation,
-      definition
+      definition,
+      questionType
     )
 
     const field = {

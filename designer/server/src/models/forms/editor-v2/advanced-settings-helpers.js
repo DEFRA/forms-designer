@@ -1,4 +1,7 @@
+import { ComponentType } from '@defra/forms-model'
+
 import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
 
 /**
  * Maps payload to additional component options
@@ -30,9 +33,32 @@ export function getAdditionalOptions(payload) {
       payload.usePostcodeLookup
     )
   }
+
   if (isCheckboxSelected(payload.giveInstructions) && payload.instructionText) {
-    additionalOptions.instructionText = payload.instructionText
+    const locationFieldTypes = [
+      ComponentType.EastingNorthingField,
+      ComponentType.OsGridRefField,
+      ComponentType.NationalGridFieldNumberField,
+      ComponentType.LatLongField
+    ]
+    const questionType = /** @type {ComponentType} */ (payload.questionType)
+
+    // Check if this is a location field with instructions
+    if (payload.questionType && locationFieldTypes.includes(questionType)) {
+      // Get all location default instructions
+      const allLocationInstructions = Object.values(locationInstructionDefaults)
+
+      // Don't include instruction text if it matches another location component's default
+      // (Let it be regenerated with the correct default for the new type)
+      if (!allLocationInstructions.includes(payload.instructionText)) {
+        additionalOptions.instructionText = payload.instructionText
+      }
+    } else {
+      // For non-location fields, always include the instruction text
+      additionalOptions.instructionText = payload.instructionText
+    }
   }
+
   return additionalOptions
 }
 

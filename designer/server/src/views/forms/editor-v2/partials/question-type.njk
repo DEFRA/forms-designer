@@ -13,6 +13,10 @@
 {{ govukRadios(fields.listSub) }}
 {% endset -%}
 
+{% set locationHtml %}
+{{ govukRadios(fields.locationSub) }}
+{% endset -%}
+
 <form class="form" method="post">
   <div class="govuk-form-group">
     <fieldset class="govuk-fieldset" aria-describedby="informationQuestion1-hint">
@@ -21,7 +25,7 @@
       </legend>
       <div id="informationQuestion1-hint" class="govuk-hint">You can ask for more information later</div>
 
-      {{ govukRadios(fields.questionType | setConditionalAttribute("writtenAnswerSub", writtenAnswerHtml) | setConditionalAttribute("dateSub", dateHtml) | setConditionalAttribute("listSub", listHtml)) }}
+      {{ govukRadios(fields.questionType | setConditionalAttribute("writtenAnswerSub", writtenAnswerHtml) | setConditionalAttribute("dateSub", dateHtml) | setConditionalAttribute("listSub", listHtml) | setConditionalAttribute("locationSub", locationHtml)) }}
 
     </fieldset>
   </div>

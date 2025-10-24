@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   getAdditionalOptions,
   getAdditionalSchema,
@@ -98,6 +100,57 @@ describe('advanced-settings-helpers', () => {
         maxDaysInPast: '60',
         usePostcodeLookup: true,
         instructionText: 'Follow these steps'
+      })
+    })
+
+    it('should not include instruction text when switching from OsGridRefField to EastingNorthingField with default instruction', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.EastingNorthingField,
+        giveInstructions: 'true',
+        instructionText:
+          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
+      })
+
+      // Should not include instructionText as it matches OsGridRefField default
+      expect(result).toEqual({})
+    })
+
+    it('should not include instruction text when switching between location fields with default instruction', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.LatLongField,
+        giveInstructions: 'true',
+        instructionText:
+          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the easting and northing for your land or buildings. Follow these instructions:'
+      })
+
+      // Should not include instructionText as it matches EastingNorthingField default
+      expect(result).toEqual({})
+    })
+
+    it('should include custom instruction text for location fields', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.EastingNorthingField,
+        giveInstructions: 'true',
+        instructionText: 'Custom location instructions that user wrote'
+      })
+
+      expect(result).toEqual({
+        instructionText: 'Custom location instructions that user wrote'
+      })
+    })
+
+    it('should include instruction text for non-location fields even if it matches a location default', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.TextField,
+        giveInstructions: 'true',
+        instructionText:
+          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
+      })
+
+      // For non-location fields, always include the instruction text
+      expect(result).toEqual({
+        instructionText:
+          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
       })
     })
   })

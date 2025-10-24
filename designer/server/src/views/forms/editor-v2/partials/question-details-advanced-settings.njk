@@ -1,12 +1,13 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 {% if extraFields | length %}
 
 <details class="govuk-details" data-module="govuk-details"{% if isOpen %} open{% endif %}>
   <summary class="govuk-details__summary">
     <span class="govuk-details__summary-text">
-      Set answer limits (optional)
+      Additional settings (optional)
     </span>
   </summary>
   <div class="govuk-details__text">
@@ -17,6 +18,8 @@
           {{ govukInput(field) }}
         {% elif fieldType == 'MultilineTextField' %}
           {{ govukTextarea(field) }}
+        {% elif fieldType == 'CheckboxesField' %}
+          {{ govukCheckboxes(field) }}
         {% endif %}
       {% endfor %}
     </div>

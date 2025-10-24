@@ -29,7 +29,8 @@ const multiLineTextFieldQuestions = [
   QuestionBaseSettings.AutoCompleteOptions,
   QuestionBaseSettings.DeclarationText,
   QuestionAdvancedSettings.Regex,
-  QuestionAdvancedSettings.Classes
+  QuestionAdvancedSettings.Classes,
+  QuestionAdvancedSettings.InstructionText
 ]
 
 const checkBoxFieldQuestions = [
@@ -37,7 +38,8 @@ const checkBoxFieldQuestions = [
   QuestionBaseSettings.DocumentTypes,
   QuestionBaseSettings.ImageTypes,
   QuestionBaseSettings.TabularDataTypes,
-  QuestionBaseSettings.UsePostcodeLookup
+  QuestionBaseSettings.UsePostcodeLookup,
+  QuestionAdvancedSettings.GiveInstructions
 ]
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]

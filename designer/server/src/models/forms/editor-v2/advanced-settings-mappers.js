@@ -7,7 +7,10 @@ import {
   mapExtraRootFields
 } from '~/src/models/forms/editor-v2/advanced-settings-helpers.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
-import { getDefaultLocationHint } from '~/src/models/forms/editor-v2/location-hint-defaults.js'
+import {
+  getDefaultLocationHint,
+  locationHintDefaults
+} from '~/src/models/forms/editor-v2/location-hint-defaults.js'
 
 /**
  * Maps FormEditorInputQuestion payload to FileUploadField component
@@ -16,24 +19,33 @@ import { getDefaultLocationHint } from '~/src/models/forms/editor-v2/location-hi
  */
 export function mapFileUploadQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
-  const additionalSchema = getAdditionalSchema(payload)
-  const extraRootFields = mapExtraRootFields(payload)
   const fileTypes = mapPayloadToFileMimeTypes(payload)
 
-  return {
+  const baseQuestionDetails = mapBaseQuestionDetails(payload)
+  const baseSchema =
+    'schema' in baseQuestionDetails ? baseQuestionDetails.schema : undefined
+  const fileUploadSchema = {}
+
+  if (baseSchema && 'max' in baseSchema) {
+    fileUploadSchema.max = baseSchema.max
+  }
+  if (baseSchema && 'min' in baseSchema) {
+    fileUploadSchema.min = baseSchema.min
+  }
+  if (baseSchema && 'length' in baseSchema) {
+    fileUploadSchema.length = baseSchema.length
+  }
+
+  return /** @type {Partial<FileUploadFieldComponent>} */ ({
+    ...baseQuestionDetails,
     type: ComponentType.FileUploadField,
-    title: payload.question,
-    name: payload.name,
-    shortDescription: payload.shortDescription,
-    hint: payload.hintText,
-    ...extraRootFields,
+    schema: fileUploadSchema,
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions,
       ...fileTypes
-    },
-    schema: { ...additionalSchema }
-  }
+    }
+  })
 }
 
 /**
@@ -59,21 +71,23 @@ export function mapBaseQuestionDetails(payload) {
   const additionalSchema = getAdditionalSchema(payload)
   const extraRootFields = mapExtraRootFields(payload)
 
+  let hintText = payload.hintText
   const locationFieldTypes = [
     ComponentType.EastingNorthingField,
     ComponentType.OsGridRefField,
     ComponentType.NationalGridFieldNumberField,
     ComponentType.LatLongField
   ]
-
   const questionType = /** @type {ComponentType} */ (payload.questionType)
   const isLocationField =
     payload.questionType && locationFieldTypes.includes(questionType)
 
-  // Set default hint text for location fields if no hint is provided
-  let hintText = payload.hintText
-  if (!hintText && isLocationField) {
-    hintText = getDefaultLocationHint(questionType)
+  if (payload.questionType && locationFieldTypes.includes(questionType)) {
+    const allLocationHints = Object.values(locationHintDefaults)
+
+    if (!hintText || allLocationHints.includes(hintText)) {
+      hintText = getDefaultLocationHint(questionType)
+    }
   }
 
   const baseComponent = {

@@ -105,6 +105,53 @@ describe('advanced-settings-mappers', () => {
       )
     })
 
+    it('should replace hint text when switching from OsGridRefField to EastingNorthingField', () => {
+      const payload = {
+        questionType: ComponentType.EastingNorthingField,
+        question: 'Location',
+        name: 'location',
+        hintText:
+          'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
+        'For example. Easting: 248741, Northing: 63688'
+      )
+    })
+
+    it('should replace hint text when switching from LatLongField to NationalGridFieldNumberField', () => {
+      const payload = {
+        questionType: ComponentType.NationalGridFieldNumberField,
+        question: 'Grid number',
+        name: 'gridNumber',
+        hintText:
+          'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
+        'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589'
+      )
+    })
+
+    it('should replace hint text when switching between any location field types', () => {
+      const payload = {
+        questionType: ComponentType.LatLongField,
+        question: 'Coordinates',
+        name: 'coordinates',
+        hintText: 'For example. Easting: 248741, Northing: 63688'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
+        'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767'
+      )
+    })
+
     it('should not apply default hint for non-location fields', () => {
       const payload = {
         questionType: ComponentType.TextField,
