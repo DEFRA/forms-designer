@@ -1,6 +1,5 @@
 import {
   ComponentType,
-  FormDefinitionError,
   Scopes,
   questionDetailsFullSchema
 } from '@defra/forms-model'
@@ -9,11 +8,9 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
-  DEFAULT_FIELD_NAME,
   checkBoomError,
   createJoiError,
-  isInvalidFormErrorType,
-  unpackErrorToken
+  handleInvalidFormErrors
 } from '~/src/lib/error-boom-helper.js'
 import {
   dispatchToPageTitle,
@@ -409,30 +406,8 @@ export default [
           .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        if (
-          isInvalidFormErrorType(err, FormDefinitionError.UniqueListItemValue)
-        ) {
-          const joiErr = createJoiError(
-            DEFAULT_FIELD_NAME,
-            'Each item must have a unique identifier - enter a different identifier for this item.'
-          )
-
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
-        }
-
-        if (
-          isInvalidFormErrorType(err, FormDefinitionError.RefConditionItemId)
-        ) {
-          const conditionName = unpackErrorToken(
-            err,
-            'conditions',
-            definition.conditions.map((x) => x.displayName)
-          )
-          const joiErr = createJoiError(
-            'autoCompleteOptions',
-            `A list item used by condition '${conditionName}' has been deleted from the list.`
-          )
-
+        const joiErr = handleInvalidFormErrors(err, definition)
+        if (joiErr) {
           return redirectWithErrors(request, h, joiErr, errorKey, '#')
         }
 

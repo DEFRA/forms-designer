@@ -1,52 +1,57 @@
-import { type FormDefinitionErrorCause } from '@defra/forms-model'
+import {
+  FormDefinitionError,
+  type FormDefinitionErrorCause
+} from '@defra/forms-model'
 import { type Boom } from '@hapi/boom'
 import { type Request, type ResponseToolkit } from '@hapi/hapi'
 
-import { sessionNames } from '~//src/common/constants/session-names.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { type ErrorDetailsItem } from '~/src/common/helpers/types.js'
 
-const formErrorsToMessages = {
-  unique_page_id:
+export const formErrorsToMessages = {
+  [FormDefinitionError.UniquePageId]:
     'Each page must have a unique ID. Change the page ID to one that is not already used.',
-  unique_page_path:
+  [FormDefinitionError.UniquePagePath]:
     'Each page must have a unique path. Change the page path to one that is not already used.',
-  unique_page_component_id:
+  [FormDefinitionError.UniquePageComponentId]:
     'Each question on a page must have a unique ID. Change the question ID to one that is not already used.',
-  unique_page_component_name:
+  [FormDefinitionError.UniquePageComponentName]:
     'Each question on a page must have a unique name. Change the question name to one that is not already used.',
-  unique_section_name:
+  [FormDefinitionError.UniqueSectionName]:
     'Each section must have a unique name. Change the section name to one that is not already used.',
-  unique_section_title:
+  [FormDefinitionError.UniqueSectionTitle]:
     'Each section must have a unique title. Change the section title to one that is not already used.',
-  unique_list_id:
+  [FormDefinitionError.UniqueListId]:
     'Each list must have a unique ID. Change the list ID to one that is not already used.',
-  unique_list_title:
+  [FormDefinitionError.UniqueListTitle]:
     'Each list must have a unique title. Change the list title to one that is not already used.',
-  unique_list_name:
+  [FormDefinitionError.UniqueListName]:
     'Each list must have a unique name. Change the list name to one that is not already used.',
-  unique_condition_id:
+  [FormDefinitionError.UniqueConditionId]:
     'Each condition must have a unique ID. Change the condition ID to one that is not already used.',
-  unique_condition_displayname:
+  [FormDefinitionError.UniqueConditionDisplayName]:
     'Each condition must have a unique display name. Change the display name to one that is not already used.',
-  unique_list_item_id:
+  [FormDefinitionError.UniqueListItemId]:
     'Each item in a list must have a unique ID. Change the item ID to one that is not already used.',
-  unique_list_item_text:
+  [FormDefinitionError.UniqueListItemText]:
     'Each item in a list must have unique text. Change the item text to one that is not already used.',
-  unique_list_item_value:
+  [FormDefinitionError.UniqueListItemValue]:
     'Each item in a list must have a unique value. Change the item value to one that is not already used.',
-  ref_page_condition:
+  [FormDefinitionError.RefPageCondition]:
     'This page is referenced by a condition. Remove the condition before making changes to this page.',
-  ref_condition_component_id:
+  [FormDefinitionError.RefConditionComponentId]:
     'A condition is using a question on this page. Remove the condition before re-attempting its removal.',
-  ref_condition_list_id:
+  [FormDefinitionError.RefConditionListId]:
     'A condition is using a list in this form. Remove the condition before making changes to the list.',
-  ref_condition_item_id:
+  [FormDefinitionError.RefConditionItemId]:
     'A condition is using an item in this list. Remove the condition before making changes to the item.',
-  ref_condition_condition_id:
+  [FormDefinitionError.RefConditionConditionId]:
     'A condition is using another condition. Remove the reference before making changes.',
-  ref_page_component_list:
+  [FormDefinitionError.RefPageComponentList]:
     'A question on this page is using a list. Remove the reference before making changes to the list.',
-  other:
+  [FormDefinitionError.IncompatibleConditionComponentType]:
+    'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
+  [FormDefinitionError.Other]:
     'There is a problem with the form definition. Check your changes and try again.'
 }
 

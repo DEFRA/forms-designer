@@ -626,6 +626,22 @@ describe('Form definition schema', () => {
 
         expect(validated.error).toBeUndefined()
       })
+
+      it('should reject if question type does not support conditions', () => {
+        const definitionWithBadCondition = structuredClone({
+          ...definition,
+          name: 'test form'
+        })
+        const pageWithCond = definitionWithBadCondition.pages[0] as PageQuestion
+        pageWithCond.components[3].type = ComponentType.UkAddressField
+        const validated = formDefinitionV2Schema.validate(
+          definitionWithBadCondition
+        )
+
+        expect(validated.error).toEqual(
+          new ValidationError('Incompatible data value', [], {})
+        )
+      })
     })
   })
 

@@ -19,7 +19,8 @@ export interface AddComponentQueryOptions {
 export enum FormDefinitionErrorType {
   Unique = 'unique', // Unique constraint
   Ref = 'ref', // Referential integrity
-  Type = 'type' // General schema type error
+  Type = 'type', // General schema type error
+  Incompatible = 'incompatible' // Data values/types that are not compatible
 }
 
 // Enum for errors that can exist in a form definition
@@ -44,6 +45,7 @@ export enum FormDefinitionError {
   RefConditionItemId = 'ref_condition_item_id',
   RefConditionConditionId = 'ref_condition_condition_id',
   RefPageComponentList = 'ref_page_component_list',
+  IncompatibleConditionComponentType = 'incompatible_condition_component_type',
   Other = 'other'
 }
 
@@ -136,6 +138,10 @@ export const formDefinitionErrors: FormDefinitionErrors = {
     key: 'list',
     type: FormDefinitionErrorType.Ref
   },
+  [FormDefinitionError.IncompatibleConditionComponentType]: {
+    key: 'componentId',
+    type: FormDefinitionErrorType.Incompatible
+  },
   [FormDefinitionError.Other]: {
     key: '',
     type: FormDefinitionErrorType.Type
@@ -152,6 +158,16 @@ export interface FormDefinitionErrorCauseDetailUnique {
 
 export interface FormDefinitionErrorCauseDetailRef {
   path: FormDefinitionErrorCauseDetailPath
+}
+
+export interface FormDefinitionErrorCauseDetailIncompatible {
+  path: FormDefinitionErrorCauseDetailPath
+  valueKey?: string
+  incompatibleObject: {
+    key?: string
+    value?: unknown
+  }
+  reason: string
 }
 
 export type FormDefinitionErrorCause =
@@ -172,4 +188,10 @@ export type FormDefinitionErrorCause =
       type: FormDefinitionErrorType.Type
       message: string
       detail: Context | undefined
+    }
+  | {
+      id: FormDefinitionError
+      type: FormDefinitionErrorType.Incompatible
+      message: string
+      detail: FormDefinitionErrorCauseDetailIncompatible
     }

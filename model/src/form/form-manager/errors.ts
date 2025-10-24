@@ -50,6 +50,16 @@ export const checkErrors = (
           return
         }
 
+        if (
+          errorDetails.type === FormDefinitionErrorType.Incompatible &&
+          err.code === 'custom.incompatible'
+          // Match any key
+        ) {
+          err.local.errorCode = formError
+          err.local.errorType = FormDefinitionErrorType.Incompatible
+          return
+        }
+
         err.local.errorType = FormDefinitionErrorType.Type
       }
     })
@@ -91,6 +101,26 @@ export function getErrors(
           message: detail.message,
           detail: {
             path: detail.path
+          }
+        }
+      }
+
+      if (
+        detail.context?.errorType === FormDefinitionErrorType.Incompatible &&
+        detail.context.errorCode
+      ) {
+        return {
+          id: /** @type {FormDefinitionError} */ detail.context.errorCode,
+          type: FormDefinitionErrorType.Incompatible,
+          message: detail.message,
+          detail: {
+            path: detail.path,
+            key: detail.context.key,
+            valueKey: detail.context.valueKey,
+            value: detail.context.value,
+            label: detail.context.label,
+            incompatibleObject: detail.context.incompatibleObject,
+            reason: detail.context.reason
           }
         }
       }
