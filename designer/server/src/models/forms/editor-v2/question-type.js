@@ -36,6 +36,13 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: QuestionTypeSubGroup.DateSubGroup
   },
   {
+    text: 'Location',
+    hint: {
+      text: 'A UK address or precise location'
+    },
+    value: QuestionTypeSubGroup.LocationSubGroup
+  },
+  {
     text: 'UK address',
     hint: {
       text: 'A street address, town or city and postcode'
@@ -87,6 +94,25 @@ const writtenAnswerSubItems = [
 const dateSubItems = [
   { text: 'Day, month and year', value: ComponentType.DatePartsField },
   { text: 'Month and year', value: ComponentType.MonthYearField }
+]
+
+const locationSubItems = [
+  {
+    text: 'Easting and northing',
+    value: ComponentType.EastingNorthingField
+  },
+  {
+    text: 'Ordnance Survey (OS) grid reference',
+    value: ComponentType.OsGridRefField
+  },
+  {
+    text: 'National Grid field number',
+    value: ComponentType.NationalGridFieldNumberField
+  },
+  {
+    text: 'Latitude and longitude',
+    value: ComponentType.LatLongField
+  }
 ]
 
 const listSubItems = [
@@ -200,6 +226,20 @@ function questionTypeGroupFields(formValues, validation) {
       items: listSubItems,
       value: formValues?.listSub,
       ...insertValidationErrors(validation?.formErrors.listSub)
+    },
+    [QuestionTypeSubGroup.LocationSubGroup]: {
+      id: 'locationSub',
+      name: 'locationSub',
+      idPrefix: 'locationSub',
+      fieldset: {
+        legend: {
+          text: 'Type of precise location you require',
+          isPageHeading: false
+        }
+      },
+      items: locationSubItems,
+      value: formValues?.locationSub,
+      ...insertValidationErrors(validation?.formErrors.locationSub)
     }
   }
 }

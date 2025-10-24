@@ -200,6 +200,39 @@ export function FileUploadField() {
   )
 }
 
+export function EastingNorthingField() {
+  return (
+    <ComponentField className="app-group" data-field-type="easting-northing">
+      <span className="app-field-input-s" />
+      <span className="app-field-input-s" />
+    </ComponentField>
+  )
+}
+
+export function OsGridRefField() {
+  return (
+    <ComponentField className="app-field-input" data-field-type="os-grid-ref" />
+  )
+}
+
+export function NationalGridFieldNumberField() {
+  return (
+    <ComponentField
+      className="app-field-input"
+      data-field-type="national-grid"
+    />
+  )
+}
+
+export function LatLongField() {
+  return (
+    <ComponentField className="app-group" data-field-type="lat-long">
+      <span className="app-field-input-s" />
+      <span className="app-field-input-s" />
+    </ComponentField>
+  )
+}
+
 export const componentTypes = {
   [ComponentType.TextField]: TextField,
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
@@ -219,7 +252,11 @@ export const componentTypes = {
   [ComponentType.Markdown]: Markdown,
   [ComponentType.InsetText]: InsetText,
   [ComponentType.List]: List,
-  [ComponentType.FileUploadField]: FileUploadField
+  [ComponentType.FileUploadField]: FileUploadField,
+  [ComponentType.EastingNorthingField]: EastingNorthingField,
+  [ComponentType.OsGridRefField]: OsGridRefField,
+  [ComponentType.NationalGridFieldNumberField]: NationalGridFieldNumberField,
+  [ComponentType.LatLongField]: LatLongField
 }
 
 interface Props {
