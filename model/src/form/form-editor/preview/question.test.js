@@ -83,6 +83,15 @@ describe('question', () => {
         classes: ' highlight'
       })
     })
+
+    it('should apply user-supplied class', () => {
+      const questionElements = new QuestionPreviewElements({
+        ...baseElements,
+        userClasses: 'my-special-class'
+      })
+      const preview = new Question(questionElements, renderer)
+      expect(preview.renderInput.classes).toBe('my-special-class')
+    })
   })
 
   describe('QuestionComponentElements', () => {
