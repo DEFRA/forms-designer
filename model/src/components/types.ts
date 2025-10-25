@@ -144,6 +144,7 @@ export interface DeclarationFieldComponent extends FormFieldBase {
   content: string
   options: FormFieldBase['options'] & {
     condition?: string
+    declarationConfirmationLabel?: string
   }
 }
 
@@ -278,6 +279,7 @@ export type InputFieldsComponentsDef =
   | DatePartsFieldComponent
   | UkAddressFieldComponent
   | FileUploadFieldComponent
+  | DeclarationFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =
@@ -289,10 +291,7 @@ export type ContentComponentsDef =
 
 // Components that render lists
 export type ListComponentsDef =
-  | Exclude<
-      SelectionComponentsDef,
-      YesNoFieldComponent | DeclarationFieldComponent
-    >
+  | Exclude<SelectionComponentsDef, YesNoFieldComponent>
   | ListComponent
 
 // Components that have selection fields
@@ -302,7 +301,6 @@ export type SelectionComponentsDef =
   | RadiosFieldComponent
   | SelectFieldComponent
   | YesNoFieldComponent
-  | DeclarationFieldComponent
 
 // Components that have condition support
 export type ConditionalComponentsDef = Exclude<
