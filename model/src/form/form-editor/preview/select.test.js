@@ -120,6 +120,7 @@ describe('SelectQuestion', () => {
       new QuestionPreviewElements({
         question: 'My select list',
         hintText: '',
+        userClasses: '',
         items: [],
         optional: false,
         shortDesc: 'list',

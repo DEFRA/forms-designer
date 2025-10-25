@@ -48,6 +48,7 @@ describe('nunjucks-renderer', () => {
         hintText: '',
         optional: false,
         shortDesc: '',
+        userClasses: '',
         items: [],
         largeTitle: true,
         content: ''

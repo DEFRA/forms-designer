@@ -65,12 +65,17 @@ export class Question extends PreviewComponent {
    */
   constructor(htmlElements, questionRenderer) {
     super(htmlElements, questionRenderer)
-    const { hintText } = htmlElements.values
+    const { hintText, userClasses } = htmlElements.values
     /**
      * @type {string}
      * @private
      */
     this._hintText = hintText
+    /**
+     * @type {string}
+     * @private
+     */
+    this._userClasses = userClasses
   }
 
   /**
@@ -94,7 +99,16 @@ export class Question extends PreviewComponent {
    * @protected
    */
   _renderInput() {
-    return { ...super._renderInput(), label: this.label, hint: this.hint }
+    const renderValues = {
+      ...super._renderInput(),
+      label: this.label,
+      hint: this.hint
+    }
+    return {
+      ...renderValues,
+      classes: this._userClasses,
+      previewClasses: renderValues.classes ?? ''
+    }
   }
 
   /**
@@ -109,6 +123,21 @@ export class Question extends PreviewComponent {
    */
   set hintText(value) {
     this._hintText = value
+    this.render()
+  }
+
+  /**
+   * @type {string}
+   */
+  get userClasses() {
+    return this._userClasses
+  }
+
+  /**
+   * @param {string} value
+   */
+  set userClasses(value) {
+    this._userClasses = value
     this.render()
   }
 }

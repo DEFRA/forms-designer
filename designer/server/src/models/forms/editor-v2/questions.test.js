@@ -372,7 +372,8 @@ describe('editor-v2 - questions model', () => {
                 isPageHeading: true,
                 text: 'What type of farming do you do?'
               },
-              name: 'inputField'
+              name: 'inputField',
+              previewClasses: ''
             },
             questionType: 'TextField'
           }
@@ -419,7 +420,8 @@ describe('editor-v2 - questions model', () => {
                 isPageHeading: true,
                 text: 'What type of farming do you do?'
               },
-              name: 'inputField'
+              name: 'inputField',
+              previewClasses: ''
             },
             questionType: ComponentType.TextField
           }

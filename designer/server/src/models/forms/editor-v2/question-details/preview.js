@@ -84,6 +84,11 @@ export class QuestionPreviewElements {
    * @type {string}
    * @protected
    */
+  _userClasses = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _content = ''
   /**
    * @type {boolean}
@@ -140,6 +145,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      userClasses: this._userClasses,
       usePostcodeLookup: this._usePostcodeLookup,
       largeTitle: this._largeTitle,
       items: this._items,

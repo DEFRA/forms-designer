@@ -26,6 +26,10 @@ export class ComponentElements {
       hintText: '',
       optional: !required,
       shortDesc: '',
+      userClasses:
+        this._component.options && 'classes' in this._component.options
+          ? (this._component.options.classes ?? '')
+          : '',
       items: [],
       content: ''
     }

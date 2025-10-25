@@ -616,7 +616,8 @@ describe('editor-v2 - question details model', () => {
           isPageHeading: true,
           text: 'Upload a file'
         },
-        name: 'inputField'
+        name: 'inputField',
+        previewClasses: ''
       })
     })
 

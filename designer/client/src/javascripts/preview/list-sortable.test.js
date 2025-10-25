@@ -95,6 +95,7 @@ describe('list-sortable', () => {
       expect(questionElements.values).toEqual({
         question: 'Which quest would you like to pick?',
         hintText: 'Choose one adventure that best suits you.',
+        userClasses: '',
         optional: false,
         shortDesc: 'your quest',
         largeTitle: true,
