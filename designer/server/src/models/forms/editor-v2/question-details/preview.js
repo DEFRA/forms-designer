@@ -318,6 +318,9 @@ export const ModelFactory =
      */
     FileUploadField: (questionElements) => {
       return new SupportingEvidenceQuestion(questionElements, emptyRender)
+    },
+    DeclarationField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
     }
   })
 

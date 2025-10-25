@@ -67,7 +67,8 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MinFiles,
       QuestionAdvancedSettings.MaxFiles,
       QuestionAdvancedSettings.ExactFiles
-    ]
+    ],
+    DeclarationField: []
   })
 
 /**

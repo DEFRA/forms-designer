@@ -36,7 +36,8 @@ export const enhancedFieldsPerComponentType =
     Details: [],
     List: [],
     Markdown: [],
-    FileUploadField: []
+    FileUploadField: [],
+    DeclarationField: []
   })
 
 /**

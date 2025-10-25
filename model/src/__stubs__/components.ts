@@ -3,6 +3,7 @@ import {
   type AutocompleteFieldComponent,
   type CheckboxesFieldComponent,
   type DatePartsFieldComponent,
+  type DeclarationFieldComponent,
   type DetailsComponent,
   type EmailAddressFieldComponent,
   type FileUploadFieldComponent,
@@ -65,6 +66,20 @@ export function buildYesNoFieldComponent(
     options: {},
     ...partialYesNoField,
     type: ComponentType.YesNoField
+  }
+}
+
+export function buildDeclarationFieldComponent(
+  partialDeclarationField: Partial<DeclarationFieldComponent> = {}
+): DeclarationFieldComponent {
+  return {
+    title: 'Declaration',
+    id: 'f2a8c9e1-3d4f-4b5a-8c6d-1e2f3a4b5c6d',
+    name: 'DeclarationFieldComponent',
+    content: '',
+    options: {},
+    ...partialDeclarationField,
+    type: ComponentType.DeclarationField
   }
 }
 export function buildMonthYearFieldComponent(

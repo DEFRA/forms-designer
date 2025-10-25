@@ -47,7 +47,8 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
     max: 'maxFiles',
     length: 'exactFiles',
     accept: 'accept'
-  }
+  },
+  DeclarationField: {}
 })
 
 /**
