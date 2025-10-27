@@ -27,7 +27,8 @@ export class QuestionComponentElements extends ComponentElements {
     return {
       ...super._getValues(),
       hintText: this._component.hint ?? '',
-      shortDesc: this._component.shortDescription ?? ''
+      shortDesc: this._component.shortDescription ?? '',
+      userClasses: this._component.options.classes ?? ''
     }
   }
 }

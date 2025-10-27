@@ -59,6 +59,15 @@ export interface AutocompleteElements extends QuestionElements {
   autocompleteOptions: string
 }
 
+export interface NumberSettings extends BaseSettings {
+  prefix: string
+  suffix: string
+}
+
+export interface NumberElements extends DomElementsBase {
+  readonly values: NumberSettings
+}
+
 export interface RenderBase {
   render(questionTemplate: string, renderContext: RenderContext): void
 }
