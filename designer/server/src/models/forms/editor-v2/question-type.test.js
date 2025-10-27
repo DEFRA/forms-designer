@@ -44,7 +44,7 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         'new',
         testQuestionTypeItems,
-        [],
+        buildQuestionPage({}),
         undefined
       )
       expect(res).toHaveLength(4)
@@ -55,15 +55,17 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         'new',
         testQuestionTypeItems,
-        [
-          {
-            name: '',
-            title: '',
-            type: ComponentType.TextField,
-            schema: {},
-            options: {}
-          }
-        ],
+        buildQuestionPage({
+          components: [
+            {
+              name: '',
+              title: '',
+              type: ComponentType.TextField,
+              schema: {},
+              options: {}
+            }
+          ]
+        }),
         undefined
       )
       expect(res).toHaveLength(3)
@@ -74,15 +76,17 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         'new',
         testQuestionTypeItems,
-        [
-          {
-            name: '',
-            title: '',
-            type: ComponentType.FileUploadField,
-            schema: {},
-            options: {}
-          }
-        ],
+        buildQuestionPage({
+          components: [
+            {
+              name: '',
+              title: '',
+              type: ComponentType.FileUploadField,
+              schema: {},
+              options: {}
+            }
+          ]
+        }),
         undefined
       )
       expect(res).toHaveLength(3)
@@ -109,10 +113,10 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         '123',
         testQuestionTypeItems,
-        componentsSoFar,
         buildQuestionPage({
           components: componentsSoFar
-        })
+        }),
+        undefined
       )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
@@ -123,10 +127,10 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         '123',
         testQuestionTypeItems,
-        [textFieldComponent],
         buildRepeaterPage({
           components: [textFieldComponent]
-        })
+        }),
+        undefined
       )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')

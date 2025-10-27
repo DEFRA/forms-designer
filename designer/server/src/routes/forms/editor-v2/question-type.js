@@ -125,6 +125,8 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
+      const state = getQuestionSessionState(yar, stateId)
+
       return h.view(
         'forms/editor-v2/question',
         viewModel.questionTypeViewModel(
@@ -132,6 +134,7 @@ export default [
           definition,
           pageId,
           questionId,
+          state,
           validation
         )
       )
