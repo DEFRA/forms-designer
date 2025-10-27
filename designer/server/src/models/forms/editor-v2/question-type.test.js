@@ -188,6 +188,22 @@ describe('editor-v2 - question type model', () => {
       expect(res).toHaveLength(4)
       expect(res[2].text).toBe('Supporting evidence')
     })
+
+    test('should ignore state overriding question type when ids dont match', () => {
+      const textFieldComponent = buildTextFieldComponent({ id: '123' })
+      const res = filterQuestionTypes(
+        '111',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [textFieldComponent]
+        }),
+        {
+          questionType: ComponentType.MultilineTextField
+        }
+      )
+      expect(res).toHaveLength(4)
+      expect(res[2].text).toBe('Supporting evidence')
+    })
   })
 })
 
