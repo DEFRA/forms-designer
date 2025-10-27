@@ -135,6 +135,59 @@ describe('editor-v2 - question type model', () => {
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
     })
+
+    test('should handle omit file upload if already a file upload component on page', () => {
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [
+            {
+              name: '',
+              title: '',
+              type: ComponentType.FileUploadField,
+              schema: {},
+              options: {}
+            }
+          ]
+        }),
+        undefined
+      )
+      expect(res).toHaveLength(3)
+      expect(res[2].text).toBe('Email address')
+    })
+
+    test('should handle state overriding question type to FileUpload', () => {
+      const textFieldComponent = buildTextFieldComponent({ id: '123' })
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [textFieldComponent]
+        }),
+        {
+          questionType: ComponentType.FileUploadField
+        }
+      )
+      expect(res).toHaveLength(3)
+      expect(res[2].text).toBe('Email address')
+    })
+
+    test('should handle state overriding question type to anything other than FileUpload', () => {
+      const textFieldComponent = buildTextFieldComponent({ id: '123' })
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [textFieldComponent]
+        }),
+        {
+          questionType: ComponentType.MultilineTextField
+        }
+      )
+      expect(res).toHaveLength(4)
+      expect(res[2].text).toBe('Supporting evidence')
+    })
   })
 })
 

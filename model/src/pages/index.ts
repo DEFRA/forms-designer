@@ -18,7 +18,6 @@ export {
   includesFileUploadField,
   isControllerName,
   isSummaryPage,
-  omitFileUploadComponent,
   showRepeaterSettings,
   summaryPageControllers
 } from '~/src/pages/helpers.js'
