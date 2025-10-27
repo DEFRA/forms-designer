@@ -52,13 +52,7 @@ export class NumberOnlyQuestion extends Question {
    */
   get customRenderFields() {
     return {
-      type: 'number',
-      prefix: {
-        text: this._prefix
-      },
-      suffix: {
-        text: this._suffix
-      }
+      type: 'number'
     }
   }
 
@@ -90,14 +84,12 @@ export class NumberOnlyQuestion extends Question {
    * @protected
    */
   _renderInput() {
+    const prefixObj = this.prefix ? { prefix: { text: this.prefix } } : {}
+    const suffixObj = this.suffix ? { suffix: { text: this.suffix } } : {}
     return {
       ...super._renderInput(),
-      prefix: {
-        text: this.prefix
-      },
-      suffix: {
-        text: this.suffix
-      }
+      ...prefixObj,
+      ...suffixObj
     }
   }
 }

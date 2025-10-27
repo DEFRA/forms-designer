@@ -247,7 +247,9 @@ describe('preview', () => {
         optional: true,
         shortDesc: 'Short answer',
         usePostcodeLookup: true,
-        items: []
+        items: [],
+        prefix: '',
+        suffix: ''
       })
     })
 
@@ -262,7 +264,9 @@ describe('preview', () => {
         optional: false,
         shortDesc: '',
         usePostcodeLookup: false,
-        items: []
+        items: [],
+        prefix: '',
+        suffix: ''
       })
     })
 
