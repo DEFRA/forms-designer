@@ -92,6 +92,15 @@ describe('question', () => {
       const preview = new Question(questionElements, renderer)
       expect(preview.renderInput.classes).toBe('my-special-class')
     })
+
+    it('should apply user-supplied class after instantiation', () => {
+      const questionElements = new QuestionPreviewElements(baseElements)
+      const preview = new Question(questionElements, renderer)
+      expect(preview.userClasses).toBe('')
+      preview.userClasses = 'my-special-class'
+      expect(preview.renderInput.classes).toBe('my-special-class')
+      expect(preview.userClasses).toBe('my-special-class')
+    })
   })
 
   describe('QuestionComponentElements', () => {
