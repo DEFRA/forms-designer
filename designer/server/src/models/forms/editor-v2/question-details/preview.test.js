@@ -104,6 +104,36 @@ describe('preview', () => {
     value: 'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
   }
 
+  const classes = {
+    name: 'classes',
+    id: 'classes',
+    label: {
+      text: 'Classes',
+      classes: 'govuk-label--m'
+    },
+    value: 'specific-class'
+  }
+
+  const prefix = {
+    name: 'prefix',
+    id: 'prefix',
+    label: {
+      text: 'Prefix',
+      classes: 'govuk-label--m'
+    },
+    value: 'pre'
+  }
+
+  const suffix = {
+    name: 'suffix',
+    id: 'suffix',
+    label: {
+      text: 'Suffix',
+      classes: 'govuk-label--m'
+    },
+    value: 'suf'
+  }
+
   const questionSessionState = {
     questionType: ComponentType.RadiosField,
     editRow: {},
@@ -134,7 +164,10 @@ describe('preview', () => {
     hintText,
     questionOptional,
     shortDescription,
-    usePostcodeLookup
+    usePostcodeLookup,
+    classes,
+    prefix,
+    suffix
   ]
 
   describe('getValueAsString', () => {
@@ -241,15 +274,15 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
-        userClasses: '',
+        userClasses: 'specific-class',
         content: '',
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
         usePostcodeLookup: true,
         items: [],
-        prefix: '',
-        suffix: ''
+        prefix: 'pre',
+        suffix: 'suf'
       })
     })
 

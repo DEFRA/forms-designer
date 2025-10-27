@@ -63,6 +63,70 @@ describe('NumberOnly', () => {
       }
     })
   })
+
+  it('should set prefix', () => {
+    const renderer = new QuestionRendererStub(jest.fn())
+    const elements = /** @type {NumberElements} */ (
+      new NumberPreviewElements({
+        ...numberElements,
+        prefix: '',
+        suffix: ''
+      })
+    )
+    const res = new NumberOnlyQuestion(elements, renderer)
+    res.prefix = 'pre'
+    expect(res.renderInput).toEqual({
+      id: 'numberField',
+      name: 'numberField',
+      classes: '',
+      label: {
+        text: 'Which quest would you like to pick?',
+        classes: 'govuk-label--l',
+        isPageHeading: true
+      },
+      hint: {
+        text: 'Choose one adventure that best suits you.',
+        classes: ''
+      },
+      type: 'number',
+      previewClasses: '',
+      prefix: {
+        text: 'pre'
+      }
+    })
+  })
+
+  it('should set suffix', () => {
+    const renderer = new QuestionRendererStub(jest.fn())
+    const elements = /** @type {NumberElements} */ (
+      new NumberPreviewElements({
+        ...numberElements,
+        prefix: '',
+        suffix: ''
+      })
+    )
+    const res = new NumberOnlyQuestion(elements, renderer)
+    res.suffix = 'suf'
+    expect(res.renderInput).toEqual({
+      id: 'numberField',
+      name: 'numberField',
+      classes: '',
+      label: {
+        text: 'Which quest would you like to pick?',
+        classes: 'govuk-label--l',
+        isPageHeading: true
+      },
+      hint: {
+        text: 'Choose one adventure that best suits you.',
+        classes: ''
+      },
+      type: 'number',
+      previewClasses: '',
+      suffix: {
+        text: 'suf'
+      }
+    })
+  })
 })
 
 /**
