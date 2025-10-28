@@ -14,6 +14,7 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
+import { stringHasValue } from '~/src/lib/utils.js'
 
 const radiosSectionListItemsAnchor = '#list-items'
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
@@ -248,8 +249,9 @@ function handleSaveItem(request, state, stateId) {
           text: payload.radioHint
         }
       : undefined
-    foundRow.value =
-      payload.radioValue !== '' ? payload.radioValue : payload.radioText
+    foundRow.value = stringHasValue(payload.radioValue)
+      ? payload.radioValue
+      : payload.radioText
   } else {
     // Insert
     listItemsSnapshot.push({
@@ -259,7 +261,9 @@ function handleSaveItem(request, state, stateId) {
             text: payload.radioHint
           }
         : undefined,
-      value: payload.radioValue !== '' ? payload.radioValue : payload.radioText,
+      value: stringHasValue(payload.radioValue)
+        ? payload.radioValue
+        : payload.radioText,
       id: randomUUID()
     })
   }
