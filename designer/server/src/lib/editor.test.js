@@ -42,6 +42,7 @@ import {
   removeUniquelyMappedListFromQuestion,
   removeUniquelyMappedListsFromPage
 } from '~/src/lib/list.js'
+import { stringHasValue } from '~/src/lib/utils.js'
 
 jest.mock('~/src/lib/fetch.js')
 jest.mock('~/src/lib/list.js')
@@ -1988,6 +1989,16 @@ describe('editor.js', () => {
         getControllerTypeAndProperties(page, components, payload)
       expect(controllerType).toBeNull()
       expect(additionalProperties).toEqual({})
+    })
+  })
+
+  describe('stringHasValue', () => {
+    test('should return coorect boolean value', () => {
+      expect(stringHasValue(undefined)).toBe(false)
+      expect(stringHasValue(null)).toBe(false)
+      expect(stringHasValue('')).toBe(false)
+      expect(stringHasValue('a')).toBe(true)
+      expect(stringHasValue('Something')).toBe(true)
     })
   })
 })

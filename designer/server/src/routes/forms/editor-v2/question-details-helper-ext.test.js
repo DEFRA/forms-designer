@@ -1,6 +1,7 @@
 import { testFormDefinitionWithMultipleV2ConditionsListRef } from '~/src/__stubs__/form-definition.js'
 import { setQuestionSessionState } from '~/src/lib/session-helper.js'
 import { handleListConflict } from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
+import { handleSaveItem } from '~/src/routes/forms/editor-v2/question-details-helper.js'
 
 jest.mock('~/src/lib/session-helper.js')
 
@@ -21,6 +22,25 @@ const mockYar = /** @type {Yar}} */ ({
 })
 
 const mockState = {}
+
+/**
+ *
+ * @param {Request['payload']} payload
+ */
+const buildMockRequest = (payload) => {
+  const req =
+    /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ ({
+      payload,
+      yar: mockYar
+    })
+
+  return {
+    mockRequest: req,
+    mockGet,
+    mockSet,
+    mockFlash
+  }
+}
 
 describe('Editor v2 question details helper ext routes', () => {
   beforeAll(() => {
@@ -119,9 +139,339 @@ describe('Editor v2 question details helper ext routes', () => {
       expect(setQuestionSessionState).not.toHaveBeenCalled()
     })
   })
+
+  describe('handleSaveItem', () => {
+    const listItems = [
+      {
+        id: '1',
+        text: 'Option 1',
+        hint: { text: 'Hint 1' },
+        value: 'Option 1'
+      },
+      {
+        id: '2',
+        text: 'Option 2',
+        hint: { text: 'Hint 2' },
+        value: 'Option 2'
+      },
+      {
+        id: '3',
+        text: 'Option 3',
+        hint: { text: 'Hint 3' },
+        value: 'Option 3'
+      },
+      { id: '4', text: 'Option 4', hint: { text: 'Hint 4' }, value: 'Option 4' }
+    ]
+    test('should perform update', () => {
+      const payload = {
+        radioId: '1',
+        radioText: 'New Option 1',
+        radioHint: 'New Hint 1',
+        radioValue: 'New Option 1'
+      }
+      const { mockRequest } = buildMockRequest(payload)
+      const mockState = structuredClone({
+        listItems
+      })
+      const res = handleSaveItem(mockRequest, mockState, '12345')
+      expect(res).toBe('#list-items')
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345',
+        {
+          editRow: expect.anything(),
+          listItems: [
+            {
+              id: '1',
+              text: 'New Option 1',
+              hint: { text: 'New Hint 1' },
+              value: 'New Option 1'
+            },
+            {
+              id: '2',
+              text: 'Option 2',
+              hint: { text: 'Hint 2' },
+              value: 'Option 2'
+            },
+            {
+              id: '3',
+              text: 'Option 3',
+              hint: { text: 'Hint 3' },
+              value: 'Option 3'
+            },
+            {
+              id: '4',
+              text: 'Option 4',
+              hint: { text: 'Hint 4' },
+              value: 'Option 4'
+            }
+          ]
+        }
+      )
+    })
+
+    test('should perform update when no unique value supplied', () => {
+      const payload = {
+        radioId: '1',
+        radioText: 'New Option 1',
+        radioHint: 'New Hint 1',
+        radioValue: ''
+      }
+      const { mockRequest } = buildMockRequest(payload)
+      const mockState = structuredClone({
+        listItems
+      })
+      const res = handleSaveItem(mockRequest, mockState, '12345')
+      expect(res).toBe('#list-items')
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345',
+        {
+          editRow: expect.anything(),
+          listItems: [
+            {
+              id: '1',
+              text: 'New Option 1',
+              hint: { text: 'New Hint 1' },
+              value: 'New Option 1'
+            },
+            {
+              id: '2',
+              text: 'Option 2',
+              hint: { text: 'Hint 2' },
+              value: 'Option 2'
+            },
+            {
+              id: '3',
+              text: 'Option 3',
+              hint: { text: 'Hint 3' },
+              value: 'Option 3'
+            },
+            {
+              id: '4',
+              text: 'Option 4',
+              hint: { text: 'Hint 4' },
+              value: 'Option 4'
+            }
+          ]
+        }
+      )
+    })
+
+    test('should perform update using supplied unique value', () => {
+      const payload = {
+        radioId: '1',
+        radioText: 'New Option 1',
+        radioHint: 'New Hint 1',
+        radioValue: 'New val1'
+      }
+      const { mockRequest } = buildMockRequest(payload)
+      const mockState = structuredClone({
+        listItems
+      })
+      const res = handleSaveItem(mockRequest, mockState, '12345')
+      expect(res).toBe('#list-items')
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345',
+        {
+          editRow: expect.anything(),
+          listItems: [
+            {
+              id: '1',
+              text: 'New Option 1',
+              hint: { text: 'New Hint 1' },
+              value: 'New val1'
+            },
+            {
+              id: '2',
+              text: 'Option 2',
+              hint: { text: 'Hint 2' },
+              value: 'Option 2'
+            },
+            {
+              id: '3',
+              text: 'Option 3',
+              hint: { text: 'Hint 3' },
+              value: 'Option 3'
+            },
+            {
+              id: '4',
+              text: 'Option 4',
+              hint: { text: 'Hint 4' },
+              value: 'Option 4'
+            }
+          ]
+        }
+      )
+    })
+
+    test('should perform insert', () => {
+      const payload = {
+        radioId: 'new',
+        radioText: 'New Option 5',
+        radioHint: 'New Hint 5',
+        radioValue: 'New Option 5'
+      }
+      const { mockRequest } = buildMockRequest(payload)
+      const mockState = structuredClone({
+        listItems
+      })
+      const res = handleSaveItem(mockRequest, mockState, '12345')
+      expect(res).toBe('#list-items')
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345',
+        {
+          editRow: expect.anything(),
+          listItems: [
+            {
+              id: '1',
+              text: 'Option 1',
+              hint: { text: 'Hint 1' },
+              value: 'Option 1'
+            },
+            {
+              id: '2',
+              text: 'Option 2',
+              hint: { text: 'Hint 2' },
+              value: 'Option 2'
+            },
+            {
+              id: '3',
+              text: 'Option 3',
+              hint: { text: 'Hint 3' },
+              value: 'Option 3'
+            },
+            {
+              id: '4',
+              text: 'Option 4',
+              hint: { text: 'Hint 4' },
+              value: 'Option 4'
+            },
+            {
+              id: expect.any(String),
+              text: 'New Option 5',
+              hint: { text: 'New Hint 5' },
+              value: 'New Option 5'
+            }
+          ]
+        }
+      )
+    })
+
+    test('should perform insert when no unique value supplied', () => {
+      const payload = {
+        radioId: 'new',
+        radioText: 'New Option 5',
+        radioHint: 'New Hint 5',
+        radioValue: ''
+      }
+      const { mockRequest } = buildMockRequest(payload)
+      const mockState = structuredClone({
+        listItems
+      })
+      const res = handleSaveItem(mockRequest, mockState, '12345')
+      expect(res).toBe('#list-items')
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345',
+        {
+          editRow: expect.anything(),
+          listItems: [
+            {
+              id: '1',
+              text: 'Option 1',
+              hint: { text: 'Hint 1' },
+              value: 'Option 1'
+            },
+            {
+              id: '2',
+              text: 'Option 2',
+              hint: { text: 'Hint 2' },
+              value: 'Option 2'
+            },
+            {
+              id: '3',
+              text: 'Option 3',
+              hint: { text: 'Hint 3' },
+              value: 'Option 3'
+            },
+            {
+              id: '4',
+              text: 'Option 4',
+              hint: { text: 'Hint 4' },
+              value: 'Option 4'
+            },
+            {
+              id: expect.any(String),
+              text: 'New Option 5',
+              hint: { text: 'New Hint 5' },
+              value: 'New Option 5'
+            }
+          ]
+        }
+      )
+    })
+
+    test('should perform insert using supplied unique value', () => {
+      const payload = {
+        radioId: 'new',
+        radioText: 'New Option 5',
+        radioHint: 'New Hint 5',
+        radioValue: 'New val 5'
+      }
+      const { mockRequest } = buildMockRequest(payload)
+      const mockState = structuredClone({
+        listItems
+      })
+      const res = handleSaveItem(mockRequest, mockState, '12345')
+      expect(res).toBe('#list-items')
+      expect(setQuestionSessionState).toHaveBeenCalledWith(
+        expect.anything(),
+        '12345',
+        {
+          editRow: expect.anything(),
+          listItems: [
+            {
+              id: '1',
+              text: 'Option 1',
+              hint: { text: 'Hint 1' },
+              value: 'Option 1'
+            },
+            {
+              id: '2',
+              text: 'Option 2',
+              hint: { text: 'Hint 2' },
+              value: 'Option 2'
+            },
+            {
+              id: '3',
+              text: 'Option 3',
+              hint: { text: 'Hint 3' },
+              value: 'Option 3'
+            },
+            {
+              id: '4',
+              text: 'Option 4',
+              hint: { text: 'Hint 4' },
+              value: 'Option 4'
+            },
+            {
+              id: expect.any(String),
+              text: 'New Option 5',
+              hint: { text: 'New Hint 5' },
+              value: 'New val 5'
+            }
+          ]
+        }
+      )
+    })
+  })
 })
 
 /**
- * @import { Item } from '@defra/forms-model'
+ * @import { FormEditorInputQuestionDetails, Item } from '@defra/forms-model'
+ * @import { Request } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */
