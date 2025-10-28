@@ -90,7 +90,8 @@ export const dummyRenderer = {
  *    questionType?: ComponentType,
  *    previewTitle?: string,
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
- *    buttonText: string
+ *    buttonText: string,
+ *    hasPageSettingsTab: boolean
  * }}
  */
 export function getPreviewModel(page, definition, previewPageUrl, fields) {
@@ -118,7 +119,8 @@ export function getPreviewModel(page, definition, previewPageUrl, fields) {
     buttonText: previewPageController.buttonText,
     previewPageUrl,
     questionType: ComponentType.TextField, // components[0]?.type
-    componentRows: previewPageController.componentRows
+    componentRows: previewPageController.componentRows,
+    hasPageSettingsTab: true
   }
 }
 
