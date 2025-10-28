@@ -531,7 +531,34 @@ export const componentSchema = Joi.object<ComponentDef>()
         .description('Maximum value or length for validation'),
       length: Joi.number()
         .empty('')
-        .description('Exact length required for validation')
+        .description('Exact length required for validation'),
+      regex: Joi.when('type', {
+        is: Joi.string().valid(
+          ComponentType.TextField,
+          ComponentType.MultilineTextField
+        ),
+        then: Joi.string()
+          .trim()
+          .optional()
+          .description('Regex expression for validation of user field content')
+          .custom((value: string, helpers: CustomHelpers<string>) => {
+            try {
+              const regex = RegExp(value)
+              regex.test('dummy')
+            } catch {
+              return helpers.error('custom.incompatible', {
+                errorType: FormDefinitionErrorType.Incompatible,
+                errorCode: FormDefinitionError.Other,
+                valueKey: 'regex',
+                reason: 'has invalid regex expression'
+              })
+            }
+            return value
+          }),
+        otherwise: Joi.forbidden()
+      }).messages({
+        'custom.incompatible': 'Regex expression is invalid'
+      })
     })
       .unknown(true)
       .default({})
