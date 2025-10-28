@@ -32,16 +32,16 @@
       </div>
 
       {% if not params.hasPageSettingsTab %}
-      <div class="govuk-button-group govuk-!-margin-top-3">
-        {{ govukSkipLink({
-          text: "Skip to page overview" if not params.skipLink else params.skipLink.text,
-          href: "#page-overview" if not params.skipLink else params.skipLink.url,
-          classes: "govuk-!-margin-right-4",
-          attributes: {
-            "data-module": "govuk-skip-link"
-          }
-        }) }}
-      </div>
+        <div class="govuk-button-group govuk-!-margin-top-3">
+          {{ govukSkipLink({
+            text: "Skip to page overview" if not params.skipLink else params.skipLink.text,
+            href: "#page-overview" if not params.skipLink else params.skipLink.url,
+            classes: "govuk-!-margin-right-4",
+            attributes: {
+              "data-module": "govuk-skip-link"
+            }
+          }) }}
+        </div>
       {% endif %}
     </div>
 
