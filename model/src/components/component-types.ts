@@ -143,5 +143,33 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     type: ComponentType.List,
     list: '',
     options: {}
+  },
+  {
+    name: 'EastingNorthingField',
+    title: 'Easting and northing',
+    type: ComponentType.EastingNorthingField,
+    hint: 'For example, Easting: 248741, Northing: 63688',
+    options: {}
+  },
+  {
+    name: 'OsGridRefField',
+    title: 'Ordnance Survey (OS) grid reference',
+    type: ComponentType.OsGridRefField,
+    hint: 'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364',
+    options: {}
+  },
+  {
+    name: 'NationalGridFieldNumberField',
+    title: 'National Grid field number',
+    type: ComponentType.NationalGridFieldNumberField,
+    hint: 'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589',
+    options: {}
+  },
+  {
+    name: 'LatLongField',
+    title: 'Latitude and longitude',
+    type: ComponentType.LatLongField,
+    hint: 'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767',
+    options: {}
   }
 ])

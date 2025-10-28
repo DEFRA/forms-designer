@@ -516,6 +516,38 @@ describe('preview', () => {
       )
       expect(previewModel).toBeInstanceOf(SelectSortableQuestion)
     })
+
+    it('should get EastingNorthingField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.EastingNorthingField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get OsGridRefField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.OsGridRefField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get NationalGridFieldNumberField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.NationalGridFieldNumberField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get LatLongField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.LatLongField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
   })
 
   describe('getPreviewModel', () => {
@@ -947,6 +979,42 @@ describe('preview', () => {
           }
         ]
       })
+    })
+
+    it('should get EastingNorthingField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.EastingNorthingField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get OsGridRefField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.OsGridRefField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get NationalGridFieldNumberField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.NationalGridFieldNumberField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get LatLongField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.LatLongField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
     })
   })
 })

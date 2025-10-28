@@ -286,6 +286,18 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return listSortable
+    },
+    EastingNorthingField: () => {
+      return SetupPreview.Question()
+    },
+    OsGridRefField: () => {
+      return SetupPreview.Question()
+    },
+    NationalGridFieldNumberField: () => {
+      return SetupPreview.Question()
+    },
+    LatLongField: () => {
+      return SetupPreview.Question()
     }
   })
 /**

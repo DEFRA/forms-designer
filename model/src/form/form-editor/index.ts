@@ -19,7 +19,8 @@ import {
 export enum QuestionTypeSubGroup {
   WrittenAnswerSubGroup = 'writtenAnswerSub',
   DateSubGroup = 'dateSub',
-  ListSubGroup = 'listSub'
+  ListSubGroup = 'listSub',
+  LocationSubGroup = 'locationSub'
 }
 
 export const pageTypeSchema = Joi.string()
@@ -32,6 +33,7 @@ export const questionTypeSchema = Joi.string()
   .valid(
     QuestionTypeSubGroup.WrittenAnswerSubGroup,
     QuestionTypeSubGroup.DateSubGroup,
+    QuestionTypeSubGroup.LocationSubGroup,
     ComponentType.UkAddressField,
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
@@ -60,7 +62,11 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
     ComponentType.AutocompleteField,
-    ComponentType.SelectField
+    ComponentType.SelectField,
+    ComponentType.EastingNorthingField,
+    ComponentType.OsGridRefField,
+    ComponentType.NationalGridFieldNumberField,
+    ComponentType.LatLongField
   )
   .description('The specific component type to use for this question')
 
@@ -76,6 +82,8 @@ export const writtenAnswerSubSchema = Joi.string()
 export const dateSubSchema = Joi.string()
   .required()
   .valid(ComponentType.DatePartsField, ComponentType.MonthYearField)
+  .description('Subtype for date-related questions')
+
 export const listSubSchema = Joi.string()
   .required()
   .valid(
@@ -85,7 +93,17 @@ export const listSubSchema = Joi.string()
     ComponentType.AutocompleteField,
     ComponentType.SelectField
   )
-  .description('Subtype for date-related questions')
+  .description('Subtype for list-related questions')
+
+export const locationSubSchema = Joi.string()
+  .required()
+  .valid(
+    ComponentType.EastingNorthingField,
+    ComponentType.OsGridRefField,
+    ComponentType.NationalGridFieldNumberField,
+    ComponentType.LatLongField
+  )
+  .description('Subtype for location-related questions')
 
 export const nameSchema = Joi.string()
   .trim()
@@ -102,6 +120,14 @@ export const hintTextSchema = Joi.string()
   .optional()
   .allow('')
   .description('Optional guidance text displayed below the question')
+
+export const instructionTextSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('')
+  .description(
+    'Optional instruction text with markdown support to help users answer the question'
+  )
 
 export const questionOptionalSchema = Joi.string()
   .trim()
@@ -512,6 +538,7 @@ export const questionDetailsFullSchema = {
   fileTypesSchema,
   hintTextSchema,
   imageTypesSchema,
+  instructionTextSchema,
   jsEnabledSchema,
   listForQuestionSchema,
   listItemCountSchema,
