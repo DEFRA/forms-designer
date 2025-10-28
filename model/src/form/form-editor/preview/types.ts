@@ -20,6 +20,7 @@ export interface BaseSettings {
   hintText: string
   optional: boolean
   shortDesc: string
+  userClasses: string
   items: ListElement[]
   content: string
   attributes?: Record<string, string>
@@ -56,6 +57,15 @@ export interface QuestionElements extends DomElementsBase {
 
 export interface AutocompleteElements extends QuestionElements {
   autocompleteOptions: string
+}
+
+export interface NumberSettings extends BaseSettings {
+  prefix: string
+  suffix: string
+}
+
+export interface NumberElements extends DomElementsBase {
+  readonly values: NumberSettings
 }
 
 export interface RenderBase {

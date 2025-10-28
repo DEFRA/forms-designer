@@ -89,6 +89,11 @@ export class QuestionPreviewElements {
    * @type {string}
    * @protected
    */
+  _userClasses = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _content = ''
   /**
    *
@@ -111,6 +116,7 @@ export class QuestionPreviewElements {
     hintText,
     optional,
     shortDesc,
+    userClasses,
     usePostcodeLookup,
     items,
     content
@@ -119,6 +125,7 @@ export class QuestionPreviewElements {
     this._hintText = hintText
     this._optional = optional
     this._shortDesc = shortDesc
+    this._userClasses = userClasses
     this._items = items
     this._content = content
     this._usePostcodeLookup = usePostcodeLookup ?? false
@@ -133,6 +140,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      userClasses: this._userClasses,
       usePostcodeLookup: this._usePostcodeLookup,
       items: this._items,
       content: this._content
@@ -204,9 +212,23 @@ export const baseElements = /** @type {BaseSettings} */ ({
   optional: false,
   question: 'Which quest would you like to pick?',
   hintText: 'Choose one adventure that best suits you.',
+  userClasses: '',
   shortDesc: '',
   content: '',
   largeTitle: true
+})
+
+export const numberElements = /** @type {NumberSettings} */ ({
+  items: [],
+  optional: false,
+  question: 'Which quest would you like to pick?',
+  hintText: 'Choose one adventure that best suits you.',
+  userClasses: '',
+  shortDesc: '',
+  content: '',
+  largeTitle: true,
+  prefix: '',
+  suffix: ''
 })
 
 const list1Id = '414d82a3-4cab-416a-bd54-6b86fbd51120'
@@ -267,8 +289,115 @@ export function buildPreviewShortAnswer(partialBaseElements, renderMock) {
   )
 }
 
+export class NumberPreviewElements {
+  /**
+   * @protected
+   */
+  _question = ''
+  /** @protected */
+  _hintText = ''
+  /** @protected */
+  _optional = false
+  /**
+   * @type {string}
+   * @protected
+   */
+  _shortDesc = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _userClasses = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _prefix = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _suffix = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _content = ''
+  /**
+   *
+   * @type {ListElement[]}
+   * @private
+   */
+  _items = []
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  _usePostcodeLookup = false
+  afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
+
+  /**
+   * @param {NumberSettings} baseSettings
+   */
+  constructor({
+    question,
+    hintText,
+    optional,
+    shortDesc,
+    userClasses,
+    prefix,
+    suffix,
+    usePostcodeLookup,
+    items,
+    content
+  }) {
+    this._question = question
+    this._hintText = hintText
+    this._optional = optional
+    this._shortDesc = shortDesc
+    this._userClasses = userClasses
+    this._prefix = prefix
+    this._suffix = suffix
+    this._items = items
+    this._content = content
+    this._usePostcodeLookup = usePostcodeLookup ?? false
+  }
+
+  /**
+   * @returns {NumberSettings}
+   */
+  get values() {
+    return {
+      question: this._question,
+      hintText: this._hintText,
+      optional: this._optional,
+      shortDesc: this._shortDesc,
+      userClasses: this._userClasses,
+      prefix: this._prefix,
+      suffix: this._suffix,
+      usePostcodeLookup: this._usePostcodeLookup,
+      items: this._items,
+      content: this._content
+    }
+  }
+
+  /**
+   * @param {string} _value
+   */
+  setPreviewHTML(_value) {
+    // Not implemented for server side render
+  }
+
+  /**
+   * @param {HTMLElement} _value
+   */
+  setPreviewDOM(_value) {
+    // Not implemented for server side render
+  }
+}
+
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
  * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
- * @import { BaseSettings, ListElements, RenderContext, QuestionBaseModel, QuestionElements, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer } from  '~/src/form/form-editor/preview/types.js'
  */

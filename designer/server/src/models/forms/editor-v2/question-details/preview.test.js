@@ -104,6 +104,36 @@ describe('preview', () => {
     value: 'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
   }
 
+  const classes = {
+    name: 'classes',
+    id: 'classes',
+    label: {
+      text: 'Classes',
+      classes: 'govuk-label--m'
+    },
+    value: 'specific-class'
+  }
+
+  const prefix = {
+    name: 'prefix',
+    id: 'prefix',
+    label: {
+      text: 'Prefix',
+      classes: 'govuk-label--m'
+    },
+    value: 'pre'
+  }
+
+  const suffix = {
+    name: 'suffix',
+    id: 'suffix',
+    label: {
+      text: 'Suffix',
+      classes: 'govuk-label--m'
+    },
+    value: 'suf'
+  }
+
   const questionSessionState = {
     questionType: ComponentType.RadiosField,
     editRow: {},
@@ -134,7 +164,10 @@ describe('preview', () => {
     hintText,
     questionOptional,
     shortDescription,
-    usePostcodeLookup
+    usePostcodeLookup,
+    classes,
+    prefix,
+    suffix
   ]
 
   describe('getValueAsString', () => {
@@ -241,12 +274,15 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
+        userClasses: 'specific-class',
         content: '',
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
         usePostcodeLookup: true,
-        items: []
+        items: [],
+        prefix: 'pre',
+        suffix: 'suf'
       })
     })
 
@@ -255,12 +291,15 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
+        userClasses: '',
         largeTitle: true,
         content: '',
         optional: false,
         shortDesc: '',
         usePostcodeLookup: false,
-        items: []
+        items: [],
+        prefix: '',
+        suffix: ''
       })
     })
 
@@ -502,7 +541,8 @@ describe('preview', () => {
         isPageHeading: true,
         text: 'Short answer (optional)'
       },
-      name: 'inputField'
+      name: 'inputField',
+      previewClasses: ''
     })
 
     const fieldSetModelBase = /** @type {QuestionBaseModel} */ ({
@@ -566,7 +606,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'inputField'
+        name: 'inputField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -800,7 +841,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'emailAddressField'
+        name: 'emailAddressField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -849,7 +891,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'phoneNumberField'
+        name: 'phoneNumberField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })

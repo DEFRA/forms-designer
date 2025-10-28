@@ -14,4 +14,60 @@ describe('component-elements', () => {
     expect(() => elements.setPreviewDOM(new HTMLElement())).toThrow()
     expect(() => elements.setPreviewHTML('<p>test</p>')).toThrow()
   })
+
+  it('should handle user-supplied classes - nothing passed here', () => {
+    const elements = new ComponentElements(buildTextFieldComponent())
+    expect(() => elements.setPreviewDOM(new HTMLElement())).toThrow()
+    expect(() => elements.setPreviewHTML('<p>test</p>')).toThrow()
+    const values = elements.values
+    expect(values).toEqual({
+      content: '',
+      hintText: '',
+      items: [],
+      optional: false,
+      question: 'Text field',
+      shortDesc: '',
+      userClasses: ''
+    })
+  })
+
+  it('should handle user-supplied classes - value passed', () => {
+    const elements = new ComponentElements(
+      buildTextFieldComponent({
+        options: {
+          classes: 'my-special-class'
+        }
+      })
+    )
+    const values = elements.values
+    expect(values).toEqual({
+      content: '',
+      hintText: '',
+      items: [],
+      optional: false,
+      question: 'Text field',
+      shortDesc: '',
+      userClasses: 'my-special-class'
+    })
+  })
+
+  it('should handle user-supplied classes - value missing', () => {
+    const elements = new ComponentElements(
+      buildTextFieldComponent({
+        options: {
+          classes: undefined
+        }
+      })
+    )
+    const values = elements.values
+    expect(values).toEqual({
+      content: '',
+      hintText: '',
+      items: [],
+      optional: false,
+      question: 'Text field',
+      shortDesc: '',
+      userClasses: ''
+    })
+  })
 })

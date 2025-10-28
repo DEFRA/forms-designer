@@ -196,8 +196,13 @@ describe('reorder-questions-page-controller', () => {
         selectComponent.type
       )
       pageController.highlightQuestion('407dd0d7-cce9-4f43-8e1f-7d89cb698875')
-      expect(pageController.components[0].model.classes).toBe('highlight')
+      expect(pageController.components[0].model.previewClasses).toBe(
+        'highlight'
+      )
+      expect(pageController.components[0].model.classes).toBe('')
+      expect(pageController.components[1].model.previewClasses).toBeUndefined()
       expect(pageController.components[1].model.classes).toBe('')
+      expect(pageController.components[2].model.previewClasses).toBeUndefined()
       expect(pageController.components[2].model.classes).toBe('')
     })
   })
