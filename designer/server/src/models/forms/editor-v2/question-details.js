@@ -268,6 +268,18 @@ export function handleAutocomplete(question, state, definition) {
 }
 
 /**
+ * @param {{ questionNum: number, pageNum: number }} details
+ */
+export function getCardHeadings(details) {
+  return {
+    cardTitle: `Question ${details.questionNum}`,
+    cardCaption: `Page ${details.pageNum}`,
+    cardHeading: `Edit question ${details.questionNum}`,
+    cardId: 'edit-question'
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -329,10 +341,7 @@ export function questionDetailsViewModel(
     extraFields,
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     errorTemplates,
-    cardTitle: `Question ${details.questionNum}`,
-    cardCaption: `Page ${details.pageNum}`,
-    cardHeading: `Edit question ${details.questionNum}`,
-    cardId: 'edit-question',
+    ...getCardHeadings(details),
     navigation: details.navigation,
     errorList,
     formErrors: validation?.formErrors,
