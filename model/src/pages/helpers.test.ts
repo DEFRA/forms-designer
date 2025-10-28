@@ -4,11 +4,7 @@ import {
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
-import {
-  buildFileUploadPage,
-  buildQuestionPage,
-  buildRepeaterPage
-} from '~/src/__stubs__/pages.js'
+import { buildQuestionPage, buildRepeaterPage } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type Page,
@@ -29,7 +25,6 @@ import {
   hasNext,
   hasRepeater,
   isSummaryPage,
-  omitFileUploadComponent,
   showRepeaterSettings
 } from '~/src/pages/helpers.js'
 import { PageTypes } from '~/src/pages/page-types.js'
@@ -278,55 +273,6 @@ describe('helpers', () => {
       })
 
       expect(showRepeaterSettings(page)).toBe(true)
-    })
-  })
-
-  describe('omitFileUploadComponent', () => {
-    it('should return true if page is a repeater page', () => {
-      const page = buildRepeaterPage()
-      expect(omitFileUploadComponent(page)).toBe(true)
-    })
-    it('should return true if a file upload component already exists', () => {
-      const page = buildFileUploadPage()
-      expect(omitFileUploadComponent(page)).toBe(true)
-    })
-    it('should return true if more than one components exist', () => {
-      const page: PageQuestion = buildQuestionPage({
-        title: 'Empty page',
-        path: '/empty-page',
-        components: [
-          buildTextFieldComponent({
-            id: 'ee83413e-31b6-4158-98e0-4611479582ce',
-            title: 'Simple text field',
-            name: 'IHAIzC',
-            shortDescription: 'Your simple text field'
-          }),
-          buildTextFieldComponent({
-            type: ComponentType.TextField,
-            title: 'Simple text field 2',
-            name: 'IHAIzD',
-            shortDescription: 'Your simple text field',
-            hint: '',
-            options: {},
-            schema: {},
-            id: 'c02ba468-61a3-43f8-bd6a-768bf906d402'
-          })
-        ]
-      })
-      expect(omitFileUploadComponent(page)).toBe(true)
-    })
-    it('should return false no components exist', () => {
-      const page: PageQuestion = {
-        title: 'Empty page',
-        path: '/empty-page',
-        components: [],
-        next: [],
-        id: '0f711e08-3801-444d-8e37-a88867c48f04'
-      }
-      expect(omitFileUploadComponent(page)).toBe(false)
-    })
-    it('should return true if page is undefined', () => {
-      expect(omitFileUploadComponent(undefined)).toBe(false)
     })
   })
 

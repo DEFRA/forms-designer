@@ -136,27 +136,6 @@ export function showRepeaterSettings(page: Page): boolean {
 }
 
 /**
- * High level check for whether file upload component should be omitted
- * @param { Page | undefined } page
- * @returns {boolean}
- */
-export function omitFileUploadComponent(page: Page | undefined): boolean {
-  if (page?.controller === ControllerType.Repeat) {
-    return true
-  }
-  if (!hasComponents(page)) {
-    return false
-  }
-  if (page.components.length > 1) {
-    return true
-  }
-  if (includesFileUploadField(page.components)) {
-    return true
-  }
-  return false
-}
-
-/**
  * Gets page title, or title of first question (if no page title set)
  * @param {Page} page
  * @returns {string}

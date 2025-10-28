@@ -1,8 +1,10 @@
 import {
   ComponentType,
+  ControllerType,
   QuestionTypeSubGroup,
-  isFormType,
-  omitFileUploadComponent
+  hasComponents,
+  includesFileUploadField,
+  isFormType
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -15,8 +17,7 @@ import {
   baseModelFields,
   getFormSpecificNavigation,
   getPageNum,
-  getQuestionNum,
-  getQuestionsOnPage
+  getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -156,27 +157,46 @@ const listSubItems = [
 /**
  * @param {string} questionId
  * @param {FormEditorCheckbox[]} questionTypes
- * @param {ComponentDef[]} componentsSoFar
  * @param {Page|undefined} page
+ * @param { QuestionSessionState | undefined } state
  */
-export function filterQuestionTypes(
-  questionId,
-  questionTypes,
-  componentsSoFar,
-  page
-) {
-  const formComponents = componentsSoFar.filter((c) => isFormType(c.type))
-  const formComponentCount = formComponents.length
-  const shouldOmitFileUploadComponent = /** @type {boolean} */ (
-    omitFileUploadComponent(page)
-  )
-  const preventFileUpload =
-    shouldOmitFileUploadComponent ||
-    (formComponentCount === 1 && questionId === 'new')
+export function filterQuestionTypes(questionId, questionTypes, page, state) {
+  let components = hasComponents(page)
+    ? page.components.filter((c) => isFormType(c.type))
+    : []
+  const formComponentCount = components.length
 
-  return preventFileUpload
-    ? questionTypes.filter((q) => q.value !== ComponentType.FileUploadField)
-    : questionTypes
+  if (
+    page?.controller === ControllerType.Repeat ||
+    formComponentCount > 1 ||
+    (formComponentCount === 1 && questionId === 'new')
+  ) {
+    // File upload not allowed for Repeat, or if more than one question already, or if adding a second question
+    return questionTypes.filter(
+      (q) => q.value !== ComponentType.FileUploadField
+    )
+  }
+
+  // Handle question type override from state
+  if (state?.questionType) {
+    components = components.map((comp) => {
+      if (comp.id === questionId) {
+        return /** @type {ComponentDef} */ ({
+          ...comp,
+          type: state.questionType
+        })
+      } else {
+        return comp
+      }
+    })
+  }
+
+  if (includesFileUploadField(components)) {
+    return questionTypes.filter(
+      (q) => q.value !== ComponentType.FileUploadField
+    )
+  }
+  return questionTypes
 }
 
 /**
@@ -249,6 +269,7 @@ function questionTypeGroupFields(formValues, validation) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
+ * @param { QuestionSessionState | undefined } state
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionTypeViewModel(
@@ -256,6 +277,7 @@ export function questionTypeViewModel(
   definition,
   pageId,
   questionId,
+  state,
   validation
 ) {
   const formTitle = metadata.title
@@ -292,8 +314,8 @@ export function questionTypeViewModel(
         items: filterQuestionTypes(
           questionId,
           questionTypeRadioItems,
-          getQuestionsOnPage(definition, pageId),
-          page
+          page,
+          state
         ),
         ...insertValidationErrors(validation?.formErrors.questionType)
       },
@@ -304,6 +326,6 @@ export function questionTypeViewModel(
 }
 
 /**
- * @import { ComponentDef, FormEditorCheckbox, FormMetadata, FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorCheckbox, FormMetadata, FormDefinition, FormEditor, Page, QuestionSessionState } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
