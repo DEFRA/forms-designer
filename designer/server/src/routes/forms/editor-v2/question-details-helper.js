@@ -233,7 +233,7 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
  * @param {string } stateId
  * @returns { string | undefined }
  */
-function handleSaveItem(request, state, stateId) {
+export function handleSaveItem(request, state, stateId) {
   const { yar, payload } = request
   const listItemsSnapshot =
     state.listItems?.map((x) => {
