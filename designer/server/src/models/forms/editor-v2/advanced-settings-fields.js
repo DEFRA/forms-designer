@@ -8,6 +8,7 @@ import {
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
+import { mapComposableSettings } from '~/src/models/forms/editor-v2/composable-settings-fields.js'
 
 const MIN_FILES_ERROR_MESSAGE =
   'Minimum file count must be a whole number between 1 and 25'
@@ -458,6 +459,7 @@ export function mapBaseQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
   const extraRootFields = mapExtraRootFields(payload)
+  const composableSettings = mapComposableSettings(payload)
 
   return /** @type {Partial<ComponentDef>} */ ({
     type: payload.questionType,
@@ -466,6 +468,7 @@ export function mapBaseQuestionDetails(payload) {
     shortDescription: payload.shortDescription,
     hint: payload.hintText,
     ...extraRootFields,
+    ...composableSettings, // Add composable settings (before/after)
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions
