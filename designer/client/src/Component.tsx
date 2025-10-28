@@ -192,9 +192,15 @@ export function Markdown() {
   return Html()
 }
 
-export const componentTypes: Partial<
-  Record<ComponentType, () => React.JSX.Element>
-> = {
+export function FileUploadField() {
+  return (
+    <ComponentField className="app-field-input">
+      <span className="app-field-prefix app-field-prefix--file-upload" />
+    </ComponentField>
+  )
+}
+
+export const componentTypes = {
   [ComponentType.TextField]: TextField,
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
   [ComponentType.NumberField]: NumberField,
@@ -212,7 +218,8 @@ export const componentTypes: Partial<
   [ComponentType.Html]: Html,
   [ComponentType.Markdown]: Markdown,
   [ComponentType.InsetText]: InsetText,
-  [ComponentType.List]: List
+  [ComponentType.List]: List,
+  [ComponentType.FileUploadField]: FileUploadField
 }
 
 interface Props {
@@ -242,11 +249,15 @@ export function Component(props: Readonly<Props>) {
     [data, page, index, save]
   )
 
-  // Check if component type is supported
-  const ComponentIcon = componentTypes[type]
-  if (!ComponentIcon) {
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore -- Legacy editor doesn't support all component types
+  if (!(type in componentTypes)) {
     return null
   }
+
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-ignore -- Legacy editor doesn't support all component types
+  const ComponentIcon = componentTypes[type]
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
