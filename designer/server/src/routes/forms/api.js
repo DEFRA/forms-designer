@@ -132,7 +132,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${Scopes.FormRead}`]
         }
       }
     }
