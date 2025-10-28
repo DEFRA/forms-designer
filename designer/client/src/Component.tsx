@@ -192,48 +192,9 @@ export function Markdown() {
   return Html()
 }
 
-export function FileUploadField() {
-  return (
-    <ComponentField className="app-field-input">
-      <span className="app-field-prefix app-field-prefix--file-upload" />
-    </ComponentField>
-  )
-}
-
-export function EastingNorthingField() {
-  return (
-    <ComponentField className="app-group" data-field-type="easting-northing">
-      <span className="app-field-input-s" />
-      <span className="app-field-input-s" />
-    </ComponentField>
-  )
-}
-
-export function OsGridRefField() {
-  return (
-    <ComponentField className="app-field-input" data-field-type="os-grid-ref" />
-  )
-}
-
-export function NationalGridFieldNumberField() {
-  return (
-    <ComponentField
-      className="app-field-input"
-      data-field-type="national-grid"
-    />
-  )
-}
-
-export function LatLongField() {
-  return (
-    <ComponentField className="app-group" data-field-type="lat-long">
-      <span className="app-field-input-s" />
-      <span className="app-field-input-s" />
-    </ComponentField>
-  )
-}
-
-export const componentTypes = {
+export const componentTypes: Partial<
+  Record<ComponentType, () => React.JSX.Element>
+> = {
   [ComponentType.TextField]: TextField,
   [ComponentType.TelephoneNumberField]: TelephoneNumberField,
   [ComponentType.NumberField]: NumberField,
@@ -251,12 +212,7 @@ export const componentTypes = {
   [ComponentType.Html]: Html,
   [ComponentType.Markdown]: Markdown,
   [ComponentType.InsetText]: InsetText,
-  [ComponentType.List]: List,
-  [ComponentType.FileUploadField]: FileUploadField,
-  [ComponentType.EastingNorthingField]: EastingNorthingField,
-  [ComponentType.OsGridRefField]: OsGridRefField,
-  [ComponentType.NationalGridFieldNumberField]: NationalGridFieldNumberField,
-  [ComponentType.LatLongField]: LatLongField
+  [ComponentType.List]: List
 }
 
 interface Props {
@@ -286,15 +242,11 @@ export function Component(props: Readonly<Props>) {
     [data, page, index, save]
   )
 
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore -- Legacy editor doesn't support all component types
-  if (!(type in componentTypes)) {
+  // Check if component type is supported
+  const ComponentIcon = componentTypes[type]
+  if (!ComponentIcon) {
     return null
   }
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore -- Legacy editor doesn't support all component types
-  const ComponentIcon = componentTypes[type]
 
   const pageId = slugify(page.path)
   const headingId = `${pageId}-heading`
