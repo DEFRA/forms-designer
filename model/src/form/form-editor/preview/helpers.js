@@ -19,7 +19,10 @@ import {
 import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
-import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
+import {
+  NumberComponentPreviewElements,
+  NumberOnlyQuestion
+} from '~/src/form/form-editor/preview/number-only.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 import { QuestionComponentElements } from '~/src/form/form-editor/preview/question.js'
 import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
@@ -78,6 +81,8 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
         questionElements = new SelectComponentElements(component, list)
       } else if (component.type === ComponentType.UkAddressField) {
         questionElements = new UkAddressComponentPreviewElements(component)
+      } else if (component.type === ComponentType.NumberField) {
+        questionElements = new NumberComponentPreviewElements(component)
       } else if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new ListComponentElements(component, list)

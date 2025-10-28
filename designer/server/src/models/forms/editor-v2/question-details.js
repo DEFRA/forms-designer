@@ -346,7 +346,11 @@ export function questionDetailsViewModel(
     errorList,
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    model: getPreviewModel(basePageFields, state, questionType),
+    model: getPreviewModel(
+      basePageFields.concat(extraFields),
+      state,
+      questionType
+    ),
     questionType: questionFieldsOverride.type,
     questionTypeDesc: QuestionTypeDescriptions.find(
       (x) => x.type === questionFieldsOverride.type
