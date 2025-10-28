@@ -31,7 +31,7 @@
         </div>
       </div>
 
-      {% if params.skipLink or params.skipLink.url %}
+      {% if not params.hasPageSettingsTab %}
       <div class="govuk-button-group govuk-!-margin-top-3">
         {{ govukSkipLink({
           text: "Skip to page overview" if not params.skipLink else params.skipLink.text,
