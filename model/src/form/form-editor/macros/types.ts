@@ -56,6 +56,8 @@ export interface QuestionBaseModel {
   type?: 'text' | 'number' | 'boolean'
   classes?: string
   previewClasses?: string
+  prefix?: { text: string }
+  suffix?: { text: string }
 }
 
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {

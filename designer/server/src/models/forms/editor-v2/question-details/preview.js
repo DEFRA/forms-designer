@@ -110,6 +110,16 @@ export class QuestionPreviewElements {
    * @type {boolean}
    */
   _usePostcodeLookup = false
+  /**
+   * @type {string}
+   * @protected
+   */
+  _prefix = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _suffix = ''
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -132,6 +142,12 @@ export class QuestionPreviewElements {
         this.autocompleteOptions = getValueAsString(field)
       } else if (field.name === 'usePostcodeLookup') {
         this._usePostcodeLookup = getCheckedValue(field)
+      } else if (field.name === 'classes') {
+        this._userClasses = getValueAsString(field)
+      } else if (field.name === 'prefix') {
+        this._prefix = getValueAsString(field)
+      } else if (field.name === 'suffix') {
+        this._suffix = getValueAsString(field)
       } else {
         // sonarlint
       }
@@ -147,6 +163,8 @@ export class QuestionPreviewElements {
       shortDesc: this._shortDesc,
       userClasses: this._userClasses,
       usePostcodeLookup: this._usePostcodeLookup,
+      prefix: this._prefix,
+      suffix: this._suffix,
       largeTitle: this._largeTitle,
       items: this._items,
       content: this._content
@@ -183,7 +201,7 @@ export class EmptyRender {
 const emptyRender = new EmptyRender()
 
 export const ModelFactory =
-  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements) => Question>} */ ({
+  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements) => Question>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -227,11 +245,11 @@ export const ModelFactory =
       return new SelectSortableQuestion(questionElements, emptyRender)
     },
     /**
-     * @param {QuestionElements} questionElements
+     * @param {NumberElements} numberElements
      * @returns {Question}
      */
-    NumberField: (questionElements) => {
-      return new NumberOnlyQuestion(questionElements, emptyRender)
+    NumberField: (numberElements) => {
+      return new NumberOnlyQuestion(numberElements, emptyRender)
     },
     /**
      * @param {AutocompleteElements} questionElements
@@ -354,5 +372,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { AutocompleteElements, ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

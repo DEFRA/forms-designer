@@ -612,7 +612,10 @@ export function govukFieldValueIsString(
     'question',
     'hintText',
     'shortDescription',
-    'autoCompleteOptions'
+    'autoCompleteOptions',
+    'classes',
+    'prefix',
+    'suffix'
   ].includes(`${govukField.name}`)
 }
 

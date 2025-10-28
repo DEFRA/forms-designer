@@ -26,6 +26,10 @@ import {
   ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable.js'
+import {
+  NumberDomElements,
+  NumberEventListeners
+} from '~/src/javascripts/preview/number'
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import {
   EventListeners,
@@ -88,13 +92,13 @@ export const SetupPreview =
      * @returns {NumberOnlyQuestion}
      */
     NumberField: () => {
-      const questionElements = new QuestionDomElements()
-      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const numberElements = new NumberDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(numberElements)
       const numberField = new NumberOnlyQuestion(
-        questionElements,
+        numberElements,
         nunjucksRenderer
       )
-      const listeners = new EventListeners(numberField, questionElements)
+      const listeners = new NumberEventListeners(numberField, numberElements)
       listeners.setupListeners()
 
       return numberField
