@@ -248,7 +248,8 @@ function handleSaveItem(request, state, stateId) {
           text: payload.radioHint
         }
       : undefined
-    foundRow.value = payload.radioValue
+    foundRow.value =
+      payload.radioValue !== '' ? payload.radioValue : payload.radioText
   } else {
     // Insert
     listItemsSnapshot.push({
