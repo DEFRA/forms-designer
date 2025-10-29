@@ -268,7 +268,7 @@ describe('Form definition schema', () => {
 
         expect(result.error).toBeDefined()
         expect(result.error?.details[0].message).toContain(
-          'Regex expression is invalid'
+          'The regex expression is invalid'
         )
       })
     })
