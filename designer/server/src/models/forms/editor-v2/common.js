@@ -224,7 +224,7 @@ export function toPresentationHtmlV2(conditionWrapper, definition) {
 }
 
 /**
- * Gets the highest page where questions of a condition are sourced from
+ * Gets a list of all component names used in the supplied condition
  * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
  * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
  * @returns {string[]} list of component names
