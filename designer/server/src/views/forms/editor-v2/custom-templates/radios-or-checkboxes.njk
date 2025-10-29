@@ -9,6 +9,10 @@
 
 <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
+<!-- Dummy hidden button to allow an 'enter' press to simulate pressing the 'Save and continue' button, -->
+<!-- as opposed to the next button in the page firing (which would be 'Add item') -->
+<input type="submit" class="govuk-visually-hidden" />
+
 <div class="govuk-form-group" id="list-items">
   <h2 class="govuk-heading-m" tabindex="-1">
     <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -125,7 +129,7 @@
                   </ul>
                 </div>
               </div>
-{% endif %}
+              {% endif %}
           </div>
         </li>
       {% endfor %}
