@@ -11,7 +11,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import {
   buildConditionEditor,
-  getComponentItems
+  getComponentsPerPageNumber
 } from '~/src/models/forms/editor-v2/condition-helper.js'
 import {
   determineEditUrl,
@@ -45,7 +45,7 @@ export function getPreceedingConditions(
   // Create a map of what components reside on what page
   /** @type {Map<string, number>} */
   const componentPage = new Map()
-  for (const { number, components } of getComponentItems(definition)) {
+  for (const { number, components } of getComponentsPerPageNumber(definition)) {
     for (const component of components) {
       componentPage.set(component.name, number)
     }
