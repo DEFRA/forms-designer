@@ -51,6 +51,8 @@ export const formErrorsToMessages = {
     'A question on this page is using a list. Remove the reference before making changes to the list.',
   [FormDefinitionError.IncompatibleConditionComponentType]:
     'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
+  [FormDefinitionError.IncompatibleQuestionRegex]:
+    'The regex expression is invalid',
   [FormDefinitionError.Other]:
     'There is a problem with the form definition. Check your changes and try again.'
 }
