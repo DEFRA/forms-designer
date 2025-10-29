@@ -543,8 +543,7 @@ export const componentSchema = Joi.object<ComponentDef>()
           .description('Regex expression for validation of user field content')
           .custom((value: string, helpers: CustomHelpers<string>) => {
             try {
-              const regex = RegExp(value)
-              regex.test('dummy')
+              const _regex = RegExp(value)
             } catch {
               return helpers.error('custom.incompatible', {
                 errorType: FormDefinitionErrorType.Incompatible,
@@ -554,7 +553,7 @@ export const componentSchema = Joi.object<ComponentDef>()
             return value
           }),
         otherwise: Joi.string().allow('')
-      }).messages({ '*': 'Regex expression is invalid' })
+      }).messages({ 'custom.incompatible': 'The regex expression is invalid' })
     })
       .unknown(true)
       .default({})
