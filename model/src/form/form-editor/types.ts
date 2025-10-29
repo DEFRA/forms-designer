@@ -515,6 +515,9 @@ export interface GovukField {
   rows?: number
   type?: string
   customTemplate?: string
+  formGroup?: {
+    classes?: string
+  }
 }
 
 export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
