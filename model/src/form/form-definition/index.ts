@@ -552,7 +552,7 @@ export const componentSchema = Joi.object<ComponentDef>()
           ComponentType.TextField,
           ComponentType.MultilineTextField
         ),
-        then: Joi.string()
+        then: Joi.string() // NOSONAR
           .trim()
           .optional()
           .description('Regex expression for validation of user field content')
