@@ -444,6 +444,21 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
   })
   .description('Condition schema for V2 forms')
 
+export const regexCustomValidator = (
+  value: string,
+  helpers: CustomHelpers<string>
+) => {
+  try {
+    const _regex = RegExp(value)
+  } catch {
+    return helpers.error('custom.incompatible', {
+      errorType: FormDefinitionErrorType.Incompatible,
+      errorCode: FormDefinitionError.IncompatibleQuestionRegex
+    })
+  }
+  return value
+}
+
 export const componentSchema = Joi.object<ComponentDef>()
   .description('Form component definition specifying UI element behavior')
   .keys({
@@ -541,17 +556,7 @@ export const componentSchema = Joi.object<ComponentDef>()
           .trim()
           .optional()
           .description('Regex expression for validation of user field content')
-          .custom((value: string, helpers: CustomHelpers<string>) => {
-            try {
-              const _regex = RegExp(value)
-            } catch {
-              return helpers.error('custom.incompatible', {
-                errorType: FormDefinitionErrorType.Incompatible,
-                errorCode: FormDefinitionError.IncompatibleQuestionRegex
-              })
-            }
-            return value
-          }),
+          .custom(regexCustomValidator),
         otherwise: Joi.string().allow('')
       }).messages({ 'custom.incompatible': 'The regex expression is invalid' })
     })
