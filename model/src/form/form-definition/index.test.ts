@@ -22,7 +22,10 @@ import {
   buildRepeaterPage
 } from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import {
+  type ComponentDef,
+  type TextFieldComponent
+} from '~/src/components/types.js'
 import {
   ConditionType,
   Coordinator,
@@ -238,6 +241,35 @@ describe('Form definition schema', () => {
 
         expect(result.error).toBeDefined()
         expect(result.error?.details[0].message).toMatch(/pattern/)
+      })
+
+      it('should allow valid regex', () => {
+        const testComponent1 = testComponent as TextFieldComponent
+        testComponent1.name = 'textfield'
+        testComponent1.schema.regex = '[A-Z]'
+        page.components = [testComponent1]
+
+        const result = formDefinitionV2Schema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeUndefined()
+      })
+
+      it('should reject invalid regex', () => {
+        const testComponent1 = testComponent as TextFieldComponent
+        testComponent1.name = 'textfield'
+        testComponent1.schema.regex = '*'
+        page.components = [testComponent1]
+
+        const result = formDefinitionV2Schema.validate(definition, {
+          abortEarly: false
+        })
+
+        expect(result.error).toBeDefined()
+        expect(result.error?.details[0].message).toContain(
+          'Regex expression is invalid'
+        )
       })
     })
 

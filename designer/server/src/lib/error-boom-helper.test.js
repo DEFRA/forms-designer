@@ -5,10 +5,15 @@ import {
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
+import {
+  testFormDefinitionWithMultipleV2Conditions,
+  testFormDefinitionWithNoPages
+} from '~/src/__stubs__/form-definition.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
 import {
   checkBoomError,
+  handleInvalidFormErrors,
   isInvalidFormError,
   isInvalidFormErrorType,
   unpackErrorToken
@@ -202,6 +207,57 @@ describe('Boom error helper', () => {
       expect(unpackErrorToken(boomErr, 'missing-token', conditionNames)).toBe(
         'Unknown'
       )
+    })
+  })
+
+  describe('handleInvalidFormErrors', () => {
+    test('should return error for RefConditionItemId', () => {
+      const cause = [
+        {
+          id: FormDefinitionError.RefConditionItemId,
+          detail: { path: ['conditions', 1], pos: 1, dupePos: 0 },
+          message: '"conditions[1]" missing reference',
+          type: FormDefinitionErrorType.Ref
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"conditions[1]" missing reference', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      const res = handleInvalidFormErrors(
+        boomErr,
+        testFormDefinitionWithMultipleV2Conditions
+      )
+      expect(res?.message).toBe(
+        "A list item used by condition 'isFaveColourRedV2' has been deleted from the list."
+      )
+    })
+
+    test('should return error for IncompatibleQuestionRegex', () => {
+      const cause = [
+        {
+          id: FormDefinitionError.IncompatibleQuestionRegex,
+          message: 'Regex expression is invalid',
+          type: FormDefinitionErrorType.Incompatible
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('Regex expression is invalid', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      const res = handleInvalidFormErrors(
+        boomErr,
+        testFormDefinitionWithNoPages
+      )
+      expect(res?.message).toBe('The regex expression is invalid')
     })
   })
 })

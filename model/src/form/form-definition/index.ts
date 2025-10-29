@@ -554,7 +554,7 @@ export const componentSchema = Joi.object<ComponentDef>()
             return value
           }),
         otherwise: Joi.string().allow('')
-      })
+      }).messages({ '*': 'Regex expression is invalid' })
     })
       .unknown(true)
       .default({})
