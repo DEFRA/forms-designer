@@ -449,7 +449,7 @@ export const regexCustomValidator = (
   helpers: CustomHelpers<string>
 ) => {
   try {
-    const _regex = RegExp(value)
+    const _regex = new RegExp(value)
   } catch {
     return helpers.error('custom.incompatible', {
       errorType: FormDefinitionErrorType.Incompatible,
