@@ -200,6 +200,15 @@ export function handleInvalidFormErrors(err, definition) {
     )
   }
 
+  if (
+    isInvalidFormErrorType(err, FormDefinitionError.IncompatibleQuestionRegex)
+  ) {
+    return createJoiError(
+      'regex',
+      formErrorsToMessages[FormDefinitionError.IncompatibleQuestionRegex]
+    )
+  }
+
   return undefined
 }
 

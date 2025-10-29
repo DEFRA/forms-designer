@@ -548,16 +548,12 @@ export const componentSchema = Joi.object<ComponentDef>()
             } catch {
               return helpers.error('custom.incompatible', {
                 errorType: FormDefinitionErrorType.Incompatible,
-                errorCode: FormDefinitionError.Other,
-                valueKey: 'regex',
-                reason: 'has invalid regex expression'
+                errorCode: FormDefinitionError.IncompatibleQuestionRegex
               })
             }
             return value
           }),
-        otherwise: Joi.forbidden()
-      }).messages({
-        'custom.incompatible': 'Regex expression is invalid'
+        otherwise: Joi.string().allow('')
       })
     })
       .unknown(true)
