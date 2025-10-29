@@ -88,6 +88,13 @@ export default [
             .response({ ok: false, err })
             .code(StatusCodes.INTERNAL_SERVER_ERROR)
         }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormEdit}`]
+        }
       }
     }
   }),
@@ -119,6 +126,13 @@ export default [
           return h
             .response({ ok: false })
             .code(StatusCodes.INTERNAL_SERVER_ERROR)
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormRead}`]
         }
       }
     }
