@@ -11,7 +11,9 @@
 
 <!-- Dummy hidden button to allow an 'enter' press to simulate pressing the 'Save and continue' button, -->
 <!-- as opposed to the next button in the page firing (which would be 'Add item') -->
-<input type="submit" class="govuk-visually-hidden" />
+{% if not state.editRow.expanded and not state.isReordering %}
+  <input type="submit" class="govuk-visually-hidden" />
+{% endif %}
 
 <div class="govuk-form-group" id="list-items">
   <h2 class="govuk-heading-m" tabindex="-1">
