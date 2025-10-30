@@ -108,10 +108,10 @@ describe('advanced-settings-helpers', () => {
         questionType: ComponentType.EastingNorthingField,
         giveInstructions: 'true',
         instructionText:
-          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
+          "Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the Easting and Northing for your land or buildings. Follow these instructions:\n\n  1. Select 'Get Started'.\n  2. Search for a postcode or place.\n  3. Using the map, locate the land or building. Use the +/- icons to zoom in and out.\n  4. In the top toolbar, select the fourth icon along ('Where am I?') - it looks like a target.\n  5. Click on the land or building.\n  6. A pop-up box will appear showing the land details for this location. Easting and Northing appear at the top of the list. They are made up of 6 digits each, for example, 248741 and 63688."
       })
 
-      // Should not include instructionText as it matches OsGridRefField default
+      // Should not include instructionText as it matches EastingNorthingField default
       expect(result).toEqual({})
     })
 
@@ -120,10 +120,10 @@ describe('advanced-settings-helpers', () => {
         questionType: ComponentType.LatLongField,
         giveInstructions: 'true',
         instructionText:
-          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the easting and northing for your land or buildings. Follow these instructions:'
+          "Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the latitude and longitude for your land or buildings. Follow these instructions:\n\n  1. Select 'Get Started'.\n  2. Search for a postcode or place.\n  3. Using the map, locate the land or building. Use the +/- icons to zoom in and out.\n  4. In the top toolbar, select the fourth icon along ('Where am I?') - it looks like a target.\n  5. Click on the land or building.\n  6. A pop-up box will appear showing the land details for this location. The latitude and longitude are four numbers down from the top of the list."
       })
 
-      // Should not include instructionText as it matches EastingNorthingField default
+      // Should not include instructionText as it matches LatLongField default
       expect(result).toEqual({})
     })
 
