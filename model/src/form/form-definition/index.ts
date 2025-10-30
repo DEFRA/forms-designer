@@ -175,11 +175,18 @@ const conditionListItemRefDataSchemaV2 =
         value: ConditionListItemRefValueDataV2,
         helpers: CustomHelpers<ConditionListItemRefValueDataV2>
       ) => {
+        const definition = helpers.state.ancestors.find(isFormDefinition) as
+          | FormDefinition
+          | undefined
+
+        // Validation may not have been fired on the full FormDefinition
+        // therefore we are unable to verify the list & item combination
+        if (!definition) {
+          return value
+        }
+
         const { listId, itemId } = value
-        const [, , , , definition] = helpers.state.ancestors
-        const list = (definition as FormDefinition).lists.find(
-          (list) => list.id === listId
-        )
+        const list = definition.lists.find((list) => list.id === listId)
 
         if (!list) {
           return helpers.error('any.ref', {
@@ -395,21 +402,6 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
           errorCode: FormDefinitionError.IncompatibleConditionComponentType,
           reason: 'does not support conditions'
         })
-  })
-  .custom((value, helpers) => {
-    if (value.type === ConditionType.ListItemRef) {
-      const { listId, itemId } = value.value
-      const [, , , definition] = helpers.state.ancestors
-      const list = definition.lists.find((list) => list.id === listId)
-
-      if (!list) {
-        return helpers.error('List not found')
-      }
-
-      const itemIdExists = list.items.some((item) => item.id === itemId)
-      return itemIdExists ? value : helpers.error('oops')
-    }
-    return value
   })
   .messages({
     'custom.incompatible': 'Incompatible data value'
