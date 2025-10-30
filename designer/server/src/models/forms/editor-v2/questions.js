@@ -380,7 +380,6 @@ export function getPreviewModel(
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
     guidance: previewPageController.guidance,
-    repeaterButton: previewPageController.repeaterButton,
     sectionTitle: previewPageController.sectionTitle
   })
 

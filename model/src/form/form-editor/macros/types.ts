@@ -83,10 +83,6 @@ export interface PagePreviewPanelMacro {
     text: string
     classes: string
   }
-  readonly repeaterButton?: {
-    text: string
-    classes: string
-  }
 }
 
 export interface SummaryRowActionItem {

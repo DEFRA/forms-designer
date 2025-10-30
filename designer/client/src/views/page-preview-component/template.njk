@@ -16,9 +16,4 @@
     {% set idx = idx + 1 %}
     {%- include 'preview-components/' + component.questionType | lower + ".njk" -%}
   {% endfor %}
-  {% if params.repeaterButton %}
-    {{ govukButton({
-      html: "Add another <span id=\"repeater-btn\" class=\"" + params.repeaterButton.classes + "\">" + params.repeaterButton.text + "</span>"
-    }) }}
-  {% endif %}
 </div>

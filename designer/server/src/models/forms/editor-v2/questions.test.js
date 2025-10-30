@@ -449,7 +449,6 @@ describe('editor-v2 - questions model', () => {
       expect(previewModel.previewErrorsUrl).toBe('/error-preview-url')
       expect(previewModel.previewPageUrl).toBe('/page-preview-url')
       expect(previewModel.sectionTitle).toBeUndefined()
-      expect(previewModel.repeaterButton).toBeUndefined()
     })
     it('should get preview model with repeater page', () => {
       const page = buildRepeaterPage({
@@ -481,10 +480,6 @@ describe('editor-v2 - questions model', () => {
       expect(previewModel.sectionTitle).toEqual({
         classes: '',
         text: 'Simple question responses 1'
-      })
-      expect(previewModel.repeaterButton).toEqual({
-        classes: '',
-        text: 'simple question responses'
       })
     })
   })
