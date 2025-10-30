@@ -636,29 +636,21 @@ describe('page-controller', () => {
         renderer
       )
       expect(pageController.sectionTitle).toBeUndefined()
-      expect(pageController.repeaterButton).toBeUndefined()
       pageController.setRepeater()
       expect(pageController.sectionTitle).toEqual({
         text: 'Question set name',
         classes: ''
       })
-      expect(pageController.repeaterButton).toEqual({
-        text: '[question set name]',
-        classes: ''
-      })
       pageController.sectionTitleText = 'Repeater question'
       expect(pageController.sectionTitleText).toBe('Repeater question 1')
-      expect(pageController.repeaterButtonText).toBe('repeater question')
       pageController.unsetRepeater()
       expect(pageController.sectionTitleText).toBeUndefined()
-      expect(pageController.repeaterButtonText).toBeUndefined()
       pageController.setRepeater()
       expect(pageController.sectionTitleText).toBe('Repeater question 1')
-      expect(pageController.repeaterButtonText).toBe('repeater question')
       expect(pageRenderMock).toHaveBeenCalledTimes(4)
     })
 
-    it('should highlight section title and repeater button', () => {
+    it('should highlight section title', () => {
       const elements = new PagePreviewElementsWithHeading(
         buildQuestionPage({ title: '' }),
         false
@@ -679,31 +671,21 @@ describe('page-controller', () => {
         text: 'Question set name',
         classes: 'highlight'
       })
-      expect(pageController.repeaterButton).toEqual({
-        text: '[question set name]',
-        classes: 'highlight'
-      })
       pageController.sectionTitleText = 'Repeater question'
       pageController.clearHighlight()
       expect(pageController.sectionTitle).toEqual({
         text: 'Repeater question 1',
         classes: ''
       })
-      expect(pageController.repeaterButton).toEqual({
-        text: 'repeater question',
-        classes: ''
-      })
       pageController.unsetRepeater()
       expect(pageController.sectionTitleText).toBeUndefined()
       expect(pageController.repeaterText).toBeUndefined()
-      expect(pageController.repeaterButtonText).toBeUndefined()
       pageController.setRepeater()
       expect(pageController.sectionTitleText).toBe('Repeater question 1')
-      expect(pageController.repeaterButtonText).toBe('repeater question')
       expect(pageRenderMock).toHaveBeenCalledTimes(6)
     })
 
-    it('should show sectionTitle and repeaterButton given repeater page', () => {
+    it('should show sectionTitle given repeater page', () => {
       const component = buildTextFieldComponent({
         title: 'Text field question?'
       })
@@ -734,16 +716,11 @@ describe('page-controller', () => {
       expect(pageController.sectionTitleText).toBe(
         'Simple question responses 1'
       )
-      expect(pageController.repeaterButtonText).toBe(
-        'simple question responses'
-      )
       expect(pageController.isRepeater).toBe(true)
       pageController.sectionTitleText = ''
       expect(pageController.sectionTitleText).toBe('Question set name')
-      expect(pageController.repeaterButtonText).toBe('[question set name]')
       pageController.sectionTitleText = 'a'
       expect(pageController.sectionTitleText).toBe('a 1')
-      expect(pageController.repeaterButtonText).toBe('a')
 
       expect(pageRenderMock).toHaveBeenCalledTimes(2)
     })
