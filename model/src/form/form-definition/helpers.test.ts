@@ -50,18 +50,18 @@ describe('helpers', () => {
     })
 
     it('should return false if undefined', () => {
-      const def = undefined
-      expect(isConditionListItemRefValueData(def)).toBe(false)
+      const data = undefined
+      expect(isConditionListItemRefValueData(data)).toBe(false)
     })
 
     it('should return false if primitive string', () => {
-      const def = ''
-      expect(isConditionListItemRefValueData(def)).toBe(false)
+      const data = ''
+      expect(isConditionListItemRefValueData(data)).toBe(false)
     })
 
     it('should return false if primitive number', () => {
-      const def = 1
-      expect(isConditionListItemRefValueData(def)).toBe(false)
+      const data = 1
+      expect(isConditionListItemRefValueData(data)).toBe(false)
     })
 
     it('should return false if not a ConditionListItemRefValueDataV2', () => {
