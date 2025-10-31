@@ -91,7 +91,7 @@ export const allAdvancedSettingsFields =
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: "Apply CSS classes to this field. For example, 'govuk-input govuk-!-width-full'"
+        text: "Apply CSS classes to this field. For example, 'govuk-input--width-10'"
       },
       rows: 1
     },
