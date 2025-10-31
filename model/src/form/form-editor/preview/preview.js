@@ -1,5 +1,6 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
+import { buildCombinedId } from '~/src/form/form-editor/preview/utils.js'
 
 /**
  * @abstract
@@ -139,7 +140,7 @@ export class PreviewComponent {
    */
   _renderInput() {
     return {
-      id: this._fieldName,
+      id: buildCombinedId(this._fieldName, this._id),
       name: this._fieldName,
       classes: this._highlighted ? HIGHLIGHT_CLASS : ''
     }

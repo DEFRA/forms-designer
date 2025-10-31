@@ -19,14 +19,20 @@ import {
 import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
-import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
+import {
+  NumberComponentPreviewElements,
+  NumberOnlyQuestion
+} from '~/src/form/form-editor/preview/number-only.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 import { QuestionComponentElements } from '~/src/form/form-editor/preview/question.js'
 import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
 import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
 import { ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
 import { SupportingEvidenceQuestion } from '~/src/form/form-editor/preview/supporting-evidence.js'
-import { UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
+import {
+  UkAddressComponentPreviewElements,
+  UkAddressQuestion
+} from '~/src/form/form-editor/preview/uk-address.js'
 import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
 /**
@@ -52,7 +58,11 @@ const InputFieldComponentDictionary = {
   [ComponentType.SelectField]: SelectQuestion,
   [ComponentType.YesNoField]: YesNoQuestion,
   [ComponentType.DeclarationField]: YesNoQuestion,
-  [ComponentType.FileUploadField]: SupportingEvidenceQuestion
+  [ComponentType.FileUploadField]: SupportingEvidenceQuestion,
+  [ComponentType.EastingNorthingField]: ShortAnswerQuestion,
+  [ComponentType.OsGridRefField]: ShortAnswerQuestion,
+  [ComponentType.NationalGridFieldNumberField]: ShortAnswerQuestion,
+  [ComponentType.LatLongField]: ShortAnswerQuestion
 }
 
 /**
@@ -74,6 +84,10 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
       ) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new SelectComponentElements(component, list)
+      } else if (component.type === ComponentType.UkAddressField) {
+        questionElements = new UkAddressComponentPreviewElements(component)
+      } else if (component.type === ComponentType.NumberField) {
+        questionElements = new NumberComponentPreviewElements(component)
       } else if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new ListComponentElements(component, list)

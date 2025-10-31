@@ -14,7 +14,7 @@ import {
   SupportingEvidenceQuestion,
   UkAddressQuestion,
   YesNoQuestion,
-  govukFieldIsQuestionOptional,
+  govukFieldIsChecked,
   govukFieldValueIsString
 } from '@defra/forms-model'
 
@@ -34,7 +34,7 @@ export function getValueAsString(val) {
  * @returns {boolean}
  */
 export function getCheckedValue(govukField) {
-  if (govukFieldIsQuestionOptional(govukField)) {
+  if (govukFieldIsChecked(govukField)) {
     return govukField.items[0].checked
   }
   return false
@@ -84,6 +84,11 @@ export class QuestionPreviewElements {
    * @type {string}
    * @protected
    */
+  _userClasses = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _content = ''
   /**
    * @type {boolean}
@@ -100,6 +105,21 @@ export class QuestionPreviewElements {
    * @type {string}
    */
   autocompleteOptions = ''
+  /**
+   * @protected
+   * @type {boolean}
+   */
+  _usePostcodeLookup = false
+  /**
+   * @type {string}
+   * @protected
+   */
+  _prefix = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _suffix = ''
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -120,6 +140,14 @@ export class QuestionPreviewElements {
         this._shortDesc = getValueAsString(field)
       } else if (field.name === 'autoCompleteOptions') {
         this.autocompleteOptions = getValueAsString(field)
+      } else if (field.name === 'usePostcodeLookup') {
+        this._usePostcodeLookup = getCheckedValue(field)
+      } else if (field.name === 'classes') {
+        this._userClasses = getValueAsString(field)
+      } else if (field.name === 'prefix') {
+        this._prefix = getValueAsString(field)
+      } else if (field.name === 'suffix') {
+        this._suffix = getValueAsString(field)
       } else {
         // sonarlint
       }
@@ -133,6 +161,10 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      userClasses: this._userClasses,
+      usePostcodeLookup: this._usePostcodeLookup,
+      prefix: this._prefix,
+      suffix: this._suffix,
       largeTitle: this._largeTitle,
       items: this._items,
       content: this._content
@@ -168,8 +200,41 @@ export class EmptyRender {
 
 const emptyRender = new EmptyRender()
 
+// Factory functions for location components
+/**
+ * @param {QuestionElements} questionElements
+ * @returns {Question}
+ */
+const eastingNorthingField = (questionElements) => {
+  return new Question(questionElements, emptyRender)
+}
+
+/**
+ * @param {QuestionElements} questionElements
+ * @returns {Question}
+ */
+const osGridRefField = (questionElements) => {
+  return new Question(questionElements, emptyRender)
+}
+
+/**
+ * @param {QuestionElements} questionElements
+ * @returns {Question}
+ */
+const nationalGridFieldNumberField = (questionElements) => {
+  return new Question(questionElements, emptyRender)
+}
+
+/**
+ * @param {QuestionElements} questionElements
+ * @returns {Question}
+ */
+const latLongField = (questionElements) => {
+  return new Question(questionElements, emptyRender)
+}
+
 export const ModelFactory =
-  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements) => Question>} */ ({
+  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements) => Question>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -213,11 +278,11 @@ export const ModelFactory =
       return new SelectSortableQuestion(questionElements, emptyRender)
     },
     /**
-     * @param {QuestionElements} questionElements
+     * @param {NumberElements} numberElements
      * @returns {Question}
      */
-    NumberField: (questionElements) => {
-      return new NumberOnlyQuestion(questionElements, emptyRender)
+    NumberField: (numberElements) => {
+      return new NumberOnlyQuestion(numberElements, emptyRender)
     },
     /**
      * @param {AutocompleteElements} questionElements
@@ -313,7 +378,12 @@ export const ModelFactory =
     },
     DeclarationField: (questionElements) => {
       return new Question(questionElements, emptyRender)
-    }
+    },
+    // Location components - using camelCase function references
+    EastingNorthingField: eastingNorthingField,
+    OsGridRefField: osGridRefField,
+    NationalGridFieldNumberField: nationalGridFieldNumberField,
+    LatLongField: latLongField
   })
 
 /**
@@ -343,5 +413,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { AutocompleteElements, ListElement, ListElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

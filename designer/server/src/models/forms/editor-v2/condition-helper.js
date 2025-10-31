@@ -287,7 +287,7 @@ export function buildConditionsFields(
 /**
  * @param {FormDefinition} definition
  */
-export function getComponentItems(definition) {
+export function getComponentsPerPageNumber(definition) {
   return definition.pages
     .map(withPageNumbers)
     .filter(({ page }) => hasConditionSupportForPage(page))
@@ -311,7 +311,7 @@ export function getComponentItems(definition) {
  * @param {ConditionSessionState} state
  */
 export function buildConditionEditor(definition, validation, state) {
-  const componentItems = getComponentItems(definition)
+  const componentsPerPageNumber = getComponentsPerPageNumber(definition)
   const legendText = state.id !== 'new' ? '' : 'Create new condition'
   const { conditionWrapper } = state
 
@@ -320,7 +320,7 @@ export function buildConditionEditor(definition, validation, state) {
   ).map((item, idx) => {
     return buildConditionsFields(
       idx,
-      componentItems,
+      componentsPerPageNumber,
       item,
       validation,
       definition

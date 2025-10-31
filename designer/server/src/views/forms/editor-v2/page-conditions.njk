@@ -100,7 +100,7 @@
                                     {% endif %}
                                     <select class="govuk-select{% if formErrors.conditionName %} govuk-select--error{% endif %}" id="selectPageCondition" name="conditionName"{% if formErrors.conditionName %} aria-describedby="selectPageCondition-error"{% endif %}>
                                       <option value="">Select existing condition</option>
-                                      {% for condition in allConditions | sort(false, false, 'displayName') %}
+                                      {% for condition in allPrecedingConditions | sort(false, false, 'displayName') %}
                                         {% if condition.id !== pageCondition %}
                                           <option value="{{ condition.id }}"{% if formValues.conditionName == condition.id %} selected{% endif %}>{{ condition.displayName }}</option>
                                         {% endif %}

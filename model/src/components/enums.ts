@@ -18,5 +18,9 @@ export enum ComponentType {
   List = 'List',
   Markdown = 'Markdown',
   FileUploadField = 'FileUploadField',
-  DeclarationField = 'DeclarationField'
+  DeclarationField = 'DeclarationField',
+  EastingNorthingField = 'EastingNorthingField',
+  OsGridRefField = 'OsGridRefField',
+  NationalGridFieldNumberField = 'NationalGridFieldNumberField',
+  LatLongField = 'LatLongField'
 }

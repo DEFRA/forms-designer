@@ -44,7 +44,7 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         'new',
         testQuestionTypeItems,
-        [],
+        buildQuestionPage({}),
         undefined
       )
       expect(res).toHaveLength(4)
@@ -55,15 +55,17 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         'new',
         testQuestionTypeItems,
-        [
-          {
-            name: '',
-            title: '',
-            type: ComponentType.TextField,
-            schema: {},
-            options: {}
-          }
-        ],
+        buildQuestionPage({
+          components: [
+            {
+              name: '',
+              title: '',
+              type: ComponentType.TextField,
+              schema: {},
+              options: {}
+            }
+          ]
+        }),
         undefined
       )
       expect(res).toHaveLength(3)
@@ -74,15 +76,17 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         'new',
         testQuestionTypeItems,
-        [
-          {
-            name: '',
-            title: '',
-            type: ComponentType.FileUploadField,
-            schema: {},
-            options: {}
-          }
-        ],
+        buildQuestionPage({
+          components: [
+            {
+              name: '',
+              title: '',
+              type: ComponentType.FileUploadField,
+              schema: {},
+              options: {}
+            }
+          ]
+        }),
         undefined
       )
       expect(res).toHaveLength(3)
@@ -109,10 +113,10 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         '123',
         testQuestionTypeItems,
-        componentsSoFar,
         buildQuestionPage({
           components: componentsSoFar
-        })
+        }),
+        undefined
       )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
@@ -123,13 +127,82 @@ describe('editor-v2 - question type model', () => {
       const res = filterQuestionTypes(
         '123',
         testQuestionTypeItems,
-        [textFieldComponent],
         buildRepeaterPage({
           components: [textFieldComponent]
-        })
+        }),
+        undefined
       )
       expect(res).toHaveLength(3)
       expect(res[2].text).toBe('Email address')
+    })
+
+    test('should handle omit file upload if already a file upload component on page', () => {
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [
+            {
+              name: '',
+              title: '',
+              type: ComponentType.FileUploadField,
+              schema: {},
+              options: {}
+            }
+          ]
+        }),
+        undefined
+      )
+      expect(res).toHaveLength(3)
+      expect(res[2].text).toBe('Email address')
+    })
+
+    test('should handle state overriding question type to FileUpload', () => {
+      const textFieldComponent = buildTextFieldComponent({ id: '123' })
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [textFieldComponent]
+        }),
+        {
+          questionType: ComponentType.FileUploadField
+        }
+      )
+      expect(res).toHaveLength(3)
+      expect(res[2].text).toBe('Email address')
+    })
+
+    test('should handle state overriding question type to anything other than FileUpload', () => {
+      const textFieldComponent = buildTextFieldComponent({ id: '123' })
+      const res = filterQuestionTypes(
+        '123',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [textFieldComponent]
+        }),
+        {
+          questionType: ComponentType.MultilineTextField
+        }
+      )
+      expect(res).toHaveLength(4)
+      expect(res[2].text).toBe('Supporting evidence')
+    })
+
+    test('should ignore state overriding question type when ids dont match', () => {
+      const textFieldComponent = buildTextFieldComponent({ id: '123' })
+      const res = filterQuestionTypes(
+        '111',
+        testQuestionTypeItems,
+        buildQuestionPage({
+          components: [textFieldComponent]
+        }),
+        {
+          questionType: ComponentType.MultilineTextField
+        }
+      )
+      expect(res).toHaveLength(4)
+      expect(res[2].text).toBe('Supporting evidence')
     })
   })
 })

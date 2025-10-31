@@ -1,6 +1,8 @@
+import { type ErrorReport } from 'joi'
+
 import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
 import * as schema from '~/src/form/form-definition/index.js'
-import { getErrors } from '~/src/form/form-manager/errors.js'
+import { checkErrors, getErrors } from '~/src/form/form-manager/errors.js'
 import {
   FormDefinitionError,
   FormDefinitionErrorType
@@ -11,7 +13,8 @@ import {
   buildListItem,
   buildQuestionPage,
   buildRadioComponent,
-  buildTextFieldComponent
+  buildTextFieldComponent,
+  buildUkAddressFieldComponent
 } from '~/src/stubs.js'
 
 const formDefinitionV2Schema = schema.formDefinitionV2Schema
@@ -824,6 +827,110 @@ describe('validation errors', () => {
           }
         ])
       })
+    })
+  })
+
+  describe('incompatibility errors', () => {
+    const componentId = '7d722018-ea0f-45f7-9843-aacbf2be72ad'
+    const component = buildUkAddressFieldComponent({
+      id: componentId
+    })
+    const componentId2 = '33344018-ea0f-45f7-9843-aacbf2be72ad'
+    const component2 = buildTextFieldComponent({
+      id: componentId2
+    })
+
+    it('should handle invalid component type for condition', () => {
+      const def = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: pageId1 }),
+          buildQuestionPage({
+            id: pageId2,
+            path: '/page-two',
+            components: [component, component2]
+          })
+        ],
+        conditions: [
+          {
+            id: '881296f9-d753-4b5b-8b61-6de387787cbd',
+            displayName: 'cond1',
+            items: [
+              {
+                id: '11472f07-bae0-4287-b26a-893fdd941603',
+                componentId: componentId2,
+                operator: OperatorName.Is,
+                type: ConditionType.Value,
+                value: 'Test'
+              },
+              {
+                id: '29472f07-bae0-4287-b26a-893fdd941603',
+                componentId,
+                operator: OperatorName.Is,
+                type: ConditionType.Value,
+                value: 'Test'
+              }
+            ]
+          }
+        ]
+      })
+
+      const { error } = formDefinitionV2Schema.validate(def)
+
+      expect(error).toBeDefined()
+
+      const errors = getErrors(error)
+
+      expect(errors).toEqual([
+        {
+          id: FormDefinitionError.IncompatibleConditionComponentType,
+          detail: {
+            path: ['conditions', 0, 'items', 1],
+            key: 1,
+            valueKey: 'componentId',
+            label: 'conditions[0].items[1]',
+            value: componentId,
+            incompatibleObject: {
+              key: 'type',
+              value: {
+                id: componentId,
+                type: 'UkAddressField',
+                name: 'UkAddressFieldComponent',
+                title: 'UkAddressFieldComponent',
+                options: {},
+                schema: {}
+              }
+            },
+            reason: 'does not support conditions'
+          },
+          message: 'Incompatible data value',
+          type: FormDefinitionErrorType.Incompatible
+        }
+      ])
+    })
+
+    it('should handle invalid component type for condition in checkErrors', () => {
+      const errors = checkErrors([
+        FormDefinitionError.IncompatibleConditionComponentType
+      ])
+
+      const errorsToPass = [
+        {
+          local: {
+            key: 'componentId'
+          },
+          code: 'custom.incompatible'
+        }
+      ] as ErrorReport[]
+      expect(errors(errorsToPass)).toEqual([
+        {
+          code: 'custom.incompatible',
+          local: {
+            errorType: 'incompatible',
+            errorCode: 'incompatible_condition_component_type',
+            key: 'componentId'
+          }
+        }
+      ])
     })
   })
 })

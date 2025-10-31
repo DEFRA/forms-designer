@@ -354,7 +354,7 @@ describe('editor-v2 - questions model', () => {
             model: {
               classes: '',
               content: '<p>Some info</p>\n',
-              id: 'markdown',
+              id: expect.stringContaining('markdown'),
               name: 'markdown'
             },
             questionType: 'Markdown'
@@ -366,13 +366,14 @@ describe('editor-v2 - questions model', () => {
                 classes: '',
                 text: ''
               },
-              id: 'inputField',
+              id: expect.stringContaining('inputField'),
               label: {
                 classes: 'govuk-label--m',
                 isPageHeading: true,
                 text: 'What type of farming do you do?'
               },
-              name: 'inputField'
+              name: 'inputField',
+              previewClasses: ''
             },
             questionType: 'TextField'
           }
@@ -413,13 +414,14 @@ describe('editor-v2 - questions model', () => {
                 classes: '',
                 text: ''
               },
-              id: 'inputField',
+              id: expect.stringContaining('inputField'),
               label: {
                 classes: 'govuk-label--l',
                 isPageHeading: true,
                 text: 'What type of farming do you do?'
               },
-              name: 'inputField'
+              name: 'inputField',
+              previewClasses: ''
             },
             questionType: ComponentType.TextField
           }
@@ -447,7 +449,6 @@ describe('editor-v2 - questions model', () => {
       expect(previewModel.previewErrorsUrl).toBe('/error-preview-url')
       expect(previewModel.previewPageUrl).toBe('/page-preview-url')
       expect(previewModel.sectionTitle).toBeUndefined()
-      expect(previewModel.repeaterButton).toBeUndefined()
     })
     it('should get preview model with repeater page', () => {
       const page = buildRepeaterPage({
@@ -479,10 +480,6 @@ describe('editor-v2 - questions model', () => {
       expect(previewModel.sectionTitle).toEqual({
         classes: '',
         text: 'Simple question responses 1'
-      })
-      expect(previewModel.repeaterButton).toEqual({
-        classes: '',
-        text: 'simple question responses'
       })
     })
   })

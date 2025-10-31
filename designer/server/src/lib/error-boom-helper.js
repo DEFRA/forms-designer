@@ -1,8 +1,9 @@
-import { ApiErrorCode } from '@defra/forms-model'
+import { ApiErrorCode, FormDefinitionError } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { formErrorsToMessages } from '~/src/plugins/error-pages/form-errors.js'
 
 const duplicatePageTitle = 'Page heading already exists in this form'
 
@@ -161,6 +162,57 @@ export function unpackErrorToken(err, tokenName, lookup) {
 }
 
 /**
+ * @param {unknown} err
+ * @param {FormDefinition} definition
+ * @returns { Joi.ValidationError | undefined }
+ */
+export function handleInvalidFormErrors(err, definition) {
+  if (isInvalidFormErrorType(err, FormDefinitionError.UniqueListItemValue)) {
+    return createJoiError(
+      DEFAULT_FIELD_NAME,
+      'Each item must have a unique identifier - enter a different identifier for this item.'
+    )
+  }
+
+  if (isInvalidFormErrorType(err, FormDefinitionError.RefConditionItemId)) {
+    const conditionName = unpackErrorToken(
+      err,
+      'conditions',
+      definition.conditions.map((x) => x.displayName)
+    )
+    return createJoiError(
+      'autoCompleteOptions',
+      `A list item used by condition '${conditionName}' has been deleted from the list.`
+    )
+  }
+
+  if (
+    isInvalidFormErrorType(
+      err,
+      FormDefinitionError.IncompatibleConditionComponentType
+    )
+  ) {
+    return createJoiError(
+      DEFAULT_FIELD_NAME,
+      formErrorsToMessages[
+        FormDefinitionError.IncompatibleConditionComponentType
+      ]
+    )
+  }
+
+  if (
+    isInvalidFormErrorType(err, FormDefinitionError.IncompatibleQuestionRegex)
+  ) {
+    return createJoiError(
+      'regex',
+      formErrorsToMessages[FormDefinitionError.IncompatibleQuestionRegex]
+    )
+  }
+
+  return undefined
+}
+
+/**
  * @import { ValidationSessionKey } from '@hapi/yar'
- * @import { FormDefinitionError } from '@defra/forms-model'
+ * @import { FormDefinition } from '@defra/forms-model'
  */

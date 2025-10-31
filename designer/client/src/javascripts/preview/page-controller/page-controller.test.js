@@ -205,7 +205,6 @@ describe('page-controller', () => {
       }
       pagePreviewElements.repeaterElement.checked = true
       pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
-      expect(pageController.repeaterButton?.text).toBe('[question set name]')
       expect(pageController.sectionTitle?.text).toBe('Question set name')
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
     })
@@ -221,7 +220,6 @@ describe('page-controller', () => {
       pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
       pagePreviewElements.questionSetNameElement.focus()
       expect(pageController.sectionTitle?.classes).toBe('highlight')
-      expect(pageController.repeaterButton?.classes).toBe('highlight')
       pagePreviewElements.questionSetNameElement.blur()
       expect(pageController.sectionTitle?.classes).toBe('')
       expect(pageRendererCb).toHaveBeenCalledTimes(4)
@@ -231,7 +229,6 @@ describe('page-controller', () => {
       pagePreviewElements.repeaterElement.checked = false
       pagePreviewElements.repeaterElement.dispatchEvent(changeEvent)
       expect(pageController.sectionTitle).toBeUndefined()
-      expect(pageController.repeaterButton).toBeUndefined()
       expect(pageController.repeaterText).toBeUndefined()
       expect(pageRendererCb).toHaveBeenCalledTimes(6)
     })

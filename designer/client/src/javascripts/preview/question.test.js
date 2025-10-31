@@ -77,7 +77,7 @@ describe('question', () => {
       const res = SetupPreview.Question()
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         classes: '',
         name: 'inputField',
         label: {
@@ -88,7 +88,8 @@ describe('question', () => {
         hint: {
           text: 'Choose one adventure that best suits you.',
           classes: ''
-        }
+        },
+        previewClasses: ''
       })
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')
@@ -123,7 +124,7 @@ describe('question', () => {
       res.hintText = ''
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         classes: '',
         name: 'inputField',
         label: {
@@ -134,7 +135,8 @@ describe('question', () => {
         hint: {
           text: 'Hint text',
           classes: ' highlight'
-        }
+        },
+        previewClasses: ''
       })
     })
 

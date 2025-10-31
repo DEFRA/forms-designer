@@ -26,6 +26,10 @@ import {
   ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable.js'
+import {
+  NumberDomElements,
+  NumberEventListeners
+} from '~/src/javascripts/preview/number'
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
 import {
   EventListeners,
@@ -35,6 +39,10 @@ import {
   RadioSortableEventListeners,
   RadioSortableQuestionElements
 } from '~/src/javascripts/preview/radio-sortable.js'
+import {
+  UkAddressDomElements,
+  UkAddressEventListeners
+} from '~/src/javascripts/preview/uk-address'
 
 export const SetupPreview =
   /** @type {Record<ComponentType|'Question'|'ListSortable', () => PreviewQuestion>} */ ({
@@ -84,13 +92,13 @@ export const SetupPreview =
      * @returns {NumberOnlyQuestion}
      */
     NumberField: () => {
-      const questionElements = new QuestionDomElements()
-      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const numberElements = new NumberDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(numberElements)
       const numberField = new NumberOnlyQuestion(
-        questionElements,
+        numberElements,
         nunjucksRenderer
       )
-      const listeners = new EventListeners(numberField, questionElements)
+      const listeners = new NumberEventListeners(numberField, numberElements)
       listeners.setupListeners()
 
       return numberField
@@ -171,16 +179,16 @@ export const SetupPreview =
      * @returns {UkAddressQuestion}
      */
     UkAddressField: () => {
-      const questionElements = new QuestionDomElements()
+      const questionElements = new UkAddressDomElements()
       const nunjucksRenderer = new NunjucksRenderer(questionElements)
       const address = new UkAddressQuestion(questionElements, nunjucksRenderer)
-      const listeners = new EventListeners(address, questionElements)
+      const listeners = new UkAddressEventListeners(address, questionElements)
       listeners.setupListeners()
 
       return address
     },
     /**
-     * @returns {UkAddressQuestion}
+     * @returns {YesNoQuestion}
      */
     YesNoField: () => {
       const questionElements = new QuestionDomElements()
@@ -278,6 +286,18 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return listSortable
+    },
+    EastingNorthingField: () => {
+      return SetupPreview.Question()
+    },
+    OsGridRefField: () => {
+      return SetupPreview.Question()
+    },
+    NationalGridFieldNumberField: () => {
+      return SetupPreview.Question()
+    },
+    LatLongField: () => {
+      return SetupPreview.Question()
     }
   })
 /**

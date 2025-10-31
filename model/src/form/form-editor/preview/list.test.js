@@ -20,6 +20,7 @@ describe('list', () => {
     question: 'Which quest would you like to pick?',
     hintText: 'Choose one adventure that best suits you.',
     shortDesc: '',
+    userClasses: '',
     largeTitle: true,
     content: ''
   })
@@ -326,6 +327,7 @@ describe('list', () => {
       expect(new ListComponentElements(radiosComponent, list).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
+        userClasses: '',
         optional: false,
         content: '',
         shortDesc: 'shortDesc',

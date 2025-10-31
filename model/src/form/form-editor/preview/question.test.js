@@ -16,7 +16,7 @@ describe('question', () => {
     it('should create class', () => {
       const res = new Question(questionElements, renderer)
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         name: 'inputField',
         classes: '',
         label: {
@@ -27,7 +27,8 @@ describe('question', () => {
         hint: {
           text: 'Choose one adventure that best suits you.',
           classes: ''
-        }
+        },
+        previewClasses: ''
       })
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')
@@ -58,7 +59,7 @@ describe('question', () => {
       res.hintText = ''
       res.highlight = 'hintText'
       expect(res.renderInput).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         name: 'inputField',
         classes: '',
         label: {
@@ -69,7 +70,8 @@ describe('question', () => {
         hint: {
           text: 'Hint text',
           classes: ' highlight'
-        }
+        },
+        previewClasses: ''
       })
     })
 
@@ -80,6 +82,24 @@ describe('question', () => {
         text: 'Choose one adventure that best suits you.',
         classes: ' highlight'
       })
+    })
+
+    it('should apply user-supplied class', () => {
+      const questionElements = new QuestionPreviewElements({
+        ...baseElements,
+        userClasses: 'my-special-class'
+      })
+      const preview = new Question(questionElements, renderer)
+      expect(preview.renderInput.classes).toBe('my-special-class')
+    })
+
+    it('should apply user-supplied class after instantiation', () => {
+      const questionElements = new QuestionPreviewElements(baseElements)
+      const preview = new Question(questionElements, renderer)
+      expect(preview.userClasses).toBe('')
+      preview.userClasses = 'my-special-class'
+      expect(preview.renderInput.classes).toBe('my-special-class')
+      expect(preview.userClasses).toBe('my-special-class')
     })
   })
 
@@ -98,6 +118,7 @@ describe('question', () => {
       expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
+        userClasses: '',
         optional: true,
         content: '',
         shortDesc: 'shortDesc',
@@ -109,6 +130,7 @@ describe('question', () => {
       expect(new QuestionComponentElements(textFieldComponent).values).toEqual({
         question: 'Form field title',
         hintText: 'Hint text',
+        userClasses: '',
         optional: true,
         content: '',
         shortDesc: 'shortDesc',
@@ -117,7 +139,3 @@ describe('question', () => {
     })
   })
 })
-
-/**
- * @import { TextFieldComponent } from '~/src/components/types.js'
- */

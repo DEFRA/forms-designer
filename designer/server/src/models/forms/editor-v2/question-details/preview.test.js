@@ -60,6 +60,20 @@ describe('preview', () => {
       }
     ]
   }
+
+  const usePostcodeLookup = {
+    name: 'usePostcodeLookup',
+    id: 'usePostcodeLookup',
+    classes: 'govuk-checkboxes--small',
+    items: [
+      {
+        value: 'true',
+        text: 'Use postcode lookup',
+        checked: true
+      }
+    ]
+  }
+
   const shortDescription = {
     id: 'shortDescription',
     name: 'shortDescription',
@@ -88,6 +102,36 @@ describe('preview', () => {
     },
     customTemplate: 'auto-complete-options',
     value: 'Hydrogen:1\r\n' + 'Helium:2\r\n' + 'Lithium:3\r\n'
+  }
+
+  const classes = {
+    name: 'classes',
+    id: 'classes',
+    label: {
+      text: 'Classes',
+      classes: 'govuk-label--m'
+    },
+    value: 'specific-class'
+  }
+
+  const prefix = {
+    name: 'prefix',
+    id: 'prefix',
+    label: {
+      text: 'Prefix',
+      classes: 'govuk-label--m'
+    },
+    value: 'pre'
+  }
+
+  const suffix = {
+    name: 'suffix',
+    id: 'suffix',
+    label: {
+      text: 'Suffix',
+      classes: 'govuk-label--m'
+    },
+    value: 'suf'
   }
 
   const questionSessionState = {
@@ -119,7 +163,11 @@ describe('preview', () => {
     question,
     hintText,
     questionOptional,
-    shortDescription
+    shortDescription,
+    usePostcodeLookup,
+    classes,
+    prefix,
+    suffix
   ]
 
   describe('getValueAsString', () => {
@@ -139,6 +187,40 @@ describe('preview', () => {
   describe('getCheckedValue', () => {
     it('should return checked value given questionOptional', () => {
       expect(getCheckedValue(questionOptional)).toBe(true)
+    })
+
+    it('should return checked value given usePostcodeLookup', () => {
+      expect(getCheckedValue(usePostcodeLookup)).toBe(true)
+    })
+
+    it('should return false given questionOptional is not checked', () => {
+      expect(
+        getCheckedValue({
+          ...questionOptional,
+          items: [
+            {
+              value: 'true',
+              text: 'Make this question optional',
+              checked: false
+            }
+          ]
+        })
+      ).toBe(false)
+    })
+
+    it('should return false given usePostcodeLookup is not checked', () => {
+      expect(
+        getCheckedValue({
+          ...usePostcodeLookup,
+          items: [
+            {
+              value: 'true',
+              text: 'Use postcode lookup',
+              checked: false
+            }
+          ]
+        })
+      ).toBe(false)
     })
 
     it('should return false given not questionOptional', () => {
@@ -192,11 +274,15 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: 'Short answer',
         hintText: '',
+        userClasses: 'specific-class',
         content: '',
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
-        items: []
+        usePostcodeLookup: true,
+        items: [],
+        prefix: 'pre',
+        suffix: 'suf'
       })
     })
 
@@ -205,11 +291,15 @@ describe('preview', () => {
       expect(previewElements.values).toEqual({
         question: '',
         hintText: '',
+        userClasses: '',
         largeTitle: true,
         content: '',
         optional: false,
         shortDesc: '',
-        items: []
+        usePostcodeLookup: false,
+        items: [],
+        prefix: '',
+        suffix: ''
       })
     })
 
@@ -434,6 +524,37 @@ describe('preview', () => {
       )
       expect(previewModel).toBeInstanceOf(Question)
     })
+    it('should get EastingNorthingField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.EastingNorthingField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get OsGridRefField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.OsGridRefField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get NationalGridFieldNumberField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.NationalGridFieldNumberField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
+
+    it('should get LatLongField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.LatLongField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
   })
 
   describe('getPreviewModel', () => {
@@ -453,13 +574,14 @@ describe('preview', () => {
         classes: '',
         text: ''
       },
-      id: 'inputField',
+      id: expect.stringContaining('inputField'),
       label: {
         classes: 'govuk-label--l',
         isPageHeading: true,
         text: 'Short answer (optional)'
       },
-      name: 'inputField'
+      name: 'inputField',
+      previewClasses: ''
     })
 
     const fieldSetModelBase = /** @type {QuestionBaseModel} */ ({
@@ -517,13 +639,14 @@ describe('preview', () => {
           classes: '',
           text: ''
         },
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         label: {
           classes: 'govuk-label--l',
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'inputField'
+        name: 'inputField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -574,7 +697,7 @@ describe('preview', () => {
       )
 
       expect(previewModel).toEqual({
-        id: 'inputField',
+        id: expect.stringContaining('inputField'),
         name: 'inputField',
         label: {
           classes: 'govuk-label--l',
@@ -757,7 +880,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'emailAddressField'
+        name: 'emailAddressField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -782,7 +906,8 @@ describe('preview', () => {
           }
         },
         name: 'addressField',
-        classes: ''
+        classes: '',
+        usePostcodeLookup: false
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -805,7 +930,8 @@ describe('preview', () => {
           isPageHeading: true,
           text: 'Short answer (optional)'
         },
-        name: 'phoneNumberField'
+        name: 'phoneNumberField',
+        previewClasses: ''
       })
       expect(previewModel).toEqual(expectedBaseModel)
     })
@@ -860,6 +986,42 @@ describe('preview', () => {
           }
         ]
       })
+    })
+
+    it('should get EastingNorthingField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.EastingNorthingField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get OsGridRefField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.OsGridRefField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get NationalGridFieldNumberField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.NationalGridFieldNumberField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
+    })
+
+    it('should get LatLongField', () => {
+      const previewModel = getPreviewModel(
+        basePageFields,
+        {},
+        ComponentType.LatLongField
+      )
+      expect(previewModel).toEqual(expectedQuestionModel)
     })
   })
 })

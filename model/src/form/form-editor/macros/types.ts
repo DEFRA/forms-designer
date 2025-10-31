@@ -55,6 +55,9 @@ export interface QuestionBaseModel {
   formGroup?: FormGroupAfterInput
   type?: 'text' | 'number' | 'boolean'
   classes?: string
+  previewClasses?: string
+  prefix?: { text: string }
+  suffix?: { text: string }
 }
 
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {
@@ -77,10 +80,6 @@ export interface PagePreviewPanelMacro {
   }
   readonly components: PagePreviewComponent[]
   readonly sectionTitle?: {
-    text: string
-    classes: string
-  }
-  readonly repeaterButton?: {
     text: string
     classes: string
   }

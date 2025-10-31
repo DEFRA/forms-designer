@@ -27,6 +27,7 @@ interface FormFieldBase {
     optionalText?: boolean
     classes?: string
     customValidationMessages?: LanguageMessages
+    instructionText?: string
   }
 }
 
@@ -173,6 +174,59 @@ export interface UkAddressFieldComponent extends FormFieldBase {
   }
 }
 
+// Precise Location Fields
+export interface EastingNorthingFieldComponent extends FormFieldBase {
+  type: ComponentType.EastingNorthingField
+  options: FormFieldBase['options'] & {
+    condition?: string
+    customValidationMessage?: string
+  }
+  schema?: {
+    easting?: {
+      min?: number
+      max?: number
+    }
+    northing?: {
+      min?: number
+      max?: number
+    }
+  }
+}
+
+export interface OsGridRefFieldComponent extends FormFieldBase {
+  type: ComponentType.OsGridRefField
+  options: FormFieldBase['options'] & {
+    condition?: string
+    customValidationMessage?: string
+  }
+}
+
+export interface NationalGridFieldNumberFieldComponent extends FormFieldBase {
+  type: ComponentType.NationalGridFieldNumberField
+  options: FormFieldBase['options'] & {
+    condition?: string
+    customValidationMessage?: string
+  }
+}
+
+export interface LatLongFieldComponent extends FormFieldBase {
+  type: ComponentType.LatLongField
+  options: FormFieldBase['options'] & {
+    condition?: string
+    customValidationMessage?: string
+  }
+  schema?: {
+    latitude?: {
+      min?: number
+      max?: number
+    }
+    longitude?: {
+      min?: number
+      max?: number
+    }
+  }
+}
+
 // Date Fields
 export interface DatePartsFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
@@ -280,6 +334,10 @@ export type InputFieldsComponentsDef =
   | UkAddressFieldComponent
   | FileUploadFieldComponent
   | DeclarationFieldComponent
+  | EastingNorthingFieldComponent
+  | OsGridRefFieldComponent
+  | NationalGridFieldNumberFieldComponent
+  | LatLongFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =

@@ -4,10 +4,6 @@ describe('Pages left panel component', () => {
   let $headings = /** @type {Element[]} */ ([])
   /** @type { Element | null} */
   let $guidanceText
-  /** @type { Element | null} */
-  let $button = null
-  /** @type { Element | null} */
-  let $buttonSpan = null
 
   describe('With guidance and some components', () => {
     beforeEach(() => {
@@ -114,9 +110,9 @@ describe('Pages left panel component', () => {
     })
   })
 
-  describe('With section heading and repeater button', () => {
+  describe('With section heading', () => {
     beforeEach(() => {
-      const { container, document } = renderMacro(
+      const { container } = renderMacro(
         'appPagePreview',
         'page-preview/macro.njk',
         {
@@ -128,10 +124,6 @@ describe('Pages left panel component', () => {
             sectionTitle: {
               classes: 'highlight',
               text: 'Family member name'
-            },
-            repeaterButton: {
-              classes: 'highlight',
-              text: 'family member name'
             },
             components: [
               {
@@ -155,8 +147,6 @@ describe('Pages left panel component', () => {
       )
 
       $headings = container.getAllByRole('heading')
-      $button = container.getByRole('button')
-      $buttonSpan = document.querySelector('.govuk-button span')
     })
 
     it('should render page heading', () => {
@@ -164,8 +154,6 @@ describe('Pages left panel component', () => {
         'govuk-caption-l govuk-!-margin-top-0 highlight'
       )
       expect($headings[0]).toHaveTextContent('Family member name')
-      expect($buttonSpan).toHaveClass('highlight')
-      expect($button).toHaveTextContent('Add another family member name')
     })
   })
 })

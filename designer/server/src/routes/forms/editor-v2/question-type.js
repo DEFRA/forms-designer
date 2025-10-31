@@ -3,6 +3,7 @@ import {
   Scopes,
   dateSubSchema,
   listSubSchema,
+  locationSubSchema,
   questionTypeSchema,
   writtenAnswerSubSchema
 } from '@defra/forms-model'
@@ -48,6 +49,12 @@ export const schema = Joi.object().keys({
       '*': 'Select the type of date you need from users'
     })
   }),
+  locationSub: Joi.when('questionType', {
+    is: QuestionTypeSubGroup.LocationSubGroup,
+    then: locationSubSchema.messages({
+      '*': 'Select the precise location you require'
+    })
+  }),
   listSub: Joi.when('questionType', {
     is: QuestionTypeSubGroup.ListSubGroup,
     then: listSubSchema.messages({
@@ -61,12 +68,14 @@ export const schema = Joi.object().keys({
  * @param {string | undefined} questionType
  * @param {string | undefined} writtenAnswerSub - sub-type if 'written-answer-sub' selected in questionType
  * @param {string | undefined} dateSub - sub-type if 'date-sub' selected in questionType
+ * @param {string | undefined} locationSub - sub-type if 'location-sub' selected in questionType
  * @param {string | undefined} listSub - sub-type if 'list-sub' selected in questionType
  */
 export function deriveQuestionType(
   questionType,
   writtenAnswerSub,
   dateSub,
+  locationSub,
   listSub
 ) {
   if (questionType === QuestionTypeSubGroup.WrittenAnswerSubGroup) {
@@ -74,6 +83,9 @@ export function deriveQuestionType(
   }
   if (questionType === QuestionTypeSubGroup.DateSubGroup) {
     return dateSub
+  }
+  if (questionType === QuestionTypeSubGroup.LocationSubGroup) {
+    return locationSub
   }
   if (questionType === QuestionTypeSubGroup.ListSubGroup) {
     return listSub
@@ -125,6 +137,8 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
+      const state = getQuestionSessionState(yar, stateId)
+
       return h.view(
         'forms/editor-v2/question',
         viewModel.questionTypeViewModel(
@@ -132,6 +146,7 @@ export default [
           definition,
           pageId,
           questionId,
+          state,
           validation
         )
       )
@@ -147,7 +162,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId: string }, Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'listSub'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId: string }, Payload: Pick<FormEditorInputPage, 'questionType' | 'writtenAnswerSub' | 'dateSub' | 'locationSub' | 'listSub'> }>}
    */
   ({
     method: 'POST',
@@ -169,11 +184,20 @@ export default [
         )
       }
 
-      const { questionType, writtenAnswerSub, dateSub, listSub } = payload
+      const { questionType, writtenAnswerSub, dateSub, locationSub, listSub } =
+        payload
 
       const suppliedQuestionType =
         /** @type {ComponentType} */
-        (deriveQuestionType(questionType, writtenAnswerSub, dateSub, listSub))
+        (
+          deriveQuestionType(
+            questionType,
+            writtenAnswerSub,
+            dateSub,
+            locationSub,
+            listSub
+          )
+        )
 
       mergeQuestionSessionState(yar, stateId, {
         questionType: suppliedQuestionType

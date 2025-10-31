@@ -1,8 +1,9 @@
 import JoiDate from '@joi/date'
-import JoiBase, { type LanguageMessages } from 'joi'
+import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { ComponentType } from '~/src/components/enums.js'
+import { isConditionalType } from '~/src/components/helpers.js'
 import {
   type ComponentDef,
   type ContentComponentsDef,
@@ -23,6 +24,7 @@ import {
   type RelativeDateValueData,
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
+import { isFormDefinition } from '~/src/form/form-definition/helpers.js'
 import {
   SchemaVersion,
   type ConditionWrapper,
@@ -42,9 +44,15 @@ import {
   type Section
 } from '~/src/form/form-definition/types.js'
 import { checkErrors } from '~/src/form/form-manager/errors.js'
-import { FormDefinitionError } from '~/src/form/form-manager/types.js'
+import {
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '~/src/form/form-manager/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
-import { hasComponents } from '~/src/pages/helpers.js'
+import {
+  hasComponents,
+  hasComponentsEvenIfNoNext
+} from '~/src/pages/helpers.js'
 
 const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
@@ -316,6 +324,48 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
         'Value to compare the field against, either fixed or relative date'
       )
   })
+  .custom((value: ConditionDataV2, helpers: CustomHelpers<ConditionDataV2>) => {
+    const { componentId } = value
+    const definition = helpers.state.ancestors.find(isFormDefinition) as
+      | FormDefinition
+      | undefined
+
+    // Validation may not have been fired on the full FormDefinition
+    // therefore we are unable to verify at this point, but the 'save'
+    // will eventually validate the full FormDefinition
+    if (!definition) {
+      return value
+    }
+
+    const foundComponents = definition.pages
+      .map((page) =>
+        hasComponentsEvenIfNoNext(page)
+          ? page.components.find((comp) => comp.id === componentId)
+          : undefined
+      )
+      .filter(Boolean)
+
+    const foundComponentHandlesConditions = foundComponents.length
+      ? isConditionalType(foundComponents[0]?.type)
+      : false
+
+    return foundComponentHandlesConditions
+      ? value
+      : helpers.error('custom.incompatible', {
+          incompatibleObject: {
+            key: 'type',
+            value: foundComponents[0]
+          },
+          valueKey: 'componentId',
+          value: componentId,
+          errorType: FormDefinitionErrorType.Incompatible,
+          errorCode: FormDefinitionError.IncompatibleConditionComponentType,
+          reason: 'does not support conditions'
+        })
+  })
+  .messages({
+    'custom.incompatible': 'Incompatible data value'
+  })
 
 const conditionGroupSchema = Joi.object<ConditionGroupData>()
   .description('Group of conditions combined with logical operators')
@@ -393,6 +443,21 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
       .description('Array of conditions or condition references')
   })
   .description('Condition schema for V2 forms')
+
+export const regexCustomValidator = (
+  value: string,
+  helpers: CustomHelpers<string>
+) => {
+  try {
+    const _regex = new RegExp(value)
+  } catch {
+    return helpers.error('custom.incompatible', {
+      errorType: FormDefinitionErrorType.Incompatible,
+      errorCode: FormDefinitionError.IncompatibleQuestionRegex
+    })
+  }
+  return value
+}
 
 export const componentSchema = Joi.object<ComponentDef>()
   .description('Form component definition specifying UI element behavior')
@@ -481,7 +546,19 @@ export const componentSchema = Joi.object<ComponentDef>()
         .description('Maximum value or length for validation'),
       length: Joi.number()
         .empty('')
-        .description('Exact length required for validation')
+        .description('Exact length required for validation'),
+      regex: Joi.when('type', {
+        is: Joi.string().valid(
+          ComponentType.TextField,
+          ComponentType.MultilineTextField
+        ),
+        then: Joi.string() // NOSONAR
+          .trim()
+          .optional()
+          .description('Regex expression for validation of user field content')
+          .custom(regexCustomValidator),
+        otherwise: Joi.string().allow('')
+      }).messages({ 'custom.incompatible': 'The regex expression is invalid' })
     })
       .unknown(true)
       .default({})

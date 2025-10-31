@@ -11,6 +11,7 @@ import {
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/common.js'
 import {
   getConditionsData,
+  getPreceedingConditions,
   pageConditionsViewModel
 } from '~/src/models/forms/editor-v2/page-conditions.js'
 
@@ -687,6 +688,81 @@ describe('page-conditions model', () => {
         'pageSpecificHeading',
         'Page 2: Farm Operations'
       )
+    })
+  })
+
+  describe('getPreceedingConditions', () => {
+    it('should return empty array when no conditions', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            components: [testComponent]
+          })
+        ]
+      })
+
+      const result = getPreceedingConditions(definition, [], 5)
+
+      expect(result).toEqual([])
+    })
+
+    it('should return condition when condition exists', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            condition: conditionId,
+            components: [testComponent]
+          })
+        ],
+        conditions: [mockConditionV2],
+        lists: []
+      })
+
+      const result = getPreceedingConditions(
+        definition,
+        /** @type {ConditionWrapperV2[]} */ (definition.conditions),
+        5
+      )
+
+      expect(result).toEqual([
+        {
+          displayName: 'Show if cattle farming',
+          id: 'cattle-farm-condition',
+          items: [
+            {
+              componentId: 'farm-type-field',
+              id: 'cattle-farm-check',
+              operator: 'is',
+              type: 'StringValue',
+              value: 'cattle'
+            }
+          ]
+        }
+      ])
+    })
+
+    it('should not return condition when it exists on a current or future page', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            condition: conditionId,
+            components: [testComponent]
+          })
+        ],
+        conditions: [mockConditionV2],
+        lists: []
+      })
+
+      const result = getPreceedingConditions(
+        definition,
+        /** @type {ConditionWrapperV2[]} */ (definition.conditions),
+        1
+      )
+
+      expect(result).toEqual([])
     })
   })
 })

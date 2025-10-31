@@ -6,9 +6,13 @@ import {
   baseModelFields,
   getFormSpecificNavigation,
   getPageConditionDetails,
-  getPageNum
+  getPageNum,
+  getReferencedComponentNamesV2
 } from '~/src/models/forms/editor-v2/common.js'
-import { buildConditionEditor } from '~/src/models/forms/editor-v2/condition-helper.js'
+import {
+  buildConditionEditor,
+  getComponentsPerPageNumber
+} from '~/src/models/forms/editor-v2/condition-helper.js'
 import {
   determineEditUrl,
   isGuidancePage
@@ -24,6 +28,72 @@ export function getConditionsData(definition) {
   return definition.conditions
     .filter(isConditionWrapperV2)
     .sort((a, b) => a.displayName.localeCompare(b.displayName))
+}
+
+/**
+ * Construct a list of applicable conditions i.e. those whose referenced questions are all from previous pages
+ * @param {FormDefinition} definition
+ * @param {ConditionWrapperV2[]} allConditions
+ * @param {number} currentPageNum
+ * @returns {ConditionWrapperV2[]}
+ */
+export function getPreceedingConditions(
+  definition,
+  allConditions,
+  currentPageNum
+) {
+  // Create a map of what components reside on what page
+  /** @type {Map<string, number>} */
+  const componentPage = new Map()
+  for (const { number, components } of getComponentsPerPageNumber(definition)) {
+    for (const component of components) {
+      componentPage.set(component.name, number)
+    }
+  }
+
+  if (componentPage.size === 0) {
+    return []
+  }
+
+  // Find the latest page of where a condition's components are
+  const conds = allConditions.map((cond) => {
+    const pages = getReferencedComponentNamesV2(cond, definition).map(
+      (x) => componentPage.get(x) ?? 0
+    )
+    return {
+      maxPageNum: Math.max(...pages),
+      condition: cond
+    }
+  })
+
+  // Return conditions where all related questions are on preceding pages
+  return conds
+    .filter((cond) => cond.maxPageNum < currentPageNum)
+    .map((x) => x.condition)
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ */
+export function getBaseDetails(metadata, definition, pageId) {
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+  const page = getPageFromDefinition(definition, pageId)
+  const pageNum = getPageNum(definition, pageId)
+  const conditionDetails = getPageConditionDetails(definition, pageId)
+  return {
+    navigation,
+    page,
+    pageNum,
+    conditionDetails
+  }
 }
 
 /**
@@ -44,17 +114,17 @@ export function pageConditionsViewModel(
   validation,
   notification
 ) {
-  const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(
-    formPath,
+  const { navigation, page, pageNum, conditionDetails } = getBaseDetails(
     metadata,
     definition,
-    'Editor'
+    pageId
   )
-  const page = getPageFromDefinition(definition, pageId)
-  const pageNum = getPageNum(definition, pageId)
-  const conditionDetails = getPageConditionDetails(definition, pageId)
   const allConditions = getConditionsData(definition)
+  const allPrecedingConditions = getPreceedingConditions(
+    definition,
+    allConditions,
+    pageNum
+  )
   const errorList = buildErrorList(validation?.formErrors)
 
   const cardTitle = `Page ${pageNum}`
@@ -105,6 +175,7 @@ export function pageConditionsViewModel(
     pageConditionPresentationString:
       conditionDetails.pageConditionPresentationString,
     allConditions,
+    allPrecedingConditions,
     conditionsManagerPath,
     pageConditionsApiUrl,
     conditionEditor: {

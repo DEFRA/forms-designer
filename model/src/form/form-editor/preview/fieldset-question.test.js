@@ -14,7 +14,7 @@ describe('fieldset-question', () => {
     const renderer = new QuestionRendererStub(jest.fn())
     const dateInput = new DummyFieldsetClass(elements, renderer)
     expect(dateInput.renderInput).toEqual({
-      id: 'inputField',
+      id: expect.stringContaining('inputField'),
       name: 'inputField',
       classes: '',
       fieldset: {
@@ -40,7 +40,7 @@ describe('fieldset-question', () => {
     const dateInput = new DummyFieldsetClass(elements, renderer)
     dateInput.highlightContent()
     expect(dateInput.renderInput).toEqual({
-      id: 'inputField',
+      id: expect.stringContaining('inputField'),
       name: 'inputField',
       classes: 'highlight',
       fieldset: {

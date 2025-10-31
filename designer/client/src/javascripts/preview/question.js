@@ -25,6 +25,9 @@ export class QuestionDomElements extends DomElements {
     const shortDescEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('shortDescription')
     )
+    const userClassesEl = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('classes')
+    )
 
     /**
      * @type {HTMLInputElement|null}
@@ -42,6 +45,10 @@ export class QuestionDomElements extends DomElements {
      * @type {HTMLInputElement|null}
      */
     this.shortDesc = shortDescEl
+    /**
+     * @type {HTMLInputElement|null}
+     */
+    this.userClasses = userClassesEl
   }
 
   /**
@@ -53,12 +60,14 @@ export class QuestionDomElements extends DomElements {
     const optional = this.optional?.checked ?? false
     const question = this.question?.value ?? ''
     const shortDesc = this.shortDesc?.value ?? ''
+    const userClasses = this.userClasses?.value ?? ''
 
     return /** @type {BaseSettings} */ ({
       hintText,
       optional,
       question,
       shortDesc,
+      userClasses,
       items: [],
       largeTitle: true,
       content: ''
@@ -181,10 +190,23 @@ export class EventListeners {
       },
       'change'
     ])
+
+    const userClasses = /** @type {ListenerRow} */ ([
+      this.baseElements.userClasses,
+      /**
+       * @param {HTMLInputElement} target
+       */
+      (target) => {
+        this._question.userClasses = target.value
+      },
+      'input'
+    ])
+
     return [
       questionText,
       hintText,
       optionalCheckbox,
+      userClasses,
       ...this.highlightListeners,
       ...this._customListeners
     ]

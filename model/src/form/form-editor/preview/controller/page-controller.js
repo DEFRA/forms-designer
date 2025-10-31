@@ -34,6 +34,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
     const questions = components.map(
       mapComponentToPreviewQuestion(questionRenderer, definition)
     )
+
     const firstQuestion = /** @type { Markdown | undefined | Question }  */ (
       questions.shift()
     )
@@ -187,33 +188,6 @@ export class PreviewPageController extends PreviewPageControllerBase {
       return this.repeaterText
     }
     return undefined
-  }
-
-  get repeaterButton() {
-    if (this.repeaterButtonText === undefined) {
-      return undefined
-    }
-    return {
-      classes: this._isHighlighted(
-        PreviewPageControllerBase.HighlightClass.REPEATER
-      ),
-      text: this.repeaterButtonText
-    }
-  }
-
-  get repeaterButtonText() {
-    if (!this._isRepeater) {
-      return undefined
-    }
-
-    if (this._sectionTitle === '') {
-      return '[question set name]'
-    }
-
-    const [firstToken, ...rest] = this._sectionTitle
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    const restOfStr = rest ? rest.join('') : ''
-    return firstToken.toLowerCase() + restOfStr
   }
 
   /**
