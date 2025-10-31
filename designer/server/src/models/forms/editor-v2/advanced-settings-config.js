@@ -55,6 +55,7 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MaxFiles,
       QuestionAdvancedSettings.ExactFiles
     ],
+    DeclarationField: [],
     EastingNorthingField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
