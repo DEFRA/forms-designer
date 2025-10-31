@@ -517,6 +517,13 @@ describe('preview', () => {
       expect(previewModel).toBeInstanceOf(SelectSortableQuestion)
     })
 
+    it('should get DeclarationField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.DeclarationField,
+        previewElements
+      )
+      expect(previewModel).toBeInstanceOf(Question)
+    })
     it('should get EastingNorthingField', () => {
       const previewModel = getPreviewConstructor(
         ComponentType.EastingNorthingField,

@@ -376,6 +376,9 @@ export const ModelFactory =
     FileUploadField: (questionElements) => {
       return new SupportingEvidenceQuestion(questionElements, emptyRender)
     },
+    DeclarationField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
     // Location components - using camelCase function references
     EastingNorthingField: eastingNorthingField,
     OsGridRefField: osGridRefField,

@@ -37,6 +37,7 @@ export const enhancedFieldsPerComponentType =
     List: [],
     Markdown: [],
     FileUploadField: [],
+    DeclarationField: [],
     EastingNorthingField: [],
     OsGridRefField: [],
     NationalGridFieldNumberField: [],

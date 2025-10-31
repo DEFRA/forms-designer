@@ -140,6 +140,15 @@ export interface YesNoFieldComponent extends FormFieldBase {
   }
 }
 
+export interface DeclarationFieldComponent extends FormFieldBase {
+  type: ComponentType.DeclarationField
+  content: string
+  options: FormFieldBase['options'] & {
+    condition?: string
+    declarationConfirmationLabel?: string
+  }
+}
+
 export interface MultilineTextFieldComponent extends FormFieldBase {
   type: ComponentType.MultilineTextField
   options: FormFieldBase['options'] & {
@@ -324,6 +333,7 @@ export type InputFieldsComponentsDef =
   | DatePartsFieldComponent
   | UkAddressFieldComponent
   | FileUploadFieldComponent
+  | DeclarationFieldComponent
   | EastingNorthingFieldComponent
   | OsGridRefFieldComponent
   | NationalGridFieldNumberFieldComponent

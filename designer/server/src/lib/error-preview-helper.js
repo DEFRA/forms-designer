@@ -48,6 +48,7 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
     length: 'exactFiles',
     accept: 'accept'
   },
+  DeclarationField: {},
   EastingNorthingField: {},
   OsGridRefField: {},
   NationalGridFieldNumberField: {},

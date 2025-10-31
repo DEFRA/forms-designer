@@ -57,6 +57,7 @@ const InputFieldComponentDictionary = {
   [ComponentType.CheckboxesField]: CheckboxQuestion,
   [ComponentType.SelectField]: SelectQuestion,
   [ComponentType.YesNoField]: YesNoQuestion,
+  [ComponentType.DeclarationField]: YesNoQuestion,
   [ComponentType.FileUploadField]: SupportingEvidenceQuestion,
   [ComponentType.EastingNorthingField]: ShortAnswerQuestion,
   [ComponentType.OsGridRefField]: ShortAnswerQuestion,

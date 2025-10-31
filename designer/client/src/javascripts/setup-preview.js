@@ -287,6 +287,9 @@ export const SetupPreview =
 
       return listSortable
     },
+    DeclarationField: () => {
+      return SetupPreview.Question()
+    },
     EastingNorthingField: () => {
       return SetupPreview.Question()
     },
