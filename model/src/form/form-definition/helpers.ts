@@ -26,7 +26,7 @@ export function isFormDefinition(
  * @param { unknown } conditionValueData
  * @returns { definition is ConditionListItemRefValueDataV2 }
  */
-export function isConditionListItemRefValueDataV2(
+export function isConditionListItemRefValueData(
   conditionValueData: unknown
 ): conditionValueData is ConditionListItemRefValueDataV2 {
   if (!conditionValueData) {

@@ -1,6 +1,6 @@
 import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
 import {
-  isConditionListItemRefValueDataV2,
+  isConditionListItemRefValueData,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
@@ -40,35 +40,35 @@ describe('helpers', () => {
     })
   })
 
-  describe('isConditionListItemRefValueDataV2', () => {
+  describe('isConditionListItemRefValueData', () => {
     it('should return true if a ConditionListItemRefValueDataV2', () => {
       const data = {
         itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
         listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
       } as ConditionListItemRefValueDataV2
-      expect(isConditionListItemRefValueDataV2(data)).toBe(true)
+      expect(isConditionListItemRefValueData(data)).toBe(true)
     })
 
     it('should return false if undefined', () => {
       const def = undefined
-      expect(isConditionListItemRefValueDataV2(def)).toBe(false)
+      expect(isConditionListItemRefValueData(def)).toBe(false)
     })
 
     it('should return false if primitive string', () => {
       const def = ''
-      expect(isConditionListItemRefValueDataV2(def)).toBe(false)
+      expect(isConditionListItemRefValueData(def)).toBe(false)
     })
 
     it('should return false if primitive number', () => {
       const def = 1
-      expect(isConditionListItemRefValueDataV2(def)).toBe(false)
+      expect(isConditionListItemRefValueData(def)).toBe(false)
     })
 
     it('should return false if not a ConditionListItemRefValueDataV2', () => {
       const data = {
         itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07'
       } as ConditionListItemRefValueDataV2
-      expect(isConditionListItemRefValueDataV2(data)).toBe(false)
+      expect(isConditionListItemRefValueData(data)).toBe(false)
     })
   })
 })

@@ -25,7 +25,7 @@ import {
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
 import {
-  isConditionListItemRefValueDataV2,
+  isConditionListItemRefValueData,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import {
@@ -103,7 +103,7 @@ export const listItemIdValidator = (
 
   const conditionValue = helpers.state.ancestors[0]
 
-  if (!isConditionListItemRefValueDataV2(conditionValue)) {
+  if (!isConditionListItemRefValueData(conditionValue)) {
     return value
   }
 
