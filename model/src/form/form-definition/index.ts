@@ -66,7 +66,7 @@ const conditionIdRef = Joi.ref('/conditions', {
     conditions.map((condition) => condition.id)
 })
 
-const componentIdRefSchema = Joi.ref('/pages', {
+const componentIdRef = Joi.ref('/pages', {
   in: true,
   adjust: (pages: Page[]) =>
     pages.flatMap((page) =>
@@ -84,13 +84,85 @@ const listIdRef = Joi.ref('/lists', {
     lists.filter((list) => list.id).map((list) => list.id)
 })
 
-const listItemIdRef = Joi.ref('/lists', {
-  in: true,
-  adjust: (lists: List[]) =>
-    lists.flatMap((list) =>
-      list.items.filter((item) => item.id).map((item) => item.id)
+const listItemIdValidator = (
+  value: string,
+  helpers: CustomHelpers<ConditionListItemRefValueDataV2>
+) => {
+  const definition = helpers.state.ancestors.find(isFormDefinition) as
+    | FormDefinition
+    | undefined
+
+  // Validation may not have been fired on the full FormDefinition
+  // therefore we are unable to verify the list & item combination
+  if (!definition) {
+    return value
+  }
+
+  const conditionValue = helpers.state
+    .ancestors[0] as ConditionListItemRefValueDataV2
+  const listId = conditionValue.listId
+  const list = definition.lists.find((list) => list.id === listId)
+
+  // This is just for type safety it's
+  // impossible for the list to not exist here
+  if (!list) {
+    return value
+  }
+
+  const itemIdExists = list.items.some((item) => item.id === value)
+
+  return itemIdExists
+    ? value
+    : helpers.error('any.only', {
+        value,
+        valids: list.items.map((item) => item.id),
+        errorType: FormDefinitionErrorType.Ref,
+        errorCode: FormDefinitionError.RefConditionItemId
+      })
+}
+
+const incompatibleConditionValidator = (
+  value: ConditionDataV2,
+  helpers: CustomHelpers<ConditionDataV2>
+) => {
+  const { componentId } = value
+  const definition = helpers.state.ancestors.find(isFormDefinition) as
+    | FormDefinition
+    | undefined
+
+  // Validation may not have been fired on the full FormDefinition
+  // therefore we are unable to verify at this point, but the 'save'
+  // will eventually validate the full FormDefinition
+  if (!definition) {
+    return value
+  }
+
+  const foundComponents = definition.pages
+    .map((page) =>
+      hasComponentsEvenIfNoNext(page)
+        ? page.components.find((comp) => comp.id === componentId)
+        : undefined
     )
-})
+    .filter(Boolean)
+
+  const foundComponentHandlesConditions = foundComponents.length
+    ? isConditionalType(foundComponents[0]?.type)
+    : false
+
+  return foundComponentHandlesConditions
+    ? value
+    : helpers.error('custom.incompatible', {
+        incompatibleObject: {
+          key: 'type',
+          value: foundComponents[0]
+        },
+        valueKey: 'componentId',
+        value: componentId,
+        errorType: FormDefinitionErrorType.Incompatible,
+        errorCode: FormDefinitionError.IncompatibleConditionComponentType,
+        reason: 'does not support conditions'
+      })
+}
 
 const sectionsSchema = Joi.object<Section>()
   .description('A form section grouping related pages together')
@@ -162,54 +234,10 @@ const conditionListItemRefDataSchemaV2 =
         .error(checkErrors(FormDefinitionError.RefConditionListId)),
       itemId: Joi.string()
         .trim()
-        .when('/lists', {
-          is: Joi.exist(),
-          then: Joi.valid(listItemIdRef)
-        })
         .required()
         .description('The id of the list item')
-        .error(checkErrors(FormDefinitionError.RefConditionItemId))
+        .custom(listItemIdValidator)
     })
-    .custom(
-      (
-        value: ConditionListItemRefValueDataV2,
-        helpers: CustomHelpers<ConditionListItemRefValueDataV2>
-      ) => {
-        const definition = helpers.state.ancestors.find(isFormDefinition) as
-          | FormDefinition
-          | undefined
-
-        // Validation may not have been fired on the full FormDefinition
-        // therefore we are unable to verify the list & item combination
-        if (!definition) {
-          return value
-        }
-
-        const { listId, itemId } = value
-        const list = definition.lists.find((list) => list.id === listId)
-
-        if (!list) {
-          return helpers.error('any.ref', {
-            arg: 'listId',
-            ref: listId,
-            reason: 'does not exist',
-            errorType: FormDefinitionErrorType.Ref,
-            errorCode: FormDefinitionError.RefConditionListId
-          })
-        }
-
-        const itemIdExists = list.items.some((item) => item.id === itemId)
-        return itemIdExists
-          ? value
-          : helpers.error('any.ref', {
-              arg: 'itemId',
-              ref: itemId,
-              reason: `does not exist in list ${listId}`,
-              errorType: FormDefinitionErrorType.Ref,
-              errorCode: FormDefinitionError.RefConditionItemId
-            })
-      }
-    )
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
   .description('Relative date specification for date-based conditions')
@@ -322,7 +350,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       .required()
       .when('/pages', {
         is: Joi.exist(),
-        then: Joi.valid(componentIdRefSchema)
+        then: Joi.valid(componentIdRef)
       })
       .description(
         'Reference to the component id being evaluated in this condition'
@@ -364,45 +392,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
         'Value to compare the field against, either fixed or relative date'
       )
   })
-  .custom((value: ConditionDataV2, helpers: CustomHelpers<ConditionDataV2>) => {
-    const { componentId } = value
-    const definition = helpers.state.ancestors.find(isFormDefinition) as
-      | FormDefinition
-      | undefined
-
-    // Validation may not have been fired on the full FormDefinition
-    // therefore we are unable to verify at this point, but the 'save'
-    // will eventually validate the full FormDefinition
-    if (!definition) {
-      return value
-    }
-
-    const foundComponents = definition.pages
-      .map((page) =>
-        hasComponentsEvenIfNoNext(page)
-          ? page.components.find((comp) => comp.id === componentId)
-          : undefined
-      )
-      .filter(Boolean)
-
-    const foundComponentHandlesConditions = foundComponents.length
-      ? isConditionalType(foundComponents[0]?.type)
-      : false
-
-    return foundComponentHandlesConditions
-      ? value
-      : helpers.error('custom.incompatible', {
-          incompatibleObject: {
-            key: 'type',
-            value: foundComponents[0]
-          },
-          valueKey: 'componentId',
-          value: componentId,
-          errorType: FormDefinitionErrorType.Incompatible,
-          errorCode: FormDefinitionError.IncompatibleConditionComponentType,
-          reason: 'does not support conditions'
-        })
-  })
+  .custom(incompatibleConditionValidator)
   .messages({
     'custom.incompatible': 'Incompatible data value'
   })
