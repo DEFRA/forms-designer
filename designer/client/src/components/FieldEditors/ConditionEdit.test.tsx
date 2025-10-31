@@ -25,8 +25,7 @@ describe('Condition edit', () => {
     ComponentType.NumberField,
     ComponentType.SelectField,
     ComponentType.TextField,
-    ComponentType.YesNoField,
-    ComponentType.DeclarationField
+    ComponentType.YesNoField
   ]
 
   const data = {
