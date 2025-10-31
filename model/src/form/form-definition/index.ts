@@ -24,7 +24,10 @@ import {
   type RelativeDateValueData,
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
-import { isFormDefinition } from '~/src/form/form-definition/helpers.js'
+import {
+  isConditionListItemRefValueDataV2,
+  isFormDefinition
+} from '~/src/form/form-definition/helpers.js'
 import {
   SchemaVersion,
   type ConditionWrapper,
@@ -98,8 +101,12 @@ export const listItemIdValidator = (
     return value
   }
 
-  const conditionValue = helpers.state
-    .ancestors[0] as ConditionListItemRefValueDataV2
+  const conditionValue = helpers.state.ancestors[0]
+
+  if (!isConditionListItemRefValueDataV2(conditionValue)) {
+    return value
+  }
+
   const listId = conditionValue.listId
   const list = definition.lists.find((list) => list.id === listId)
 
