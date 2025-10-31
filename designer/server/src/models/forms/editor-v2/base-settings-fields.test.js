@@ -5,8 +5,7 @@ import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
   baseSchema,
   getFieldList,
-  getQuestionFieldList,
-  mapPayloadToFileMimeTypes
+  getQuestionFieldList
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
@@ -380,69 +379,6 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(getFieldComponentType({ name: 'autoCompleteOptions' })).toBe(
         ComponentType.MultilineTextField
       )
-    })
-  })
-
-  describe('mapPayloadToFileMimeTypes', () => {
-    test('should combine all types into one list', () => {
-      expect(
-        mapPayloadToFileMimeTypes({
-          fileTypes: ['documents', 'images', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: ['jpg', 'png'],
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe(
-        'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,image/jpeg,image/png,text/csv'
-      )
-    })
-
-    test('should remove sub-types if parent type not selected', () => {
-      expect(
-        mapPayloadToFileMimeTypes({
-          fileTypes: ['documents', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: ['jpg', 'png'],
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe(
-        'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/csv'
-      )
-    })
-
-    test('should remove sub-types even if no sub-types, if parent type not selected', () => {
-      expect(
-        mapPayloadToFileMimeTypes({
-          fileTypes: ['documents', 'tabular-data'],
-          documentTypes: ['doc', 'docx'],
-          imageTypes: undefined,
-          tabularDataTypes: ['csv']
-        }).accept
-      ).toBe(
-        'application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,text/csv'
-      )
-    })
-
-    test('should handle undefined lists', () => {
-      expect(
-        mapPayloadToFileMimeTypes({
-          fileTypes: [],
-          documentTypes: undefined,
-          imageTypes: undefined,
-          tabularDataTypes: undefined
-        })
-      ).toEqual({})
-    })
-
-    test('should handle undefined lists even when parent selected', () => {
-      expect(
-        mapPayloadToFileMimeTypes({
-          fileTypes: ['documents', 'images', 'tabular-data'],
-          documentTypes: undefined,
-          imageTypes: undefined,
-          tabularDataTypes: undefined
-        })
-      ).toEqual({})
     })
   })
 

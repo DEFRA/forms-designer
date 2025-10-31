@@ -4,58 +4,96 @@ import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
 
 /**
+ * @type {ComponentType[]}
+ */
+const LOCATION_FIELD_TYPES = [
+  ComponentType.EastingNorthingField,
+  ComponentType.OsGridRefField,
+  ComponentType.NationalGridFieldNumberField,
+  ComponentType.LatLongField
+]
+
+/**
+ * @param {ComponentType | undefined} questionType
+ * @param {string} instructionText
+ * @returns {boolean}
+ */
+function shouldIncludeLocationInstruction(questionType, instructionText) {
+  if (!questionType || !LOCATION_FIELD_TYPES.includes(questionType)) {
+    return true
+  }
+
+  const allLocationInstructions = Object.values(locationInstructionDefaults)
+  return !allLocationInstructions.includes(instructionText)
+}
+
+/**
  * Maps payload to additional component options
  * @param {Partial<FormEditorInputQuestion>} payload
  * @returns {object}
  */
 export function getAdditionalOptions(payload) {
   const additionalOptions = {}
-  if (payload.classes) {
-    additionalOptions.classes = payload.classes
-  }
-  if (payload.rows) {
-    additionalOptions.rows = payload.rows
-  }
-  if (payload.prefix) {
-    additionalOptions.prefix = payload.prefix
-  }
-  if (payload.suffix) {
-    additionalOptions.suffix = payload.suffix
-  }
-  if (payload.maxFuture !== undefined) {
-    additionalOptions.maxDaysInFuture = payload.maxFuture
-  }
-  if (payload.maxPast !== undefined) {
-    additionalOptions.maxDaysInPast = payload.maxPast
-  }
-  if (payload.usePostcodeLookup !== undefined) {
-    additionalOptions.usePostcodeLookup = isCheckboxSelected(
-      payload.usePostcodeLookup
-    )
-  }
 
-  if (isCheckboxSelected(payload.giveInstructions) && payload.instructionText) {
-    const locationFieldTypes = [
-      ComponentType.EastingNorthingField,
-      ComponentType.OsGridRefField,
-      ComponentType.NationalGridFieldNumberField,
-      ComponentType.LatLongField
-    ]
-    const questionType = /** @type {ComponentType} */ (payload.questionType)
-
-    // Check if this is a location field with instructions
-    if (payload.questionType && locationFieldTypes.includes(questionType)) {
-      // Get all location default instructions
-      const allLocationInstructions = Object.values(locationInstructionDefaults)
-
-      // Don't include instruction text if it matches another location component's default
-      // (Let it be regenerated with the correct default for the new type)
-      if (!allLocationInstructions.includes(payload.instructionText)) {
-        additionalOptions.instructionText = payload.instructionText
+  const optionsMapping = [
+    {
+      key: 'classes',
+      getValue: () => payload.classes,
+      shouldInclude: () => payload.classes
+    },
+    {
+      key: 'rows',
+      getValue: () => payload.rows,
+      shouldInclude: () => payload.rows
+    },
+    {
+      key: 'prefix',
+      getValue: () => payload.prefix,
+      shouldInclude: () => payload.prefix
+    },
+    {
+      key: 'suffix',
+      getValue: () => payload.suffix,
+      shouldInclude: () => payload.suffix
+    },
+    {
+      key: 'maxDaysInFuture',
+      getValue: () => payload.maxFuture,
+      shouldInclude: () => payload.maxFuture !== undefined
+    },
+    {
+      key: 'maxDaysInPast',
+      getValue: () => payload.maxPast,
+      shouldInclude: () => payload.maxPast !== undefined
+    },
+    {
+      key: 'usePostcodeLookup',
+      getValue: () => isCheckboxSelected(payload.usePostcodeLookup),
+      shouldInclude: () => payload.usePostcodeLookup !== undefined
+    },
+    {
+      key: 'instructionText',
+      getValue: () => payload.instructionText,
+      shouldInclude: () => {
+        const hasInstructions =
+          isCheckboxSelected(payload.giveInstructions) &&
+          payload.instructionText
+        if (!hasInstructions || !payload.instructionText) {
+          return false
+        }
+        const questionType = /** @type {ComponentType} */ (payload.questionType)
+        return shouldIncludeLocationInstruction(
+          questionType,
+          payload.instructionText
+        )
       }
-    } else {
-      // For non-location fields, always include the instruction text
-      additionalOptions.instructionText = payload.instructionText
+    }
+  ]
+
+  for (const mapping of optionsMapping) {
+    if (mapping.shouldInclude()) {
+      const value = mapping.getValue()
+      Object.assign(additionalOptions, { [mapping.key]: value })
     }
   }
 

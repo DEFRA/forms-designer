@@ -14,14 +14,23 @@ import {
   insertValidationErrors,
   mapListToTextareaStr
 } from '~/src/lib/utils.js'
+import { allBaseSettingsFields } from '~/src/models/forms/editor-v2/base-settings-field-config.js'
+import { tickBoxes } from '~/src/models/forms/editor-v2/common.js'
 import {
-  GOVUK_LABEL__M,
-  tickBoxes
-} from '~/src/models/forms/editor-v2/common.js'
+  allowedParentFileTypes,
+  getSelectedFileTypesFromCSVMimeTypes
+} from '~/src/models/forms/editor-v2/file-type-utils.js'
 import {
   getDefaultLocationHint,
   locationHintDefaults
 } from '~/src/models/forms/editor-v2/location-hint-defaults.js'
+
+export {
+  getSelectedFileTypesFromCSVMimeTypes,
+  mapExtensionsToMimeTypes,
+  mapPayloadToFileMimeTypes
+} from '~/src/models/forms/editor-v2/file-type-utils.js'
+export { allBaseSettingsFields } from '~/src/models/forms/editor-v2/base-settings-field-config.js'
 
 const TABULAR_DATA = 'tabular-data'
 const DOCUMENTS = 'documents'
@@ -139,250 +148,77 @@ export const baseSchema = Joi.object().keys({
 })
 
 /**
- * @type {FormEditorGovukFieldBase}
+ * @type {ComponentType[]}
  */
-export const allBaseSettingsFields = {
-  question: {
-    name: 'question',
-    id: 'question',
-    label: {
-      text: 'Question',
-      classes: GOVUK_LABEL__M
-    }
-  },
-  hintText: {
-    name: 'hintText',
-    id: 'hintText',
-    label: {
-      text: 'Hint text (optional)',
-      classes: GOVUK_LABEL__M
-    },
-    rows: 3
-  },
-  questionOptional: {
-    name: 'questionOptional',
-    id: 'questionOptional',
-    classes: 'govuk-checkboxes--small',
-    formGroup: { classes: 'app-settings-checkboxes' },
-    items: [
-      {
-        value: 'true',
-        text: 'Make this question optional',
-        checked: false
-      }
-    ]
-  },
-  shortDescription: {
-    id: 'shortDescription',
-    name: 'shortDescription',
-    idPrefix: 'shortDescription',
-    label: {
-      text: 'Short description',
-      classes: GOVUK_LABEL__M
-    },
-    hint: {
-      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
-    }
-  },
-  fileTypes: {
-    id: 'fileTypes',
-    name: 'fileTypes',
-    idPrefix: 'fileTypes',
-    fieldset: {
-      legend: {
-        text: 'Select the file types you accept',
-        isPageHeading: false,
-        classes: 'govuk-fieldset__legend--m'
-      }
-    },
-    customTemplate: 'file-types'
-  },
-  documentTypes: {
-    id: 'documentTypes',
-    name: 'documentTypes',
-    idPrefix: 'documentTypes'
-  },
-  imageTypes: {
-    id: 'imageTypes',
-    name: 'imageTypes',
-    idPrefix: 'imageTypes'
-  },
-  tabularDataTypes: {
-    id: 'tabularDataTypes',
-    name: 'tabularDataTypes',
-    idPrefix: 'tabularDataTypes'
-  },
-  radiosOrCheckboxes: {
-    id: 'radiosOrCheckboxes',
-    name: 'radiosOrCheckboxes',
-    customTemplate: 'radios-or-checkboxes'
-  },
-  autoCompleteOptions: {
-    id: 'autoCompleteOptions',
-    name: 'autoCompleteOptions',
-    idPrefix: 'autoCompleteOptions',
-    label: {
-      text: 'Add each option on a new line',
-      classes: 'govuk-label--s',
-      isPageHeading: false
-    },
-    hint: {
-      text: 'To optionally set an input value for each item, separate the option text and value with a colon (e.g English:en-gb)'
-    },
-    customTemplate: 'auto-complete-options'
-  },
-  declarationText: {
-    id: 'declarationText',
-    name: 'declarationText',
-    idPrefix: 'declarationText',
-    label: {
-      text: 'Declaration text',
-      classes: 'govuk-label--m'
-    },
-    hint: {
-      text: 'You can use Markdown if you want to format the content or add links'
-    },
-    preContent: {
-      path: '../../../../views/forms/editor-v2/partials/help-writing-declaration.njk'
-    },
-    postContent: {
-      path: '../../../../views/forms/editor-v2/partials/markdown-help.njk'
-    }
-  },
-  usePostcodeLookup: {
-    name: 'usePostcodeLookup',
-    id: 'usePostcodeLookup',
-    classes: 'govuk-checkboxes--small',
-    formGroup: { classes: 'app-settings-checkboxes' },
-    items: [
-      {
-        value: 'true',
-        text: 'Use postcode lookup',
-        checked: false,
-        hint: {
-          text: 'Allow users to search for an address using a postcode'
-        }
-      }
-    ]
-  }
-}
-
-const allowedParentFileTypes = [
-  { value: DOCUMENTS, text: 'Documents' },
-  { value: IMAGES, text: 'Images' },
-  { value: TABULAR_DATA, text: 'Tabular data' }
+const LOCATION_FIELD_TYPES = [
+  ComponentType.EastingNorthingField,
+  ComponentType.OsGridRefField,
+  ComponentType.NationalGridFieldNumberField,
+  ComponentType.LatLongField
 ]
 
 /**
- * Map file extensions to mime types
- * @param {string[]} fileExtensions
+ * @param {ComponentType} questionType
+ * @param {string | undefined} validationResult
+ * @param {string | undefined} storedHint
+ * @returns {string | undefined}
  */
-export function mapExtensionsToMimeTypes(fileExtensions) {
-  return fileExtensions.map((ext) => {
-    const found =
-      allDocumentTypes.find((x) => x.value === ext) ??
-      allImageTypes.find((x) => x.value === ext) ??
-      allTabularDataTypes.find((x) => x.value === ext)
-    return found?.mimeType
-  })
+function getLocationFieldHint(questionType, validationResult, storedHint) {
+  const allLocationHints = Object.values(locationHintDefaults)
+
+  if (validationResult && allLocationHints.includes(validationResult)) {
+    return getDefaultLocationHint(questionType)
+  }
+
+  if (storedHint && allLocationHints.includes(storedHint)) {
+    return getDefaultLocationHint(questionType)
+  }
+
+  if (validationResult !== undefined) {
+    return validationResult
+  }
+  if (storedHint) {
+    return storedHint
+  }
+  return getDefaultLocationHint(questionType)
 }
 
 /**
- * @param {Partial<FormEditorInputQuestion>} payload
+ * @param {keyof Omit<FormEditorGovukField, 'errorMessage'>} fieldName
+ * @param {FormComponentsDef | undefined} questionFields
+ * @param {FormDefinition} definition
+ * @returns {GovukField['value']}
  */
-export function mapPayloadToFileMimeTypes(payload) {
-  const documentParentSelected = payload.fileTypes?.includes('documents')
-  const imagesParentSelected = payload.fileTypes?.includes('images')
-  const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
-
-  const combinedTypes = (
-    documentParentSelected ? (payload.documentTypes ?? []) : []
-  )
-    .concat(imagesParentSelected ? (payload.imageTypes ?? []) : [])
-    .concat(tabularDataParentSelected ? (payload.tabularDataTypes ?? []) : [])
-  return combinedTypes.length
-    ? { accept: mapExtensionsToMimeTypes(combinedTypes).join(',') }
-    : {}
-}
-
-/**
- * @param {ComponentDef | undefined} question
- */
-export function getSelectedFileTypesFromCSVMimeTypes(question) {
-  const isFileUpload = question?.type === ComponentType.FileUploadField
-
-  if (!isFileUpload) {
-    return {}
-  }
-
-  const selectedMimeTypesFromCSV = question.options.accept?.split(',') ?? []
-
-  const documentTypes = selectedMimeTypesFromCSV
-    .map((currMimeType) => {
-      const found = allDocumentTypes.find((dt) => dt.mimeType === currMimeType)
-      return found ? found.value : null
-    })
-    .filter(Boolean)
-
-  const imageTypes = selectedMimeTypesFromCSV
-    .map((currMimeType) => {
-      const found = allImageTypes.find((dt) => dt.mimeType === currMimeType)
-      return found ? found.value : null
-    })
-    .filter(Boolean)
-
-  const tabularDataTypes = selectedMimeTypesFromCSV
-    .map((currMimeType) => {
-      const found = allTabularDataTypes.find(
-        (dt) => dt.mimeType === currMimeType
-      )
-      return found ? found.value : null
-    })
-    .filter(Boolean)
-
-  const fileTypes = /** @type {string[]} */ ([])
-  if (documentTypes.length) {
-    fileTypes.push(DOCUMENTS)
-  }
-  if (imageTypes.length) {
-    fileTypes.push(IMAGES)
-  }
-  if (tabularDataTypes.length) {
-    fileTypes.push(TABULAR_DATA)
-  }
-
-  return {
-    fileTypes,
-    documentTypes,
-    imageTypes,
-    tabularDataTypes
-  }
-}
-
-const fieldMappingFunctions =
-  /** @type {Partial<Record<string, (questionFields: FormComponentsDef | undefined, definition: FormDefinition) => string >>} */ ({
-    questionOptional: (questionFields) =>
-      `${questionFields?.options.required === false}`,
-    question: (questionFields) => questionFields?.title,
-    hintText: (questionFields) => questionFields?.hint,
-    shortDescription: (questionFields) => questionFields?.shortDescription,
-    declarationText: (questionFields) => {
+function getFieldValueFromSwitch(fieldName, questionFields, definition) {
+  switch (fieldName) {
+    case 'questionOptional':
+      return `${questionFields?.options.required === false}`
+    case 'question':
+      return questionFields?.title
+    case 'hintText':
+      return questionFields?.hint
+    case 'shortDescription':
+      return questionFields?.shortDescription
+    case 'declarationText': {
       const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
         questionFields
       )
       return declaration?.content
-    },
-    autoCompleteOptions: (questionFields, definition) =>
-      mapListToTextareaStr(
+    }
+    case 'autoCompleteOptions':
+      return mapListToTextareaStr(
         getListFromComponent(questionFields, definition)?.items
-      ),
-    usePostcodeLookup: (questionFields) => {
+      )
+    case 'usePostcodeLookup': {
       const addressField = /** @type {UkAddressFieldComponent | undefined} */ (
         questionFields
       )
       return `${addressField?.options.usePostcodeLookup === true}`
     }
-  })
+    default:
+      return undefined
+  }
+}
 
 /**
  *
@@ -404,59 +240,23 @@ export function getFieldValue(
 
   // Special handling for hintText with location fields
   if (fieldName === 'hintText') {
-    const locationFieldTypes = [
-      ComponentType.EastingNorthingField,
-      ComponentType.OsGridRefField,
-      ComponentType.NationalGridFieldNumberField,
-      ComponentType.LatLongField
-    ]
-
-    // Use currentQuestionType if provided (handles type changes), otherwise fall back to stored type
     const questionType = currentQuestionType ?? questionFields?.type
 
-    // If this is a location field
-    if (questionType && locationFieldTypes.includes(questionType)) {
-      const allLocationHints = Object.values(locationHintDefaults)
-
-      // If validation result exists and matches another location type's default, use the correct default
-      if (
-        validationResult &&
-        typeof validationResult === 'string' &&
-        allLocationHints.includes(validationResult)
-      ) {
-        return getDefaultLocationHint(questionType)
-      }
-
-      // If stored hint matches a different location type's default, use new default
-      if (
-        questionFields?.hint &&
-        allLocationHints.includes(questionFields.hint)
-      ) {
-        return getDefaultLocationHint(questionType)
-      }
-
-      // Otherwise use validation result if exists, or stored hint, or default
-      if (validationResult || validationResult === '') {
-        return validationResult
-      }
-      if (questionFields?.hint) {
-        return questionFields.hint
-      }
-      return getDefaultLocationHint(questionType)
+    if (questionType && LOCATION_FIELD_TYPES.includes(questionType)) {
+      const hintValue =
+        typeof validationResult === 'string' ? validationResult : undefined
+      return getLocationFieldHint(questionType, hintValue, questionFields?.hint)
     }
   }
 
-  if (validationResult || validationResult === '') {
+  if (validationResult !== undefined) {
     if (fieldName === 'autoCompleteOptions') {
       return mapListToTextareaStr(/** @type {Item[]} */ (validationResult))
     }
     return validationResult
   }
 
-  const mappingFunction = fieldMappingFunctions[fieldName]
-  return mappingFunction
-    ? mappingFunction(questionFields, definition)
-    : undefined
+  return getFieldValueFromSwitch(fieldName, questionFields, definition)
 }
 
 export const baseQuestionFields =
@@ -517,38 +317,32 @@ export const locationFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 ])
 
 /**
+ * Map of component types to their respective field lists
+ * @type {Map<ComponentType, FormEditorGovukFieldBaseKeys[]>}
+ */
+const COMPONENT_TYPE_TO_FIELDS = new Map([
+  [ComponentType.FileUploadField, fileUploadFields],
+  [ComponentType.AutocompleteField, autocompleteFields],
+  [ComponentType.UkAddressField, ukAddressFields],
+  [ComponentType.DeclarationField, declarationFields],
+  [ComponentType.RadiosField, radiosOrCheckboxesFields],
+  [ComponentType.CheckboxesField, radiosOrCheckboxesFields],
+  [ComponentType.SelectField, radiosOrCheckboxesFields],
+  [ComponentType.EastingNorthingField, locationFields],
+  [ComponentType.OsGridRefField, locationFields],
+  [ComponentType.NationalGridFieldNumberField, locationFields],
+  [ComponentType.LatLongField, locationFields]
+])
+
+/**
  * @param { ComponentType | undefined } questionType
  * @returns {(keyof Omit<FormEditorGovukField, 'errorMessage'>)[]}
  */
 export function getQuestionFieldList(questionType) {
-  if (questionType === ComponentType.FileUploadField) {
-    return fileUploadFields
+  if (!questionType) {
+    return baseQuestionFields
   }
-  if (questionType === ComponentType.AutocompleteField) {
-    return autocompleteFields
-  }
-  if (questionType === ComponentType.UkAddressField) {
-    return ukAddressFields
-  }
-  if (questionType === ComponentType.DeclarationField) {
-    return declarationFields
-  }
-  if (
-    questionType === ComponentType.RadiosField ||
-    questionType === ComponentType.CheckboxesField ||
-    questionType === ComponentType.SelectField
-  ) {
-    return radiosOrCheckboxesFields
-  }
-  if (
-    questionType === ComponentType.EastingNorthingField ||
-    questionType === ComponentType.OsGridRefField ||
-    questionType === ComponentType.NationalGridFieldNumberField ||
-    questionType === ComponentType.LatLongField
-  ) {
-    return locationFields
-  }
-  return baseQuestionFields
+  return COMPONENT_TYPE_TO_FIELDS.get(questionType) ?? baseQuestionFields
 }
 
 /**
