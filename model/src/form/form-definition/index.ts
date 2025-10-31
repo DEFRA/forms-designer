@@ -84,7 +84,7 @@ const listIdRef = Joi.ref('/lists', {
     lists.filter((list) => list.id).map((list) => list.id)
 })
 
-const listItemIdValidator = (
+export const listItemIdValidator = (
   value: string,
   helpers: CustomHelpers<ConditionListItemRefValueDataV2>
 ) => {
@@ -103,8 +103,8 @@ const listItemIdValidator = (
   const listId = conditionValue.listId
   const list = definition.lists.find((list) => list.id === listId)
 
-  // This is just for type safety it's
-  // impossible for the list to not exist here
+  // This check is just for type safety. It'll be impossible for the list to not exist here as it will be
+  // handled by the `Joi.valid(listIdRef)` applied to the `ConditionListItemRefValueDataV2.listId` schema
   if (!list) {
     return value
   }
