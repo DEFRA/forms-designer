@@ -147,6 +147,7 @@ export const allBaseSettingsFields = {
     name: 'questionOptional',
     id: 'questionOptional',
     classes: 'govuk-checkboxes--small',
+    formGroup: { classes: 'app-settings-checkboxes' },
     items: [
       {
         value: 'true',
@@ -218,6 +219,7 @@ export const allBaseSettingsFields = {
     name: 'usePostcodeLookup',
     id: 'usePostcodeLookup',
     classes: 'govuk-checkboxes--small',
+    formGroup: { classes: 'app-settings-checkboxes' },
     items: [
       {
         value: 'true',

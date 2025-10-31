@@ -36,6 +36,11 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   border-bottom: 1px solid $govuk-border-colour;
 }
 
+// Reduce spacing between consecutive app settings checkboxes
+.govuk-form-group.app-settings-checkboxes:has(+ .govuk-form-group.app-settings-checkboxes) {
+  margin-bottom: 0;
+}
+
 // Styles for the reorderable list
 .app-reorderable-list {
   list-style-type: none;

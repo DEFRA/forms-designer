@@ -38,6 +38,9 @@ describe('editor-v2 - advanced settings fields model', () => {
           name: 'questionOptional',
           id: 'questionOptional',
           classes: 'govuk-checkboxes--small',
+          formGroup: {
+            classes: 'app-settings-checkboxes'
+          },
           items: [
             {
               value: 'true',
@@ -95,6 +98,9 @@ describe('editor-v2 - advanced settings fields model', () => {
           name: 'questionOptional',
           id: 'questionOptional',
           classes: 'govuk-checkboxes--small',
+          formGroup: {
+            classes: 'app-settings-checkboxes'
+          },
           items: [
             {
               value: 'true',
@@ -198,6 +204,9 @@ describe('editor-v2 - advanced settings fields model', () => {
           name: 'questionOptional',
           id: 'questionOptional',
           classes: 'govuk-checkboxes--small',
+          formGroup: {
+            classes: 'app-settings-checkboxes'
+          },
           items: [
             {
               value: 'true',
@@ -210,6 +219,9 @@ describe('editor-v2 - advanced settings fields model', () => {
           name: 'usePostcodeLookup',
           id: 'usePostcodeLookup',
           classes: 'govuk-checkboxes--small',
+          formGroup: {
+            classes: 'app-settings-checkboxes'
+          },
           items: [
             {
               value: 'true',
