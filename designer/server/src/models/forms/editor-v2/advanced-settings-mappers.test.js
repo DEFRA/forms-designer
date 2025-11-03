@@ -142,7 +142,7 @@ describe('advanced-settings-mappers', () => {
         questionType: ComponentType.LatLongField,
         question: 'Coordinates',
         name: 'coordinates',
-        hintText: 'For example. Easting: 248741, Northing: 63688'
+        hintText: 'For example. Easting: 24874, Northing: 63688'
       }
 
       const result = mapBaseQuestionDetails(payload)

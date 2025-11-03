@@ -26,7 +26,7 @@ describe('location-hint-defaults', () => {
   describe('getDefaultLocationHint', () => {
     it('should return correct hint for EastingNorthingField', () => {
       const hint = getDefaultLocationHint(ComponentType.EastingNorthingField)
-      expect(hint).toBe('For example. Easting: 248741, Northing: 63688')
+      expect(hint).toBe('For example. Easting: 24874, Northing: 63688')
     })
 
     it('should return correct hint for OsGridRefField', () => {
