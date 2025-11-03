@@ -33,6 +33,18 @@ export const baseSchema = Joi.object().keys({
     })
   }),
   hintText: questionDetailsFullSchema.hintTextSchema,
+  declarationText: questionDetailsFullSchema.declarationTextSchema.when(
+    'questionType',
+    {
+      is: 'DeclarationField',
+      then: questionDetailsFullSchema.declarationTextSchema
+        .required()
+        .messages({
+          '*': 'Enter declaration text'
+        }),
+      otherwise: Joi.string().optional().allow('')
+    }
+  ),
   questionOptional: questionDetailsFullSchema.questionOptionalSchema,
   shortDescription: questionDetailsFullSchema.shortDescriptionSchema.when(
     'enhancedAction',

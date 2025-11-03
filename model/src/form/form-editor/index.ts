@@ -534,6 +534,7 @@ export const autoCompleteOptionsSchema = customValidator
 export const questionDetailsFullSchema = {
   autoCompleteOptionsSchema,
   classesSchema,
+  declarationTextSchema,
   documentTypesSchema,
   enhancedActionSchema,
   exactFilesSchema,
