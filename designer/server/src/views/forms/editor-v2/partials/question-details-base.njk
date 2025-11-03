@@ -11,6 +11,9 @@
       {%- include "../../../../views/forms/editor-v2/custom-templates/" + field.customTemplate + ".njk" -%}
     {% else %}
       {% set fieldType = getFieldType(field) %}
+      {% if field.preContent %}
+        {%- include field.preContent.path -%}
+      {% endif %}
       {% if fieldType == 'TextField' %}
         {{ govukInput(field) }}
       {% elif fieldType == 'MultilineTextField' %}

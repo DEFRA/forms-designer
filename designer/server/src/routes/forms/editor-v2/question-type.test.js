@@ -104,7 +104,7 @@ describe('Editor v2 question routes', () => {
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
-    expect($radios).toHaveLength(18)
+    expect($radios).toHaveLength(19)
     expect($radios[0]).toHaveAccessibleName('Written answer')
     expect($radios[1]).toHaveAccessibleName('Short answer (a single line)')
     expect($radios[2]).toHaveAccessibleName(
@@ -119,14 +119,15 @@ describe('Editor v2 question routes', () => {
     expect($radios[9]).toHaveAccessibleName('Phone number')
     expect($radios[10]).toHaveAccessibleName('Supporting evidence')
     expect($radios[11]).toHaveAccessibleName('Email address')
-    expect($radios[12]).toHaveAccessibleName(
+    expect($radios[12]).toHaveAccessibleName('Declaration')
+    expect($radios[13]).toHaveAccessibleName(
       'A list of options that users can choose from'
     )
-    expect($radios[13]).toHaveAccessibleName('Yes or No')
-    expect($radios[14]).toHaveAccessibleName('Checkboxes')
-    expect($radios[15]).toHaveAccessibleName('Radios')
-    expect($radios[16]).toHaveAccessibleName('Autocomplete')
-    expect($radios[17]).toHaveAccessibleName('Select')
+    expect($radios[14]).toHaveAccessibleName('Yes or No')
+    expect($radios[15]).toHaveAccessibleName('Checkboxes')
+    expect($radios[16]).toHaveAccessibleName('Radios')
+    expect($radios[17]).toHaveAccessibleName('Autocomplete')
+    expect($radios[18]).toHaveAccessibleName('Select')
   })
 
   test('POST - should error if missing mandatory fields', async () => {

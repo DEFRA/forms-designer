@@ -237,6 +237,12 @@ export const allBaseSettingsFields = {
     },
     hint: {
       text: 'You can use Markdown if you want to format the content or add links'
+    },
+    preContent: {
+      path: '../../../../views/forms/editor-v2/partials/help-writing-declaration.njk'
+    },
+    postContent: {
+      path: '../../../../views/forms/editor-v2/partials/markdown-help.njk'
     }
   },
   usePostcodeLookup: {
@@ -381,6 +387,12 @@ export function getFieldValue(
       return questionFields?.hint
     case 'shortDescription':
       return questionFields?.shortDescription
+    case 'declarationText': {
+      const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
+        questionFields
+      )
+      return declaration?.content
+    }
     case 'autoCompleteOptions':
       return mapListToTextareaStr(
         getListFromComponent(questionFields, definition)?.items
@@ -555,6 +567,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

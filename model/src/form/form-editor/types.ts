@@ -318,6 +318,7 @@ export type FormEditorInputQuestion = Pick<
   | 'question'
   | 'shortDescription'
   | 'hintText'
+  | 'declarationText'
   | 'questionOptional'
   | 'minLength'
   | 'maxLength'
@@ -517,6 +518,14 @@ export interface GovukField {
   customTemplate?: string
   formGroup?: {
     classes?: string
+  }
+  preContent?: {
+    html?: string
+    path?: string
+  }
+  postContent?: {
+    html?: string
+    path?: string
   }
 }
 
