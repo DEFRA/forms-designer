@@ -10,7 +10,7 @@ export const locationInstructionDefaults = {
   3. Using the map, locate the land or building. Use the +/- icons to zoom in and out.
   4. In the top toolbar, select the fourth icon along ('Where am I?') - it looks like a target.
   5. Click on the land or building.
-  6. A pop-up box will appear showing the land details for this location. Easting and Northing appear at the top of the list. They are made up of 6 digits each, for example, 248741 and 63688.`,
+  6. A pop-up box will appear showing the land details for this location. Easting and Northing appear at the top of the list. Easting can be up to 5 digits (0-70000) and Northing up to 7 digits (0-1300000), for example, 24874 and 63688.`,
 
   OsGridRefField: `Use the [Ordnance Survey](https://explore.osmaps.com/). Follow these instructions:
 

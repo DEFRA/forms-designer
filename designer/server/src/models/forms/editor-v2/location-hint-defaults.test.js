@@ -9,7 +9,7 @@ describe('location-hint-defaults', () => {
   describe('locationHintDefaults', () => {
     it('should have hint defaults for all location field types', () => {
       expect(locationHintDefaults.EastingNorthingField).toBe(
-        'For example. Easting: 248741, Northing: 63688'
+        'For example. Easting: 24874, Northing: 63688'
       )
       expect(locationHintDefaults.OsGridRefField).toBe(
         'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364'
