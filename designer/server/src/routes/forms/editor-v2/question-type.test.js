@@ -303,6 +303,18 @@ describe('Editor v2 question routes', () => {
       ).toBe('d-sub')
     })
 
+    test('gets location sub-type', () => {
+      expect(
+        deriveQuestionType(
+          QuestionTypeSubGroup.LocationSubGroup,
+          'wa-sub',
+          'd-sub',
+          'loc-sub',
+          'l-sub'
+        )
+      ).toBe('loc-sub')
+    })
+
     test('gets list sub-type', () => {
       expect(
         deriveQuestionType(
@@ -326,6 +338,72 @@ describe('Editor v2 question routes', () => {
         )
       ).toBe('standard-type')
     })
+
+    test('returns undefined when all parameters are undefined', () => {
+      expect(
+        deriveQuestionType(
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        )
+      ).toBeUndefined()
+    })
+  })
+
+  test('POST - should clear questionDetails when question type changes', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue({
+      questionType: ComponentType.TextField,
+      questionDetails: /** @type {any} */ ({
+        question: 'Old question',
+        name: 'oldName'
+      })
+    })
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/1/type/54321',
+      auth,
+      payload: { questionType: 'NumberField' }
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+  })
+
+  test('POST - should preserve questionDetails when question type unchanged', async () => {
+    jest.mocked(getQuestionSessionState).mockReturnValue({
+      questionType: ComponentType.TextField,
+      questionDetails: /** @type {any} */ ({
+        question: 'Existing question',
+        name: 'existingName'
+      })
+    })
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/1/type/54321',
+      auth,
+      payload: { questionType: 'TextField' }
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
   })
 })
 

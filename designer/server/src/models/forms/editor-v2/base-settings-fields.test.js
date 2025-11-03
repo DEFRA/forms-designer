@@ -5,6 +5,8 @@ import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
   baseSchema,
   getFieldList,
+  getFieldValue,
+  getFileUploadFields,
   getQuestionFieldList
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
@@ -558,9 +560,284 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(ukAddressField[0]).toBe('question')
       expect(ukAddressField[3]).toBe('usePostcodeLookup')
     })
+
+    test('should return autocomplete fields for AutocompleteField', () => {
+      const autocompleteFields = getQuestionFieldList(
+        ComponentType.AutocompleteField
+      )
+      expect(autocompleteFields).toHaveLength(5)
+      expect(autocompleteFields[3]).toBe('autoCompleteOptions')
+    })
+
+    test('should return location fields for EastingNorthingField', () => {
+      const locationFields = getQuestionFieldList(
+        ComponentType.EastingNorthingField
+      )
+      expect(locationFields).toHaveLength(4)
+      expect(locationFields[0]).toBe('question')
+      expect(locationFields[1]).toBe('hintText')
+    })
+
+    test('should return location fields for OsGridRefField', () => {
+      const locationFields = getQuestionFieldList(ComponentType.OsGridRefField)
+      expect(locationFields).toHaveLength(4)
+      expect(locationFields[0]).toBe('question')
+    })
+
+    test('should return location fields for NationalGridFieldNumberField', () => {
+      const locationFields = getQuestionFieldList(
+        ComponentType.NationalGridFieldNumberField
+      )
+      expect(locationFields).toHaveLength(4)
+      expect(locationFields[0]).toBe('question')
+    })
+
+    test('should return location fields for LatLongField', () => {
+      const locationFields = getQuestionFieldList(ComponentType.LatLongField)
+      expect(locationFields).toHaveLength(4)
+      expect(locationFields[0]).toBe('question')
+    })
+
+    test('should return base fields for SelectField', () => {
+      const selectFields = getQuestionFieldList(ComponentType.SelectField)
+      expect(selectFields).toHaveLength(5)
+      expect(selectFields[4]).toBe('radiosOrCheckboxes')
+    })
+
+    test('should return base fields for undefined question type', () => {
+      const fields = getQuestionFieldList(undefined)
+      expect(fields).toHaveLength(4)
+      expect(fields[0]).toBe('question')
+    })
+
+    test('should return base fields for unmapped question type', () => {
+      const fields = getQuestionFieldList(ComponentType.TextField)
+      expect(fields).toHaveLength(4)
+      expect(fields[0]).toBe('question')
+    })
+  })
+
+  describe('getFieldValue', () => {
+    test('should return validation result when available', () => {
+      const validation = /** @type {ValidationFailure<FormEditor>} */ ({
+        formValues: {
+          question: 'Validated question'
+        },
+        formErrors: {}
+      })
+      const result = getFieldValue(
+        'question',
+        undefined,
+        validation,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Validated question')
+    })
+
+    test('should return question field from component', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        title: 'Test question',
+        type: ComponentType.TextField,
+        name: 'test',
+        options: {},
+        schema: {}
+      })
+      const result = getFieldValue(
+        'question',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Test question')
+    })
+
+    test('should return hint text from component', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        hint: 'Test hint',
+        type: ComponentType.TextField,
+        name: 'test',
+        title: 'test',
+        options: {},
+        schema: {}
+      })
+      const result = getFieldValue(
+        'hintText',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Test hint')
+    })
+
+    test('should return short description from component', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        shortDescription: 'Short desc',
+        type: ComponentType.TextField,
+        name: 'test',
+        title: 'test',
+        options: {},
+        schema: {}
+      })
+      const result = getFieldValue(
+        'shortDescription',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Short desc')
+    })
+
+    test('should return questionOptional as string', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.TextField,
+        name: 'test',
+        title: 'test',
+        options: {
+          required: false
+        },
+        schema: {}
+      })
+      const result = getFieldValue(
+        'questionOptional',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('true')
+    })
+
+    test('should return default hint for location field without hint', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.EastingNorthingField,
+        name: 'location',
+        title: 'Location',
+        options: {}
+      })
+      const result = getFieldValue(
+        'hintText',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        ComponentType.EastingNorthingField
+      )
+      expect(result).toBe('For example. Easting: 248741, Northing: 63688')
+    })
+
+    test('should replace location hint when switching field types', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.OsGridRefField,
+        name: 'location',
+        title: 'Location',
+        hint: 'For example. Easting: 248741, Northing: 63688',
+        options: {}
+      })
+      const result = getFieldValue(
+        'hintText',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        ComponentType.OsGridRefField
+      )
+      expect(result).toBe(
+        'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364'
+      )
+    })
+
+    test('should keep custom hint for location field', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.EastingNorthingField,
+        name: 'location',
+        title: 'Location',
+        hint: 'Custom hint text',
+        options: {}
+      })
+      const result = getFieldValue(
+        'hintText',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        ComponentType.EastingNorthingField
+      )
+      expect(result).toBe('Custom hint text')
+    })
+
+    test('should return usePostcodeLookup as string', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.UkAddressField,
+        name: 'address',
+        title: 'Address',
+        options: {
+          usePostcodeLookup: true
+        }
+      })
+      const result = getFieldValue(
+        'usePostcodeLookup',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('true')
+    })
+
+    test('should return undefined for unknown field', () => {
+      const result = getFieldValue(
+        /** @type {any} */ ('unknownField'),
+        undefined,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBeUndefined()
+    })
+  })
+
+  describe('getFileUploadFields', () => {
+    test('should return file upload fields without validation', () => {
+      const questionFields = /** @type {ComponentDef} */ ({
+        type: ComponentType.FileUploadField,
+        name: 'upload',
+        title: 'Upload',
+        options: {
+          accept: 'application/pdf'
+        },
+        schema: {}
+      })
+      const result = getFileUploadFields(questionFields, undefined)
+      expect(result).toHaveProperty('fileTypes')
+      expect(result).toHaveProperty('documentTypes')
+      expect(result).toHaveProperty('imageTypes')
+      expect(result).toHaveProperty('tabularDataTypes')
+    })
+
+    test('should return file upload fields with validation', () => {
+      const validation = /** @type {unknown} */ ({
+        formValues: {
+          fileTypes: ['documents'],
+          documentTypes: ['pdf']
+        },
+        formErrors: {
+          fileTypes: { text: 'Error on file types' }
+        }
+      })
+      const result = getFileUploadFields(
+        undefined,
+        /** @type {ValidationFailure<FormEditor>} */ (validation)
+      )
+      expect(result.fileTypes).toHaveProperty('errorMessage')
+      expect(result.fileTypes.errorMessage).toEqual({
+        text: 'Error on file types'
+      })
+    })
   })
 })
 
 /**
- * @import { InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ComponentDef, FormComponentsDef, FormEditor, InputFieldsComponentsDef } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
