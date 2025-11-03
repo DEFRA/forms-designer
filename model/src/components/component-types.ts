@@ -156,7 +156,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     name: 'EastingNorthingField',
     title: 'Easting and northing',
     type: ComponentType.EastingNorthingField,
-    hint: 'For example, Easting: 248741, Northing: 63688',
+    hint: 'For example, Easting: 24874, Northing: 63688',
     options: {}
   },
   {
