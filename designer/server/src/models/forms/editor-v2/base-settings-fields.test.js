@@ -256,6 +256,85 @@ describe('editor-v2 - advanced settings fields model', () => {
         )
       ).toEqual(expectedArray)
     })
+
+    it('should get the declaration text field for a DeclarationComponent', () => {
+      const expectedArray = [
+        {
+          name: 'question',
+          id: 'question',
+          label: {
+            text: 'Question',
+            classes: GOVUK_LABEL__M
+          },
+          value: undefined
+        },
+        {
+          name: 'hintText',
+          id: 'hintText',
+          label: {
+            text: 'Hint text (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          rows: 3,
+          value: undefined
+        },
+        {
+          name: 'declarationText',
+          id: 'declarationText',
+          idPrefix: 'declarationText',
+          label: {
+            text: 'Declaration text',
+            classes: 'govuk-label--m'
+          },
+          hint: {
+            text: 'You can use Markdown if you want to format the content or add links'
+          },
+          value: undefined,
+          preContent: {
+            path: '../../../../views/forms/editor-v2/partials/help-writing-declaration.njk'
+          },
+          postContent: {
+            path: '../../../../views/forms/editor-v2/partials/markdown-help.njk'
+          }
+        },
+        {
+          name: 'questionOptional',
+          id: 'questionOptional',
+          classes: 'govuk-checkboxes--small',
+          formGroup: {
+            classes: 'app-settings-checkboxes'
+          },
+          items: [
+            {
+              value: 'true',
+              text: 'Make this question optional',
+              checked: false
+            }
+          ]
+        },
+        {
+          id: 'shortDescription',
+          name: 'shortDescription',
+          idPrefix: 'shortDescription',
+          label: {
+            text: 'Short description',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+          },
+          value: undefined
+        }
+      ]
+      expect(
+        getFieldList(
+          undefined,
+          ComponentType.DeclarationField,
+          undefined,
+          buildDefinition()
+        )
+      ).toEqual(expectedArray)
+    })
   })
 
   describe('getFieldComponentType', () => {

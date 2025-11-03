@@ -355,6 +355,31 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
   }
 }
 
+const fieldMappingFunctions =
+  /** @type {Partial<Record<string, (questionFields: FormComponentsDef | undefined, definition: FormDefinition) => string >>} */ ({
+    questionOptional: (questionFields) =>
+      `${questionFields?.options.required === false}`,
+    question: (questionFields) => questionFields?.title,
+    hintText: (questionFields) => questionFields?.hint,
+    shortDescription: (questionFields) => questionFields?.shortDescription,
+    declarationText: (questionFields) => {
+      const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
+        questionFields
+      )
+      return declaration?.content
+    },
+    autoCompleteOptions: (questionFields, definition) =>
+      mapListToTextareaStr(
+        getListFromComponent(questionFields, definition)?.items
+      ),
+    usePostcodeLookup: (questionFields) => {
+      const addressField = /** @type {UkAddressFieldComponent | undefined} */ (
+        questionFields
+      )
+      return `${addressField?.options.usePostcodeLookup === true}`
+    }
+  })
+
 /**
  *
  * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
@@ -378,33 +403,10 @@ export function getFieldValue(
     return validationResult
   }
 
-  switch (fieldName) {
-    case 'questionOptional':
-      return `${questionFields?.options.required === false}`
-    case 'question':
-      return questionFields?.title
-    case 'hintText':
-      return questionFields?.hint
-    case 'shortDescription':
-      return questionFields?.shortDescription
-    case 'declarationText': {
-      const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
-        questionFields
-      )
-      return declaration?.content
-    }
-    case 'autoCompleteOptions':
-      return mapListToTextareaStr(
-        getListFromComponent(questionFields, definition)?.items
-      )
-    case 'usePostcodeLookup': {
-      const addressField = /** @type {UkAddressFieldComponent | undefined} */ (
-        questionFields
-      )
-      return `${addressField?.options.usePostcodeLookup === true}`
-    }
-  }
-  return undefined
+  const mappingFunction = fieldMappingFunctions[fieldName]
+  return mappingFunction
+    ? mappingFunction(questionFields, definition)
+    : undefined
 }
 
 export const baseQuestionFields =
@@ -567,6 +569,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent, FormDefinitionError } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
