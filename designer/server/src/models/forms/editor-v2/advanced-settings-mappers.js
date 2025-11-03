@@ -22,27 +22,15 @@ const ALL_LOCATION_HINTS = Object.values(locationHintDefaults)
  */
 export function mapFileUploadQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
+  const additionalSchema = getAdditionalSchema(payload)
   const fileTypes = mapPayloadToFileMimeTypes(payload)
 
   const baseQuestionDetails = mapBaseQuestionDetails(payload)
-  const baseSchema =
-    'schema' in baseQuestionDetails ? baseQuestionDetails.schema : undefined
-  const fileUploadSchema = {}
-
-  if (baseSchema && 'max' in baseSchema) {
-    fileUploadSchema.max = baseSchema.max
-  }
-  if (baseSchema && 'min' in baseSchema) {
-    fileUploadSchema.min = baseSchema.min
-  }
-  if (baseSchema && 'length' in baseSchema) {
-    fileUploadSchema.length = baseSchema.length
-  }
 
   return /** @type {Partial<FileUploadFieldComponent>} */ ({
     ...baseQuestionDetails,
     type: ComponentType.FileUploadField,
-    schema: fileUploadSchema,
+    schema: { ...additionalSchema },
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions,
@@ -80,10 +68,12 @@ export function mapBaseQuestionDetails(payload) {
   )
   const isLocationField = isLocationFieldType(questionType)
 
-  if (isLocationField && questionType) {
-    if (!hintText || ALL_LOCATION_HINTS.includes(hintText)) {
-      hintText = getDefaultLocationHint(questionType)
-    }
+  // For location fields, reset to default hint if no hint text is provided
+  // or the hint text matches one of the standard location hints (user may have switched location field types)
+  if (isLocationField && (!hintText || ALL_LOCATION_HINTS.includes(hintText))) {
+    hintText = getDefaultLocationHint(
+      /** @type {ComponentType} */ (questionType)
+    )
   }
 
   const baseComponent = {

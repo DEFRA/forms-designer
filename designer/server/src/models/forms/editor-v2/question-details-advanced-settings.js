@@ -172,12 +172,14 @@ export function advancedSettingsFields(options, question, validation) {
       ]
     let value = formValues[fieldName]
 
-    if (fieldName === QuestionAdvancedSettings.InstructionText && !value) {
-      if (isLocationFieldType(question.type)) {
-        const defaultInstruction = getDefaultLocationInstructions(question.type)
-        if (defaultInstruction) {
-          value = defaultInstruction
-        }
+    if (
+      fieldName === QuestionAdvancedSettings.InstructionText &&
+      !value &&
+      isLocationFieldType(question.type)
+    ) {
+      const defaultInstruction = getDefaultLocationInstructions(question.type)
+      if (defaultInstruction) {
+        value = defaultInstruction
       }
     }
 

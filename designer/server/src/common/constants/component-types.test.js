@@ -23,66 +23,41 @@ describe('component-types constants', () => {
   })
 
   describe('isLocationFieldType', () => {
-    test('should return true for EastingNorthingField', () => {
-      expect(isLocationFieldType(ComponentType.EastingNorthingField)).toBe(true)
+    test.each([
+      ComponentType.EastingNorthingField,
+      ComponentType.OsGridRefField,
+      ComponentType.NationalGridFieldNumberField,
+      ComponentType.LatLongField
+    ])('should return true for %s', (componentType) => {
+      expect(isLocationFieldType(componentType)).toBe(true)
     })
 
-    test('should return true for OsGridRefField', () => {
-      expect(isLocationFieldType(ComponentType.OsGridRefField)).toBe(true)
+    test.each([
+      ComponentType.TextField,
+      ComponentType.NumberField,
+      ComponentType.UkAddressField
+    ])('should return false for %s', (componentType) => {
+      expect(isLocationFieldType(componentType)).toBe(false)
     })
 
-    test('should return true for NationalGridFieldNumberField', () => {
-      expect(
-        isLocationFieldType(ComponentType.NationalGridFieldNumberField)
-      ).toBe(true)
-    })
-
-    test('should return true for LatLongField', () => {
-      expect(isLocationFieldType(ComponentType.LatLongField)).toBe(true)
-    })
-
-    test('should return false for TextField', () => {
-      expect(isLocationFieldType(ComponentType.TextField)).toBe(false)
-    })
-
-    test('should return false for NumberField', () => {
-      expect(isLocationFieldType(ComponentType.NumberField)).toBe(false)
-    })
-
-    test('should return false for UkAddressField', () => {
-      expect(isLocationFieldType(ComponentType.UkAddressField)).toBe(false)
-    })
-
-    test('should return false for undefined', () => {
-      expect(isLocationFieldType(undefined)).toBe(false)
-    })
-
-    test('should return false for null', () => {
-      expect(
-        isLocationFieldType(
-          /** @type {ComponentType | undefined} */ (
-            /** @type {unknown} */ (null)
-          )
+    test.each([
+      ['undefined', undefined],
+      [
+        'null',
+        /** @type {ComponentType | undefined} */ (/** @type {unknown} */ (null))
+      ],
+      [
+        'empty string',
+        /** @type {ComponentType | undefined} */ (/** @type {unknown} */ (''))
+      ],
+      [
+        'invalid component type',
+        /** @type {ComponentType | undefined} */ (
+          /** @type {unknown} */ ('InvalidType')
         )
-      ).toBe(false)
-    })
-
-    test('should return false for empty string', () => {
-      expect(
-        isLocationFieldType(
-          /** @type {ComponentType | undefined} */ (/** @type {unknown} */ (''))
-        )
-      ).toBe(false)
-    })
-
-    test('should return false for invalid component type', () => {
-      expect(
-        isLocationFieldType(
-          /** @type {ComponentType | undefined} */ (
-            /** @type {unknown} */ ('InvalidType')
-          )
-        )
-      ).toBe(false)
+      ]
+    ])('should return false for %s', (_, value) => {
+      expect(isLocationFieldType(value)).toBe(false)
     })
   })
 })
