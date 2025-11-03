@@ -557,6 +557,7 @@ export interface FormEditorGovukField {
   radiosOrCheckboxes?: GovukField
   autoCompleteOptions?: GovukField
   usePostcodeLookup?: GovukField
+  declarationText?: GovukField
   errorMessage?: { text: string }
 }
 

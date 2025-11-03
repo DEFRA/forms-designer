@@ -215,6 +215,18 @@ export const allBaseSettingsFields = {
     },
     customTemplate: 'auto-complete-options'
   },
+  declarationText: {
+    id: 'declarationText',
+    name: 'declarationText',
+    idPrefix: 'declarationText',
+    label: {
+      text: 'Declaration text',
+      classes: 'govuk-label--m'
+    },
+    hint: {
+      text: 'You can use Markdown if you want to format the content or add links'
+    }
+  },
   usePostcodeLookup: {
     name: 'usePostcodeLookup',
     id: 'usePostcodeLookup',
@@ -396,6 +408,15 @@ export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.ShortDescription
 ])
 
+export const declarationFields =
+  /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+    QuestionBaseSettings.Question,
+    QuestionBaseSettings.HintText,
+    QuestionBaseSettings.DeclarationText,
+    QuestionBaseSettings.QuestionOptional,
+    QuestionBaseSettings.ShortDescription
+  ])
+
 export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question,
   QuestionBaseSettings.HintText,
@@ -426,6 +447,9 @@ export function getQuestionFieldList(questionType) {
   }
   if (questionType === ComponentType.UkAddressField) {
     return ukAddressFields
+  }
+  if (questionType === ComponentType.DeclarationField) {
+    return declarationFields
   }
   if (
     questionType === ComponentType.RadiosField ||
