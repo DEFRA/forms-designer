@@ -520,11 +520,9 @@ export interface GovukField {
     classes?: string
   }
   preContent?: {
-    html?: string
     path?: string
   }
   postContent?: {
-    html?: string
     path?: string
   }
 }

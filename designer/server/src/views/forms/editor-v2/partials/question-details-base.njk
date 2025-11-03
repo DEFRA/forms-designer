@@ -23,6 +23,9 @@
       {% elif fieldType == 'FileUploadField' %}
         {%- include "../../../../views/forms/editor-v2/partials/file-types.njk" -%}
       {% endif %}
+      {% if field.postContent %}
+        {%- include field.postContent.path -%}
+      {% endif %}
     {% endif %}
   {% endfor %}
 
