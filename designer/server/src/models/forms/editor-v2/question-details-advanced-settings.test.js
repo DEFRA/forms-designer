@@ -467,6 +467,91 @@ describe('editor-v2 - question details advanced settings model', () => {
       })
     })
   })
+
+  describe('mapToQuestionOptions - null and undefined handling', () => {
+    test('should handle undefined question gracefully', () => {
+      const result = mapToQuestionOptions(
+        /** @type {ComponentDef} */ (/** @type {unknown} */ (undefined))
+      )
+      expect(result).toEqual({ classes: undefined })
+    })
+
+    test('should handle null question gracefully', () => {
+      const result = mapToQuestionOptions(
+        /** @type {ComponentDef} */ (/** @type {unknown} */ (null))
+      )
+      expect(result).toEqual({ classes: undefined })
+    })
+
+    test('should handle question without type', () => {
+      const result = mapToQuestionOptions(
+        /** @type {ComponentDef} */ ({
+          name: 'test',
+          title: 'test',
+          options: {}
+        })
+      )
+      expect(result).toEqual({ classes: undefined })
+    })
+  })
+
+  describe('advancedSettingsFields - null and undefined handling', () => {
+    test('should handle undefined question gracefully', () => {
+      const question = /** @type {ComponentDef} */ (
+        /** @type {unknown} */ (undefined)
+      )
+      const result = advancedSettingsFields(['classes'], question)
+      expect(result).toHaveLength(1)
+    })
+
+    test('should not populate defaults for non-location fields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.TextField,
+        name: 'text',
+        title: 'text title',
+        options: {},
+        schema: {}
+      })
+      const result = advancedSettingsFields(['instructionText'], question)
+      expect(result).toHaveLength(1)
+      expect(result[0].value).toBeUndefined()
+    })
+
+    test('should not populate instruction defaults if value already exists', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.EastingNorthingField,
+        name: 'location',
+        title: 'location title',
+        options: {
+          instructionText: 'Custom instructions'
+        }
+      })
+      const validation = /** @type {unknown} */ ({
+        formValues: {
+          instructionText: 'Custom instructions'
+        },
+        formErrors: {}
+      })
+      const result = advancedSettingsFields(
+        ['instructionText'],
+        question,
+        /** @type {any} */ (validation)
+      )
+      expect(result).toHaveLength(1)
+      expect(result[0].value).toBe('Custom instructions')
+    })
+
+    test('should handle location field with undefined type gracefully', () => {
+      const question = /** @type {ComponentDef} */ ({
+        name: 'location',
+        title: 'location title',
+        options: {}
+      })
+      const result = advancedSettingsFields(['instructionText'], question)
+      expect(result).toHaveLength(1)
+      expect(result[0].value).toBeUndefined()
+    })
+  })
 })
 
 /**

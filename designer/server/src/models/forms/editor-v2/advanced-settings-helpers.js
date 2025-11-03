@@ -1,30 +1,25 @@
-import { ComponentType } from '@defra/forms-model'
-
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
 
-/**
- * @type {ComponentType[]}
- */
-const LOCATION_FIELD_TYPES = [
-  ComponentType.EastingNorthingField,
-  ComponentType.OsGridRefField,
-  ComponentType.NationalGridFieldNumberField,
-  ComponentType.LatLongField
-]
+// Cache the location instruction defaults for performance
+const ALL_LOCATION_INSTRUCTIONS = Object.values(locationInstructionDefaults)
 
 /**
  * @param {ComponentType | undefined} questionType
- * @param {string} instructionText
+ * @param {string | undefined} instructionText
  * @returns {boolean}
  */
 function shouldIncludeLocationInstruction(questionType, instructionText) {
-  if (!questionType || !LOCATION_FIELD_TYPES.includes(questionType)) {
+  if (!isLocationFieldType(questionType)) {
     return true
   }
 
-  const allLocationInstructions = Object.values(locationInstructionDefaults)
-  return !allLocationInstructions.includes(instructionText)
+  if (!instructionText) {
+    return false
+  }
+
+  return !ALL_LOCATION_INSTRUCTIONS.includes(instructionText)
 }
 
 /**
@@ -180,5 +175,5 @@ export function mapExtraRootFields(payload) {
 }
 
 /**
- * @import { FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { ComponentType, FormEditorInputQuestion } from '@defra/forms-model'
  */

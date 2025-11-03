@@ -8,6 +8,7 @@ import {
 } from '@defra/forms-model'
 import Joi from 'joi'
 
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
 import {
   getListFromComponent,
@@ -147,30 +148,24 @@ export const baseSchema = Joi.object().keys({
   usePostcodeLookup: questionDetailsFullSchema.usePostcodeLookupSchema
 })
 
-/**
- * @type {ComponentType[]}
- */
-const LOCATION_FIELD_TYPES = [
-  ComponentType.EastingNorthingField,
-  ComponentType.OsGridRefField,
-  ComponentType.NationalGridFieldNumberField,
-  ComponentType.LatLongField
-]
+const ALL_LOCATION_HINTS = Object.values(locationHintDefaults)
 
 /**
- * @param {ComponentType} questionType
+ * @param {ComponentType | undefined} questionType
  * @param {string | undefined} validationResult
  * @param {string | undefined} storedHint
  * @returns {string | undefined}
  */
 function getLocationFieldHint(questionType, validationResult, storedHint) {
-  const allLocationHints = Object.values(locationHintDefaults)
+  if (!questionType) {
+    return validationResult ?? storedHint
+  }
 
-  if (validationResult && allLocationHints.includes(validationResult)) {
+  if (validationResult && ALL_LOCATION_HINTS.includes(validationResult)) {
     return getDefaultLocationHint(questionType)
   }
 
-  if (storedHint && allLocationHints.includes(storedHint)) {
+  if (storedHint && ALL_LOCATION_HINTS.includes(storedHint)) {
     return getDefaultLocationHint(questionType)
   }
 
@@ -242,10 +237,14 @@ export function getFieldValue(
   if (fieldName === 'hintText') {
     const questionType = currentQuestionType ?? questionFields?.type
 
-    if (questionType && LOCATION_FIELD_TYPES.includes(questionType)) {
+    if (isLocationFieldType(questionType)) {
       const hintValue =
         typeof validationResult === 'string' ? validationResult : undefined
-      return getLocationFieldHint(questionType, hintValue, questionFields?.hint)
+      return getLocationFieldHint(
+        /** @type {ComponentType} */ (questionType),
+        hintValue,
+        questionFields?.hint
+      )
     }
   }
 

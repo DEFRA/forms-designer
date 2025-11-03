@@ -153,6 +153,61 @@ describe('advanced-settings-helpers', () => {
           'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
       })
     })
+
+    it('should handle undefined questionType gracefully', () => {
+      const result = getAdditionalOptions({
+        giveInstructions: 'true',
+        instructionText: 'Custom instructions'
+      })
+
+      expect(result).toEqual({
+        instructionText: 'Custom instructions'
+      })
+    })
+
+    it('should handle null questionType gracefully', () => {
+      const result = getAdditionalOptions({
+        questionType: /** @type {ComponentType} */ (
+          /** @type {unknown} */ (null)
+        ),
+        giveInstructions: 'true',
+        instructionText: 'Custom instructions'
+      })
+
+      expect(result).toEqual({
+        instructionText: 'Custom instructions'
+      })
+    })
+
+    it('should handle undefined instructionText with location field', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.EastingNorthingField,
+        giveInstructions: 'true',
+        instructionText: undefined
+      })
+
+      expect(result).toEqual({})
+    })
+
+    it('should handle empty instructionText with location field', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.OsGridRefField,
+        giveInstructions: 'true',
+        instructionText: ''
+      })
+
+      expect(result).toEqual({})
+    })
+
+    it('should handle null instructionText with location field', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.LatLongField,
+        giveInstructions: 'true',
+        instructionText: /** @type {string} */ (/** @type {unknown} */ (null))
+      })
+
+      expect(result).toEqual({})
+    })
   })
 
   describe('isValueOrZero', () => {

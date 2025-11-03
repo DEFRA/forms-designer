@@ -1,5 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected, isListComponentType } from '~/src/lib/utils.js'
 import {
   getAdditionalOptions,
@@ -11,6 +12,8 @@ import {
   getDefaultLocationHint,
   locationHintDefaults
 } from '~/src/models/forms/editor-v2/location-hint-defaults.js'
+
+const ALL_LOCATION_HINTS = Object.values(locationHintDefaults)
 
 /**
  * Maps FormEditorInputQuestion payload to FileUploadField component
@@ -72,20 +75,13 @@ export function mapBaseQuestionDetails(payload) {
   const extraRootFields = mapExtraRootFields(payload)
 
   let hintText = payload.hintText
-  const locationFieldTypes = [
-    ComponentType.EastingNorthingField,
-    ComponentType.OsGridRefField,
-    ComponentType.NationalGridFieldNumberField,
-    ComponentType.LatLongField
-  ]
-  const questionType = /** @type {ComponentType} */ (payload.questionType)
-  const isLocationField =
-    payload.questionType && locationFieldTypes.includes(questionType)
+  const questionType = /** @type {ComponentType | undefined} */ (
+    payload.questionType
+  )
+  const isLocationField = isLocationFieldType(questionType)
 
-  if (payload.questionType && locationFieldTypes.includes(questionType)) {
-    const allLocationHints = Object.values(locationHintDefaults)
-
-    if (!hintText || allLocationHints.includes(hintText)) {
+  if (isLocationField && questionType) {
+    if (!hintText || ALL_LOCATION_HINTS.includes(hintText)) {
       hintText = getDefaultLocationHint(questionType)
     }
   }

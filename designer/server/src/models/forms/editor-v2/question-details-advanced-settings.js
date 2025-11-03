@@ -1,5 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
@@ -73,9 +74,13 @@ function isTypeOfField(questionType, allowableFieldTypes) {
 }
 
 /**
- * @param {ComponentDef} question
+ * @param {ComponentDef | undefined} question
  */
 export function mapToQuestionOptions(question) {
+  if (!question?.type) {
+    return { classes: undefined }
+  }
+
   const isNumberField = isTypeOfField(question.type, [
     ComponentType.NumberField
   ])
@@ -89,12 +94,7 @@ export function mapToQuestionOptions(question) {
     ComponentType.NumberField,
     ComponentType.FileUploadField
   ])
-  const isLocationField = isTypeOfField(question.type, [
-    ComponentType.EastingNorthingField,
-    ComponentType.OsGridRefField,
-    ComponentType.NationalGridFieldNumberField,
-    ComponentType.LatLongField
-  ])
+  const isLocationField = isLocationFieldType(question.type)
 
   const numberExtras = isNumberField
     ? addNumberFieldProperties(/** @type {NumberFieldComponent} */ (question))
@@ -173,16 +173,11 @@ export function advancedSettingsFields(options, question, validation) {
     let value = formValues[fieldName]
 
     if (fieldName === QuestionAdvancedSettings.InstructionText && !value) {
-      const locationFieldTypes = [
-        ComponentType.EastingNorthingField,
-        ComponentType.OsGridRefField,
-        ComponentType.NationalGridFieldNumberField,
-        ComponentType.LatLongField
-      ]
-      const questionType = /** @type {ComponentType} */ (question.type)
-
-      if (locationFieldTypes.includes(questionType)) {
-        value = getDefaultLocationInstructions(questionType)
+      if (isLocationFieldType(question.type)) {
+        const defaultInstruction = getDefaultLocationInstructions(question.type)
+        if (defaultInstruction) {
+          value = defaultInstruction
+        }
       }
     }
 
