@@ -108,6 +108,8 @@ export interface NumberFieldComponent extends FormFieldBase {
     min?: number
     precision?: number
     minPrecision?: number
+    minLength?: number
+    maxLength?: number
   }
 }
 
