@@ -44,7 +44,7 @@ describe('advanced-settings-mappers', () => {
       const result = mapBaseQuestionDetails(payload)
 
       expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
-        'For example. Easting: 24874, Northing: 63688'
+        'For example. Easting: 248741, Northing: 63688'
       )
     })
 
@@ -117,7 +117,7 @@ describe('advanced-settings-mappers', () => {
       const result = mapBaseQuestionDetails(payload)
 
       expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
-        'For example. Easting: 24874, Northing: 63688'
+        'For example. Easting: 248741, Northing: 63688'
       )
     })
 
@@ -142,7 +142,7 @@ describe('advanced-settings-mappers', () => {
         questionType: ComponentType.LatLongField,
         question: 'Coordinates',
         name: 'coordinates',
-        hintText: 'For example. Easting: 24874, Northing: 63688'
+        hintText: 'For example. Easting: 248741, Northing: 63688'
       }
 
       const result = mapBaseQuestionDetails(payload)
@@ -307,7 +307,7 @@ describe('advanced-settings-mappers', () => {
 
       expect(result.type).toBe(ComponentType.EastingNorthingField)
       expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
-        'For example. Easting: 24874, Northing: 63688'
+        'For example. Easting: 248741, Northing: 63688'
       )
     })
   })

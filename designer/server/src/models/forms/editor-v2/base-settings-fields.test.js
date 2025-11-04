@@ -725,7 +725,7 @@ describe('editor-v2 - advanced settings fields model', () => {
         buildDefinition(),
         ComponentType.EastingNorthingField
       )
-      expect(result).toBe('For example. Easting: 24874, Northing: 63688')
+      expect(result).toBe('For example. Easting: 248741, Northing: 63688')
     })
 
     test('should replace location hint when switching field types', () => {
@@ -733,7 +733,7 @@ describe('editor-v2 - advanced settings fields model', () => {
         type: ComponentType.OsGridRefField,
         name: 'location',
         title: 'Location',
-        hint: 'For example. Easting: 24874, Northing: 63688',
+        hint: 'For example. Easting: 248741, Northing: 63688',
         options: {}
       })
       const result = getFieldValue(

@@ -3,7 +3,7 @@
  */
 
 export const locationHintDefaults = {
-  EastingNorthingField: 'For example. Easting: 24874, Northing: 63688',
+  EastingNorthingField: 'For example. Easting: 248741, Northing: 63688',
 
   OsGridRefField:
     'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364',
