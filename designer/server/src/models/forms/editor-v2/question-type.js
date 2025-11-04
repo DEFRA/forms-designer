@@ -36,14 +36,13 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     },
     value: QuestionTypeSubGroup.DateSubGroup
   },
-  // Alex: temporarily disabling this until https://github.com/DEFRA/forms-designer/pull/1173 is merged
-  // {
-  //   text: 'Location',
-  //   hint: {
-  //     text: 'A UK address or precise location'
-  //   },
-  //   value: QuestionTypeSubGroup.LocationSubGroup
-  // },
+  {
+    text: 'Location',
+    hint: {
+      text: 'A UK address or precise location'
+    },
+    value: QuestionTypeSubGroup.LocationSubGroup
+  },
   {
     text: 'UK address',
     hint: {
