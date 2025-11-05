@@ -87,6 +87,32 @@ export class DeclarationEventListeners extends EventListeners {
 
     return [...listeners, declarationTextListener]
   }
+
+  /**
+   * @returns {ListenerRow[]}
+   */
+  get highlightListeners() {
+    const element = /** @type {HTMLInputElement | null} */ (
+      this.baseElements.declarationText
+    )
+    const highlight = /** @type {string} */ ('declarationText')
+
+    const focusRow = /** @type {ListenerRow} */ ([
+      element,
+      (_target) => {
+        this._question.highlight = highlight
+      },
+      'focus'
+    ])
+    const blurRow = /** @type {ListenerRow} */ ([
+      element,
+      (_target) => {
+        this._question.highlight = null
+      },
+      'blur'
+    ])
+    return [...super._getHighlightListeners(), focusRow, blurRow]
+  }
 }
 
 /**

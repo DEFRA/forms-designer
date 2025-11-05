@@ -60,6 +60,10 @@ export interface QuestionBaseModel {
   suffix?: { text: string }
 }
 
+export interface DeclarationModel extends QuestionBaseModel {
+  declarationText?: string
+}
+
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {
   model: QuestionBaseModel
 }

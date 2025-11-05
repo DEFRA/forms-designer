@@ -62,9 +62,23 @@ export class DeclarationQuestion extends Question {
     this._declarationText = val
     this.render()
   }
+
+  /**
+   * @protected
+   * @returns {DeclarationModel}
+   */
+  _renderInput() {
+    return {
+      ...super._renderInput(),
+      declarationText: this._declarationText
+        ? this._declarationText
+        : 'Declaration text'
+    }
+  }
 }
 
 /**
  * @import { DeclarationSettings, DeclarationElements, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { DeclarationModel } from '~/src/form/form-editor/macros/types.js'
  * @import { DeclarationFieldComponent } from '~/src/components/types.js'
  */

@@ -90,6 +90,7 @@ export class PreviewComponent {
    * @protected
    */
   getHighlight(element) {
+    // console.log('PreviewCOmponent get highlight', this._highlight)
     return this._highlight === element ? ' highlight' : ''
   }
 
@@ -198,6 +199,7 @@ export class PreviewComponent {
    * @param {string | null} value
    */
   set highlight(value) {
+    // console.log('PreviewCOmponent set highlight', value)
     this._highlight = value
     this.render()
   }

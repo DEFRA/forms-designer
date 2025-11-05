@@ -121,10 +121,18 @@ export class EventListeners {
   }
 
   /**
-   * @private
    * @returns {ListenerRow[]}
+   * @protected
    */
   get highlightListeners() {
+    return this._getHighlightListeners()
+  }
+
+  /**
+   * @returns {ListenerRow[]}
+   * @protected
+   */
+  _getHighlightListeners() {
     const allItems = /** @type {[HTMLInputElement | null, string][]} */ [
       [this.baseElements.question, 'question'],
       [this.baseElements.hintText, 'hintText']
