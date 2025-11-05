@@ -80,7 +80,6 @@ export class DeclarationEventListeners extends EventListeners {
        * @param {HTMLInputElement} target
        */
       (target) => {
-        // console.log('event declarationText', target.value)
         this._question.declarationText = target.value
       },
       'input'
@@ -91,5 +90,5 @@ export class DeclarationEventListeners extends EventListeners {
 }
 
 /**
- * @import { ListenerRow, ListElement, DeclarationSettings, QuestionElements, DeclarationQuestion } from '@defra/forms-model'
+ * @import { ListenerRow, DeclarationSettings, QuestionElements, DeclarationQuestion } from '@defra/forms-model'
  */

@@ -28,7 +28,7 @@ export class UkAddressDomElements extends QuestionDomElements {
 
   /**
    * @protected
-   * @returns {BaseSettings}
+   * @returns {UkAddressSettings}
    */
   constructValues() {
     const baseValues = super.constructValues()
@@ -90,5 +90,5 @@ export class UkAddressEventListeners extends EventListeners {
 }
 
 /**
- * @import { ListenerRow, ListElement, BaseSettings, QuestionElements, UkAddressQuestion } from '@defra/forms-model'
+ * @import { ListenerRow, BaseSettings, QuestionElements, UkAddressQuestion, UkAddressSettings } from '@defra/forms-model'
  */

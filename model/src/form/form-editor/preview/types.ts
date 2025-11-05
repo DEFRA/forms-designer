@@ -24,7 +24,6 @@ export interface BaseSettings {
   items: ListElement[]
   content: string
   attributes?: Record<string, string>
-  usePostcodeLookup?: boolean
 }
 
 export interface DefaultComponent {
@@ -70,6 +69,14 @@ export interface DeclarationSettings extends BaseSettings {
 
 export interface DeclarationElements extends DomElementsBase {
   readonly values: DeclarationSettings
+}
+
+export interface UkAddressSettings extends BaseSettings {
+  usePostcodeLookup?: boolean
+}
+
+export interface UkAddressElements extends DomElementsBase {
+  readonly values: UkAddressSettings
 }
 
 export interface NumberElements extends DomElementsBase {
