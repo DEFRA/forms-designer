@@ -12,7 +12,11 @@
     </h1>
   </div>
 
-  <p>{{ model.declarationText | markdown | safe }}</p>
+  <div class="govuk-form-group">
+    <div class="{{ model.declaration.classes }}">
+      {{ model.declaration.text | markdown | safe }}
+    </div>
+  </div>
 
   {{ govukCheckboxes({
     name: "agree",
@@ -23,5 +27,4 @@
       }
     ]
   }) }}
-
 </div>

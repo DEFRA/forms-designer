@@ -61,7 +61,10 @@ export interface QuestionBaseModel {
 }
 
 export interface DeclarationModel extends QuestionBaseModel {
-  declarationText?: string
+  declaration?: {
+    text?: string
+    classes?: string
+  }
 }
 
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {

@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import {
   Question,
@@ -70,9 +71,12 @@ export class DeclarationQuestion extends Question {
   _renderInput() {
     return {
       ...super._renderInput(),
-      declarationText: this._declarationText
-        ? this._declarationText
-        : 'Declaration text'
+      declaration: {
+        text: this._declarationText
+          ? this._declarationText
+          : 'Declaration text',
+        classes: this._highlight === 'declarationText' ? HIGHLIGHT_CLASS : ''
+      }
     }
   }
 }
