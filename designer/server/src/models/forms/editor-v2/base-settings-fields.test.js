@@ -269,16 +269,6 @@ describe('editor-v2 - advanced settings fields model', () => {
           value: undefined
         },
         {
-          name: 'hintText',
-          id: 'hintText',
-          label: {
-            text: 'Hint text (optional)',
-            classes: GOVUK_LABEL__M
-          },
-          rows: 3,
-          value: undefined
-        },
-        {
           name: 'declarationText',
           id: 'declarationText',
           idPrefix: 'declarationText',
