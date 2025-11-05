@@ -43,12 +43,12 @@ export class DeclarationQuestion extends Question {
   _declarationText = ''
 
   /**
-   * @param {QuestionElements} htmlElements
+   * @param {DeclarationElements} htmlElements
    * @param {QuestionRenderer} questionRenderer
    */
   constructor(htmlElements, questionRenderer) {
     super(htmlElements, questionRenderer)
-    this._declarationText = htmlElements.values.declarationText ?? ''
+    this._declarationText = htmlElements.values.declarationText
   }
 
   get declarationText() {
@@ -65,6 +65,6 @@ export class DeclarationQuestion extends Question {
 }
 
 /**
- * @import { DeclarationSettings, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { DeclarationSettings, DeclarationElements, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
  * @import { DeclarationFieldComponent } from '~/src/components/types.js'
  */

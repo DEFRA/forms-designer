@@ -4,7 +4,7 @@ import {
 } from '~/src/javascripts/preview/question.js'
 
 /**
- * @class QuestionDomElements
+ * @class DeclarationDomElements
  * @classdesc
  * This class is responsible for interaction with the Document Object Model
  * and provides an interface for external interactions.  QuestionDomElements
@@ -28,19 +28,19 @@ export class DeclarationDomElements extends QuestionDomElements {
 
   /**
    * @protected
-   * @returns {BaseSettings}
+   * @returns {DeclarationSettings}
    */
   constructValues() {
     const baseValues = super.constructValues()
 
     return {
       ...baseValues,
-      usePostcodeLookup: this.declarationText?.checked ?? false
+      declarationText: this.declarationText?.value ?? ''
     }
   }
 
   /**
-   * @returns {BaseSettings}
+   * @returns {DeclarationSettings}
    * @public
    */
   get values() {
@@ -74,21 +74,22 @@ export class DeclarationEventListeners extends EventListeners {
   _getListeners() {
     const listeners = super._getListeners()
 
-    const usePostcodeLookupCheckbox = /** @type {ListenerRow} */ ([
+    const declarationTextListener = /** @type {ListenerRow} */ ([
       this.baseElements.declarationText,
       /**
        * @param {HTMLInputElement} target
        */
       (target) => {
+        // console.log('event declarationText', target.value)
         this._question.declarationText = target.value
       },
-      'change'
+      'input'
     ])
 
-    return [...listeners, usePostcodeLookupCheckbox]
+    return [...listeners, declarationTextListener]
   }
 }
 
 /**
- * @import { ListenerRow, ListElement, BaseSettings, QuestionElements, DeclarationQuestion } from '@defra/forms-model'
+ * @import { ListenerRow, ListElement, DeclarationSettings, QuestionElements, DeclarationQuestion } from '@defra/forms-model'
  */

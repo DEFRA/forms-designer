@@ -23,7 +23,10 @@ import {
   AutocompleteDOMElements,
   AutocompleteListeners
 } from '~/src/javascripts/preview/autocomplete.js'
-import { DeclarationDomElements } from '~/src/javascripts/preview/declaration.js'
+import {
+  DeclarationDomElements,
+  DeclarationEventListeners
+} from '~/src/javascripts/preview/declaration.js'
 import {
   ListSortableEventListeners,
   ListSortableQuestionElements
@@ -296,7 +299,7 @@ export const SetupPreview =
         declarationElements,
         nunjucksRenderer
       )
-      const listeners = new EventListeners(
+      const listeners = new DeclarationEventListeners(
         declarationField,
         declarationElements
       )

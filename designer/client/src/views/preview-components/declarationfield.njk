@@ -2,7 +2,9 @@
 
 <div class="{{ model.previewClasses }}">
 
-{{ model.declarationText | safe }}
+<p>model: {{ model | dump }}</p>
+
+<p>text: {{ model.declarationText | safe }}</p>
 
 {{ govukCheckboxes({
   name: "agree",
