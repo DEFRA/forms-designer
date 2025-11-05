@@ -401,6 +401,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   })
   .custom(incompatibleConditionValidator)
   .messages({
+    // Custom error types require a corresponding messages
     'custom.incompatible': 'Incompatible data value'
   })
 
