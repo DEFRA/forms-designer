@@ -70,6 +70,42 @@ const InputFieldComponentDictionary = {
 }
 
 /**
+ * @type {Partial<Record<ComponentType, (component: ComponentDef, definition: FormDefinition ) => QuestionElements>>}
+ */
+const ComponentToPreviewQuestion = {
+  [ComponentType.AutocompleteField]: (component, definition) => {
+    const componentCoerced = /** @type {AutocompleteFieldComponent} */ (
+      component
+    )
+    const list = findDefinitionListFromComponent(componentCoerced, definition)
+    return new SelectComponentElements(componentCoerced, list)
+  },
+  [ComponentType.SelectField]: (component, definition) => {
+    const componentCoerced = /** @type {SelectFieldComponent} */ (component)
+    const list = findDefinitionListFromComponent(componentCoerced, definition)
+    return new SelectComponentElements(componentCoerced, list)
+  },
+  [ComponentType.UkAddressField]: (component, _definition) => {
+    const componentCoerced = /** @type {UkAddressFieldComponent} */ (component)
+    return new UkAddressComponentPreviewElements(componentCoerced)
+  },
+  [ComponentType.NumberField]: (component, _definition) => {
+    const componentCoerced = /** @type {NumberFieldComponent} */ (component)
+    return new NumberComponentPreviewElements(componentCoerced)
+  },
+  [ComponentType.DeclarationField]: (component, _definition) => {
+    const componentCoerced = /** @type {DeclarationFieldComponent} */ (
+      component
+    )
+    return new DeclarationComponentPreviewElements(componentCoerced)
+  },
+  [ComponentType.YesNoField]: (component, _definition) => {
+    const componentCoerced = /** @type {YesNoFieldComponent} */ (component)
+    return new QuestionComponentElements(componentCoerced)
+  }
+}
+
+/**
  * @param {QuestionRenderer} questionRenderer
  * @param {FormDefinition} definition
  * @returns {(component: ComponentDef) => Question}
@@ -82,25 +118,14 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
        */
       let questionElements
 
-      if (
-        component.type === ComponentType.AutocompleteField ||
-        component.type === ComponentType.SelectField
-      ) {
-        const list = findDefinitionListFromComponent(component, definition)
-        questionElements = new SelectComponentElements(component, list)
-      } else if (component.type === ComponentType.UkAddressField) {
-        questionElements = new UkAddressComponentPreviewElements(component)
-      } else if (component.type === ComponentType.NumberField) {
-        questionElements = new NumberComponentPreviewElements(component)
-      } else if (component.type === ComponentType.DeclarationField) {
-        questionElements = new DeclarationComponentPreviewElements(component)
+      // Look for one-to-one mapping first, then fallback if not found
+      const getQuestionElementsFunc = ComponentToPreviewQuestion[component.type]
+      if (getQuestionElementsFunc) {
+        questionElements = getQuestionElementsFunc(component, definition)
       } else if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new ListComponentElements(component, list)
-      } else if (
-        hasInputField(component) ||
-        component.type === ComponentType.YesNoField
-      ) {
+      } else if (hasInputField(component)) {
         questionElements = new QuestionComponentElements(component)
       } else if (hasContentField(component)) {
         questionElements = new ContentElements(component)
@@ -125,5 +150,5 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { ComponentDef } from '~/src/components/types.js'
+ * @import { AutocompleteFieldComponent, ComponentDef, DeclarationFieldComponent, NumberFieldComponent, SelectFieldComponent, UkAddressFieldComponent, YesNoFieldComponent } from '~/src/components/types.js'
  */
