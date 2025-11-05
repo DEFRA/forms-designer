@@ -437,7 +437,6 @@ export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 export const declarationFields =
   /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
     QuestionBaseSettings.Question,
-    QuestionBaseSettings.HintText,
     QuestionBaseSettings.DeclarationText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.ShortDescription

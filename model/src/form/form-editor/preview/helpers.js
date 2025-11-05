@@ -10,6 +10,10 @@ import { CheckboxQuestion } from '~/src/form/form-editor/preview/checkbox.js'
 import { ComponentElements } from '~/src/form/form-editor/preview/component-elements.js'
 import { ContentElements } from '~/src/form/form-editor/preview/content.js'
 import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
+import {
+  DeclarationComponentPreviewElements,
+  DeclarationQuestion
+} from '~/src/form/form-editor/preview/declaration.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import {
   ListComponentElements,
@@ -57,7 +61,7 @@ const InputFieldComponentDictionary = {
   [ComponentType.CheckboxesField]: CheckboxQuestion,
   [ComponentType.SelectField]: SelectQuestion,
   [ComponentType.YesNoField]: YesNoQuestion,
-  [ComponentType.DeclarationField]: YesNoQuestion,
+  [ComponentType.DeclarationField]: DeclarationQuestion,
   [ComponentType.FileUploadField]: SupportingEvidenceQuestion,
   [ComponentType.EastingNorthingField]: ShortAnswerQuestion,
   [ComponentType.OsGridRefField]: ShortAnswerQuestion,
@@ -88,6 +92,8 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
         questionElements = new UkAddressComponentPreviewElements(component)
       } else if (component.type === ComponentType.NumberField) {
         questionElements = new NumberComponentPreviewElements(component)
+      } else if (component.type === ComponentType.DeclarationField) {
+        questionElements = new DeclarationComponentPreviewElements(component)
       } else if (hasSelectionFields(component) && hasListField(component)) {
         const list = findDefinitionListFromComponent(component, definition)
         questionElements = new ListComponentElements(component, list)

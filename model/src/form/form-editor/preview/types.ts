@@ -25,6 +25,7 @@ export interface BaseSettings {
   content: string
   attributes?: Record<string, string>
   usePostcodeLookup?: boolean
+  declarationText?: string
 }
 
 export interface DefaultComponent {
@@ -62,6 +63,10 @@ export interface AutocompleteElements extends QuestionElements {
 export interface NumberSettings extends BaseSettings {
   prefix: string
   suffix: string
+}
+
+export interface DeclarationSettings extends BaseSettings {
+  declarationText: string
 }
 
 export interface NumberElements extends DomElementsBase {

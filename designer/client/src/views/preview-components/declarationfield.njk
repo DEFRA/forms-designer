@@ -1,7 +1,19 @@
-{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
 <div class="{{ model.previewClasses }}">
 
-{{ govukInput(model) }}
+{{ model.declarationText | safe }}
+
+{{ govukCheckboxes({
+  name: "agree",
+  items: [
+    {
+      value: "checkDeclaration",
+      text: "I understand and agree"
+    }
+  ]
+}) }}
+
+<p>Using custom declaration template</p>
 
 </div>
