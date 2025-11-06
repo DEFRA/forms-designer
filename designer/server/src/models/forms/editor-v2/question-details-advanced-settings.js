@@ -74,13 +74,9 @@ function isTypeOfField(questionType, allowableFieldTypes) {
 }
 
 /**
- * @param {ComponentDef | undefined} question
+ * @param {ComponentDef} question
  */
 export function mapToQuestionOptions(question) {
-  if (!question?.type) {
-    return { classes: undefined }
-  }
-
   const isNumberField = isTypeOfField(question.type, [
     ComponentType.NumberField
   ])
@@ -183,13 +179,13 @@ export function advancedSettingsFields(options, question, validation) {
       }
     }
 
-    if (fieldSettings.items) {
+    if (fieldName === QuestionAdvancedSettings.GiveInstructions) {
       return {
         ...fieldSettings,
         ...insertValidationErrors(
           formErrors ? formErrors[fieldName] : undefined
         ),
-        items: fieldSettings.items.map((item) => ({
+        items: fieldSettings.items?.map((item) => ({
           ...item,
           checked: isCheckboxSelected(
             /** @type {string | undefined} */ (formValues[fieldName])
