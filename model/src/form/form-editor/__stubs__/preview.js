@@ -344,11 +344,6 @@ export class NumberPreviewElements {
    * @private
    */
   _items = []
-  /**
-   * @protected
-   * @type {boolean}
-   */
-  _usePostcodeLookup = false
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
