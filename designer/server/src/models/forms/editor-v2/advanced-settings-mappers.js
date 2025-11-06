@@ -1,5 +1,6 @@
 import { ComponentType } from '@defra/forms-model'
 
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected, isListComponentType } from '~/src/lib/utils.js'
 import {
   getAdditionalOptions,
@@ -7,7 +8,12 @@ import {
   mapExtraRootFields
 } from '~/src/models/forms/editor-v2/advanced-settings-helpers.js'
 import { mapPayloadToFileMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
-import { getDefaultLocationHint } from '~/src/models/forms/editor-v2/location-hint-defaults.js'
+import {
+  getDefaultLocationHint,
+  locationHintDefaults
+} from '~/src/models/forms/editor-v2/location-hint-defaults.js'
+
+const ALL_LOCATION_HINTS = Object.values(locationHintDefaults)
 
 /**
  * Maps FormEditorInputQuestion payload to FileUploadField component
@@ -17,23 +23,20 @@ import { getDefaultLocationHint } from '~/src/models/forms/editor-v2/location-hi
 export function mapFileUploadQuestionDetails(payload) {
   const additionalOptions = getAdditionalOptions(payload)
   const additionalSchema = getAdditionalSchema(payload)
-  const extraRootFields = mapExtraRootFields(payload)
   const fileTypes = mapPayloadToFileMimeTypes(payload)
 
-  return {
+  const baseQuestionDetails = mapBaseQuestionDetails(payload)
+
+  return /** @type {Partial<FileUploadFieldComponent>} */ ({
+    ...baseQuestionDetails,
     type: ComponentType.FileUploadField,
-    title: payload.question,
-    name: payload.name,
-    shortDescription: payload.shortDescription,
-    hint: payload.hintText,
-    ...extraRootFields,
+    schema: { ...additionalSchema },
     options: {
       required: !isCheckboxSelected(payload.questionOptional),
       ...additionalOptions,
       ...fileTypes
-    },
-    schema: { ...additionalSchema }
-  }
+    }
+  })
 }
 
 /**
@@ -59,21 +62,18 @@ export function mapBaseQuestionDetails(payload) {
   const additionalSchema = getAdditionalSchema(payload)
   const extraRootFields = mapExtraRootFields(payload)
 
-  const locationFieldTypes = [
-    ComponentType.EastingNorthingField,
-    ComponentType.OsGridRefField,
-    ComponentType.NationalGridFieldNumberField,
-    ComponentType.LatLongField
-  ]
-
-  const questionType = /** @type {ComponentType} */ (payload.questionType)
-  const isLocationField =
-    payload.questionType && locationFieldTypes.includes(questionType)
-
-  // Set default hint text for location fields if no hint is provided
   let hintText = payload.hintText
-  if (!hintText && isLocationField) {
-    hintText = getDefaultLocationHint(questionType)
+  const questionType = /** @type {ComponentType | undefined} */ (
+    payload.questionType
+  )
+  const isLocationField = isLocationFieldType(questionType)
+
+  // For location fields, reset to default hint if no hint text is provided
+  // or the hint text matches one of the standard location hints (user may have switched location field types)
+  if (isLocationField && (!hintText || ALL_LOCATION_HINTS.includes(hintText))) {
+    hintText = getDefaultLocationHint(
+      /** @type {ComponentType} */ (questionType)
+    )
   }
 
   const baseComponent = {

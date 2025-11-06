@@ -1,4 +1,26 @@
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
+import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
+
+// Cache the location instruction defaults for performance
+const ALL_LOCATION_INSTRUCTIONS = Object.values(locationInstructionDefaults)
+
+/**
+ * @param {ComponentType | undefined} questionType
+ * @param {string | undefined} instructionText
+ * @returns {boolean}
+ */
+function shouldIncludeLocationInstruction(questionType, instructionText) {
+  if (!isLocationFieldType(questionType)) {
+    return true
+  }
+
+  if (!instructionText) {
+    return false
+  }
+
+  return !ALL_LOCATION_INSTRUCTIONS.includes(instructionText)
+}
 
 /**
  * Maps payload to additional component options
@@ -7,32 +29,69 @@ import { isCheckboxSelected } from '~/src/lib/utils.js'
  */
 export function getAdditionalOptions(payload) {
   const additionalOptions = {}
-  if (payload.classes) {
-    additionalOptions.classes = payload.classes
+
+  const optionsMapping = [
+    {
+      key: 'classes',
+      getValue: () => payload.classes,
+      shouldInclude: () => payload.classes
+    },
+    {
+      key: 'rows',
+      getValue: () => payload.rows,
+      shouldInclude: () => payload.rows
+    },
+    {
+      key: 'prefix',
+      getValue: () => payload.prefix,
+      shouldInclude: () => payload.prefix
+    },
+    {
+      key: 'suffix',
+      getValue: () => payload.suffix,
+      shouldInclude: () => payload.suffix
+    },
+    {
+      key: 'maxDaysInFuture',
+      getValue: () => payload.maxFuture,
+      shouldInclude: () => payload.maxFuture !== undefined
+    },
+    {
+      key: 'maxDaysInPast',
+      getValue: () => payload.maxPast,
+      shouldInclude: () => payload.maxPast !== undefined
+    },
+    {
+      key: 'usePostcodeLookup',
+      getValue: () => isCheckboxSelected(payload.usePostcodeLookup),
+      shouldInclude: () => payload.usePostcodeLookup !== undefined
+    },
+    {
+      key: 'instructionText',
+      getValue: () => payload.instructionText,
+      shouldInclude: () => {
+        const hasInstructions =
+          isCheckboxSelected(payload.giveInstructions) &&
+          payload.instructionText
+        if (!hasInstructions || !payload.instructionText) {
+          return false
+        }
+        const questionType = /** @type {ComponentType} */ (payload.questionType)
+        return shouldIncludeLocationInstruction(
+          questionType,
+          payload.instructionText
+        )
+      }
+    }
+  ]
+
+  for (const mapping of optionsMapping) {
+    if (mapping.shouldInclude()) {
+      const value = mapping.getValue()
+      Object.assign(additionalOptions, { [mapping.key]: value })
+    }
   }
-  if (payload.rows) {
-    additionalOptions.rows = payload.rows
-  }
-  if (payload.prefix) {
-    additionalOptions.prefix = payload.prefix
-  }
-  if (payload.suffix) {
-    additionalOptions.suffix = payload.suffix
-  }
-  if (payload.maxFuture !== undefined) {
-    additionalOptions.maxDaysInFuture = payload.maxFuture
-  }
-  if (payload.maxPast !== undefined) {
-    additionalOptions.maxDaysInPast = payload.maxPast
-  }
-  if (payload.usePostcodeLookup !== undefined) {
-    additionalOptions.usePostcodeLookup = isCheckboxSelected(
-      payload.usePostcodeLookup
-    )
-  }
-  if (isCheckboxSelected(payload.giveInstructions) && payload.instructionText) {
-    additionalOptions.instructionText = payload.instructionText
-  }
+
   return additionalOptions
 }
 
@@ -116,5 +175,5 @@ export function mapExtraRootFields(payload) {
 }
 
 /**
- * @import { FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { ComponentType, FormEditorInputQuestion } from '@defra/forms-model'
  */

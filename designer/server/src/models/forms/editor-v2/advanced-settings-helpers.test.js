@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   getAdditionalOptions,
   getAdditionalSchema,
@@ -99,6 +101,112 @@ describe('advanced-settings-helpers', () => {
         usePostcodeLookup: true,
         instructionText: 'Follow these steps'
       })
+    })
+
+    it('should not include instruction text when switching from OsGridRefField to EastingNorthingField with default instruction', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.EastingNorthingField,
+        giveInstructions: 'true',
+        instructionText:
+          "Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the Easting and Northing for your land or buildings. Follow these instructions:\n\n  1. Select 'Get Started'.\n  2. Search for a postcode or place.\n  3. Using the map, locate the land or building. Use the +/- icons to zoom in and out.\n  4. In the top toolbar, select the fourth icon along ('Where am I?') - it looks like a target.\n  5. Click on the land or building.\n  6. A pop-up box will appear showing the land details for this location. Easting and Northing appear at the top of the list. Easting can be up to 6 digits (0-700000) and Northing up to 7 digits (0-1300000), for example, 248741 and 63688."
+      })
+
+      // Should not include instructionText as it matches EastingNorthingField default
+      expect(result).toEqual({})
+    })
+
+    it('should not include instruction text when switching between location fields with default instruction', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.LatLongField,
+        giveInstructions: 'true',
+        instructionText:
+          "Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the latitude and longitude for your land or buildings. Follow these instructions:\n\n  1. Select 'Get Started'.\n  2. Search for a postcode or place.\n  3. Using the map, locate the land or building. Use the +/- icons to zoom in and out.\n  4. In the top toolbar, select the fourth icon along ('Where am I?') - it looks like a target.\n  5. Click on the land or building.\n  6. A pop-up box will appear showing the land details for this location. The latitude and longitude are four numbers down from the top of the list."
+      })
+
+      // Should not include instructionText as it matches LatLongField default
+      expect(result).toEqual({})
+    })
+
+    it('should include custom instruction text for location fields', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.EastingNorthingField,
+        giveInstructions: 'true',
+        instructionText: 'Custom location instructions that user wrote'
+      })
+
+      expect(result).toEqual({
+        instructionText: 'Custom location instructions that user wrote'
+      })
+    })
+
+    it('should include instruction text for non-location fields even if it matches a location default', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.TextField,
+        giveInstructions: 'true',
+        instructionText:
+          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
+      })
+
+      // For non-location fields, always include the instruction text
+      expect(result).toEqual({
+        instructionText:
+          'Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the OS grid reference for your land or buildings. Follow these instructions:'
+      })
+    })
+
+    it('should handle undefined questionType gracefully', () => {
+      const result = getAdditionalOptions({
+        giveInstructions: 'true',
+        instructionText: 'Custom instructions'
+      })
+
+      expect(result).toEqual({
+        instructionText: 'Custom instructions'
+      })
+    })
+
+    it('should handle null questionType gracefully', () => {
+      const result = getAdditionalOptions({
+        questionType: /** @type {ComponentType} */ (
+          /** @type {unknown} */ (null)
+        ),
+        giveInstructions: 'true',
+        instructionText: 'Custom instructions'
+      })
+
+      expect(result).toEqual({
+        instructionText: 'Custom instructions'
+      })
+    })
+
+    it('should handle undefined instructionText with location field', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.EastingNorthingField,
+        giveInstructions: 'true',
+        instructionText: undefined
+      })
+
+      expect(result).toEqual({})
+    })
+
+    it('should handle empty instructionText with location field', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.OsGridRefField,
+        giveInstructions: 'true',
+        instructionText: ''
+      })
+
+      expect(result).toEqual({})
+    })
+
+    it('should handle null instructionText with location field', () => {
+      const result = getAdditionalOptions({
+        questionType: ComponentType.LatLongField,
+        giveInstructions: 'true',
+        instructionText: /** @type {string} */ (/** @type {unknown} */ (null))
+      })
+
+      expect(result).toEqual({})
     })
   })
 

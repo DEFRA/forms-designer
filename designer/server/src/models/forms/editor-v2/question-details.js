@@ -78,10 +78,7 @@ export function hasDataOrErrorForDisplay(
 /**
  * @param { ComponentType | undefined } questionType
  * @returns {{
- *   baseErrors: [{
- *     type: string;
- *     template: string;
- *   }],
+ *   baseErrors: Array<{type: string; template: string;}>;
  *   advancedSettingsErrors: []
  * }}
  */

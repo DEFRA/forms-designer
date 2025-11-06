@@ -200,39 +200,6 @@ export class EmptyRender {
 
 const emptyRender = new EmptyRender()
 
-// Factory functions for location components
-/**
- * @param {QuestionElements} questionElements
- * @returns {Question}
- */
-const eastingNorthingField = (questionElements) => {
-  return new Question(questionElements, emptyRender)
-}
-
-/**
- * @param {QuestionElements} questionElements
- * @returns {Question}
- */
-const osGridRefField = (questionElements) => {
-  return new Question(questionElements, emptyRender)
-}
-
-/**
- * @param {QuestionElements} questionElements
- * @returns {Question}
- */
-const nationalGridFieldNumberField = (questionElements) => {
-  return new Question(questionElements, emptyRender)
-}
-
-/**
- * @param {QuestionElements} questionElements
- * @returns {Question}
- */
-const latLongField = (questionElements) => {
-  return new Question(questionElements, emptyRender)
-}
-
 export const ModelFactory =
   /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements) => Question>} */ ({
     /**
@@ -376,14 +343,41 @@ export const ModelFactory =
     FileUploadField: (questionElements) => {
       return new SupportingEvidenceQuestion(questionElements, emptyRender)
     },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
     DeclarationField: (questionElements) => {
       return new Question(questionElements, emptyRender)
     },
-    // Location components - using camelCase function references
-    EastingNorthingField: eastingNorthingField,
-    OsGridRefField: osGridRefField,
-    NationalGridFieldNumberField: nationalGridFieldNumberField,
-    LatLongField: latLongField
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    EastingNorthingField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    OsGridRefField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    NationalGridFieldNumberField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    LatLongField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
+    }
   })
 
 /**

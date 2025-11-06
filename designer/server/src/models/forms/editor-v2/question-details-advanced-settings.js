@@ -1,8 +1,11 @@
 import { ComponentType } from '@defra/forms-model'
 
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
+import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
+import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { allEnhancedFields } from '~/src/models/forms/editor-v2/enhanced-fields.js'
+import { getDefaultLocationInstructions } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
 
 /**
  * @param {NumberFieldComponent} question
@@ -71,7 +74,7 @@ function isTypeOfField(questionType, allowableFieldTypes) {
 }
 
 /**
- * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | DatePartsFieldComponent | MonthYearFieldComponent } question
+ * @param {ComponentDef} question
  */
 export function mapToQuestionOptions(question) {
   const isNumberField = isTypeOfField(question.type, [
@@ -87,6 +90,7 @@ export function mapToQuestionOptions(question) {
     ComponentType.NumberField,
     ComponentType.FileUploadField
   ])
+  const isLocationField = isLocationFieldType(question.type)
 
   const numberExtras = isNumberField
     ? addNumberFieldProperties(/** @type {NumberFieldComponent} */ (question))
@@ -122,20 +126,31 @@ export function mapToQuestionOptions(question) {
         )
       )
     : {}
+  const locationExtras = isLocationField
+    ? {
+        giveInstructions: /** @type {LocationFieldComponent} */ (question)
+          .options.instructionText
+          ? 'true'
+          : undefined,
+        instructionText: /** @type {LocationFieldComponent} */ (question)
+          .options.instructionText
+      }
+    : {}
 
   return {
-    classes: question.options.classes,
+    classes: /** @type {FormComponentsDef} */ (question).options.classes,
     ...numberExtras,
     ...dateExtras,
     ...minMaxExtras,
     ...multilineExtras,
-    ...regexExtras
+    ...regexExtras,
+    ...locationExtras
   }
 }
 
 /**
- * @param {ComponentType[]} options
- * @param {TextFieldComponent} question
+ * @param {string[]} options
+ * @param {ComponentDef} question
  * @param {ValidationFailure<FormEditor>} [validation]
  * @returns {GovukField[]}
  */
@@ -147,18 +162,49 @@ export function advancedSettingsFields(options, question, validation) {
   const formErrors = validation?.formErrors
 
   return options.map((fieldName) => {
-    const fieldSettings = allAdvancedSettingsFields[fieldName]
+    const fieldSettings =
+      allAdvancedSettingsFields[
+        /** @type {keyof typeof allAdvancedSettingsFields} */ (fieldName)
+      ]
+    let value = formValues[fieldName]
+
+    if (
+      fieldName === QuestionAdvancedSettings.InstructionText &&
+      !value &&
+      isLocationFieldType(question.type)
+    ) {
+      const defaultInstruction = getDefaultLocationInstructions(question.type)
+      if (defaultInstruction) {
+        value = defaultInstruction
+      }
+    }
+
+    if (fieldName === QuestionAdvancedSettings.GiveInstructions) {
+      return {
+        ...fieldSettings,
+        ...insertValidationErrors(
+          formErrors ? formErrors[fieldName] : undefined
+        ),
+        items: fieldSettings.items?.map((item) => ({
+          ...item,
+          checked: isCheckboxSelected(
+            /** @type {string | undefined} */ (formValues[fieldName])
+          )
+        }))
+      }
+    }
+
     return {
       ...fieldSettings,
       ...insertValidationErrors(formErrors ? formErrors[fieldName] : undefined),
-      value: formValues[fieldName]
+      value
     }
   })
 }
 
 /**
- * @param {ComponentType[]} options
- * @param {TextFieldComponent} question
+ * @param {string[]} options
+ * @param {ComponentDef} question
  * @param {ValidationFailure<FormEditor>} [validation]
  * @returns {GovukField[]}
  */
@@ -170,7 +216,10 @@ export function enhancedFields(options, question, validation) {
   const formErrors = validation?.formErrors
 
   return options.map((fieldName) => {
-    const fieldSettings = allEnhancedFields[fieldName]
+    const fieldSettings =
+      allEnhancedFields[
+        /** @type {keyof typeof allEnhancedFields} */ (fieldName)
+      ]
     return {
       ...fieldSettings,
       ...insertValidationErrors(formErrors ? formErrors[fieldName] : undefined),
@@ -180,6 +229,10 @@ export function enhancedFields(options, question, validation) {
 }
 
 /**
- * @import { DatePartsFieldComponent, FileUploadFieldComponent, FormEditor, GovukField, MonthYearFieldComponent,  MultilineTextFieldComponent, NumberFieldComponent, TextFieldComponent } from '@defra/forms-model'
+ * @typedef {EastingNorthingFieldComponent | OsGridRefFieldComponent | NationalGridFieldNumberFieldComponent | LatLongFieldComponent} LocationFieldComponent
+ */
+
+/**
+ * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

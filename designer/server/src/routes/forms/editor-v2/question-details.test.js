@@ -81,6 +81,8 @@ describe('Editor v2 question details routes', () => {
     jest
       .mocked(enforceFileUploadFieldExclusivity)
       .mockImplementation((payload) => payload)
+    // Ensure handleEnhancedActionOnGet returns undefined by default
+    jest.mocked(handleEnhancedActionOnGet).mockReturnValue(undefined)
   })
 
   /**
@@ -452,6 +454,7 @@ describe('Editor v2 question details routes', () => {
     jest
       .mocked(buildQuestionSessionState)
       .mockReturnValue(simpleSessionDeclaration)
+    jest.mocked(handleEnhancedActionOnGet).mockReturnValue(undefined)
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     const def = buildDefinition({
       name: 'Test form',
@@ -479,7 +482,8 @@ describe('Editor v2 question details routes', () => {
 
     const { container } = await renderResponse(server, options)
 
-    container.getByText('Test form')
+    const $mastheadHeading = container.getByText('Test form')
+    expect($mastheadHeading).toHaveTextContent('Test form')
 
     const [, declarationField] = container.getAllByRole('textbox')
     expect(declarationField.id).toBe('declarationText')

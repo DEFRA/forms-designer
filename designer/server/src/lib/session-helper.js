@@ -164,7 +164,8 @@ export function buildQuestionSessionState(
       text: item.text,
       hint: item.hint,
       value: item.value
-    }))
+    })),
+    questionDetails: state?.questionDetails
   })
   setQuestionSessionState(yar, stateId, newState)
   return newState
