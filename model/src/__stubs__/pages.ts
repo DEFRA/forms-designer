@@ -7,7 +7,8 @@ import {
   type PageFileUpload,
   type PageQuestion,
   type PageRepeat,
-  type PageSummary
+  type PageSummary,
+  type PageTerminal
 } from '~/src/form/form-definition/types.js'
 import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
 
@@ -125,5 +126,21 @@ export function buildRepeaterPage(
     },
     ...partialRepeaterPage,
     controller: ControllerType.Repeat
+  }
+}
+
+export function buildTerminalPage(
+  partialTerminalPage: Partial<PageTerminal>
+): PageTerminal {
+  return {
+    components: [],
+    condition: '',
+    controller: ControllerType.Terminal,
+    events: undefined,
+    id: 'f44047cb-fadf-42bd-9d5c-864cf9dd70dc',
+    next: [],
+    path: '/terminal-page',
+    title: 'Terminal Page',
+    ...partialTerminalPage
   }
 }
