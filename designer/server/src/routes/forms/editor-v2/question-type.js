@@ -10,6 +10,7 @@ import {
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
   dispatchToPageTitle,
@@ -201,15 +202,20 @@ export default [
 
       // Get existing state to check if type changed
       const existingState = getQuestionSessionState(yar, stateId)
-      const typeChanged =
-        existingState?.questionType &&
-        existingState.questionType !== suppliedQuestionType
+      const oldType = existingState?.questionType
+      const typeChanged = oldType && oldType !== suppliedQuestionType
+
+      // Only clear questionDetails when switching to/from location fields
+      // (e.g., short answer to long answer)
+      const shouldClearDetails =
+        typeChanged &&
+        (isLocationFieldType(oldType) ||
+          isLocationFieldType(suppliedQuestionType))
 
       // Update question type in session
       mergeQuestionSessionState(yar, stateId, {
         questionType: suppliedQuestionType,
-        // Clear questionDetails if type changed to force regeneration with new defaults
-        questionDetails: typeChanged
+        questionDetails: shouldClearDetails
           ? undefined
           : existingState?.questionDetails
       })

@@ -13,7 +13,8 @@ import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   createQuestionSessionState,
-  getQuestionSessionState
+  getQuestionSessionState,
+  mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { deriveQuestionType } from '~/src/routes/forms/editor-v2/question-type.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -43,6 +44,12 @@ describe('Editor v2 question routes', () => {
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+  })
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+    // Ensure mergeQuestionSessionState is properly mocked
+    jest.mocked(mergeQuestionSessionState).mockImplementation(jest.fn())
   })
 
   test('GET - should redirect if no session yet', async () => {
@@ -104,7 +111,7 @@ describe('Editor v2 question routes', () => {
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
-    expect($radios).toHaveLength(22)
+    expect($radios).toHaveLength(23)
     expect($radios[0]).toHaveAccessibleName('Written answer')
     expect($radios[1]).toHaveAccessibleName('Short answer (a single line)')
     expect($radios[2]).toHaveAccessibleName(
@@ -125,14 +132,15 @@ describe('Editor v2 question routes', () => {
     expect($radios[13]).toHaveAccessibleName('Phone number')
     expect($radios[14]).toHaveAccessibleName('Supporting evidence')
     expect($radios[15]).toHaveAccessibleName('Email address')
-    expect($radios[16]).toHaveAccessibleName(
+    expect($radios[16]).toHaveAccessibleName('Declaration')
+    expect($radios[17]).toHaveAccessibleName(
       'A list of options that users can choose from'
     )
-    expect($radios[17]).toHaveAccessibleName('Yes or No')
-    expect($radios[18]).toHaveAccessibleName('Checkboxes')
-    expect($radios[19]).toHaveAccessibleName('Radios')
-    expect($radios[20]).toHaveAccessibleName('Autocomplete')
-    expect($radios[21]).toHaveAccessibleName('Select')
+    expect($radios[18]).toHaveAccessibleName('Yes or No')
+    expect($radios[19]).toHaveAccessibleName('Checkboxes')
+    expect($radios[20]).toHaveAccessibleName('Radios')
+    expect($radios[21]).toHaveAccessibleName('Autocomplete')
+    expect($radios[22]).toHaveAccessibleName('Select')
   })
 
   test('POST - should error if missing mandatory fields', async () => {
@@ -352,13 +360,14 @@ describe('Editor v2 question routes', () => {
     })
   })
 
-  test('POST - should clear questionDetails when question type changes', async () => {
+  test('POST - should clear questionDetails when changing to location field', async () => {
+    const existingDetails = /** @type {any} */ ({
+      question: 'Old question',
+      name: 'oldName'
+    })
     jest.mocked(getQuestionSessionState).mockReturnValue({
       questionType: ComponentType.TextField,
-      questionDetails: /** @type {any} */ ({
-        question: 'Old question',
-        name: 'oldName'
-      })
+      questionDetails: existingDetails
     })
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
@@ -369,7 +378,10 @@ describe('Editor v2 question routes', () => {
       method: 'post',
       url: '/library/my-form-slug/editor-v2/page/p1/question/1/type/54321',
       auth,
-      payload: { questionType: 'NumberField' }
+      payload: {
+        questionType: QuestionTypeSubGroup.LocationSubGroup,
+        locationSub: ComponentType.EastingNorthingField
+      }
     }
 
     const {
@@ -377,6 +389,54 @@ describe('Editor v2 question routes', () => {
     } = await renderResponse(server, options)
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    // When switching to location field, questionDetails should be cleared (undefined)
+    expect(mergeQuestionSessionState).toHaveBeenCalledWith(
+      expect.anything(),
+      '54321',
+      {
+        questionType: ComponentType.EastingNorthingField,
+        questionDetails: undefined
+      }
+    )
+  })
+
+  test('POST - should preserve questionDetails when changing between similar non-location fields', async () => {
+    const existingDetails = /** @type {any} */ ({
+      question: 'Keep this question',
+      name: 'keepName'
+    })
+    jest.mocked(getQuestionSessionState).mockReturnValue({
+      questionType: ComponentType.TextField,
+      questionDetails: existingDetails
+    })
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/1/type/54321',
+      auth,
+      payload: {
+        questionType: QuestionTypeSubGroup.WrittenAnswerSubGroup,
+        writtenAnswerSub: ComponentType.NumberField
+      }
+    }
+
+    const {
+      response: { statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(mergeQuestionSessionState).toHaveBeenCalledWith(
+      expect.anything(),
+      '54321',
+      {
+        questionType: ComponentType.NumberField,
+        questionDetails: existingDetails
+      }
+    )
   })
 
   test('POST - should preserve questionDetails when question type unchanged', async () => {
