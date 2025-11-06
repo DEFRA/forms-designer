@@ -1,4 +1,4 @@
-import { ValidationError } from 'joi'
+import { ValidationError, type CustomHelpers } from 'joi'
 
 import {
   buildDateComponent,
@@ -7,15 +7,19 @@ import {
   buildFileUploadComponent,
   buildHtmlComponent,
   buildInsetTextComponent,
+  buildList,
+  buildListItem,
   buildMarkdownComponent,
   buildMonthYearFieldComponent,
   buildMultilineTextFieldComponent,
   buildNumberFieldComponent,
+  buildRadioComponent,
   buildRadiosComponent,
   buildTelephoneNumberFieldComponent,
   buildTextFieldComponent,
   buildUkAddressFieldComponent
 } from '~/src/__stubs__/components.js'
+import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
   buildFileUploadPage,
   buildQuestionPage,
@@ -44,6 +48,7 @@ import {
   fileUploadComponentSchema,
   formDefinitionSchema,
   formDefinitionV2Schema,
+  listItemIdValidator,
   pageSchema,
   pageSchemaV2
 } from '~/src/form/form-definition/index.js'
@@ -54,6 +59,10 @@ import {
   type PageQuestion,
   type PageSummary
 } from '~/src/form/form-definition/types.js'
+import {
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '~/src/form/form-manager/types.js'
 import { ControllerPath, ControllerType } from '~/src/pages/enums.js'
 
 describe('Form definition schema', () => {
@@ -673,6 +682,610 @@ describe('Form definition schema', () => {
         expect(validated.error).toEqual(
           new ValidationError('Incompatible data value', [], {})
         )
+      })
+
+      it('should fail validation when the list for a condition is not found', () => {
+        const definition1 = buildDefinition({
+          name: 'Conditional Reference Check',
+          startPage: '/which-option',
+          pages: [
+            buildQuestionPage({
+              title: '',
+              path: '/which-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which option?',
+                  name: 'amkCpy',
+                  shortDescription: 'Which option?',
+                  options: {
+                    required: true
+                  },
+                  list: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60',
+                  id: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc'
+                })
+              ],
+              id: 'c875cb03-0005-4a18-8b29-07c01ad2845a'
+            })
+          ],
+          conditions: [
+            {
+              items: [
+                {
+                  id: '747fac5a-59dc-499a-9136-7d8d67309de4',
+                  componentId: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc',
+                  operator: OperatorName.Is,
+                  value: {
+                    itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                    listId: '00000000-0000-0000-0000-000000000000'
+                  },
+                  type: ConditionType.ListItemRef
+                }
+              ],
+              displayName: 'fourth option',
+              id: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }
+          ],
+          lists: [
+            buildList({
+              name: 'sGxjdK',
+              title: 'List for question YJBELu',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: '1c1f88e8-ca26-4dd4-83d9-4af98637a13f',
+                  text: 'Option 1',
+                  value: 'Option 1'
+                }),
+                buildListItem({
+                  id: '688a6a38-632a-4da4-95ae-245c60c67d1c',
+                  text: 'Option 2',
+                  value: 'Option 2'
+                }),
+                buildListItem({
+                  id: 'd9e1794e-2463-4f12-99c1-974c6880624f',
+                  text: 'Option 3',
+                  value: 'Option 3'
+                }),
+                buildListItem({
+                  id: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                })
+              ],
+              id: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9'
+            }),
+            buildList({
+              name: 'dNYuPT',
+              title: 'List for question amkCpy',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: 'f98db97a-527b-408e-889e-1efff3e6d545',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                }),
+                buildListItem({
+                  id: '7914c48b-5a62-42bb-b63e-54209c459b57',
+                  text: 'Option 5',
+                  value: 'Option 5'
+                }),
+                buildListItem({
+                  id: '5b615f6b-4895-4833-845a-e1fcf8eff8f0',
+                  text: 'Option 6',
+                  value: 'Option 6'
+                }),
+                buildListItem({
+                  id: '288122a9-ca33-4533-b79e-a347ac2e484e',
+                  text: 'Option 7',
+                  value: 'Option 7'
+                })
+              ],
+              id: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+            })
+          ]
+        })
+
+        const { error } = formDefinitionV2Schema.validate(definition1)
+        expect(error).toBeDefined()
+        expect(error?.isJoi).toBe(true)
+        expect(error?.message).toBe(
+          '"conditions[0].items[0].value.listId" must be [ref:root:lists]'
+        )
+        expect(error?.details[0].type).toBe('any.only')
+        expect(error?.details[0].context?.errorType).toBe(
+          FormDefinitionErrorType.Ref
+        )
+        expect(error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.RefConditionListId
+        )
+        expect(error?.details[0].type).toBe('any.only')
+        expect(error?.details[0].path).toEqual([
+          'conditions',
+          0,
+          'items',
+          0,
+          'value',
+          'listId'
+        ])
+      })
+
+      it('should fail validation when condition list itemId is not found in any list', () => {
+        const definition1 = buildDefinition({
+          name: 'Conditional Reference Check',
+          startPage: '/which-option',
+          pages: [
+            buildQuestionPage({
+              title: '',
+              path: '/which-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which option?',
+                  name: 'amkCpy',
+                  shortDescription: 'Which option?',
+                  options: {
+                    required: true
+                  },
+                  list: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60',
+                  id: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc'
+                })
+              ],
+              id: 'c875cb03-0005-4a18-8b29-07c01ad2845a'
+            })
+          ],
+          conditions: [
+            {
+              items: [
+                {
+                  id: '747fac5a-59dc-499a-9136-7d8d67309de4',
+                  componentId: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc',
+                  operator: OperatorName.Is,
+                  value: {
+                    itemId: '00000000-0000-0000-0000-000000000000',
+                    listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+                  },
+                  type: ConditionType.ListItemRef
+                }
+              ],
+              displayName: 'fourth option',
+              id: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }
+          ],
+          lists: [
+            buildList({
+              name: 'sGxjdK',
+              title: 'List for question YJBELu',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: '1c1f88e8-ca26-4dd4-83d9-4af98637a13f',
+                  text: 'Option 1',
+                  value: 'Option 1'
+                }),
+                buildListItem({
+                  id: '688a6a38-632a-4da4-95ae-245c60c67d1c',
+                  text: 'Option 2',
+                  value: 'Option 2'
+                }),
+                buildListItem({
+                  id: 'd9e1794e-2463-4f12-99c1-974c6880624f',
+                  text: 'Option 3',
+                  value: 'Option 3'
+                }),
+                buildListItem({
+                  id: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                })
+              ],
+              id: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9'
+            }),
+            buildList({
+              name: 'dNYuPT',
+              title: 'List for question amkCpy',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: 'f98db97a-527b-408e-889e-1efff3e6d545',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                }),
+                buildListItem({
+                  id: '7914c48b-5a62-42bb-b63e-54209c459b57',
+                  text: 'Option 5',
+                  value: 'Option 5'
+                }),
+                buildListItem({
+                  id: '5b615f6b-4895-4833-845a-e1fcf8eff8f0',
+                  text: 'Option 6',
+                  value: 'Option 6'
+                }),
+                buildListItem({
+                  id: '288122a9-ca33-4533-b79e-a347ac2e484e',
+                  text: 'Option 7',
+                  value: 'Option 7'
+                })
+              ],
+              id: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+            })
+          ]
+        })
+
+        const { error } = formDefinitionV2Schema.validate(definition1)
+        expect(error).toBeDefined()
+        expect(error?.isJoi).toBe(true)
+        expect(error?.message).toBe(
+          '"conditions[0].items[0].value.itemId" must be one of [f98db97a-527b-408e-889e-1efff3e6d545, 7914c48b-5a62-42bb-b63e-54209c459b57, 5b615f6b-4895-4833-845a-e1fcf8eff8f0, 288122a9-ca33-4533-b79e-a347ac2e484e]'
+        )
+        expect(error?.details[0].type).toBe('any.only')
+        expect(error?.details[0].context?.errorType).toBe(
+          FormDefinitionErrorType.Ref
+        )
+        expect(error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.RefConditionItemId
+        )
+        expect(error?.details[0].path).toEqual([
+          'conditions',
+          0,
+          'items',
+          0,
+          'value',
+          'itemId'
+        ])
+      })
+
+      it('should fail validation when condition list itemId is not found in the correct list', () => {
+        const definition1 = buildDefinition({
+          name: 'Conditional Reference Check',
+          startPage: '/which-option',
+          pages: [
+            buildQuestionPage({
+              title: '',
+              path: '/which-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which option?',
+                  name: 'amkCpy',
+                  shortDescription: 'Which option?',
+                  options: {
+                    required: true
+                  },
+                  list: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60',
+                  id: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc'
+                })
+              ],
+              id: 'c875cb03-0005-4a18-8b29-07c01ad2845a'
+            })
+          ],
+          conditions: [
+            {
+              items: [
+                {
+                  id: '747fac5a-59dc-499a-9136-7d8d67309de4',
+                  componentId: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc',
+                  operator: OperatorName.Is,
+                  value: {
+                    itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                    listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+                  },
+                  type: ConditionType.ListItemRef
+                }
+              ],
+              displayName: 'fourth option',
+              id: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }
+          ],
+          lists: [
+            buildList({
+              name: 'sGxjdK',
+              title: 'List for question YJBELu',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: '1c1f88e8-ca26-4dd4-83d9-4af98637a13f',
+                  text: 'Option 1',
+                  value: 'Option 1'
+                }),
+                buildListItem({
+                  id: '688a6a38-632a-4da4-95ae-245c60c67d1c',
+                  text: 'Option 2',
+                  value: 'Option 2'
+                }),
+                buildListItem({
+                  id: 'd9e1794e-2463-4f12-99c1-974c6880624f',
+                  text: 'Option 3',
+                  value: 'Option 3'
+                }),
+                buildListItem({
+                  id: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                })
+              ],
+              id: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9'
+            }),
+            buildList({
+              name: 'dNYuPT',
+              title: 'List for question amkCpy',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: 'f98db97a-527b-408e-889e-1efff3e6d545',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                }),
+                buildListItem({
+                  id: '7914c48b-5a62-42bb-b63e-54209c459b57',
+                  text: 'Option 5',
+                  value: 'Option 5'
+                }),
+                buildListItem({
+                  id: '5b615f6b-4895-4833-845a-e1fcf8eff8f0',
+                  text: 'Option 6',
+                  value: 'Option 6'
+                }),
+                buildListItem({
+                  id: '288122a9-ca33-4533-b79e-a347ac2e484e',
+                  text: 'Option 7',
+                  value: 'Option 7'
+                })
+              ],
+              id: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+            })
+          ]
+        })
+
+        const { error } = formDefinitionV2Schema.validate(definition1)
+        expect(error).toBeDefined()
+        expect(error?.isJoi).toBe(true)
+        expect(error?.message).toBe(
+          '"conditions[0].items[0].value.itemId" must be one of [f98db97a-527b-408e-889e-1efff3e6d545, 7914c48b-5a62-42bb-b63e-54209c459b57, 5b615f6b-4895-4833-845a-e1fcf8eff8f0, 288122a9-ca33-4533-b79e-a347ac2e484e]'
+        )
+        expect(error?.details[0].type).toBe('any.only')
+        expect(error?.details[0].context?.errorType).toBe(
+          FormDefinitionErrorType.Ref
+        )
+        expect(error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.RefConditionItemId
+        )
+        expect(error?.details[0].path).toEqual([
+          'conditions',
+          0,
+          'items',
+          0,
+          'value',
+          'itemId'
+        ])
+      })
+
+      it('should return value when list is not found in listItemIdValidator', () => {
+        const definition1 = buildDefinition({
+          name: 'Conditional Reference Check',
+          startPage: '/which-option',
+          pages: [
+            buildQuestionPage({
+              title: '',
+              path: '/which-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which option?',
+                  name: 'amkCpy',
+                  shortDescription: 'Which option?',
+                  options: {
+                    required: true
+                  },
+                  list: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60',
+                  id: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc'
+                })
+              ],
+              id: 'c875cb03-0005-4a18-8b29-07c01ad2845a'
+            })
+          ],
+          conditions: [
+            {
+              items: [
+                {
+                  id: '747fac5a-59dc-499a-9136-7d8d67309de4',
+                  componentId: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc',
+                  operator: OperatorName.Is,
+                  value: {
+                    itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                    listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+                  },
+                  type: ConditionType.ListItemRef
+                }
+              ],
+              displayName: 'fourth option',
+              id: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }
+          ],
+          lists: [
+            buildList({
+              name: 'sGxjdK',
+              title: 'List for question YJBELu',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: '1c1f88e8-ca26-4dd4-83d9-4af98637a13f',
+                  text: 'Option 1',
+                  value: 'Option 1'
+                }),
+                buildListItem({
+                  id: '688a6a38-632a-4da4-95ae-245c60c67d1c',
+                  text: 'Option 2',
+                  value: 'Option 2'
+                }),
+                buildListItem({
+                  id: 'd9e1794e-2463-4f12-99c1-974c6880624f',
+                  text: 'Option 3',
+                  value: 'Option 3'
+                }),
+                buildListItem({
+                  id: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                })
+              ],
+              id: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9'
+            }),
+            buildList({
+              name: 'dNYuPT',
+              title: 'List for question amkCpy',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: 'f98db97a-527b-408e-889e-1efff3e6d545',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                }),
+                buildListItem({
+                  id: '7914c48b-5a62-42bb-b63e-54209c459b57',
+                  text: 'Option 5',
+                  value: 'Option 5'
+                }),
+                buildListItem({
+                  id: '5b615f6b-4895-4833-845a-e1fcf8eff8f0',
+                  text: 'Option 6',
+                  value: 'Option 6'
+                }),
+                buildListItem({
+                  id: '288122a9-ca33-4533-b79e-a347ac2e484e',
+                  text: 'Option 7',
+                  value: 'Option 7'
+                })
+              ],
+              id: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+            })
+          ]
+        })
+
+        // This test is to exercise code that isn't possible to hit at runtime
+        const conditionValue: ConditionListItemRefValueDataV2 = {
+          itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+          listId: '00000000-0000-0000-0000-000000000000'
+        }
+        const result = listItemIdValidator(
+          'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+          {
+            state: { ancestors: [conditionValue, definition1] }
+          } as CustomHelpers<ConditionListItemRefValueDataV2>
+        )
+
+        expect(result).toBe('b3a5030c-57f1-4d2e-8db9-6adeeba43c07')
+      })
+
+      it('should return value when ConditionListItemRefValueDataV2 parent is not found in listItemIdValidator', () => {
+        const definition1 = buildDefinition({
+          name: 'Conditional Reference Check',
+          startPage: '/which-option',
+          pages: [
+            buildQuestionPage({
+              title: '',
+              path: '/which-option',
+              components: [
+                buildRadioComponent({
+                  title: 'Which option?',
+                  name: 'amkCpy',
+                  shortDescription: 'Which option?',
+                  options: {
+                    required: true
+                  },
+                  list: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60',
+                  id: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc'
+                })
+              ],
+              id: 'c875cb03-0005-4a18-8b29-07c01ad2845a'
+            })
+          ],
+          conditions: [
+            {
+              items: [
+                {
+                  id: '747fac5a-59dc-499a-9136-7d8d67309de4',
+                  componentId: 'ad9af40f-3b97-44ed-9f4e-ac855c4b8cbc',
+                  operator: OperatorName.Is,
+                  value: {
+                    itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                    listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+                  },
+                  type: ConditionType.ListItemRef
+                }
+              ],
+              displayName: 'fourth option',
+              id: '746d6cdb-1d37-4d22-a10e-84ee92de3857'
+            }
+          ],
+          lists: [
+            buildList({
+              name: 'sGxjdK',
+              title: 'List for question YJBELu',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: '1c1f88e8-ca26-4dd4-83d9-4af98637a13f',
+                  text: 'Option 1',
+                  value: 'Option 1'
+                }),
+                buildListItem({
+                  id: '688a6a38-632a-4da4-95ae-245c60c67d1c',
+                  text: 'Option 2',
+                  value: 'Option 2'
+                }),
+                buildListItem({
+                  id: 'd9e1794e-2463-4f12-99c1-974c6880624f',
+                  text: 'Option 3',
+                  value: 'Option 3'
+                }),
+                buildListItem({
+                  id: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                })
+              ],
+              id: 'a0edad95-8fd2-4755-b0aa-459b8e568bc9'
+            }),
+            buildList({
+              name: 'dNYuPT',
+              title: 'List for question amkCpy',
+              type: 'string',
+              items: [
+                buildListItem({
+                  id: 'f98db97a-527b-408e-889e-1efff3e6d545',
+                  text: 'Option 4',
+                  value: 'Option 4'
+                }),
+                buildListItem({
+                  id: '7914c48b-5a62-42bb-b63e-54209c459b57',
+                  text: 'Option 5',
+                  value: 'Option 5'
+                }),
+                buildListItem({
+                  id: '5b615f6b-4895-4833-845a-e1fcf8eff8f0',
+                  text: 'Option 6',
+                  value: 'Option 6'
+                }),
+                buildListItem({
+                  id: '288122a9-ca33-4533-b79e-a347ac2e484e',
+                  text: 'Option 7',
+                  value: 'Option 7'
+                })
+              ],
+              id: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
+            })
+          ]
+        })
+
+        // This test is to exercise code that isn't possible to hit at runtime
+        const conditionValue = {
+          itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07'
+        }
+        const result = listItemIdValidator(
+          'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
+          {
+            state: { ancestors: [conditionValue, definition1] }
+          } as CustomHelpers<ConditionListItemRefValueDataV2>
+        )
+
+        expect(result).toBe('b3a5030c-57f1-4d2e-8db9-6adeeba43c07')
       })
     })
   })

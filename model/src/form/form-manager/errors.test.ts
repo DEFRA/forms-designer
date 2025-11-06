@@ -693,7 +693,7 @@ describe('validation errors', () => {
             id: FormDefinitionError.RefConditionItemId,
             detail: { path: ['conditions', 0, 'items', 0, 'value', 'itemId'] },
             message:
-              '"conditions[0].items[0].value.itemId" must be [ref:root:lists]',
+              '"conditions[0].items[0].value.itemId" must be one of [c41b069d-eded-4713-9d62-a4e874405d81, 772f67ac-edb6-4cc3-88b7-8626ecd61f27]',
             type: FormDefinitionErrorType.Ref
           }
         ])

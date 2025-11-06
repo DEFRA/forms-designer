@@ -24,7 +24,10 @@ import {
   type RelativeDateValueData,
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
-import { isFormDefinition } from '~/src/form/form-definition/helpers.js'
+import {
+  isConditionListItemRefValueData,
+  isFormDefinition
+} from '~/src/form/form-definition/helpers.js'
 import {
   SchemaVersion,
   type ConditionWrapper,
@@ -66,7 +69,7 @@ const conditionIdRef = Joi.ref('/conditions', {
     conditions.map((condition) => condition.id)
 })
 
-const componentIdRefSchema = Joi.ref('/pages', {
+const componentIdRef = Joi.ref('/pages', {
   in: true,
   adjust: (pages: Page[]) =>
     pages.flatMap((page) =>
@@ -84,13 +87,89 @@ const listIdRef = Joi.ref('/lists', {
     lists.filter((list) => list.id).map((list) => list.id)
 })
 
-const listItemIdRef = Joi.ref('/lists', {
-  in: true,
-  adjust: (lists: List[]) =>
-    lists.flatMap((list) =>
-      list.items.filter((item) => item.id).map((item) => item.id)
+export const listItemIdValidator = (
+  value: string,
+  helpers: CustomHelpers<ConditionListItemRefValueDataV2>
+) => {
+  const definition = helpers.state.ancestors.find(isFormDefinition) as
+    | FormDefinition
+    | undefined
+
+  // Validation may not have been fired on the full FormDefinition
+  // therefore we are unable to verify the list & item combination
+  if (!definition) {
+    return value
+  }
+
+  const conditionValue = helpers.state.ancestors[0]
+
+  if (!isConditionListItemRefValueData(conditionValue)) {
+    return value
+  }
+
+  const listId = conditionValue.listId
+  const list = definition.lists.find((list) => list.id === listId)
+
+  // This check is just for type safety. It'll be impossible for the list to not exist here as it will be
+  // handled by the `Joi.valid(listIdRef)` applied to the `ConditionListItemRefValueDataV2.listId` schema
+  if (!list) {
+    return value
+  }
+
+  const itemIdExists = list.items.some((item) => item.id === value)
+
+  return itemIdExists
+    ? value
+    : helpers.error('any.only', {
+        value,
+        valids: list.items.map((item) => item.id),
+        errorType: FormDefinitionErrorType.Ref,
+        errorCode: FormDefinitionError.RefConditionItemId
+      })
+}
+
+const incompatibleConditionValidator = (
+  value: ConditionDataV2,
+  helpers: CustomHelpers<ConditionDataV2>
+) => {
+  const { componentId } = value
+  const definition = helpers.state.ancestors.find(isFormDefinition) as
+    | FormDefinition
+    | undefined
+
+  // Validation may not have been fired on the full FormDefinition
+  // therefore we are unable to verify at this point, but the 'save'
+  // will eventually validate the full FormDefinition
+  if (!definition) {
+    return value
+  }
+
+  const foundComponents = definition.pages
+    .map((page) =>
+      hasComponentsEvenIfNoNext(page)
+        ? page.components.find((comp) => comp.id === componentId)
+        : undefined
     )
-})
+    .filter(Boolean)
+
+  const foundComponentHandlesConditions = foundComponents.length
+    ? isConditionalType(foundComponents[0]?.type)
+    : false
+
+  return foundComponentHandlesConditions
+    ? value
+    : helpers.error('custom.incompatible', {
+        incompatibleObject: {
+          key: 'type',
+          value: foundComponents[0]
+        },
+        valueKey: 'componentId',
+        value: componentId,
+        errorType: FormDefinitionErrorType.Incompatible,
+        errorCode: FormDefinitionError.IncompatibleConditionComponentType,
+        reason: 'does not support conditions'
+      })
+}
 
 const sectionsSchema = Joi.object<Section>()
   .description('A form section grouping related pages together')
@@ -162,13 +241,9 @@ const conditionListItemRefDataSchemaV2 =
         .error(checkErrors(FormDefinitionError.RefConditionListId)),
       itemId: Joi.string()
         .trim()
-        .when('/lists', {
-          is: Joi.exist(),
-          then: Joi.valid(listItemIdRef)
-        })
         .required()
         .description('The id of the list item')
-        .error(checkErrors(FormDefinitionError.RefConditionItemId))
+        .custom(listItemIdValidator)
     })
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
@@ -282,7 +357,7 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
       .required()
       .when('/pages', {
         is: Joi.exist(),
-        then: Joi.valid(componentIdRefSchema)
+        then: Joi.valid(componentIdRef)
       })
       .description(
         'Reference to the component id being evaluated in this condition'
@@ -324,46 +399,9 @@ export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
         'Value to compare the field against, either fixed or relative date'
       )
   })
-  .custom((value: ConditionDataV2, helpers: CustomHelpers<ConditionDataV2>) => {
-    const { componentId } = value
-    const definition = helpers.state.ancestors.find(isFormDefinition) as
-      | FormDefinition
-      | undefined
-
-    // Validation may not have been fired on the full FormDefinition
-    // therefore we are unable to verify at this point, but the 'save'
-    // will eventually validate the full FormDefinition
-    if (!definition) {
-      return value
-    }
-
-    const foundComponents = definition.pages
-      .map((page) =>
-        hasComponentsEvenIfNoNext(page)
-          ? page.components.find((comp) => comp.id === componentId)
-          : undefined
-      )
-      .filter(Boolean)
-
-    const foundComponentHandlesConditions = foundComponents.length
-      ? isConditionalType(foundComponents[0]?.type)
-      : false
-
-    return foundComponentHandlesConditions
-      ? value
-      : helpers.error('custom.incompatible', {
-          incompatibleObject: {
-            key: 'type',
-            value: foundComponents[0]
-          },
-          valueKey: 'componentId',
-          value: componentId,
-          errorType: FormDefinitionErrorType.Incompatible,
-          errorCode: FormDefinitionError.IncompatibleConditionComponentType,
-          reason: 'does not support conditions'
-        })
-  })
+  .custom(incompatibleConditionValidator)
   .messages({
+    // Custom error types require a corresponding messages
     'custom.incompatible': 'Incompatible data value'
   })
 
