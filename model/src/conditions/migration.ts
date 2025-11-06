@@ -138,12 +138,12 @@ function createConditionValueDataFromBooleanValueDataV2(
 }
 
 function createConditionValueDataFromDeclarationValueDataV2(
-  _condition: ConditionDataV2
+  condition: ConditionDataV2
 ): ConditionValueData {
   return {
     type: ConditionType.Value,
-    value: 'true',
-    display: 'Agreed'
+    value: (condition.value as boolean).toString(),
+    display: (condition.value as boolean) ? 'Agreed' : 'Not agreed'
   }
 }
 
