@@ -2,6 +2,7 @@ import {
   buildAutoCompleteComponent,
   buildCheckboxComponent,
   buildDateComponent,
+  buildDeclarationFieldComponent,
   buildEmailAddressFieldComponent,
   buildFileUploadComponent,
   buildList,
@@ -24,6 +25,7 @@ import { QuestionRendererStub } from '~/src/form/form-editor/__stubs__/preview.j
 import { AutocompleteListQuestion } from '~/src/form/form-editor/preview/autocomplete.js'
 import { CheckboxQuestion } from '~/src/form/form-editor/preview/checkbox.js'
 import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
+import { DeclarationQuestion } from '~/src/form/form-editor/preview/declaration.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
 import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
@@ -135,6 +137,11 @@ describe('helpers', () => {
         type: 'ListComponent',
         buildComponent: buildListComponent,
         expected: ListQuestion
+      },
+      {
+        type: 'DeclarationField',
+        buildComponent: buildDeclarationFieldComponent,
+        expected: DeclarationQuestion
       }
     ])('should map $type', ({ buildComponent, expected }) => {
       const question = buildComponent(componentContent)

@@ -191,6 +191,29 @@ export class UkAddressPreviewElements extends QuestionPreviewElements {
 }
 
 /**
+ * @implements {DeclarationElements}
+ */
+export class DeclarationPreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {declarationText: string}} elements
+   */
+  constructor({ declarationText, ...elements }) {
+    super(elements)
+    this._declarationText = declarationText
+  }
+
+  /**
+   * @returns {DeclarationSettings}
+   */
+  get values() {
+    return {
+      ...super.values,
+      declarationText: this._declarationText
+    }
+  }
+}
+
+/**
  * @implements {PageOverviewElements}
  */
 export class PagePreviewElements {
@@ -406,5 +429,5 @@ export class NumberPreviewElements {
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
  * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
- * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings, DeclarationElements, DeclarationSettings } from  '~/src/form/form-editor/preview/types.js'
  */
