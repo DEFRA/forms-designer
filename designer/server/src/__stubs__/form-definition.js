@@ -124,6 +124,22 @@ export function buildAutoCompleteComponent(partialAutoCompleteField) {
 }
 
 /**
+ *
+ * @param {Partial<DeclarationFieldComponent>} partialDeclarationField
+ * @returns {DeclarationFieldComponent}
+ */
+export function buildDeclarationComponent(partialDeclarationField) {
+  return {
+    name: 'DeclarationField',
+    title: 'Do you agree?',
+    type: ComponentType.DeclarationField,
+    content: 'My declaration text',
+    options: {},
+    ...partialDeclarationField
+  }
+}
+
+/**
  * @param {Partial<RadiosFieldComponent>} partialListComponent
  * @returns {RadiosFieldComponent}
  */
@@ -978,5 +994,5 @@ export const testFormDefinitionWithMultipleV2ConditionsWithUnassigned =
   })
 
 /**
- * @import { FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
+ * @import { DeclarationFieldComponent, FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
  */

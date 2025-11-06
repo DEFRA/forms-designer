@@ -38,6 +38,7 @@ export const questionTypeSchema = Joi.string()
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
+    ComponentType.DeclarationField,
     QuestionTypeSubGroup.ListSubGroup,
     ComponentType.YesNoField,
     ComponentType.CheckboxesField,
@@ -58,6 +59,7 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.TelephoneNumberField,
     ComponentType.FileUploadField,
     ComponentType.EmailAddressField,
+    ComponentType.DeclarationField,
     ComponentType.YesNoField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
@@ -532,6 +534,7 @@ export const autoCompleteOptionsSchema = customValidator
 export const questionDetailsFullSchema = {
   autoCompleteOptionsSchema,
   classesSchema,
+  declarationTextSchema,
   documentTypesSchema,
   enhancedActionSchema,
   exactFilesSchema,

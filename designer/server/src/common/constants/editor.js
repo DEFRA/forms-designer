@@ -39,6 +39,10 @@ export const QuestionTypeDescriptions =
       description: 'Email address'
     },
     {
+      type: ComponentType.DeclarationField,
+      description: 'Declaration'
+    },
+    {
       type: ComponentType.YesNoField,
       description: 'List: yes or no'
     },
@@ -82,6 +86,7 @@ export const QuestionBaseSettings = {
   HintText: 'hintText',
   QuestionOptional: 'questionOptional',
   ShortDescription: 'shortDescription',
+  DeclarationText: 'declarationText',
   FileTypes: 'fileTypes',
   DocumentTypes: 'documentTypes',
   ImageTypes: 'imageTypes',

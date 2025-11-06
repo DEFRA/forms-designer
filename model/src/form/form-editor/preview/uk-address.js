@@ -17,7 +17,7 @@ export class UkAddressComponentPreviewElements extends QuestionComponentElements
 
   /**
    * @protected
-   * @returns {BaseSettings}
+   * @returns {UkAddressSettings}
    */
   _getValues() {
     return {
@@ -37,7 +37,7 @@ export class UkAddressQuestion extends FieldsetQuestion {
   _usePostcodeLookup = false
 
   /**
-   * @param {QuestionElements} htmlElements
+   * @param {UkAddressElements} htmlElements
    * @param {QuestionRenderer} questionRenderer
    */
   constructor(htmlElements, questionRenderer) {
@@ -69,6 +69,6 @@ export class UkAddressQuestion extends FieldsetQuestion {
 }
 
 /**
- * @import { BaseSettings, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { QuestionElements, QuestionRenderer, UkAddressElements, UkAddressSettings } from '~/src/form/form-editor/preview/types.js'
  * @import { UkAddressFieldComponent } from '~/src/components/types.js'
  */

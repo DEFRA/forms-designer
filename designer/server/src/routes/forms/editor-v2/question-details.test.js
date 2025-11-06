@@ -11,6 +11,7 @@ import Joi from 'joi'
 
 import {
   buildAutoCompleteComponent,
+  buildDeclarationComponent,
   buildDefinition,
   buildList,
   buildListItem,
@@ -108,6 +109,10 @@ describe('Editor v2 question details routes', () => {
 
   const simpleSessionRadiosField = {
     questionType: ComponentType.RadiosField
+  }
+
+  const simpleSessionDeclaration = {
+    questionType: ComponentType.DeclarationField
   }
 
   test('GET - should redirect if no session yet', async () => {
@@ -437,6 +442,49 @@ describe('Editor v2 question details routes', () => {
     )
     expect(/** @type {HTMLInputElement} */ (autoCompleteField).value).toMatch(
       'Northern Ireland:northern-ireland'
+    )
+  })
+
+  test('GET - should render the declaration field in the base view', async () => {
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionDeclaration)
+    jest
+      .mocked(buildQuestionSessionState)
+      .mockReturnValue(simpleSessionDeclaration)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    const def = buildDefinition({
+      name: 'Test form',
+      pages: [
+        buildQuestionPage({
+          id: 'p1',
+          path: '/declaration',
+          title: 'Do you agree?',
+          components: [
+            buildDeclarationComponent({
+              id: 'c1',
+              name: 'declaration'
+            })
+          ]
+        })
+      ]
+    })
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValue(def)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/54321',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    container.getByText('Test form')
+
+    const [, declarationField] = container.getAllByRole('textbox')
+    expect(declarationField.id).toBe('declarationText')
+    expect(/** @type {HTMLInputElement} */ (declarationField).value).toMatch(
+      'My declaration text'
     )
   })
 

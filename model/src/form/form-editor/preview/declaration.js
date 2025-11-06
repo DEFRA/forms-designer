@@ -1,0 +1,88 @@
+import { ComponentType } from '~/src/components/enums.js'
+import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
+import {
+  Question,
+  QuestionComponentElements
+} from '~/src/form/form-editor/preview/question.js'
+
+/**
+ * @implements {QuestionElements}
+ */
+export class DeclarationComponentPreviewElements extends QuestionComponentElements {
+  /**
+   * @param {DeclarationFieldComponent} component
+   */
+  constructor(component) {
+    super(component)
+    this._declarationText = component.content
+  }
+
+  /**
+   * @protected
+   * @returns {DeclarationSettings}
+   */
+  _getValues() {
+    return {
+      ...super._getValues(),
+      declarationText: this._declarationText
+    }
+  }
+}
+
+export class DeclarationQuestion extends Question {
+  /**
+   * @type {ComponentType}
+   */
+  componentType = ComponentType.DeclarationField
+  /**
+   * @type {string}
+   * @protected
+   */
+  _questionTemplate = PreviewComponent.PATH + 'declarationfield.njk'
+  _fieldName = 'DeclarationField'
+  _declarationText = ''
+
+  /**
+   * @param {DeclarationElements} htmlElements
+   * @param {QuestionRenderer} questionRenderer
+   */
+  constructor(htmlElements, questionRenderer) {
+    super(htmlElements, questionRenderer)
+    this._declarationText = htmlElements.values.declarationText
+  }
+
+  get declarationText() {
+    return this._declarationText
+  }
+
+  /**
+   * @param {string} val
+   */
+  set declarationText(val) {
+    this._declarationText = val
+    this.render()
+  }
+
+  /**
+   * @protected
+   * @returns {DeclarationModel}
+   */
+  _renderInput() {
+    return {
+      ...super._renderInput(),
+      declaration: {
+        text: this._declarationText
+          ? this._declarationText
+          : 'Declaration text',
+        classes: this._highlight === 'declarationText' ? HIGHLIGHT_CLASS : ''
+      }
+    }
+  }
+}
+
+/**
+ * @import { DeclarationSettings, DeclarationElements, QuestionElements, QuestionRenderer } from '~/src/form/form-editor/preview/types.js'
+ * @import { DeclarationModel } from '~/src/form/form-editor/macros/types.js'
+ * @import { DeclarationFieldComponent } from '~/src/components/types.js'
+ */

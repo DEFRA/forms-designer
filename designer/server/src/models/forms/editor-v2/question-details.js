@@ -1,5 +1,5 @@
 import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoField.js'
-import { createComponent } from '@defra/forms-engine-plugin/helpers.js'
+import { createComponent } from '@defra/forms-engine-plugin/engine/components/helpers/components.js'
 import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'

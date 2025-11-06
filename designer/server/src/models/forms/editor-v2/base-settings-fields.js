@@ -33,6 +33,18 @@ export const baseSchema = Joi.object().keys({
     })
   }),
   hintText: questionDetailsFullSchema.hintTextSchema,
+  declarationText: questionDetailsFullSchema.declarationTextSchema.when(
+    'questionType',
+    {
+      is: 'DeclarationField',
+      then: questionDetailsFullSchema.declarationTextSchema
+        .required()
+        .messages({
+          '*': 'Enter declaration text'
+        }),
+      otherwise: Joi.string().optional().allow('')
+    }
+  ),
   questionOptional: questionDetailsFullSchema.questionOptionalSchema,
   shortDescription: questionDetailsFullSchema.shortDescriptionSchema.when(
     'enhancedAction',
@@ -215,6 +227,24 @@ export const allBaseSettingsFields = {
     },
     customTemplate: 'auto-complete-options'
   },
+  declarationText: {
+    id: 'declarationText',
+    name: 'declarationText',
+    idPrefix: 'declarationText',
+    label: {
+      text: 'Declaration text',
+      classes: 'govuk-label--m'
+    },
+    hint: {
+      text: 'You can use Markdown if you want to format the content or add links'
+    },
+    preContent: {
+      path: '../../../../views/forms/editor-v2/partials/help-writing-declaration.njk'
+    },
+    postContent: {
+      path: '../../../../views/forms/editor-v2/partials/markdown-help.njk'
+    }
+  },
   usePostcodeLookup: {
     name: 'usePostcodeLookup',
     id: 'usePostcodeLookup',
@@ -325,6 +355,31 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
   }
 }
 
+const fieldMappingFunctions =
+  /** @type {Partial<Record<string, (questionFields: FormComponentsDef | undefined, definition: FormDefinition) => string >>} */ ({
+    questionOptional: (questionFields) =>
+      `${questionFields?.options.required === false}`,
+    question: (questionFields) => questionFields?.title,
+    hintText: (questionFields) => questionFields?.hint,
+    shortDescription: (questionFields) => questionFields?.shortDescription,
+    declarationText: (questionFields) => {
+      const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
+        questionFields
+      )
+      return declaration?.content
+    },
+    autoCompleteOptions: (questionFields, definition) =>
+      mapListToTextareaStr(
+        getListFromComponent(questionFields, definition)?.items
+      ),
+    usePostcodeLookup: (questionFields) => {
+      const addressField = /** @type {UkAddressFieldComponent | undefined} */ (
+        questionFields
+      )
+      return `${addressField?.options.usePostcodeLookup === true}`
+    }
+  })
+
 /**
  *
  * @param { keyof Omit<FormEditorGovukField, 'errorMessage'> } fieldName
@@ -348,27 +403,10 @@ export function getFieldValue(
     return validationResult
   }
 
-  switch (fieldName) {
-    case 'questionOptional':
-      return `${questionFields?.options.required === false}`
-    case 'question':
-      return questionFields?.title
-    case 'hintText':
-      return questionFields?.hint
-    case 'shortDescription':
-      return questionFields?.shortDescription
-    case 'autoCompleteOptions':
-      return mapListToTextareaStr(
-        getListFromComponent(questionFields, definition)?.items
-      )
-    case 'usePostcodeLookup': {
-      const addressField = /** @type {UkAddressFieldComponent | undefined} */ (
-        questionFields
-      )
-      return `${addressField?.options.usePostcodeLookup === true}`
-    }
-  }
-  return undefined
+  const mappingFunction = fieldMappingFunctions[fieldName]
+  return mappingFunction
+    ? mappingFunction(questionFields, definition)
+    : undefined
 }
 
 export const baseQuestionFields =
@@ -395,6 +433,14 @@ export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.UsePostcodeLookup,
   QuestionBaseSettings.ShortDescription
 ])
+
+export const declarationFields =
+  /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+    QuestionBaseSettings.Question,
+    QuestionBaseSettings.DeclarationText,
+    QuestionBaseSettings.QuestionOptional,
+    QuestionBaseSettings.ShortDescription
+  ])
 
 export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question,
@@ -426,6 +472,9 @@ export function getQuestionFieldList(questionType) {
   }
   if (questionType === ComponentType.UkAddressField) {
     return ukAddressFields
+  }
+  if (questionType === ComponentType.DeclarationField) {
+    return declarationFields
   }
   if (
     questionType === ComponentType.RadiosField ||
@@ -519,6 +568,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent, FormDefinitionError } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

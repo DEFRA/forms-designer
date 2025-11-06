@@ -318,6 +318,7 @@ export type FormEditorInputQuestion = Pick<
   | 'question'
   | 'shortDescription'
   | 'hintText'
+  | 'declarationText'
   | 'questionOptional'
   | 'minLength'
   | 'maxLength'
@@ -518,6 +519,12 @@ export interface GovukField {
   formGroup?: {
     classes?: string
   }
+  preContent?: {
+    path?: string
+  }
+  postContent?: {
+    path?: string
+  }
 }
 
 export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
@@ -557,6 +564,7 @@ export interface FormEditorGovukField {
   radiosOrCheckboxes?: GovukField
   autoCompleteOptions?: GovukField
   usePostcodeLookup?: GovukField
+  declarationText?: GovukField
   errorMessage?: { text: string }
 }
 

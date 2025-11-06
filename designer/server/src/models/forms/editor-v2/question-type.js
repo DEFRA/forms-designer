@@ -73,6 +73,13 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: ComponentType.EmailAddressField
   },
   {
+    text: 'Declaration',
+    hint: {
+      text: 'Ask users to formally agree to something'
+    },
+    value: ComponentType.DeclarationField
+  },
+  {
     divider: 'or'
   },
   {

@@ -27,6 +27,7 @@ const textFieldQuestions = [
 const multiLineTextFieldQuestions = [
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.AutoCompleteOptions,
+  QuestionBaseSettings.DeclarationText,
   QuestionAdvancedSettings.Regex,
   QuestionAdvancedSettings.Classes
 ]

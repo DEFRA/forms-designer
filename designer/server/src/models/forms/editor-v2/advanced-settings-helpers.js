@@ -109,6 +109,9 @@ export function mapExtraRootFields(payload) {
   if (payload.list) {
     rootFields.list = payload.list
   }
+  if (payload.declarationText) {
+    rootFields.content = payload.declarationText
+  }
   return rootFields
 }
 

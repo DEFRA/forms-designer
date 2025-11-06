@@ -213,6 +213,13 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ list: 'myList' })
     })
 
+    it('should include content when declaration', () => {
+      const result = mapExtraRootFields({
+        declarationText: 'My declaration text'
+      })
+      expect(result).toEqual({ content: 'My declaration text' })
+    })
+
     it('should not include other properties', () => {
       const result = mapExtraRootFields({
         list: 'myList',
