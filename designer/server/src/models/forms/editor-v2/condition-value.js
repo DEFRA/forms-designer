@@ -18,6 +18,7 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
+const SELECT_A_VALUE = 'Select a value'
 
 /**
  * @param { ErrorDetailsItem | undefined } formError
@@ -218,7 +219,7 @@ function buildListItemValueField(
     name: `items[${idx}][value][itemId]`,
     fieldset: {
       legend: {
-        text: 'Select a value'
+        text: SELECT_A_VALUE
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -247,7 +248,7 @@ function buildBooleanValueField(idx, item, validation) {
     name: `items[${idx}][value]`,
     fieldset: {
       legend: {
-        text: 'Select a value'
+        text: SELECT_A_VALUE
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -277,7 +278,7 @@ function buildDeclarationValueField(idx, _item, _validation) {
     name: `items[${idx}][value]`,
     fieldset: {
       legend: {
-        text: 'Select a value'
+        text: SELECT_A_VALUE
       }
     },
     classes: GOVUK_RADIOS_SMALL,
