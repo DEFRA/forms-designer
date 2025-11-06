@@ -392,6 +392,59 @@ describe('Migration', () => {
         }
       })
     })
+
+    test('convertConditionWrapperFromV2 converts a boolean condition correctly for declaration field', () => {
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            type: ConditionType.BooleanValue,
+            value: true
+          }
+        ]
+      }
+
+      const component: ComponentDef = {
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type: ComponentType.DeclarationField,
+        content: 'Dummy text',
+        options: {}
+      }
+
+      model.getComponentById = jest.fn().mockReturnValue(component)
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result).toEqual({
+        name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+        displayName: 'Test Wrapper',
+        value: {
+          name: '1df76f06-3aa0-435e-974d-030b3daa0b9d',
+          conditions: [
+            {
+              field: {
+                name: 'testComponent',
+                type: ComponentType.DeclarationField,
+                display: 'Test Component'
+              },
+              operator: OperatorName.Is,
+              value: {
+                display: 'Agreed',
+                type: ConditionType.Value,
+                value: 'true'
+              },
+              coordinator: undefined
+            }
+          ]
+        }
+      })
+    })
   })
 
   describe('number conditions', () => {

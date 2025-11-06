@@ -5,6 +5,7 @@ import {
   OperatorName
 } from '@defra/forms-model'
 import {
+  buildDeclarationFieldComponent,
   buildDefinition,
   buildMetaData,
   buildQuestionPage,
@@ -31,6 +32,13 @@ describe('editor-v2 - conditions model', () => {
     title: 'Test Field'
   })
 
+  const declarationComponentId = 'declaration-field'
+  const testDeclarationComponent = buildDeclarationFieldComponent({
+    id: declarationComponentId,
+    name: 'declarationField',
+    title: 'Declaration Field'
+  })
+
   const regularCondition = {
     id: 'regular-condition',
     displayName: 'Regular condition',
@@ -41,6 +49,20 @@ describe('editor-v2 - conditions model', () => {
         operator: OperatorName.Is,
         type: ConditionType.StringValue,
         value: 'test-value'
+      }
+    ]
+  }
+
+  const declarationCondition = {
+    id: 'declaration-condition',
+    displayName: 'Declaration condition',
+    items: [
+      {
+        id: 'declaration-item-1',
+        componentId: declarationComponentId,
+        operator: OperatorName.Is,
+        type: ConditionType.BooleanValue,
+        value: 'true'
       }
     ]
   }
@@ -333,18 +355,27 @@ describe('editor-v2 - conditions model', () => {
     it('should include condition display name and presentation HTML', () => {
       const definition = buildDefinition({
         pages: [
-          buildQuestionPage({ id: 'page1', components: [testComponent] })
+          buildQuestionPage({
+            id: 'page1',
+            components: [testDeclarationComponent]
+          }),
+          buildQuestionPage({ id: 'page2', components: [testComponent] })
         ],
-        conditions: [regularCondition],
+        conditions: [regularCondition, declarationCondition],
         engine: Engine.V2
       })
 
       const result = buildConditionsTable(metadata.slug, definition)
 
-      expect(result.rows).toHaveLength(1)
-      const conditionHtml = result.rows[0][0].html
-      expect(conditionHtml).toContain('Regular condition')
-      expect(conditionHtml).toContain('govuk-!-font-weight-bold')
+      expect(result.rows).toHaveLength(2)
+      const declarationConditionHtml = result.rows[0][0].html
+      const otherConditionHtml = result.rows[1][0].html
+      expect(declarationConditionHtml).toContain(
+        "'Declaration Field' is 'Agreed'"
+      )
+      expect(declarationConditionHtml).toContain('govuk-!-font-weight-bold')
+      expect(otherConditionHtml).toContain('Regular condition')
+      expect(otherConditionHtml).toContain('govuk-!-font-weight-bold')
     })
 
     it('should include edit and delete links for all conditions', () => {

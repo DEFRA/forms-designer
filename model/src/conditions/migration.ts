@@ -1,3 +1,4 @@
+import { ComponentType } from '~/src/components/enums.js'
 import {
   type ComponentDef,
   type ConditionalComponentType
@@ -136,6 +137,16 @@ function createConditionValueDataFromBooleanValueDataV2(
   }
 }
 
+function createConditionValueDataFromDeclarationValueDataV2(
+  _condition: ConditionDataV2
+): ConditionValueData {
+  return {
+    type: ConditionType.Value,
+    value: 'true',
+    display: 'Agreed'
+  }
+}
+
 function isConditionDataV2(
   condition: ConditionDataV2 | ConditionRefDataV2
 ): condition is ConditionDataV2 {
@@ -159,7 +170,10 @@ function convertConditionDataV2(
   } else if (isConditionStringValueDataV2(condition)) {
     newValue = createConditionValueDataFromStringValueDataV2(condition)
   } else if (isConditionBooleanValueDataV2(condition)) {
-    newValue = createConditionValueDataFromBooleanValueDataV2(condition)
+    newValue =
+      component.type === ComponentType.DeclarationField
+        ? createConditionValueDataFromDeclarationValueDataV2(condition)
+        : createConditionValueDataFromBooleanValueDataV2(condition)
   } else if (isConditionNumberValueDataV2(condition)) {
     newValue = createConditionValueDataFromNumberValueDataV2(condition)
   } else if (isConditionDateValueDataV2(condition)) {

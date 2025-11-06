@@ -151,6 +151,8 @@ export function getConditionType(selectedComponent, operatorValue) {
     return ConditionType.ListItemRef
   } else if (selectedComponent?.type === ComponentType.YesNoField) {
     return ConditionType.BooleanValue
+  } else if (selectedComponent?.type === ComponentType.DeclarationField) {
+    return ConditionType.BooleanValue
   } else if (selectedComponent?.type === ComponentType.DatePartsField) {
     return isRelativeDate(operatorValue)
       ? ConditionType.RelativeDate
