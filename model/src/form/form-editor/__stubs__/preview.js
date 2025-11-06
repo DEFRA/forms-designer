@@ -101,11 +101,6 @@ export class QuestionPreviewElements {
    * @private
    */
   _items = []
-  /**
-   * @protected
-   * @type {boolean}
-   */
-  _usePostcodeLookup = false
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
@@ -117,7 +112,6 @@ export class QuestionPreviewElements {
     optional,
     shortDesc,
     userClasses,
-    usePostcodeLookup,
     items,
     content
   }) {
@@ -128,7 +122,6 @@ export class QuestionPreviewElements {
     this._userClasses = userClasses
     this._items = items
     this._content = content
-    this._usePostcodeLookup = usePostcodeLookup ?? false
   }
 
   /**
@@ -141,7 +134,6 @@ export class QuestionPreviewElements {
       optional: this._optional,
       shortDesc: this._shortDesc,
       userClasses: this._userClasses,
-      usePostcodeLookup: this._usePostcodeLookup,
       items: this._items,
       content: this._content
     }
@@ -172,6 +164,52 @@ export class AutocompletePreviewElements extends QuestionPreviewElements {
   constructor({ autocompleteOptions, ...elements }) {
     super(elements)
     this.autocompleteOptions = autocompleteOptions
+  }
+}
+
+/**
+ * @implements {UkAddressElements}
+ */
+export class UkAddressPreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {usePostcodeLookup?: boolean}} elements
+   */
+  constructor({ usePostcodeLookup, ...elements }) {
+    super(elements)
+    this._usePostcodeLookup = usePostcodeLookup ?? false
+  }
+
+  /**
+   * @returns {UkAddressSettings}
+   */
+  get values() {
+    return {
+      ...super.values,
+      usePostcodeLookup: this._usePostcodeLookup
+    }
+  }
+}
+
+/**
+ * @implements {DeclarationElements}
+ */
+export class DeclarationPreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {declarationText: string}} elements
+   */
+  constructor({ declarationText, ...elements }) {
+    super(elements)
+    this._declarationText = declarationText
+  }
+
+  /**
+   * @returns {DeclarationSettings}
+   */
+  get values() {
+    return {
+      ...super.values,
+      declarationText: this._declarationText
+    }
   }
 }
 
@@ -329,11 +367,6 @@ export class NumberPreviewElements {
    * @private
    */
   _items = []
-  /**
-   * @protected
-   * @type {boolean}
-   */
-  _usePostcodeLookup = false
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
@@ -347,7 +380,6 @@ export class NumberPreviewElements {
     userClasses,
     prefix,
     suffix,
-    usePostcodeLookup,
     items,
     content
   }) {
@@ -360,7 +392,6 @@ export class NumberPreviewElements {
     this._suffix = suffix
     this._items = items
     this._content = content
-    this._usePostcodeLookup = usePostcodeLookup ?? false
   }
 
   /**
@@ -375,7 +406,6 @@ export class NumberPreviewElements {
       userClasses: this._userClasses,
       prefix: this._prefix,
       suffix: this._suffix,
-      usePostcodeLookup: this._usePostcodeLookup,
       items: this._items,
       content: this._content
     }
@@ -399,5 +429,5 @@ export class NumberPreviewElements {
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
  * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
- * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings, DeclarationElements, DeclarationSettings } from  '~/src/form/form-editor/preview/types.js'
  */

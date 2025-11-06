@@ -4,7 +4,7 @@ import {
 } from '~/src/javascripts/preview/question.js'
 
 /**
- * @class QuestionDomElements
+ * @class DeclarationDomElements
  * @classdesc
  * This class is responsible for interaction with the Document Object Model
  * and provides an interface for external interactions.  QuestionDomElements
@@ -13,34 +13,34 @@ import {
  * returns the values
  * @implements {QuestionElements}
  */
-export class UkAddressDomElements extends QuestionDomElements {
+export class DeclarationDomElements extends QuestionDomElements {
   constructor() {
     super()
-    const usePostcodeLookupEl = /** @type {HTMLInputElement | null} */ (
-      document.getElementById('usePostcodeLookup')
+    const declarationTextEl = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('declarationText')
     )
 
     /**
      * @type {HTMLInputElement|null}
      */
-    this.usePostcodeLookup = usePostcodeLookupEl
+    this.declarationText = declarationTextEl
   }
 
   /**
    * @protected
-   * @returns {UkAddressSettings}
+   * @returns {DeclarationSettings}
    */
   constructValues() {
     const baseValues = super.constructValues()
 
     return {
       ...baseValues,
-      usePostcodeLookup: this.usePostcodeLookup?.checked ?? false
+      declarationText: this.declarationText?.value ?? ''
     }
   }
 
   /**
-   * @returns {BaseSettings}
+   * @returns {DeclarationSettings}
    * @public
    */
   get values() {
@@ -56,10 +56,10 @@ export class UkAddressDomElements extends QuestionDomElements {
  * the QuestionDomElements class and to the model renderer Question class.  It is not
  * responsible for the rendering.
  */
-export class UkAddressEventListeners extends EventListeners {
+export class DeclarationEventListeners extends EventListeners {
   /**
-   * @param {UkAddressQuestion} question
-   * @param {UkAddressDomElements} baseElements
+   * @param {DeclarationQuestion} question
+   * @param {DeclarationDomElements} baseElements
    */
   constructor(question, baseElements) {
     super(question, baseElements)
@@ -74,21 +74,47 @@ export class UkAddressEventListeners extends EventListeners {
   _getListeners() {
     const listeners = super._getListeners()
 
-    const usePostcodeLookupCheckbox = /** @type {ListenerRow} */ ([
-      this.baseElements.usePostcodeLookup,
+    const declarationTextListener = /** @type {ListenerRow} */ ([
+      this.baseElements.declarationText,
       /**
        * @param {HTMLInputElement} target
        */
       (target) => {
-        this._question.usePostcodeLookup = target.checked
+        this._question.declarationText = target.value
       },
-      'change'
+      'input'
     ])
 
-    return [...listeners, usePostcodeLookupCheckbox]
+    return [...listeners, declarationTextListener]
+  }
+
+  /**
+   * @returns {ListenerRow[]}
+   */
+  get highlightListeners() {
+    const element = /** @type {HTMLInputElement | null} */ (
+      this.baseElements.declarationText
+    )
+    const highlight = /** @type {string} */ ('declarationText')
+
+    const focusRow = /** @type {ListenerRow} */ ([
+      element,
+      (_target) => {
+        this._question.highlight = highlight
+      },
+      'focus'
+    ])
+    const blurRow = /** @type {ListenerRow} */ ([
+      element,
+      (_target) => {
+        this._question.highlight = null
+      },
+      'blur'
+    ])
+    return [...super._getHighlightListeners(), focusRow, blurRow]
   }
 }
 
 /**
- * @import { ListenerRow, BaseSettings, QuestionElements, UkAddressQuestion, UkAddressSettings } from '@defra/forms-model'
+ * @import { ListenerRow, DeclarationSettings, QuestionElements, DeclarationQuestion } from '@defra/forms-model'
  */

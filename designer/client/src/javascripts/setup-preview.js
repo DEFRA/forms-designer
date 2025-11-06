@@ -2,6 +2,7 @@ import {
   AutocompleteQuestion,
   CheckboxSortableQuestion,
   DateInputQuestion,
+  DeclarationQuestion,
   EmailAddressQuestion,
   ListSortableQuestion,
   LongAnswerQuestion,
@@ -22,6 +23,10 @@ import {
   AutocompleteDOMElements,
   AutocompleteListeners
 } from '~/src/javascripts/preview/autocomplete.js'
+import {
+  DeclarationDomElements,
+  DeclarationEventListeners
+} from '~/src/javascripts/preview/declaration.js'
 import {
   ListSortableEventListeners,
   ListSortableQuestionElements
@@ -288,7 +293,19 @@ export const SetupPreview =
       return listSortable
     },
     DeclarationField: () => {
-      return SetupPreview.Question()
+      const declarationElements = new DeclarationDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(declarationElements)
+      const declarationField = new DeclarationQuestion(
+        declarationElements,
+        nunjucksRenderer
+      )
+      const listeners = new DeclarationEventListeners(
+        declarationField,
+        declarationElements
+      )
+      listeners.setupListeners()
+
+      return declarationField
     },
     EastingNorthingField: () => {
       return SetupPreview.Question()

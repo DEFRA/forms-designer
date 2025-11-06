@@ -1,6 +1,7 @@
 import {
   QuestionPreviewElements,
   QuestionRendererStub,
+  UkAddressPreviewElements,
   baseElements
 } from '~/src/form/form-editor/__stubs__/preview.js'
 import { UkAddressQuestion } from '~/src/form/form-editor/preview/uk-address.js'
@@ -37,7 +38,7 @@ describe('address', () => {
     })
 
     it('should create class with usePostcodeLookup', () => {
-      const elements = new QuestionPreviewElements({
+      const elements = new UkAddressPreviewElements({
         ...baseElements,
         usePostcodeLookup: true
       })
@@ -65,7 +66,7 @@ describe('address', () => {
   })
 
   it('should create class and set usePostcodeLookup to false', () => {
-    const elements = new QuestionPreviewElements({
+    const elements = new UkAddressPreviewElements({
       ...baseElements,
       usePostcodeLookup: true
     })

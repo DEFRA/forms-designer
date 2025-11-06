@@ -481,7 +481,7 @@ describe('Editor v2 question details routes', () => {
 
     container.getByText('Test form')
 
-    const [, , declarationField] = container.getAllByRole('textbox')
+    const [, declarationField] = container.getAllByRole('textbox')
     expect(declarationField.id).toBe('declarationText')
     expect(/** @type {HTMLInputElement} */ (declarationField).value).toMatch(
       'My declaration text'
