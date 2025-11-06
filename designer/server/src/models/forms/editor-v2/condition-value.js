@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   ConditionType,
   DateDirections,
   DateUnits,
@@ -17,6 +18,7 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
+const SELECT_A_VALUE = 'Select a value'
 
 /**
  * @param { ErrorDetailsItem | undefined } formError
@@ -168,7 +170,9 @@ export function buildValueField(
     }
 
     case ConditionType.BooleanValue: {
-      return buildBooleanValueField(idx, item, validation)
+      return selectedComponent?.type === ComponentType.DeclarationField
+        ? buildDeclarationValueField(idx, item, validation)
+        : buildBooleanValueField(idx, item, validation)
     }
 
     case ConditionType.DateValue: {
@@ -215,7 +219,7 @@ function buildListItemValueField(
     name: `items[${idx}][value][itemId]`,
     fieldset: {
       legend: {
-        text: 'Select a value'
+        text: SELECT_A_VALUE
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -244,7 +248,7 @@ function buildBooleanValueField(idx, item, validation) {
     name: `items[${idx}][value]`,
     fieldset: {
       legend: {
-        text: 'Select a value'
+        text: SELECT_A_VALUE
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -260,6 +264,31 @@ function buildBooleanValueField(idx, item, validation) {
       }
     }),
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
+  }
+}
+
+/**
+ * @param {number} idx
+ * @param { ConditionDataV2 } _item
+ * @param { ValidationFailure<FormEditor> | undefined } _validation
+ */
+function buildDeclarationValueField(idx, _item, _validation) {
+  return {
+    id: `items[${idx}].value`,
+    name: `items[${idx}][value]`,
+    fieldset: {
+      legend: {
+        text: SELECT_A_VALUE
+      }
+    },
+    classes: GOVUK_RADIOS_SMALL,
+    value: 'true',
+    items: [
+      {
+        text: 'Declaration agreed',
+        value: 'true'
+      }
+    ]
   }
 }
 

@@ -1,6 +1,9 @@
 import { ConditionType, DateDirections, OperatorName } from '@defra/forms-model'
 
-import { testFormDefinitionWithMultipleV2Conditions } from '~/src/__stubs__/form-definition.js'
+import {
+  buildDeclarationComponent,
+  testFormDefinitionWithMultipleV2Conditions
+} from '~/src/__stubs__/form-definition.js'
 import {
   buildValueField,
   createSequentialId,
@@ -299,6 +302,36 @@ describe('editor-v2 - condition-value', () => {
       )
       expect(valueField.id).toBeDefined()
       expect(valueField.value).toBeUndefined()
+    })
+
+    test('should return boolean value field (boolean for declaration field)', () => {
+      const booleanItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        type: ConditionType.BooleanValue,
+        value: true
+      })
+      const valueField = buildValueField(
+        ConditionType.BooleanValue,
+        2,
+        booleanItem,
+        buildDeclarationComponent({}),
+        testFormDefinitionWithMultipleV2Conditions,
+        undefined
+      )
+      expect(valueField).toEqual({
+        fieldset: {
+          legend: {
+            text: 'Select a value'
+          }
+        },
+        id: 'items[2].value',
+        name: 'items[2][value]',
+        value: 'true',
+        classes: 'govuk-radios--small',
+        items: [{ text: 'Declaration agreed', value: 'true' }]
+      })
     })
 
     test('should return date value field', () => {
