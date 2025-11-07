@@ -1,0 +1,28 @@
+@use "govuk-frontend" as *;
+
+// Location field specific styles for side-by-side display
+.app-location-fields {
+  .govuk-location-input {
+    @include govuk-media-query($from: tablet) {
+      // Display items inline on tablet and above
+      &::after {
+        content: "";
+        display: block;
+        clear: both;
+      }
+    }
+
+    &__item {
+      float: left;
+      margin-right: govuk-spacing(4);
+      margin-bottom: 0;
+
+      @include govuk-media-query($until: tablet) {
+        // Stack vertically on mobile
+        float: none;
+        margin-right: 0;
+        margin-bottom: govuk-spacing(3);
+      }
+    }
+  }
+}

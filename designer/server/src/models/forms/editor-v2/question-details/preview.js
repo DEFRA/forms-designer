@@ -2,10 +2,14 @@ import {
   AutocompleteQuestion,
   CheckboxSortableQuestion,
   DateInputQuestion,
+  EastingNorthingQuestion,
   EmailAddressQuestion,
+  LatLongQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NationalGridQuestion,
   NumberOnlyQuestion,
+  OsGridRefQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -120,6 +124,16 @@ export class QuestionPreviewElements {
    * @protected
    */
   _suffix = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _instructionText = ''
+  /**
+   * @type {boolean}
+   * @protected
+   */
+  _giveInstructions = false
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -148,6 +162,10 @@ export class QuestionPreviewElements {
         this._prefix = getValueAsString(field)
       } else if (field.name === 'suffix') {
         this._suffix = getValueAsString(field)
+      } else if (field.name === 'instructionText') {
+        this._instructionText = getValueAsString(field)
+      } else if (field.name === 'giveInstructions') {
+        this._giveInstructions = getCheckedValue(field)
       } else {
         // sonarlint
       }
@@ -167,7 +185,9 @@ export class QuestionPreviewElements {
       suffix: this._suffix,
       largeTitle: this._largeTitle,
       items: this._items,
-      content: this._content
+      content: this._content,
+      // Only include instructionText if giveInstructions is checked
+      instructionText: this._giveInstructions ? this._instructionText : ''
     }
   }
 
@@ -355,28 +375,28 @@ export const ModelFactory =
      * @returns {Question}
      */
     EastingNorthingField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new EastingNorthingQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     OsGridRefField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new OsGridRefQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     NationalGridFieldNumberField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new NationalGridQuestion(questionElements, emptyRender)
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     LatLongField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new LatLongQuestion(questionElements, emptyRender)
     }
   })
 

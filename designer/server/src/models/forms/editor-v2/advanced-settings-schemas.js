@@ -103,5 +103,12 @@ export const allSpecificSchemas = Joi.object().keys({
   }),
   classes: questionDetailsFullSchema.classesSchema,
   giveInstructions: Joi.string().optional().allow(''),
-  instructionText: questionDetailsFullSchema.instructionTextSchema
+  instructionText: Joi.when('giveInstructions', {
+    is: 'true',
+    then: Joi.string().trim().required().messages({
+      'string.empty': 'Enter instructions to help users answer this question',
+      '*': 'Enter instructions to help users answer this question'
+    }),
+    otherwise: Joi.string().optional().allow('')
+  })
 })

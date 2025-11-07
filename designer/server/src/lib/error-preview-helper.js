@@ -49,10 +49,20 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
     accept: 'accept'
   },
   DeclarationField: {},
-  EastingNorthingField: {},
+  EastingNorthingField: {
+    eastingMin: 'eastingMin',
+    eastingMax: 'eastingMax',
+    northingMin: 'northingMin',
+    northingMax: 'northingMax'
+  },
   OsGridRefField: {},
   NationalGridFieldNumberField: {},
-  LatLongField: {}
+  LatLongField: {
+    latitudeMin: 'latitudeMin',
+    latitudeMax: 'latitudeMax',
+    longitudeMin: 'longitudeMin',
+    longitudeMax: 'longitudeMax'
+  }
 })
 
 /**
@@ -231,6 +241,22 @@ function getFileUploadLimit(type, fields) {
 }
 
 /**
+ * Get location field limit values
+ * @param {GovukField[]} fields
+ * @param {ComponentType} questionType
+ * @param {string} propertyName
+ * @returns {string|number}
+ */
+function getLocationFieldLimits(fields, questionType, propertyName) {
+  return getFieldProperty(
+    fields,
+    questionType,
+    propertyName,
+    `[${propertyName} limit]`
+  )
+}
+
+/**
  * Get file types limit
  * @param {GovukField[]} fields
  * @returns {string}
@@ -284,6 +310,19 @@ export function determineLimit(type, fields, questionType) {
 
   if (type.startsWith('date')) {
     return getDateLimits(fields, questionType, type)
+  }
+
+  // Handle location field limits
+  if (type.startsWith('easting') || type.startsWith('northing')) {
+    return getLocationFieldLimits(
+      fields,
+      ComponentType.EastingNorthingField,
+      type
+    )
+  }
+
+  if (type.startsWith('latitude') || type.startsWith('longitude')) {
+    return getLocationFieldLimits(fields, ComponentType.LatLongField, type)
   }
 
   return '[unknown]'
