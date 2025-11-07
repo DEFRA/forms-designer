@@ -43,18 +43,6 @@ describe('signOutRoute', () => {
 
   it('should redirect to home if credentials are not found', async () => {
     jest.mocked(hasCredentials).mockReturnValueOnce(false)
-
-    const response = await server.inject({
-      method: 'GET',
-      url: '/auth/sign-out',
-      auth
-    })
-
-    expect(response.headers.location).toBe('/')
-  })
-
-  it("should redirect to home if not authenticated and the logoutHint isn't provided", async () => {
-    jest.mocked(hasUser).mockReturnValueOnce(false)
     config.isTest = false
 
     const response = await server.inject({
@@ -81,6 +69,7 @@ describe('signOutRoute', () => {
 
   it('should redirect to end session URL if authenticated and the logoutHint is provided', async () => {
     jest.mocked(hasUser).mockReturnValueOnce(true)
+    jest.mocked(hasCredentials).mockReturnValueOnce(true)
     config.isTest = false
 
     const response = await server.inject({
@@ -97,6 +86,7 @@ describe('signOutRoute', () => {
 
   it('should redirect to end session URL if authenticated and the logoutHint is not provided', async () => {
     jest.mocked(hasUser).mockReturnValueOnce(true)
+    jest.mocked(hasCredentials).mockReturnValueOnce(true)
     jest.mocked(getLoginHint).mockReturnValueOnce('foo')
     config.isTest = false
 
