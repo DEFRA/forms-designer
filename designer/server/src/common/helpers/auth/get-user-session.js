@@ -34,6 +34,14 @@ export async function getUserSession(request, session) {
 
 /**
  * @param {AuthCredentials | null} [credentials]
+ * @returns {credentials is AuthCredentials}
+ */
+export function hasCredentials(credentials) {
+  return !!credentials
+}
+
+/**
+ * @param {AuthCredentials | null} [credentials]
  * @returns {credentials is AuthWithTokens}
  */
 export function hasAuthenticated(credentials) {
