@@ -2,7 +2,10 @@ import { hostname } from 'node:os'
 
 import { StatusCodes } from 'http-status-codes'
 
-import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
+import {
+  hasCredentials,
+  hasUser
+} from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as oidc from '~/src/lib/oidc.js'
@@ -36,6 +39,18 @@ describe('signOutRoute', () => {
 
   afterEach(async () => {
     await server.stop()
+  })
+
+  it('should redirect to home if credentials are not found', async () => {
+    jest.mocked(hasCredentials).mockReturnValueOnce(false)
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/auth/sign-out',
+      auth
+    })
+
+    expect(response.headers.location).toBe('/')
   })
 
   it("should redirect to home if not authenticated and the logoutHint isn't provided", async () => {

@@ -3,7 +3,10 @@ import { URL } from 'node:url'
 import Joi from 'joi'
 
 import { dropUserSession } from '~/src/common/helpers/auth/drop-user-session.js'
-import { hasUser } from '~/src/common/helpers/auth/get-user-session.js'
+import {
+  hasCredentials,
+  hasUser
+} from '~/src/common/helpers/auth/get-user-session.js'
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import config from '~/src/config.js'
 import * as oidc from '~/src/lib/oidc.js'
@@ -23,7 +26,10 @@ export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} *
     const { logoutHint } = request.query
 
     // Skip OpenID Connect (OIDC) when not authenticated
-    if (!logoutHint && (!hasUser(credentials) || config.isTest)) {
+    if (
+      !hasCredentials(credentials) ||
+      (!logoutHint && (!hasUser(credentials) || config.isTest))
+    ) {
       await dropUserSession(request)
       return h.redirect('/')
     }
@@ -67,5 +73,5 @@ export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} *
 })
 
 /**
- * @import { ServerRoute, UserCredentials } from '@hapi/hapi'
+ * @import { ServerRoute } from '@hapi/hapi'
  */
