@@ -222,8 +222,7 @@ const result = schema.validate(
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
     featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
-    enforceCsrf:
-      process.env.NODE_ENV !== 'production' ? process.env.ENFORCE_CSRF : true
+    enforceCsrf: process.env.ENFORCE_CSRF ?? true
   },
   { abortEarly: false }
 )
