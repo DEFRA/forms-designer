@@ -57,6 +57,7 @@ export interface Config {
   snsEndpoint: string
   snsTopicArn: string
   featureFlagUseEntitlementApi: boolean
+  enforceCsrf: boolean
 }
 
 // Define config schema
@@ -170,7 +171,8 @@ const schema = joi.object<Config>({
   awsRegion: joi.string().default('eu-west-2'),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
-  featureFlagUseEntitlementApi: joi.boolean().default(false)
+  featureFlagUseEntitlementApi: joi.boolean().default(false),
+  enforceCsrf: joi.boolean().default(true)
 })
 
 // Validate config
@@ -219,7 +221,9 @@ const result = schema.validate(
     awsRegion: process.env.AWS_REGION,
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
-    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API
+    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
+    enforceCsrf:
+      process.env.NODE_ENV !== 'production' ? process.env.ENFORCE_CSRF : true
   },
   { abortEarly: false }
 )

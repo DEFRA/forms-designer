@@ -13,6 +13,8 @@ const csrf = {
         plugin: crumb,
         options: {
           key: 'csrfToken',
+          logUnauthorized: true,
+          enforce: config.enforceCsrf || config.isProduction,
           cookieOptions: {
             path: '/',
             password: config.sessionCookiePassword,
