@@ -14,7 +14,6 @@ const csrf = {
         options: {
           key: 'csrfToken',
           logUnauthorized: true,
-          enforce: config.enforceCsrf,
           cookieOptions: {
             path: '/',
             password: config.sessionCookiePassword,
