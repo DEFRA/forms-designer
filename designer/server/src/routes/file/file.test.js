@@ -272,7 +272,7 @@ describe('File routes', () => {
 
       const result = await renderResponse(server, options)
 
-      expect(result.response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+      expect(result.response.statusCode).toBe(StatusCodes.UNPROCESSABLE_ENTITY)
     })
 
     test('should show error when invalid payload', async () => {
