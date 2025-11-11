@@ -1,19 +1,18 @@
 import config from '~/src/config.js'
 
-const LOCALHOST = 'http://localhost'
-const INTERNAL_DOCKER = 'http://host.docker.internal'
+const URL_PROTOCOL = 'http://'
+const LOCALHOST = `${URL_PROTOCOL}localhost`
+const INTERNAL_DOCKER = `${URL_PROTOCOL}host.docker.internal`
 
 /**
  * @param { string } [downloadUrl]
  */
 export function downloadCompleteModel(downloadUrl) {
-  // Amend download url if running locally
-  if (
+  // Change host in download url if running locally
+  const isRunningLocally =
     config.appBaseUrl.startsWith(LOCALHOST) &&
     downloadUrl?.startsWith(INTERNAL_DOCKER)
-  ) {
-    downloadUrl = downloadUrl.replace(INTERNAL_DOCKER, LOCALHOST)
-  }
+
   const pageTitle = 'Your file is downloading'
   return {
     pageTitle,
@@ -21,7 +20,9 @@ export function downloadCompleteModel(downloadUrl) {
       text: pageTitle,
       size: 'large'
     },
-    downloadUrl,
+    downloadUrl: isRunningLocally
+      ? downloadUrl?.replace(INTERNAL_DOCKER, LOCALHOST)
+      : downloadUrl,
     buttonText: 'Download file'
   }
 }
