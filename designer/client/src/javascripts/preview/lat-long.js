@@ -80,31 +80,46 @@ export class LatLongEventListeners extends EventListeners {
    */
   _getListeners() {
     const listeners = super._getListeners()
+    const additionalListeners = []
 
-    const instructionTextListener = /** @type {ListenerRow} */ ([
-      this.baseElements.instructionText,
-      (_target) => {
-        this._updateInstructionText()
-      },
-      'input'
-    ])
+    if (this.baseElements.instructionText) {
+      additionalListeners.push(
+        /** @type {ListenerRow} */ ([
+          this.baseElements.instructionText,
+          (_target) => {
+            this._updateInstructionText()
+          },
+          'input'
+        ])
+      )
+    }
 
-    const giveInstructionsListener = /** @type {ListenerRow} */ ([
-      this.baseElements.giveInstructions,
-      (_target) => {
-        this._updateInstructionText()
-      },
-      'change'
-    ])
+    if (this.baseElements.giveInstructions) {
+      additionalListeners.push(
+        /** @type {ListenerRow} */ ([
+          this.baseElements.giveInstructions,
+          (_target) => {
+            this._updateInstructionText()
+          },
+          'change'
+        ])
+      )
+    }
 
-    return [...listeners, instructionTextListener, giveInstructionsListener]
+    return [...listeners, ...additionalListeners]
   }
 
   /**
    * @returns {ListenerRow[]}
    */
   get highlightListeners() {
-    const element = /** @type {HTMLInputElement | null} */ (
+    const baseListeners = super._getHighlightListeners()
+
+    if (!this.baseElements.instructionText) {
+      return baseListeners
+    }
+
+    const element = /** @type {HTMLTextAreaElement} */ (
       this.baseElements.instructionText
     )
     const highlight = /** @type {string} */ ('instructionText')
@@ -123,7 +138,8 @@ export class LatLongEventListeners extends EventListeners {
       },
       'blur'
     ])
-    return [...super._getHighlightListeners(), focusRow, blurRow]
+
+    return [...baseListeners, focusRow, blurRow]
   }
 }
 

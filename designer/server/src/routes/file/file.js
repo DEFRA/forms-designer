@@ -169,11 +169,7 @@ export default [
           )
         }
 
-        return Boom.internal(
-          new Error('Failed to download file', {
-            cause: err
-          })
-        )
+        throw err
       }
     },
     options: {
