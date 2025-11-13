@@ -142,7 +142,7 @@ describe('confirmation email settings', () => {
       )
 
       expect(previewModel.pageTitle).toEqual({
-        text: 'Check your answers before submitting',
+        text: 'Check your answers before sending your form',
         classes: ''
       })
       expect(previewModel.previewPageUrl).toBe('http://another-url')
