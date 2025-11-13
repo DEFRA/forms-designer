@@ -45,7 +45,7 @@ describe('Helpers', () => {
         html: '<p><a class="govuk-link" href="mailto:dummy@defra.gov.uk">link</a></p>\n'
       }
     ])("formats '$markdown' to '$html'", ({ markdown, html }) => {
-      expect(markdownToHtml(markdown, exampleBaseUrl)).toBe(html)
+      expect(markdownToHtml(markdown, { baseUrl: exampleBaseUrl })).toBe(html)
     })
   })
 
@@ -58,6 +58,44 @@ describe('Helpers', () => {
       {
         markdown: '[link](https://example.com)',
         html: '<p><a class="govuk-link" href="https://example.com">link</a></p>\n'
+      }
+    ])("formats '$markdown' to '$html'", ({ markdown, html }) => {
+      expect(markdownToHtml(markdown)).toBe(html)
+    })
+  })
+
+  describe('markdown with H1 demotion', () => {
+    it.each([
+      {
+        markdown: '# This is an H1 demoted',
+        html: '<h2>This is an H1 demoted</h2>\n'
+      },
+      {
+        markdown: '## This is an H2',
+        html: '<h2>This is an H2</h2>\n'
+      },
+      {
+        markdown: '### This is an H3',
+        html: '<h3>This is an H3</h3>\n'
+      }
+    ])("formats '$markdown' to '$html'", ({ markdown, html }) => {
+      expect(markdownToHtml(markdown, { demoteH1: true })).toBe(html)
+    })
+  })
+
+  describe('markdown without H1 demotion', () => {
+    it.each([
+      {
+        markdown: '# This is an H1',
+        html: '<h1>This is an H1</h1>\n'
+      },
+      {
+        markdown: '## This is an H2',
+        html: '<h2>This is an H2</h2>\n'
+      },
+      {
+        markdown: '### This is an H3',
+        html: '<h3>This is an H3</h3>\n'
       }
     ])("formats '$markdown' to '$html'", ({ markdown, html }) => {
       expect(markdownToHtml(markdown)).toBe(html)

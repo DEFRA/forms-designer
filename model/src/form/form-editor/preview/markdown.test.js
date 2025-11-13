@@ -8,18 +8,20 @@ describe('markdown', () => {
   const questionElements = new ContentElements(
     buildMarkdownComponent({
       title: 'Which quest would you like to pick?',
-      content: '# This is a heading'
+      content: '# This is a heading demoted'
     })
   )
   describe('Markdown', () => {
     it('should create class', () => {
-      expect(questionElements.values.content).toBe('# This is a heading')
+      expect(questionElements.values.content).toBe(
+        '# This is a heading demoted'
+      )
       const res = new Markdown(questionElements, renderer)
       expect(res.renderInput).toEqual({
         id: 'markdown',
         name: 'markdown',
         classes: '',
-        content: '<h1>This is a heading</h1>\n'
+        content: '<h2>This is a heading demoted</h2>\n'
       })
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')

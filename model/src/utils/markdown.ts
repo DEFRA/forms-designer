@@ -30,9 +30,8 @@ function demoteH1(text: string, depth: number) {
   if (depth === 1) {
     depth = 2
   }
-  return `
-        <h${depth}>${text}</h${depth}>
-        `
+  return `<h${depth}>${text}</h${depth}>
+`
 }
 
 /**
