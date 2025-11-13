@@ -3,37 +3,18 @@ import {
   createFieldClasses,
   createLocationFieldModel
 } from '~/src/form/form-editor/preview/location-helpers.js'
-import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 import {
-  Question,
-  QuestionComponentElements
-} from '~/src/form/form-editor/preview/question.js'
+  LocationQuestion,
+  LocationQuestionComponentPreviewElements
+} from '~/src/form/form-editor/preview/location-question-base.js'
+import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
 
 /**
  * @implements {QuestionElements}
  */
-export class EastingNorthingComponentPreviewElements extends QuestionComponentElements {
-  /**
-   * @param {EastingNorthingFieldComponent} component
-   */
-  constructor(component) {
-    super(component)
-    this._instructionText = component.options.instructionText ?? ''
-  }
+export class EastingNorthingComponentPreviewElements extends LocationQuestionComponentPreviewElements {}
 
-  /**
-   * @protected
-   * @returns {LocationSettings}
-   */
-  _getValues() {
-    return {
-      ...super._getValues(),
-      instructionText: this._instructionText
-    }
-  }
-}
-
-export class EastingNorthingQuestion extends Question {
+export class EastingNorthingQuestion extends LocationQuestion {
   /**
    * @type {ComponentType}
    */
@@ -44,28 +25,6 @@ export class EastingNorthingQuestion extends Question {
    */
   _questionTemplate = PreviewComponent.PATH + 'eastingnorthingfield.njk'
   _fieldName = 'EastingNorthingField'
-  _instructionText = ''
-
-  /**
-   * @param {LocationElements} htmlElements
-   * @param {QuestionRenderer} questionRenderer
-   */
-  constructor(htmlElements, questionRenderer) {
-    super(htmlElements, questionRenderer)
-    this._instructionText = htmlElements.values.instructionText
-  }
-
-  get instructionText() {
-    return this._instructionText
-  }
-
-  /**
-   * @param {string} val
-   */
-  set instructionText(val) {
-    this._instructionText = val
-    this.render()
-  }
 
   /**
    * @protected
