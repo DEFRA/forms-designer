@@ -375,28 +375,40 @@ export const ModelFactory =
      * @returns {Question}
      */
     EastingNorthingField: (questionElements) => {
-      return new EastingNorthingQuestion(questionElements, emptyRender)
+      return new EastingNorthingQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     OsGridRefField: (questionElements) => {
-      return new OsGridRefQuestion(questionElements, emptyRender)
+      return new OsGridRefQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     NationalGridFieldNumberField: (questionElements) => {
-      return new NationalGridQuestion(questionElements, emptyRender)
+      return new NationalGridQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     LatLongField: (questionElements) => {
-      return new LatLongQuestion(questionElements, emptyRender)
+      return new LatLongQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     }
   })
 
@@ -427,5 +439,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { AutocompleteElements, ListElement, ListElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, LocationElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */
