@@ -81,15 +81,8 @@ export default [
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      await setConfirmationEmailSettings(
-        metadata.id,
-        token,
-        pageId,
-        definition,
-        payload
-      )
+      await setConfirmationEmailSettings(metadata.id, token, pageId, payload)
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 

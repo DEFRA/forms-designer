@@ -449,14 +449,12 @@ export async function setCheckAnswersDeclaration(
  * @param {string} formId
  * @param {string} token
  * @param {string} pageId
- * @param {FormDefinition} definition
  * @param {Partial<FormEditorInputConfirmationEmailSettings>} payload
  */
 export async function setConfirmationEmailSettings(
   formId,
   token,
   pageId,
-  definition,
   payload
 ) {
   const controllerPayload = {

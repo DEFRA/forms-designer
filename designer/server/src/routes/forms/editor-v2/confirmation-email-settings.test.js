@@ -122,7 +122,6 @@ describe('Editor v2 confirmation-email-settings routes', () => {
       testFormMetadata.id,
       expect.anything(),
       'p2',
-      testFormDefinitionWithExistingSummaryDeclaration,
       {
         disableConfirmationEmail: false
       }
@@ -154,7 +153,6 @@ describe('Editor v2 confirmation-email-settings routes', () => {
       testFormMetadata.id,
       expect.anything(),
       'p1',
-      testFormDefinitionWithTwoQuestions,
       {
         disableConfirmationEmail: true
       }

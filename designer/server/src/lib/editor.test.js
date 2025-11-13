@@ -1392,15 +1392,9 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setConfirmationEmailSettings(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          {
-            disableConfirmationEmail: false
-          }
-        )
+        await setConfirmationEmailSettings(formId, token, '12345', {
+          disableConfirmationEmail: false
+        })
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,
@@ -1421,15 +1415,9 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setConfirmationEmailSettings(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          {
-            disableConfirmationEmail: true
-          }
-        )
+        await setConfirmationEmailSettings(formId, token, '12345', {
+          disableConfirmationEmail: true
+        })
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,
@@ -1450,13 +1438,7 @@ describe('editor.js', () => {
           headers: { Authorization: `Bearer ${token}` }
         }
 
-        await setConfirmationEmailSettings(
-          formId,
-          token,
-          '12345',
-          formDefinition,
-          {}
-        )
+        await setConfirmationEmailSettings(formId, token, '12345', {})
 
         expect(mockedPatchJson).toHaveBeenCalledWith(
           pageRequestUrl,
