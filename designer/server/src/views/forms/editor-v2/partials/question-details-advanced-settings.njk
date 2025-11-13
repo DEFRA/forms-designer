@@ -2,18 +2,30 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 
-{% if extraFields | length %}
-
-<details class="govuk-details" data-module="govuk-details"{% if isOpen %} open{% endif %}>
-  <summary class="govuk-details__summary">
-    <span class="govuk-details__summary-text">
-      Additional settings (optional)
-    </span>
-  </summary>
-  <div class="govuk-details__text">
-    <div id="question-extra-content" class="question-content" style="margin-top: 10px;">
-      {% for field in extraFields %}
-        {% set fieldType = getFieldType(field) %}
+{% if isLocationField %}
+  <h2 class="govuk-heading-m">Additional settings (optional)</h2>
+  <p class="govuk-hint">You should choose a location format first before adding additional settings.</p>
+  
+  {% set instructionTextHtml %}
+    {% for field in extraFields %}
+      {% if field.name == 'instructionText' %}
+        {{ govukTextarea(field) }}
+      {% endif %}
+    {% endfor %}
+  {% endset -%}
+  
+  <div id="question-extra-content" class="question-content">
+    {% for field in basePageFields %}
+      {% if field.name == 'questionOptional' %}
+        {{ govukCheckboxes(field) }}
+      {% endif %}
+    {% endfor %}
+    
+    {% for field in extraFields %}
+      {% set fieldType = getFieldType(field) %}
+      {% if field.name == 'giveInstructions' %}
+        {{ govukCheckboxes(field | setConditionalAttribute("true", instructionTextHtml)) }}
+      {% elif field.name != 'instructionText' %}
         {% if fieldType == 'TextField' %}
           {{ govukInput(field) }}
         {% elif fieldType == 'MultilineTextField' %}
@@ -21,8 +33,30 @@
         {% elif fieldType == 'CheckboxesField' %}
           {{ govukCheckboxes(field) }}
         {% endif %}
-      {% endfor %}
-    </div>
+      {% endif %}
+    {% endfor %}
   </div>
-</details>
+{% elif extraFields | length %}
+
+  <details class="govuk-details" data-module="govuk-details"{% if isOpen %} open{% endif %}>
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">
+        Additional settings (optional)
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      <div id="question-extra-content" class="question-content govuk-!-margin-top-2">
+        {% for field in extraFields %}
+          {% set fieldType = getFieldType(field) %}
+          {% if fieldType == 'TextField' %}
+            {{ govukInput(field) }}
+          {% elif fieldType == 'MultilineTextField' %}
+            {{ govukTextarea(field) }}
+          {% elif fieldType == 'CheckboxesField' %}
+            {{ govukCheckboxes(field) }}
+          {% endif %}
+        {% endfor %}
+      </div>
+    </div>
+  </details>
 {% endif %}
