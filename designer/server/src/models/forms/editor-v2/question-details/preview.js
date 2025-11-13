@@ -138,36 +138,56 @@ export class QuestionPreviewElements {
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
   /**
+   * Field name to handler mapping
+   * @type {Record<string, (field: GovukField, instance: QuestionPreviewElements) => void>}
+   * @private
+   * @static
+   */
+  static _fieldHandlers = {
+    question: (field, instance) => {
+      instance._question = getValueAsString(field)
+    },
+    hintText: (field, instance) => {
+      instance._hintText = getValueAsString(field)
+    },
+    questionOptional: (field, instance) => {
+      instance._optional = getCheckedValue(field)
+    },
+    shortDescription: (field, instance) => {
+      instance._shortDesc = getValueAsString(field)
+    },
+    autoCompleteOptions: (field, instance) => {
+      instance.autocompleteOptions = getValueAsString(field)
+    },
+    usePostcodeLookup: (field, instance) => {
+      instance._usePostcodeLookup = getCheckedValue(field)
+    },
+    classes: (field, instance) => {
+      instance._userClasses = getValueAsString(field)
+    },
+    prefix: (field, instance) => {
+      instance._prefix = getValueAsString(field)
+    },
+    suffix: (field, instance) => {
+      instance._suffix = getValueAsString(field)
+    },
+    instructionText: (field, instance) => {
+      instance._instructionText = getValueAsString(field)
+    },
+    giveInstructions: (field, instance) => {
+      instance._giveInstructions = getCheckedValue(field)
+    }
+  }
+
+  /**
    *
    * @param {GovukField[]} basePageFields
    * @param {QuestionSessionState|undefined} state
    */
   constructor(basePageFields, state) {
     basePageFields.forEach((field) => {
-      if (field.name === 'question') {
-        this._question = getValueAsString(field)
-      } else if (field.name === 'hintText') {
-        this._hintText = getValueAsString(field)
-      } else if (field.name === 'questionOptional') {
-        this._optional = getCheckedValue(field)
-      } else if (field.name === 'shortDescription') {
-        this._shortDesc = getValueAsString(field)
-      } else if (field.name === 'autoCompleteOptions') {
-        this.autocompleteOptions = getValueAsString(field)
-      } else if (field.name === 'usePostcodeLookup') {
-        this._usePostcodeLookup = getCheckedValue(field)
-      } else if (field.name === 'classes') {
-        this._userClasses = getValueAsString(field)
-      } else if (field.name === 'prefix') {
-        this._prefix = getValueAsString(field)
-      } else if (field.name === 'suffix') {
-        this._suffix = getValueAsString(field)
-      } else if (field.name === 'instructionText') {
-        this._instructionText = getValueAsString(field)
-      } else if (field.name === 'giveInstructions') {
-        this._giveInstructions = getCheckedValue(field)
-      } else {
-        // sonarlint
+      if (field.name && field.name in QuestionPreviewElements._fieldHandlers) {
+        QuestionPreviewElements._fieldHandlers[field.name](field, this)
       }
     })
     this._items = getListFromState(state)

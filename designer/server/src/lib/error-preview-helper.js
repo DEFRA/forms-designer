@@ -210,6 +210,10 @@ export function getDateLimits(fields, questionType, propertyName) {
  * @returns {string|number}
  */
 function getFileUploadLimit(type, fields) {
+  if (type === 'filesMimes' || type.includes('mime')) {
+    return getFileTypesLimit(fields)
+  }
+
   if (type === 'min' || type === 'filesMin' || type === 'array.min') {
     return getFieldProperty(
       fields,
@@ -257,6 +261,47 @@ function getLocationFieldLimits(fields, questionType, propertyName) {
 }
 
 /**
+ * Get text field min/max limit values
+ * @param {string} type
+ * @param {GovukField[]} fields
+ * @param {ComponentType} questionType
+ * @returns {string|number|undefined}
+ */
+function getTextFieldLimits(type, fields, questionType) {
+  if (type === 'min' && isTypeForMinMax(questionType)) {
+    return getFieldProperty(fields, questionType, 'min', '[min length]')
+  }
+
+  if (type === 'max' && isTypeForMinMax(questionType)) {
+    return getFieldProperty(fields, questionType, 'max', '[max length]')
+  }
+
+  return undefined
+}
+
+/**
+ * Get location field limit based on type prefix
+ * @param {string} type
+ * @param {GovukField[]} fields
+ * @returns {string|number|undefined}
+ */
+function getLocationLimitsByType(type, fields) {
+  if (type.startsWith('easting') || type.startsWith('northing')) {
+    return getLocationFieldLimits(
+      fields,
+      ComponentType.EastingNorthingField,
+      type
+    )
+  }
+
+  if (type.startsWith('latitude') || type.startsWith('longitude')) {
+    return getLocationFieldLimits(fields, ComponentType.LatLongField, type)
+  }
+
+  return undefined
+}
+
+/**
  * Get file types limit
  * @param {GovukField[]} fields
  * @returns {string}
@@ -290,18 +335,12 @@ function getFileTypesLimit(fields) {
  */
 export function determineLimit(type, fields, questionType) {
   if (questionType === ComponentType.FileUploadField) {
-    if (type === 'filesMimes' || type.includes('mime')) {
-      return getFileTypesLimit(fields)
-    }
     return getFileUploadLimit(type, fields)
   }
 
-  if (type === 'min' && isTypeForMinMax(questionType)) {
-    return getFieldProperty(fields, questionType, 'min', '[min length]')
-  }
-
-  if (type === 'max' && isTypeForMinMax(questionType)) {
-    return getFieldProperty(fields, questionType, 'max', '[max length]')
+  const textFieldLimit = getTextFieldLimits(type, fields, questionType)
+  if (textFieldLimit !== undefined) {
+    return textFieldLimit
   }
 
   if (type.startsWith('number')) {
@@ -312,17 +351,9 @@ export function determineLimit(type, fields, questionType) {
     return getDateLimits(fields, questionType, type)
   }
 
-  // Handle location field limits
-  if (type.startsWith('easting') || type.startsWith('northing')) {
-    return getLocationFieldLimits(
-      fields,
-      ComponentType.EastingNorthingField,
-      type
-    )
-  }
-
-  if (type.startsWith('latitude') || type.startsWith('longitude')) {
-    return getLocationFieldLimits(fields, ComponentType.LatLongField, type)
+  const locationLimit = getLocationLimitsByType(type, fields)
+  if (locationLimit !== undefined) {
+    return locationLimit
   }
 
   return '[unknown]'
