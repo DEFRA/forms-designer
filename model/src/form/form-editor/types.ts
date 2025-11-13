@@ -121,6 +121,11 @@ export interface FormEditor {
   declarationText: string
 
   /**
+   * Whether confirmation e-mails should be disabled
+   */
+  disableConfirmationEmail: boolean
+
+  /**
    * The min length a field can have
    */
   minLength: string
@@ -309,6 +314,11 @@ export type FormEditorInputPage = Pick<
 export type FormEditorInputCheckAnswersSettings = Pick<
   FormEditor,
   'needDeclaration' | 'declarationText'
+>
+
+export type FormEditorInputConfirmationEmailSettings = Pick<
+  FormEditor,
+  'disableConfirmationEmail'
 >
 
 export type FormEditorInputQuestion = Pick<
