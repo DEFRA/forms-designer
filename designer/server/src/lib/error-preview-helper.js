@@ -210,38 +210,43 @@ export function getDateLimits(fields, questionType, propertyName) {
  * @returns {string|number}
  */
 function getFileUploadLimit(type, fields) {
-  if (type === 'filesMimes' || type.includes('mime')) {
+  /** @type {Record<string, string>} */
+  const typeMapping = {
+    filesMimes: 'fileTypes',
+    min: 'min',
+    filesMin: 'min',
+    'array.min': 'min',
+    max: 'max',
+    filesMax: 'max',
+    'array.max': 'max',
+    length: 'length',
+    filesExact: 'length',
+    'array.length': 'length'
+  }
+
+  if (type.includes('mime')) {
     return getFileTypesLimit(fields)
   }
 
-  if (type === 'min' || type === 'filesMin' || type === 'array.min') {
-    return getFieldProperty(
-      fields,
-      ComponentType.FileUploadField,
-      'min',
-      '[min file count]'
-    )
+  const mappedProperty = /** @type {string | undefined} */ (typeMapping[type])
+
+  if (mappedProperty === 'fileTypes' || !mappedProperty) {
+    return getFileTypesLimit(fields)
   }
 
-  if (type === 'max' || type === 'filesMax' || type === 'array.max') {
-    return getFieldProperty(
-      fields,
-      ComponentType.FileUploadField,
-      'max',
-      '[max file count]'
-    )
+  /** @type {Record<string, string>} */
+  const fallbackMessages = {
+    min: '[min file count]',
+    max: '[max file count]',
+    length: '[exact file count]'
   }
 
-  if (type === 'length' || type === 'filesExact' || type === 'array.length') {
-    return getFieldProperty(
-      fields,
-      ComponentType.FileUploadField,
-      'length',
-      '[exact file count]'
-    )
-  }
-
-  return getFileTypesLimit(fields)
+  return getFieldProperty(
+    fields,
+    ComponentType.FileUploadField,
+    mappedProperty,
+    fallbackMessages[mappedProperty] ?? '[unknown]'
+  )
 }
 
 /**

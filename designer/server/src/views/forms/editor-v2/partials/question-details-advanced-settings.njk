@@ -5,7 +5,7 @@
 {% if isLocationField %}
   <h2 class="govuk-heading-m">Additional settings (optional)</h2>
   <p class="govuk-hint">You should choose a location format first before adding additional settings.</p>
-  
+
   {% set instructionTextHtml %}
     {% for field in extraFields %}
       {% if field.name == 'instructionText' %}
@@ -13,14 +13,14 @@
       {% endif %}
     {% endfor %}
   {% endset -%}
-  
+
   <div id="question-extra-content" class="question-content">
     {% for field in basePageFields %}
       {% if field.name == 'questionOptional' %}
         {{ govukCheckboxes(field) }}
       {% endif %}
     {% endfor %}
-    
+
     {% for field in extraFields %}
       {% set fieldType = getFieldType(field) %}
       {% if field.name == 'giveInstructions' %}
