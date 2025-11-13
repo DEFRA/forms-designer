@@ -33,6 +33,7 @@ import {
   reorderQuestions,
   resolvePageHeading,
   setCheckAnswersDeclaration,
+  setConfirmationEmailSettings,
   setPageCondition,
   setPageSettings,
   updateCondition,
@@ -1368,6 +1369,100 @@ describe('editor.js', () => {
         expectedOptionsGuidance
       )
       expect(mockedPostJson).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('setConfirmationEmailSettings', () => {
+    const pageRequestUrl = new URL(
+      `./${formId}/definition/draft/pages/12345`,
+      formsEndpoint
+    )
+
+    describe('when patchJson succeeds', () => {
+      test('sets controller to SummaryWithConfirmationEmail when confirmation email is enabled', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        const expectedOptions = {
+          payload: {
+            controller: ControllerType.SummaryWithConfirmationEmail
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setConfirmationEmailSettings(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          {
+            disableConfirmationEmail: false
+          }
+        )
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptions
+        )
+      })
+
+      test('sets controller to Summary when confirmation email is disabled', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        const expectedOptions = {
+          payload: {
+            controller: ControllerType.Summary
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setConfirmationEmailSettings(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          {
+            disableConfirmationEmail: true
+          }
+        )
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptions
+        )
+      })
+
+      test('handles undefined disableConfirmationEmail as falsy (enables confirmation email)', async () => {
+        mockedPatchJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: {}
+        })
+
+        const expectedOptions = {
+          payload: {
+            controller: ControllerType.SummaryWithConfirmationEmail
+          },
+          headers: { Authorization: `Bearer ${token}` }
+        }
+
+        await setConfirmationEmailSettings(
+          formId,
+          token,
+          '12345',
+          formDefinition,
+          {}
+        )
+
+        expect(mockedPatchJson).toHaveBeenCalledWith(
+          pageRequestUrl,
+          expectedOptions
+        )
+      })
     })
   })
 
