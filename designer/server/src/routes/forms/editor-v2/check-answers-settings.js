@@ -30,6 +30,14 @@ export const schema = Joi.object().keys({
   })
 })
 
+export const postAuthSettings = /** @type {RouteOptions['auth']} */ ({
+  mode: 'required',
+  access: {
+    entity: 'user',
+    scope: [`+${Scopes.FormEdit}`]
+  }
+})
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
@@ -113,18 +121,12 @@ export default [
           return redirectWithErrors(request, h, error, errorKey)
         }
       },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
-        }
-      }
+      auth: postAuthSettings
     }
   })
 ]
 
 /**
  * @import { FormEditorInputCheckAnswersSettings } from '@defra/forms-model'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { RouteOptions, ServerRoute } from '@hapi/hapi'
  */

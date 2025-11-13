@@ -10,6 +10,7 @@ import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/confirmation-email-settings.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { postAuthSettings } from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 
 export const ROUTE_FULL_PATH_CONFIRMATION_EMAIL_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/confirmation-email-settings`
 
@@ -92,7 +93,7 @@ export default [
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      // Redirect to pages list
+      // Redirect to pages list - same as check-answers-settings page.
       return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -102,16 +103,11 @@ export default [
           return redirectWithErrors(request, h, error, errorKey)
         }
       },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
-        }
-      }
+      auth: postAuthSettings
     }
   })
 ]
+
 /**
  * @import { FormEditorInputConfirmationEmailSettings } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
