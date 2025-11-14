@@ -312,9 +312,12 @@ export const repeaterPageHTML = /** @type {string} */ (
 
 export const summaryPageHTML = (
   declaration = false,
-  declarationContent = ''
+  declarationContent = '',
+  disableConfirmationEmail = false,
+  showConfirmationEmailFallback = 'false'
 ) => `
 <form id="checkAnswersForm" class="form" method="post">
+  <input type="hidden" id="showConfirmationEmailFallback" value="${showConfirmationEmailFallback}">
   <fieldset class="govuk-fieldset">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
       Do users need to make a declaration?
@@ -350,6 +353,27 @@ export const summaryPageHTML = (
       </div>
     </div>
   </div>
+  </fieldset>
+  <fieldset class="govuk-fieldset">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+      Disable confirmation email
+    </legend>
+    <div class="govuk-form-group">
+      <div class="govuk-radios" data-module="govuk-radios" data-govuk-radios-init="">
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="radio" value="false" ${!disableConfirmationEmail ? 'checked=""' : ''}>
+          <label class="govuk-label govuk-radios__label" for="disableConfirmationEmail">
+            No
+          </label>
+        </div>
+        <div class="govuk-radios__item">
+          <input class="govuk-radios__input" id="disableConfirmationEmail-2" name="disableConfirmationEmail" type="radio" value="true" ${disableConfirmationEmail ? 'checked=""' : ''}>
+          <label class="govuk-label govuk-radios__label" for="disableConfirmationEmail-2">
+            Yes
+          </label>
+        </div>
+      </div>
+    </div>
   </fieldset>
 </form>
 `

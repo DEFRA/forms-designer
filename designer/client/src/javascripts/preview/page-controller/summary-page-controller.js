@@ -32,6 +32,18 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   declarationTextElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  disableConfirmationEmailNo = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  disableConfirmationEmailYes = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  showConfirmationEmailFallback = null
 
   constructor() {
     super()
@@ -47,6 +59,15 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.needDeclarationForm = /** @type {HTMLFormElement|null} */ (
       document.getElementById('checkAnswersForm')
     )
+    this.disableConfirmationEmailNo = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('disableConfirmationEmail')
+    )
+    this.disableConfirmationEmailYes = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('disableConfirmationEmail-2')
+    )
+    this.showConfirmationEmailFallback = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('showConfirmationEmailFallback')
+    )
   }
 
   get declarationText() {
@@ -59,6 +80,17 @@ export class SummaryPagePreviewDomElements extends DomElements {
 
   get guidance() {
     return this.declarationText
+  }
+
+  get showConfirmationEmail() {
+    // If radio buttons exist (on confirmation-email-settings page), read from them
+    if (this.disableConfirmationEmailNo || this.disableConfirmationEmailYes) {
+      // If "No" is checked, show confirmation email
+      // If "Yes" is checked (disable), don't show confirmation email
+      return this.disableConfirmationEmailNo?.checked ?? true
+    }
+    // Otherwise (on check-answers-settings page), read from server-provided fallback
+    return this.showConfirmationEmailFallback?.value === 'true'
   }
 }
 
@@ -98,6 +130,32 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
           const checked = getTargetChecked(inputEvent)
           if (checked) {
             this._pageController.unsetMakeDeclaration()
+          }
+        }
+      }
+    },
+    disableConfirmationEmailNo: {
+      change: {
+        /**
+         * @param {Event} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          const checked = getTargetChecked(inputEvent)
+          if (checked) {
+            this._pageController.setShowConfirmationEmail()
+          }
+        }
+      }
+    },
+    disableConfirmationEmailYes: {
+      change: {
+        /**
+         * @param {Event} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          const checked = getTargetChecked(inputEvent)
+          if (checked) {
+            this._pageController.unsetShowConfirmationEmail()
           }
         }
       }
@@ -153,6 +211,16 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
       [
         this._summaryPageElements.needDeclarationNo,
         this._listeners.needDeclarationNo.change,
+        'change'
+      ],
+      [
+        this._summaryPageElements.disableConfirmationEmailNo,
+        this._listeners.disableConfirmationEmailNo.change,
+        'change'
+      ],
+      [
+        this._summaryPageElements.disableConfirmationEmailYes,
+        this._listeners.disableConfirmationEmailYes.change,
         'change'
       ],
       [

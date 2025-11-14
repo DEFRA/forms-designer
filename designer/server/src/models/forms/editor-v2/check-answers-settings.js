@@ -1,5 +1,6 @@
 import {
   ComponentType,
+  ControllerType,
   FormStatus,
   SummaryPageController,
   hasComponentsEvenIfNoNext
@@ -85,23 +86,32 @@ export const dummyRenderer = {
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
  * @param {ReturnType<typeof settingsFields>} fields
+ * @param {boolean} showConfirmationEmail
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
  *    questionType?: ComponentType,
  *    previewTitle?: string,
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
  *    buttonText: string,
- *    hasPageSettingsTab: boolean
+ *    hasPageSettingsTab: boolean,
+ *    showConfirmationEmail: boolean
  * }}
  */
-export function getPreviewModel(page, definition, previewPageUrl, fields) {
+export function getPreviewModel(
+  page,
+  definition,
+  previewPageUrl,
+  fields,
+  showConfirmationEmail
+) {
   const declarationText = fields.declarationText.value
   const needDeclaration = Boolean(fields.needDeclaration.value)
 
   const elements = new SummaryPreviewSSR(
     page,
     declarationText ?? '',
-    needDeclaration
+    needDeclaration,
+    showConfirmationEmail
   )
 
   const previewPageController = new SummaryPageController(
@@ -120,7 +130,8 @@ export function getPreviewModel(page, definition, previewPageUrl, fields) {
     previewPageUrl,
     questionType: ComponentType.TextField, // components[0]?.type
     componentRows: previewPageController.componentRows,
-    hasPageSettingsTab: true
+    hasPageSettingsTab: true,
+    showConfirmationEmail: previewPageController.showConfirmationEmail
   }
 }
 
@@ -161,6 +172,7 @@ export function checkAnswersSettingsViewModel(
     formValues?.declarationText ?? guidanceComponent?.content
   const needDeclarationVal =
     formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
+  const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const fields = settingsFields(
     needDeclarationVal,
     declarationTextVal,
@@ -171,7 +183,7 @@ export function checkAnswersSettingsViewModel(
 
   // prettier-ignore
   const previewModel = getPreviewModel(
-    page, definition, previewPageUrl, fields
+    page, definition, previewPageUrl, fields, showConfirmationEmail
   )
 
   return {

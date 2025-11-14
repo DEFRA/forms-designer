@@ -30,7 +30,8 @@ describe('check answers settings', () => {
         page,
         definition,
         'http://url',
-        fields
+        fields,
+        true
       )
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
       expect(previewModel.components).toEqual([])

@@ -109,7 +109,8 @@ describe('confirmation email settings', () => {
       const previewModel = getPreviewModel(
         page,
         definition,
-        'http://preview-url'
+        'http://preview-url',
+        true
       )
 
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
@@ -138,7 +139,8 @@ describe('confirmation email settings', () => {
       const previewModel = getPreviewModel(
         page,
         definition,
-        'http://another-url'
+        'http://another-url',
+        true
       )
 
       expect(previewModel.pageTitle).toEqual({
@@ -161,7 +163,12 @@ describe('confirmation email settings', () => {
           })
         ]
       })
-      const previewModel = getPreviewModel(page, definition, 'http://test-url')
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        'http://test-url',
+        false
+      )
 
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
       expect(previewModel.previewTitle).toBe('Preview of Check answers page')

@@ -4,6 +4,8 @@
 {% call appPagePreviewPanel(previewModel) %}
 {% endcall %}
 
+<input type="hidden" id="showConfirmationEmailFallback" value="{{ previewModel.showConfirmationEmail }}">
+
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
 <script type="module">
   import { setupSummaryPageController } from "{{ getAssetPath("pagePreview.js") }}"

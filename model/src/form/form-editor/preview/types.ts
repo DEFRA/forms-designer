@@ -128,6 +128,7 @@ export interface PageOverviewElements extends PagePreviewBaseElements {
 
 export interface SummaryPageElements extends PagePreviewBaseElements {
   declaration: boolean
+  showConfirmationEmail: boolean
 }
 
 export type PreviewQuestion =

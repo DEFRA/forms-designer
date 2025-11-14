@@ -61,17 +61,24 @@ export const dummyRenderer = {
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
+ * @param {boolean} showConfirmationEmail
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
  *    questionType?: ComponentType,
  *    previewTitle?: string,
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
  *    buttonText: string,
- *    hasPageSettingsTab: boolean
+ *    hasPageSettingsTab: boolean,
+ *    showConfirmationEmail: boolean
  * }}
  */
-export function getPreviewModel(page, definition, previewPageUrl) {
-  const elements = new SummaryPreviewSSR(page, '', false)
+export function getPreviewModel(
+  page,
+  definition,
+  previewPageUrl,
+  showConfirmationEmail
+) {
+  const elements = new SummaryPreviewSSR(page, '', false, showConfirmationEmail)
 
   const previewPageController = new SummaryPageController(
     elements,
@@ -89,7 +96,8 @@ export function getPreviewModel(page, definition, previewPageUrl) {
     previewPageUrl,
     questionType: ComponentType.TextField,
     componentRows: previewPageController.componentRows,
-    hasPageSettingsTab: true
+    hasPageSettingsTab: true,
+    showConfirmationEmail: previewPageController.showConfirmationEmail
   }
 }
 
@@ -122,11 +130,17 @@ export function confirmationEmailSettingsViewModel(
 
   const disableConfirmationEmailVal =
     page?.controller === ControllerType.Summary ? 'true' : 'false'
+  const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const fields = settingsFields(disableConfirmationEmailVal, validation)
   const pageHeading = 'Confirmation emails'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
-  const previewModel = getPreviewModel(page, definition, previewPageUrl)
+  const previewModel = getPreviewModel(
+    page,
+    definition,
+    previewPageUrl,
+    showConfirmationEmail
+  )
 
   return {
     ...baseModelFields(

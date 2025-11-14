@@ -23,19 +23,31 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
  */
 export class SummaryPreviewSSR extends PagePreviewElementsSSR {
   #declaration = false
+  #showConfirmationEmail = true
 
   /**
    * @param {Page|undefined} page
    * @param {string} declarationText
    * @param {boolean} showDeclaration
+   * @param {boolean} showConfirmationEmail
    */
-  constructor(page, declarationText, showDeclaration = false) {
+  constructor(
+    page,
+    declarationText,
+    showDeclaration = false,
+    showConfirmationEmail = true
+  ) {
     super(page, declarationText)
     this.#declaration = showDeclaration
+    this.#showConfirmationEmail = showConfirmationEmail
   }
 
   get declaration() {
     return this.#declaration
+  }
+
+  get showConfirmationEmail() {
+    return this.#showConfirmationEmail
   }
 }
 
