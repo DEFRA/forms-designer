@@ -42,7 +42,7 @@ describe('markdown', () => {
       res.optional = true
       expect(res.titleText).toBe('New question (optional)')
       res.content = '## This is a subheading'
-      expect(res.content).toBe('<h2>This is a subheading</h2>\n')
+      expect(res.content).toBe('<h3>This is a subheading</h3>\n')
     })
   })
 })
