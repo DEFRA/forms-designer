@@ -13,7 +13,7 @@
 
   <div class="govuk-form-group">
     <div class="{{ model.declaration.classes }}">
-      {{ model.declaration.text | markdown({ demoteH1: true }) | safe }}
+      {{ model.declaration.text | markdown({ startingHeaderLevel: 2 }) | safe }}
     </div>
   </div>
 

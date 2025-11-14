@@ -64,41 +64,48 @@ describe('Helpers', () => {
     })
   })
 
-  describe('markdown with H1 demotion', () => {
+  describe('markdown with demotion from speific levels', () => {
     it.each([
       {
-        markdown: '# This is an H1 demoted',
-        html: '<h2>This is an H1 demoted</h2>\n'
+        level: 1,
+        markdown:
+          '# This is H1\n## This is H2\n### This is H3\n#### This is H4\n##### This is H5\n###### This is H6\n',
+        html: '<h1>This is H1</h1>\n<h2>This is H2</h2>\n<h3>This is H3</h3>\n<h4>This is H4</h4>\n<h5>This is H5</h5>\n<h6>This is H6</h6>\n'
       },
       {
-        markdown: '## This is an H2',
-        html: '<h2>This is an H2</h2>\n'
+        level: 2,
+        markdown:
+          '# This is H1\n## This is H2\n### This is H3\n#### This is H4\n##### This is H5\n###### This is H6\n',
+        html: '<h2>This is H1</h2>\n<h3>This is H2</h3>\n<h4>This is H3</h4>\n<h5>This is H4</h5>\n<h6>This is H5</h6>\n<h6>This is H6</h6>\n'
       },
       {
-        markdown: '### This is an H3',
-        html: '<h3>This is an H3</h3>\n'
+        level: 3,
+        markdown:
+          '# This is H1\n## This is H2\n### This is H3\n#### This is H4\n##### This is H5\n###### This is H6\n',
+        html: '<h3>This is H1</h3>\n<h4>This is H2</h4>\n<h5>This is H3</h5>\n<h6>This is H4</h6>\n<h6>This is H5</h6>\n<h6>This is H6</h6>\n'
+      },
+      {
+        level: 4,
+        markdown:
+          '# This is H1\n## This is H2\n### This is H3\n#### This is H4\n##### This is H5\n###### This is H6\n',
+        html: '<h4>This is H1</h4>\n<h5>This is H2</h5>\n<h6>This is H3</h6>\n<h6>This is H4</h6>\n<h6>This is H5</h6>\n<h6>This is H6</h6>\n'
+      },
+      {
+        level: 5,
+        markdown:
+          '# This is H1\n## This is H2\n### This is H3\n#### This is H4\n##### This is H5\n###### This is H6\n',
+        html: '<h5>This is H1</h5>\n<h6>This is H2</h6>\n<h6>This is H3</h6>\n<h6>This is H4</h6>\n<h6>This is H5</h6>\n<h6>This is H6</h6>\n'
+      },
+      {
+        level: 6,
+        markdown:
+          '# This is H1\n## This is H2\n### This is H3\n#### This is H4\n##### This is H5\n###### This is H6\n',
+        html: '<h6>This is H1</h6>\n<h6>This is H2</h6>\n<h6>This is H3</h6>\n<h6>This is H4</h6>\n<h6>This is H5</h6>\n<h6>This is H6</h6>\n'
       }
-    ])("formats '$markdown' to '$html'", ({ markdown, html }) => {
-      expect(markdownToHtml(markdown, { demoteH1: true })).toBe(html)
-    })
-  })
-
-  describe('markdown without H1 demotion', () => {
-    it.each([
-      {
-        markdown: '# This is an H1',
-        html: '<h1>This is an H1</h1>\n'
-      },
-      {
-        markdown: '## This is an H2',
-        html: '<h2>This is an H2</h2>\n'
-      },
-      {
-        markdown: '### This is an H3',
-        html: '<h3>This is an H3</h3>\n'
-      }
-    ])("formats '$markdown' to '$html'", ({ markdown, html }) => {
-      expect(markdownToHtml(markdown)).toBe(html)
+    ])("formats '$markdown' to '$html'", ({ markdown, html, level }) => {
+      expect(markdownToHtml(markdown, { startingHeaderLevel: level })).toBe(
+        html
+      )
     })
   })
 })

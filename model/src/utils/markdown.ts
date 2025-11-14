@@ -26,10 +26,13 @@ function renderLink(href: string, text: string, baseUrl?: string) {
   return `<a ${attrs.join(' ')}>${label}</a>`
 }
 
-function demoteH1(text: string, depth: number) {
-  if (depth === 1) {
-    depth = 2
-  }
+function demoteHeading(
+  text: string,
+  depth: number,
+  startingHeaderLevel: number
+) {
+  // Max heading is h6 so don't demote further than that
+  depth = Math.min(depth + startingHeaderLevel - 1, 6)
   return `<h${depth}>${text}</h${depth}>
 `
 }
@@ -41,7 +44,7 @@ export function markdownToHtml(
   markdown: string | null | undefined,
   options?: {
     baseUrl?: string // optional in some contexts, e.g. from the designer where it might not make sense,
-    demoteH1?: boolean
+    startingHeaderLevel?: number
   }
 ) {
   if (markdown === undefined || markdown === null) {
@@ -59,9 +62,9 @@ export function markdownToHtml(
   renderer.link = ({ href, text }: Tokens.Link): string => {
     return renderLink(href, text, options?.baseUrl)
   }
-  if (options?.demoteH1) {
+  if (options?.startingHeaderLevel) {
     renderer.heading = ({ text, depth }: Tokens.Heading): string => {
-      return demoteH1(text, depth)
+      return demoteHeading(text, depth, options.startingHeaderLevel ?? 1)
     }
   }
   return marked.parse(escaped, { async: false, renderer })
