@@ -1,7 +1,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-<fieldset class="govuk-fieldset {{ model.previewClasses }} {{ model.userClasses }} app-location-fields">
+<fieldset class="govuk-fieldset {{ model.previewClasses }} app-location-fields">
   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l {{ model.fieldset.legend.classes }}">
     <h1 class="govuk-fieldset__heading">
       {{ model.fieldset.legend.text }}
@@ -10,7 +10,7 @@
 
   <div class="govuk-hint {{ model.hint.classes }}">{{ model.hint.text }}</div>
 
-  <div class="govuk-location-input">
+  <div class="govuk-location-input {{ model.userClasses }}">
     <div class="govuk-location-input__item">
       <div class="govuk-form-group">
         {{ govukInput({
