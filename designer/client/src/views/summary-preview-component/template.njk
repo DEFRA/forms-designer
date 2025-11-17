@@ -12,9 +12,6 @@
   {% for component in params.components %}
     {% if loop.index0 === 0 %}
       {% set model = component.model %}
-      <p>
-        <pre>{{ component.model | dump(2) }}</pre>
-      </p>
       <div class="border-left-container govuk-!-margin-top-6">
         {%- include 'preview-components/markdown.njk' -%}
       </div>
