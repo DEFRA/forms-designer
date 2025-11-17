@@ -45,15 +45,14 @@ export function settingsFields(disableConfirmationEmailVal, validation) {
   }
 }
 
-export const dummyRenderer = {
+export const emptyRenderer = {
   /**
    * @param {string} _a
    * @param {PagePreviewPanelMacro} _b
-   * @returns {never}
+   * @returns {void}
    */
   render(_a, _b) {
-    // Server Side Render shouldn't use render
-    throw new Error('Not implemented')
+    // Nothing to do here.
   }
 }
 
@@ -83,7 +82,7 @@ export function getPreviewModel(
   const previewPageController = new SummaryPageController(
     elements,
     definition,
-    dummyRenderer
+    emptyRenderer
   )
 
   return {

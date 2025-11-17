@@ -30,13 +30,14 @@ export const schema = Joi.object().keys({
   })
 })
 
-export const postAuthSettings = /** @type {RouteOptions['auth']} */ ({
+/** @type {RouteOptions['auth']} */
+export const postAuthSettings = {
   mode: 'required',
   access: {
     entity: 'user',
     scope: [`+${Scopes.FormEdit}`]
   }
-})
+}
 
 export default [
   /**
