@@ -1,6 +1,16 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% macro renderFieldByType(field) %}
+  {% set fieldType = getFieldType(field) %}
+  {% if fieldType == 'TextField' %}
+    {{ govukInput(field) }}
+  {% elif fieldType == 'MultilineTextField' %}
+    {{ govukTextarea(field) }}
+  {% elif fieldType == 'CheckboxesField' %}
+    {{ govukCheckboxes(field) }}
+  {% endif %}
+{% endmacro %}
 
 {% if isLocationField %}
   <h2 class="govuk-heading-m">Additional settings (optional)</h2>
@@ -22,17 +32,10 @@
     {% endfor %}
 
     {% for field in extraFields %}
-      {% set fieldType = getFieldType(field) %}
       {% if field.name == 'giveInstructions' %}
         {{ govukCheckboxes(field | setConditionalAttribute("true", instructionTextHtml)) }}
       {% elif field.name != 'instructionText' %}
-        {% if fieldType == 'TextField' %}
-          {{ govukInput(field) }}
-        {% elif fieldType == 'MultilineTextField' %}
-          {{ govukTextarea(field) }}
-        {% elif fieldType == 'CheckboxesField' %}
-          {{ govukCheckboxes(field) }}
-        {% endif %}
+        {{ renderFieldByType(field) }}
       {% endif %}
     {% endfor %}
   </div>
@@ -47,14 +50,7 @@
     <div class="govuk-details__text">
       <div id="question-extra-content" class="question-content govuk-!-margin-top-2">
         {% for field in extraFields %}
-          {% set fieldType = getFieldType(field) %}
-          {% if fieldType == 'TextField' %}
-            {{ govukInput(field) }}
-          {% elif fieldType == 'MultilineTextField' %}
-            {{ govukTextarea(field) }}
-          {% elif fieldType == 'CheckboxesField' %}
-            {{ govukCheckboxes(field) }}
-          {% endif %}
+          {{ renderFieldByType(field) }}
         {% endfor %}
       </div>
     </div>
