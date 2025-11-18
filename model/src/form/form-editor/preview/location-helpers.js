@@ -6,22 +6,22 @@ import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
  * @param {LocationElements} htmlElements - The HTML elements containing values
  * @param {string | null} highlight - The currently highlighted element
  * @param {string} instructionText - The instruction text to display
+ * @param {string} titleText - The title text including optional suffix
  * @returns {LocationFieldModel}
  */
 export function createLocationFieldModel(
   baseModel,
   htmlElements,
   highlight,
-  instructionText
+  instructionText,
+  titleText
 ) {
-  const question = htmlElements.values.question || 'Question'
-
   return {
     ...baseModel,
     userClasses: htmlElements.values.userClasses,
     fieldset: {
       legend: {
-        text: question,
+        text: titleText,
         classes: highlight === 'question' ? HIGHLIGHT_CLASS : ''
       }
     },

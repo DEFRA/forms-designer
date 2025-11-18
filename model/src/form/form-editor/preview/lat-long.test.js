@@ -148,6 +148,21 @@ describe('lat-long', () => {
 
       expect(question.renderInput.fieldset?.legend.text).toBe('Question')
     })
+
+    it('should include optional suffix when question is optional', () => {
+      const elements = new LocationPreviewElements({
+        ...baseElements,
+        question: 'Enter your location',
+        optional: true,
+        instructionText: ''
+      })
+
+      const question = new LatLongQuestion(elements, renderer)
+
+      expect(question.renderInput.fieldset?.legend.text).toBe(
+        'Enter your location (optional)'
+      )
+    })
   })
 })
 

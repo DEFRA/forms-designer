@@ -34,14 +34,14 @@ export class OsGridRefQuestion extends LocationQuestion {
       baseModel,
       /** @type {LocationElements} */ (this._htmlElements),
       this._highlight,
-      this._instructionText
+      this._instructionText,
+      this.titleText
     )
-    const question = this._htmlElements.values.question || 'Question'
 
     return {
       ...locationModel,
       label: {
-        text: question,
+        text: this.titleText,
         classes: this._highlight === 'question' ? HIGHLIGHT_CLASS : ''
       },
       inputClasses: this._highlight === 'input' ? HIGHLIGHT_CLASS : ''

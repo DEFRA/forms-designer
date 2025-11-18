@@ -36,7 +36,8 @@ export class EastingNorthingQuestion extends LocationQuestion {
       baseModel,
       /** @type {LocationElements} */ (this._htmlElements),
       this._highlight,
-      this._instructionText
+      this._instructionText,
+      this.titleText
     )
 
     return {

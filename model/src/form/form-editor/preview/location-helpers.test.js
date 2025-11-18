@@ -27,12 +27,14 @@ describe('location-helpers', () => {
 
       const highlight = 'question'
       const instructionText = 'Enter your precise location'
+      const titleText = 'What is your location?'
 
       const result = createLocationFieldModel(
         baseModel,
         htmlElements,
         highlight,
-        instructionText
+        instructionText,
+        titleText
       )
 
       expect(result).toEqual({
@@ -71,11 +73,14 @@ describe('location-helpers', () => {
         items: []
       })
 
+      const titleText = 'Question'
+
       const result = createLocationFieldModel(
         baseModel,
         htmlElements,
         null,
-        'Instruction'
+        'Instruction',
+        titleText
       )
 
       expect(result.fieldset.legend.text).toBe('Question')
@@ -99,11 +104,14 @@ describe('location-helpers', () => {
         items: []
       })
 
+      const titleText = 'Location question'
+
       const result = createLocationFieldModel(
         baseModel,
         htmlElements,
         'instructionText',
-        'Instructions here'
+        'Instructions here',
+        titleText
       )
 
       expect(result.details.classes).toBe(HIGHLIGHT_CLASS)
@@ -128,15 +136,51 @@ describe('location-helpers', () => {
         items: []
       })
 
+      const titleText = 'Location question'
+
       const result = createLocationFieldModel(
         baseModel,
         htmlElements,
         null,
-        'Instructions'
+        'Instructions',
+        titleText
       )
 
       expect(result.fieldset.legend.classes).toBe('')
       expect(result.details.classes).toBe('')
+    })
+
+    it('should include optional suffix in title text when optional is true', () => {
+      const baseModel = {
+        id: 'test-field',
+        name: 'testField',
+        classes: ''
+      }
+
+      const htmlElements = new LocationPreviewElements({
+        question: 'What is your location?',
+        userClasses: '',
+        hintText: '',
+        optional: true,
+        shortDesc: '',
+        content: '',
+        instructionText: '',
+        items: []
+      })
+
+      const titleText = 'What is your location? (optional)'
+
+      const result = createLocationFieldModel(
+        baseModel,
+        htmlElements,
+        null,
+        '',
+        titleText
+      )
+
+      expect(result.fieldset.legend.text).toBe(
+        'What is your location? (optional)'
+      )
     })
   })
 
