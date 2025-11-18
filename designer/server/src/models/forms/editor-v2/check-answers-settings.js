@@ -94,7 +94,9 @@ export const dummyRenderer = {
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
  *    buttonText: string,
  *    hasPageSettingsTab: boolean,
- *    showConfirmationEmail: boolean
+ *    showConfirmationEmail: boolean,
+ *    declarationText: string,
+ *    needDeclaration: boolean
  * }}
  */
 export function getPreviewModel(
@@ -104,12 +106,12 @@ export function getPreviewModel(
   fields,
   showConfirmationEmail
 ) {
-  const declarationText = fields.declarationText.value
+  const declarationText = fields.declarationText.value ?? ''
   const needDeclaration = Boolean(fields.needDeclaration.value)
 
   const elements = new SummaryPreviewSSR(
     page,
-    declarationText ?? '',
+    declarationText,
     needDeclaration,
     showConfirmationEmail
   )
@@ -131,7 +133,9 @@ export function getPreviewModel(
     questionType: ComponentType.TextField, // components[0]?.type
     componentRows: previewPageController.componentRows,
     hasPageSettingsTab: true,
-    showConfirmationEmail: previewPageController.showConfirmationEmail
+    showConfirmationEmail: previewPageController.showConfirmationEmail,
+    declarationText,
+    needDeclaration
   }
 }
 

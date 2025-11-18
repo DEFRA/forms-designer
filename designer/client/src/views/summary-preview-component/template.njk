@@ -9,15 +9,6 @@
     </h2>
   {% endif %}
   {{ govukSummaryList(params.componentRows) }}
-  {% for component in params.components %}
-    {% if loop.index0 === 0 %}
-      {% set model = component.model %}
-      <div class="border-left-container govuk-!-margin-top-6">
-        {%- include 'preview-components/markdown.njk' -%}
-      </div>
-    {% endif %}
-  {% endfor %}
-  <br/>
   {% if params.showConfirmationEmail %}
     {{ govukInput({
       id: "userConfirmationEmailAddress",
@@ -30,8 +21,16 @@
         text: "Enter your email address to get an email confirming your form has been submitted"
       }
     }) }}
+  {% endif %}
+  {% for component in params.components %}
+    {% if loop.index0 === 0 %}
+      {% set model = component.model %}
+      <div class="border-left-container govuk-!-margin-top-6">
+        {%- include 'preview-components/markdown.njk' -%}
+      </div>
     {% endif %}
-    <div class="govuk-button-group govuk-!-margin-top-6">
+  {% endfor %}
+  <div class="govuk-button-group govuk-!-margin-top-6">
       {{ govukSkipLink({
       text: "Skip to page settings",
       href: "#page-settings",
@@ -40,5 +39,5 @@
       {{ govukButton({
       text: params.buttonText
     }) }}
-    </div>
   </div>
+</div>

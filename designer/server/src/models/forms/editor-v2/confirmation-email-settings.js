@@ -2,13 +2,15 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  SummaryPageController
+  SummaryPageController,
+  hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   getPageFromDefinition,
-  insertValidationErrors
+  insertValidationErrors,
+  stringHasValue
 } from '~/src/lib/utils.js'
 import {
   SAVE_AND_CONTINUE,
@@ -60,6 +62,8 @@ export const emptyRenderer = {
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
+ * @param {string} declarationText
+ * @param {boolean} needDeclaration
  * @param {boolean} showConfirmationEmail
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
@@ -68,16 +72,25 @@ export const emptyRenderer = {
  *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
  *    buttonText: string,
  *    hasPageSettingsTab: boolean,
- *    showConfirmationEmail: boolean
+ *    showConfirmationEmail: boolean,
+ *    declarationText: string,
+ *    needDeclaration: boolean
  * }}
  */
 export function getPreviewModel(
   page,
   definition,
   previewPageUrl,
+  declarationText,
+  needDeclaration,
   showConfirmationEmail
 ) {
-  const elements = new SummaryPreviewSSR(page, '', false, showConfirmationEmail)
+  const elements = new SummaryPreviewSSR(
+    page,
+    declarationText,
+    needDeclaration,
+    showConfirmationEmail
+  )
 
   const previewPageController = new SummaryPageController(
     elements,
@@ -96,7 +109,9 @@ export function getPreviewModel(
     questionType: ComponentType.TextField,
     componentRows: previewPageController.componentRows,
     hasPageSettingsTab: true,
-    showConfirmationEmail: previewPageController.showConfirmationEmail
+    showConfirmationEmail: previewPageController.showConfirmationEmail,
+    declarationText,
+    needDeclaration
   }
 }
 
@@ -126,6 +141,16 @@ export function confirmationEmailSettingsViewModel(
   const { formErrors } = validation ?? {}
 
   const page = getPageFromDefinition(definition, pageId)
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+
+  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
+    components.find((comp, idx) => {
+      return comp.type === ComponentType.Markdown && idx === 0
+    })
+  )
+
+  const declarationText = guidanceComponent?.content ?? ''
+  const needDeclaration = stringHasValue(declarationText)
 
   const disableConfirmationEmailVal =
     page?.controller === ControllerType.Summary ? 'true' : 'false'
@@ -138,6 +163,8 @@ export function confirmationEmailSettingsViewModel(
     page,
     definition,
     previewPageUrl,
+    declarationText,
+    needDeclaration,
     showConfirmationEmail
   )
 

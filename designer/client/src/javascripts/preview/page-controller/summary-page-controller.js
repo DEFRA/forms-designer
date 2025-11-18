@@ -44,6 +44,14 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   showConfirmationEmailFallback = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  declarationTextFallback = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  needDeclarationFallback = null
 
   constructor() {
     super()
@@ -68,14 +76,30 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.showConfirmationEmailFallback = /** @type {HTMLInputElement|null} */ (
       document.getElementById('showConfirmationEmailFallback')
     )
+    this.declarationTextFallback = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('declarationTextFallback')
+    )
+    this.needDeclarationFallback = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('needDeclarationFallback')
+    )
   }
 
   get declarationText() {
-    return this.declarationTextElement?.value ?? ''
+    // If text input exists (on check-answers-settings page), read from it
+    if (this.declarationTextElement) {
+      return this.declarationTextElement.value
+    }
+    // Otherwise (on confirmation-email-settings page), read from server-provided fallback
+    return this.declarationTextFallback?.value ?? ''
   }
 
   get declaration() {
-    return this.needDeclarationYes?.checked ?? false
+    // If radio buttons exist (on check-answers-settings page), read from them
+    if (this.needDeclarationYes || this.needDeclarationNo) {
+      return this.needDeclarationYes?.checked ?? false
+    }
+    // Otherwise (on confirmation-email-settings page), read from server-provided fallback
+    return this.needDeclarationFallback?.value === 'true'
   }
 
   get guidance() {

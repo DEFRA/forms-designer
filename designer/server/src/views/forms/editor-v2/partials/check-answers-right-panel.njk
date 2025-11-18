@@ -5,6 +5,8 @@
 {% endcall %}
 
 <input type="hidden" id="showConfirmationEmailFallback" value="{{ previewModel.showConfirmationEmail }}">
+<input type="hidden" id="declarationTextFallback" value="{{ previewModel.declarationText }}">
+<input type="hidden" id="needDeclarationFallback" value="{{ previewModel.needDeclaration }}">
 
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
 <script type="module">
