@@ -367,6 +367,43 @@ describe('Error-preview-help functions', () => {
     })
   })
 
+  describe('insertTags with shouldMarkFixed parameter', () => {
+    test('should add data-fixed attribute when shouldMarkFixed is true', () => {
+      const result = insertTags('Enter {{#label}}', 'string.empty', true)
+      expect(result).toBe(
+        'Enter <span class="error-preview-shortDescription" data-fixed="true">{{#label}}</span>'
+      )
+    })
+
+    test('should NOT add data-fixed attribute when shouldMarkFixed is false', () => {
+      const result = insertTags('Enter {{#label}}', 'string.empty', false)
+      expect(result).toBe(
+        'Enter <span class="error-preview-shortDescription">{{#label}}</span>'
+      )
+    })
+
+    test('should NOT add data-fixed attribute when shouldMarkFixed is not provided', () => {
+      const result = insertTags(
+        '{{#label}} must be between {{#limit}}',
+        'eastingMin'
+      )
+      expect(result).toBe(
+        '<span class="error-preview-shortDescription">{{#label}}</span> must be between <span class="error-preview-eastingMin">{{#limit}}</span>'
+      )
+    })
+
+    test('should handle fixed attribute with template function', () => {
+      const result = insertTags(
+        'Enter {{lowerFirst(#label)}}',
+        'string.empty',
+        true
+      )
+      expect(result).toBe(
+        'Enter <span class="error-preview-shortDescription" data-templatefunc="lowerFirst" data-fixed="true">{{lowerFirst(#label)}}</span>'
+      )
+    })
+  })
+
   describe('file upload limit types', () => {
     test('should handle array.max limit type', () => {
       const fields = [{ name: 'maxFiles', value: '8' }]

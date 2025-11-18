@@ -391,12 +391,16 @@ export function spanTag(type, part) {
 /**
  * @param {string} templateStr
  * @param {string} type
+ * @param {boolean} [shouldMarkFixed]
  */
-export function insertTags(templateStr, type) {
+export function insertTags(templateStr, type, shouldMarkFixed = false) {
   const delimiterRegex = /{{([^{}]*)}}/g
+
   return templateStr.replace(delimiterRegex, (match, content) => {
     if (content.includes('#label') || content.includes('#title')) {
-      return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}>{{${content}}}</span>`
+      // Mark labels as fixed when specified (for location field base errors)
+      const fixedAttribute = shouldMarkFixed ? ' data-fixed="true"' : ''
+      return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}${fixedAttribute}>{{${content}}}</span>`
     } else if (content.includes('#limit')) {
       return `<span class="error-preview-${type}">{{${content}}}</span>`
     } else {

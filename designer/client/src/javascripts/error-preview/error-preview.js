@@ -90,7 +90,7 @@ export class ErrorPreviewDomElements {
   }
 
   /**
-   * @param { HTMLInputElement | null } elem
+   * @param { HTMLElement | null } elem
    * @param {string} newText
    */
   applyTemplateFunction(elem, newText) {
@@ -108,12 +108,18 @@ export class ErrorPreviewDomElements {
 
   /**
    * @param { HTMLInputElement | null } source
-   * @param {HTMLInputElementOrNull[]} targets
+   * @param {HTMLElementOrNull[]} targets
    * @param {string} placeholder
    */
   updateText(source, targets, placeholder) {
     targets.forEach((elem) => {
       if (elem) {
+        // Skip elements marked as fixed (e.g., location field base errors like "Enter easting and northing")
+        // This allows validation errors to still use custom short descriptions
+        if (elem.dataset.fixed === 'true') {
+          return
+        }
+
         const sourceText = source?.value ?? ''
         const newText = sourceText !== '' ? sourceText : placeholder
         let newTextFinal = elem.dataset.templatefunc
@@ -145,14 +151,40 @@ export class ErrorPreviewEventListeners {
   /**
    * @param {ErrorPreview} errorPreview
    * @param {ErrorPreviewDomElements} baseElements
+   * @param {ComponentType | undefined} componentType
    */
-  constructor(errorPreview, baseElements) {
+  constructor(errorPreview, baseElements, componentType) {
     /**
      * @property {ErrorPreview} _errorPreview -
      * @protected
      */
     this._errorPreview = errorPreview
     this.baseElements = baseElements
+    /**
+     * @type {ComponentType | undefined}
+     * @protected
+     */
+    this._componentType = componentType
+  }
+
+  /**
+   * Get default placeholder text for error messages based on component type
+   * @returns {string}
+   * @protected
+   */
+  _getDefaultPlaceholder() {
+    switch (this._componentType) {
+      case ComponentType.EastingNorthingField:
+        return 'easting and northing'
+      case ComponentType.LatLongField:
+        return 'latitude and longitude'
+      case ComponentType.OsGridRefField:
+        return 'OS grid reference'
+      case ComponentType.NationalGridFieldNumberField:
+        return 'national grid reference'
+      default:
+        return '[Short description]'
+    }
   }
 
   /**
@@ -230,7 +262,7 @@ export class ErrorPreviewEventListeners {
         this.baseElements.updateText(
           this.baseElements.shortDesc,
           this.baseElements.shortDescTargets,
-          '[Short description]'
+          this._getDefaultPlaceholder()
         )
       },
       'input'
@@ -465,15 +497,20 @@ export class ErrorPreviewEventListeners {
 export class ErrorPreview {
   /**
    * @param {ErrorPreviewDomElements} htmlElements
+   * @param {ComponentType | undefined} componentType
    */
-  constructor(htmlElements) {
+  constructor(htmlElements, componentType) {
     /**
      * @type {ErrorPreviewDomElements}
      * @private
      */
     this._htmlElements = htmlElements
 
-    const listeners = new ErrorPreviewEventListeners(this, htmlElements)
+    const listeners = new ErrorPreviewEventListeners(
+      this,
+      htmlElements,
+      componentType
+    )
     listeners.setupListeners()
 
     /**
@@ -491,7 +528,8 @@ export class ErrorPreview {
     const advancedFields = fieldMappings[componentType]
 
     const question = new ErrorPreview(
-      new ErrorPreviewDomElements(advancedFields)
+      new ErrorPreviewDomElements(advancedFields),
+      componentType
     )
 
     if (componentType === ComponentType.FileUploadField) {
