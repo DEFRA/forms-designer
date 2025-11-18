@@ -256,6 +256,88 @@ describe('helpers', () => {
       expect(showRepeaterSettings(page)).toBe(true)
     })
 
+    it('should not allow repeater to be set if all components are declarations - defensive', () => {
+      const page: Page = {
+        id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+        title: '',
+        path: '/declarations',
+        components: [
+          {
+            type: ComponentType.Markdown,
+            title: 'Guidance',
+            name: 'adKHjg',
+            content: '# Guidance text',
+            options: {}
+          },
+          {
+            type: ComponentType.DeclarationField,
+            title: 'Declaration 1',
+            name: 'yBpZQO',
+            shortDescription: 'Declaration 1',
+            content: '# Some markdown',
+            options: {
+              required: true
+            },
+            id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+          },
+          {
+            type: ComponentType.DeclarationField,
+            title: 'Declaration 2',
+            name: 'dyHbne',
+            shortDescription: 'Declaration 2',
+            content: '# Some more markdown',
+            options: {
+              required: true
+            },
+            id: '8bab5c2a-7e7e-495d-97a8-3b301ee2906f'
+          }
+        ],
+        next: []
+      }
+      expect(showRepeaterSettings(page)).toBe(false)
+    })
+
+    it('should allow repeater when at least one component is not a declaration', () => {
+      const page: Page = {
+        id: '85e5c8da-88f5-4009-a821-7d7de1364318',
+        title: '',
+        path: '/supporting-evidence',
+        components: [
+          {
+            type: ComponentType.Markdown,
+            title: 'Guidance',
+            name: 'adKHjg',
+            content: '# Guidance text',
+            options: {}
+          },
+          {
+            type: ComponentType.DeclarationField,
+            title: 'Declaration 1',
+            name: 'yBpZQO',
+            shortDescription: 'Declaration 1',
+            content: '# Some markdown',
+            options: {
+              required: true
+            },
+            id: '4189b8a1-1a04-4f74-a7a0-dd23012a0ee0'
+          },
+          {
+            type: ComponentType.TextField,
+            title: 'Enter your name',
+            name: 'dyKLL',
+            shortDescription: 'Your name',
+            options: {
+              required: true
+            },
+            schema: {},
+            id: '8bab5c2a-7e7e-495d-97a8-3b301ee2906f'
+          }
+        ],
+        next: []
+      }
+      expect(showRepeaterSettings(page)).toBe(true)
+    })
+
     it('should allow repeater to be set on a Repeater page', () => {
       const page = buildRepeaterPage({
         title: 'sdsfdf',
