@@ -366,6 +366,209 @@ describe('Error-preview-help functions', () => {
       expect(result).toBe('This has {{something}} else')
     })
   })
+
+  describe('insertTags with shouldMarkFixed parameter', () => {
+    test('should add data-fixed attribute when shouldMarkFixed is true', () => {
+      const result = insertTags('Enter {{#label}}', 'string.empty', true)
+      expect(result).toBe(
+        'Enter <span class="error-preview-shortDescription" data-fixed="true">{{#label}}</span>'
+      )
+    })
+
+    test('should NOT add data-fixed attribute when shouldMarkFixed is false', () => {
+      const result = insertTags('Enter {{#label}}', 'string.empty', false)
+      expect(result).toBe(
+        'Enter <span class="error-preview-shortDescription">{{#label}}</span>'
+      )
+    })
+
+    test('should NOT add data-fixed attribute when shouldMarkFixed is not provided', () => {
+      const result = insertTags(
+        '{{#label}} must be between {{#limit}}',
+        'eastingMin'
+      )
+      expect(result).toBe(
+        '<span class="error-preview-shortDescription">{{#label}}</span> must be between <span class="error-preview-eastingMin">{{#limit}}</span>'
+      )
+    })
+
+    test('should handle fixed attribute with template function', () => {
+      const result = insertTags(
+        'Enter {{lowerFirst(#label)}}',
+        'string.empty',
+        true
+      )
+      expect(result).toBe(
+        'Enter <span class="error-preview-shortDescription" data-templatefunc="lowerFirst" data-fixed="true">{{lowerFirst(#label)}}</span>'
+      )
+    })
+  })
+
+  describe('file upload limit types', () => {
+    test('should handle array.max limit type', () => {
+      const fields = [{ name: 'maxFiles', value: '8' }]
+      const result = determineLimit(
+        'array.max',
+        fields,
+        ComponentType.FileUploadField
+      )
+      expect(result).toBe('8')
+    })
+
+    test('should handle array.length limit type', () => {
+      const fields = [{ name: 'exactFiles', value: '4' }]
+      const result = determineLimit(
+        'array.length',
+        fields,
+        ComponentType.FileUploadField
+      )
+      expect(result).toBe('4')
+    })
+
+    test('should handle max limit type', () => {
+      const fields = [{ name: 'maxFiles', value: '15' }]
+      const result = determineLimit(
+        'max',
+        fields,
+        ComponentType.FileUploadField
+      )
+      expect(result).toBe('15')
+    })
+
+    test('should handle length limit type', () => {
+      const fields = [{ name: 'exactFiles', value: '7' }]
+      const result = determineLimit(
+        'length',
+        fields,
+        ComponentType.FileUploadField
+      )
+      expect(result).toBe('7')
+    })
+
+    test('should handle type that includes mime', () => {
+      const fields = [{ name: 'accept', value: 'image/jpeg' }]
+      const originalLookupFn = jest.spyOn(helperModule, 'lookupFileTypes')
+      originalLookupFn.mockReturnValue('JPG')
+
+      const result = determineLimit(
+        'file.mime',
+        fields,
+        ComponentType.FileUploadField
+      )
+      expect(result).toBe('JPG')
+
+      originalLookupFn.mockRestore()
+    })
+
+    test('should return fallback for unknown file upload type', () => {
+      const fields = [{ name: 'accept', value: 'image/jpeg' }]
+      const originalLookupFn = jest.spyOn(helperModule, 'lookupFileTypes')
+      originalLookupFn.mockReturnValue('JPG')
+
+      const result = determineLimit(
+        'unknownType',
+        fields,
+        ComponentType.FileUploadField
+      )
+      expect(result).toBe('JPG')
+
+      originalLookupFn.mockRestore()
+    })
+  })
+
+  describe('location field limits', () => {
+    test('should return easting min limit for EastingNorthingField', () => {
+      const fields = [{ name: 'eastingMin', value: '100000' }]
+      const result = determineLimit(
+        'eastingMin',
+        fields,
+        ComponentType.EastingNorthingField
+      )
+      expect(result).toBe('100000')
+    })
+
+    test('should return easting max limit for EastingNorthingField', () => {
+      const fields = [{ name: 'eastingMax', value: '700000' }]
+      const result = determineLimit(
+        'eastingMax',
+        fields,
+        ComponentType.EastingNorthingField
+      )
+      expect(result).toBe('700000')
+    })
+
+    test('should return northing min limit for EastingNorthingField', () => {
+      const fields = [{ name: 'northingMin', value: '0' }]
+      const result = determineLimit(
+        'northingMin',
+        fields,
+        ComponentType.EastingNorthingField
+      )
+      expect(result).toBe('0')
+    })
+
+    test('should return northing max limit for EastingNorthingField', () => {
+      const fields = [{ name: 'northingMax', value: '1300000' }]
+      const result = determineLimit(
+        'northingMax',
+        fields,
+        ComponentType.EastingNorthingField
+      )
+      expect(result).toBe('1300000')
+    })
+
+    test('should return latitude min limit for LatLongField', () => {
+      const fields = [{ name: 'latitudeMin', value: '-90' }]
+      const result = determineLimit(
+        'latitudeMin',
+        fields,
+        ComponentType.LatLongField
+      )
+      expect(result).toBe('-90')
+    })
+
+    test('should return latitude max limit for LatLongField', () => {
+      const fields = [{ name: 'latitudeMax', value: '90' }]
+      const result = determineLimit(
+        'latitudeMax',
+        fields,
+        ComponentType.LatLongField
+      )
+      expect(result).toBe('90')
+    })
+
+    test('should return longitude min limit for LatLongField', () => {
+      const fields = [{ name: 'longitudeMin', value: '-180' }]
+      const result = determineLimit(
+        'longitudeMin',
+        fields,
+        ComponentType.LatLongField
+      )
+      expect(result).toBe('-180')
+    })
+
+    test('should return longitude max limit for LatLongField', () => {
+      const fields = [{ name: 'longitudeMax', value: '180' }]
+      const result = determineLimit(
+        'longitudeMax',
+        fields,
+        ComponentType.LatLongField
+      )
+      expect(result).toBe('180')
+    })
+  })
+
+  describe('multiline text field limits', () => {
+    test('should determine limit for multiline text field max', () => {
+      const fields = [{ name: 'maxLength', value: '500' }]
+      const result = determineLimit(
+        'max',
+        fields,
+        ComponentType.MultilineTextField
+      )
+      expect(result).toBe('500')
+    })
+  })
 })
 
 /**

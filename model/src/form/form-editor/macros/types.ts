@@ -67,6 +67,60 @@ export interface DeclarationModel extends QuestionBaseModel {
   }
 }
 
+export interface EastingNorthingModel extends QuestionBaseModel {
+  fieldset?: {
+    legend: {
+      text: string
+      classes: string
+    }
+  }
+  easting?: {
+    classes?: string
+  }
+  northing?: {
+    classes?: string
+  }
+  instructionText?: string
+  details?: {
+    classes?: string
+  }
+}
+
+export interface OsGridRefModel extends QuestionBaseModel {
+  inputClasses?: string
+  instructionText?: string
+  details?: {
+    classes?: string
+  }
+}
+
+export interface NationalGridModel extends QuestionBaseModel {
+  inputClasses?: string
+  instructionText?: string
+  details?: {
+    classes?: string
+  }
+}
+
+export interface LatLongModel extends QuestionBaseModel {
+  fieldset?: {
+    legend: {
+      text: string
+      classes: string
+    }
+  }
+  latitude?: {
+    classes?: string
+  }
+  longitude?: {
+    classes?: string
+  }
+  instructionText?: string
+  details?: {
+    classes?: string
+  }
+}
+
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {
   model: QuestionBaseModel
 }

@@ -53,7 +53,7 @@ export const schema = Joi.object().keys({
   locationSub: Joi.when('questionType', {
     is: QuestionTypeSubGroup.LocationSubGroup,
     then: locationSubSchema.messages({
-      '*': 'Select the precise location you require'
+      '*': 'Select the type of location you require'
     })
   }),
   listSub: Joi.when('questionType', {

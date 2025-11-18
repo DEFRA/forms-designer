@@ -44,13 +44,6 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: QuestionTypeSubGroup.LocationSubGroup
   },
   {
-    text: 'UK address',
-    hint: {
-      text: 'A street address, town or city and postcode'
-    },
-    value: ComponentType.UkAddressField
-  },
-  {
     text: 'Phone number',
     hint: {
       text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
@@ -105,6 +98,13 @@ const dateSubItems = [
 ]
 
 const locationSubItems = [
+  {
+    text: 'UK address',
+    hint: {
+      text: 'A street address, town or city and postcode'
+    },
+    value: ComponentType.UkAddressField
+  },
   {
     text: 'Easting and northing',
     value: ComponentType.EastingNorthingField
@@ -260,7 +260,7 @@ function questionTypeGroupFields(formValues, validation) {
       idPrefix: 'locationSub',
       fieldset: {
         legend: {
-          text: 'Type of precise location you require',
+          text: 'Type of location you require',
           isPageHeading: false
         }
       },

@@ -1,7 +1,56 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 
-<div class="{{ model.previewClasses }}">
+<fieldset class="govuk-fieldset {{ model.previewClasses }} app-location-fields">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l {{ model.fieldset.legend.classes }}">
+    <h1 class="govuk-fieldset__heading">
+      {{ model.fieldset.legend.text }}
+    </h1>
+  </legend>
 
-{{ govukInput(model) }}
+  <div class="govuk-hint {{ model.hint.classes }}">{{ model.hint.text }}</div>
 
-</div>
+  <div class="govuk-location-input {{ model.userClasses }}">
+    <div class="govuk-location-input__item">
+      <div class="govuk-form-group">
+        {{ govukInput({
+          label: {
+            text: "Latitude",
+            classes: "govuk-label"
+          },
+          id: "latitude",
+          name: "latitude",
+          classes: "govuk-input--width-10 " + (model.latitude.classes if model.latitude.classes),
+          attributes: {
+            maxlength: "10"
+          }
+        }) }}
+      </div>
+    </div>
+
+    <div class="govuk-location-input__item">
+      <div class="govuk-form-group">
+        {{ govukInput({
+          label: {
+            text: "Longitude",
+            classes: "govuk-label"
+          },
+          id: "longitude",
+          name: "longitude",
+          classes: "govuk-input--width-10 " + (model.longitude.classes if model.longitude.classes),
+          attributes: {
+            maxlength: "10"
+          }
+        }) }}
+      </div>
+    </div>
+  </div>
+
+  {% if model.instructionText %}
+    {{ govukDetails({
+      summaryText: "How to find location details",
+      html: model.instructionText | markdown | safe,
+      classes: model.details.classes if model.details.classes
+    }) }}
+  {% endif %}
+</fieldset>
