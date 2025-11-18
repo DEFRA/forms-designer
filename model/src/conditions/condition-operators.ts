@@ -166,7 +166,8 @@ function formatValue(
     (field.type === ComponentType.DatePartsField &&
       value.type === ConditionType.RelativeDate) ||
     field.type === ComponentType.NumberField ||
-    field.type === ComponentType.YesNoField
+    field.type === ComponentType.YesNoField ||
+    field.type === ComponentType.DeclarationField
   ) {
     return value.toValue()
   }

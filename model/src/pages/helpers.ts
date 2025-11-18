@@ -1,5 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { hasFormField } from '~/src/components/helpers.js'
+import { hasFormField, isFormType } from '~/src/components/helpers.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import {
   type Link,
@@ -123,14 +123,25 @@ export function includesFileUploadField(components: ComponentDef[]): boolean {
   )
 }
 
+export function onlyDeclarationComponents(components: ComponentDef[]): boolean {
+  return components
+    .filter((comp) => isFormType(comp.type))
+    .every((component) => component.type === ComponentType.DeclarationField)
+}
+
 const SHOW_REPEATER_CONTROLLERS = [ControllerType.Page, ControllerType.Repeat]
 
 export function showRepeaterSettings(page: Page): boolean {
   if (page.controller && !SHOW_REPEATER_CONTROLLERS.includes(page.controller)) {
     return false
   }
-  if (hasComponents(page) && includesFileUploadField(page.components)) {
-    return false
+  if (hasComponents(page)) {
+    if (includesFileUploadField(page.components)) {
+      return false
+    }
+    if (onlyDeclarationComponents(page.components)) {
+      return false
+    }
   }
   return true
 }
