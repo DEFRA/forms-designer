@@ -199,8 +199,8 @@ describe('Editor v2 question details error messages', () => {
         )
         expect(addErrorsToSession).toHaveBeenCalledWith(
           expect.anything(),
-          new Joi.ValidationError(expectedErrorMessage, [], undefined),
-          'questionDetailsValidationFailure'
+          'questionDetailsValidationFailure',
+          new Joi.ValidationError(expectedErrorMessage, [], undefined)
         )
       }
     )
@@ -234,12 +234,12 @@ describe('Editor v2 question details error messages', () => {
       )
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
+        'questionDetailsValidationFailure',
         new Joi.ValidationError(
           'Minimum length must be less than or equal to maximum length',
           [],
           undefined
-        ),
-        'questionDetailsValidationFailure'
+        )
       )
     })
   })

@@ -171,7 +171,6 @@ declare module '@hapi/yar' {
     [sessionNames.validationFailure.submissionGuidance]: ValidationFailure<
       Pick<FormMetadataInput, 'submissionGuidance'>
     >
-    // [ValidationSessionKey]: unknown
     [key: string]: ValidationFailure<FormEditor> | string
     [sessionNames.validationFailure.upload]: {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -79,12 +79,12 @@ describe('Editor v2 guidance routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'guidanceValidationFailure',
       new Joi.ValidationError(
         'Enter a page heading. Enter guidance text',
         [],
         undefined
-      ),
-      'guidanceValidationFailure'
+      )
     )
   })
 
@@ -118,12 +118,12 @@ describe('Editor v2 guidance routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'guidanceValidationFailure',
       new Joi.ValidationError(
         'Page heading already exists in this form',
         [],
         undefined
-      ),
-      'guidanceValidationFailure'
+      )
     )
   })
 
@@ -154,8 +154,8 @@ describe('Editor v2 guidance routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      new Joi.ValidationError('Other boom error', [], undefined),
-      'guidanceValidationFailure'
+      'guidanceValidationFailure',
+      new Joi.ValidationError('Other boom error', [], undefined)
     )
   })
 

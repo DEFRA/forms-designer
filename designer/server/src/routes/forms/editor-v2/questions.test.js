@@ -234,8 +234,8 @@ describe('Editor v2 questions routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      new Joi.ValidationError('Enter a page heading', [], undefined),
-      'questionsValidationFailure'
+      'questionsValidationFailure',
+      new Joi.ValidationError('Enter a page heading', [], undefined)
     )
   })
 
@@ -268,12 +268,12 @@ describe('Editor v2 questions routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'questionsValidationFailure',
       new Joi.ValidationError(
         'Page heading already exists in this form',
         [],
         undefined
-      ),
-      'questionsValidationFailure'
+      )
     )
   })
 
@@ -303,8 +303,8 @@ describe('Editor v2 questions routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      new Joi.ValidationError('Some other error boom message', [], undefined),
-      'questionsValidationFailure'
+      'questionsValidationFailure',
+      new Joi.ValidationError('Some other error boom message', [], undefined)
     )
   })
 

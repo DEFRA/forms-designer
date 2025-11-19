@@ -163,12 +163,12 @@ describe('Editor v2 question routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'questionValidationFailure',
       new Joi.ValidationError(
         'Select the type of information you need from users or ask users to choose from a list',
         [],
         undefined
-      ),
-      'questionValidationFailure'
+      )
     )
   })
 
