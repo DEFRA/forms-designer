@@ -22,7 +22,11 @@ describe('summary page controller', () => {
     it('should instantiate given no elements', () => {
       document.body.innerHTML = summaryPageHTML() + questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.declarationText).toBe('')
       expect(pagePreviewElements.declaration).toBe(false)
     })
@@ -31,7 +35,11 @@ describe('summary page controller', () => {
       document.body.innerHTML =
         summaryPageHTML(true) + questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.declaration).toBe(true)
       expect(pagePreviewElements.declarationText).toBe('')
     })
@@ -40,14 +48,22 @@ describe('summary page controller', () => {
       document.body.innerHTML =
         summaryPageHTML(true, 'Declaration text') + questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.declaration).toBe(true)
       expect(pagePreviewElements.declarationText).toBe('Declaration text')
     })
 
     it('should give default values if HTML is missing', () => {
       document.body.innerHTML = '<div></div>'
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.declarationText).toBe('')
       expect(pagePreviewElements.declaration).toBe(false)
     })
@@ -56,7 +72,11 @@ describe('summary page controller', () => {
       document.body.innerHTML =
         summaryPageHTML(false, '', false) + questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
 
@@ -64,7 +84,11 @@ describe('summary page controller', () => {
       document.body.innerHTML =
         summaryPageHTML(false, '', true) + questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
 
@@ -76,7 +100,11 @@ describe('summary page controller', () => {
         ${questionDetailsPreviewHTML}
       `
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: true,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
 
@@ -88,7 +116,11 @@ describe('summary page controller', () => {
         ${questionDetailsPreviewHTML}
       `
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
 
@@ -96,7 +128,11 @@ describe('summary page controller', () => {
       document.body.innerHTML =
         summaryPageHTML(false, '', false, 'false') + questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       // Radio "No" is checked (showConfirmationEmail should be true)
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
@@ -108,7 +144,11 @@ describe('summary page controller', () => {
         ${questionDetailsPreviewHTML}
       `
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
 
@@ -117,7 +157,11 @@ describe('summary page controller', () => {
         summaryPageHTML(true, 'My declaration text') +
         questionDetailsPreviewHTML
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.guidance).toBe('My declaration text')
     })
 
@@ -129,7 +173,11 @@ describe('summary page controller', () => {
         ${questionDetailsPreviewHTML}
       `
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
 
@@ -141,7 +189,11 @@ describe('summary page controller', () => {
         ${questionDetailsPreviewHTML}
       `
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: true,
+        declarationText: '',
+        needDeclaration: false
+      })
       // Since disableConfirmationEmailNo is null, it returns the default value (true)
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
@@ -155,7 +207,11 @@ describe('summary page controller', () => {
         ${questionDetailsPreviewHTML}
       `
 
-      const pagePreviewElements = new SummaryPagePreviewDomElements()
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       // disableConfirmationEmailNo exists but is not checked, so .checked returns false
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
@@ -168,7 +224,11 @@ describe('summary page controller', () => {
         </form>
         ${questionDetailsPreviewHTML}
       `
-      let pagePreviewElements = new SummaryPagePreviewDomElements()
+      let pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: true,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
 
       // Test with empty string
@@ -178,7 +238,11 @@ describe('summary page controller', () => {
         </form>
         ${questionDetailsPreviewHTML}
       `
-      pagePreviewElements = new SummaryPagePreviewDomElements()
+      pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
 
       // Test with arbitrary string
@@ -188,7 +252,11 @@ describe('summary page controller', () => {
         </form>
         ${questionDetailsPreviewHTML}
       `
-      pagePreviewElements = new SummaryPagePreviewDomElements()
+      pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
   })
@@ -232,7 +300,11 @@ describe('summary page controller', () => {
     beforeEach(() => {
       jest.clearAllMocks()
       document.body.innerHTML = summaryPageHTML() + questionDetailsPreviewHTML
-      pagePreviewElements = new SummaryPagePreviewDomElements()
+      pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: true,
+        declarationText: '',
+        needDeclaration: false
+      })
       pageController = new SummaryPageController(
         pagePreviewElements,
         definition,

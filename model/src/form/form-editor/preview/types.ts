@@ -131,6 +131,12 @@ export interface SummaryPageElements extends PagePreviewBaseElements {
   showConfirmationEmail: boolean
 }
 
+export interface SummaryPageInitialState {
+  showConfirmationEmail: boolean
+  declarationText: string
+  needDeclaration: boolean
+}
+
 export type PreviewQuestion =
   | DateInputQuestion
   | EmailAddressQuestion

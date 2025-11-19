@@ -41,19 +41,22 @@ export class SummaryPagePreviewDomElements extends DomElements {
    */
   disableConfirmationEmailYes = null
   /**
-   * @type {HTMLInputElement|null}
+   * @type {boolean}
    */
-  showConfirmationEmailFallback = null
+  showConfirmationEmailFallback
   /**
-   * @type {HTMLInputElement|null}
+   * @type {string}
    */
-  declarationTextFallback = null
+  declarationTextFallback
   /**
-   * @type {HTMLInputElement|null}
+   * @type {boolean}
    */
-  needDeclarationFallback = null
+  needDeclarationFallback
 
-  constructor() {
+  /**
+   * @param {SummaryPageInitialState} initialState
+   */
+  constructor(initialState) {
     super()
     this.needDeclarationYes = /** @type {HTMLInputElement|null} */ (
       document.getElementById('needDeclaration-2')
@@ -73,15 +76,9 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.disableConfirmationEmailYes = /** @type {HTMLInputElement|null} */ (
       document.getElementById('disableConfirmationEmail-2')
     )
-    this.showConfirmationEmailFallback = /** @type {HTMLInputElement|null} */ (
-      document.getElementById('showConfirmationEmailFallback')
-    )
-    this.declarationTextFallback = /** @type {HTMLInputElement|null} */ (
-      document.getElementById('declarationTextFallback')
-    )
-    this.needDeclarationFallback = /** @type {HTMLInputElement|null} */ (
-      document.getElementById('needDeclarationFallback')
-    )
+    this.showConfirmationEmailFallback = initialState.showConfirmationEmail
+    this.declarationTextFallback = initialState.declarationText
+    this.needDeclarationFallback = initialState.needDeclaration
   }
 
   get declarationText() {
@@ -90,7 +87,7 @@ export class SummaryPagePreviewDomElements extends DomElements {
       return this.declarationTextElement.value
     }
     // Otherwise (on confirmation-email-settings page), read from server-provided fallback
-    return this.declarationTextFallback?.value ?? ''
+    return this.declarationTextFallback
   }
 
   get declaration() {
@@ -99,7 +96,7 @@ export class SummaryPagePreviewDomElements extends DomElements {
       return this.needDeclarationYes?.checked ?? false
     }
     // Otherwise (on confirmation-email-settings page), read from server-provided fallback
-    return this.needDeclarationFallback?.value === 'true'
+    return this.needDeclarationFallback
   }
 
   get guidance() {
@@ -114,7 +111,7 @@ export class SummaryPagePreviewDomElements extends DomElements {
       return this.disableConfirmationEmailNo?.checked ?? true
     }
     // Otherwise (on check-answers-settings page), read from server-provided fallback
-    return this.showConfirmationEmailFallback?.value === 'true'
+    return this.showConfirmationEmailFallback
   }
 }
 
@@ -267,5 +264,5 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { SummaryPageElements, SummaryPageController } from '@defra/forms-model'
+ * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState } from '@defra/forms-model'
  */
