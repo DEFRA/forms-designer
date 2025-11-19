@@ -51,7 +51,7 @@ describe('Validation functions', () => {
         undefined
       )
       const payload = { field1: 'abc' }
-      addErrorsToSession(buildMockRequest(payload), error, sessionKey)
+      addErrorsToSession(buildMockRequest(payload), sessionKey, error)
       expect(mockFlash).toHaveBeenCalledWith('this-key', {
         formErrors: {
           'field-key': {
@@ -67,7 +67,7 @@ describe('Validation functions', () => {
       const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
       const error = undefined
       const payload = { field1: 'abc' }
-      addErrorsToSession(buildMockRequest(payload), error, sessionKey)
+      addErrorsToSession(buildMockRequest(payload), sessionKey, error)
       expect(mockFlash).not.toHaveBeenCalled()
     })
 
@@ -75,7 +75,7 @@ describe('Validation functions', () => {
       const sessionKey = /** @type {ValidationSessionKey} */ ('this-key')
       const error = /** @type {Joi.ValidationError} */ ({})
       const payload = { field1: 'abc' }
-      addErrorsToSession(buildMockRequest(payload), error, sessionKey)
+      addErrorsToSession(buildMockRequest(payload), sessionKey, error)
       expect(mockFlash).not.toHaveBeenCalled()
     })
   })

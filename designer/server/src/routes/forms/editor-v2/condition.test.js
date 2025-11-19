@@ -165,12 +165,12 @@ describe('Editor v2 condition routes', () => {
       )
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
+        'conditionValidationFailure',
         new Joi.ValidationError(
           'Choose how you want to combine conditions',
           [],
           undefined
-        ),
-        'conditionValidationFailure'
+        )
       )
     })
 
@@ -237,12 +237,12 @@ describe('Editor v2 condition routes', () => {
       )
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
+        'conditionValidationFailure',
         new Joi.ValidationError(
           'items[0].id must be a valid GUID. Select a question. Enter a condition value',
           [],
           undefined
-        ),
-        'conditionValidationFailure'
+        )
       )
     })
 

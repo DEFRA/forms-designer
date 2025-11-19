@@ -33,7 +33,7 @@ export function getImpactedPages(definition, conditionId) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {ConditionWrapperV2} originalCondition
- * @param { ConditionSessionState | undefined } state
+ * @param { ConditionSessionState | null | undefined } state
  * @param {string} conditionId
  */
 export function conditionCheckChangesViewModel(

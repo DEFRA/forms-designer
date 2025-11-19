@@ -274,7 +274,7 @@ export function handleSaveItem(request, state, stateId) {
     radioText: fullItemTexts
   })
   if (error) {
-    addErrorsToSession(request, error, errorKey)
+    addErrorsToSession(request, errorKey, error)
     return '#'
   }
 

@@ -8,7 +8,7 @@ import {
 } from '~/src/routes/forms/create.js'
 
 /**
- * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {Partial<FormMetadataInput> | null} [metadata]
  * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function titleViewModel(metadata, validation) {
@@ -36,7 +36,7 @@ export function titleViewModel(metadata, validation) {
 }
 
 /**
- * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {Partial<FormMetadataInput> | null} [metadata]
  * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function organisationViewModel(metadata, validation) {
@@ -72,7 +72,7 @@ export function organisationViewModel(metadata, validation) {
 }
 
 /**
- * @param {Partial<FormMetadataInput>} [metadata]
+ * @param {Partial<FormMetadataInput> | null} [metadata]
  * @param {ValidationFailure<FormMetadataInput>} [validation]
  */
 export function teamViewModel(metadata, validation) {

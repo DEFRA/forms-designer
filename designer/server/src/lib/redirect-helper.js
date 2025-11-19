@@ -11,7 +11,7 @@ import { addErrorsToSession } from '~/src/lib/error-helper.js'
  * @param {string} [anchor]
  */
 export function redirectWithErrors(request, h, error, errorKey, anchor = '') {
-  addErrorsToSession(request, error, errorKey)
+  addErrorsToSession(request, errorKey, error)
   const { pathname: redirectTo, search } = request.url
   return h
     .redirect(`${redirectTo}${search || ''}${anchor}`)

@@ -66,7 +66,7 @@ export function mergeQuestionSessionState(yar, stateId, model) {
 /**
  * @param {Yar} yar
  * @param {string} stateId
- * @returns { QuestionSessionState | undefined }
+ * @returns { QuestionSessionState | null | undefined }
  */
 export function getQuestionSessionState(yar, stateId) {
   return yar.get(questionSessionKey(stateId))
@@ -110,7 +110,7 @@ export function setConditionSessionState(yar, stateId, model) {
 /**
  * @param {Yar} yar
  * @param {string} stateId
- * @returns { ConditionSessionState | undefined }
+ * @returns { ConditionSessionState | null | undefined }
  */
 export function getConditionSessionState(yar, stateId) {
   return yar.get(conditionSessionKey(stateId))
