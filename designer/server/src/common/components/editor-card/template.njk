@@ -15,15 +15,21 @@
                   {% if params.title %}
                     <div class="editor-card-title"{% if params.id %} id="{{ params.id }}"{% endif %}>{{ params.title }}</div>
                   {% elif params.titles %}
-                    <div class="editor-card-title editor-card-title-box" {% if params.id %} id="{{ params.id }}"{% endif %}>
+                    <div class="app-tab-container"{% if params.id %} id="{{ params.id }}"{% endif %}>
                       {% for item in params.titles %}
-                        <span class="{{ "editor-card-title editor-card-title-active" if item.isActive else "editor-card-title-other-item" }} {{ "" if loop.first else "editor-card-title-marg-left" }}">
-                          {% if not item.isActive and item.link %}
-                            <a href="{{ item.link }}">{{ item.title }}</a>
-                          {% else %}
-                            {{ item.title }}
-                          {% endif %}
-                        </span>
+                        {% if item.isActive %}
+                          <nav class="app-page-navigation" aria-label="Page options">
+                            <div class="app-page-navigation__list">
+                              <div class="app-page-navigation__item--current">
+                                <a class="app-page-navigation__link editor-card-title" aria-current="page">
+                                  {{ item.title }}
+                                </a>
+                              </div>
+                            </div>
+                          </nav>
+                        {% elif item.link %}
+                          <a href="{{ item.link }}" class="editor-card-title app-tab-link">{{ item.title }}</a>
+                        {% endif %}
                       {% endfor %}
                     </div>
                   {% endif %}

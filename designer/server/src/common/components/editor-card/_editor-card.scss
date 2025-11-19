@@ -29,28 +29,6 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     padding-bottom: 10px;
     @include govuk-text-colour;
     @include govuk-font($size: 19);
-
-    &-box {
-      text-decoration: none;
-      text-underline-offset: 0;
-      padding-bottom: 0;
-    }
-
-    &-active {
-      display: inline-block;
-    }
-
-    &-other-item {
-      display: inline-block;
-    }
-
-    &-marg-left {
-      margin-left: 10px;
-    }
-
-    a {
-      text-decoration: none;
-    }
   }
 }
 
