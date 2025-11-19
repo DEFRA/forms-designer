@@ -165,7 +165,7 @@ const listSubItems = [
  * @param {string} questionId
  * @param {FormEditorCheckbox[]} questionTypes
  * @param {Page|undefined} page
- * @param { QuestionSessionState | undefined } state
+ * @param { QuestionSessionState | null | undefined } state
  */
 export function filterQuestionTypes(questionId, questionTypes, page, state) {
   let components = hasComponents(page)
@@ -276,7 +276,7 @@ function questionTypeGroupFields(formValues, validation) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
- * @param { QuestionSessionState | undefined } state
+ * @param { QuestionSessionState | null | undefined } state
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionTypeViewModel(

@@ -1,4 +1,6 @@
 import {
+  type ConditionSessionState,
+  type FormEditor,
   type FormMetadataContact,
   type FormMetadataContactEmail,
   type FormMetadataContactOnline,
@@ -133,76 +135,68 @@ declare module '@hapi/yar' {
   type ValidationSession = (typeof sessionNames)['validationFailure']
   export type ValidationSessionKey = ValidationSession[keyof ValidationSession]
 
-  interface Yar {
-    /**
-     * Get temporary string values from the session
-     * such as the redirect path for after sign in
-     * (Deleted when read, e.g. after a redirect)
-     */
-    flash(
-      type:
-        | RedirectToKey
-        | SuccessNotification
-        | QuestionType
-        | LogoutHintKey
-        | ReorderPagesKey
-    ): string[]
+  interface YarFlashes {
+    // String flash types using actual constants
+    [sessionNames.redirectTo]: string
+    [sessionNames.successNotification]: string
+    [sessionNames.questionType]: string
+    [sessionNames.logoutHint]: string
+    [sessionNames.reorderPages]: string
+    [sessionNames.errorList]: ErrorDetailsItem
+    [sessionNames.badRequestErrorList]: ErrorDetailsItem
+    // Validation failure types using actual constants
+    [sessionNames.validationFailure
+      .createForm]: ValidationFailure<FormMetadataInput>
+    [sessionNames.validationFailure
+      .updateForm]: ValidationFailure<FormMetadataInput>
+    [sessionNames.validationFailure.privacyNotice]: ValidationFailure<
+      Pick<FormMetadataInput, 'privacyNoticeUrl'>
+    >
+    [sessionNames.validationFailure.notificationEmail]: ValidationFailure<
+      Pick<FormMetadataInput, 'notificationEmail'>
+    >
+    [sessionNames.validationFailure
+      .contactEmail]: ValidationFailure<FormMetadataContactEmail>
+    [sessionNames.validationFailure.fileDownload]: ValidationFailure<{
+      email: string
+    }>
+    [sessionNames.validationFailure.contactPhone]: ValidationFailure<
+      Pick<FormMetadataContact, 'phone'>
+    >
+    [sessionNames.validationFailure
+      .contactOnline]: ValidationFailure<FormMetadataContactOnline>
+    [key: ValidationSession['fileDownload']]: ValidationFailure<{
+      email: string
+    }>
+    [sessionNames.validationFailure.submissionGuidance]: ValidationFailure<
+      Pick<FormMetadataInput, 'submissionGuidance'>
+    >
+    // [ValidationSessionKey]: unknown
+    [key: string]: ValidationFailure<FormEditor> | string
+    [sessionNames.validationFailure.upload]: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formErrors?: any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formValues?: any
+    }
+    [ConditionSessionStateKey]: ConditionSessionState
+  }
 
-    /**
-     * Get temporary error messages from the session
-     * (Deleted when read, e.g. after a redirect)
-     */
-    flash(
-      type: ValidationSession['createForm']
-    ): ValidationFailure<FormMetadataInput>[]
-
-    flash(
-      type: ValidationSession['privacyNotice']
-    ): ValidationFailure<Pick<FormMetadataInput, 'privacyNoticeUrl'>>[]
-
-    flash(
-      type: ValidationSession['notificationEmail']
-    ): ValidationFailure<Pick<FormMetadataInput, 'notificationEmail'>>[]
-
-    flash(
-      type: ValidationSession['contactPhone']
-    ): ValidationFailure<Pick<FormMetadataContact, 'phone'>>[]
-
-    flash(
-      type: ValidationSession['contactEmail']
-    ): ValidationFailure<FormMetadataContactEmail>[]
-
-    flash(
-      type: ValidationSession['contactOnline']
-    ): ValidationFailure<FormMetadataContactOnline>[]
-
-    flash(
-      type: ValidationSession['submissionGuidance']
-    ): ValidationFailure<Pick<FormMetadataInput, 'submissionGuidance'>>[]
-
-    flash(
-      type: ValidationSession['fileDownload']
-    ): ValidationFailure<{ email: string }>[]
-
-    flash(
-      type: ValidationSession['fileDownload']
-    ): ValidationFailure<{ email: string }>[]
-
-    /**
-     * Get temporary error messages relating to the current page.
-     */
-    flash(type: ErrorListKey): ErrorDetailsItem[]
-
-    /**
-     * Get form metadata from the session
-     */
-    get(type: CreateKey): Partial<FormMetadataInput> | undefined
+  interface YarValues {
+    [sessionNames.conditionSessionState]: ConditionSessionState
 
     /**
      * Get enhanced action state from the session
      */
-    get(type: QuestionSessionStateKey): QuestionSessionState | undefined
+    [sessionNames.questionSessionState]: QuestionSessionState
 
+    /**
+     * Get form metadata from the session
+     */
+    [sessionNames.create]: Partial<FormMetadataInput>
+  }
+
+  interface Yar {
     /**
      * Set form metadata on the session
      */

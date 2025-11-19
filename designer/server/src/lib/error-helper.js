@@ -30,6 +30,7 @@ export function flashErrorsToSession(request, formValues, error, flashKey) {
   if (error && error instanceof Joi.ValidationError) {
     const formErrors = buildErrorDetails(error)
 
+    // @ts-expect-error -- TODO fix - flashKey is potentially undefined which yar doesn't support. Must be fixed separately as it's a larger change.
     yar.flash(flashKey, {
       formErrors,
       formValues

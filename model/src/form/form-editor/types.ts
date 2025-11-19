@@ -17,6 +17,7 @@ export interface FormEditor {
 
   /**
    * The type of the question
+   * The type of the question
    */
   questionType: string | undefined
 
