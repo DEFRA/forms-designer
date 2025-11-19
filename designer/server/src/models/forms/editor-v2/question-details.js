@@ -2,6 +2,7 @@ import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoFi
 import { createComponent } from '@defra/forms-engine-plugin/engine/components/helpers/components.js'
 import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 
+import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
@@ -359,6 +360,7 @@ export function questionDetailsViewModel(
     deleteUrl,
     skipLink: getSkipLink(),
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
+    isLocationField: isLocationFieldType(questionFieldsOverride.type),
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field)
   }

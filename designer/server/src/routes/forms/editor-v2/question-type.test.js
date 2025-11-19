@@ -122,13 +122,13 @@ describe('Editor v2 question routes', () => {
     expect($radios[5]).toHaveAccessibleName('Day, month and year')
     expect($radios[6]).toHaveAccessibleName('Month and year')
     expect($radios[7]).toHaveAccessibleName('Location')
-    expect($radios[8]).toHaveAccessibleName('Easting and northing')
-    expect($radios[9]).toHaveAccessibleName(
+    expect($radios[8]).toHaveAccessibleName('UK address')
+    expect($radios[9]).toHaveAccessibleName('Easting and northing')
+    expect($radios[10]).toHaveAccessibleName(
       'Ordnance Survey (OS) grid reference'
     )
-    expect($radios[10]).toHaveAccessibleName('National Grid field number')
-    expect($radios[11]).toHaveAccessibleName('Latitude and longitude')
-    expect($radios[12]).toHaveAccessibleName('UK address')
+    expect($radios[11]).toHaveAccessibleName('National Grid field number')
+    expect($radios[12]).toHaveAccessibleName('Latitude and longitude')
     expect($radios[13]).toHaveAccessibleName('Phone number')
     expect($radios[14]).toHaveAccessibleName('Supporting evidence')
     expect($radios[15]).toHaveAccessibleName('Email address')
@@ -163,12 +163,12 @@ describe('Editor v2 question routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'questionValidationFailure',
       new Joi.ValidationError(
         'Select the type of information you need from users or ask users to choose from a list',
         [],
         undefined
-      ),
-      'questionValidationFailure'
+      )
     )
   })
 

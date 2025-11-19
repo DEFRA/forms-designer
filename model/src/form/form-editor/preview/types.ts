@@ -38,8 +38,8 @@ export interface GovukFieldset {
 }
 
 export type ListenerRow = [
-  HTMLInputElement | null,
-  (target: HTMLInputElement, e: Event) => void,
+  HTMLInputElement | HTMLTextAreaElement | null,
+  (target: HTMLInputElement | HTMLTextAreaElement, e: Event) => void,
   keyof HTMLElementEventMap
 ]
 
@@ -81,6 +81,28 @@ export interface UkAddressElements extends DomElementsBase {
 
 export interface NumberElements extends DomElementsBase {
   readonly values: NumberSettings
+}
+
+export interface LocationSettings extends BaseSettings {
+  instructionText: string
+}
+
+export interface LocationElements extends DomElementsBase {
+  readonly values: LocationSettings
+}
+
+export interface LocationFieldModel extends QuestionBaseModel {
+  userClasses: string
+  fieldset: {
+    legend: {
+      text: string
+      classes: string
+    }
+  }
+  instructionText: string
+  details: {
+    classes: string
+  }
 }
 
 export interface RenderBase {

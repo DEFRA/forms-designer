@@ -2,10 +2,14 @@ import {
   AutocompleteQuestion,
   CheckboxSortableQuestion,
   DateInputQuestion,
+  EastingNorthingQuestion,
   EmailAddressQuestion,
+  LatLongQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NationalGridQuestion,
   NumberOnlyQuestion,
+  OsGridRefQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -120,8 +124,60 @@ export class QuestionPreviewElements {
    * @protected
    */
   _suffix = ''
+  /**
+   * @type {string}
+   * @protected
+   */
+  _instructionText = ''
+  /**
+   * @type {boolean}
+   * @protected
+   */
+  _giveInstructions = false
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
+
+  /**
+   * Field name to handler mapping
+   * @type {Record<string, (field: GovukField, instance: QuestionPreviewElements) => void>}
+   * @private
+   * @static
+   */
+  static _fieldHandlers = {
+    question: (field, instance) => {
+      instance._question = getValueAsString(field)
+    },
+    hintText: (field, instance) => {
+      instance._hintText = getValueAsString(field)
+    },
+    questionOptional: (field, instance) => {
+      instance._optional = getCheckedValue(field)
+    },
+    shortDescription: (field, instance) => {
+      instance._shortDesc = getValueAsString(field)
+    },
+    autoCompleteOptions: (field, instance) => {
+      instance.autocompleteOptions = getValueAsString(field)
+    },
+    usePostcodeLookup: (field, instance) => {
+      instance._usePostcodeLookup = getCheckedValue(field)
+    },
+    classes: (field, instance) => {
+      instance._userClasses = getValueAsString(field)
+    },
+    prefix: (field, instance) => {
+      instance._prefix = getValueAsString(field)
+    },
+    suffix: (field, instance) => {
+      instance._suffix = getValueAsString(field)
+    },
+    instructionText: (field, instance) => {
+      instance._instructionText = getValueAsString(field)
+    },
+    giveInstructions: (field, instance) => {
+      instance._giveInstructions = getCheckedValue(field)
+    }
+  }
 
   /**
    *
@@ -130,26 +186,8 @@ export class QuestionPreviewElements {
    */
   constructor(basePageFields, state) {
     basePageFields.forEach((field) => {
-      if (field.name === 'question') {
-        this._question = getValueAsString(field)
-      } else if (field.name === 'hintText') {
-        this._hintText = getValueAsString(field)
-      } else if (field.name === 'questionOptional') {
-        this._optional = getCheckedValue(field)
-      } else if (field.name === 'shortDescription') {
-        this._shortDesc = getValueAsString(field)
-      } else if (field.name === 'autoCompleteOptions') {
-        this.autocompleteOptions = getValueAsString(field)
-      } else if (field.name === 'usePostcodeLookup') {
-        this._usePostcodeLookup = getCheckedValue(field)
-      } else if (field.name === 'classes') {
-        this._userClasses = getValueAsString(field)
-      } else if (field.name === 'prefix') {
-        this._prefix = getValueAsString(field)
-      } else if (field.name === 'suffix') {
-        this._suffix = getValueAsString(field)
-      } else {
-        // sonarlint
+      if (field.name && field.name in QuestionPreviewElements._fieldHandlers) {
+        QuestionPreviewElements._fieldHandlers[field.name](field, this)
       }
     })
     this._items = getListFromState(state)
@@ -167,7 +205,9 @@ export class QuestionPreviewElements {
       suffix: this._suffix,
       largeTitle: this._largeTitle,
       items: this._items,
-      content: this._content
+      content: this._content,
+      // Only include instructionText if giveInstructions is checked
+      instructionText: this._giveInstructions ? this._instructionText : ''
     }
   }
 
@@ -355,28 +395,40 @@ export const ModelFactory =
      * @returns {Question}
      */
     EastingNorthingField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new EastingNorthingQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     OsGridRefField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new OsGridRefQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     NationalGridFieldNumberField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new NationalGridQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     },
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
      */
     LatLongField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new LatLongQuestion(
+        /** @type {LocationElements} */ (questionElements),
+        emptyRender
+      )
     }
   })
 
@@ -407,5 +459,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { AutocompleteElements, ListElement, ListElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, LocationElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

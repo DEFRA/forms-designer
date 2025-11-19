@@ -3,15 +3,19 @@ import {
   buildCheckboxComponent,
   buildDateComponent,
   buildDeclarationFieldComponent,
+  buildEastingNorthingFieldComponent,
   buildEmailAddressFieldComponent,
   buildFileUploadComponent,
+  buildLatLongFieldComponent,
   buildList,
   buildListComponent,
   buildListItem,
   buildMarkdownComponent,
   buildMonthYearFieldComponent,
   buildMultilineTextFieldComponent,
+  buildNationalGridFieldNumberFieldComponent,
   buildNumberFieldComponent,
+  buildOsGridRefFieldComponent,
   buildRadiosComponent,
   buildSelectFieldComponent,
   buildTelephoneNumberFieldComponent,
@@ -26,13 +30,17 @@ import { AutocompleteListQuestion } from '~/src/form/form-editor/preview/autocom
 import { CheckboxQuestion } from '~/src/form/form-editor/preview/checkbox.js'
 import { DateInputQuestion } from '~/src/form/form-editor/preview/date-input.js'
 import { DeclarationQuestion } from '~/src/form/form-editor/preview/declaration.js'
+import { EastingNorthingQuestion } from '~/src/form/form-editor/preview/easting-northing.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
 import { mapComponentToPreviewQuestion } from '~/src/form/form-editor/preview/helpers.js'
+import { LatLongQuestion } from '~/src/form/form-editor/preview/lat-long.js'
 import { ListQuestion } from '~/src/form/form-editor/preview/list.js'
 import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
+import { NationalGridQuestion } from '~/src/form/form-editor/preview/national-grid.js'
 import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
+import { OsGridRefQuestion } from '~/src/form/form-editor/preview/os-grid-ref.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
 import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
@@ -142,6 +150,26 @@ describe('helpers', () => {
         type: 'DeclarationField',
         buildComponent: buildDeclarationFieldComponent,
         expected: DeclarationQuestion
+      },
+      {
+        type: 'EastingNorthingFieldComponent',
+        buildComponent: buildEastingNorthingFieldComponent,
+        expected: EastingNorthingQuestion
+      },
+      {
+        type: 'LatLongFieldComponent',
+        buildComponent: buildLatLongFieldComponent,
+        expected: LatLongQuestion
+      },
+      {
+        type: 'NationalGridFieldNumberFieldComponent',
+        buildComponent: buildNationalGridFieldNumberFieldComponent,
+        expected: NationalGridQuestion
+      },
+      {
+        type: 'OsGridRefFieldComponent',
+        buildComponent: buildOsGridRefFieldComponent,
+        expected: OsGridRefQuestion
       }
     ])('should map $type', ({ buildComponent, expected }) => {
       const question = buildComponent(componentContent)

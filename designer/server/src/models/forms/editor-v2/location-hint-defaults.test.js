@@ -12,7 +12,7 @@ describe('location-hint-defaults', () => {
         'For example. Easting: 248741, Northing: 63688'
       )
       expect(locationHintDefaults.OsGridRefField).toBe(
-        'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364'
+        'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456'
       )
       expect(locationHintDefaults.NationalGridFieldNumberField).toBe(
         'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589'
@@ -32,7 +32,7 @@ describe('location-hint-defaults', () => {
     it('should return correct hint for OsGridRefField', () => {
       const hint = getDefaultLocationHint(ComponentType.OsGridRefField)
       expect(hint).toBe(
-        'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364'
+        'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456'
       )
     })
 

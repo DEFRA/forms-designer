@@ -3,11 +3,15 @@ import {
   CheckboxSortableQuestion,
   DateInputQuestion,
   DeclarationQuestion,
+  EastingNorthingQuestion,
   EmailAddressQuestion,
+  LatLongQuestion,
   ListSortableQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
+  NationalGridQuestion,
   NumberOnlyQuestion,
+  OsGridRefQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -28,14 +32,30 @@ import {
   DeclarationEventListeners
 } from '~/src/javascripts/preview/declaration.js'
 import {
+  EastingNorthingDomElements,
+  EastingNorthingEventListeners
+} from '~/src/javascripts/preview/easting-northing.js'
+import {
+  LatLongDomElements,
+  LatLongEventListeners
+} from '~/src/javascripts/preview/lat-long.js'
+import {
   ListSortableEventListeners,
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable.js'
+import {
+  NationalGridDomElements,
+  NationalGridEventListeners
+} from '~/src/javascripts/preview/national-grid.js'
 import {
   NumberDomElements,
   NumberEventListeners
 } from '~/src/javascripts/preview/number'
 import { NunjucksRenderer } from '~/src/javascripts/preview/nunjucks-renderer.js'
+import {
+  OsGridRefDomElements,
+  OsGridRefEventListeners
+} from '~/src/javascripts/preview/os-grid-ref.js'
 import {
   EventListeners,
   QuestionDomElements
@@ -307,17 +327,74 @@ export const SetupPreview =
 
       return declarationField
     },
+    /**
+     * @returns {EastingNorthingQuestion}
+     */
     EastingNorthingField: () => {
-      return SetupPreview.Question()
+      const eastingNorthingElements = new EastingNorthingDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(eastingNorthingElements)
+      const eastingNorthingField = new EastingNorthingQuestion(
+        eastingNorthingElements,
+        nunjucksRenderer
+      )
+      const listeners = new EastingNorthingEventListeners(
+        eastingNorthingField,
+        eastingNorthingElements
+      )
+      listeners.setupListeners()
+
+      return eastingNorthingField
     },
+    /**
+     * @returns {OsGridRefQuestion}
+     */
     OsGridRefField: () => {
-      return SetupPreview.Question()
+      const osGridRefElements = new OsGridRefDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(osGridRefElements)
+      const osGridRefField = new OsGridRefQuestion(
+        osGridRefElements,
+        nunjucksRenderer
+      )
+      const listeners = new OsGridRefEventListeners(
+        osGridRefField,
+        osGridRefElements
+      )
+      listeners.setupListeners()
+
+      return osGridRefField
     },
+    /**
+     * @returns {NationalGridQuestion}
+     */
     NationalGridFieldNumberField: () => {
-      return SetupPreview.Question()
+      const nationalGridElements = new NationalGridDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(nationalGridElements)
+      const nationalGridField = new NationalGridQuestion(
+        nationalGridElements,
+        nunjucksRenderer
+      )
+      const listeners = new NationalGridEventListeners(
+        nationalGridField,
+        nationalGridElements
+      )
+      listeners.setupListeners()
+
+      return nationalGridField
     },
+    /**
+     * @returns {LatLongQuestion}
+     */
     LatLongField: () => {
-      return SetupPreview.Question()
+      const latLongElements = new LatLongDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(latLongElements)
+      const latLongField = new LatLongQuestion(
+        latLongElements,
+        nunjucksRenderer
+      )
+      const listeners = new LatLongEventListeners(latLongField, latLongElements)
+      listeners.setupListeners()
+
+      return latLongField
     }
   })
 /**

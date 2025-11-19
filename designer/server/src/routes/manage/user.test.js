@@ -172,12 +172,12 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users/new')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
+        'manageUsersValidationFailure',
         new Joi.ValidationError(
           'Enter an email address in the correct format. Select a role',
           [],
           undefined
-        ),
-        'manageUsersValidationFailure'
+        )
       )
     })
 
@@ -218,8 +218,8 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users/new')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
-        new Joi.ValidationError('An error occurred', [], undefined),
-        'manageUsersValidationFailure'
+        'manageUsersValidationFailure',
+        new Joi.ValidationError('An error occurred', [], undefined)
       )
     })
   })
@@ -261,8 +261,8 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users/12345/amend')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
-        new Joi.ValidationError('Select a role', [], undefined),
-        'manageUsersValidationFailure'
+        'manageUsersValidationFailure',
+        new Joi.ValidationError('Select a role', [], undefined)
       )
     })
 
@@ -303,8 +303,8 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users/12345/amend')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
-        new Joi.ValidationError('An error occurred', [], undefined),
-        'manageUsersValidationFailure'
+        'manageUsersValidationFailure',
+        new Joi.ValidationError('An error occurred', [], undefined)
       )
     })
 
@@ -419,8 +419,8 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users/12345/delete')
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
-        new Joi.ValidationError('An error occurred', [], undefined),
-        'manageUsersValidationFailure'
+        'manageUsersValidationFailure',
+        new Joi.ValidationError('An error occurred', [], undefined)
       )
     })
   })

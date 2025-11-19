@@ -321,8 +321,8 @@ export default [
         if (error) {
           addErrorsToSession(
             /** @type {*} */ (request),
-            error,
-            sessionNames.validationFailure.editorPageCondition
+            sessionNames.validationFailure.editorPageCondition,
+            error
           )
           return h
             .redirect(editorv2Path(slug, `page/${pageId}/conditions`))
@@ -341,8 +341,8 @@ export default [
 
           addErrorsToSession(
             /** @type {*} */ (request),
-            error,
-            sessionNames.validationFailure.editorPageCondition
+            sessionNames.validationFailure.editorPageCondition,
+            error
           )
 
           return h

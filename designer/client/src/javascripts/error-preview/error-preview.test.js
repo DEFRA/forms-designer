@@ -95,6 +95,32 @@ describe('error-preview', () => {
       expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
     })
 
+    it('should not update elements with data-fixed="true"', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const res = new ErrorPreviewDomElements(undefined)
+
+      // Create a fixed element (like location field base error)
+      const fixedElem = document.createElement('span')
+      fixedElem.classList.add('error-preview-shortDescription')
+      fixedElem.dataset.fixed = 'true'
+      fixedElem.textContent = 'easting and northing'
+
+      // Create a normal element
+      const normalElem = document.createElement('span')
+      normalElem.classList.add('error-preview-shortDescription')
+      normalElem.textContent = '[Short description]'
+
+      const sourceElem = document.createElement('input')
+      sourceElem.value = 'my custom text'
+
+      res.updateText(sourceElem, [fixedElem, normalElem], '[placeholder]')
+
+      // Fixed element should not change
+      expect(fixedElem.textContent).toBe('easting and northing')
+      // Normal element should update
+      expect(normalElem.textContent).toBe('My custom text')
+    })
+
     it('should apply lowerFirst template function', () => {
       document.body.innerHTML = shortDescInputHTML + panelHTML
       const res = new ErrorPreviewDomElements(undefined)
@@ -242,7 +268,8 @@ describe('error-preview', () => {
       )
       const listeners = new ErrorPreviewEventListeners(
         mockErrorPreview,
-        baseElements
+        baseElements,
+        undefined
       )
 
       const mockElement = document.createElement('input')
@@ -270,7 +297,8 @@ describe('error-preview', () => {
       )
       const listeners = new ErrorPreviewEventListeners(
         mockErrorPreview,
-        baseElements
+        baseElements,
+        undefined
       )
 
       expect(
@@ -315,7 +343,8 @@ describe('error-preview', () => {
       )
       const listeners = new ErrorPreviewEventListeners(
         mockErrorPreview,
-        baseElements
+        baseElements,
+        undefined
       )
 
       // @ts-expect-error - accessing protected property for testing
@@ -341,7 +370,8 @@ describe('error-preview', () => {
       )
       const listeners = new ErrorPreviewEventListeners(
         mockErrorPreview,
-        baseElements
+        baseElements,
+        undefined
       )
       const mockElement = document.createElement('input')
       const mockCallback = jest.fn()
@@ -378,7 +408,8 @@ describe('error-preview', () => {
       )
       const listeners = new ErrorPreviewEventListeners(
         mockErrorPreview,
-        baseElements
+        baseElements,
+        undefined
       )
 
       // @ts-expect-error - accessing protected property for testing
@@ -396,6 +427,102 @@ describe('error-preview', () => {
       expect(addSpy).toHaveBeenCalled()
       expect(removeSpy).toHaveBeenCalled()
     })
+
+    it('should return correct placeholder for EastingNorthingField', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(undefined)
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        ComponentType.EastingNorthingField
+      )
+
+      // @ts-expect-error - accessing protected method for testing
+      expect(listeners._getDefaultPlaceholder()).toBe('easting and northing')
+    })
+
+    it('should return correct placeholder for LatLongField', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(undefined)
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        ComponentType.LatLongField
+      )
+
+      // @ts-expect-error - accessing protected method for testing
+      expect(listeners._getDefaultPlaceholder()).toBe('latitude and longitude')
+    })
+
+    it('should return correct placeholder for OsGridRefField', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(undefined)
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        ComponentType.OsGridRefField
+      )
+
+      // @ts-expect-error - accessing protected method for testing
+      expect(listeners._getDefaultPlaceholder()).toBe('OS grid reference')
+    })
+
+    it('should return correct placeholder for NationalGridFieldNumberField', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(undefined)
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        ComponentType.NationalGridFieldNumberField
+      )
+
+      // @ts-expect-error - accessing protected method for testing
+      expect(listeners._getDefaultPlaceholder()).toBe('national grid reference')
+    })
+
+    it('should return default placeholder for other component types', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(undefined)
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        ComponentType.TextField
+      )
+
+      // @ts-expect-error - accessing protected method for testing
+      expect(listeners._getDefaultPlaceholder()).toBe('[Short description]')
+    })
+
+    it('should return default placeholder when component type is undefined', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const baseElements = new ErrorPreviewDomElements(undefined)
+      const mockErrorPreview = /** @type {ErrorPreview} */ (
+        /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
+      )
+      const listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        undefined
+      )
+
+      // @ts-expect-error - accessing protected method for testing
+      expect(listeners._getDefaultPlaceholder()).toBe('[Short description]')
+    })
   })
 
   describe('ErrorPreviewEventListeners complex functions', () => {
@@ -412,7 +539,11 @@ describe('error-preview', () => {
       mockErrorPreview = /** @type {ErrorPreview} */ (
         /** @type {unknown} */ ({ _updateTextFieldErrorMessages: jest.fn() })
       )
-      listeners = new ErrorPreviewEventListeners(mockErrorPreview, baseElements)
+      listeners = new ErrorPreviewEventListeners(
+        mockErrorPreview,
+        baseElements,
+        undefined
+      )
     })
 
     it('should update min/max placeholders', () => {
@@ -576,7 +707,7 @@ describe('error-preview', () => {
         fieldMappings[ComponentType.TextField]
       )
 
-      const errorPreview = new ErrorPreview(baseElements)
+      const errorPreview = new ErrorPreview(baseElements, undefined)
 
       expect(errorPreview).toBeDefined()
       // @ts-expect-error - accessing protected property for testing
