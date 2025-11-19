@@ -8,23 +8,23 @@ import { createJoiError } from '~/src/lib/error-boom-helper.js'
 /**
  * @template T, S
  * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
+ * @param {ValidationSessionKey} flashKey
  * @param {Error} [error]
- * @param {ValidationSessionKey} [flashKey]
  */
-export function addErrorsToSession(request, error, flashKey) {
+export function addErrorsToSession(request, flashKey, error) {
   const { payload } = request
 
-  flashErrorsToSession(request, payload, error, flashKey)
+  flashErrorsToSession(request, payload, flashKey, error)
 }
 
 /**
  * @template T, S
  * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {unknown} formValues
+ * @param {ValidationSessionKey} flashKey
  * @param {Error} [error]
- * @param {ValidationSessionKey} [flashKey]
  */
-export function flashErrorsToSession(request, formValues, error, flashKey) {
+export function flashErrorsToSession(request, formValues, flashKey, error) {
   const { yar } = request
 
   if (error && error instanceof Joi.ValidationError) {
@@ -75,8 +75,8 @@ export function dispatchToPageTitle(request, h, path) {
     {
       pageHeadingAndGuidance: 'true'
     },
-    pageTitleError(),
-    errorKey
+    errorKey,
+    pageTitleError()
   )
 
   return h.redirect(path).code(StatusCodes.SEE_OTHER)

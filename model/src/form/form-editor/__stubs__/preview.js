@@ -214,6 +214,29 @@ export class DeclarationPreviewElements extends QuestionPreviewElements {
 }
 
 /**
+ * @implements {LocationElements}
+ */
+export class LocationPreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {instructionText?: string}} elements
+   */
+  constructor({ instructionText, ...elements }) {
+    super(elements)
+    this._instructionText = instructionText ?? ''
+  }
+
+  /**
+   * @returns {LocationSettings}
+   */
+  get values() {
+    return {
+      ...super.values,
+      instructionText: this._instructionText
+    }
+  }
+}
+
+/**
  * @implements {PageOverviewElements}
  */
 export class PagePreviewElements {
@@ -429,5 +452,5 @@ export class NumberPreviewElements {
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
  * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
- * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings, DeclarationElements, DeclarationSettings } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings, DeclarationElements, DeclarationSettings, LocationElements, LocationSettings } from  '~/src/form/form-editor/preview/types.js'
  */

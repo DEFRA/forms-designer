@@ -49,10 +49,20 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
     accept: 'accept'
   },
   DeclarationField: {},
-  EastingNorthingField: {},
+  EastingNorthingField: {
+    eastingMin: 'eastingMin',
+    eastingMax: 'eastingMax',
+    northingMin: 'northingMin',
+    northingMax: 'northingMax'
+  },
   OsGridRefField: {},
   NationalGridFieldNumberField: {},
-  LatLongField: {}
+  LatLongField: {
+    latitudeMin: 'latitudeMin',
+    latitudeMax: 'latitudeMax',
+    longitudeMin: 'longitudeMin',
+    longitudeMax: 'longitudeMax'
+  }
 })
 
 /**
@@ -200,34 +210,100 @@ export function getDateLimits(fields, questionType, propertyName) {
  * @returns {string|number}
  */
 function getFileUploadLimit(type, fields) {
-  if (type === 'min' || type === 'filesMin' || type === 'array.min') {
-    return getFieldProperty(
+  /** @type {Record<string, string>} */
+  const typeMapping = {
+    filesMimes: 'fileTypes',
+    min: 'min',
+    filesMin: 'min',
+    'array.min': 'min',
+    max: 'max',
+    filesMax: 'max',
+    'array.max': 'max',
+    length: 'length',
+    filesExact: 'length',
+    'array.length': 'length'
+  }
+
+  if (type.includes('mime')) {
+    return getFileTypesLimit(fields)
+  }
+
+  const mappedProperty = /** @type {string | undefined} */ (typeMapping[type])
+
+  if (mappedProperty === 'fileTypes' || !mappedProperty) {
+    return getFileTypesLimit(fields)
+  }
+
+  /** @type {Record<string, string>} */
+  const fallbackMessages = {
+    min: '[min file count]',
+    max: '[max file count]',
+    length: '[exact file count]'
+  }
+
+  return getFieldProperty(
+    fields,
+    ComponentType.FileUploadField,
+    mappedProperty,
+    fallbackMessages[mappedProperty] ?? '[unknown]'
+  )
+}
+
+/**
+ * Get location field limit values
+ * @param {GovukField[]} fields
+ * @param {ComponentType} questionType
+ * @param {string} propertyName
+ * @returns {string|number}
+ */
+function getLocationFieldLimits(fields, questionType, propertyName) {
+  return getFieldProperty(
+    fields,
+    questionType,
+    propertyName,
+    `[${propertyName} limit]`
+  )
+}
+
+/**
+ * Get text field min/max limit values
+ * @param {string} type
+ * @param {GovukField[]} fields
+ * @param {ComponentType} questionType
+ * @returns {string|number|undefined}
+ */
+function getTextFieldLimits(type, fields, questionType) {
+  if (type === 'min' && isTypeForMinMax(questionType)) {
+    return getFieldProperty(fields, questionType, 'min', '[min length]')
+  }
+
+  if (type === 'max' && isTypeForMinMax(questionType)) {
+    return getFieldProperty(fields, questionType, 'max', '[max length]')
+  }
+
+  return undefined
+}
+
+/**
+ * Get location field limit based on type prefix
+ * @param {string} type
+ * @param {GovukField[]} fields
+ * @returns {string|number|undefined}
+ */
+function getLocationLimitsByType(type, fields) {
+  if (type.startsWith('easting') || type.startsWith('northing')) {
+    return getLocationFieldLimits(
       fields,
-      ComponentType.FileUploadField,
-      'min',
-      '[min file count]'
+      ComponentType.EastingNorthingField,
+      type
     )
   }
 
-  if (type === 'max' || type === 'filesMax' || type === 'array.max') {
-    return getFieldProperty(
-      fields,
-      ComponentType.FileUploadField,
-      'max',
-      '[max file count]'
-    )
+  if (type.startsWith('latitude') || type.startsWith('longitude')) {
+    return getLocationFieldLimits(fields, ComponentType.LatLongField, type)
   }
 
-  if (type === 'length' || type === 'filesExact' || type === 'array.length') {
-    return getFieldProperty(
-      fields,
-      ComponentType.FileUploadField,
-      'length',
-      '[exact file count]'
-    )
-  }
-
-  return getFileTypesLimit(fields)
+  return undefined
 }
 
 /**
@@ -264,18 +340,12 @@ function getFileTypesLimit(fields) {
  */
 export function determineLimit(type, fields, questionType) {
   if (questionType === ComponentType.FileUploadField) {
-    if (type === 'filesMimes' || type.includes('mime')) {
-      return getFileTypesLimit(fields)
-    }
     return getFileUploadLimit(type, fields)
   }
 
-  if (type === 'min' && isTypeForMinMax(questionType)) {
-    return getFieldProperty(fields, questionType, 'min', '[min length]')
-  }
-
-  if (type === 'max' && isTypeForMinMax(questionType)) {
-    return getFieldProperty(fields, questionType, 'max', '[max length]')
+  const textFieldLimit = getTextFieldLimits(type, fields, questionType)
+  if (textFieldLimit !== undefined) {
+    return textFieldLimit
   }
 
   if (type.startsWith('number')) {
@@ -284,6 +354,11 @@ export function determineLimit(type, fields, questionType) {
 
   if (type.startsWith('date')) {
     return getDateLimits(fields, questionType, type)
+  }
+
+  const locationLimit = getLocationLimitsByType(type, fields)
+  if (locationLimit !== undefined) {
+    return locationLimit
   }
 
   return '[unknown]'
@@ -316,12 +391,16 @@ export function spanTag(type, part) {
 /**
  * @param {string} templateStr
  * @param {string} type
+ * @param {boolean} [shouldMarkFixed]
  */
-export function insertTags(templateStr, type) {
+export function insertTags(templateStr, type, shouldMarkFixed = false) {
   const delimiterRegex = /{{([^{}]*)}}/g
+
   return templateStr.replace(delimiterRegex, (match, content) => {
     if (content.includes('#label') || content.includes('#title')) {
-      return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}>{{${content}}}</span>`
+      // Mark labels as fixed when specified (for location field base errors)
+      const fixedAttribute = shouldMarkFixed ? ' data-fixed="true"' : ''
+      return `<span class="error-preview-shortDescription"${getFunctionAttribute(content)}${fixedAttribute}>{{${content}}}</span>`
     } else if (content.includes('#limit')) {
       return `<span class="error-preview-${type}">{{${content}}}</span>`
     } else {

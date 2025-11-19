@@ -262,6 +262,7 @@ export const allAdvancedSettingsFields =
       name: 'giveInstructions',
       id: 'giveInstructions',
       classes: 'govuk-checkboxes--small',
+      formGroup: { classes: 'app-settings-checkboxes' },
       items: [
         {
           value: 'true',

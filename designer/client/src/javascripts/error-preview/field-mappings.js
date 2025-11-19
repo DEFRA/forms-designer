@@ -30,6 +30,24 @@ export const fieldMappings =
         fieldName: 'accept',
         placeholder: '[files types you accept]'
       }
+    },
+    [ComponentType.EastingNorthingField]: {
+      eastingMin: { fieldName: 'eastingMin', placeholder: '[min easting]' },
+      eastingMax: { fieldName: 'eastingMax', placeholder: '[max easting]' },
+      northingMin: { fieldName: 'northingMin', placeholder: '[min northing]' },
+      northingMax: { fieldName: 'northingMax', placeholder: '[max northing]' }
+    },
+    [ComponentType.LatLongField]: {
+      latitudeMin: { fieldName: 'latitudeMin', placeholder: '[min latitude]' },
+      latitudeMax: { fieldName: 'latitudeMax', placeholder: '[max latitude]' },
+      longitudeMin: {
+        fieldName: 'longitudeMin',
+        placeholder: '[min longitude]'
+      },
+      longitudeMax: {
+        fieldName: 'longitudeMax',
+        placeholder: '[max longitude]'
+      }
     }
   })
 

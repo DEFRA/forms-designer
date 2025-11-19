@@ -6,7 +6,7 @@ export const locationHintDefaults = {
   EastingNorthingField: 'For example. Easting: 248741, Northing: 63688',
 
   OsGridRefField:
-    'An OS grid reference number is made up of 2 letters followed by 10 numbers, for example, SO7394301364',
+    'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456',
 
   NationalGridFieldNumberField:
     'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589',

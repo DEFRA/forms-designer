@@ -535,13 +535,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'name is required. The question type is missing. Enter a question. Enter a short description',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -571,13 +570,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'Minimum length must be a positive whole number',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -608,13 +606,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'Minimum length must be less than or equal to maximum length',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -646,13 +643,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'At least 2 items are required for a list',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -691,13 +687,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'Question or page heading already exists in this form',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -733,9 +728,8 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      new Joi.ValidationError('Some other boom error', [], undefined),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      new Joi.ValidationError('Some other boom error', [], undefined)
     )
   })
 
@@ -781,12 +775,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'Each item must have a unique identifier - enter a different identifier for this item.',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -832,12 +826,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         "A list item used by condition 'Unknown' has been deleted from the list.",
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -887,12 +881,12 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
   })
 
@@ -967,9 +961,8 @@ describe('Editor v2 question details routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-      new Joi.ValidationError('Enter a short description', [], undefined),
-      'questionDetailsValidationFailure'
+      'questionDetailsValidationFailure',
+      new Joi.ValidationError('Enter a short description', [], undefined)
     )
     expect(setQuestionSessionState).toHaveBeenCalledWith(
       expect.anything(),
@@ -1156,13 +1149,12 @@ describe('Editor v2 question details routes', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      'questionDetailsValidationFailure',
       new Joi.ValidationError(
         'Add a new option to replace the one you deleted, or delete the condition that uses it.',
         [],
         undefined
-      ),
-      'questionDetailsValidationFailure'
+      )
     )
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/p1/question/q1/details#'

@@ -44,13 +44,6 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: QuestionTypeSubGroup.LocationSubGroup
   },
   {
-    text: 'UK address',
-    hint: {
-      text: 'A street address, town or city and postcode'
-    },
-    value: ComponentType.UkAddressField
-  },
-  {
     text: 'Phone number',
     hint: {
       text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
@@ -105,6 +98,13 @@ const dateSubItems = [
 ]
 
 const locationSubItems = [
+  {
+    text: 'UK address',
+    hint: {
+      text: 'A street address, town or city and postcode'
+    },
+    value: ComponentType.UkAddressField
+  },
   {
     text: 'Easting and northing',
     value: ComponentType.EastingNorthingField
@@ -165,7 +165,7 @@ const listSubItems = [
  * @param {string} questionId
  * @param {FormEditorCheckbox[]} questionTypes
  * @param {Page|undefined} page
- * @param { QuestionSessionState | undefined } state
+ * @param { QuestionSessionState | null | undefined } state
  */
 export function filterQuestionTypes(questionId, questionTypes, page, state) {
   let components = hasComponents(page)
@@ -260,7 +260,7 @@ function questionTypeGroupFields(formValues, validation) {
       idPrefix: 'locationSub',
       fieldset: {
         legend: {
-          text: 'Type of precise location you require',
+          text: 'Type of location you require',
           isPageHeading: false
         }
       },
@@ -276,7 +276,7 @@ function questionTypeGroupFields(formValues, validation) {
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {string} questionId
- * @param { QuestionSessionState | undefined } state
+ * @param { QuestionSessionState | null | undefined } state
  * @param {ValidationFailure<FormEditor>} [validation]
  */
 export function questionTypeViewModel(

@@ -120,12 +120,12 @@ describe('Editor v2 check-answers-settings routes', () => {
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
+      'checkAnswersSettingsValidationFailure',
       new Joi.ValidationError(
         'Enter the information you need users to declare or agree to',
         [],
         undefined
-      ),
-      'checkAnswersSettingsValidationFailure'
+      )
     )
   })
 

@@ -129,7 +129,7 @@ export function deleteQuestionConfirmationPageViewModel(
 
 /**
  * Model to represent confirmation page dialog for a given form.
- * @param { QuestionSessionState | undefined } state
+ * @param { QuestionSessionState | null | undefined } state
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId

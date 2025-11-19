@@ -505,6 +505,54 @@ describe('editor-v2 - question details advanced settings model', () => {
       expect(result).toHaveLength(1)
       expect(result[0].value).toBe('Custom instructions')
     })
+
+    test('should return separate checkbox and instructionText fields for location components', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.EastingNorthingField,
+        name: 'location',
+        title: 'location title',
+        options: {
+          instructionText: 'Test instructions'
+        }
+      })
+      const result = advancedSettingsFields(
+        ['giveInstructions', 'instructionText'],
+        question
+      )
+      // Should return 2 separate fields
+      expect(result).toHaveLength(2)
+
+      // First field is the checkbox
+      expect(result[0].name).toBe('giveInstructions')
+      expect(result[0].items?.[0]).toHaveProperty('checked', true)
+      expect(result[0].items?.[0]).not.toHaveProperty('conditional')
+
+      // Second field is the instructionText textarea
+      expect(result[1].name).toBe('instructionText')
+      expect(result[1].value).toBe('Test instructions')
+    })
+
+    test('should populate default instructions for location fields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.EastingNorthingField,
+        name: 'location',
+        title: 'location title',
+        options: {}
+      })
+      const result = advancedSettingsFields(
+        ['giveInstructions', 'instructionText'],
+        question
+      )
+      // Should return 2 separate fields
+      expect(result).toHaveLength(2)
+
+      // Verify checkbox is unchecked when no instructions exist
+      expect(result[0].items?.[0].checked).toBe(false)
+
+      // Verify instructionText has default content
+      expect(result[1].value).toContain('MAGIC map tool')
+      expect(result[1].value).toContain('Easting and Northing')
+    })
   })
 })
 

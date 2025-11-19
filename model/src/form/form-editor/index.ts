@@ -100,6 +100,7 @@ export const listSubSchema = Joi.string()
 export const locationSubSchema = Joi.string()
   .required()
   .valid(
+    ComponentType.UkAddressField,
     ComponentType.EastingNorthingField,
     ComponentType.OsGridRefField,
     ComponentType.NationalGridFieldNumberField,

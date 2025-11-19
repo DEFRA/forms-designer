@@ -5,15 +5,19 @@ import {
   type DatePartsFieldComponent,
   type DeclarationFieldComponent,
   type DetailsComponent,
+  type EastingNorthingFieldComponent,
   type EmailAddressFieldComponent,
   type FileUploadFieldComponent,
   type HtmlComponent,
   type InsetTextComponent,
+  type LatLongFieldComponent,
   type ListComponent,
   type MarkdownComponent,
   type MonthYearFieldComponent,
   type MultilineTextFieldComponent,
+  type NationalGridFieldNumberFieldComponent,
   type NumberFieldComponent,
+  type OsGridRefFieldComponent,
   type RadiosFieldComponent,
   type SelectFieldComponent,
   type TelephoneNumberFieldComponent,
@@ -367,5 +371,63 @@ export function buildRadiosComponent(
     list: 'Default list Id ref',
     ...partialComponent,
     type: ComponentType.RadiosField
+  }
+}
+
+export function buildEastingNorthingFieldComponent(
+  partialComponent: Partial<EastingNorthingFieldComponent> = {}
+): EastingNorthingFieldComponent {
+  return {
+    id: '1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p',
+    name: 'EastingNorthingField',
+    title: 'Easting and northing',
+    hint: 'For example, Easting: 248741, Northing: 63688',
+    options: {},
+    schema: {},
+    ...partialComponent,
+    type: ComponentType.EastingNorthingField
+  }
+}
+
+export function buildLatLongFieldComponent(
+  partialComponent: Partial<LatLongFieldComponent> = {}
+): LatLongFieldComponent {
+  return {
+    id: '2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q',
+    name: 'LatLongField',
+    title: 'Latitude and longitude',
+    hint: 'For example, Latitude: 51.5074, Longitude: -0.1278',
+    options: {},
+    schema: {},
+    ...partialComponent,
+    type: ComponentType.LatLongField
+  }
+}
+
+export function buildNationalGridFieldNumberFieldComponent(
+  partialComponent: Partial<NationalGridFieldNumberFieldComponent> = {}
+): NationalGridFieldNumberFieldComponent {
+  return {
+    id: '3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r',
+    name: 'NationalGridFieldNumberField',
+    title: 'National Grid field number',
+    hint: 'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589',
+    options: {},
+    ...partialComponent,
+    type: ComponentType.NationalGridFieldNumberField
+  }
+}
+
+export function buildOsGridRefFieldComponent(
+  partialComponent: Partial<OsGridRefFieldComponent> = {}
+): OsGridRefFieldComponent {
+  return {
+    id: '4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s',
+    name: 'OsGridRefField',
+    title: 'Ordnance Survey (OS) grid reference',
+    hint: 'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456',
+    options: {},
+    ...partialComponent,
+    type: ComponentType.OsGridRefField
   }
 }
