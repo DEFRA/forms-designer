@@ -15,6 +15,7 @@ import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 const basePageFieldsFallback = /** @type {BasePageFields[]} */ ([])
 const extraFieldsFallback = /** @type {GovukField[]} */ ([])
+const SHORT_DESCRIPTION_PLACEHOLDER = '[short description]'
 
 /**
  * Check if component type is a location field
@@ -33,23 +34,27 @@ export function isLocationField(questionType) {
 /**
  * Get the default label text for error messages based on question type
  * @param {ComponentType} questionType
- * @param {boolean} isBaseError - Whether this is a base error (like "Enter...")
+ * @param {boolean} forBaseError - Whether this is a base error (like "Enter...")
  * @returns {string}
  */
-export function getDefaultErrorLabel(questionType, isBaseError = false) {
+export function getDefaultErrorLabel(questionType, forBaseError = false) {
   switch (questionType) {
     case ComponentType.EastingNorthingField:
-      return isBaseError ? 'easting and enter northing' : '[short description]'
+      return forBaseError
+        ? 'easting and enter northing'
+        : SHORT_DESCRIPTION_PLACEHOLDER
     case ComponentType.LatLongField:
-      return isBaseError
+      return forBaseError
         ? 'latitude and enter longitude'
-        : '[short description]'
+        : SHORT_DESCRIPTION_PLACEHOLDER
     case ComponentType.OsGridRefField:
-      return isBaseError ? 'OS grid reference' : '[short description]'
+      return forBaseError ? 'OS grid reference' : SHORT_DESCRIPTION_PLACEHOLDER
     case ComponentType.NationalGridFieldNumberField:
-      return isBaseError ? 'National Grid reference' : '[short description]'
+      return forBaseError
+        ? 'National Grid reference'
+        : SHORT_DESCRIPTION_PLACEHOLDER
     default:
-      return '[short description]'
+      return SHORT_DESCRIPTION_PLACEHOLDER
   }
 }
 
