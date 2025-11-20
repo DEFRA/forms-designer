@@ -315,6 +315,10 @@ export const locationFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.ShortDescription
 ])
 
+export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.Question
+])
+
 /**
  * Map of component types to their respective field lists
  * @type {Map<ComponentType, FormEditorGovukFieldBaseKeys[]>}
@@ -330,7 +334,8 @@ const COMPONENT_TYPE_TO_FIELDS = new Map([
   [ComponentType.EastingNorthingField, locationFields],
   [ComponentType.OsGridRefField, locationFields],
   [ComponentType.NationalGridFieldNumberField, locationFields],
-  [ComponentType.LatLongField, locationFields]
+  [ComponentType.LatLongField, locationFields],
+  [ComponentType.HiddenField, hiddenFields]
 ])
 
 /**

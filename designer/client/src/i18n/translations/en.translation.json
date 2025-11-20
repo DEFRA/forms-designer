@@ -215,7 +215,9 @@
     "NationalGridFieldNumberField": "National Grid field number",
     "NationalGridFieldNumberField_info": "Allows users to enter a National Grid field number",
     "LatLongField": "Latitude and longitude",
-    "LatLongField_info": "Allows users to enter latitude and longitude coordinates"
+    "LatLongField_info": "Allows users to enter latitude and longitude coordinates",
+    "HiddenField": "Hidden field",
+    "HiddenField_info": "For internal processing"
   },
   "fileUploadFieldEditComponent": {
     "helpTextField": {

@@ -19,6 +19,7 @@ import {
   EastingNorthingQuestion
 } from '~/src/form/form-editor/preview/easting-northing.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
+import { HiddenQuestion } from '~/src/form/form-editor/preview/hidden.js'
 import {
   LatLongComponentPreviewElements,
   LatLongQuestion
@@ -82,7 +83,8 @@ const InputFieldComponentDictionary = {
   [ComponentType.EastingNorthingField]: EastingNorthingQuestion,
   [ComponentType.OsGridRefField]: OsGridRefQuestion,
   [ComponentType.NationalGridFieldNumberField]: NationalGridQuestion,
-  [ComponentType.LatLongField]: LatLongQuestion
+  [ComponentType.LatLongField]: LatLongQuestion,
+  [ComponentType.HiddenField]: HiddenQuestion
 }
 
 /**

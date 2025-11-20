@@ -179,5 +179,13 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     type: ComponentType.LatLongField,
     hint: 'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767',
     options: {}
+  },
+  {
+    name: 'HiddenField',
+    title: 'Hidden field',
+    type: ComponentType.HiddenField,
+    hint: '',
+    options: {},
+    schema: {}
   }
 ])

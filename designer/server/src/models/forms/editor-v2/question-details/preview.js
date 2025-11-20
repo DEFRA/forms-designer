@@ -429,6 +429,13 @@ export const ModelFactory =
         /** @type {LocationElements} */ (questionElements),
         emptyRender
       )
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    HiddenField: (questionElements) => {
+      return new Question(questionElements, emptyRender)
     }
   })
 
