@@ -3528,7 +3528,7 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
             <td class="govuk-table__cell">Form Designer</td>
-            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite. <a class="govuk-link" href="https://forms.defra.gov.uk">https://forms.defra.gov.uk</a> has been launched to:</p>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite. <a class="govuk-link" href="https://forms.defra.gov.uk" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk (opens in new tab)</a> has been launched to:</p>
 <ul>
 <li>describe our offering</li>
 <li>showcase the features available in our Form Designer application and developer plugin</li>
@@ -3624,7 +3624,7 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
             <td class="govuk-table__cell">Form Designer</td>
-            <td class="govuk-table__cell collapse-first-p-margin"><p>Service moved to new domain <a class="govuk-link" href="https://forms.defra.gov.uk/">https://forms.defra.gov.uk/</a> to improve access for colleagues across different ALBs.</p>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Service moved to new domain <a class="govuk-link" href="https://forms.defra.gov.uk/" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk/ (opens in new tab)</a> to improve access for colleagues across different ALBs.</p>
 <p>No disruption expected:</p>
 <ul>
 <li>forms and files remain</li>

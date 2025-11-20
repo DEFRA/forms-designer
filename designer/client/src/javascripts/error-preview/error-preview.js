@@ -80,11 +80,20 @@ export class ErrorPreviewDomElements {
 
   /**
    * Handle lowerFirst, including taking into account if text is a placeholder (starting with '[')
+   * Also preserves "OS" as it's an acronym that should stay uppercase
    * @param {string} elemText
    */
   lowerFirstEnhanced(elemText) {
     if (elemText.length > 1 && elemText.startsWith('[')) {
       return `[${lowerFirst(elemText.substring(1))}`
+    }
+    // Don't lowercase "OS" in "OS grid reference" as it's an acronym
+    if (elemText.startsWith('OS ')) {
+      return elemText
+    }
+    // Don't lowercase "National" in "National Grid reference"
+    if (elemText.startsWith('National Grid')) {
+      return elemText
     }
     return lowerFirst(elemText)
   }
@@ -122,16 +131,12 @@ export class ErrorPreviewDomElements {
 
         const sourceText = source?.value ?? ''
         const newText = sourceText !== '' ? sourceText : placeholder
-        let newTextFinal = elem.dataset.templatefunc
+        const newTextFinal = elem.dataset.templatefunc
           ? this.applyTemplateFunction(elem, newText)
           : newText
 
-        if (
-          !elem.dataset.templatefunc &&
-          elem.classList.contains('error-preview-shortDescription')
-        ) {
-          newTextFinal = capitalize(newText)
-        }
+        // Only capitalize if element has an explicit capitalise template function
+        // Validation errors should remain lowercase (e.g. "northing for location must be...")
 
         elem.textContent = newTextFinal
       }
@@ -173,18 +178,8 @@ export class ErrorPreviewEventListeners {
    * @protected
    */
   _getDefaultPlaceholder() {
-    switch (this._componentType) {
-      case ComponentType.EastingNorthingField:
-        return 'easting and northing'
-      case ComponentType.LatLongField:
-        return 'latitude and longitude'
-      case ComponentType.OsGridRefField:
-        return 'OS grid reference'
-      case ComponentType.NationalGridFieldNumberField:
-        return 'national grid reference'
-      default:
-        return '[Short description]'
-    }
+    // All location fields now use [short description] placeholder for consistency
+    return '[short description]'
   }
 
   /**

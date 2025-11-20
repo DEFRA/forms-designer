@@ -40,33 +40,57 @@ describe('render-error-template', () => {
   })
 
   describe('getDefaultErrorLabel', () => {
-    it('should return correct label for EastingNorthingField', () => {
-      expect(getDefaultErrorLabel(ComponentType.EastingNorthingField)).toBe(
-        'easting and northing'
+    it('should return correct label for EastingNorthingField base errors', () => {
+      expect(
+        getDefaultErrorLabel(ComponentType.EastingNorthingField, true)
+      ).toBe('easting and enter northing')
+    })
+
+    it('should return correct label for EastingNorthingField validation errors', () => {
+      expect(
+        getDefaultErrorLabel(ComponentType.EastingNorthingField, false)
+      ).toBe('[short description]')
+    })
+
+    it('should return correct label for LatLongField base errors', () => {
+      expect(getDefaultErrorLabel(ComponentType.LatLongField, true)).toBe(
+        'latitude and enter longitude'
       )
     })
 
-    it('should return correct label for LatLongField', () => {
-      expect(getDefaultErrorLabel(ComponentType.LatLongField)).toBe(
-        'latitude and longitude'
+    it('should return correct label for LatLongField validation errors', () => {
+      expect(getDefaultErrorLabel(ComponentType.LatLongField, false)).toBe(
+        '[short description]'
       )
     })
 
-    it('should return correct label for OsGridRefField', () => {
-      expect(getDefaultErrorLabel(ComponentType.OsGridRefField)).toBe(
+    it('should return correct label for OsGridRefField base errors', () => {
+      expect(getDefaultErrorLabel(ComponentType.OsGridRefField, true)).toBe(
         'OS grid reference'
       )
     })
 
-    it('should return correct label for NationalGridFieldNumberField', () => {
+    it('should return correct label for OsGridRefField validation errors', () => {
+      expect(getDefaultErrorLabel(ComponentType.OsGridRefField, false)).toBe(
+        '[short description]'
+      )
+    })
+
+    it('should return correct label for NationalGridFieldNumberField base errors', () => {
       expect(
-        getDefaultErrorLabel(ComponentType.NationalGridFieldNumberField)
-      ).toBe('national grid reference')
+        getDefaultErrorLabel(ComponentType.NationalGridFieldNumberField, true)
+      ).toBe('National Grid reference')
+    })
+
+    it('should return correct label for NationalGridFieldNumberField validation errors', () => {
+      expect(
+        getDefaultErrorLabel(ComponentType.NationalGridFieldNumberField, false)
+      ).toBe('[short description]')
     })
 
     it('should return fallback for other field types', () => {
       expect(getDefaultErrorLabel(ComponentType.TextField)).toBe(
-        '[Short description]'
+        '[short description]'
       )
     })
   })
@@ -136,7 +160,7 @@ describe('render-error-template', () => {
         true,
         { id: 'shortDescription', value: 'custom description' }
       )
-      expect(result).toBe('easting and northing')
+      expect(result).toBe('easting and enter northing')
     })
 
     it('should use custom short description for location field validation errors', () => {
@@ -161,7 +185,7 @@ describe('render-error-template', () => {
         true,
         undefined
       )
-      expect(result).toBe('[Short description]')
+      expect(result).toBe('[short description]')
     })
 
     it('should use default when short description is empty', () => {
@@ -169,7 +193,8 @@ describe('render-error-template', () => {
         id: 'shortDescription',
         value: ''
       })
-      expect(result).toBe('[Short description]')
+      // Empty string should use short description if provided
+      expect(result).toBe('')
     })
   })
 
@@ -221,7 +246,7 @@ describe('render-error-template', () => {
         ComponentType.EastingNorthingField
       )
 
-      expect(result).toBe('Enter easting and northing')
+      expect(result).toBe('Enter easting and enter northing')
     })
 
     it('should use default for LatLongField when no short description', () => {
@@ -241,7 +266,7 @@ describe('render-error-template', () => {
         ComponentType.LatLongField
       )
 
-      expect(result).toBe('Enter latitude and longitude')
+      expect(result).toBe('Enter latitude and enter longitude')
     })
 
     it('should use default for OsGridRefField when no short description', () => {
@@ -281,10 +306,10 @@ describe('render-error-template', () => {
         ComponentType.NationalGridFieldNumberField
       )
 
-      expect(result).toBe('Enter national grid reference')
+      expect(result).toBe('Enter National Grid reference')
     })
 
-    it('should use [Short description] fallback for other field types', () => {
+    it('should use [short description] fallback for other field types', () => {
       const template = {
         type: 'string.empty',
         template: 'Enter {#label}'
@@ -301,7 +326,7 @@ describe('render-error-template', () => {
         ComponentType.TextField
       )
 
-      expect(result).toBe('Enter [Short description]')
+      expect(result).toBe('Enter [short description]')
     })
 
     it('should ignore custom short description for location field base errors only', () => {
@@ -327,7 +352,7 @@ describe('render-error-template', () => {
       )
 
       // Base errors for location fields should always use the component name
-      expect(result).toBe('Enter easting and northing')
+      expect(result).toBe('Enter easting and enter northing')
     })
 
     it('should use custom short description for location field validation errors', () => {
@@ -378,7 +403,7 @@ describe('render-error-template', () => {
         ComponentType.LatLongField
       )
 
-      expect(result).toBe('Enter latitude and longitude')
+      expect(result).toBe('Enter latitude and enter longitude')
     })
 
     it('should handle Joi.expression templates for location fields', () => {
@@ -418,7 +443,7 @@ describe('render-error-template', () => {
         ComponentType.TextField
       )
 
-      expect(result).toBe('Enter [Short description]')
+      expect(result).toBe('Enter [short description]')
     })
   })
 })
