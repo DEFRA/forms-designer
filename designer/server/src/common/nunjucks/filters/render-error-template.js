@@ -33,20 +33,23 @@ export function isLocationField(questionType) {
 /**
  * Get the default label text for error messages based on question type
  * @param {ComponentType} questionType
+ * @param {boolean} isBaseError - Whether this is a base error (like "Enter...")
  * @returns {string}
  */
-export function getDefaultErrorLabel(questionType) {
+export function getDefaultErrorLabel(questionType, isBaseError = false) {
   switch (questionType) {
     case ComponentType.EastingNorthingField:
-      return 'easting and northing'
+      return isBaseError ? 'easting and enter northing' : '[short description]'
     case ComponentType.LatLongField:
-      return 'latitude and longitude'
+      return isBaseError
+        ? 'latitude and enter longitude'
+        : '[short description]'
     case ComponentType.OsGridRefField:
-      return 'OS grid reference'
+      return isBaseError ? 'OS grid reference' : '[short description]'
     case ComponentType.NationalGridFieldNumberField:
-      return 'national grid reference'
+      return isBaseError ? 'National Grid reference' : '[short description]'
     default:
-      return '[Short description]'
+      return '[short description]'
   }
 }
 
@@ -96,14 +99,15 @@ export function determineLabelText(
   baseError,
   shortDescriptionField
 ) {
-  // For location fields' base errors only, always use the component name (not the short description)
+  // For all location fields' base errors only, always use the component-specific name (not the short description)
   if (isLocationField(questionType) && baseError) {
-    return getDefaultErrorLabel(questionType)
+    return getDefaultErrorLabel(questionType, true)
   }
 
-  // For all other cases, use short description if provided, otherwise use default
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  return shortDescriptionField?.value || getDefaultErrorLabel(questionType)
+  // For all other cases (including location validation errors), use short description if provided, otherwise use default
+  return (
+    shortDescriptionField?.value ?? getDefaultErrorLabel(questionType, false)
+  )
 }
 
 /**

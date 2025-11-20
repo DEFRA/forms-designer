@@ -1,23 +1,32 @@
+{% set renderedMessages = [] %}
 <h2 class="govuk-error-summary__title">There is a problem</h2>
 <ul class="govuk-list govuk-error-summary__list">
   <!-- Error messages -->
   {% for baseError in params.errorTemplates.baseErrors %}
-  <li>
-    <a id="empty-input-error-shorttext" class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span>
-      {{ baseError | renderErrorTemplate(params.fieldDetails, params.questionType) | safe }}
-    </a>
-  </li>
+    {% set renderedError = baseError | renderErrorTemplate(params.fieldDetails, params.questionType) %}
+    {% if renderedError not in renderedMessages %}
+      {% set _ = renderedMessages.push(renderedError) %}
+      <li>
+        <a id="empty-input-error-shorttext" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span>
+          {{ renderedError | safe }}
+        </a>
+      </li>
+    {% endif %}
   {% endfor %}
   {% if params.errorTemplates.advancedSettingsErrors | length%}
     <h3 class="govuk-heading-s">If you set answer limits:</h3>
     {% for advancedSettingsError in params.errorTemplates.advancedSettingsErrors %}
-    <li>
-      <a id="too-long-input-error-shorttext" class="govuk-error-message">
-        <span class="govuk-visually-hidden">Error:</span>
-        {{ advancedSettingsError | renderErrorTemplate(params.fieldDetails, params.questionType) | safe }}
-      </a>
-    </li>
+      {% set renderedError = advancedSettingsError | renderErrorTemplate(params.fieldDetails, params.questionType) %}
+      {% if renderedError not in renderedMessages %}
+        {% set _ = renderedMessages.push(renderedError) %}
+        <li>
+          <a id="too-long-input-error-shorttext" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span>
+            {{ renderedError | safe }}
+          </a>
+        </li>
+      {% endif %}
     {% endfor %}
   {% endif %}
 </ul>
