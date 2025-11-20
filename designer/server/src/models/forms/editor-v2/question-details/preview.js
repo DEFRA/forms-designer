@@ -4,6 +4,7 @@ import {
   DateInputQuestion,
   EastingNorthingQuestion,
   EmailAddressQuestion,
+  HiddenQuestion,
   LatLongQuestion,
   LongAnswerQuestion,
   MonthYearQuestion,
@@ -435,7 +436,7 @@ export const ModelFactory =
      * @returns {Question}
      */
     HiddenField: (questionElements) => {
-      return new Question(questionElements, emptyRender)
+      return new HiddenQuestion(questionElements, emptyRender)
     }
   })
 
