@@ -1,4 +1,5 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
 import { hasFormComponents } from '~/src/pages/helpers.js'
@@ -50,7 +51,7 @@ export function getHiddenFields(definition: FormDefinition) {
   if (definition.pages.length === 0) {
     return []
   }
-  const totalHiddenFields = []
+  const totalHiddenFields = [] as ComponentDef[]
   for (const page of definition.pages) {
     const hiddenFields = hasFormComponents(page)
       ? page.components.filter(
