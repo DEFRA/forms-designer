@@ -1,14 +1,27 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
-
+{% from "govuk/components/input/macro.njk" import govukInput %}
 <div>
   {% if params.pageTitle.text %}
-  <h2 class="govuk-heading-l">
-    {{ params.pageTitle.text }}
-  </h2>
+    <h2 class="govuk-heading-l">
+      {{ params.pageTitle.text }}
+    </h2>
   {% endif %}
-  {{ govukSummaryList(params.componentRows)}}
+  {{ govukSummaryList(params.componentRows) }}
+  {% if params.showConfirmationEmail %}
+    {{ govukInput({
+      id: "userConfirmationEmailAddress",
+      name: "userConfirmationEmailAddress",
+      label: {
+        text: "Confirmation email (optional)",
+        classes: "govuk-label--m"
+      },
+      hint: {
+        text: "Enter your email address to get an email confirming your form has been submitted"
+      }
+    }) }}
+  {% endif %}
   {% for component in params.components %}
     {% if loop.index0 === 0 %}
       {% set model = component.model %}
@@ -17,15 +30,12 @@
       </div>
     {% endif %}
   {% endfor %}
-  <br />
-
   <div class="govuk-button-group govuk-!-margin-top-6">
     {{ govukSkipLink({
       text: "Skip to page settings",
       href: "#page-settings",
       classes: "govuk-!-margin-right-4"
     }) }}
-
     {{ govukButton({
       text: params.buttonText
     }) }}

@@ -150,6 +150,13 @@ export interface PageOverviewElements extends PagePreviewBaseElements {
 
 export interface SummaryPageElements extends PagePreviewBaseElements {
   declaration: boolean
+  showConfirmationEmail: boolean
+}
+
+export interface SummaryPageInitialState {
+  showConfirmationEmail: boolean
+  declarationText: string
+  needDeclaration: boolean
 }
 
 export type PreviewQuestion =

@@ -61,8 +61,11 @@ describe('Editor v2 check-answers-settings routes', () => {
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
     expect($previewPanel?.innerHTML).toContain(
-      "setupSummaryPageController('661e4ca5039739ef2902b214')"
+      "setupSummaryPageController('661e4ca5039739ef2902b214',"
     )
+    expect($previewPanel?.innerHTML).toContain('showConfirmationEmail:')
+    expect($previewPanel?.innerHTML).toContain('declarationText:')
+    expect($previewPanel?.innerHTML).toContain('needDeclaration:')
   })
 
   test('GET - should render radio group in the view when declaration text', async () => {

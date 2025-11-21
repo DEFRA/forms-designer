@@ -258,7 +258,11 @@ describe('setup-page-controller', () => {
         definition: formDefinition,
         page: undefined
       })
-      const summaryPage = await setupSummaryPageController(definitionId)
+      const summaryPage = await setupSummaryPageController(definitionId, {
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false
+      })
       expect(summaryPage).toBeInstanceOf(SummaryPageController)
       expect(summaryPage.declarationText).toBe('')
       expect(summaryPage.declaration).toEqual({

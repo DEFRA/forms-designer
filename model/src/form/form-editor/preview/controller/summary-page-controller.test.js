@@ -22,6 +22,10 @@ describe('summary page controller', () => {
   const pageRenderMock = jest.fn()
   const renderer = new PageRendererStub(pageRenderMock)
 
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
   it('should work without a declaration', () => {
     const elements = /** @type {SummaryPageElements} */ ({
       heading: '',
@@ -228,6 +232,145 @@ describe('summary page controller', () => {
       text: ''
     })
     expect(controller.components).toHaveLength(0)
+  })
+
+  it('should initialize with showConfirmationEmail set to false', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: false
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.showConfirmationEmail).toBe(false)
+  })
+
+  it('should initialize with showConfirmationEmail set to true', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: true
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.showConfirmationEmail).toBe(true)
+  })
+
+  it('should set showConfirmationEmail to true and trigger render', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: false
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.showConfirmationEmail).toBe(false)
+    expect(pageRenderMock).toHaveBeenCalledTimes(0)
+
+    controller.setShowConfirmationEmail()
+
+    expect(controller.showConfirmationEmail).toBe(true)
+    expect(pageRenderMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('should unset showConfirmationEmail to false and trigger render', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: true
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.showConfirmationEmail).toBe(true)
+    expect(pageRenderMock).toHaveBeenCalledTimes(0)
+
+    controller.unsetShowConfirmationEmail()
+
+    expect(controller.showConfirmationEmail).toBe(false)
+    expect(pageRenderMock).toHaveBeenCalledTimes(1)
+  })
+
+  it('should toggle showConfirmationEmail multiple times', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: false
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.showConfirmationEmail).toBe(false)
+
+    controller.setShowConfirmationEmail()
+    expect(controller.showConfirmationEmail).toBe(true)
+    expect(pageRenderMock).toHaveBeenCalledTimes(1)
+
+    controller.unsetShowConfirmationEmail()
+    expect(controller.showConfirmationEmail).toBe(false)
+    expect(pageRenderMock).toHaveBeenCalledTimes(2)
+
+    controller.setShowConfirmationEmail()
+    expect(controller.showConfirmationEmail).toBe(true)
+    expect(pageRenderMock).toHaveBeenCalledTimes(3)
   })
 })
 

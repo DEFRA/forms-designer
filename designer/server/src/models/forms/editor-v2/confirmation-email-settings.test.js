@@ -109,7 +109,10 @@ describe('confirmation email settings', () => {
       const previewModel = getPreviewModel(
         page,
         definition,
-        'http://preview-url'
+        'http://preview-url',
+        '',
+        false,
+        true
       )
 
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
@@ -138,7 +141,10 @@ describe('confirmation email settings', () => {
       const previewModel = getPreviewModel(
         page,
         definition,
-        'http://another-url'
+        'http://another-url',
+        '',
+        false,
+        true
       )
 
       expect(previewModel.pageTitle).toEqual({
@@ -161,10 +167,47 @@ describe('confirmation email settings', () => {
           })
         ]
       })
-      const previewModel = getPreviewModel(page, definition, 'http://test-url')
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        'http://test-url',
+        '',
+        false,
+        false
+      )
 
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
       expect(previewModel.previewTitle).toBe('Preview of Check answers page')
+    })
+
+    it('should include declaration in preview when provided', () => {
+      const page = buildSummaryPage()
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            components: [
+              buildTextFieldComponent({
+                shortDescription: 'Your details'
+              })
+            ]
+          })
+        ]
+      })
+      const declarationText = 'I agree to the terms and conditions'
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        'http://test-url',
+        declarationText,
+        true,
+        true
+      )
+
+      expect(previewModel.components).toHaveLength(1)
+      expect(previewModel.components[0].model).toMatchObject({
+        content: expect.stringContaining(declarationText)
+      })
+      expect(previewModel.showConfirmationEmail).toBe(true)
     })
   })
 })
