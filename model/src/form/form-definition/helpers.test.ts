@@ -136,17 +136,50 @@ describe('helpers', () => {
         title: 'lwirta',
         path: '/lwirta',
         components: [
-          buildTextFieldComponent({
-            title: 'What is your name?',
-            name: 'kwuRts',
-            shortDescription: 'Your name'
-          }),
           {
             type: ComponentType.HiddenField,
             name: 'hidden3',
             title: '',
             options: {}
-          },
+          }
+        ],
+        next: [],
+        id: '22711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page4 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'wwwfff',
+        path: '/wwwfff',
+        components: [
+          {
+            type: ComponentType.Html,
+            name: 'html',
+            title: '',
+            content: '<p>some text</p>',
+            options: {}
+          }
+        ],
+        next: [],
+        id: '33711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page5 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'eeeddd',
+        path: '/eeeddd',
+        components: [],
+        next: [],
+        id: '44711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page6 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'lwirta',
+        path: '/lwirta',
+        components: [
+          buildTextFieldComponent({
+            title: 'What is your name?',
+            name: 'kwuRts',
+            shortDescription: 'Your name'
+          }),
           {
             type: ComponentType.HiddenField,
             name: 'hidden4',
@@ -158,15 +191,21 @@ describe('helpers', () => {
             name: 'hidden5',
             title: '',
             options: {}
+          },
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden6',
+            title: '',
+            options: {}
           }
         ],
         next: [],
-        id: '22711e08-3801-444d-8e37-a88867c48f04'
+        id: '55711e08-3801-444d-8e37-a88867c48f04'
       })
       const def = {
         name: 'form name',
         conditions: [],
-        pages: [page1, page2, page3]
+        pages: [page1, page2, page3, page4, page5, page6]
       } as unknown as FormDefinition
       expect(getHiddenFields(def)).toEqual([
         {
@@ -195,6 +234,12 @@ describe('helpers', () => {
         },
         {
           name: 'hidden5',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        },
+        {
+          name: 'hidden6',
           type: ComponentType.HiddenField,
           title: '',
           options: {}
