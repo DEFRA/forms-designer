@@ -87,13 +87,13 @@ export class ErrorPreviewDomElements {
     if (elemText.length > 1 && elemText.startsWith('[')) {
       return `[${lowerFirst(elemText.substring(1))}`
     }
-    // Don't lowercase "OS" in "OS grid reference" as it's an acronym
-    if (elemText.startsWith('OS ')) {
-      return elemText
+
+    if (elemText.toLowerCase().startsWith('os ')) {
+      return 'OS' + elemText.substring(2)
     }
-    // Don't lowercase "National" in "National Grid reference"
-    if (elemText.startsWith('National Grid')) {
-      return elemText
+
+    if (elemText.toLowerCase().startsWith('national grid')) {
+      return 'National Grid' + elemText.substring('national grid'.length)
     }
     return lowerFirst(elemText)
   }

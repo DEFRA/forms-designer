@@ -156,6 +156,21 @@ describe('error-preview', () => {
       expect(res.lowerFirstEnhanced('OS grid reference')).toBe(
         'OS grid reference'
       )
+
+      // Should handle lowercase "os grid reference" and capitalize "OS"
+      expect(res.lowerFirstEnhanced('os grid reference')).toBe(
+        'OS grid reference'
+      )
+
+      // Should preserve "National Grid" with capital N
+      expect(res.lowerFirstEnhanced('National Grid reference')).toBe(
+        'National Grid reference'
+      )
+
+      // Should handle lowercase "national grid reference" and capitalize "National Grid"
+      expect(res.lowerFirstEnhanced('national grid reference')).toBe(
+        'National Grid reference'
+      )
     })
 
     it('should apply capitalise template function', () => {
