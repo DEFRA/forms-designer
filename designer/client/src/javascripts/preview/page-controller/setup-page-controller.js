@@ -113,10 +113,11 @@ export async function setupPageController(pageId, definitionId) {
 /**
  * Setup the Page Controller for client
  * @param {string} definitionId
+ * @param {SummaryPageInitialState} initialState
  */
-export async function setupSummaryPageController(definitionId) {
+export async function setupSummaryPageController(definitionId, initialState) {
   const { definition } = await getPageAndDefinition(definitionId, undefined)
-  const elements = new SummaryPagePreviewDomElements()
+  const elements = new SummaryPagePreviewDomElements(initialState)
   const nunjucksRenderBase = new NunjucksRendererBase(elements)
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
 
@@ -181,5 +182,5 @@ export async function setupReorderQuestionsController(pageId, definitionId) {
 }
 
 /**
- * @import { ComponentDef, Page, FormDefinition, PreviewPageControllerBase } from '@defra/forms-model'
+ * @import { ComponentDef, Page, PreviewPageControllerBase, SummaryPageInitialState } from '@defra/forms-model'
  */

@@ -8,5 +8,9 @@
 <script type="module">
   import { setupSummaryPageController } from "{{ getAssetPath("pagePreview.js") }}"
 
-  setupSummaryPageController('{{ preview.definitionId }}')
+  setupSummaryPageController('{{ preview.definitionId }}', {
+    showConfirmationEmail: {{ previewModel.showConfirmationEmail | dump }},
+    declarationText: {{ previewModel.declarationText | dump | safe }},
+    needDeclaration: {{ previewModel.needDeclaration | dump }}
+  })
 </script>

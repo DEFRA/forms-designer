@@ -1,5 +1,4 @@
 import { StatusCodes } from 'http-status-codes'
-import Joi from 'joi'
 
 import {
   testFormDefinitionWithExistingSummaryDeclaration,
@@ -7,17 +6,15 @@ import {
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
-import { setCheckAnswersDeclaration } from '~/src/lib/editor.js'
-import { addErrorsToSession } from '~/src/lib/error-helper.js'
+import { setConfirmationEmailSettings } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/editor.js')
-jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
 
-describe('Editor v2 check-answers-settings routes', () => {
+describe('Editor v2 confirmation-email-settings routes', () => {
   /** @type {Server} */
   let server
 
@@ -26,7 +23,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     await server.initialize()
   })
 
-  test('GET - should render radio group in the view when no declaration', async () => {
+  test('GET - should render radio group in the view when confirmation email is enabled', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -34,14 +31,14 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/confirmation-email-settings',
       auth
     }
 
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardHeadings = container.getAllByText('Page settings')
+    const $cardHeadings = container.getAllByText('Confirmation emails')
     const $radios = container.getAllByRole('radio')
 
     const $actions = container.getAllByRole('button')
@@ -49,9 +46,9 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardHeadings[0]).toHaveTextContent('Page settings')
+    expect($cardHeadings[0]).toHaveTextContent('Confirmation emails')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Page settings')
+    expect($cardHeadings[1]).toHaveTextContent('Confirmation emails')
     expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
     expect($radios).toHaveLength(2)
@@ -68,7 +65,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     expect($previewPanel?.innerHTML).toContain('needDeclaration:')
   })
 
-  test('GET - should render radio group in the view when declaration text', async () => {
+  test('GET - should render radio group in the view when confirmation email is disabled', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -76,23 +73,23 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/confirmation-email-settings',
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardHeadings = container.getAllByText('Page settings')
+    const $cardHeadings = container.getAllByText('Confirmation emails')
     const $radios = container.getAllByRole('radio')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardHeadings[0]).toHaveTextContent('Page settings')
+    expect($cardHeadings[0]).toHaveTextContent('Confirmation emails')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Page settings')
+    expect($cardHeadings[1]).toHaveTextContent('Confirmation emails')
     expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
     expect($radios).toHaveLength(2)
@@ -103,36 +100,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     expect($actions[2]).toHaveTextContent('Save changes')
   })
 
-  test('POST - should error if missing mandatory fields', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-    const options = {
-      method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
-      auth,
-      payload: { needDeclaration: 'true' }
-    }
-
-    const {
-      response: { headers, statusCode }
-    } = await renderResponse(server, options)
-
-    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-    expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p2/check-answers-settings'
-    )
-    expect(addErrorsToSession).toHaveBeenCalledWith(
-      expect.anything(),
-      'checkAnswersSettingsValidationFailure',
-      new Joi.ValidationError(
-        'Enter the information you need users to declare or agree to',
-        [],
-        undefined
-      )
-    )
-  })
-
-  test('POST - should save and redirect to same page if valid payload', async () => {
+  test('POST - should save and redirect to pages list when enabling confirmation emails', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -140,11 +108,10 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/confirmation-email-settings',
       auth,
       payload: {
-        needDeclaration: 'true',
-        declarationText: 'Declaration text'
+        disableConfirmationEmail: false
       }
     }
 
@@ -154,14 +121,43 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
-    expect(setCheckAnswersDeclaration).toHaveBeenCalledWith(
+    expect(setConfirmationEmailSettings).toHaveBeenCalledWith(
       testFormMetadata.id,
       expect.anything(),
       'p2',
-      testFormDefinitionWithExistingSummaryDeclaration,
       {
-        declarationText: 'Declaration text',
-        needDeclaration: 'true'
+        disableConfirmationEmail: false
+      }
+    )
+  })
+
+  test('POST - should save and redirect to pages list when disabling confirmation emails', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/confirmation-email-settings',
+      auth,
+      payload: {
+        disableConfirmationEmail: true
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+    expect(setConfirmationEmailSettings).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      {
+        disableConfirmationEmail: true
       }
     )
   })

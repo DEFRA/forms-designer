@@ -32,8 +32,31 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   declarationTextElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  disableConfirmationEmailNo = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  disableConfirmationEmailYes = null
+  /**
+   * @type {boolean}
+   */
+  showConfirmationEmailFallback
+  /**
+   * @type {string}
+   */
+  declarationTextFallback
+  /**
+   * @type {boolean}
+   */
+  needDeclarationFallback
 
-  constructor() {
+  /**
+   * @param {SummaryPageInitialState} initialState
+   */
+  constructor(initialState) {
     super()
     this.needDeclarationYes = /** @type {HTMLInputElement|null} */ (
       document.getElementById('needDeclaration-2')
@@ -47,18 +70,48 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.needDeclarationForm = /** @type {HTMLFormElement|null} */ (
       document.getElementById('checkAnswersForm')
     )
+    this.disableConfirmationEmailNo = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('disableConfirmationEmail')
+    )
+    this.disableConfirmationEmailYes = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('disableConfirmationEmail-2')
+    )
+    this.showConfirmationEmailFallback = initialState.showConfirmationEmail
+    this.declarationTextFallback = initialState.declarationText
+    this.needDeclarationFallback = initialState.needDeclaration
   }
 
   get declarationText() {
-    return this.declarationTextElement?.value ?? ''
+    // If text input exists (on check-answers-settings page), read from it
+    if (this.declarationTextElement) {
+      return this.declarationTextElement.value
+    }
+    // Otherwise (on confirmation-email-settings page), read from server-provided fallback
+    return this.declarationTextFallback
   }
 
   get declaration() {
-    return this.needDeclarationYes?.checked ?? false
+    // If radio buttons exist (on check-answers-settings page), read from them
+    if (this.needDeclarationYes || this.needDeclarationNo) {
+      return this.needDeclarationYes?.checked ?? false
+    }
+    // Otherwise (on confirmation-email-settings page), read from server-provided fallback
+    return this.needDeclarationFallback
   }
 
   get guidance() {
     return this.declarationText
+  }
+
+  get showConfirmationEmail() {
+    // If radio buttons exist (on confirmation-email-settings page), read from them
+    if (this.disableConfirmationEmailNo || this.disableConfirmationEmailYes) {
+      // If "No" is checked, show confirmation email
+      // If "Yes" is checked (disable), don't show confirmation email
+      return this.disableConfirmationEmailNo?.checked ?? true
+    }
+    // Otherwise (on check-answers-settings page), read from server-provided fallback
+    return this.showConfirmationEmailFallback
   }
 }
 
@@ -98,6 +151,32 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
           const checked = getTargetChecked(inputEvent)
           if (checked) {
             this._pageController.unsetMakeDeclaration()
+          }
+        }
+      }
+    },
+    disableConfirmationEmailNo: {
+      change: {
+        /**
+         * @param {Event} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          const checked = getTargetChecked(inputEvent)
+          if (checked) {
+            this._pageController.setShowConfirmationEmail()
+          }
+        }
+      }
+    },
+    disableConfirmationEmailYes: {
+      change: {
+        /**
+         * @param {Event} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          const checked = getTargetChecked(inputEvent)
+          if (checked) {
+            this._pageController.unsetShowConfirmationEmail()
           }
         }
       }
@@ -156,6 +235,16 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
         'change'
       ],
       [
+        this._summaryPageElements.disableConfirmationEmailNo,
+        this._listeners.disableConfirmationEmailNo.change,
+        'change'
+      ],
+      [
+        this._summaryPageElements.disableConfirmationEmailYes,
+        this._listeners.disableConfirmationEmailYes.change,
+        'change'
+      ],
+      [
         this._summaryPageElements.declarationTextElement,
         this._listeners.declarationTextElement.focus,
         'focus'
@@ -175,5 +264,5 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { SummaryPageElements, SummaryPageController } from '@defra/forms-model'
+ * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState } from '@defra/forms-model'
  */

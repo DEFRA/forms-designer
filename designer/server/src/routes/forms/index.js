@@ -10,6 +10,7 @@ import editorConditionDelete from '~/src/routes/forms/editor-v2/condition-delete
 import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
 import editorConditionsJoin from '~/src/routes/forms/editor-v2/conditions-join.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
+import confirmationEmailSettings from '~/src/routes/forms/editor-v2/confirmation-email-settings.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
 import editorEditListResolve from '~/src/routes/forms/editor-v2/edit-list-resolve.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
@@ -63,5 +64,6 @@ export default [
   contactOnline,
   submissionGuidance,
   privacyNotice,
-  notificationEmail
+  notificationEmail,
+  confirmationEmailSettings
 ].flat()

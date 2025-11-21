@@ -12,7 +12,27 @@
             <div class="govuk-grid-row" id="page-settings-container-1">
               <div id="card-1">
                 <div class="govuk-summary-card__content">
-                  {% if params.title %}<div class="editor-card-title"{% if params.id %} id="{{ params.id }}"{% endif %}>{{ params.title }}</div>{% endif %}
+                  {% if params.title %}
+                    <div class="editor-card-title"{% if params.id %} id="{{ params.id }}"{% endif %}>{{ params.title }}</div>
+                  {% elif params.titles %}
+                    <div class="app-tab-container"{% if params.id %} id="{{ params.id }}"{% endif %}>
+                      {% for item in params.titles %}
+                        {% if item.isActive %}
+                          <nav class="app-page-navigation" aria-label="Page options">
+                            <div class="app-page-navigation__list">
+                              <div class="app-page-navigation__item--current">
+                                <a class="app-page-navigation__link editor-card-title" aria-current="page">
+                                  {{ item.title }}
+                                </a>
+                              </div>
+                            </div>
+                          </nav>
+                        {% elif item.link %}
+                          <a href="{{ item.link }}" class="editor-card-title app-tab-link">{{ item.title }}</a>
+                        {% endif %}
+                      {% endfor %}
+                    </div>
+                  {% endif %}
                   <div class="govuk-!-padding-top-3">
                     {% if params.errorList | length %}
                       {{ govukErrorSummary({
