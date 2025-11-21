@@ -1,9 +1,17 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
 import {
+  getHiddenFields,
   isConditionListItemRefValueData,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import { ControllerType } from '~/src/pages/enums.js'
+import {
+  buildCheckboxComponent,
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '~/src/stubs.js'
 
 describe('helpers', () => {
   describe('isFormDefinition', () => {
@@ -69,6 +77,174 @@ describe('helpers', () => {
         itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07'
       } as ConditionListItemRefValueDataV2
       expect(isConditionListItemRefValueData(data)).toBe(false)
+    })
+  })
+
+  describe('getHiddenFields', () => {
+    it('should return empty array if no pages', () => {
+      const def = {
+        name: 'form name',
+        conditions: [],
+        pages: []
+      } as unknown as FormDefinition
+      expect(getHiddenFields(def)).toEqual([])
+    })
+
+    it('should return array of hidden fields even if across different pages', () => {
+      const page1 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'sdsfdf',
+        path: '/sdsfdf',
+        components: [
+          buildCheckboxComponent({
+            title: 'What is your favourite adventure?',
+            name: 'jnUjwa',
+            shortDescription: 'Your favourite adventure'
+          }),
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden1',
+            title: '',
+            options: {}
+          },
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden2',
+            title: '',
+            options: {}
+          }
+        ],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page2 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'kndywh',
+        path: '/kndywh',
+        components: [
+          buildCheckboxComponent({
+            title: 'What is your favourite colour?',
+            name: 'axkGhe',
+            shortDescription: 'Your favourite colour'
+          })
+        ],
+        next: [],
+        id: '11711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page3 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'lwirta',
+        path: '/lwirta',
+        components: [
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden3',
+            title: '',
+            options: {}
+          }
+        ],
+        next: [],
+        id: '22711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page4 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'wwwfff',
+        path: '/wwwfff',
+        components: [
+          {
+            type: ComponentType.Html,
+            name: 'html',
+            title: '',
+            content: '<p>some text</p>',
+            options: {}
+          }
+        ],
+        next: [],
+        id: '33711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page5 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'eeeddd',
+        path: '/eeeddd',
+        components: undefined,
+        next: [],
+        id: '44711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const page6 = buildQuestionPage({
+        controller: ControllerType.Page,
+        title: 'lwirta',
+        path: '/lwirta',
+        components: [
+          buildTextFieldComponent({
+            title: 'What is your name?',
+            name: 'kwuRts',
+            shortDescription: 'Your name'
+          }),
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden4',
+            title: '',
+            options: {}
+          },
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden5',
+            title: '',
+            options: {}
+          },
+          {
+            type: ComponentType.HiddenField,
+            name: 'hidden6',
+            title: '',
+            options: {}
+          }
+        ],
+        next: [],
+        id: '55711e08-3801-444d-8e37-a88867c48f04'
+      })
+      const def = {
+        name: 'form name',
+        conditions: [],
+        pages: [page1, page2, page3, page4, page5, page6]
+      } as unknown as FormDefinition
+      expect(getHiddenFields(def)).toEqual([
+        {
+          name: 'hidden1',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        },
+        {
+          name: 'hidden2',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        },
+        {
+          name: 'hidden3',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        },
+        {
+          name: 'hidden4',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        },
+        {
+          name: 'hidden5',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        },
+        {
+          name: 'hidden6',
+          type: ComponentType.HiddenField,
+          title: '',
+          options: {}
+        }
+      ])
     })
   })
 })

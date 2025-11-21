@@ -230,6 +230,13 @@ export interface LatLongFieldComponent extends FormFieldBase {
   }
 }
 
+export interface HiddenFieldComponent extends FormFieldBase {
+  type: ComponentType.HiddenField
+  options: FormFieldBase['options'] & {
+    condition?: string
+  }
+}
+
 // Date Fields
 export interface DatePartsFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
@@ -341,6 +348,7 @@ export type InputFieldsComponentsDef =
   | OsGridRefFieldComponent
   | NationalGridFieldNumberFieldComponent
   | LatLongFieldComponent
+  | HiddenFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =

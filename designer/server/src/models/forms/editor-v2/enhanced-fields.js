@@ -41,7 +41,8 @@ export const enhancedFieldsPerComponentType =
     EastingNorthingField: [],
     OsGridRefField: [],
     NationalGridFieldNumberField: [],
-    LatLongField: []
+    LatLongField: [],
+    HiddenField: []
   })
 
 /**

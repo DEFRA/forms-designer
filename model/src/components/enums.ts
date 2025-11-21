@@ -22,5 +22,6 @@ export enum ComponentType {
   EastingNorthingField = 'EastingNorthingField',
   OsGridRefField = 'OsGridRefField',
   NationalGridFieldNumberField = 'NationalGridFieldNumberField',
-  LatLongField = 'LatLongField'
+  LatLongField = 'LatLongField',
+  HiddenField = 'HiddenField'
 }

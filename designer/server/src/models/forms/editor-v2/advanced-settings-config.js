@@ -75,7 +75,8 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
       QuestionAdvancedSettings.Classes
-    ]
+    ],
+    HiddenField: []
   })
 
 /**

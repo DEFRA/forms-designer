@@ -5,6 +5,7 @@ import {
   DateInputQuestion,
   EastingNorthingQuestion,
   EmailAddressQuestion,
+  HiddenQuestion,
   LatLongQuestion,
   ListQuestion,
   LongAnswerQuestion,
@@ -560,6 +561,15 @@ describe('preview', () => {
         previewElements
       )
       expect(previewModel).toBeInstanceOf(LatLongQuestion)
+    })
+
+    it('should get HiddenField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.HiddenField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(HiddenQuestion)
     })
   })
 
