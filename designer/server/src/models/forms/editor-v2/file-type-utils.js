@@ -8,11 +8,14 @@ import {
 const TABULAR_DATA = 'tabular-data'
 const DOCUMENTS = 'documents'
 const IMAGES = 'images'
+const ANY = 'any'
 
 export const allowedParentFileTypes = [
   { value: DOCUMENTS, text: 'Documents' },
   { value: IMAGES, text: 'Images' },
-  { value: TABULAR_DATA, text: 'Tabular data' }
+  { value: TABULAR_DATA, text: 'Tabular data' },
+  { divider: 'or' },
+  { value: ANY, text: 'Accept any file', behaviour: 'exclusive' }
 ]
 
 /**
@@ -33,6 +36,12 @@ export function mapExtensionsToMimeTypes(fileExtensions) {
  * @param {Partial<FormEditorInputQuestion>} payload
  */
 export function mapPayloadToFileMimeTypes(payload) {
+  // If "any" is selected, don't restrict file types
+  const anySelected = payload.fileTypes?.includes('any')
+  if (anySelected) {
+    return {}
+  }
+
   const documentParentSelected = payload.fileTypes?.includes('documents')
   const imagesParentSelected = payload.fileTypes?.includes('images')
   const tabularDataParentSelected = payload.fileTypes?.includes('tabular-data')
@@ -57,7 +66,19 @@ export function getSelectedFileTypesFromCSVMimeTypes(question) {
     return {}
   }
 
-  const selectedMimeTypesFromCSV = question.options.accept?.split(',') ?? []
+  const acceptValue = question.options.accept
+
+  // If no accept restriction, "any" is selected
+  if (!acceptValue || acceptValue.trim() === '') {
+    return {
+      fileTypes: ['any'],
+      documentTypes: [],
+      imageTypes: [],
+      tabularDataTypes: []
+    }
+  }
+
+  const selectedMimeTypesFromCSV = acceptValue.split(',')
 
   const documentTypes = selectedMimeTypesFromCSV
     .map((currMimeType) => {

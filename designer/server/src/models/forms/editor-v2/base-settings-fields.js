@@ -36,6 +36,7 @@ export { allBaseSettingsFields } from '~/src/models/forms/editor-v2/base-setting
 const TABULAR_DATA = 'tabular-data'
 const DOCUMENTS = 'documents'
 const IMAGES = 'images'
+const ANY = 'any'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
@@ -74,12 +75,20 @@ export const baseSchema = Joi.object().keys({
     '*': 'The question type is missing'
   }),
   list: questionDetailsFullSchema.listForQuestionSchema,
-  fileTypes: questionDetailsFullSchema.fileTypesSchema.when('questionType', {
-    is: 'FileUploadField',
-    then: Joi.required().messages({
-      '*': 'Select the type of file you want to upload'
+  fileTypes: questionDetailsFullSchema.fileTypesSchema
+    .when('questionType', {
+      is: 'FileUploadField',
+      then: Joi.required().messages({
+        '*': 'Select the type of file you want to upload'
+      })
     })
-  }),
+    .when(Joi.ref('.'), {
+      is: Joi.array().has(Joi.string().valid(ANY)),
+      then: Joi.array().length(1).messages({
+        'array.length':
+          'When any file type is allowed, no other file types can be selected'
+      })
+    }),
   documentTypes: questionDetailsFullSchema.documentTypesSchema.when(
     'questionType',
     {

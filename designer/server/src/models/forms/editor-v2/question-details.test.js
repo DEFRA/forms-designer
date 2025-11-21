@@ -199,7 +199,7 @@ describe('editor-v2 - question details model', () => {
         hintText: 'hintText',
         questionOptional: 'true',
         shortDescription: 'shortDescription',
-        fileTypes: [],
+        fileTypes: ['any'],
         documentTypes: [],
         imageTypes: [],
         tabularDataTypes: []
@@ -218,7 +218,7 @@ describe('editor-v2 - question details model', () => {
       })
     })
 
-    test('should handle no types selected', () => {
+    test('should handle no types selected as "any"', () => {
       const res = getSelectedFileTypesFromCSVMimeTypes({
         name: '',
         title: '',
@@ -229,7 +229,7 @@ describe('editor-v2 - question details model', () => {
         }
       })
       expect(res).toEqual({
-        fileTypes: [],
+        fileTypes: ['any'],
         documentTypes: [],
         imageTypes: [],
         tabularDataTypes: []

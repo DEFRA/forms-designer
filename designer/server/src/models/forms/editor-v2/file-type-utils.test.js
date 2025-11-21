@@ -11,7 +11,9 @@ describe('file-type-utils', () => {
       expect(allowedParentFileTypes).toEqual([
         { value: 'documents', text: 'Documents' },
         { value: 'images', text: 'Images' },
-        { value: 'tabular-data', text: 'Tabular data' }
+        { value: 'tabular-data', text: 'Tabular data' },
+        { divider: 'or' },
+        { value: 'any', text: 'Accept any file', behaviour: 'exclusive' }
       ])
     })
   })
@@ -172,7 +174,7 @@ describe('file-type-utils', () => {
       expect(result).toEqual({})
     })
 
-    it('should return empty arrays when no accept string provided', () => {
+    it('should return array with "any" option when no accept string provided', () => {
       const question = {
         type: 'FileUploadField',
         options: {}
@@ -182,7 +184,7 @@ describe('file-type-utils', () => {
         /** @type {ComponentDef} */ (question)
       )
       expect(result).toEqual({
-        fileTypes: [],
+        fileTypes: ['any'],
         documentTypes: [],
         imageTypes: [],
         tabularDataTypes: []
