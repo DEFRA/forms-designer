@@ -31,7 +31,7 @@ export class Markdown extends Content {
   constructor(htmlElements, questionRenderer) {
     super(htmlElements, questionRenderer)
     const { content } = htmlElements.values
-    this._content = markdownToHtml(content)
+    this._content = markdownToHtml(content, { startingHeaderLevel: 2 })
   }
 
   /**
@@ -39,7 +39,7 @@ export class Markdown extends Content {
    * @protected
    */
   _setContent(value) {
-    super._setContent(markdownToHtml(value))
+    super._setContent(markdownToHtml(value, { startingHeaderLevel: 2 }))
   }
 }
 
