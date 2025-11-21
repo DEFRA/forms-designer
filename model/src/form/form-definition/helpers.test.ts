@@ -166,7 +166,7 @@ describe('helpers', () => {
         controller: ControllerType.Page,
         title: 'eeeddd',
         path: '/eeeddd',
-        components: [],
+        components: undefined,
         next: [],
         id: '44711e08-3801-444d-8e37-a88867c48f04'
       })
