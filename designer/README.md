@@ -94,6 +94,19 @@ To watch the tests:
 npm run test:watch
 ```
 
+To check the coverage of the tests for new changes, there are the following options (available from the project root directory):
+
+```sh
+# The coverage of the files that have changed versus origin/main
+npm run test:changed
+
+# The coverage of the files that have changed since a specific commit hash
+npm run test:since <commit-hash>
+
+# The coverage of the files that have changed since the last commit
+npm run test:uncommitted
+```
+
 ## License
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
