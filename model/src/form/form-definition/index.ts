@@ -1006,19 +1006,13 @@ export const listSchemaV2 = listSchema
 const feedbackSchema = Joi.object<FormDefinition['feedback']>()
   .description('Feedback configuration for the form')
   .keys({
-    feedbackForm: Joi.boolean()
-      .default(false)
-      .description('Whether to show the built-in feedback form'),
-    url: Joi.when('feedbackForm', {
-      is: Joi.boolean().valid(false),
-      then: Joi.string()
-        .trim()
-        .optional()
-        .allow('')
-        .description(
-          'URL to an external feedback form when not using built-in feedback'
-        )
-    }),
+    url: Joi.string()
+      .trim()
+      .optional()
+      .allow('')
+      .description(
+        'URL to an external feedback form when not using built-in feedback'
+      ),
     emailAddress: Joi.string()
       .trim()
       .email({
