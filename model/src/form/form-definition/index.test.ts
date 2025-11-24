@@ -87,9 +87,8 @@ describe('Form definition schema', () => {
   })
 
   describe('Feedback', () => {
-    it("should allow empty feedback URL when 'feedbackForm' is false", () => {
+    it('should allow empty feedback URL', () => {
       definition.feedback = {
-        feedbackForm: false,
         url: ''
       }
 
