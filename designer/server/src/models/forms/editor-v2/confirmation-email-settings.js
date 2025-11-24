@@ -74,7 +74,8 @@ export const emptyRenderer = {
  *    hasPageSettingsTab: boolean,
  *    showConfirmationEmail: boolean,
  *    declarationText: string,
- *    needDeclaration: boolean
+ *    needDeclaration: boolean,
+ *    isConfirmationEmailSettingsPanel: boolean
  * }}
  */
 export function getPreviewModel(
@@ -111,7 +112,8 @@ export function getPreviewModel(
     hasPageSettingsTab: true,
     showConfirmationEmail: previewPageController.showConfirmationEmail,
     declarationText,
-    needDeclaration
+    needDeclaration,
+    isConfirmationEmailSettingsPanel: true
   }
 }
 

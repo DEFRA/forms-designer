@@ -9,23 +9,26 @@
     </h2>
   {% endif %}
   {{ govukSummaryList(params.componentRows) }}
+
   {% if params.showConfirmationEmail %}
-    {{ govukInput({
-      id: "userConfirmationEmailAddress",
-      name: "userConfirmationEmailAddress",
-      label: {
-        text: "Confirmation email (optional)",
-        classes: "govuk-label--m"
-      },
-      hint: {
-        text: "Enter your email address to get an email confirming your form has been submitted"
-      }
-    }) }}
+    <div class="{{ "border-left-container" if params.isConfirmationEmailSettingsPanel else "" }} govuk-!-margin-top-6">
+      {{ govukInput({
+        id: "userConfirmationEmailAddress",
+        name: "userConfirmationEmailAddress",
+        label: {
+          text: "Confirmation email (optional)",
+          classes: "govuk-label--m"
+        },
+        hint: {
+          text: "Enter your email address to get an email confirming your form has been submitted"
+        }
+      }) }}
+    </div>
   {% endif %}
   {% for component in params.components %}
     {% if loop.index0 === 0 %}
       {% set model = component.model %}
-      <div class="border-left-container govuk-!-margin-top-6">
+      <div class="{{ "border-left-container" if not params.isConfirmationEmailSettingsPanel else "" }} govuk-!-margin-top-6">
         {%- include 'preview-components/markdown.njk' -%}
       </div>
     {% endif %}

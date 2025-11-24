@@ -25,7 +25,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.declarationText).toBe('')
       expect(pagePreviewElements.declaration).toBe(false)
@@ -38,7 +39,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.declaration).toBe(true)
       expect(pagePreviewElements.declarationText).toBe('')
@@ -51,7 +53,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.declaration).toBe(true)
       expect(pagePreviewElements.declarationText).toBe('Declaration text')
@@ -62,7 +65,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.declarationText).toBe('')
       expect(pagePreviewElements.declaration).toBe(false)
@@ -75,7 +79,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
@@ -87,7 +92,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
@@ -103,7 +109,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: true,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
@@ -119,7 +126,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
@@ -131,7 +139,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       // Radio "No" is checked (showConfirmationEmail should be true)
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
@@ -147,7 +156,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
@@ -160,7 +170,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.guidance).toBe('My declaration text')
     })
@@ -176,7 +187,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
@@ -192,7 +204,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: true,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       // Since disableConfirmationEmailNo is null, it returns the default value (true)
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
@@ -210,7 +223,8 @@ describe('summary page controller', () => {
       const pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       // disableConfirmationEmailNo exists but is not checked, so .checked returns false
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
@@ -227,7 +241,8 @@ describe('summary page controller', () => {
       let pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: true,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
 
@@ -241,7 +256,8 @@ describe('summary page controller', () => {
       pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
 
@@ -255,9 +271,34 @@ describe('summary page controller', () => {
       pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(pagePreviewElements.showConfirmationEmail).toBe(false)
+    })
+
+    it('should store and return isConfirmationEmailSettingsPanel as false', () => {
+      document.body.innerHTML = summaryPageHTML() + questionDetailsPreviewHTML
+
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
+      })
+      expect(pagePreviewElements.isConfirmationEmailSettingsPanel).toBe(false)
+    })
+
+    it('should store and return isConfirmationEmailSettingsPanel as true', () => {
+      document.body.innerHTML = summaryPageHTML() + questionDetailsPreviewHTML
+
+      const pagePreviewElements = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: false,
+        declarationText: '',
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: true
+      })
+      expect(pagePreviewElements.isConfirmationEmailSettingsPanel).toBe(true)
     })
   })
   describe('SummaryPreviewListeners', () => {
@@ -303,7 +344,8 @@ describe('summary page controller', () => {
       pagePreviewElements = new SummaryPagePreviewDomElements({
         showConfirmationEmail: true,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       pageController = new SummaryPageController(
         pagePreviewElements,
@@ -518,6 +560,27 @@ describe('summary page controller', () => {
       pagePreviewElements.needDeclarationNo.checked = true
       pagePreviewElements.needDeclarationNo.dispatchEvent(changeEvent)
       expect(pageRendererCb).toHaveBeenCalledTimes(5)
+    })
+
+    it('should expose isConfirmationEmailSettingsPanel from elements as false', () => {
+      expect(pageController.isConfirmationEmailSettingsPanel).toBe(false)
+    })
+
+    it('should expose isConfirmationEmailSettingsPanel from elements as true', () => {
+      const pagePreviewElementsWithPanel = new SummaryPagePreviewDomElements({
+        showConfirmationEmail: true,
+        declarationText: '',
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: true
+      })
+      const pageControllerWithPanel = new SummaryPageController(
+        pagePreviewElementsWithPanel,
+        definition,
+        renderer
+      )
+      expect(pageControllerWithPanel.isConfirmationEmailSettingsPanel).toBe(
+        true
+      )
     })
   })
 })

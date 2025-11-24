@@ -262,7 +262,8 @@ describe('setup-page-controller', () => {
       const summaryPage = await setupSummaryPageController(definitionId, {
         showConfirmationEmail: false,
         declarationText: '',
-        needDeclaration: false
+        needDeclaration: false,
+        isConfirmationEmailSettingsPanel: false
       })
       expect(summaryPage).toBeInstanceOf(SummaryPageController)
       expect(summaryPage.declarationText).toBe('')

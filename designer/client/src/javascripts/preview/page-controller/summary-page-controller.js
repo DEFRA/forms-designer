@@ -52,6 +52,10 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {boolean}
    */
   needDeclarationFallback
+  /**
+   * @type {boolean}
+   */
+  isConfirmationEmailSettingsPanel
 
   /**
    * @param {SummaryPageInitialState} initialState
@@ -79,6 +83,8 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.showConfirmationEmailFallback = initialState.showConfirmationEmail
     this.declarationTextFallback = initialState.declarationText
     this.needDeclarationFallback = initialState.needDeclaration
+    this.isConfirmationEmailSettingsPanel =
+      initialState.isConfirmationEmailSettingsPanel
   }
 
   get declarationText() {

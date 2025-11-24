@@ -11,6 +11,7 @@
   setupSummaryPageController('{{ preview.definitionId }}', {
     showConfirmationEmail: {{ previewModel.showConfirmationEmail | dump }},
     declarationText: {{ previewModel.declarationText | dump | safe }},
-    needDeclaration: {{ previewModel.needDeclaration | dump }}
+    needDeclaration: {{ previewModel.needDeclaration | dump }},
+    isConfirmationEmailSettingsPanel: {{ previewModel.isConfirmationEmailSettingsPanel | dump }}
   })
 </script>

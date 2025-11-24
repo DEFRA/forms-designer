@@ -24,6 +24,7 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
 export class SummaryPreviewSSR extends PagePreviewElementsSSR {
   #declaration = false
   #showConfirmationEmail = true
+  #isConfirmationEmailSettingsPanel = false
 
   /**
    * @param {Page|undefined} page
@@ -35,11 +36,13 @@ export class SummaryPreviewSSR extends PagePreviewElementsSSR {
     page,
     declarationText,
     showDeclaration = false,
-    showConfirmationEmail = true
+    showConfirmationEmail = true,
+    isConfirmationEmailSettingsPanel = false
   ) {
     super(page, declarationText)
     this.#declaration = showDeclaration
     this.#showConfirmationEmail = showConfirmationEmail
+    this.#isConfirmationEmailSettingsPanel = isConfirmationEmailSettingsPanel
   }
 
   get declaration() {
@@ -48,6 +51,10 @@ export class SummaryPreviewSSR extends PagePreviewElementsSSR {
 
   get showConfirmationEmail() {
     return this.#showConfirmationEmail
+  }
+
+  get isConfirmationEmailSettingsPanel() {
+    return this.#isConfirmationEmailSettingsPanel
   }
 }
 

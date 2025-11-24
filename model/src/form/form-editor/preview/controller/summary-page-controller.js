@@ -31,6 +31,11 @@ export class SummaryPageController extends PreviewPageControllerBase {
    * @private
    */
   _showConfirmationEmail = false
+  /**
+   * @type {boolean}
+   * @private
+   */
+  _isConfirmationEmailSettingsPanel = false
 
   /**
    * @param {SummaryPageElements} elements
@@ -47,8 +52,9 @@ export class SummaryPageController extends PreviewPageControllerBase {
     })
     this._makeDeclaration = elements.declaration
     this._showConfirmationEmail = elements.showConfirmationEmail
-
     this._guidanceComponent.content = elements.guidance
+    this._isConfirmationEmailSettingsPanel =
+      elements.isConfirmationEmailSettingsPanel
   }
 
   /**
@@ -115,6 +121,10 @@ export class SummaryPageController extends PreviewPageControllerBase {
 
   get declaration() {
     return this.guidance
+  }
+
+  get isConfirmationEmailSettingsPanel() {
+    return this._isConfirmationEmailSettingsPanel
   }
 
   setMakeDeclaration() {
