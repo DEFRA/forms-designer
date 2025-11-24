@@ -62,7 +62,8 @@ const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
     latitudeMax: 'latitudeMax',
     longitudeMin: 'longitudeMin',
     longitudeMax: 'longitudeMax'
-  }
+  },
+  HiddenField: {}
 })
 
 /**

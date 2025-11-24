@@ -395,6 +395,9 @@ export const SetupPreview =
       listeners.setupListeners()
 
       return latLongField
+    },
+    HiddenField: () => {
+      return SetupPreview.Question()
     }
   })
 /**

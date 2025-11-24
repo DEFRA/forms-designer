@@ -1,3 +1,4 @@
+import config from '~/src/config.js'
 import { getWebsitePageNavigation } from '~/src/models/website/helpers.js'
 import content from '~/src/routes/website/content.js'
 
@@ -21,6 +22,7 @@ export function websiteWhatsNewModel(isGuest) {
       text: mastHead.heading,
       description: 'large'
     },
-    latest: content.whatsNew.latest
+    latest: content.whatsNew.latest,
+    appBaseUrl: config.appBaseUrl
   }
 }

@@ -27,7 +27,7 @@ If you're taking part in private beta, ask for support by sending a message to t
           {% for update in month.updates %}
             <tr class="govuk-table__row">
             <td class="govuk-table__cell">{{ update.product }}</td>
-            <td class="govuk-table__cell collapse-first-p-margin">{{ update.content | markdown | safe }}</td>
+            <td class="govuk-table__cell collapse-first-p-margin">{{ update.content | markdown({ baseUrl: appBaseUrl }) | safe }}</td>
           </tr>
           {% endfor %}
           </tbody>

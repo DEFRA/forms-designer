@@ -1,7 +1,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
-<div class="govuk-form-group {{ model.previewClasses }} {{ model.userClasses }}">
+<div class="govuk-form-group {{ model.previewClasses }}">
   <h1 class="govuk-label-wrapper">
     <label class="govuk-label govuk-label--l {{ model.label.classes }}" for="nationalgrid">
       {{ model.label.text }}
@@ -13,17 +13,17 @@
   {{ govukInput({
     id: "nationalgrid",
     name: "nationalgrid",
-    classes: "govuk-input--width-20 " + (model.inputClasses if model.inputClasses),
+    classes: "govuk-input--width-20 " + (model.userClasses if model.userClasses) + " " + (model.inputClasses if model.inputClasses),
     attributes: {
       maxlength: "10"
     }
   }) }}
-
-  {% if model.instructionText %}
-    {{ govukDetails({
-      summaryText: "How to find location details",
-      html: model.instructionText | markdown | safe,
-      classes: model.details.classes if model.details.classes
-    }) }}
-  {% endif %}
 </div>
+
+{% if model.instructionText %}
+  {{ govukDetails({
+    summaryText: "How to find location details",
+    html: model.instructionText | markdown | safe,
+    classes: model.details.classes if model.details.classes
+  }) }}
+{% endif %}

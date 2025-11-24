@@ -15,6 +15,7 @@ import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 const basePageFieldsFallback = /** @type {BasePageFields[]} */ ([])
 const extraFieldsFallback = /** @type {GovukField[]} */ ([])
+const SHORT_DESCRIPTION_PLACEHOLDER = '[short description]'
 
 /**
  * Check if component type is a location field
@@ -33,20 +34,27 @@ export function isLocationField(questionType) {
 /**
  * Get the default label text for error messages based on question type
  * @param {ComponentType} questionType
+ * @param {boolean} forBaseError - Whether this is a base error (like "Enter...")
  * @returns {string}
  */
-export function getDefaultErrorLabel(questionType) {
+export function getDefaultErrorLabel(questionType, forBaseError = false) {
   switch (questionType) {
     case ComponentType.EastingNorthingField:
-      return 'easting and northing'
+      return forBaseError
+        ? 'easting and enter northing'
+        : SHORT_DESCRIPTION_PLACEHOLDER
     case ComponentType.LatLongField:
-      return 'latitude and longitude'
+      return forBaseError
+        ? 'latitude and enter longitude'
+        : SHORT_DESCRIPTION_PLACEHOLDER
     case ComponentType.OsGridRefField:
-      return 'OS grid reference'
+      return forBaseError ? 'OS grid reference' : SHORT_DESCRIPTION_PLACEHOLDER
     case ComponentType.NationalGridFieldNumberField:
-      return 'national grid reference'
+      return forBaseError
+        ? 'National Grid reference'
+        : SHORT_DESCRIPTION_PLACEHOLDER
     default:
-      return '[Short description]'
+      return SHORT_DESCRIPTION_PLACEHOLDER
   }
 }
 
@@ -96,14 +104,15 @@ export function determineLabelText(
   baseError,
   shortDescriptionField
 ) {
-  // For location fields' base errors only, always use the component name (not the short description)
+  // For all location fields' base errors only, always use the component-specific name (not the short description)
   if (isLocationField(questionType) && baseError) {
-    return getDefaultErrorLabel(questionType)
+    return getDefaultErrorLabel(questionType, true)
   }
 
-  // For all other cases, use short description if provided, otherwise use default
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-  return shortDescriptionField?.value || getDefaultErrorLabel(questionType)
+  // For all other cases (including location validation errors), use short description if provided, otherwise use default
+  return (
+    shortDescriptionField?.value ?? getDefaultErrorLabel(questionType, false)
+  )
 }
 
 /**

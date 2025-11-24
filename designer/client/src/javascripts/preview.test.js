@@ -49,6 +49,7 @@ jest.mock('~/src/views/preview-components/checkboxesfield.njk', () => '')
 jest.mock('~/src/views/preview-components/date-input.njk', () => '')
 jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
 jest.mock('~/src/views/preview-components/fileuploadfield.njk', () => '')
+jest.mock('~/src/views/preview-components/hiddenfield.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')
 
