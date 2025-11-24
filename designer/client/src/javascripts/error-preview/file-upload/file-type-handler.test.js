@@ -175,6 +175,59 @@ describe('file-type-handler', () => {
         'File must be a <span class="error-preview-filesMimes">[files types you accept]</span>'
       )
     })
+
+    test('should detect "any" file type and remove li when fileTypes-5 is checked', () => {
+      document.body.innerHTML = `
+        <ul>
+          <li>
+            <span class="error-preview-filesMimes">Initial text</span>
+          </li>
+        </ul>
+        <input id="fileTypes-5" type="checkbox" checked>
+      `
+
+      updateFileTypes()
+
+      const li = document.querySelector('li')
+      expect(li).toBeNull()
+    })
+
+    test('should remove li element when "any" is selected', () => {
+      document.body.innerHTML = `
+        <ul class="govuk-error-summary__list">
+          <li>
+            <a href="#file-upload">File must be a <span class="error-preview-filesMimes">PDF</span></a>
+          </li>
+        </ul>
+        <input id="fileTypes-5" type="checkbox" checked>
+      `
+
+      updateFileTypes()
+
+      const li = document.querySelector('li')
+      expect(li).toBeNull()
+    })
+
+    test('should not remove li when "any" is not selected', () => {
+      document.body.innerHTML = `
+        <ul class="govuk-error-summary__list">
+          <li>
+            <a href="#file-upload">File must be a <span class="error-preview-filesMimes">PDF</span></a>
+          </li>
+        </ul>
+        <input id="fileTypes-5" type="checkbox">
+        <input id="fileTypes" type="checkbox" checked>
+        <input id="docType1" name="documentTypes" type="checkbox" checked>
+        <label for="docType1">PDF</label>
+      `
+
+      updateFileTypes()
+
+      const li = document.querySelector('li')
+      expect(li).not.toBeNull()
+      const span = document.querySelector('.error-preview-filesMimes')
+      expect(span?.textContent).toBe('PDF')
+    })
   })
 
   describe('setupFileTypeListeners', () => {
