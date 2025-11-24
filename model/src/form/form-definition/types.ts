@@ -159,7 +159,6 @@ export type ListTypeOption = 'bulleted' | 'numbered'
 export type ListTypeContent = 'string' | 'number' | 'boolean'
 
 export interface Feedback {
-  feedbackForm?: boolean
   url?: string
   emailAddress?: string
 }
