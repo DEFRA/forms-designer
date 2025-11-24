@@ -1,4 +1,26 @@
 /**
+ * Collects selected file types from checkboxes
+ * @param {string} parentId - ID of the parent checkbox
+ * @param {string} checkboxName - Name attribute of the child checkboxes
+ * @param {string[]} selectedTypes - Array to push selected types into
+ */
+function collectSelectedTypes(parentId, checkboxName, selectedTypes) {
+  const parent = /** @type {HTMLInputElement | null} */ (
+    document.getElementById(parentId)
+  )
+  if (parent?.checked) {
+    document
+      .querySelectorAll(`input[name="${checkboxName}"]:checked`)
+      .forEach((checkbox) => {
+        const label = document.querySelector(`label[for="${checkbox.id}"]`)
+        if (label) {
+          selectedTypes.push((label.textContent ?? '').trim())
+        }
+      })
+  }
+}
+
+/**
  * Updates file type text based on selected checkboxes
  */
 export function updateFileTypes() {
@@ -15,45 +37,9 @@ export function updateFileTypes() {
     selectedTypes.push('any')
   }
 
-  const docsParent = document.getElementById('fileTypes')
-  if (/** @type {HTMLInputElement} */ (docsParent)?.checked) {
-    document
-      .querySelectorAll('input[name="documentTypes"]:checked')
-      .forEach((checkbox) => {
-        const label = document.querySelector(`label[for="${checkbox.id}"]`)
-        if (label) {
-          selectedTypes.push((label.textContent ?? '').trim())
-        }
-      })
-  }
-
-  const imagesParent = /** @type {HTMLInputElement | null} */ (
-    document.getElementById('fileTypes-2')
-  )
-  if (imagesParent?.checked) {
-    document
-      .querySelectorAll('input[name="imageTypes"]:checked')
-      .forEach((checkbox) => {
-        const label = document.querySelector(`label[for="${checkbox.id}"]`)
-        if (label) {
-          selectedTypes.push((label.textContent ?? '').trim())
-        }
-      })
-  }
-
-  const tabularParent = /** @type {HTMLInputElement | null} */ (
-    document.getElementById('fileTypes-3')
-  )
-  if (tabularParent?.checked) {
-    document
-      .querySelectorAll('input[name="tabularDataTypes"]:checked')
-      .forEach((checkbox) => {
-        const label = document.querySelector(`label[for="${checkbox.id}"]`)
-        if (label) {
-          selectedTypes.push((label.textContent ?? '').trim())
-        }
-      })
-  }
+  collectSelectedTypes('fileTypes', 'documentTypes', selectedTypes)
+  collectSelectedTypes('fileTypes-2', 'imageTypes', selectedTypes)
+  collectSelectedTypes('fileTypes-3', 'tabularDataTypes', selectedTypes)
 
   let displayText = '[files types you accept]'
 
