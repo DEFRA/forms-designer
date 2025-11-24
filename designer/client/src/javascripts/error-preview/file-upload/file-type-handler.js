@@ -10,6 +10,11 @@ export function updateFileTypes() {
   /** @type {string[]} */
   const selectedTypes = []
 
+  const anyOption = document.getElementById('fileTypes-5')
+  if (/** @type {HTMLInputElement} */ (anyOption)?.checked) {
+    selectedTypes.push('any')
+  }
+
   const docsParent = document.getElementById('fileTypes')
   if (/** @type {HTMLInputElement} */ (docsParent)?.checked) {
     document
@@ -62,6 +67,15 @@ export function updateFileTypes() {
   }
 
   fileTypeSpans.forEach((span) => {
+    // Remove the enclosing li if 'any' is selected
+    if (selectedTypes.includes('any')) {
+      const li = span.closest('li')
+      if (li) {
+        li.remove()
+      }
+      return
+    }
+
     span.textContent = displayText
 
     const errorMessage = span.closest('.govuk-error-message')
