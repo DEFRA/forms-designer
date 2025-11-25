@@ -13,7 +13,6 @@ import {
   stringHasValue
 } from '~/src/lib/utils.js'
 import {
-  GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
   buildPreviewUrl,
@@ -23,61 +22,35 @@ import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-pre
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
- * @param {string | undefined} needDeclarationVal
- * @param {string | undefined} declarationTextVal
+ * Constructs the settings fields for the confirmation email settings page, specifically the radio button options.
+ * @param {string | undefined} disableConfirmationEmailVal
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function settingsFields(
-  needDeclarationVal,
-  declarationTextVal,
-  validation
-) {
+export function settingsFields(disableConfirmationEmailVal, validation) {
   return {
-    needDeclaration: {
-      name: 'needDeclaration',
-      id: 'needDeclaration',
-      hint: {
-        text: 'Use a declaration if you need users to declare or agree to something before they submit the form'
-      },
+    disableConfirmationEmail: {
+      name: 'disableConfirmationEmail',
+      id: 'disableConfirmationEmail',
       items: [
         {
-          value: 'false',
-          text: 'No'
-        },
-        {
           value: 'true',
-          text: 'Yes'
+          text: 'Turn off the confirmation email',
+          checked: disableConfirmationEmailVal === 'true'
         }
       ],
-      value: needDeclarationVal,
-      ...insertValidationErrors(validation?.formErrors.needDeclaration)
-    },
-    declarationText: {
-      name: 'declarationText',
-      id: 'declarationText',
-      label: {
-        text: 'Declaration text',
-        classes: GOVUK_LABEL__M
-      },
-      hint: {
-        text: 'Use a declaration if you need users to declare or agree to something before they submit the form'
-      },
-      rows: 3,
-      value: declarationTextVal,
-      ...insertValidationErrors(validation?.formErrors.declarationText)
+      ...insertValidationErrors(validation?.formErrors.disableConfirmationEmail)
     }
   }
 }
 
-export const dummyRenderer = {
+export const emptyRenderer = {
   /**
    * @param {string} _a
    * @param {PagePreviewPanelMacro} _b
-   * @returns {never}
+   * @returns {void}
    */
   render(_a, _b) {
-    // Server Side Render shouldn't use render
-    throw new Error('Not implemented')
+    // Nothing to do here.
   }
 }
 
@@ -85,7 +58,8 @@ export const dummyRenderer = {
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
- * @param {ReturnType<typeof settingsFields>} fields
+ * @param {string} declarationText
+ * @param {boolean} needDeclaration
  * @param {boolean} showConfirmationEmail
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
@@ -104,12 +78,10 @@ export function getPreviewModel(
   page,
   definition,
   previewPageUrl,
-  fields,
+  declarationText,
+  needDeclaration,
   showConfirmationEmail
 ) {
-  const declarationText = fields.declarationText.value ?? ''
-  const needDeclaration = Boolean(fields.needDeclaration.value)
-
   const elements = new SummaryPreviewSSR(
     page,
     declarationText,
@@ -120,7 +92,7 @@ export function getPreviewModel(
   const previewPageController = new SummaryPageController(
     elements,
     definition,
-    dummyRenderer
+    emptyRenderer
   )
 
   return {
@@ -131,24 +103,25 @@ export function getPreviewModel(
     sectionTitle: previewPageController.sectionTitle,
     buttonText: previewPageController.buttonText,
     previewPageUrl,
-    questionType: ComponentType.TextField, // components[0]?.type
+    questionType: ComponentType.TextField,
     componentRows: previewPageController.componentRows,
     hasPageSettingsTab: true,
     showConfirmationEmail: previewPageController.showConfirmationEmail,
     declarationText,
     needDeclaration,
-    isConfirmationEmailSettingsPanel: false
+    isConfirmationEmailSettingsPanel: true
   }
 }
 
 /**
+ * Creates the view model for the confirmation email settings page.
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
-export function checkAnswersSettingsViewModel(
+export function confirmationEmailSettingsViewModel(
   metadata,
   definition,
   pageId,
@@ -163,7 +136,7 @@ export function checkAnswersSettingsViewModel(
     definition,
     'Editor'
   )
-  const { formValues, formErrors } = validation ?? {}
+  const { formErrors } = validation ?? {}
 
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
@@ -174,22 +147,23 @@ export function checkAnswersSettingsViewModel(
     })
   )
 
-  const declarationTextVal =
-    formValues?.declarationText ?? guidanceComponent?.content
-  const needDeclarationVal =
-    formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
+  const declarationText = guidanceComponent?.content ?? ''
+  const needDeclaration = stringHasValue(declarationText)
+
+  const disableConfirmationEmailVal =
+    page?.controller === ControllerType.Summary ? 'true' : 'false'
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
-  const fields = settingsFields(
-    needDeclarationVal,
-    declarationTextVal,
-    validation
-  )
-  const pageHeading = 'Page settings'
+  const fields = settingsFields(disableConfirmationEmailVal, validation)
+  const pageHeading = 'Confirmation email'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
-  // prettier-ignore
   const previewModel = getPreviewModel(
-    page, definition, previewPageUrl, fields, showConfirmationEmail
+    page,
+    definition,
+    previewPageUrl,
+    declarationText,
+    needDeclaration,
+    showConfirmationEmail
   )
 
   return {

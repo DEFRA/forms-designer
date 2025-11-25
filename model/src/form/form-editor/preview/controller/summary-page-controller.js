@@ -27,6 +27,17 @@ export class SummaryPageController extends PreviewPageControllerBase {
    */
   _makeDeclaration = false
   /**
+   * @type {boolean}
+   * @private
+   */
+  _showConfirmationEmail = false
+  /**
+   * @type {boolean}
+   * @private
+   */
+  _isConfirmationEmailSettingsPanel = false
+
+  /**
    * @param {SummaryPageElements} elements
    * @param {FormDefinition} formDefinition
    * @param {PageRenderer} renderer
@@ -40,8 +51,10 @@ export class SummaryPageController extends PreviewPageControllerBase {
       return []
     })
     this._makeDeclaration = elements.declaration
-
+    this._showConfirmationEmail = elements.showConfirmationEmail
     this._guidanceComponent.content = elements.guidance
+    this._isConfirmationEmailSettingsPanel =
+      elements.isConfirmationEmailSettingsPanel
   }
 
   /**
@@ -110,6 +123,10 @@ export class SummaryPageController extends PreviewPageControllerBase {
     return this.guidance
   }
 
+  get isConfirmationEmailSettingsPanel() {
+    return this._isConfirmationEmailSettingsPanel
+  }
+
   setMakeDeclaration() {
     this._makeDeclaration = true
     this.render()
@@ -132,6 +149,10 @@ export class SummaryPageController extends PreviewPageControllerBase {
     this.clearHighlight()
   }
 
+  get showConfirmationEmail() {
+    return this._showConfirmationEmail
+  }
+
   /**
    * @returns {Markdown[]}
    * @protected
@@ -145,6 +166,16 @@ export class SummaryPageController extends PreviewPageControllerBase {
 
   get buttonText() {
     return this.makeDeclaration ? 'Accept and send' : 'Send'
+  }
+
+  setShowConfirmationEmail() {
+    this._showConfirmationEmail = true
+    this.render()
+  }
+
+  unsetShowConfirmationEmail() {
+    this._showConfirmationEmail = false
+    this.render()
   }
 }
 

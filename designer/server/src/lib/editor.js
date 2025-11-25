@@ -445,6 +445,31 @@ export async function setCheckAnswersDeclaration(
 }
 
 /**
+ * Set confirmation email settings by updating the page controller (SummaryPageController for disabled, SummaryWithConfirmationEmailController for enabled)
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {Partial<FormEditorInputConfirmationEmailSettings>} payload
+ */
+export async function setConfirmationEmailSettings(
+  formId,
+  token,
+  pageId,
+  payload
+) {
+  const controllerPayload = {
+    controller: payload.disableConfirmationEmail
+      ? ControllerType.Summary
+      : ControllerType.SummaryWithConfirmationEmail
+  }
+
+  await patchJsonByPageType(buildRequestUrl(formId, `pages/${pageId}`), {
+    payload: controllerPayload,
+    ...getHeaders(token)
+  })
+}
+
+/**
  * Re-order the pages as per list of ids
  * @param {string} formId
  * @param {string} token
@@ -616,5 +641,5 @@ export async function deleteCondition(formId, token, conditionId) {
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputConfirmationEmailSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat } from '@defra/forms-model'
  */

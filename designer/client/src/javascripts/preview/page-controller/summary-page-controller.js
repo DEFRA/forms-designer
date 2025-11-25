@@ -32,8 +32,31 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {HTMLInputElement|null}
    */
   declarationTextElement = null
+  /**
+   * @type {HTMLInputElement|null}
+   */
+  disableConfirmationEmail = null
+  /**
+   * @type {boolean}
+   */
+  showConfirmationEmailFallback
+  /**
+   * @type {string}
+   */
+  declarationTextFallback
+  /**
+   * @type {boolean}
+   */
+  needDeclarationFallback
+  /**
+   * @type {boolean}
+   */
+  isConfirmationEmailSettingsPanel
 
-  constructor() {
+  /**
+   * @param {SummaryPageInitialState} initialState
+   */
+  constructor(initialState) {
     super()
     this.needDeclarationYes = /** @type {HTMLInputElement|null} */ (
       document.getElementById('needDeclaration-2')
@@ -47,18 +70,46 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.needDeclarationForm = /** @type {HTMLFormElement|null} */ (
       document.getElementById('checkAnswersForm')
     )
+    this.disableConfirmationEmail = /** @type {HTMLInputElement|null} */ (
+      document.getElementById('disableConfirmationEmail')
+    )
+    this.showConfirmationEmailFallback = initialState.showConfirmationEmail
+    this.declarationTextFallback = initialState.declarationText
+    this.needDeclarationFallback = initialState.needDeclaration
+    this.isConfirmationEmailSettingsPanel =
+      initialState.isConfirmationEmailSettingsPanel
   }
 
   get declarationText() {
-    return this.declarationTextElement?.value ?? ''
+    // If text input exists (on check-answers-settings page), read from it
+    if (this.declarationTextElement) {
+      return this.declarationTextElement.value
+    }
+    // Otherwise (on confirmation-email-settings page), read from server-provided fallback
+    return this.declarationTextFallback
   }
 
   get declaration() {
-    return this.needDeclarationYes?.checked ?? false
+    // If radio buttons exist (on check-answers-settings page), read from them
+    if (this.needDeclarationYes || this.needDeclarationNo) {
+      return this.needDeclarationYes?.checked ?? false
+    }
+    // Otherwise (on confirmation-email-settings page), read from server-provided fallback
+    return this.needDeclarationFallback
   }
 
   get guidance() {
     return this.declarationText
+  }
+
+  get showConfirmationEmail() {
+    // If check-box exists (on confirmation-email-settings page), read from it
+    if (this.disableConfirmationEmail) {
+      // If is checked, don't show confirmation email
+      return !this.disableConfirmationEmail.checked
+    }
+    // Otherwise (on check-answers-settings page), read from server-provided fallback
+    return this.showConfirmationEmailFallback
   }
 }
 
@@ -98,6 +149,21 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
           const checked = getTargetChecked(inputEvent)
           if (checked) {
             this._pageController.unsetMakeDeclaration()
+          }
+        }
+      }
+    },
+    disableConfirmationEmail: {
+      change: {
+        /**
+         * @param {Event} inputEvent
+         */
+        handleEvent: (inputEvent) => {
+          const checked = getTargetChecked(inputEvent)
+          if (checked) {
+            this._pageController.unsetShowConfirmationEmail()
+          } else {
+            this._pageController.setShowConfirmationEmail()
           }
         }
       }
@@ -156,6 +222,11 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
         'change'
       ],
       [
+        this._summaryPageElements.disableConfirmationEmail,
+        this._listeners.disableConfirmationEmail.change,
+        'change'
+      ],
+      [
         this._summaryPageElements.declarationTextElement,
         this._listeners.declarationTextElement.focus,
         'focus'
@@ -175,5 +246,5 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { SummaryPageElements, SummaryPageController } from '@defra/forms-model'
+ * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState } from '@defra/forms-model'
  */
