@@ -303,7 +303,7 @@ export const declarationTextSchema = Joi.string()
   .description('Text of the declaration that users must agree to')
 
 export const disableConfirmationEmailSchema = Joi.boolean()
-  .required()
+  .valid(true)
   .description('Whether confirmation emails should be disabled')
 
 export const minSchema = Joi.number()

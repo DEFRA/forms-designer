@@ -356,20 +356,14 @@ export const summaryPageHTML = (
   </fieldset>
   <fieldset class="govuk-fieldset">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-      Disable confirmation email
+      Confirmation email
     </legend>
     <div class="govuk-form-group">
-      <div class="govuk-radios" data-module="govuk-radios" data-govuk-radios-init="">
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="radio" value="false" ${!disableConfirmationEmail ? 'checked=""' : ''}>
-          <label class="govuk-label govuk-radios__label" for="disableConfirmationEmail">
-            No
-          </label>
-        </div>
-        <div class="govuk-radios__item">
-          <input class="govuk-radios__input" id="disableConfirmationEmail-2" name="disableConfirmationEmail" type="radio" value="true" ${disableConfirmationEmail ? 'checked=""' : ''}>
-          <label class="govuk-label govuk-radios__label" for="disableConfirmationEmail-2">
-            Yes
+      <div class="govuk-checkboxes" data-module="govuk-checkboxes" data-govuk-checkboxes-init="">
+        <div class="govuk-checkboxes__item">
+          <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true" ${disableConfirmationEmail ? 'checked=""' : ''}>
+          <label class="govuk-label govuk-checkboxes__label" for="disableConfirmationEmail">
+            Turn off the confirmation email
           </label>
         </div>
       </div>

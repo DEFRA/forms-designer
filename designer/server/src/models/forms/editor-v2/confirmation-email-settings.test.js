@@ -12,7 +12,7 @@ import {
 
 describe('confirmation email settings', () => {
   describe('settingsFields', () => {
-    it('should create radio fields with value false (confirmation email enabled)', () => {
+    it('should create checkbox field with value false (confirmation email enabled)', () => {
       const fields = settingsFields('false')
 
       expect(fields.disableConfirmationEmail).toEqual({
@@ -20,19 +20,15 @@ describe('confirmation email settings', () => {
         id: 'disableConfirmationEmail',
         items: [
           {
-            value: 'false',
-            text: 'No'
-          },
-          {
             value: 'true',
-            text: 'Yes, I have an equivalent confirmation process'
+            text: 'Turn off the confirmation email',
+            checked: false
           }
-        ],
-        value: 'false'
+        ]
       })
     })
 
-    it('should create radio fields with value true (confirmation email disabled)', () => {
+    it('should create checkbox field with value true (confirmation email disabled)', () => {
       const fields = settingsFields('true')
 
       expect(fields.disableConfirmationEmail).toEqual({
@@ -40,19 +36,15 @@ describe('confirmation email settings', () => {
         id: 'disableConfirmationEmail',
         items: [
           {
-            value: 'false',
-            text: 'No'
-          },
-          {
             value: 'true',
-            text: 'Yes, I have an equivalent confirmation process'
+            text: 'Turn off the confirmation email',
+            checked: true
           }
-        ],
-        value: 'true'
+        ]
       })
     })
 
-    it('should create radio fields with undefined value', () => {
+    it('should create checkbox field with undefined value', () => {
       const fields = settingsFields(undefined)
 
       expect(fields.disableConfirmationEmail).toEqual({
@@ -60,15 +52,11 @@ describe('confirmation email settings', () => {
         id: 'disableConfirmationEmail',
         items: [
           {
-            value: 'false',
-            text: 'No'
-          },
-          {
             value: 'true',
-            text: 'Yes, I have an equivalent confirmation process'
+            text: 'Turn off the confirmation email',
+            checked: false
           }
-        ],
-        value: undefined
+        ]
       })
     })
 

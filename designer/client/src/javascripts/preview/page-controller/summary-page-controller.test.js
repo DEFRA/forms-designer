@@ -72,7 +72,7 @@ describe('summary page controller', () => {
       expect(pagePreviewElements.declaration).toBe(false)
     })
 
-    it('should return showConfirmationEmail as true when disableConfirmationEmail radio "No" is checked', () => {
+    it('should return showConfirmationEmail as true when disableConfirmationEmail checkbox is unchecked', () => {
       document.body.innerHTML =
         summaryPageHTML(false, '', false) + questionDetailsPreviewHTML
 
@@ -85,7 +85,7 @@ describe('summary page controller', () => {
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
 
-    it('should return showConfirmationEmail as false when disableConfirmationEmail radio "Yes" is checked', () => {
+    it('should return showConfirmationEmail as false when disableConfirmationEmail checkbox is checked', () => {
       document.body.innerHTML =
         summaryPageHTML(false, '', true) + questionDetailsPreviewHTML
 
@@ -176,10 +176,10 @@ describe('summary page controller', () => {
       expect(pagePreviewElements.guidance).toBe('My declaration text')
     })
 
-    it('should return showConfirmationEmail when only disableConfirmationEmailNo exists', () => {
+    it('should return showConfirmationEmail when checkbox is unchecked', () => {
       document.body.innerHTML = `
         <form id="checkAnswersForm">
-          <input class="govuk-radios__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="radio" value="false" checked>
+          <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true">
         </form>
         ${questionDetailsPreviewHTML}
       `
@@ -193,10 +193,10 @@ describe('summary page controller', () => {
       expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
 
-    it('should return true when only disableConfirmationEmailYes exists (falls back to default)', () => {
+    it('should return false when checkbox is checked', () => {
       document.body.innerHTML = `
         <form id="checkAnswersForm">
-          <input class="govuk-radios__input" id="disableConfirmationEmail-2" name="disableConfirmationEmail" type="radio" value="true" checked>
+          <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true" checked>
         </form>
         ${questionDetailsPreviewHTML}
       `
@@ -207,15 +207,14 @@ describe('summary page controller', () => {
         needDeclaration: false,
         isConfirmationEmailSettingsPanel: false
       })
-      // Since disableConfirmationEmailNo is null, it returns the default value (true)
-      expect(pagePreviewElements.showConfirmationEmail).toBe(true)
+      // Checkbox is checked, so showConfirmationEmail should be false
+      expect(pagePreviewElements.showConfirmationEmail).toBe(false)
     })
 
-    it('should return false when disableConfirmationEmailNo exists but is not checked', () => {
+    it('should return true when checkbox exists but is not checked', () => {
       document.body.innerHTML = `
         <form id="checkAnswersForm">
-          <input class="govuk-radios__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="radio" value="false">
-          <input class="govuk-radios__input" id="disableConfirmationEmail-2" name="disableConfirmationEmail" type="radio" value="true">
+          <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true">
         </form>
         ${questionDetailsPreviewHTML}
       `
@@ -226,8 +225,8 @@ describe('summary page controller', () => {
         needDeclaration: false,
         isConfirmationEmailSettingsPanel: false
       })
-      // disableConfirmationEmailNo exists but is not checked, so .checked returns false
-      expect(pagePreviewElements.showConfirmationEmail).toBe(false)
+      // Checkbox exists but is not checked, so showConfirmationEmail should be true
+      expect(pagePreviewElements.showConfirmationEmail).toBe(true)
     })
 
     it('should handle fallback value with various string representations', () => {
@@ -392,134 +391,116 @@ describe('summary page controller', () => {
       expect(pageRendererCb).toHaveBeenCalledTimes(6)
     })
 
-    it('should set showConfirmationEmail when disableConfirmationEmail "No" radio is checked', () => {
-      if (
-        !pagePreviewElements.disableConfirmationEmailNo ||
-        !pagePreviewElements.disableConfirmationEmailYes
-      ) {
-        throw new Error('confirmation email radios not found')
+    it('should toggle showConfirmationEmail when checkbox is changed', () => {
+      if (!pagePreviewElements.disableConfirmationEmail) {
+        throw new Error('confirmation email checkbox not found')
       }
 
-      // Initially "No" is checked by default (showConfirmationEmail is true)
+      // Initially checkbox is unchecked (showConfirmationEmail is true)
       expect(pageController.showConfirmationEmail).toBe(true)
       jest.clearAllMocks()
 
-      // Switch to "Yes" (disable)
-      pagePreviewElements.disableConfirmationEmailYes.checked = true
-      pagePreviewElements.disableConfirmationEmailYes.dispatchEvent(changeEvent)
+      // Check the checkbox (disable confirmation email)
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
       expect(pageController.showConfirmationEmail).toBe(false)
       expect(pageRendererCb).toHaveBeenCalledTimes(1)
 
-      // Switch back to "No" (enable)
-      pagePreviewElements.disableConfirmationEmailNo.checked = true
-      pagePreviewElements.disableConfirmationEmailNo.dispatchEvent(changeEvent)
+      // Uncheck the checkbox (enable confirmation email)
+      pagePreviewElements.disableConfirmationEmail.checked = false
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
 
       expect(pageController.showConfirmationEmail).toBe(true)
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
     })
 
-    it('should unset showConfirmationEmail when disableConfirmationEmail "Yes" radio is checked', () => {
-      if (
-        !pagePreviewElements.disableConfirmationEmailNo ||
-        !pagePreviewElements.disableConfirmationEmailYes
-      ) {
-        throw new Error('confirmation email radios not found')
+    it('should unset showConfirmationEmail when checkbox is checked', () => {
+      if (!pagePreviewElements.disableConfirmationEmail) {
+        throw new Error('confirmation email checkbox not found')
       }
 
-      // Initially "No" is checked (showConfirmationEmail is true)
+      // Initially checkbox is unchecked (showConfirmationEmail is true)
       expect(pageController.showConfirmationEmail).toBe(true)
       jest.clearAllMocks()
 
-      // Now disable it
-      pagePreviewElements.disableConfirmationEmailYes.checked = true
-      pagePreviewElements.disableConfirmationEmailYes.dispatchEvent(changeEvent)
+      // Check the checkbox to disable confirmation email
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
 
       expect(pageController.showConfirmationEmail).toBe(false)
       expect(pageRendererCb).toHaveBeenCalledTimes(1)
     })
 
-    it('should toggle showConfirmationEmail multiple times via radio buttons', () => {
-      if (
-        !pagePreviewElements.disableConfirmationEmailNo ||
-        !pagePreviewElements.disableConfirmationEmailYes
-      ) {
-        throw new Error('confirmation email radios not found')
+    it('should toggle showConfirmationEmail multiple times via checkbox', () => {
+      if (!pagePreviewElements.disableConfirmationEmail) {
+        throw new Error('confirmation email checkbox not found')
       }
 
-      // Initially "No" is checked (showConfirmationEmail is true)
+      // Initially checkbox is unchecked (showConfirmationEmail is true)
       expect(pageController.showConfirmationEmail).toBe(true)
       jest.clearAllMocks()
 
-      // Disable confirmation email
-      pagePreviewElements.disableConfirmationEmailYes.checked = true
-      pagePreviewElements.disableConfirmationEmailYes.dispatchEvent(changeEvent)
+      // Check to disable confirmation email
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
       expect(pageController.showConfirmationEmail).toBe(false)
       expect(pageRendererCb).toHaveBeenCalledTimes(1)
 
-      // Enable again
-      pagePreviewElements.disableConfirmationEmailNo.checked = true
-      pagePreviewElements.disableConfirmationEmailNo.dispatchEvent(changeEvent)
+      // Uncheck to enable again
+      pagePreviewElements.disableConfirmationEmail.checked = false
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
       expect(pageController.showConfirmationEmail).toBe(true)
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
 
-      // Disable again
-      pagePreviewElements.disableConfirmationEmailYes.checked = true
-      pagePreviewElements.disableConfirmationEmailYes.dispatchEvent(changeEvent)
+      // Check to disable again
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
       expect(pageController.showConfirmationEmail).toBe(false)
       expect(pageRendererCb).toHaveBeenCalledTimes(3)
     })
 
-    it('should not call setShowConfirmationEmail when radio is checked but not the "No" option', () => {
-      if (
-        !pagePreviewElements.disableConfirmationEmailNo ||
-        !pagePreviewElements.disableConfirmationEmailYes
-      ) {
-        throw new Error('confirmation email radios not found')
+    it('should call setShowConfirmationEmail when checkbox is unchecked', () => {
+      if (!pagePreviewElements.disableConfirmationEmail) {
+        throw new Error('confirmation email checkbox not found')
+      }
+
+      // First check it
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
+      jest.clearAllMocks()
+
+      // Now uncheck it - should trigger setShowConfirmationEmail
+      pagePreviewElements.disableConfirmationEmail.checked = false
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
+      expect(pageController.showConfirmationEmail).toBe(true)
+      expect(pageRendererCb).toHaveBeenCalledTimes(1)
+    })
+
+    it('should call unsetShowConfirmationEmail when checkbox is checked', () => {
+      if (!pagePreviewElements.disableConfirmationEmail) {
+        throw new Error('confirmation email checkbox not found')
       }
 
       jest.clearAllMocks()
 
-      // Set "No" to unchecked and dispatch - should not trigger since checked is false
-      pagePreviewElements.disableConfirmationEmailNo.checked = false
-      pagePreviewElements.disableConfirmationEmailNo.dispatchEvent(changeEvent)
-      // Renderer should not be called since the radio wasn't checked
-      expect(pageRendererCb).toHaveBeenCalledTimes(0)
+      // Check the checkbox - should trigger unsetShowConfirmationEmail
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
+      expect(pageController.showConfirmationEmail).toBe(false)
+      expect(pageRendererCb).toHaveBeenCalledTimes(1)
     })
 
-    it('should not call unsetShowConfirmationEmail when radio is unchecked', () => {
-      if (
-        !pagePreviewElements.disableConfirmationEmailNo ||
-        !pagePreviewElements.disableConfirmationEmailYes
-      ) {
-        throw new Error('confirmation email radios not found')
-      }
-
-      jest.clearAllMocks()
-
-      // Set "Yes" to unchecked and dispatch - should not trigger since checked is false
-      pagePreviewElements.disableConfirmationEmailYes.checked = false
-      pagePreviewElements.disableConfirmationEmailYes.dispatchEvent(changeEvent)
-      // Renderer should not be called since the radio wasn't checked
-      expect(pageRendererCb).toHaveBeenCalledTimes(0)
-    })
-
-    it('should return correct listeners array including confirmation email listeners', () => {
+    it('should return correct listeners array including confirmation email listener', () => {
       const listeners = pageListeners.getListeners()
 
-      // Verify we have listeners for confirmation email radios
-      const disableConfirmationEmailNoListener = listeners.find(
+      // Verify we have listener for confirmation email checkbox
+      const disableConfirmationEmailListener = listeners.find(
         (listener) =>
-          listener[0] === pagePreviewElements.disableConfirmationEmailNo
-      )
-      const disableConfirmationEmailYesListener = listeners.find(
-        (listener) =>
-          listener[0] === pagePreviewElements.disableConfirmationEmailYes
+          listener[0] === pagePreviewElements.disableConfirmationEmail
       )
 
-      expect(disableConfirmationEmailNoListener).toBeDefined()
-      expect(disableConfirmationEmailNoListener?.[2]).toBe('change')
-      expect(disableConfirmationEmailYesListener).toBeDefined()
-      expect(disableConfirmationEmailYesListener?.[2]).toBe('change')
+      expect(disableConfirmationEmailListener).toBeDefined()
+      expect(disableConfirmationEmailListener?.[2]).toBe('change')
     })
 
     it('should handle mixed declaration and confirmation email interactions', () => {
@@ -527,8 +508,7 @@ describe('summary page controller', () => {
         !pagePreviewElements.declarationTextElement ||
         !pagePreviewElements.needDeclarationYes ||
         !pagePreviewElements.needDeclarationNo ||
-        !pagePreviewElements.disableConfirmationEmailNo ||
-        !pagePreviewElements.disableConfirmationEmailYes
+        !pagePreviewElements.disableConfirmationEmail
       ) {
         throw new Error('elements not found')
       }
@@ -540,9 +520,9 @@ describe('summary page controller', () => {
       pagePreviewElements.needDeclarationYes.dispatchEvent(changeEvent)
       expect(pageRendererCb).toHaveBeenCalledTimes(1)
 
-      // Disable confirmation email
-      pagePreviewElements.disableConfirmationEmailYes.checked = true
-      pagePreviewElements.disableConfirmationEmailYes.dispatchEvent(changeEvent)
+      // Check checkbox to disable confirmation email
+      pagePreviewElements.disableConfirmationEmail.checked = true
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
       expect(pageRendererCb).toHaveBeenCalledTimes(2)
 
       // Update declaration text
@@ -551,9 +531,9 @@ describe('summary page controller', () => {
       expect(pageController.guidanceText).toBe('I agree')
       expect(pageRendererCb).toHaveBeenCalledTimes(3)
 
-      // Re-enable confirmation email
-      pagePreviewElements.disableConfirmationEmailNo.checked = true
-      pagePreviewElements.disableConfirmationEmailNo.dispatchEvent(changeEvent)
+      // Uncheck checkbox to re-enable confirmation email
+      pagePreviewElements.disableConfirmationEmail.checked = false
+      pagePreviewElements.disableConfirmationEmail.dispatchEvent(changeEvent)
       expect(pageRendererCb).toHaveBeenCalledTimes(4)
 
       // Disable declaration

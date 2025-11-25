@@ -33,15 +33,11 @@ export function settingsFields(disableConfirmationEmailVal, validation) {
       id: 'disableConfirmationEmail',
       items: [
         {
-          value: 'false',
-          text: 'No'
-        },
-        {
           value: 'true',
-          text: 'Yes, I have an equivalent confirmation process'
+          text: 'Turn off the confirmation email',
+          checked: disableConfirmationEmailVal === 'true'
         }
       ],
-      value: disableConfirmationEmailVal,
       ...insertValidationErrors(validation?.formErrors.disableConfirmationEmail)
     }
   }
@@ -158,7 +154,7 @@ export function confirmationEmailSettingsViewModel(
     page?.controller === ControllerType.Summary ? 'true' : 'false'
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const fields = settingsFields(disableConfirmationEmailVal, validation)
-  const pageHeading = 'Confirmation emails'
+  const pageHeading = 'Confirmation email'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
   const previewModel = getPreviewModel(

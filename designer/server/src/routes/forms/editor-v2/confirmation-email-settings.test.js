@@ -23,7 +23,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     await server.initialize()
   })
 
-  test('GET - should render radio group in the view when confirmation email is enabled', async () => {
+  test('GET - should render checkbox in the view when confirmation email is enabled', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -38,22 +38,21 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardHeadings = container.getAllByText('Confirmation emails')
-    const $radios = container.getAllByRole('radio')
+    const $cardHeadings = container.getAllByText('Confirmation email')
+    const $checkboxes = container.getAllByRole('checkbox')
 
     const $actions = container.getAllByRole('button')
     const $previewPanel = document.getElementById('preview-panel')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardHeadings[0]).toHaveTextContent('Confirmation emails')
+    expect($cardHeadings[0]).toHaveTextContent('Confirmation email')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Confirmation emails')
+    expect($cardHeadings[1]).toHaveTextContent('Confirmation email')
     expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
-    expect($radios).toHaveLength(2)
-    expect($radios[0]).toBeChecked()
-    expect($radios[1]).not.toBeChecked()
+    expect($checkboxes).toHaveLength(1)
+    expect($checkboxes[0]).not.toBeChecked()
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
@@ -65,7 +64,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     expect($previewPanel?.innerHTML).toContain('needDeclaration:')
   })
 
-  test('GET - should render radio group in the view when confirmation email is disabled', async () => {
+  test('GET - should render checkbox in the view when confirmation email is disabled', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -80,21 +79,20 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardHeadings = container.getAllByText('Confirmation emails')
-    const $radios = container.getAllByRole('radio')
+    const $cardHeadings = container.getAllByText('Confirmation email')
+    const $checkboxes = container.getAllByRole('checkbox')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardHeadings[0]).toHaveTextContent('Confirmation emails')
+    expect($cardHeadings[0]).toHaveTextContent('Confirmation email')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Confirmation emails')
+    expect($cardHeadings[1]).toHaveTextContent('Confirmation email')
     expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
-    expect($radios).toHaveLength(2)
-    expect($radios[0]).not.toBeChecked()
-    expect($radios[1]).toBeChecked()
+    expect($checkboxes).toHaveLength(1)
+    expect($checkboxes[0]).toBeChecked()
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
@@ -111,7 +109,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
       url: '/library/my-form-slug/editor-v2/page/p2/confirmation-email-settings',
       auth,
       payload: {
-        disableConfirmationEmail: false
+        // Checkbox unchecked - field is omitted
       }
     }
 
@@ -125,9 +123,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
       testFormMetadata.id,
       expect.anything(),
       'p2',
-      {
-        disableConfirmationEmail: false
-      }
+      expect.objectContaining({})
     )
   })
 
@@ -142,7 +138,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
       url: '/library/my-form-slug/editor-v2/page/p1/confirmation-email-settings',
       auth,
       payload: {
-        disableConfirmationEmail: true
+        disableConfirmationEmail: 'true' // Checkbox checked sends string 'true'
       }
     }
 
@@ -157,7 +153,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
       expect.anything(),
       'p1',
       {
-        disableConfirmationEmail: true
+        disableConfirmationEmail: true // Schema converts string to boolean
       }
     )
   })

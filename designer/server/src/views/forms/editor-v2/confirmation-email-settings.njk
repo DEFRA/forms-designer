@@ -5,7 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
@@ -49,15 +49,15 @@
 
         {% call govukFieldset({
           legend: {
-            text: "Do you want to turn off confirmation emails?",
+            text: "Do you want to turn off the confirmation email?",
             classes: "govuk-fieldset__legend--m",
             isPageHeading: false
           }
         }) %}
 
-          <p class="govuk-body">You can remove the option for users to receive a confirmation email if you have an equivalent confirmation process</p>
+          <p class="govuk-body">The confirmation email is switched on by default but you can turn it off if you have an equivalent confirmation process.</p>
 
-          {{ govukRadios(fields.disableConfirmationEmail) }}
+          {{ govukCheckboxes(fields.disableConfirmationEmail) }}
 
           <div class="govuk-button-group govuk-!-margin-top-6">
             {{ govukSkipLink({

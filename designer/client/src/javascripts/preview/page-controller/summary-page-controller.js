@@ -35,11 +35,7 @@ export class SummaryPagePreviewDomElements extends DomElements {
   /**
    * @type {HTMLInputElement|null}
    */
-  disableConfirmationEmailNo = null
-  /**
-   * @type {HTMLInputElement|null}
-   */
-  disableConfirmationEmailYes = null
+  disableConfirmationEmail = null
   /**
    * @type {boolean}
    */
@@ -74,11 +70,8 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.needDeclarationForm = /** @type {HTMLFormElement|null} */ (
       document.getElementById('checkAnswersForm')
     )
-    this.disableConfirmationEmailNo = /** @type {HTMLInputElement|null} */ (
+    this.disableConfirmationEmail = /** @type {HTMLInputElement|null} */ (
       document.getElementById('disableConfirmationEmail')
-    )
-    this.disableConfirmationEmailYes = /** @type {HTMLInputElement|null} */ (
-      document.getElementById('disableConfirmationEmail-2')
     )
     this.showConfirmationEmailFallback = initialState.showConfirmationEmail
     this.declarationTextFallback = initialState.declarationText
@@ -110,11 +103,10 @@ export class SummaryPagePreviewDomElements extends DomElements {
   }
 
   get showConfirmationEmail() {
-    // If radio buttons exist (on confirmation-email-settings page), read from them
-    if (this.disableConfirmationEmailNo || this.disableConfirmationEmailYes) {
-      // If "No" is checked, show confirmation email
-      // If "Yes" is checked (disable), don't show confirmation email
-      return this.disableConfirmationEmailNo?.checked ?? true
+    // If check-box exists (on confirmation-email-settings page), read from it
+    if (this.disableConfirmationEmail) {
+      // If is checked, don't show confirmation email
+      return !this.disableConfirmationEmail.checked
     }
     // Otherwise (on check-answers-settings page), read from server-provided fallback
     return this.showConfirmationEmailFallback
@@ -161,20 +153,7 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
         }
       }
     },
-    disableConfirmationEmailNo: {
-      change: {
-        /**
-         * @param {Event} inputEvent
-         */
-        handleEvent: (inputEvent) => {
-          const checked = getTargetChecked(inputEvent)
-          if (checked) {
-            this._pageController.setShowConfirmationEmail()
-          }
-        }
-      }
-    },
-    disableConfirmationEmailYes: {
+    disableConfirmationEmail: {
       change: {
         /**
          * @param {Event} inputEvent
@@ -183,6 +162,8 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
           const checked = getTargetChecked(inputEvent)
           if (checked) {
             this._pageController.unsetShowConfirmationEmail()
+          } else {
+            this._pageController.setShowConfirmationEmail()
           }
         }
       }
@@ -241,13 +222,8 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
         'change'
       ],
       [
-        this._summaryPageElements.disableConfirmationEmailNo,
-        this._listeners.disableConfirmationEmailNo.change,
-        'change'
-      ],
-      [
-        this._summaryPageElements.disableConfirmationEmailYes,
-        this._listeners.disableConfirmationEmailYes.change,
+        this._summaryPageElements.disableConfirmationEmail,
+        this._listeners.disableConfirmationEmail.change,
         'change'
       ],
       [
