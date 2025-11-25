@@ -11,7 +11,9 @@ describe('file-type-utils', () => {
       expect(allowedParentFileTypes).toEqual([
         { value: 'documents', text: 'Documents' },
         { value: 'images', text: 'Images' },
-        { value: 'tabular-data', text: 'Tabular data' }
+        { value: 'tabular-data', text: 'Tabular data' },
+        { divider: 'or' },
+        { value: 'any', text: 'Accept any file', behaviour: 'exclusive' }
       ])
     })
   })
@@ -118,6 +120,39 @@ describe('file-type-utils', () => {
         })
       ).toEqual({})
     })
+
+    it('should return empty object when "any" file type is selected', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['any'],
+          documentTypes: [],
+          imageTypes: [],
+          tabularDataTypes: []
+        })
+      ).toEqual({})
+    })
+
+    it('should return empty object when "any" is selected with other file types', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['any', 'documents', 'images'],
+          documentTypes: ['doc', 'docx'],
+          imageTypes: ['jpg', 'png'],
+          tabularDataTypes: []
+        })
+      ).toEqual({})
+    })
+
+    it('should return empty object when "any" is selected even with subtypes defined', () => {
+      expect(
+        mapPayloadToFileMimeTypes({
+          fileTypes: ['any'],
+          documentTypes: ['pdf', 'doc'],
+          imageTypes: ['jpg'],
+          tabularDataTypes: ['csv']
+        })
+      ).toEqual({})
+    })
   })
 
   describe('getSelectedFileTypesFromCSVMimeTypes', () => {
@@ -172,7 +207,7 @@ describe('file-type-utils', () => {
       expect(result).toEqual({})
     })
 
-    it('should return empty arrays when no accept string provided', () => {
+    it('should return array with "any" option when no accept string provided', () => {
       const question = {
         type: 'FileUploadField',
         options: {}
@@ -182,7 +217,26 @@ describe('file-type-utils', () => {
         /** @type {ComponentDef} */ (question)
       )
       expect(result).toEqual({
-        fileTypes: [],
+        fileTypes: ['any'],
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
+      })
+    })
+
+    it('should return array with "any" option when accept is empty string with whitespace', () => {
+      const question = {
+        type: 'FileUploadField',
+        options: {
+          accept: '   '
+        }
+      }
+
+      const result = getSelectedFileTypesFromCSVMimeTypes(
+        /** @type {ComponentDef} */ (question)
+      )
+      expect(result).toEqual({
+        fileTypes: ['any'],
         documentTypes: [],
         imageTypes: [],
         tabularDataTypes: []

@@ -1,4 +1,26 @@
 /**
+ * Collects selected file types from checkboxes
+ * @param {string} parentId - ID of the parent checkbox
+ * @param {string} checkboxName - Name attribute of the child checkboxes
+ * @param {string[]} selectedTypes - Array to push selected types into
+ */
+function collectSelectedTypes(parentId, checkboxName, selectedTypes) {
+  const parent = /** @type {HTMLInputElement | null} */ (
+    document.getElementById(parentId)
+  )
+  if (parent?.checked) {
+    document
+      .querySelectorAll(`input[name="${checkboxName}"]:checked`)
+      .forEach((checkbox) => {
+        const label = document.querySelector(`label[for="${checkbox.id}"]`)
+        if (label) {
+          selectedTypes.push((label.textContent ?? '').trim())
+        }
+      })
+  }
+}
+
+/**
  * Updates file type text based on selected checkboxes
  */
 export function updateFileTypes() {
@@ -10,45 +32,14 @@ export function updateFileTypes() {
   /** @type {string[]} */
   const selectedTypes = []
 
-  const docsParent = document.getElementById('fileTypes')
-  if (/** @type {HTMLInputElement} */ (docsParent)?.checked) {
-    document
-      .querySelectorAll('input[name="documentTypes"]:checked')
-      .forEach((checkbox) => {
-        const label = document.querySelector(`label[for="${checkbox.id}"]`)
-        if (label) {
-          selectedTypes.push((label.textContent ?? '').trim())
-        }
-      })
+  const anyOption = document.getElementById('fileTypes-5')
+  if (/** @type {HTMLInputElement} */ (anyOption)?.checked) {
+    selectedTypes.push('any')
   }
 
-  const imagesParent = /** @type {HTMLInputElement | null} */ (
-    document.getElementById('fileTypes-2')
-  )
-  if (imagesParent?.checked) {
-    document
-      .querySelectorAll('input[name="imageTypes"]:checked')
-      .forEach((checkbox) => {
-        const label = document.querySelector(`label[for="${checkbox.id}"]`)
-        if (label) {
-          selectedTypes.push((label.textContent ?? '').trim())
-        }
-      })
-  }
-
-  const tabularParent = /** @type {HTMLInputElement | null} */ (
-    document.getElementById('fileTypes-3')
-  )
-  if (tabularParent?.checked) {
-    document
-      .querySelectorAll('input[name="tabularDataTypes"]:checked')
-      .forEach((checkbox) => {
-        const label = document.querySelector(`label[for="${checkbox.id}"]`)
-        if (label) {
-          selectedTypes.push((label.textContent ?? '').trim())
-        }
-      })
-  }
+  collectSelectedTypes('fileTypes', 'documentTypes', selectedTypes)
+  collectSelectedTypes('fileTypes-2', 'imageTypes', selectedTypes)
+  collectSelectedTypes('fileTypes-3', 'tabularDataTypes', selectedTypes)
 
   let displayText = '[files types you accept]'
 
@@ -62,6 +53,15 @@ export function updateFileTypes() {
   }
 
   fileTypeSpans.forEach((span) => {
+    // Remove the enclosing li if 'any' is selected
+    if (selectedTypes.includes('any')) {
+      const li = span.closest('li')
+      if (li) {
+        li.remove()
+      }
+      return
+    }
+
     span.textContent = displayText
 
     const errorMessage = span.closest('.govuk-error-message')

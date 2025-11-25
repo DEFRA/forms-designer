@@ -30,6 +30,9 @@
     "prepare": "husky || true",
     "start": "npm run start --workspace designer",
     "test": "jest --color --coverage --verbose",
+    "test:changed": "jest --coverage --changedSince=origin/main --coverageReporters=text",
+    "test:since": "jest --coverage --coverageReporters=text --changedSince",
+    "test:uncommitted": "jest --coverage --onlyChanged --coverageReporters=text",
     "test:watch": "jest --color --watch"
   },
   "devDependencies": {

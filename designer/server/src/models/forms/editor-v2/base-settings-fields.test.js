@@ -530,6 +530,118 @@ describe('editor-v2 - advanced settings fields model', () => {
     })
   })
 
+  describe('fileTypes validation', () => {
+    it('should validate successfully when "any" file type is selected alone', () => {
+      const payload = {
+        question: 'Upload a file',
+        hintText: '',
+        shortDescription: 'file upload',
+        questionType: 'FileUploadField',
+        name: 'fileUpload',
+        fileTypes: ['any'],
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: []
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toBeUndefined()
+      expect(validated.value.fileTypes).toEqual(['any'])
+    })
+
+    it('should fail validation when "any" is selected with documents', () => {
+      const payload = {
+        question: 'Upload a file',
+        hintText: '',
+        shortDescription: 'file upload',
+        questionType: 'FileUploadField',
+        name: 'fileUpload',
+        fileTypes: ['any', 'documents'],
+        documentTypes: ['pdf'],
+        imageTypes: [],
+        tabularDataTypes: []
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError(
+          'When any file type is allowed, no other file types can be selected',
+          [],
+          []
+        )
+      )
+    })
+
+    it('should fail validation when "any" is selected with images', () => {
+      const payload = {
+        question: 'Upload a file',
+        hintText: '',
+        shortDescription: 'file upload',
+        questionType: 'FileUploadField',
+        name: 'fileUpload',
+        fileTypes: ['any', 'images'],
+        documentTypes: [],
+        imageTypes: ['jpg'],
+        tabularDataTypes: []
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError(
+          'When any file type is allowed, no other file types can be selected',
+          [],
+          []
+        )
+      )
+    })
+
+    it('should fail validation when "any" is selected with tabular-data', () => {
+      const payload = {
+        question: 'Upload a file',
+        hintText: '',
+        shortDescription: 'file upload',
+        questionType: 'FileUploadField',
+        name: 'fileUpload',
+        fileTypes: ['any', 'tabular-data'],
+        documentTypes: [],
+        imageTypes: [],
+        tabularDataTypes: ['csv']
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError(
+          'When any file type is allowed, no other file types can be selected',
+          [],
+          []
+        )
+      )
+    })
+
+    it('should fail validation when "any" is selected with multiple other file types', () => {
+      const payload = {
+        question: 'Upload a file',
+        hintText: '',
+        shortDescription: 'file upload',
+        questionType: 'FileUploadField',
+        name: 'fileUpload',
+        fileTypes: ['any', 'documents', 'images', 'tabular-data'],
+        documentTypes: ['pdf'],
+        imageTypes: ['jpg'],
+        tabularDataTypes: ['csv']
+      }
+
+      const validated = baseSchema.validate(payload)
+      expect(validated.error).toEqual(
+        new ValidationError(
+          'When any file type is allowed, no other file types can be selected',
+          [],
+          []
+        )
+      )
+    })
+  })
+
   describe('getQuestionFieldList', () => {
     test('should return fileTypes for FileUploadField', () => {
       const fileUploadFields = getQuestionFieldList(
