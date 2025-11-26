@@ -1,6 +1,7 @@
 import {
   ComponentType,
   FormStatus,
+  getPageTitle,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
@@ -51,7 +52,7 @@ function buildSectionsWithPages(definition) {
       .map((page) => ({
         id: page.id ?? '',
         path: page.path,
-        title: page.title,
+        title: getPageTitle(page),
         isGuidance: isGuidancePage(page)
       }))
   }))
@@ -69,7 +70,7 @@ function getUnassignedPages(definition, currentPageId) {
     .map((page) => ({
       id: page.id ?? '',
       path: page.path,
-      title: page.title,
+      title: getPageTitle(page),
       isGuidance: isGuidancePage(page)
     }))
 }
@@ -85,7 +86,7 @@ function getUnassignedPagesForPreview(definition) {
     .map((page) => ({
       id: page.id ?? '',
       path: page.path,
-      title: page.title,
+      title: getPageTitle(page),
       isGuidance: isGuidancePage(page)
     }))
 }

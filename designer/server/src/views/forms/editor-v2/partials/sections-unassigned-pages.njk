@@ -1,0 +1,41 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<div class="app-unassigned-container">
+  <div class="app-unassigned-header">
+    <h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-0">Unassigned pages</h2>
+  </div>
+  <ul class="govuk-list govuk-!-margin-bottom-0 app-unassigned-list">
+    {% for page in unassignedPages %}
+    <li class="app-page-item">
+      <form method="post" action="{{ currentPath }}" class="app-assign-form">
+        <input type="hidden" name="operation" value="assign-page">
+        <input type="hidden" name="pageId" value="{{ page.id }}">
+
+        <div class="app-assign-form__content">
+          <div class="app-page-item__details">
+            {% if page.isGuidance %}
+              <span class="app-page-item__type">Guidance page</span>
+            {% endif %}
+            <span class="govuk-body">{{ page.title }}</span>
+          </div>
+        </div>
+
+        <div class="app-assign-form__controls">
+          <select class="govuk-select" name="sectionId" required {% if sections.length == 0 %}disabled{% endif %}>
+            <option value="">Select section</option>
+            {% for section in sections %}
+            <option value="{{ section.name }}">{{ section.title }}</option>
+            {% endfor %}
+          </select>
+
+          {{ govukButton({
+            text: "Assign",
+            classes: "govuk-button--secondary govuk-!-margin-bottom-0",
+            disabled: sections.length == 0
+          }) }}
+        </div>
+      </form>
+    </li>
+    {% endfor %}
+  </ul>
+</div>

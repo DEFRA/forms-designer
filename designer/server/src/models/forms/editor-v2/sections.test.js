@@ -353,6 +353,32 @@ describe('sections model', () => {
       expect(result.unassignedPages[0].id).toBe('')
     })
 
+    it('should use first question title when page has no title', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: '',
+            components: [
+              buildTextFieldComponent({ title: 'What is your name?' })
+            ]
+          }),
+          buildSummaryPage({ id: 'cya-page' })
+        ],
+        sections: []
+      })
+
+      const result = sectionsViewModel(
+        baseMetadata,
+        definition,
+        'cya-page',
+        undefined,
+        undefined
+      )
+
+      expect(result.unassignedPages[0].title).toBe('What is your name?')
+    })
+
     it('should handle hideTitle defaulting to false when undefined', () => {
       const definition = buildDefinition({
         pages: [buildSummaryPage({ id: 'cya-page' })],

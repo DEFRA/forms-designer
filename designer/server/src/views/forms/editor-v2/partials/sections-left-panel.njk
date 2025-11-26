@@ -1,0 +1,104 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+<div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
+  <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
+    <dl class="govuk-summary-list" role="presentation">
+      <div class="govuk-summary-list__row">
+        <dd class="govuk-summary-list__value">
+          <div class="govuk-grid-row" id="page-settings-container-1">
+            <div id="card-1">
+              <div class="govuk-summary-card__content">
+
+                <div class="app-tab-container">
+                  <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId + '/check-answers-settings') }}">
+                    Page settings
+                  </a>
+                  <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId + '/confirmation-email-settings') }}">
+                    Confirmation emails
+                  </a>
+                  <span class="editor-card-title app-tab-current" aria-current="page">
+                    Sections
+                  </span>
+                </div>
+
+                <div class="govuk-!-padding-top-3">
+                  {% if errorList | length %}
+                    {{ govukErrorSummary({
+                      titleText: "There is a problem",
+                      errorList: errorList,
+                      classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+                    }) }}
+                  {% endif %}
+
+                  {% if notification | length %}
+                    {% call govukNotificationBanner({
+                      type: "success"
+                    }) %}
+                      <p class="govuk-notification-banner__heading">{{ notification }}</p>
+                    {% endcall %}
+                  {% endif %}
+
+                  <p class="govuk-body">
+                    You can group related pages into sections to help break up the check your answers page.
+                    Guidance only pages can be added to sections but will not appear on the check your answers page.
+                  </p>
+
+                  {{ govukWarningText({
+                    text: "Sections only change the order of questions on the check your answers page, not in the form itself.",
+                    iconFallbackText: "Warning"
+                  }) }}
+
+                  <form method="post" action="{{ currentPath }}">
+                    <input type="hidden" name="operation" value="add-section">
+
+                    {{ govukInput({
+                      id: "section-heading",
+                      name: "sectionHeading",
+                      label: {
+                        text: "Section heading",
+                        classes: "govuk-label--m"
+                      },
+                      hint: {
+                        text: "Add a heading to group related questions together, for example, 'Business details'"
+                      },
+                      errorMessage: formErrors.sectionHeading if formErrors.sectionHeading else undefined,
+                      value: formValues.sectionHeading if formValues else undefined
+                    }) }}
+
+                    {{ govukButton({
+                      text: "+ Add section heading",
+                      classes: "govuk-!-margin-bottom-6"
+                    }) }}
+                  </form>
+
+                  <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+                  {% if sections.length > 0 %}
+                    <h2 class="govuk-heading-m govuk-!-margin-bottom-6">Pages assigned to sections</h2>
+
+                    {% for section in sections %}
+                      {%- include "../../../../views/forms/editor-v2/partials/sections-section-card.njk" -%}
+                    {% endfor %}
+                  {% endif %}
+
+                  {% if unassignedPages.length > 0 %}
+                    {%- include "../../../../views/forms/editor-v2/partials/sections-unassigned-pages.njk" -%}
+                  {% endif %}
+
+                  {% if sections.length == 0 and unassignedPages.length == 0 %}
+                    <p class="govuk-body">No pages available to organise into sections.</p>
+                  {% endif %}
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>
