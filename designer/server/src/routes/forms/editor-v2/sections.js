@@ -36,6 +36,61 @@ const OP_ASSIGN_PAGE = 'assign-page'
 const OP_UNASSIGN_PAGE = 'unassign-page'
 const OP_SAVE_SETTINGS = 'save-settings'
 
+/**
+ * @typedef {object} SectionsPayload
+ * @property {string} operation - The operation to perform (add-section, remove-section, etc.)
+ * @property {string} [sectionHeading] - The heading text for a new section
+ * @property {string} [sectionId] - The ID of the section to operate on
+ * @property {string} [pageId] - The ID of the page to assign/unassign
+ * @property {boolean} [hideTitle] - Whether to hide the section title in the form
+ */
+
+/**
+ * Handles section operations based on the operation type
+ * @param {string} operation
+ * @param {SectionsPayload} payload
+ * @param {string} formId
+ * @param {string} token
+ */
+export async function handleSectionOperation(
+  operation,
+  payload,
+  formId,
+  token
+) {
+  switch (operation) {
+    case OP_ADD_SECTION: {
+      const { sectionHeading = '' } = payload
+      await addSection(formId, token, sectionHeading)
+      return SECTION_ADDED
+    }
+    case OP_REMOVE_SECTION: {
+      const { sectionId = '' } = payload
+      await removeSection(formId, token, sectionId)
+      return SECTION_REMOVED
+    }
+    case OP_ASSIGN_PAGE: {
+      const { pageId: targetPageId = '', sectionId = '' } = payload
+      await assignPageToSection(formId, token, targetPageId, sectionId)
+      return PAGE_ASSIGNED_TO_SECTION
+    }
+    case OP_UNASSIGN_PAGE: {
+      const { pageId: targetPageId = '' } = payload
+      await unassignPageFromSection(formId, token, targetPageId)
+      return PAGE_UNASSIGNED_FROM_SECTION
+    }
+    case OP_SAVE_SETTINGS: {
+      const { sectionId = '', hideTitle } = payload
+      await updateSectionSettings(formId, token, sectionId, {
+        hideTitle: hideTitle === true
+      })
+      return CHANGES_SAVED_SUCCESSFULLY
+    }
+    default:
+      return null
+  }
+}
+
 export const schema = Joi.object().keys({
   operation: Joi.string()
     .valid(
@@ -108,14 +163,6 @@ export default [
     }
   }),
   /**
-   * @typedef {object} SectionsPayload
-   * @property {string} operation - The operation to perform (add-section, remove-section, etc.)
-   * @property {string} [sectionHeading] - The heading text for a new section
-   * @property {string} [sectionId] - The ID of the section to operate on
-   * @property {string} [pageId] - The ID of the page to assign/unassign
-   * @property {boolean} [hideTitle] - Whether to hide the section title in the form
-   */
-  /**
    * @satisfies {ServerRoute<{ Payload: SectionsPayload }>}
    */
   ({
@@ -132,55 +179,14 @@ export default [
       const metadata = await forms.get(slug, token)
 
       try {
-        switch (operation) {
-          case OP_ADD_SECTION: {
-            const { sectionHeading = '' } = payload
-            await addSection(metadata.id, token, sectionHeading)
-            yar.flash(sessionNames.successNotification, SECTION_ADDED)
-            break
-          }
-          case OP_REMOVE_SECTION: {
-            const { sectionId = '' } = payload
-            await removeSection(metadata.id, token, sectionId)
-            yar.flash(sessionNames.successNotification, SECTION_REMOVED)
-            break
-          }
-          case OP_ASSIGN_PAGE: {
-            const { pageId: targetPageId = '', sectionId = '' } = payload
-            await assignPageToSection(
-              metadata.id,
-              token,
-              targetPageId,
-              sectionId
-            )
-            yar.flash(
-              sessionNames.successNotification,
-              PAGE_ASSIGNED_TO_SECTION
-            )
-            break
-          }
-          case OP_UNASSIGN_PAGE: {
-            const { pageId: targetPageId = '' } = payload
-            await unassignPageFromSection(metadata.id, token, targetPageId)
-            yar.flash(
-              sessionNames.successNotification,
-              PAGE_UNASSIGNED_FROM_SECTION
-            )
-            break
-          }
-          case OP_SAVE_SETTINGS: {
-            const { sectionId = '', hideTitle } = payload
-            await updateSectionSettings(metadata.id, token, sectionId, {
-              hideTitle: hideTitle === true
-            })
-            yar.flash(
-              sessionNames.successNotification,
-              CHANGES_SAVED_SUCCESSFULLY
-            )
-            break
-          }
-          default:
-            break
+        const notification = await handleSectionOperation(
+          operation,
+          payload,
+          metadata.id,
+          token
+        )
+        if (notification) {
+          yar.flash(sessionNames.successNotification, notification)
         }
       } catch (error) {
         const errorInstance = /** @type {Error} */ (error)
