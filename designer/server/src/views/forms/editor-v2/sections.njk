@@ -21,11 +21,10 @@
     useNewMasthead: true
   }) %}
 
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-one-half-from-desktop">
+  <div class="govuk-grid-column-one-half-from-desktop">
 
-      <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-end">
-        <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background-very-light-grey">
+      <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-standard">
+        <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background">
           <dl class="govuk-summary-list" role="presentation">
             <div class="govuk-summary-list__row">
               <dd class="govuk-summary-list__value">
@@ -34,11 +33,11 @@
                     <div class="govuk-summary-card__content">
 
                       <div class="app-tab-container">
-                        <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId) }}">
+                        <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId + '/check-answers-settings') }}">
                           Page settings
                         </a>
-                        <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId + '/check-answers-settings') }}">
-                          Declaration
+                        <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId + '/confirmation-email-settings') }}">
+                          Confirmation emails
                         </a>
                         <span class="editor-card-title app-tab-current" aria-current="page">
                           Sections
@@ -241,9 +240,8 @@
         </div>
       </div>
 
-    </div>
-
-    <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
+  </div>
+  <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
       <div id="preview-container-inner">
         <div id="before-content" class="preview-before-content">
           <p class="govuk-body-s">Preview</p>
@@ -324,7 +322,6 @@
           </div>
         </div>
       </div>
-    </div>
   </div>
 
   {% endcall %}
