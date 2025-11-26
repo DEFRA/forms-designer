@@ -179,6 +179,8 @@ export default [
             )
             break
           }
+          default:
+            break
         }
       } catch (error) {
         const errorInstance = /** @type {Error} */ (error)

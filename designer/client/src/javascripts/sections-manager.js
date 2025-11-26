@@ -33,7 +33,9 @@ export class SectionsManager {
     const sectionHeadingInput = document.getElementById(
       SECTION_HEADING_INPUT_ID
     )
-    if (!sectionHeadingInput) return
+    if (!sectionHeadingInput) {
+      return
+    }
 
     sectionHeadingInput.addEventListener('focus', () => {
       this.showPlaceholderSection()
@@ -71,7 +73,9 @@ export class SectionsManager {
 
   showPlaceholderSection() {
     const preview = document.getElementById(SECTIONS_PREVIEW_ID)
-    if (!preview) return
+    if (!preview) {
+      return
+    }
 
     const existingSections = document.querySelectorAll(SECTION_CARD_SELECTOR)
     const nextNumber = existingSections.length + 1
@@ -120,10 +124,14 @@ export class SectionsManager {
    * @param {string | undefined} sectionId
    */
   highlightPreviewSection(sectionId) {
-    if (!sectionId) return
+    if (!sectionId) {
+      return
+    }
 
     const preview = document.getElementById(SECTIONS_PREVIEW_ID)
-    if (!preview) return
+    if (!preview) {
+      return
+    }
 
     const section = preview.querySelector(
       `[data-preview-section-id="${sectionId}"]`
@@ -141,12 +149,20 @@ export class SectionsManager {
   }
 }
 
+/**
+ * Initialises the sections manager if the required element exists.
+ * @returns {SectionsManager | null}
+ */
+export function initSectionsManager() {
+  if (document.getElementById(SECTION_HEADING_INPUT_ID)) {
+    return new SectionsManager()
+  }
+  return null
+}
+
 if (typeof document !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
-    if (document.getElementById(SECTION_HEADING_INPUT_ID)) {
-      // eslint-disable-next-line no-new
-      new SectionsManager()
-    }
+    initSectionsManager()
   })
 }
 
