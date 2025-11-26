@@ -70,10 +70,10 @@ $page-item-spacing: govuk-spacing(2);
   }
 
   &__type {
-    @include govuk-font($size: 16);
-
     color: govuk-colour("dark-grey");
     display: block;
+
+    @include govuk-font($size: 16);
   }
 }
 
