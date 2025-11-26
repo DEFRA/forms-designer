@@ -1,0 +1,331 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageTitle,
+    caption: cardCaption,
+    classes: "govuk-grid-column-full",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half-from-desktop">
+
+      <div class="govuk-summary-card govuk-!-margin-top-0 pages-panel-left-end">
+        <div class="govuk-summary-card__content govuk-!-padding-top-0 editor-card-background-very-light-grey">
+          <dl class="govuk-summary-list" role="presentation">
+            <div class="govuk-summary-list__row">
+              <dd class="govuk-summary-list__value">
+                <div class="govuk-grid-row" id="page-settings-container-1">
+                  <div id="card-1">
+                    <div class="govuk-summary-card__content">
+
+                      <div class="app-tab-container">
+                        <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId) }}">
+                          Page settings
+                        </a>
+                        <a class="editor-card-title app-tab-link" href="{{ editorv2Path(slug, 'page/' + pageId + '/check-answers-settings') }}">
+                          Declaration
+                        </a>
+                        <span class="editor-card-title app-tab-current" aria-current="page">
+                          Sections
+                        </span>
+                      </div>
+
+                      <div class="govuk-!-padding-top-3">
+                        {% if errorList | length %}
+                          {{ govukErrorSummary({
+                            titleText: "There is a problem",
+                            errorList: errorList,
+                            classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+                          }) }}
+                        {% endif %}
+
+                        {% if notification | length %}
+                          {% call govukNotificationBanner({
+                            type: "success"
+                          }) %}
+                            <p class="govuk-notification-banner__heading">{{ notification }}</p>
+                          {% endcall %}
+                        {% endif %}
+
+                        <p class="govuk-body">
+                          You can group related pages into sections to help break up the check your answers page.
+                          Guidance only pages can be added to sections but will not appear on the check your answers page.
+                        </p>
+
+                        {{ govukWarningText({
+                          text: "Sections only change the order of questions on the check your answers page, not in the form itself.",
+                          iconFallbackText: "Warning"
+                        }) }}
+
+                        <form method="post" action="{{ currentPath }}">
+                          <input type="hidden" name="operation" value="add-section">
+
+                          {{ govukInput({
+                            id: "section-heading",
+                            name: "sectionHeading",
+                            label: {
+                              text: "Section heading",
+                              classes: "govuk-label--m"
+                            },
+                            hint: {
+                              text: "Add a heading to group related questions together, for example, 'Business details'"
+                            },
+                            errorMessage: formErrors.sectionHeading if formErrors.sectionHeading else undefined,
+                            value: formValues.sectionHeading if formValues else undefined
+                          }) }}
+
+                          {{ govukButton({
+                            text: "+ Add section heading",
+                            classes: "govuk-!-margin-bottom-6"
+                          }) }}
+                        </form>
+
+                        <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible">
+
+                        {% if sections.length > 0 %}
+                          <h2 class="govuk-heading-m govuk-!-margin-bottom-6">Pages assigned to sections</h2>
+
+                          {% for section in sections %}
+                            <div class="app-form-container {% if not loop.last %}govuk-!-margin-bottom-6{% endif %}">
+                              {% set sectionContent %}
+                                {% if section.pages.length > 0 %}
+                                  <ul class="govuk-list govuk-!-margin-bottom-0">
+                                    {% for page in section.pages %}
+                                    <li class="app-page-item">
+                                      <div class="app-page-item__content">
+                                        <div class="app-page-item__details">
+                                          {% if page.isGuidance %}
+                                            <span class="app-page-item__type">Guidance page</span>
+                                          {% endif %}
+                                          <span class="govuk-body">{{ page.title }}</span>
+                                        </div>
+                                        <form method="post" action="{{ currentPath }}" class="app-inline-form">
+                                          <input type="hidden" name="operation" value="unassign-page">
+                                          <input type="hidden" name="pageId" value="{{ page.id }}">
+                                          <button type="submit" class="govuk-link govuk-!-font-size-16">
+                                            Unassign
+                                          </button>
+                                        </form>
+                                      </div>
+                                    </li>
+                                    {% endfor %}
+                                  </ul>
+                                {% else %}
+                                  <p class="govuk-hint">Pages and guidance added to this section will appear here</p>
+                                {% endif %}
+
+                                <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+                                <form method="post" action="{{ currentPath }}">
+                                  <input type="hidden" name="operation" value="save-settings">
+                                  <input type="hidden" name="sectionId" value="{{ section.name }}">
+
+                                  <fieldset class="govuk-fieldset">
+                                    <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+                                      <h3 class="govuk-fieldset__heading">Settings</h3>
+                                    </legend>
+
+                                    {{ govukCheckboxes({
+                                      name: "hideTitle",
+                                      classes: "govuk-checkboxes--small",
+                                      items: [{
+                                        value: "true",
+                                        text: "Hide section headings from pages in the form",
+                                        hint: {
+                                          text: "Users will only see this section heading on the check your answers page"
+                                        },
+                                        checked: section.hideTitle
+                                      }]
+                                    }) }}
+
+                                    {{ govukButton({
+                                      text: "Save settings"
+                                    }) }}
+                                  </fieldset>
+                                </form>
+                              {% endset %}
+
+                              {% set sectionActions %}
+                                <form method="post" action="{{ currentPath }}" class="app-inline-form">
+                                  <input type="hidden" name="operation" value="remove-section">
+                                  <input type="hidden" name="sectionId" value="{{ section.name }}">
+                                  {{ govukButton({
+                                    text: "Remove section",
+                                    classes: "govuk-button--warning"
+                                  }) }}
+                                </form>
+                              {% endset %}
+
+                              <div class="govuk-summary-card app-section-card" data-section-id="{{ section.name }}">
+                                <div class="govuk-summary-card__title-wrapper">
+                                  <h2 class="govuk-summary-card__title">Section {{ section.number }}: {{ section.title }}</h2>
+                                  <div class="govuk-summary-card__actions">
+                                    {{ sectionActions | safe }}
+                                  </div>
+                                </div>
+                                <div class="govuk-summary-card__content">
+                                  {{ sectionContent | safe }}
+                                </div>
+                              </div>
+                          </div>
+                          {% endfor %}
+                        {% endif %}
+
+                        {% if unassignedPages.length > 0 %}
+                          <div class="app-unassigned-container">
+                            <div class="app-unassigned-header">
+                              <h2 class="govuk-heading-m govuk-!-margin-bottom-0 govuk-!-margin-top-0">Unassigned pages</h2>
+                            </div>
+                            <ul class="govuk-list govuk-!-margin-bottom-0 app-unassigned-list">
+                              {% for page in unassignedPages %}
+                              <li class="app-page-item">
+                                <form method="post" action="{{ currentPath }}" class="app-assign-form">
+                                  <input type="hidden" name="operation" value="assign-page">
+                                  <input type="hidden" name="pageId" value="{{ page.id }}">
+
+                                  <div class="app-assign-form__content">
+                                    <div class="app-page-item__details">
+                                      {% if page.isGuidance %}
+                                        <span class="app-page-item__type">Guidance page</span>
+                                      {% endif %}
+                                      <span class="govuk-body">{{ page.title }}</span>
+                                    </div>
+                                  </div>
+
+                                  <div class="app-assign-form__controls">
+                                    <select class="govuk-select" name="sectionId" required {% if sections.length == 0 %}disabled{% endif %}>
+                                      <option value="">Select section</option>
+                                      {% for section in sections %}
+                                      <option value="{{ section.name }}">{{ section.title }}</option>
+                                      {% endfor %}
+                                    </select>
+
+                                    {{ govukButton({
+                                      text: "Assign",
+                                      classes: "govuk-button--secondary govuk-!-margin-bottom-0",
+                                      disabled: sections.length == 0
+                                    }) }}
+                                  </div>
+                                </form>
+                              </li>
+                              {% endfor %}
+                            </ul>
+                          </div>
+                        {% endif %}
+
+                        {% if sections.length == 0 and unassignedPages.length == 0 %}
+                          <p class="govuk-body">No pages available to organise into sections.</p>
+                        {% endif %}
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
+      <div id="preview-container-inner">
+        <div id="before-content" class="preview-before-content">
+          <p class="govuk-body-s">Preview</p>
+        </div>
+
+        <div class="govuk-!-margin-top-9">
+          <div class="govuk-tabs" data-module="govuk-tabs">
+            <h2 class="govuk-tabs__title">Contents</h2>
+            <ul class="govuk-tabs__list" role="tablist">
+              <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+                <a class="govuk-tabs__tab" href="#tab-preview" id="tab-preview-link" role="tab" aria-controls="tab-preview">Page preview</a>
+              </li>
+            </ul>
+
+            <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab-preview-link" tabindex="0">
+              <p class="govuk-body-s">
+                <a href="{{ previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+                  Preview this page in a new tab
+                </a>
+              </p>
+              <div id="preview-panel-content">
+                <div id="preview-panel-inner">
+                  <h3 class="govuk-heading-l">Check your answers before sending your form</h3>
+
+                  <div id="sections-preview">
+                    {% for section in previewModel.sections %}
+                      {% if section.pages.length > 0 %}
+                        <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+                        <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                          {% for page in section.pages %}
+                          <div class="govuk-summary-list__row">
+                            <dt class="govuk-summary-list__key">{{ page.title }}</dt>
+                            <dd class="govuk-summary-list__value">Answer goes here</dd>
+                            <dd class="govuk-summary-list__actions">
+                              <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                                Change<span class="govuk-visually-hidden"> {{ page.title }}</span>
+                              </a>
+                            </dd>
+                          </div>
+                          {% endfor %}
+                        </dl>
+                      {% else %}
+                        <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+                        <p class="govuk-hint">No pages in this section</p>
+                      {% endif %}
+                    {% endfor %}
+
+                    {% if previewModel.unassignedPages.length > 0 %}
+                      <dl class="govuk-summary-list">
+                        {% for page in previewModel.unassignedPages %}
+                        <div class="govuk-summary-list__row">
+                          <dt class="govuk-summary-list__key">{{ page.title }}</dt>
+                          <dd class="govuk-summary-list__value">Answer goes here</dd>
+                          <dd class="govuk-summary-list__actions">
+                            <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                              Change<span class="govuk-visually-hidden"> {{ page.title }}</span>
+                            </a>
+                          </dd>
+                        </div>
+                        {% endfor %}
+                      </dl>
+                    {% endif %}
+                  </div>
+
+                  {% if previewModel.declaration.hasDeclaration %}
+                    <h4 class="govuk-heading-m">Declaration</h4>
+                    <div class="app-prose-scope">
+                      {{ previewModel.declaration.declarationText | markdown | safe }}
+                    </div>
+                  {% endif %}
+
+                  <button type="button" class="govuk-button govuk-button--disabled" disabled aria-disabled="true">
+                    {% if previewModel.declaration.hasDeclaration %}Accept and send{% else %}Send{% endif %}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% endcall %}
+{% endblock %}
