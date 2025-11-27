@@ -11,6 +11,7 @@ import {
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import * as forms from '~/src/lib/forms.js'
 import {
   removeUniquelyMappedListFromQuestion,
   removeUniquelyMappedListsFromPage
@@ -23,6 +24,7 @@ import {
   slugify,
   stringHasValue
 } from '~/src/lib/utils.js'
+import { SECTION_NAME_ALREADY_EXISTS } from '~/src/models/forms/editor-v2/common.js'
 
 const formsEndpoint = new URL('/forms/', config.managerUrl)
 
@@ -638,6 +640,114 @@ export async function deleteCondition(formId, token, conditionId) {
   await delJson(buildRequestUrl(formId, `conditions/${conditionId}`), {
     ...getHeaders(token)
   })
+}
+
+/**
+ * Add a new section to the form
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} sectionTitle
+ */
+export async function addSection(formId, token, sectionTitle) {
+  const definition = await forms.getDraftFormDefinition(formId, token)
+  const sectionName = slugify(sectionTitle)
+
+  if (definition.sections.some((s) => s.name === sectionName)) {
+    throw new Error(SECTION_NAME_ALREADY_EXISTS)
+  }
+
+  definition.sections.push({
+    name: sectionName,
+    title: sectionTitle,
+    hideTitle: false
+  })
+
+  await forms.updateDraftFormDefinition(formId, definition, token)
+  return definition
+}
+
+/**
+ * Remove a section from the form and unassign all pages from it
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} sectionName
+ */
+export async function removeSection(formId, token, sectionName) {
+  const definition = await forms.getDraftFormDefinition(formId, token)
+
+  definition.pages.forEach((page) => {
+    if (page.section === sectionName) {
+      delete page.section
+    }
+  })
+
+  definition.sections = definition.sections.filter(
+    (s) => s.name !== sectionName
+  )
+
+  await forms.updateDraftFormDefinition(formId, definition, token)
+  return definition
+}
+
+/**
+ * Assign a page to a section
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ * @param {string} sectionName
+ */
+export async function assignPageToSection(formId, token, pageId, sectionName) {
+  const definition = await forms.getDraftFormDefinition(formId, token)
+  const page = definition.pages.find((p) => p.id === pageId)
+
+  if (page) {
+    page.section = sectionName
+  }
+
+  await forms.updateDraftFormDefinition(formId, definition, token)
+  return definition
+}
+
+/**
+ * Unassign a page from its section
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} pageId
+ */
+export async function unassignPageFromSection(formId, token, pageId) {
+  const definition = await forms.getDraftFormDefinition(formId, token)
+  const page = definition.pages.find((p) => p.id === pageId)
+
+  if (page) {
+    delete page.section
+  }
+
+  await forms.updateDraftFormDefinition(formId, definition, token)
+  return definition
+}
+
+/**
+ * Update section settings
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} sectionName
+ * @param {{ hideTitle?: boolean }} settings
+ */
+export async function updateSectionSettings(
+  formId,
+  token,
+  sectionName,
+  settings
+) {
+  const definition = await forms.getDraftFormDefinition(formId, token)
+  const section = definition.sections.find((s) => s.name === sectionName)
+
+  if (section) {
+    section.hideTitle = settings.hideTitle ?? false
+  }
+
+  await forms.updateDraftFormDefinition(formId, definition, token)
+  return definition
 }
 
 /**

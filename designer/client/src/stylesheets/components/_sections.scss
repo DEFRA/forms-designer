@@ -1,0 +1,157 @@
+@use "govuk-frontend" as *;
+
+$defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
+$page-item-spacing: govuk-spacing(2);
+
+// Tab styling for current/active tab
+.app-tab-container .app-tab-current {
+  position: relative;
+  font-weight: bold;
+  color: govuk-colour("black");
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 6px;
+    background-color: $defra-brand-colour;
+  }
+}
+
+// Section card with green left border and grey outline
+.app-form-container .govuk-summary-card.app-section-card {
+  border-left: 5px solid $defra-brand-colour;
+  outline: 1px solid govuk-colour("mid-grey");
+
+  .govuk-summary-card__title-wrapper {
+    background-color: govuk-colour("light-grey");
+    border-bottom: 0;
+    padding: govuk-spacing(3) govuk-spacing(4) govuk-spacing(1);
+  }
+
+  .govuk-summary-card__content {
+    background-color: govuk-colour("light-grey");
+    padding: govuk-spacing(1) govuk-spacing(4) govuk-spacing(4);
+
+    > .govuk-hint:first-of-type {
+      margin-top: 0;
+      margin-bottom: 0;
+    }
+
+    // Also target any paragraph that's the first element
+    > p:first-of-type {
+      margin-top: 0;
+    }
+  }
+}
+
+.app-page-item {
+  background-color: govuk-colour("white");
+  border: 1px solid govuk-colour("mid-grey");
+  border-left: 5px solid $defra-brand-colour;
+  padding: govuk-spacing(2);
+  margin-bottom: $page-item-spacing;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__details {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__type {
+    color: govuk-colour("dark-grey");
+    display: block;
+
+    @include govuk-font($size: 16);
+  }
+}
+
+// Unassigned pages container with border
+.app-unassigned-container {
+  margin-top: govuk-spacing(6);
+  outline: 1px solid govuk-colour("mid-grey");
+}
+
+// Unassigned pages header - light-grey background
+.app-unassigned-header {
+  background-color: govuk-colour("light-grey");
+  padding: govuk-spacing(3) govuk-spacing(4);
+}
+
+// Unassigned pages list container
+.app-unassigned-list {
+  background-color: govuk-tint(govuk-colour("light-grey"), 50%);
+  padding: govuk-spacing(4);
+
+  .app-page-item {
+    margin-bottom: $page-item-spacing;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+// Pages inside sections - ensure spacing is applied
+.app-section-card .app-page-item {
+  margin-bottom: $page-item-spacing;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.app-inline-form {
+  display: inline;
+}
+
+.app-assign-form {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: govuk-spacing(2);
+
+  &__content {
+    flex: 1;
+    min-width: 150px;
+  }
+
+  &__controls {
+    display: flex;
+    gap: govuk-spacing(2);
+    align-items: center;
+
+    .govuk-select {
+      width: auto;
+      min-width: 150px;
+    }
+  }
+}
+
+// Preview panel enhancements
+.app-section-highlight {
+  background-color: govuk-colour("yellow");
+  padding: govuk-spacing(1) govuk-spacing(2);
+  margin-left: -#{govuk-spacing(2)};
+  margin-right: -#{govuk-spacing(2)};
+}
+
+.section-placeholder {
+  opacity: 0.6;
+  padding: govuk-spacing(3);
+  background-color: govuk-colour("light-grey");
+  border-left: 4px solid govuk-colour("mid-grey");
+  margin-bottom: govuk-spacing(4);
+}

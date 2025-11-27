@@ -1,0 +1,84 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+<div class="app-form-container {% if not loop.last %}govuk-!-margin-bottom-6{% endif %}">
+  {% set sectionContent %}
+    {% if section.pages.length > 0 %}
+      <ul class="govuk-list govuk-!-margin-bottom-0">
+        {% for page in section.pages %}
+        <li class="app-page-item">
+          <div class="app-page-item__content">
+            <div class="app-page-item__details">
+              {% if page.isGuidance %}
+                <span class="app-page-item__type">Guidance page</span>
+              {% endif %}
+              <span class="govuk-body">{{ page.title }}</span>
+            </div>
+            <form method="post" action="{{ currentPath }}" class="app-inline-form">
+              <input type="hidden" name="operation" value="unassign-page">
+              <input type="hidden" name="pageId" value="{{ page.id }}">
+              <button type="submit" class="govuk-link govuk-!-font-size-16">
+                Unassign
+              </button>
+            </form>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="govuk-hint">Pages and guidance added to this section will appear here</p>
+    {% endif %}
+
+    <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    <form method="post" action="{{ currentPath }}">
+      <input type="hidden" name="operation" value="save-settings">
+      <input type="hidden" name="sectionId" value="{{ section.name }}">
+
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
+          <h3 class="govuk-fieldset__heading">Settings</h3>
+        </legend>
+
+        {{ govukCheckboxes({
+          name: "hideTitle",
+          classes: "govuk-checkboxes--small",
+          items: [{
+            value: "true",
+            text: "Hide section headings from pages in the form",
+            hint: {
+              text: "Users will only see this section heading on the check your answers page"
+            },
+            checked: section.hideTitle
+          }]
+        }) }}
+
+        {{ govukButton({
+          text: "Save settings"
+        }) }}
+      </fieldset>
+    </form>
+  {% endset %}
+
+  {% set sectionActions %}
+    <form method="post" action="{{ currentPath }}" class="app-inline-form">
+      <input type="hidden" name="operation" value="remove-section">
+      <input type="hidden" name="sectionId" value="{{ section.name }}">
+      {{ govukButton({
+        text: "Remove section",
+        classes: "govuk-button--warning"
+      }) }}
+    </form>
+  {% endset %}
+
+  <div class="govuk-summary-card app-section-card" data-section-id="{{ section.name }}">
+    <div class="govuk-summary-card__title-wrapper">
+      <h2 class="govuk-summary-card__title">Section {{ section.number }}: {{ section.title }}</h2>
+      <div class="govuk-summary-card__actions">
+        {{ sectionActions | safe }}
+      </div>
+    </div>
+    <div class="govuk-summary-card__content">
+      {{ sectionContent | safe }}
+    </div>
+  </div>
+</div>

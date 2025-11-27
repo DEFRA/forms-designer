@@ -1,0 +1,24 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: cardCaption,
+    classes: "govuk-grid-column-full",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+  <div class="govuk-grid-column-one-half-from-desktop">
+    {%- include "../views/forms/editor-v2/partials/sections-left-panel.njk" -%}
+  </div>
+  <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
+    {%- include "../views/forms/editor-v2/partials/sections-right-panel.njk" -%}
+  </div>
+
+  {% endcall %}
+{% endblock %}
