@@ -425,7 +425,7 @@ export function buildOsGridRefFieldComponent(
     id: '4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s',
     name: 'OsGridRefField',
     title: 'Ordnance Survey (OS) grid reference',
-    hint: 'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456',
+    hint: 'An OS grid reference number is made up of 2 letters followed by either 6, 8 or 10 numbers, for example, TQ123456',
     options: {},
     ...partialComponent,
     type: ComponentType.OsGridRefField
