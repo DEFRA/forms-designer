@@ -195,7 +195,7 @@ export default [
             formErrors: {
               sectionHeading: {
                 text: errorInstance.message,
-                href: '#section-heading'
+                href: '#sectionHeading'
               }
             },
             formValues: payload
