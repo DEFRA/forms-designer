@@ -5,14 +5,16 @@ import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   getFormSpecificNavigation,
-  getPageConditionDetails,
-  getPageNum,
-  getReferencedComponentNamesV2
+  getPageNum
 } from '~/src/models/forms/editor-v2/common.js'
 import {
   buildConditionEditor,
   getComponentsPerPageNumber
 } from '~/src/models/forms/editor-v2/condition-helper.js'
+import {
+  getPageConditionDetails,
+  getReferencedComponentNamesV2
+} from '~/src/models/forms/editor-v2/condition-helpers.js'
 import {
   determineEditUrl,
   isGuidancePage

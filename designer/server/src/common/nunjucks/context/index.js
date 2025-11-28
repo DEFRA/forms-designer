@@ -13,7 +13,7 @@ import config from '~/src/config.js'
 import {
   buildFormUrl,
   buildPreviewUrl
-} from '~/src/models/forms/editor-v2/common.js'
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
 
 const logger = createLogger()
 const { cdpEnvironment, phase, serviceName, serviceVersion } = config

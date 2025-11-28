@@ -3,10 +3,9 @@ import { FormStatus } from '@defra/forms-model'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   baseModelFields,
-  buildPreviewUrl,
-  getFormSpecificNavigation,
-  toPresentationHtmlV2
+  getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
+import { toPresentationHtmlV2 } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import {
   buildConditionsField,
   buildCoordinatorField,
@@ -14,6 +13,7 @@ import {
   getAvailableConditions,
   getSelectedConditions
 } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
+import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**

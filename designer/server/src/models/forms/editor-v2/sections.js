@@ -1,19 +1,28 @@
 import {
-  ComponentType,
+  ControllerType,
   FormStatus,
   getPageTitle,
-  hasComponentsEvenIfNoNext
+  isSummaryPage
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { getPageFromDefinition, stringHasValue } from '~/src/lib/utils.js'
+import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
   BACK_TO_ADD_AND_EDIT_PAGES,
   baseModelFields,
-  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
+import {
+  buildPreviewUrl,
+  buildSectionsForPreview,
+  getDeclarationInfo
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
+import {
+  CHECK_ANSWERS_CAPTION,
+  CHECK_ANSWERS_TAB_SECTIONS,
+  getCheckAnswersTabConfig
+} from '~/src/models/forms/editor-v2/tab-config.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -59,14 +68,19 @@ function buildSectionsWithPages(definition) {
 }
 
 /**
- * Get unassigned pages (excludes the current CYA page)
+ * Get unassigned pages that can be assigned to sections
+ * Excludes Summary and Status pages as they shouldn't appear in check answers
  * @param {FormDefinition} definition
- * @param {string} currentPageId - The CYA page ID to exclude
  * @returns {Array<PageSummary>}
  */
-function getUnassignedPages(definition, currentPageId) {
+function getUnassignedPages(definition) {
   return definition.pages
-    .filter((page) => page.id !== currentPageId && !page.section)
+    .filter(
+      (page) =>
+        !page.section &&
+        !isSummaryPage(page) &&
+        page.controller !== ControllerType.Status
+    )
     .map((page) => ({
       id: page.id ?? '',
       path: page.path,
@@ -76,41 +90,13 @@ function getUnassignedPages(definition, currentPageId) {
 }
 
 /**
- * Get all unassigned pages for preview (no exclusions)
+ * Get unassigned pages for preview, excluding guidance pages
+ * Guidance pages can be assigned to sections but won't appear on the check answers page
  * @param {FormDefinition} definition
  * @returns {Array<PageSummary>}
  */
 function getUnassignedPagesForPreview(definition) {
-  return definition.pages
-    .filter((page) => !page.section)
-    .map((page) => ({
-      id: page.id ?? '',
-      path: page.path,
-      title: getPageTitle(page),
-      isGuidance: isGuidancePage(page)
-    }))
-}
-
-/**
- * Get declaration info from the CYA page
- * @param {Page | undefined} page
- * @returns {{ hasDeclaration: boolean, declarationText: string }}
- */
-function getDeclarationInfo(page) {
-  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
-
-  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
-    components.find((comp, idx) => {
-      return comp.type === ComponentType.Markdown && idx === 0
-    })
-  )
-
-  const declarationText = guidanceComponent?.content ?? ''
-
-  return {
-    hasDeclaration: stringHasValue(declarationText),
-    declarationText
-  }
+  return getUnassignedPages(definition).filter((page) => !page.isGuidance)
 }
 
 /**
@@ -138,7 +124,8 @@ export function sectionsViewModel(
   )
 
   const sectionsWithPages = buildSectionsWithPages(definition)
-  const unassignedPages = getUnassignedPages(definition, pageId)
+  const unassignedPages = getUnassignedPages(definition)
+  const previewSections = buildSectionsForPreview(definition)
   const previewUnassignedPages = getUnassignedPagesForPreview(definition)
 
   const currentPath = `/library/${slug}/editor-v2/page/${pageId}/check-answers-settings/sections`
@@ -146,6 +133,7 @@ export function sectionsViewModel(
   const page = getPageFromDefinition(definition, pageId)
   const previewPageUrl = `${buildPreviewUrl(slug, FormStatus.Draft)}${page?.path}?force`
   const declarationInfo = getDeclarationInfo(page)
+  const showConfirmationEmail = page?.controller !== ControllerType.Summary
 
   return {
     ...baseModelFields(slug, `${pageTitle} - ${formTitle}`, formTitle),
@@ -153,7 +141,12 @@ export function sectionsViewModel(
     slug,
     pageTitle,
     cardTitle: pageTitle,
-    cardCaption: 'Check answers',
+    cardCaption: CHECK_ANSWERS_CAPTION,
+    tabConfig: getCheckAnswersTabConfig(
+      slug,
+      pageId,
+      CHECK_ANSWERS_TAB_SECTIONS
+    ),
     sections: sectionsWithPages,
     unassignedPages,
     currentPath,
@@ -166,9 +159,10 @@ export function sectionsViewModel(
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     previewModel: {
-      sections: sectionsWithPages,
+      sections: previewSections,
       unassignedPages: previewUnassignedPages,
-      declaration: declarationInfo
+      declaration: declarationInfo,
+      showConfirmationEmail
     },
     previewPageUrl,
     notification,
@@ -177,6 +171,6 @@ export function sectionsViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

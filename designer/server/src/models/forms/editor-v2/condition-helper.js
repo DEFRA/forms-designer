@@ -16,7 +16,7 @@ import {
   getListFromComponent,
   insertValidationErrors
 } from '~/src/lib/utils.js'
-import { toPresentationHtmlV2 } from '~/src/models/forms/editor-v2/common.js'
+import { toPresentationHtmlV2 } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { buildValueField } from '~/src/models/forms/editor-v2/condition-value.js'
 import {
   hasConditionSupportForPage,

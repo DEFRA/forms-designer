@@ -1,0 +1,94 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: cardCaption,
+    classes: "govuk-grid-column-full",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+  <div class="govuk-grid-column-one-half-from-desktop">
+
+    {% call appEditorCard({
+      titles: tabConfig,
+      id: 'page-overview',
+      caption: cardCaption,
+      heading: cardHeading
+    }) %}
+
+      {# Declaration text summary row #}
+      {%- set declarationValueHtml %}
+        {% if declaration.hasDeclaration %}
+          {{ declaration.text }}
+        {% else %}
+          <a class="govuk-link govuk-link--no-visited-state" href="{{ declaration.link }}">Add declaration text</a>
+        {% endif %}
+      {% endset %}
+
+      {# Sections summary row #}
+      {%- set sectionsValueHtml %}
+        {% if sections.count > 0 %}
+          {{ sections.count }} sections: {{ sections.titles | join(", ") }}
+        {% else %}
+          <a class="govuk-link govuk-link--no-visited-state" href="{{ sections.link }}">Add and organise sections</a>
+        {% endif %}
+      {% endset %}
+
+      {{ govukSummaryList({
+        classes: "govuk-!-margin-bottom-0",
+        rows: [
+          {
+            key: {
+              text: "Declaration text (optional)"
+            },
+            value: {
+              html: declarationValueHtml,
+              classes: 'with-ellipsis' if declaration.hasDeclaration
+            },
+            actions: {
+              items: [
+                {
+                  href: declaration.link,
+                  text: "Change",
+                  visuallyHiddenText: "declaration text"
+                }
+              ]
+            } if declaration.hasDeclaration
+          },
+          {
+            key: {
+              text: "Sections (optional)"
+            },
+            value: {
+              html: sectionsValueHtml
+            },
+            actions: {
+              items: [
+                {
+                  href: sections.link,
+                  text: "Change",
+                  visuallyHiddenText: "sections"
+                }
+              ]
+            } if sections.count > 0
+          }
+        ]
+      }) }}
+
+    {% endcall %}
+
+  </div>
+  <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
+    {%- include "../views/forms/editor-v2/partials/check-answers-right-panel.njk" -%}
+  </div>
+  {% endcall %}
+
+{% endblock %}

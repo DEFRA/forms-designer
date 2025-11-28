@@ -15,7 +15,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/check-answers-settings.
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path } from '~/src/models/links.js'
 
-export const ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings`
+export const ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/declaration`
 
 const errorKey = sessionNames.validationFailure.editorCheckAnswersSettings
 const notificationKey = sessionNames.successNotification

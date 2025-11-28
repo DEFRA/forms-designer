@@ -52,6 +52,14 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {boolean}
    */
   isConfirmationEmailSettingsPanel
+  /**
+   * @type {SectionForPreview[]}
+   */
+  sections
+  /**
+   * @type {Array<{ title: string }>}
+   */
+  unassignedPages
 
   /**
    * @param {SummaryPageInitialState} initialState
@@ -78,6 +86,8 @@ export class SummaryPagePreviewDomElements extends DomElements {
     this.needDeclarationFallback = initialState.needDeclaration
     this.isConfirmationEmailSettingsPanel =
       initialState.isConfirmationEmailSettingsPanel
+    this.sections = initialState.sections ?? []
+    this.unassignedPages = initialState.unassignedPages ?? []
   }
 
   get declarationText() {
@@ -246,5 +256,5 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState } from '@defra/forms-model'
+ * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState, SectionForPreview } from '@defra/forms-model'
  */

@@ -1,0 +1,100 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+<div id="preview-container-inner">
+  <div id="before-content" class="preview-before-content">
+    <p class="govuk-body-s">Preview</p>
+  </div>
+
+  <div class="govuk-!-margin-top-9">
+    <div class="govuk-tabs" data-module="govuk-tabs">
+      <h2 class="govuk-tabs__title">Contents</h2>
+      <ul class="govuk-tabs__list" role="tablist">
+        <li class="govuk-tabs__list-item govuk-tabs__list-item--selected" role="presentation">
+          <a class="govuk-tabs__tab" href="#tab-preview" id="tab-preview-link" role="tab" aria-controls="tab-preview">Page preview</a>
+        </li>
+      </ul>
+
+      <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab-preview-link" tabindex="0">
+        <p class="govuk-body-s">
+          <a href="{{ previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+            Preview this page in a new tab
+          </a>
+        </p>
+        <div id="preview-panel-content">
+          <div id="preview-panel-inner">
+            <h3 class="govuk-heading-l">Check your answers before sending your form</h3>
+
+            <div id="sections-preview">
+              {% for section in previewModel.sections %}
+                {% if section.pages.length > 0 %}
+                  <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+                  <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+                    {% for page in section.pages %}
+                    <div class="govuk-summary-list__row">
+                      <dt class="govuk-summary-list__key">{{ page.title }}</dt>
+                      <dd class="govuk-summary-list__value">Answer goes here</dd>
+                      <dd class="govuk-summary-list__actions">
+                        <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                          Change<span class="govuk-visually-hidden"> {{ page.title }}</span>
+                        </a>
+                      </dd>
+                    </div>
+                    {% endfor %}
+                  </dl>
+                {% else %}
+                  <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+                  <p class="govuk-hint">No pages in this section</p>
+                {% endif %}
+              {% endfor %}
+
+              {% if previewModel.unassignedPages.length > 0 %}
+                <dl class="govuk-summary-list">
+                  {% for page in previewModel.unassignedPages %}
+                  <div class="govuk-summary-list__row">
+                    <dt class="govuk-summary-list__key">{{ page.title }}</dt>
+                    <dd class="govuk-summary-list__value">Answer goes here</dd>
+                    <dd class="govuk-summary-list__actions">
+                      <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                        Change<span class="govuk-visually-hidden"> {{ page.title }}</span>
+                      </a>
+                    </dd>
+                  </div>
+                  {% endfor %}
+                </dl>
+              {% endif %}
+            </div>
+
+            {% if previewModel.showConfirmationEmail %}
+              <div class="govuk-!-margin-top-6">
+                {{ govukInput({
+                  id: "userConfirmationEmailAddress",
+                  name: "userConfirmationEmailAddress",
+                  label: {
+                    text: "Confirmation email (optional)",
+                    classes: "govuk-label--m"
+                  },
+                  hint: {
+                    text: "Enter your email address to get an email confirming your form has been submitted"
+                  }
+                }) }}
+              </div>
+            {% endif %}
+
+            {% if previewModel.declaration.hasDeclaration %}
+              <div class="border-left-container govuk-!-margin-top-6">
+                <h4 class="govuk-heading-m">Declaration</h4>
+                <div class="app-prose-scope">
+                  {{ previewModel.declaration.declarationText | markdown({ startingHeaderLevel: 2 }) | safe }}
+                </div>
+              </div>
+            {% endif %}
+
+            <button type="button" class="govuk-button govuk-button--disabled" disabled aria-disabled="true">
+              {% if previewModel.declaration.hasDeclaration %}Accept and send{% else %}Send{% endif %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

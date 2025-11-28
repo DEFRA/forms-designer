@@ -15,10 +15,21 @@ import {
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
-  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
+import {
+  DECLARATION_PREVIEW_TITLE,
+  SUMMARY_CONTROLLER_TEMPLATE,
+  buildPreviewUrl,
+  enrichPreviewModel
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
+import { dummyRenderer } from '~/src/models/forms/editor-v2/questions.js'
+import {
+  CHECK_ANSWERS_CAPTION,
+  CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS,
+  getCheckAnswersTabConfig
+} from '~/src/models/forms/editor-v2/tab-config.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -43,17 +54,6 @@ export function settingsFields(disableConfirmationEmailVal, validation) {
   }
 }
 
-export const emptyRenderer = {
-  /**
-   * @param {string} _a
-   * @param {PagePreviewPanelMacro} _b
-   * @returns {void}
-   */
-  render(_a, _b) {
-    // Nothing to do here.
-  }
-}
-
 /**
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
@@ -61,18 +61,7 @@ export const emptyRenderer = {
  * @param {string} declarationText
  * @param {boolean} needDeclaration
  * @param {boolean} showConfirmationEmail
- * @returns {PagePreviewPanelMacro & {
- *    previewPageUrl: string;
- *    questionType?: ComponentType,
- *    previewTitle?: string,
- *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
- *    buttonText: string,
- *    hasPageSettingsTab: boolean,
- *    showConfirmationEmail: boolean,
- *    declarationText: string,
- *    needDeclaration: boolean,
- *    isConfirmationEmailSettingsPanel: boolean
- * }}
+ * @returns {PagePreviewPanelMacro & PreviewModelExtras}
  */
 export function getPreviewModel(
   page,
@@ -92,11 +81,11 @@ export function getPreviewModel(
   const previewPageController = new SummaryPageController(
     elements,
     definition,
-    emptyRenderer
+    dummyRenderer
   )
 
   return {
-    previewTitle: 'Preview of Check answers page',
+    previewTitle: DECLARATION_PREVIEW_TITLE,
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
     guidance: previewPageController.guidance,
@@ -157,7 +146,7 @@ export function confirmationEmailSettingsViewModel(
   const pageHeading = 'Confirmation email'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
-  const previewModel = getPreviewModel(
+  const basePreviewModel = getPreviewModel(
     page,
     definition,
     previewPageUrl,
@@ -165,6 +154,7 @@ export function confirmationEmailSettingsViewModel(
     needDeclaration,
     showConfirmationEmail
   )
+  const previewModel = enrichPreviewModel(basePreviewModel, definition)
 
   return {
     ...baseModelFields(
@@ -174,8 +164,13 @@ export function confirmationEmailSettingsViewModel(
     ),
     fields,
     cardTitle: pageHeading,
-    cardCaption: 'Check answers',
+    cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageHeading,
+    tabConfig: getCheckAnswersTabConfig(
+      metadata.slug,
+      pageId,
+      CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS
+    ),
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
@@ -184,7 +179,7 @@ export function confirmationEmailSettingsViewModel(
     preview: {
       pageId: page?.id,
       definitionId: metadata.id,
-      pageTemplate: 'summary-controller.njk'
+      pageTemplate: SUMMARY_CONTROLLER_TEMPLATE
     },
     buttonText: SAVE_AND_CONTINUE,
     notification
@@ -194,4 +189,5 @@ export function confirmationEmailSettingsViewModel(
 /**
  * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { PreviewModelExtras } from '~/src/models/forms/editor-v2/preview-helpers.js'
  */

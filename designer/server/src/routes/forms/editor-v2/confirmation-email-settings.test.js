@@ -31,7 +31,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/confirmation-email-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/confirmation-email',
       auth
     }
 
@@ -72,7 +72,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p2/confirmation-email-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/confirmation-email',
       auth
     }
 
@@ -106,7 +106,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p2/confirmation-email-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/confirmation-email',
       auth,
       payload: {
         // Checkbox unchecked - field is omitted
@@ -135,7 +135,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p1/confirmation-email-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/confirmation-email',
       auth,
       payload: {
         disableConfirmationEmail: 'true' // Checkbox checked sends string 'true'
