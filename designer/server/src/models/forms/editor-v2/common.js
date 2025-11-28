@@ -1,15 +1,6 @@
-import {
-  ConditionsModel,
-  convertConditionWrapperFromV2,
-  hasComponents,
-  hasComponentsEvenIfNoNext,
-  isConditionWrapperV2,
-  isFormType,
-  isSummaryPage
-} from '@defra/forms-model'
+import { hasComponents, isFormType, isSummaryPage } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
-import config from '~/src/config.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
   editorv2Path,
@@ -17,6 +8,7 @@ import {
   formsSupportPath
 } from '~/src/models/links.js'
 
+// Common string constants
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 export const BACK_TO_MANAGE_CONDITIONS = 'Back to conditions'
 export const SAVE_AND_CONTINUE = 'Save and continue'
@@ -122,38 +114,6 @@ export function baseModelFields(slug, pageTitle, pageHeading) {
 }
 
 /**
- * Builds a live form URL based on its slug.
- * @param {string} slug - The unique identifier for the form.
- */
-export function buildFormUrl(slug) {
-  const encodedSlug = encodeURIComponent(slug)
-
-  return `${config.previewUrl}/form/${encodedSlug}`
-}
-
-/**
- * Builds a URL for previewing a form based on its slug and status.
- * @param {string} slug - The unique identifier for the form.
- * @param {FormStatus} status - The current status of the form.
- */
-export function buildPreviewUrl(slug, status) {
-  const encodedSlug = encodeURIComponent(slug)
-  const encodedStatus = encodeURIComponent(status)
-
-  return `${config.previewUrl}/form/preview/${encodedStatus}/${encodedSlug}`
-}
-
-/**
- * Builds a URL for previewing error messages for a question based on its slug.
- * @param {string} slug - The unique identifier for the form.
- */
-export function buildPreviewErrorsUrl(slug) {
-  const encodedSlug = encodeURIComponent(slug)
-
-  return `${config.previewUrl}/error-preview/draft/${encodedSlug}`
-}
-
-/**
  * @param {{ text?: string, value?: string, checked?: boolean }[] | undefined } items
  * @param {string[] | undefined} selectedItems
  */
@@ -175,100 +135,5 @@ export function tickBoxes(items, selectedItems) {
 }
 
 /**
- * Convert the condition to a V1 wrapper
- * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
- * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
- * @returns {ConditionWrapper} condition as V1
- */
-export function getConditionAsV1(conditionWrapper, definition) {
-  const { pages, conditions, lists } = definition
-  const components = pages.flatMap((p) =>
-    hasComponentsEvenIfNoNext(p) ? p.components : []
-  )
-
-  const v2Conditions = /** @type {ConditionWrapperV2[]} */ (
-    conditions.filter(isConditionWrapperV2)
-  )
-
-  /** @type {RuntimeFormModel} */
-  const accessors = {
-    getListById: (listId) => lists.find((list) => list.id === listId),
-    getComponentById: (componentId) =>
-      components.find((component) => component.id === componentId),
-    getConditionById: (conditionId) =>
-      v2Conditions.find((condition) => condition.id === conditionId)
-  }
-
-  return convertConditionWrapperFromV2(conditionWrapper, accessors)
-}
-
-/**
- * Gets the presentation string for a V2 condition wrapper
- * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
- * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
- * @returns {string} The presentation string for the condition
- */
-export function toPresentationStringV2(conditionWrapper, definition) {
-  const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
-  return ConditionsModel.from(conditionAsV1.value).toPresentationString()
-}
-
-/**
- * Gets the presentation HTML for a V2 condition wrapper
- * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
- * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
- * @returns {string} The presentation HTML for the condition
- */
-export function toPresentationHtmlV2(conditionWrapper, definition) {
-  const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
-  return ConditionsModel.from(conditionAsV1.value).toPresentationHtml()
-}
-
-/**
- * Gets a list of all component names used in the supplied condition
- * @param {ConditionWrapperV2} conditionWrapper - The V2 condition wrapper
- * @param {FormDefinition} definition - The form definition containing pages, conditions, and lists
- * @returns {string[]} list of component names
- */
-export function getReferencedComponentNamesV2(conditionWrapper, definition) {
-  const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
-  return conditionAsV1.value.conditions
-    .map((cond) => ('field' in cond ? cond.field.name : undefined))
-    .filter((elem) => elem !== undefined)
-}
-
-/**
- * Gets page condition details and presentation string
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @returns {ConditionDetails}
- */
-export function getPageConditionDetails(definition, pageId) {
-  const page = getPageFromDefinition(definition, pageId)
-  const pageCondition = page?.condition
-  const pageConditionDetails = pageCondition
-    ? /** @type {ConditionWrapperV2 | undefined} */ (
-        definition.conditions
-          .filter(isConditionWrapperV2)
-          .find((c) => c.id === pageCondition)
-      )
-    : undefined
-
-  let pageConditionPresentationString = null
-  if (pageConditionDetails) {
-    pageConditionPresentationString = toPresentationStringV2(
-      pageConditionDetails,
-      definition
-    )
-  }
-
-  return {
-    pageCondition,
-    pageConditionDetails,
-    pageConditionPresentationString
-  }
-}
-
-/**
- * @import { ComponentDef, ConditionDetails, ConditionWrapper, FormMetadata, FormDefinition, FormStatus, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
+ * @import { ComponentDef, FormMetadata, FormDefinition } from '@defra/forms-model'
  */

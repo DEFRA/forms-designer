@@ -1,7 +1,9 @@
 import { ConditionType, Coordinator, OperatorName } from '@defra/forms-model'
 import {
   buildDefinition,
+  buildMarkdownComponent,
   buildQuestionPage,
+  buildSummaryPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
@@ -15,10 +17,31 @@ import {
   getPageNum,
   getQuestionNum,
   getQuestionsOnPage,
-  tickBoxes,
+  tickBoxes
+} from '~/src/models/forms/editor-v2/common.js'
+import {
   toPresentationHtmlV2,
   toPresentationStringV2
-} from '~/src/models/forms/editor-v2/common.js'
+} from '~/src/models/forms/editor-v2/condition-helpers.js'
+import {
+  DEFAULT_TRUNCATE_LENGTH,
+  buildSectionsForPreview,
+  enrichPreviewModel,
+  getDeclarationInfo,
+  getUnassignedPageTitlesForPreview,
+  truncateText
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
+import {
+  CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS,
+  CHECK_ANSWERS_TAB_DECLARATION,
+  CHECK_ANSWERS_TAB_PAGE_SETTINGS,
+  CHECK_ANSWERS_TAB_SECTIONS,
+  PAGE_SETTINGS_TITLE,
+  TAB_TITLE_CONFIRMATION_EMAIL,
+  TAB_TITLE_DECLARATION,
+  TAB_TITLE_SECTIONS,
+  getCheckAnswersTabConfig
+} from '~/src/models/forms/editor-v2/tab-config.js'
 
 describe('editor-v2 - model', () => {
   describe('getPageNum', () => {
@@ -362,6 +385,390 @@ describe('editor-v2 - model', () => {
       expect(typeof htmlResult).toBe('string')
       expect(stringResult.length).toBeGreaterThan(0)
       expect(htmlResult.length).toBeGreaterThan(0)
+    })
+  })
+
+  describe('truncateText', () => {
+    it('should return text unchanged if shorter than max length', () => {
+      const text = 'Short text'
+      const result = truncateText(text)
+      expect(result).toBe(text)
+    })
+
+    it('should return text unchanged if equal to max length', () => {
+      const text = 'A'.repeat(DEFAULT_TRUNCATE_LENGTH)
+      const result = truncateText(text)
+      expect(result).toBe(text)
+    })
+
+    it('should truncate text longer than default max length', () => {
+      const text = 'A'.repeat(DEFAULT_TRUNCATE_LENGTH + 10)
+      const result = truncateText(text)
+      expect(result).toBe('A'.repeat(DEFAULT_TRUNCATE_LENGTH) + '...')
+      expect(result).toHaveLength(DEFAULT_TRUNCATE_LENGTH + 3)
+    })
+
+    it('should truncate text to custom max length', () => {
+      const text = 'This is a longer text'
+      const result = truncateText(text, 10)
+      expect(result).toBe('This is a ...')
+    })
+
+    it('should handle empty string', () => {
+      const result = truncateText('')
+      expect(result).toBe('')
+    })
+  })
+
+  describe('buildSectionsForPreview', () => {
+    it('should return empty array when no sections', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: 'p1' })],
+        sections: []
+      })
+
+      const result = buildSectionsForPreview(definition)
+      expect(result).toEqual([])
+    })
+
+    it('should build sections with pages', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Page One',
+            section: 'section-1'
+          }),
+          buildQuestionPage({
+            id: 'p2',
+            title: 'Page Two',
+            section: 'section-1'
+          }),
+          buildQuestionPage({
+            id: 'p3',
+            title: 'Page Three',
+            section: 'section-2'
+          })
+        ],
+        sections: [
+          { name: 'section-1', title: 'First Section' },
+          { name: 'section-2', title: 'Second Section' }
+        ]
+      })
+
+      const result = buildSectionsForPreview(definition)
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toEqual({
+        name: 'section-1',
+        title: 'First Section',
+        pages: [{ title: 'Page One' }, { title: 'Page Two' }]
+      })
+      expect(result[1]).toEqual({
+        name: 'section-2',
+        title: 'Second Section',
+        pages: [{ title: 'Page Three' }]
+      })
+    })
+
+    it('should return section with empty pages array if no pages assigned', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: 'p1', title: 'Unassigned Page' })],
+        sections: [{ name: 'empty-section', title: 'Empty Section' }]
+      })
+
+      const result = buildSectionsForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toEqual({
+        name: 'empty-section',
+        title: 'Empty Section',
+        pages: []
+      })
+    })
+  })
+
+  describe('getUnassignedPageTitlesForPreview', () => {
+    it('should return all pages when none are assigned to sections', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'p1', title: 'Page One' }),
+          buildQuestionPage({ id: 'p2', title: 'Page Two' })
+        ],
+        sections: []
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toHaveLength(2)
+      expect(result[0]).toEqual({ title: 'Page One' })
+      expect(result[1]).toEqual({ title: 'Page Two' })
+    })
+
+    it('should return empty array when all pages are assigned', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Page One',
+            section: 'section-1'
+          })
+        ],
+        sections: [{ name: 'section-1', title: 'Section One' }]
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toEqual([])
+    })
+
+    it('should return only unassigned pages', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Assigned Page',
+            section: 'section-1'
+          }),
+          buildQuestionPage({ id: 'p2', title: 'Unassigned Page' })
+        ],
+        sections: [{ name: 'section-1', title: 'Section One' }]
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0]).toEqual({ title: 'Unassigned Page' })
+    })
+  })
+
+  describe('getDeclarationInfo', () => {
+    it('should return hasDeclaration false when page is undefined', () => {
+      const result = getDeclarationInfo(undefined)
+
+      expect(result).toEqual({
+        hasDeclaration: false,
+        declarationText: ''
+      })
+    })
+
+    it('should return hasDeclaration false when page has no components', () => {
+      const page = buildSummaryPage({ id: 'cya', components: [] })
+      const result = getDeclarationInfo(page)
+
+      expect(result).toEqual({
+        hasDeclaration: false,
+        declarationText: ''
+      })
+    })
+
+    it('should return hasDeclaration false when first component is not markdown', () => {
+      const page = buildSummaryPage({
+        id: 'cya',
+        components: [buildTextFieldComponent({ title: 'Question' })]
+      })
+      const result = getDeclarationInfo(page)
+
+      expect(result).toEqual({
+        hasDeclaration: false,
+        declarationText: ''
+      })
+    })
+
+    it('should return hasDeclaration true when first component is markdown', () => {
+      const page = buildSummaryPage({
+        id: 'cya',
+        components: [
+          buildMarkdownComponent({ content: 'I agree to the terms' })
+        ]
+      })
+      const result = getDeclarationInfo(page)
+
+      expect(result).toEqual({
+        hasDeclaration: true,
+        declarationText: 'I agree to the terms'
+      })
+    })
+
+    it('should only check first component for declaration', () => {
+      const page = buildSummaryPage({
+        id: 'cya',
+        components: [
+          buildTextFieldComponent({ title: 'Question' }),
+          buildMarkdownComponent({ content: 'This should not be detected' })
+        ]
+      })
+      const result = getDeclarationInfo(page)
+
+      expect(result).toEqual({
+        hasDeclaration: false,
+        declarationText: ''
+      })
+    })
+
+    it('should return hasDeclaration false when markdown content is empty', () => {
+      const page = buildSummaryPage({
+        id: 'cya',
+        components: [buildMarkdownComponent({ content: '' })]
+      })
+      const result = getDeclarationInfo(page)
+
+      expect(result).toEqual({
+        hasDeclaration: false,
+        declarationText: ''
+      })
+    })
+  })
+
+  describe('getCheckAnswersTabConfig', () => {
+    it('should return all four tabs', () => {
+      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+
+      expect(result).toHaveLength(4)
+      expect(result.map((t) => t.title)).toEqual([
+        PAGE_SETTINGS_TITLE,
+        TAB_TITLE_DECLARATION,
+        TAB_TITLE_CONFIRMATION_EMAIL,
+        TAB_TITLE_SECTIONS
+      ])
+    })
+
+    it('should mark page settings tab as active', () => {
+      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+
+      expect(result[0].isActive).toBe(true)
+      expect(result[1].isActive).toBe(false)
+      expect(result[2].isActive).toBe(false)
+      expect(result[3].isActive).toBe(false)
+    })
+
+    it('should mark declaration tab as active', () => {
+      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_DECLARATION)
+
+      expect(result[0].isActive).toBe(false)
+      expect(result[1].isActive).toBe(true)
+      expect(result[2].isActive).toBe(false)
+      expect(result[3].isActive).toBe(false)
+    })
+
+    it('should mark confirmation emails tab as active', () => {
+      const result = getCheckAnswersTabConfig(
+        CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS
+      )
+
+      expect(result[0].isActive).toBe(false)
+      expect(result[1].isActive).toBe(false)
+      expect(result[2].isActive).toBe(true)
+      expect(result[3].isActive).toBe(false)
+    })
+
+    it('should mark sections tab as active', () => {
+      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_SECTIONS)
+
+      expect(result[0].isActive).toBe(false)
+      expect(result[1].isActive).toBe(false)
+      expect(result[2].isActive).toBe(false)
+      expect(result[3].isActive).toBe(true)
+    })
+
+    it('should have correct links', () => {
+      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+
+      expect(result[0].link).toBe(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+      expect(result[1].link).toBe(CHECK_ANSWERS_TAB_DECLARATION)
+      expect(result[2].link).toBe(CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS)
+      expect(result[3].link).toBe(CHECK_ANSWERS_TAB_SECTIONS)
+    })
+  })
+
+  describe('enrichPreviewModel', () => {
+    it('should enrich preview model with sections and unassigned pages', () => {
+      const basePreviewModel = {
+        needDeclaration: true,
+        declarationText: 'I agree to the terms',
+        otherField: 'preserved'
+      }
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Page One',
+            section: 'section-1'
+          }),
+          buildQuestionPage({ id: 'p2', title: 'Unassigned Page' })
+        ],
+        sections: [{ name: 'section-1', title: 'First Section' }]
+      })
+
+      const result = enrichPreviewModel(basePreviewModel, definition)
+
+      expect(result.sections).toHaveLength(1)
+      expect(result.sections[0].title).toBe('First Section')
+      expect(result.unassignedPages).toHaveLength(1)
+      expect(result.unassignedPages[0].title).toBe('Unassigned Page')
+      expect(result.declaration).toEqual({
+        hasDeclaration: true,
+        declarationText: 'I agree to the terms'
+      })
+    })
+
+    it('should preserve all original properties from base model', () => {
+      const basePreviewModel = {
+        needDeclaration: false,
+        declarationText: '',
+        previewTitle: 'Preview of Check answers page',
+        showConfirmationEmail: true,
+        customField: 'should be preserved'
+      }
+      const definition = buildDefinition({
+        pages: [],
+        sections: []
+      })
+
+      const result = enrichPreviewModel(basePreviewModel, definition)
+
+      expect(result.previewTitle).toBe('Preview of Check answers page')
+      expect(result.showConfirmationEmail).toBe(true)
+      expect(result.customField).toBe('should be preserved')
+    })
+
+    it('should not mutate the original base model', () => {
+      const basePreviewModel = {
+        needDeclaration: true,
+        declarationText: 'Original text'
+      }
+      const definition = buildDefinition({
+        pages: [],
+        sections: []
+      })
+
+      const result = enrichPreviewModel(basePreviewModel, definition)
+
+      // Original should not have new properties
+      expect(basePreviewModel).not.toHaveProperty('sections')
+      expect(basePreviewModel).not.toHaveProperty('unassignedPages')
+      expect(basePreviewModel).not.toHaveProperty('declaration')
+
+      // Result should have new properties
+      expect(result).toHaveProperty('sections')
+      expect(result).toHaveProperty('unassignedPages')
+      expect(result).toHaveProperty('declaration')
+    })
+
+    it('should set hasDeclaration false when needDeclaration is false', () => {
+      const basePreviewModel = {
+        needDeclaration: false,
+        declarationText: ''
+      }
+      const definition = buildDefinition({
+        pages: [],
+        sections: []
+      })
+
+      const result = enrichPreviewModel(basePreviewModel, definition)
+
+      expect(result.declaration.hasDeclaration).toBe(false)
+      expect(result.declaration.declarationText).toBe('')
     })
   })
 })
