@@ -100,7 +100,7 @@ describe('check-answers-overview model', () => {
       expect(result.declaration.text).toBeNull()
     })
 
-    it('should truncate long declaration text', () => {
+    it('should pass full declaration text (CSS handles truncation)', () => {
       const longText = 'A'.repeat(100)
       const definition = buildDefinition({
         pages: [
@@ -120,7 +120,7 @@ describe('check-answers-overview model', () => {
       )
 
       expect(result.declaration.hasDeclaration).toBe(true)
-      expect(result.declaration.text).toBe('A'.repeat(50) + '...')
+      expect(result.declaration.text).toBe(longText)
     })
 
     it('should build sections summary', () => {

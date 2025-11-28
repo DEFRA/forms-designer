@@ -50,7 +50,8 @@
               text: "Declaration text (optional)"
             },
             value: {
-              html: declarationValueHtml
+              html: declarationValueHtml,
+              classes: 'with-ellipsis' if declaration.hasDeclaration
             },
             actions: {
               items: [

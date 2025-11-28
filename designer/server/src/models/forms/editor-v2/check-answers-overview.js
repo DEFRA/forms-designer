@@ -11,8 +11,7 @@ import {
   buildPreviewUrl,
   buildSectionsForPreview,
   getDeclarationInfo,
-  getUnassignedPageTitlesForPreview,
-  truncateText
+  getUnassignedPageTitlesForPreview
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   CHECK_ANSWERS_CAPTION,
@@ -85,7 +84,7 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
     declaration: {
       hasDeclaration: declarationInfo.hasDeclaration,
       text: declarationInfo.hasDeclaration
-        ? truncateText(declarationInfo.declarationText)
+        ? declarationInfo.declarationText
         : null,
       link: editorv2Path(
         slug,

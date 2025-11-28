@@ -10,7 +10,7 @@
   {% endif %}
 
   {# Render sections if available #}
-  {% if params.sections and params.sections.length > 0 %}
+  {% if params.sections | length %}
     <div id="sections-preview">
       {% for section in params.sections %}
         {% if section.pages.length > 0 %}
@@ -34,7 +34,7 @@
         {% endif %}
       {% endfor %}
 
-      {% if params.unassignedPages and params.unassignedPages.length > 0 %}
+      {% if params.unassignedPages | length %}
         <dl class="govuk-summary-list">
           {% for page in params.unassignedPages %}
           <div class="govuk-summary-list__row">
