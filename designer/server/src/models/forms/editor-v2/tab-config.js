@@ -1,4 +1,3 @@
-// Tab titles for check answers pages
 export const PAGE_SETTINGS_TITLE = 'Page settings'
 export const TAB_TITLE_DECLARATION = 'Declaration'
 export const TAB_TITLE_CONFIRMATION_EMAIL = 'Confirmation email'
@@ -12,12 +11,10 @@ export const CHECK_ANSWERS_CAPTION = 'Check answers'
  * @property {boolean} [isActive] - Whether this tab is currently active
  */
 
-/**
- * Check answers page tab identifiers
- */
 export const CHECK_ANSWERS_TAB_PAGE_SETTINGS = 'check-answers-overview'
 export const CHECK_ANSWERS_TAB_DECLARATION = 'check-answers-settings'
-export const CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS = 'confirmation-email-settings'
+export const CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS =
+  'confirmation-email-settings'
 export const CHECK_ANSWERS_TAB_SECTIONS = 'check-answers-settings/sections'
 
 /**

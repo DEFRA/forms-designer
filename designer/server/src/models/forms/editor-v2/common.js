@@ -8,7 +8,6 @@ import {
   formsSupportPath
 } from '~/src/models/links.js'
 
-// Common string constants
 export const BACK_TO_ADD_AND_EDIT_PAGES = 'Back to add and edit pages'
 export const BACK_TO_MANAGE_CONDITIONS = 'Back to conditions'
 export const SAVE_AND_CONTINUE = 'Save and continue'

@@ -84,7 +84,7 @@
               <div class="border-left-container govuk-!-margin-top-6">
                 <h4 class="govuk-heading-m">Declaration</h4>
                 <div class="app-prose-scope">
-                  {{ previewModel.declaration.declarationText | markdown | safe }}
+                  {{ previewModel.declaration.declarationText | markdown({ startingHeaderLevel: 2 }) | safe }}
                 </div>
               </div>
             {% endif %}
