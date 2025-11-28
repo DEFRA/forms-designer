@@ -10,7 +10,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 
-describe('Editor v2 check-answers-overview routes', () => {
+describe('Editor v2 check-answers-settings routes', () => {
   /** @type {Server} */
   let server
 
@@ -31,18 +31,18 @@ describe('Editor v2 check-answers-overview routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-overview',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings',
       auth
     }
 
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $pageSettingsLinks = container.getAllByText('Page settings')
+    const $pageOverviewLinks = container.getAllByText('Page overview')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($pageSettingsLinks.length).toBeGreaterThan(0)
+    expect($pageOverviewLinks.length).toBeGreaterThan(0)
 
     const $previewPanel = document.getElementById('preview-panel')
     expect($previewPanel).toBeTruthy()
@@ -57,7 +57,7 @@ describe('Editor v2 check-answers-overview routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-overview',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
       auth
     }
 
@@ -78,7 +78,7 @@ describe('Editor v2 check-answers-overview routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-overview',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings',
       auth
     }
 
@@ -97,7 +97,7 @@ describe('Editor v2 check-answers-overview routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-overview',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings',
       auth
     }
 
@@ -120,7 +120,7 @@ describe('Editor v2 check-answers-overview routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-overview',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings',
       auth
     }
 
@@ -143,7 +143,7 @@ describe('Editor v2 check-answers-overview routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-overview'
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings'
       // No auth
     }
 

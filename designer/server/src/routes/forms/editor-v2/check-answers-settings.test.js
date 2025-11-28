@@ -34,7 +34,7 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/declaration',
       auth
     }
 
@@ -76,7 +76,7 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/declaration',
       auth
     }
 
@@ -108,7 +108,7 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/declaration',
       auth,
       payload: { needDeclaration: 'true' }
     }
@@ -119,7 +119,7 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p2/check-answers-settings'
+      '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/declaration'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -140,7 +140,7 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/declaration',
       auth,
       payload: {
         needDeclaration: 'true',

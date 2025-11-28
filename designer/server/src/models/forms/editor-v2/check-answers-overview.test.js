@@ -8,7 +8,7 @@ import {
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { checkAnswersOverviewViewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
 import { SUMMARY_CONTROLLER_TEMPLATE } from '~/src/models/forms/editor-v2/preview-helpers.js'
-import { PAGE_SETTINGS_TITLE } from '~/src/models/forms/editor-v2/tab-config.js'
+import { PAGE_OVERVIEW_TITLE } from '~/src/models/forms/editor-v2/tab-config.js'
 
 describe('check-answers-overview model', () => {
   const baseMetadata = {
@@ -33,11 +33,11 @@ describe('check-answers-overview model', () => {
       )
 
       expect(result.pageTitle).toBe('Check answers page overview')
-      expect(result.cardTitle).toBe(PAGE_SETTINGS_TITLE)
+      expect(result.cardTitle).toBe(PAGE_OVERVIEW_TITLE)
       expect(result.cardCaption).toBe('Check answers')
     })
 
-    it('should include tabConfig with Page settings as active', () => {
+    it('should include tabConfig with Page overview as active', () => {
       const definition = buildDefinition({
         pages: [buildSummaryPage({ id: 'cya-page', path: '/summary' })],
         sections: []
@@ -51,7 +51,7 @@ describe('check-answers-overview model', () => {
 
       expect(result.tabConfig).toHaveLength(4)
       expect(result.tabConfig[0].isActive).toBe(true)
-      expect(result.tabConfig[0].title).toBe(PAGE_SETTINGS_TITLE)
+      expect(result.tabConfig[0].title).toBe(PAGE_OVERVIEW_TITLE)
     })
 
     it('should detect declaration when CYA page has markdown component', () => {
@@ -302,7 +302,7 @@ describe('check-answers-overview model', () => {
       )
 
       expect(result.declaration.link).toBe(
-        '/library/test-form/editor-v2/page/cya-page/check-answers-settings'
+        '/library/test-form/editor-v2/page/cya-page/check-answers-settings/declaration'
       )
     })
 

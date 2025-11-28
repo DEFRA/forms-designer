@@ -191,7 +191,11 @@ export function checkAnswersSettingsViewModel(
     cardTitle: pageHeading,
     cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageHeading,
-    tabConfig: getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_DECLARATION),
+    tabConfig: getCheckAnswersTabConfig(
+      metadata.slug,
+      pageId,
+      CHECK_ANSWERS_TAB_DECLARATION
+    ),
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,

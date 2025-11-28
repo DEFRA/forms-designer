@@ -193,7 +193,7 @@ describe('sections model', () => {
       )
 
       expect(result.backLink.href).toBe(
-        '/library/test-form/editor-v2/page/cya-page/check-answers-overview'
+        '/library/test-form/editor-v2/page/cya-page/check-answers-settings'
       )
       expect(result.backLink.text).toBe('Back to add and edit pages')
     })

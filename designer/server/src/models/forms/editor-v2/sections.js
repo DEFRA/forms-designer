@@ -147,12 +147,16 @@ export function sectionsViewModel(
     pageTitle,
     cardTitle: pageTitle,
     cardCaption: CHECK_ANSWERS_CAPTION,
-    tabConfig: getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_SECTIONS),
+    tabConfig: getCheckAnswersTabConfig(
+      slug,
+      pageId,
+      CHECK_ANSWERS_TAB_SECTIONS
+    ),
     sections: sectionsWithPages,
     unassignedPages,
     currentPath,
     backLink: {
-      href: editorv2Path(slug, `page/${pageId}/check-answers-overview`),
+      href: editorv2Path(slug, `page/${pageId}/check-answers-settings`),
       text: BACK_TO_ADD_AND_EDIT_PAGES
     },
     navigation,

@@ -34,9 +34,9 @@ import {
 import {
   CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS,
   CHECK_ANSWERS_TAB_DECLARATION,
-  CHECK_ANSWERS_TAB_PAGE_SETTINGS,
+  CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
   CHECK_ANSWERS_TAB_SECTIONS,
-  PAGE_SETTINGS_TITLE,
+  PAGE_OVERVIEW_TITLE,
   TAB_TITLE_CONFIRMATION_EMAIL,
   TAB_TITLE_DECLARATION,
   TAB_TITLE_SECTIONS,
@@ -621,20 +621,31 @@ describe('editor-v2 - model', () => {
   })
 
   describe('getCheckAnswersTabConfig', () => {
+    const testSlug = 'test-form'
+    const testPageId = 'cya-page'
+
     it('should return all four tabs', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+      )
 
       expect(result).toHaveLength(4)
       expect(result.map((t) => t.title)).toEqual([
-        PAGE_SETTINGS_TITLE,
+        PAGE_OVERVIEW_TITLE,
         TAB_TITLE_DECLARATION,
         TAB_TITLE_CONFIRMATION_EMAIL,
         TAB_TITLE_SECTIONS
       ])
     })
 
-    it('should mark page settings tab as active', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+    it('should mark page overview tab as active', () => {
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+      )
 
       expect(result[0].isActive).toBe(true)
       expect(result[1].isActive).toBe(false)
@@ -643,7 +654,11 @@ describe('editor-v2 - model', () => {
     })
 
     it('should mark declaration tab as active', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_DECLARATION)
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_DECLARATION
+      )
 
       expect(result[0].isActive).toBe(false)
       expect(result[1].isActive).toBe(true)
@@ -653,6 +668,8 @@ describe('editor-v2 - model', () => {
 
     it('should mark confirmation emails tab as active', () => {
       const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
         CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS
       )
 
@@ -663,7 +680,11 @@ describe('editor-v2 - model', () => {
     })
 
     it('should mark sections tab as active', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_SECTIONS)
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_SECTIONS
+      )
 
       expect(result[0].isActive).toBe(false)
       expect(result[1].isActive).toBe(false)
@@ -671,13 +692,25 @@ describe('editor-v2 - model', () => {
       expect(result[3].isActive).toBe(true)
     })
 
-    it('should have correct links', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+    it('should have correct full path links', () => {
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+      )
 
-      expect(result[0].link).toBe(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
-      expect(result[1].link).toBe(CHECK_ANSWERS_TAB_DECLARATION)
-      expect(result[2].link).toBe(CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS)
-      expect(result[3].link).toBe(CHECK_ANSWERS_TAB_SECTIONS)
+      expect(result[0].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_PAGE_OVERVIEW}`
+      )
+      expect(result[1].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_DECLARATION}`
+      )
+      expect(result[2].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS}`
+      )
+      expect(result[3].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_SECTIONS}`
+      )
     })
   })
 

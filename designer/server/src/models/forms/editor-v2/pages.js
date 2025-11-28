@@ -36,7 +36,7 @@ export function isGuidancePage(page) {
  */
 export function determineEditUrl(page, isEndPage, editBaseUrl) {
   if (isEndPage) {
-    return `${editBaseUrl}${page.id}/check-answers-overview`
+    return `${editBaseUrl}${page.id}/check-answers-settings`
   }
 
   if (isGuidancePage(page)) {

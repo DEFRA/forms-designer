@@ -12,7 +12,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/confirmation-email-sett
 import { editorv2Path } from '~/src/models/links.js'
 import { postAuthSettings } from '~/src/routes/forms/editor-v2/check-answers-settings.js'
 
-export const ROUTE_FULL_PATH_CONFIRMATION_EMAIL_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/confirmation-email-settings`
+export const ROUTE_FULL_PATH_CONFIRMATION_EMAIL_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/confirmation-email`
 
 const errorKey = sessionNames.validationFailure.editorConfirmationEmailSettings
 const notificationKey = sessionNames.successNotification

@@ -16,8 +16,8 @@ import {
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   CHECK_ANSWERS_CAPTION,
-  CHECK_ANSWERS_TAB_PAGE_SETTINGS,
-  PAGE_SETTINGS_TITLE,
+  CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
+  PAGE_OVERVIEW_TITLE,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
@@ -67,10 +67,14 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
     pageId,
     slug,
     pageTitle,
-    cardTitle: PAGE_SETTINGS_TITLE,
+    cardTitle: PAGE_OVERVIEW_TITLE,
     cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageTitle,
-    tabConfig: getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS),
+    tabConfig: getCheckAnswersTabConfig(
+      slug,
+      pageId,
+      CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+    ),
     navigation,
     backLink: {
       href: editorv2Path(slug, 'pages'),
@@ -83,7 +87,10 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       text: declarationInfo.hasDeclaration
         ? truncateText(declarationInfo.declarationText)
         : null,
-      link: editorv2Path(slug, `page/${pageId}/check-answers-settings`)
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/declaration`
+      )
     },
 
     // Sections summary

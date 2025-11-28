@@ -166,7 +166,11 @@ export function confirmationEmailSettingsViewModel(
     cardTitle: pageHeading,
     cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageHeading,
-    tabConfig: getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS),
+    tabConfig: getCheckAnswersTabConfig(
+      metadata.slug,
+      pageId,
+      CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS
+    ),
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,

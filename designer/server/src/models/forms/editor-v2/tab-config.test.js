@@ -2,9 +2,9 @@ import {
   CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS,
   CHECK_ANSWERS_TAB_DECLARATION,
-  CHECK_ANSWERS_TAB_PAGE_SETTINGS,
+  CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
   CHECK_ANSWERS_TAB_SECTIONS,
-  PAGE_SETTINGS_TITLE,
+  PAGE_OVERVIEW_TITLE,
   TAB_TITLE_CONFIRMATION_EMAIL,
   TAB_TITLE_DECLARATION,
   TAB_TITLE_SECTIONS,
@@ -13,8 +13,8 @@ import {
 
 describe('tab-config', () => {
   describe('constants', () => {
-    it('should export PAGE_SETTINGS_TITLE', () => {
-      expect(PAGE_SETTINGS_TITLE).toBe('Page settings')
+    it('should export PAGE_OVERVIEW_TITLE', () => {
+      expect(PAGE_OVERVIEW_TITLE).toBe('Page overview')
     })
 
     it('should export TAB_TITLE_DECLARATION', () => {
@@ -34,30 +34,43 @@ describe('tab-config', () => {
     })
 
     it('should export tab identifiers', () => {
-      expect(CHECK_ANSWERS_TAB_PAGE_SETTINGS).toBe('check-answers-overview')
-      expect(CHECK_ANSWERS_TAB_DECLARATION).toBe('check-answers-settings')
+      expect(CHECK_ANSWERS_TAB_PAGE_OVERVIEW).toBe('check-answers-settings')
+      expect(CHECK_ANSWERS_TAB_DECLARATION).toBe(
+        'check-answers-settings/declaration'
+      )
       expect(CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS).toBe(
-        'confirmation-email-settings'
+        'check-answers-settings/confirmation-email'
       )
       expect(CHECK_ANSWERS_TAB_SECTIONS).toBe('check-answers-settings/sections')
     })
   })
 
   describe('getCheckAnswersTabConfig', () => {
+    const testSlug = 'test-form'
+    const testPageId = 'cya-page'
+
     it('should return all four tabs', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+      )
 
       expect(result).toHaveLength(4)
       expect(result.map((t) => t.title)).toEqual([
-        PAGE_SETTINGS_TITLE,
+        PAGE_OVERVIEW_TITLE,
         TAB_TITLE_DECLARATION,
         TAB_TITLE_CONFIRMATION_EMAIL,
         TAB_TITLE_SECTIONS
       ])
     })
 
-    it('should mark page settings tab as active', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+    it('should mark page overview tab as active', () => {
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+      )
 
       expect(result[0].isActive).toBe(true)
       expect(result[1].isActive).toBe(false)
@@ -66,7 +79,11 @@ describe('tab-config', () => {
     })
 
     it('should mark declaration tab as active', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_DECLARATION)
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_DECLARATION
+      )
 
       expect(result[0].isActive).toBe(false)
       expect(result[1].isActive).toBe(true)
@@ -76,6 +93,8 @@ describe('tab-config', () => {
 
     it('should mark confirmation emails tab as active', () => {
       const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
         CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS
       )
 
@@ -86,7 +105,11 @@ describe('tab-config', () => {
     })
 
     it('should mark sections tab as active', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_SECTIONS)
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_SECTIONS
+      )
 
       expect(result[0].isActive).toBe(false)
       expect(result[1].isActive).toBe(false)
@@ -94,13 +117,25 @@ describe('tab-config', () => {
       expect(result[3].isActive).toBe(true)
     })
 
-    it('should have correct links', () => {
-      const result = getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
+    it('should have correct full path links', () => {
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_PAGE_OVERVIEW
+      )
 
-      expect(result[0].link).toBe(CHECK_ANSWERS_TAB_PAGE_SETTINGS)
-      expect(result[1].link).toBe(CHECK_ANSWERS_TAB_DECLARATION)
-      expect(result[2].link).toBe(CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS)
-      expect(result[3].link).toBe(CHECK_ANSWERS_TAB_SECTIONS)
+      expect(result[0].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_PAGE_OVERVIEW}`
+      )
+      expect(result[1].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_DECLARATION}`
+      )
+      expect(result[2].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS}`
+      )
+      expect(result[3].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_SECTIONS}`
+      )
     })
   })
 })

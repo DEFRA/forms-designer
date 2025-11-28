@@ -3,7 +3,7 @@ import { Scopes } from '@defra/forms-model'
 import * as forms from '~/src/lib/forms.js'
 import * as viewModel from '~/src/models/forms/editor-v2/check-answers-overview.js'
 
-export const ROUTE_FULL_PATH_CHECK_ANSWERS_OVERVIEW = `/library/{slug}/editor-v2/page/{pageId}/check-answers-overview`
+export const ROUTE_FULL_PATH_CHECK_ANSWERS_OVERVIEW = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings`
 
 export default [
   /**
