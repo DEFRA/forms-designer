@@ -118,13 +118,15 @@ export default [
 
       const metadata = await forms.get(slug, token)
 
-      // TODO - make API call to generate email, based on payload.action
-      // eslint-disable-next-line no-console
-      console.log('action', action)
-      yar.flash(
-        sessionNames.successNotification,
-        generateSuccessMessage(metadata.notificationEmail)
-      )
+      if (metadata.notificationEmail) {
+        // TODO - make API call to generate email, based on payload.action
+        // eslint-disable-next-line no-console
+        console.log('action', action)
+        yar.flash(
+          sessionNames.successNotification,
+          generateSuccessMessage(metadata.notificationEmail)
+        )
+      }
 
       // Redirect to same page
       return h
