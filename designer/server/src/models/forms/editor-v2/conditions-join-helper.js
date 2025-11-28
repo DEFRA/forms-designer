@@ -1,5 +1,5 @@
 import { insertValidationErrors } from '~/src/lib/utils.js'
-import { toPresentationStringV2 } from '~/src/models/forms/editor-v2/common.js'
+import { toPresentationStringV2 } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { getConditionsData } from '~/src/models/forms/editor-v2/page-conditions.js'
 
 /**

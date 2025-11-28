@@ -1,19 +1,27 @@
 import {
-  ComponentType,
+  ControllerType,
   FormStatus,
   getPageTitle,
-  hasComponentsEvenIfNoNext
+  isSummaryPage
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { getPageFromDefinition, stringHasValue } from '~/src/lib/utils.js'
+import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
   BACK_TO_ADD_AND_EDIT_PAGES,
   baseModelFields,
-  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
+import {
+  buildPreviewUrl,
+  getDeclarationInfo
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
+import {
+  CHECK_ANSWERS_CAPTION,
+  CHECK_ANSWERS_TAB_SECTIONS,
+  getCheckAnswersTabConfig
+} from '~/src/models/forms/editor-v2/tab-config.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -76,41 +84,25 @@ function getUnassignedPages(definition, currentPageId) {
 }
 
 /**
- * Get all unassigned pages for preview (no exclusions)
+ * Get all unassigned pages with full details for preview
+ * Excludes Summary and Status pages as they shouldn't appear in check answers
  * @param {FormDefinition} definition
  * @returns {Array<PageSummary>}
  */
-function getUnassignedPagesForPreview(definition) {
+function getUnassignedPagesWithDetails(definition) {
   return definition.pages
-    .filter((page) => !page.section)
+    .filter(
+      (page) =>
+        !page.section &&
+        !isSummaryPage(page) &&
+        page.controller !== ControllerType.Status
+    )
     .map((page) => ({
       id: page.id ?? '',
       path: page.path,
       title: getPageTitle(page),
       isGuidance: isGuidancePage(page)
     }))
-}
-
-/**
- * Get declaration info from the CYA page
- * @param {Page | undefined} page
- * @returns {{ hasDeclaration: boolean, declarationText: string }}
- */
-function getDeclarationInfo(page) {
-  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
-
-  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
-    components.find((comp, idx) => {
-      return comp.type === ComponentType.Markdown && idx === 0
-    })
-  )
-
-  const declarationText = guidanceComponent?.content ?? ''
-
-  return {
-    hasDeclaration: stringHasValue(declarationText),
-    declarationText
-  }
 }
 
 /**
@@ -139,13 +131,14 @@ export function sectionsViewModel(
 
   const sectionsWithPages = buildSectionsWithPages(definition)
   const unassignedPages = getUnassignedPages(definition, pageId)
-  const previewUnassignedPages = getUnassignedPagesForPreview(definition)
+  const previewUnassignedPages = getUnassignedPagesWithDetails(definition)
 
   const currentPath = `/library/${slug}/editor-v2/page/${pageId}/check-answers-settings/sections`
 
   const page = getPageFromDefinition(definition, pageId)
   const previewPageUrl = `${buildPreviewUrl(slug, FormStatus.Draft)}${page?.path}?force`
   const declarationInfo = getDeclarationInfo(page)
+  const showConfirmationEmail = page?.controller !== ControllerType.Summary
 
   return {
     ...baseModelFields(slug, `${pageTitle} - ${formTitle}`, formTitle),
@@ -153,12 +146,13 @@ export function sectionsViewModel(
     slug,
     pageTitle,
     cardTitle: pageTitle,
-    cardCaption: 'Check answers',
+    cardCaption: CHECK_ANSWERS_CAPTION,
+    tabConfig: getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_SECTIONS),
     sections: sectionsWithPages,
     unassignedPages,
     currentPath,
     backLink: {
-      href: editorv2Path(slug, `page/${pageId}/check-answers-settings`),
+      href: editorv2Path(slug, `page/${pageId}/check-answers-overview`),
       text: BACK_TO_ADD_AND_EDIT_PAGES
     },
     navigation,
@@ -168,7 +162,8 @@ export function sectionsViewModel(
     previewModel: {
       sections: sectionsWithPages,
       unassignedPages: previewUnassignedPages,
-      declaration: declarationInfo
+      declaration: declarationInfo,
+      showConfirmationEmail
     },
     previewPageUrl,
     notification,
@@ -177,6 +172,6 @@ export function sectionsViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

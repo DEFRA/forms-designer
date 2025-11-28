@@ -16,10 +16,21 @@ import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
-  buildPreviewUrl,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
+import {
+  DECLARATION_PREVIEW_TITLE,
+  SUMMARY_CONTROLLER_TEMPLATE,
+  buildPreviewUrl,
+  enrichPreviewModel
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
+import { dummyRenderer } from '~/src/models/forms/editor-v2/questions.js'
+import {
+  CHECK_ANSWERS_CAPTION,
+  CHECK_ANSWERS_TAB_DECLARATION,
+  getCheckAnswersTabConfig
+} from '~/src/models/forms/editor-v2/tab-config.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
@@ -69,36 +80,13 @@ export function settingsFields(
   }
 }
 
-export const dummyRenderer = {
-  /**
-   * @param {string} _a
-   * @param {PagePreviewPanelMacro} _b
-   * @returns {never}
-   */
-  render(_a, _b) {
-    // Server Side Render shouldn't use render
-    throw new Error('Not implemented')
-  }
-}
-
 /**
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
  * @param {ReturnType<typeof settingsFields>} fields
  * @param {boolean} showConfirmationEmail
- * @returns {PagePreviewPanelMacro & {
- *    previewPageUrl: string;
- *    questionType?: ComponentType,
- *    previewTitle?: string,
- *    componentRows: { rows: { key: { text: string }, value: { text: string } }[] },
- *    buttonText: string,
- *    hasPageSettingsTab: boolean,
- *    showConfirmationEmail: boolean,
- *    declarationText: string,
- *    needDeclaration: boolean,
- *    isConfirmationEmailSettingsPanel: boolean
- * }}
+ * @returns {PagePreviewPanelMacro & PreviewModelExtras}
  */
 export function getPreviewModel(
   page,
@@ -124,7 +112,7 @@ export function getPreviewModel(
   )
 
   return {
-    previewTitle: 'Preview of Check answers page',
+    previewTitle: DECLARATION_PREVIEW_TITLE,
     pageTitle: previewPageController.pageTitle,
     components: previewPageController.components,
     guidance: previewPageController.guidance,
@@ -184,13 +172,14 @@ export function checkAnswersSettingsViewModel(
     declarationTextVal,
     validation
   )
-  const pageHeading = 'Page settings'
+  const pageHeading = 'Declaration'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
   // prettier-ignore
-  const previewModel = getPreviewModel(
+  const basePreviewModel = getPreviewModel(
     page, definition, previewPageUrl, fields, showConfirmationEmail
   )
+  const previewModel = enrichPreviewModel(basePreviewModel, definition)
 
   return {
     ...baseModelFields(
@@ -200,8 +189,9 @@ export function checkAnswersSettingsViewModel(
     ),
     fields,
     cardTitle: pageHeading,
-    cardCaption: 'Check answers',
+    cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageHeading,
+    tabConfig: getCheckAnswersTabConfig(CHECK_ANSWERS_TAB_DECLARATION),
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
@@ -210,7 +200,7 @@ export function checkAnswersSettingsViewModel(
     preview: {
       pageId: page?.id,
       definitionId: metadata.id,
-      pageTemplate: 'summary-controller.njk'
+      pageTemplate: SUMMARY_CONTROLLER_TEMPLATE
     },
     buttonText: SAVE_AND_CONTINUE,
     notification
@@ -220,4 +210,5 @@ export function checkAnswersSettingsViewModel(
 /**
  * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { PreviewModelExtras } from '~/src/models/forms/editor-v2/preview-helpers.js'
  */

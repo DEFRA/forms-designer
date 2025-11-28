@@ -15,8 +15,6 @@ import {
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
-  buildPreviewErrorsUrl,
-  buildPreviewUrl,
   getFormSpecificNavigation,
   getPageNum,
   getQuestion,
@@ -24,6 +22,10 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
+import {
+  buildPreviewErrorsUrl,
+  buildPreviewUrl
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
 import { getPreviewModel } from '~/src/models/forms/editor-v2/question-details/preview.js'
 import {
   advancedSettingsFields,

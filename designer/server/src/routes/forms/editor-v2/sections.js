@@ -103,7 +103,7 @@ export const schema = Joi.object().keys({
     .required(),
   sectionHeading: Joi.when('operation', {
     is: OP_ADD_SECTION,
-    then: Joi.string().required().messages({
+    then: Joi.string().trim().required().messages({
       'any.required': ENTER_SECTION_HEADING,
       'string.empty': ENTER_SECTION_HEADING
     })
@@ -192,7 +192,13 @@ export default [
         const errorInstance = /** @type {Error} */ (error)
         if (errorInstance.message === SECTION_NAME_ALREADY_EXISTS) {
           yar.flash(errorKey, {
-            sectionHeading: { message: errorInstance.message }
+            formErrors: {
+              sectionHeading: {
+                text: errorInstance.message,
+                href: '#section-heading'
+              }
+            },
+            formValues: payload
           })
         } else {
           throw error

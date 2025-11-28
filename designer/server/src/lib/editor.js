@@ -651,8 +651,14 @@ export async function deleteCondition(formId, token, conditionId) {
 export async function addSection(formId, token, sectionTitle) {
   const definition = await forms.getDraftFormDefinition(formId, token)
   const sectionName = slugify(sectionTitle)
+  const normalisedTitle = sectionTitle.toLowerCase().trim()
 
-  if (definition.sections.some((s) => s.name === sectionName)) {
+  const isDuplicate = definition.sections.some(
+    (s) =>
+      s.name === sectionName || s.title.toLowerCase().trim() === normalisedTitle
+  )
+
+  if (isDuplicate) {
     throw new Error(SECTION_NAME_ALREADY_EXISTS)
   }
 

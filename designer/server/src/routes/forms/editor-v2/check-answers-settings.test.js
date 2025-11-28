@@ -41,7 +41,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardHeadings = container.getAllByText('Page settings')
+    const $cardHeadings = container.getAllByText('Declaration')
     const $radios = container.getAllByRole('radio')
 
     const $actions = container.getAllByRole('button')
@@ -49,9 +49,9 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardHeadings[0]).toHaveTextContent('Page settings')
+    expect($cardHeadings[0]).toHaveTextContent('Declaration')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Page settings')
+    expect($cardHeadings[1]).toHaveTextContent('Declaration')
     expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
     expect($radios).toHaveLength(2)
@@ -83,16 +83,16 @@ describe('Editor v2 check-answers-settings routes', () => {
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText('Test form')
-    const $cardHeadings = container.getAllByText('Page settings')
+    const $cardHeadings = container.getAllByText('Declaration')
     const $radios = container.getAllByRole('radio')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardHeadings[0]).toHaveTextContent('Page settings')
+    expect($cardHeadings[0]).toHaveTextContent('Declaration')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Page settings')
+    expect($cardHeadings[1]).toHaveTextContent('Declaration')
     expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
     expect($radios).toHaveLength(2)

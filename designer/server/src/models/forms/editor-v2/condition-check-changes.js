@@ -1,9 +1,7 @@
 import { getPageTitle } from '@defra/forms-model'
 
-import {
-  getFormSpecificNavigation,
-  toPresentationHtmlV2
-} from '~/src/models/forms/editor-v2/common.js'
+import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
+import { toPresentationHtmlV2 } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { isJoinedCondition } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
 import { editorFormPath, formOverviewPath } from '~/src/models/links.js'
 
