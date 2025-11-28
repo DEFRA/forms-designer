@@ -1,11 +1,32 @@
 {% extends "layouts/page.njk" %}
 
 {% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% set submissionsButtonHtml %}
+  {{ govukButton({
+    text: "Send submissions data",
+    name: "action",
+    value: "submissions",
+    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+    preventDoubleClick: true
+  }) }}
+{% endset %}
+
+{% set feedbackButtonHtml %}
+  {{ govukButton({
+    text: "Send feedback data",
+    name: "action",
+    value: "feedback",
+    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+    preventDoubleClick: true
+  }) }}
+{% endset %}
 
 {% block content %}
   {% call appPageBody({
@@ -31,43 +52,29 @@
     {% endif %}
 
     <form class="form" method="post">
-      <table class="govuk-table">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Type of data</th>
-            <th scope="col" class="govuk-table__header">How long we keep it</th>
-            <th scope="col" class="govuk-table__header">Send to shared mailbox</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">Form submissions</th>
-            <td class="govuk-table__cell">9 months after submission</td>
-            <td class="govuk-table__cell">
-              {{ govukButton({
-                text: "Send submissions data",
-                name: "action",
-                value: "submissions",
-                classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
-                preventDoubleClick: true
-              }) }}
-            </td>
-          </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" class="govuk-table__header">User feedback</th>
-            <td class="govuk-table__cell">9 months after submission</td>
-            <td class="govuk-table__cell">
-              {{ govukButton({
-                text: "Send feedback data",
-                name: "action",
-                value: "feedback",
-                classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
-                preventDoubleClick: true
-              }) }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
+
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [
+          { text: "Type of data" },
+          { text: "How long we keep it" },
+          { text: "Send to shared mailbox" }
+        ],
+        rows: [
+          [
+            { text: "Form submissions" },
+            { text: "9 months after submission" },
+            { html: submissionsButtonHtml }
+          ],
+          [
+            { text: "User feedback" },
+            { text: "9 months after submission" },
+            { html: feedbackButtonHtml }
+          ]
+        ]
+        })
+      }}
+
     </form>
 
   {% endcall %}
