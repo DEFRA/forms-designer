@@ -1,11 +1,14 @@
 import {
   ComponentType,
+  ControllerType,
   getPageTitle,
-  hasComponentsEvenIfNoNext
+  hasComponentsEvenIfNoNext,
+  isSummaryPage
 } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { stringHasValue } from '~/src/lib/utils.js'
+import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
 
 export const DEFAULT_TRUNCATE_LENGTH = 50
 export const DECLARATION_PREVIEW_TITLE = 'Preview of Check answers page'
@@ -58,6 +61,7 @@ export function buildPreviewErrorsUrl(slug) {
 
 /**
  * Build sections with their assigned pages for preview
+ * Excludes guidance-only pages as they don't appear on the check answers page
  * @param {FormDefinition} definition
  * @returns {Array<{ name: string, title: string, pages: Array<{ title: string }> }>}
  */
@@ -69,7 +73,7 @@ export function buildSectionsForPreview(definition) {
     name: section.name,
     title: section.title,
     pages: pages
-      .filter((page) => page.section === section.name)
+      .filter((page) => page.section === section.name && !isGuidancePage(page))
       .map((page) => ({
         title: getPageTitle(page)
       }))
@@ -77,14 +81,21 @@ export function buildSectionsForPreview(definition) {
 }
 
 /**
- * Get unassigned page titles for preview (simple version returning only title)
+ * Get unassigned page titles for preview
+ * Excludes Summary, Status, and guidance-only pages as they don't appear on check answers
  * @param {FormDefinition} definition
  * @returns {Array<{ title: string }>}
  */
 export function getUnassignedPageTitlesForPreview(definition) {
   const pages = definition.pages
   return pages
-    .filter((page) => !page.section)
+    .filter(
+      (page) =>
+        !page.section &&
+        !isSummaryPage(page) &&
+        page.controller !== ControllerType.Status &&
+        !isGuidancePage(page)
+    )
     .map((page) => ({
       title: getPageTitle(page)
     }))

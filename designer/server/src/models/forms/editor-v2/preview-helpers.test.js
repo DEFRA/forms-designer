@@ -120,6 +120,32 @@ describe('preview-helpers', () => {
       expect(result[0].title).toBe('First Section')
       expect(result[1].title).toBe('Second Section')
     })
+
+    it('should exclude guidance-only pages from sections', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Question page',
+            section: 'section-1',
+            components: [buildTextFieldComponent()]
+          }),
+          buildQuestionPage({
+            id: 'p2',
+            title: 'Guidance page',
+            section: 'section-1',
+            components: [buildMarkdownComponent({ content: 'Some guidance' })]
+          })
+        ],
+        sections: [{ name: 'section-1', title: 'First Section' }]
+      })
+
+      const result = buildSectionsForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].pages).toHaveLength(1)
+      expect(result[0].pages[0].title).toBe('Question page')
+    })
   })
 
   describe('getUnassignedPageTitlesForPreview', () => {
@@ -153,6 +179,44 @@ describe('preview-helpers', () => {
       const result = getUnassignedPageTitlesForPreview(definition)
 
       expect(result).toEqual([])
+    })
+
+    it('should exclude summary pages from unassigned pages', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'p1', title: 'Question page' }),
+          buildSummaryPage({ id: 'cya-page', path: '/summary' })
+        ],
+        sections: []
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('Question page')
+    })
+
+    it('should exclude guidance-only pages from unassigned pages', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Question page',
+            components: [buildTextFieldComponent()]
+          }),
+          buildQuestionPage({
+            id: 'p2',
+            title: 'Guidance page',
+            components: [buildMarkdownComponent({ content: 'Some guidance' })]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('Question page')
     })
   })
 

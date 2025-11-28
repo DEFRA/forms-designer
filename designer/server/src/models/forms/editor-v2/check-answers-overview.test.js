@@ -173,7 +173,7 @@ describe('check-answers-overview model', () => {
       expect(result.previewModel.sections[0].pages).toHaveLength(1)
     })
 
-    it('should build preview model with unassigned pages', () => {
+    it('should build preview model with unassigned pages excluding summary pages', () => {
       const definition = buildDefinition({
         pages: [
           buildQuestionPage({ id: 'p1', title: 'Unassigned Page' }),
@@ -188,7 +188,10 @@ describe('check-answers-overview model', () => {
         'cya-page'
       )
 
-      expect(result.previewModel.unassignedPages).toHaveLength(2)
+      expect(result.previewModel.unassignedPages).toHaveLength(1)
+      expect(result.previewModel.unassignedPages[0].title).toBe(
+        'Unassigned Page'
+      )
     })
 
     it('should include required preview model properties for right panel', () => {

@@ -122,13 +122,18 @@ describe('sections model', () => {
       ).toBeUndefined()
     })
 
-    it('should exclude CYA page from preview unassigned pages', () => {
+    it('should exclude CYA page and guidance pages from preview unassigned pages', () => {
       const definition = buildDefinition({
         pages: [
           buildQuestionPage({
             id: 'p1',
-            title: 'Page one',
+            title: 'Question page',
             components: [buildTextFieldComponent()]
+          }),
+          buildQuestionPage({
+            id: 'p2',
+            title: 'Guidance page',
+            components: [buildMarkdownComponent({ content: 'Some guidance' })]
           }),
           buildSummaryPage({ id: 'cya-page' })
         ],
@@ -143,9 +148,10 @@ describe('sections model', () => {
         undefined
       )
 
-      // CYA page should not appear in preview unassigned pages
+      // CYA page and guidance pages should not appear in preview unassigned pages
+      // Only question pages should appear
       expect(result.previewModel.unassignedPages).toHaveLength(1)
-      expect(result.previewModel.unassignedPages[0].title).toBe('Page one')
+      expect(result.previewModel.unassignedPages[0].title).toBe('Question page')
     })
 
     it('should identify guidance pages', () => {
@@ -431,6 +437,43 @@ describe('sections model', () => {
       )
 
       expect(result.previewModel.declaration.hasDeclaration).toBe(false)
+    })
+
+    it('should exclude guidance pages from section preview pages', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Question page',
+            section: 'section-1',
+            components: [buildTextFieldComponent()]
+          }),
+          buildQuestionPage({
+            id: 'p2',
+            title: 'Guidance page',
+            section: 'section-1',
+            components: [buildMarkdownComponent({ content: 'Some guidance' })]
+          }),
+          buildSummaryPage({ id: 'cya-page' })
+        ],
+        sections: [{ name: 'section-1', title: 'Section One' }]
+      })
+
+      const result = sectionsViewModel(
+        baseMetadata,
+        definition,
+        'cya-page',
+        undefined,
+        undefined
+      )
+
+      // Section should still show both pages in the assignment UI
+      expect(result.sections[0].pages).toHaveLength(2)
+      // But preview should only show question pages (not guidance)
+      expect(result.previewModel.sections[0].pages).toHaveLength(1)
+      expect(result.previewModel.sections[0].pages[0].title).toBe(
+        'Question page'
+      )
     })
   })
 })

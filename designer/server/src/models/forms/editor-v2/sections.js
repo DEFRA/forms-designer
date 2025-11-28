@@ -15,6 +15,7 @@ import {
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
 import {
   buildPreviewUrl,
+  buildSectionsForPreview,
   getDeclarationInfo
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
@@ -67,29 +68,12 @@ function buildSectionsWithPages(definition) {
 }
 
 /**
- * Get unassigned pages (excludes the current CYA page)
- * @param {FormDefinition} definition
- * @param {string} currentPageId - The CYA page ID to exclude
- * @returns {Array<PageSummary>}
- */
-function getUnassignedPages(definition, currentPageId) {
-  return definition.pages
-    .filter((page) => page.id !== currentPageId && !page.section)
-    .map((page) => ({
-      id: page.id ?? '',
-      path: page.path,
-      title: getPageTitle(page),
-      isGuidance: isGuidancePage(page)
-    }))
-}
-
-/**
- * Get all unassigned pages with full details for preview
+ * Get unassigned pages that can be assigned to sections
  * Excludes Summary and Status pages as they shouldn't appear in check answers
  * @param {FormDefinition} definition
  * @returns {Array<PageSummary>}
  */
-function getUnassignedPagesWithDetails(definition) {
+function getUnassignedPages(definition) {
   return definition.pages
     .filter(
       (page) =>
@@ -103,6 +87,16 @@ function getUnassignedPagesWithDetails(definition) {
       title: getPageTitle(page),
       isGuidance: isGuidancePage(page)
     }))
+}
+
+/**
+ * Get unassigned pages for preview, excluding guidance pages
+ * Guidance pages can be assigned to sections but won't appear on the check answers page
+ * @param {FormDefinition} definition
+ * @returns {Array<PageSummary>}
+ */
+function getUnassignedPagesForPreview(definition) {
+  return getUnassignedPages(definition).filter((page) => !page.isGuidance)
 }
 
 /**
@@ -130,8 +124,9 @@ export function sectionsViewModel(
   )
 
   const sectionsWithPages = buildSectionsWithPages(definition)
-  const unassignedPages = getUnassignedPages(definition, pageId)
-  const previewUnassignedPages = getUnassignedPagesWithDetails(definition)
+  const unassignedPages = getUnassignedPages(definition)
+  const previewSections = buildSectionsForPreview(definition)
+  const previewUnassignedPages = getUnassignedPagesForPreview(definition)
 
   const currentPath = `/library/${slug}/editor-v2/page/${pageId}/check-answers-settings/sections`
 
@@ -164,7 +159,7 @@ export function sectionsViewModel(
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
     previewModel: {
-      sections: sectionsWithPages,
+      sections: previewSections,
       unassignedPages: previewUnassignedPages,
       declaration: declarationInfo,
       showConfirmationEmail
