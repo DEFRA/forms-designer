@@ -151,6 +151,29 @@ describe('Editor v2 responses routes', () => {
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/library/my-form-slug/editor-v2/responses')
     })
+
+    test('should handle valid payload', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce({
+        ...testFormMetadata,
+        notificationEmail: 'test@defratest.gov.uk'
+      })
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/responses',
+        auth,
+        payload: { action: 'submissions' }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/library/my-form-slug/editor-v2/responses')
+
+      // TODO - ensure API call happened
+    })
   })
 })
 
