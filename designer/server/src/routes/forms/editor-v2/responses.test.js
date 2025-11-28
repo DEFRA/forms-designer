@@ -126,8 +126,10 @@ describe('Editor v2 responses routes', () => {
       expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
     })
 
-    test.skip('POST - should handle boom error if boom received from API call', async () => {
+    test('should handle boom error if boom received from API call', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      // TODO - implement test when API call is plubmed in
+
       // jest.mocked(setPageSettings).mockImplementationOnce(() => {
       //   throw buildBoom409(
       //     'Duplicate page path',
