@@ -163,7 +163,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     name: 'OsGridRefField',
     title: 'Ordnance Survey (OS) grid reference',
     type: ComponentType.OsGridRefField,
-    hint: 'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456',
+    hint: 'An OS grid reference number is made up of 2 letters followed by either 6, 8 or 10 numbers, for example, TQ123456',
     options: {}
   },
   {

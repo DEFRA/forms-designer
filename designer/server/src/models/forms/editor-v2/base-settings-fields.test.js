@@ -856,7 +856,7 @@ describe('editor-v2 - advanced settings fields model', () => {
         ComponentType.OsGridRefField
       )
       expect(result).toBe(
-        'An OS grid reference number is made up of 2 letters followed by 6 numbers, for example, TQ123456'
+        'An OS grid reference number is made up of 2 letters followed by either 6, 8 or 10 numbers, for example, TQ123456'
       )
     })
 
