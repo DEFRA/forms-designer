@@ -25,6 +25,7 @@ import editorQuestionDetails from '~/src/routes/forms/editor-v2/question-details
 import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-or-page-delete.js'
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
+import editorResponses from '~/src/routes/forms/editor-v2/responses.js'
 import editorSections from '~/src/routes/forms/editor-v2/sections.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
 import editorUpload from '~/src/routes/forms/editor-v2/upload.js'
@@ -47,6 +48,7 @@ export default [
   editorQuestionDelete,
   editorQuestionDetails,
   editorQuestions,
+  editorResponses,
   editorState,
   editorListItemDelete,
   editorCheckAnswersOverview,
