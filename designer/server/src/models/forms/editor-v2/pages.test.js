@@ -243,7 +243,7 @@ describe('editor-v2 - pages model', () => {
     test('should return end page edit url', () => {
       const [page1] = testFormDefinitionWithTwoQuestions.pages
       const url = determineEditUrl(page1, true, '/edit-base/')
-      expect(url).toBe('/edit-base/p1/check-answers-settings')
+      expect(url).toBe('/edit-base/p1/check-answers-overview')
     })
     test('should return guidance url', () => {
       const [page1] = testFormDefinitionWithAGuidancePage.pages

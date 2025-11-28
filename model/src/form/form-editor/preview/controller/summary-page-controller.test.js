@@ -372,6 +372,70 @@ describe('summary page controller', () => {
     expect(controller.showConfirmationEmail).toBe(true)
     expect(pageRenderMock).toHaveBeenCalledTimes(3)
   })
+
+  it('should initialize with sections and unassignedPages', () => {
+    const sections = [
+      {
+        name: 'section1',
+        title: 'First Section',
+        pages: [{ title: 'Page 1' }, { title: 'Page 2' }]
+      },
+      {
+        name: 'section2',
+        title: 'Second Section',
+        pages: [{ title: 'Page 3' }]
+      }
+    ]
+    const unassignedPages = [{ title: 'Unassigned Page 1' }]
+
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: false,
+      sections,
+      unassignedPages
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.sections).toEqual(sections)
+    expect(controller.unassignedPages).toEqual(unassignedPages)
+  })
+
+  it('should default sections and unassignedPages to empty arrays when not provided', () => {
+    const elements = /** @type {SummaryPageElements} */ ({
+      heading: '',
+      declaration: false,
+      guidance: '',
+      showConfirmationEmail: false
+    })
+    const definition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          components: [
+            buildTextFieldComponent({
+              title: 'What is your full name?',
+              shortDescription: 'Your full name'
+            })
+          ]
+        })
+      ]
+    })
+    const controller = new SummaryPageController(elements, definition, renderer)
+    expect(controller.sections).toEqual([])
+    expect(controller.unassignedPages).toEqual([])
+  })
 })
 
 /**

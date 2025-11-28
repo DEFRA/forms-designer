@@ -148,10 +148,18 @@ export interface PageOverviewElements extends PagePreviewBaseElements {
   hasRepeater: boolean
 }
 
+export interface SectionForPreview {
+  name: string
+  title: string
+  pages: { title: string }[]
+}
+
 export interface SummaryPageElements extends PagePreviewBaseElements {
   declaration: boolean
   showConfirmationEmail: boolean
   isConfirmationEmailSettingsPanel: boolean
+  sections?: SectionForPreview[]
+  unassignedPages?: { title: string }[]
 }
 
 export interface SummaryPageInitialState {
@@ -159,6 +167,8 @@ export interface SummaryPageInitialState {
   declarationText: string
   needDeclaration: boolean
   isConfirmationEmailSettingsPanel: boolean
+  sections?: SectionForPreview[]
+  unassignedPages?: { title: string }[]
 }
 
 export type PreviewQuestion =

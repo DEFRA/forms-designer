@@ -2164,6 +2164,28 @@ describe('editor.js', () => {
         addSection(formId, token, 'Existing-Section')
       ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
     })
+
+    test('should throw error if section title matches case-insensitively', async () => {
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWithSections)
+
+      await expect(
+        addSection(formId, token, 'existing section')
+      ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
+      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
+    })
+
+    test('should throw error if section title matches with different whitespace', async () => {
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWithSections)
+
+      await expect(
+        addSection(formId, token, '  Existing Section  ')
+      ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
+      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
+    })
   })
 
   describe('removeSection', () => {

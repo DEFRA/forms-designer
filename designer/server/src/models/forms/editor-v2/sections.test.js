@@ -122,7 +122,7 @@ describe('sections model', () => {
       ).toBeUndefined()
     })
 
-    it('should include CYA page in preview unassigned pages', () => {
+    it('should exclude CYA page from preview unassigned pages', () => {
       const definition = buildDefinition({
         pages: [
           buildQuestionPage({
@@ -143,7 +143,9 @@ describe('sections model', () => {
         undefined
       )
 
-      expect(result.previewModel.unassignedPages).toHaveLength(2)
+      // CYA page should not appear in preview unassigned pages
+      expect(result.previewModel.unassignedPages).toHaveLength(1)
+      expect(result.previewModel.unassignedPages[0].title).toBe('Page one')
     })
 
     it('should identify guidance pages', () => {
@@ -191,7 +193,7 @@ describe('sections model', () => {
       )
 
       expect(result.backLink.href).toBe(
-        '/library/test-form/editor-v2/page/cya-page/check-answers-settings'
+        '/library/test-form/editor-v2/page/cya-page/check-answers-overview'
       )
       expect(result.backLink.text).toBe('Back to add and edit pages')
     })

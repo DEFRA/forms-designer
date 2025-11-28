@@ -32,21 +32,7 @@
   <div class="govuk-grid-column-one-half-from-desktop">
 
     {% call appEditorCard({
-      titles: [
-        {
-          title: cardTitle,
-          isActive: true,
-          link: 'check-answers-settings'
-        },
-        {
-          title: 'Confirmation emails',
-          link: 'confirmation-email-settings'
-        },
-        {
-          title: 'Sections',
-          link: 'check-answers-settings/sections'
-        }
-      ],
+      titles: tabConfig,
       id: 'page-settings',
       caption: cardCaption,
       heading: cardHeading,

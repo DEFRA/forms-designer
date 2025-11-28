@@ -36,6 +36,16 @@ export class SummaryPageController extends PreviewPageControllerBase {
    * @private
    */
   _isConfirmationEmailSettingsPanel = false
+  /**
+   * @type {SectionForPreview[]}
+   * @private
+   */
+  _sections = []
+  /**
+   * @type {Array<{ title: string }>}
+   * @private
+   */
+  _unassignedPages = []
 
   /**
    * @param {SummaryPageElements} elements
@@ -55,6 +65,8 @@ export class SummaryPageController extends PreviewPageControllerBase {
     this._guidanceComponent.content = elements.guidance
     this._isConfirmationEmailSettingsPanel =
       elements.isConfirmationEmailSettingsPanel
+    this._sections = elements.sections ?? []
+    this._unassignedPages = elements.unassignedPages ?? []
   }
 
   /**
@@ -154,6 +166,20 @@ export class SummaryPageController extends PreviewPageControllerBase {
   }
 
   /**
+   * @returns {SectionForPreview[]}
+   */
+  get sections() {
+    return this._sections
+  }
+
+  /**
+   * @returns {Array<{ title: string }>}
+   */
+  get unassignedPages() {
+    return this._unassignedPages
+  }
+
+  /**
    * @returns {Markdown[]}
    * @protected
    */
@@ -182,7 +208,7 @@ export class SummaryPageController extends PreviewPageControllerBase {
 /**
  * @import { ComponentDef, ContentComponentsDef, ListComponent, FormComponentsDef } from '~/src/components/types.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements, SectionForPreview } from '~/src/form/form-editor/preview/types.js'
  * @import { SummaryRowActionItem, SummaryRow } from '~/src/form/form-editor/macros/types.js'
  * @import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
  */

@@ -8,10 +8,55 @@
       {{ params.pageTitle.text }}
     </h2>
   {% endif %}
-  {{ govukSummaryList(params.componentRows) }}
+
+  {# Render sections if available #}
+  {% if params.sections and params.sections.length > 0 %}
+    <div id="sections-preview">
+      {% for section in params.sections %}
+        {% if section.pages.length > 0 %}
+          <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+          <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+            {% for page in section.pages %}
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">{{ page.title }}</dt>
+              <dd class="govuk-summary-list__value">Answer goes here</dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                  Change<span class="govuk-visually-hidden"> {{ page.title }}</span>
+                </a>
+              </dd>
+            </div>
+            {% endfor %}
+          </dl>
+        {% else %}
+          <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+          <p class="govuk-hint">No pages in this section</p>
+        {% endif %}
+      {% endfor %}
+
+      {% if params.unassignedPages and params.unassignedPages.length > 0 %}
+        <dl class="govuk-summary-list">
+          {% for page in params.unassignedPages %}
+          <div class="govuk-summary-list__row">
+            <dt class="govuk-summary-list__key">{{ page.title }}</dt>
+            <dd class="govuk-summary-list__value">Answer goes here</dd>
+            <dd class="govuk-summary-list__actions">
+              <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                Change<span class="govuk-visually-hidden"> {{ page.title }}</span>
+              </a>
+            </dd>
+          </div>
+          {% endfor %}
+        </dl>
+      {% endif %}
+    </div>
+  {% else %}
+    {# Fallback to flat component rows when no sections #}
+    {{ govukSummaryList(params.componentRows) }}
+  {% endif %}
 
   {% if params.showConfirmationEmail %}
-    <div class="{{ "border-left-container" if params.isConfirmationEmailSettingsPanel else "" }} govuk-!-margin-top-6">
+    <div class="govuk-!-margin-top-6">
       {{ govukInput({
         id: "userConfirmationEmailAddress",
         name: "userConfirmationEmailAddress",
@@ -28,7 +73,7 @@
   {% for component in params.components %}
     {% if loop.index0 === 0 %}
       {% set model = component.model %}
-      <div class="{{ "border-left-container" if not params.isConfirmationEmailSettingsPanel else "" }} govuk-!-margin-top-6">
+      <div class="border-left-container govuk-!-margin-top-6">
         {%- include 'preview-components/markdown.njk' -%}
       </div>
     {% endif %}
@@ -40,7 +85,8 @@
       classes: "govuk-!-margin-right-4"
     }) }}
     {{ govukButton({
-      text: params.buttonText
+      text: params.buttonText,
+      disabled: true
     }) }}
   </div>
 </div>

@@ -1,8 +1,4 @@
-{% from "page-preview-panel/macro.njk" import appPagePreviewPanel %}
-{% from "preview-panel/macro.njk" import appPreviewPanel %}
-
-{% call appPagePreviewPanel(previewModel) %}
-{% endcall %}
+{%- include "./check-answers-preview-content.njk" -%}
 
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
 <script type="module">
@@ -12,6 +8,8 @@
     showConfirmationEmail: {{ previewModel.showConfirmationEmail | dump }},
     declarationText: {{ previewModel.declarationText | dump | safe }},
     needDeclaration: {{ previewModel.needDeclaration | dump }},
-    isConfirmationEmailSettingsPanel: {{ previewModel.isConfirmationEmailSettingsPanel | dump }}
+    isConfirmationEmailSettingsPanel: {{ previewModel.isConfirmationEmailSettingsPanel | dump }},
+    sections: {{ previewModel.sections | dump | safe }},
+    unassignedPages: {{ previewModel.unassignedPages | dump | safe }}
   })
 </script>
