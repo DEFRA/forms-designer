@@ -29,9 +29,12 @@ export function generateSuccessMessage(email) {
  * @param {string} slug
  */
 export function generateTitling(slug) {
+  const pageTitle = 'Download responses as an Excel spreadsheet'
+
   return {
+    pageTitle,
     pageHeading: {
-      text: 'Download responses as an Excel spreadsheet'
+      text: pageTitle
     },
     backLink: {
       text: 'Back to form overview',
