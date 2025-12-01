@@ -129,6 +129,7 @@ export type Page =
   | PageStatus
 
 export interface Section {
+  id?: string
   name: string
   title: string
   hideTitle?: boolean
