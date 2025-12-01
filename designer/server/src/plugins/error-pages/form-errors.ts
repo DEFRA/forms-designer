@@ -17,6 +17,8 @@ export const formErrorsToMessages = {
     'Each question on a page must have a unique ID. Change the question ID to one that is not already used.',
   [FormDefinitionError.UniquePageComponentName]:
     'Each question on a page must have a unique name. Change the question name to one that is not already used.',
+  [FormDefinitionError.UniqueSectionId]:
+    'Each section must have a unique ID. Change the section ID to one that is not already used.',
   [FormDefinitionError.UniqueSectionName]:
     'Each section must have a unique name. Change the section name to one that is not already used.',
   [FormDefinitionError.UniqueSectionTitle]:
