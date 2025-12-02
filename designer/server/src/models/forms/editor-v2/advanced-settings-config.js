@@ -6,10 +6,10 @@ import {
 
 /**
  * Configuration mapping component types to their available advanced settings
- * @type {Record<ComponentType, QuestionAdvancedSettings[]>}
+ * @type {Partial<Record<ComponentType, QuestionAdvancedSettings[]>>}
  */
 export const advancedSettingsPerComponentType =
-  /** @type {Record<ComponentType, QuestionAdvancedSettings[]> } */ ({
+  /** @type {Partial<Record<ComponentType, QuestionAdvancedSettings[]>>} */ ({
     TextField: [
       QuestionAdvancedSettings.MinLength,
       QuestionAdvancedSettings.MaxLength,

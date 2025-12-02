@@ -74,7 +74,7 @@ describe('question', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.Question()
+      const res = SetupPreview('Question')
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({
         id: expect.stringContaining('inputField'),
@@ -101,7 +101,7 @@ describe('question', () => {
     it('should handle changed values', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.Question()
+      const res = SetupPreview('Question')
       expect(res.titleText).toBe('Which quest would you like to pick?')
       expect(res.question).toBe('Which quest would you like to pick?')
       expect(res.hintText).toBe('Choose one adventure that best suits you.')
@@ -118,7 +118,7 @@ describe('question', () => {
     it('should handle missing values', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.Question()
+      const res = SetupPreview('Question')
       res.question = ''
       expect(res.titleText).toBe('Question')
       res.hintText = ''
@@ -141,7 +141,7 @@ describe('question', () => {
     })
 
     it('should highlight', () => {
-      const preview = SetupPreview.Question()
+      const preview = SetupPreview('Question')
       preview.highlight = `hintText`
       expect(preview).toMatchObject({
         hint: { text: 'Hint text' }

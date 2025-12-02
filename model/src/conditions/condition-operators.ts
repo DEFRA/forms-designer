@@ -55,7 +55,11 @@ const relativeDateOperators = {
   )
 }
 
-export const customOperators = {
+export type CustomOperators<
+  T extends ConditionalComponentType = ConditionalComponentType
+> = Partial<Record<T, Partial<Conditionals> | undefined>>
+
+export const customOperators: CustomOperators = {
   [ComponentType.AutocompleteField]: defaultOperators,
   [ComponentType.RadiosField]: defaultOperators,
   [ComponentType.CheckboxesField]: {

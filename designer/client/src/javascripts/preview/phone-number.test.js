@@ -1,4 +1,4 @@
-import { PhoneNumberQuestion } from '@defra/forms-model'
+import { ComponentType, PhoneNumberQuestion } from '@defra/forms-model'
 
 import {
   questionDetailsLeftPanelHTML,
@@ -13,7 +13,7 @@ describe('phone number', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.TelephoneNumberField()
+      const res = SetupPreview(ComponentType.TelephoneNumberField)
       expect(res).toBeInstanceOf(PhoneNumberQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

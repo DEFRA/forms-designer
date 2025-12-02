@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
@@ -10,7 +12,7 @@ describe('ShortAnswer', () => {
   it('should create class', () => {
     document.body.innerHTML =
       questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-    const res = SetupPreview.TextField()
+    const res = SetupPreview(ComponentType.TextField)
     expect(res).toBeDefined()
   })
 })

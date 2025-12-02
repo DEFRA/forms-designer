@@ -39,12 +39,7 @@ export function showHideForJs() {
  * @returns {PreviewQuestion}
  */
 export function setupPreview(componentType) {
-  const PreviewConstructor =
-    /** @type {() => PreviewQuestion} */
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    (SetupPreview[componentType] ?? SetupPreview.Question)
-
-  const preview = PreviewConstructor()
+  const preview = SetupPreview(componentType)
 
   showHideForJs()
 

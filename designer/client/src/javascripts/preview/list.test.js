@@ -141,7 +141,7 @@ describe('list', () => {
     it('should setup', () => {
       document.body.innerHTML = list1HTML
       const preview = /** @type {ListSortableQuestion} */ (
-        SetupPreview.ListSortable()
+        SetupPreview('ListSortable')
       )
       expect(preview.renderInput.fieldset?.legend.text).toBe('Question')
     })
@@ -192,7 +192,7 @@ describe('list', () => {
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
         const preview = /** @type {ListQuestion} */ (
-          SetupPreview.ListSortable()
+          SetupPreview('ListSortable')
         )
         const listEventListeners = new ListEventListeners(
           preview,
@@ -331,7 +331,7 @@ describe('list', () => {
 
     it('should highlight', () => {
       const preview = /** @type {ListSortableQuestion} */ (
-        SetupPreview.ListSortable()
+        SetupPreview('ListSortable')
       )
       preview.highlight = `${baronListItemId}-hint`
       expect(preview.list[3]).toMatchObject({
@@ -341,7 +341,7 @@ describe('list', () => {
 
     it('should handle edge cases', () => {
       const preview = /** @type {ListSortableQuestion} */ (
-        SetupPreview.ListSortable()
+        SetupPreview('ListSortable')
       )
       expect(preview.list).toEqual(expectedList)
       preview.updateValue(undefined, 'new-value')
@@ -359,7 +359,7 @@ describe('list', () => {
 
   describe('editFieldHasFocus', () => {
     it('should return true for list text field', () => {
-      const preview = /** @type {ListQuestion} */ (SetupPreview.ListSortable())
+      const preview = /** @type {ListQuestion} */ (SetupPreview('ListSortable'))
       const listEventListeners = new ListEventListeners(
         preview,
         questionElements,

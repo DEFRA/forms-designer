@@ -139,12 +139,14 @@ const formDefinitionRepeater = {
   lists: []
 }
 
+/** @type {Partial<ComponentDef>} */
 const questionDetails = {
   title: 'What is your name?',
   name: 'what-is-your-name',
   type: ComponentType.TextField
 }
 
+/** @type {Partial<ComponentDef>} */
 const radioQuestionDetails = {
   title: 'What is your favourite colour?',
   name: 'what-is-your-fav-colour',
@@ -152,6 +154,7 @@ const radioQuestionDetails = {
   list: 'my-list'
 }
 
+/** @type {Partial<ComponentDef>} */
 const guidanceDetails = {
   name: 'markdown-component',
   type: ComponentType.Markdown,
@@ -455,6 +458,7 @@ describe('editor.js', () => {
           body: { id: '456' }
         })
 
+        /** @type {Partial<ComponentDef>} */
         const questionDetailsFileUpload = {
           type: ComponentType.FileUploadField
         }
@@ -494,6 +498,7 @@ describe('editor.js', () => {
           body: { id: '456' }
         })
 
+        /** @type {Partial<ComponentDef>} */
         const questionDetailsFileUpload = {
           type: ComponentType.FileUploadField
         }
@@ -776,6 +781,7 @@ describe('editor.js', () => {
           formsEndpoint
         )
 
+        /** @type {Partial<ComponentDef>} */
         const questionDetails = {
           type: ComponentType.TextField,
           title: 'My first question'

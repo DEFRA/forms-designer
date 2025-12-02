@@ -1,4 +1,4 @@
-import { DeclarationQuestion } from '@defra/forms-model'
+import { ComponentType, DeclarationQuestion } from '@defra/forms-model'
 
 import {
   questionDetailsLeftPanelHTML,
@@ -122,7 +122,7 @@ describe('declaration', () => {
         questionDetailsPreviewHTML +
         declarationHTML
       const question = /** @type {DeclarationQuestion} */ (
-        SetupPreview.DeclarationField()
+        SetupPreview(ComponentType.DeclarationField)
       )
       const declarationTextEl = /** @type {HTMLTextAreaElement | null} */ (
         document.getElementById('declarationText')
@@ -146,7 +146,7 @@ describe('declaration', () => {
         questionDetailsPreviewHTML +
         declarationHTML
       const question = /** @type {DeclarationQuestion} */ (
-        SetupPreview.DeclarationField()
+        SetupPreview(ComponentType.DeclarationField)
       )
       const declarationTextEl = /** @type {HTMLTextAreaElement | null} */ (
         document.getElementById('declarationText')
@@ -169,7 +169,7 @@ describe('declaration', () => {
         questionDetailsPreviewHTML +
         declarationHTML
       const question = /** @type {DeclarationQuestion} */ (
-        SetupPreview.DeclarationField()
+        SetupPreview(ComponentType.DeclarationField)
       )
       const declarationTextEl = /** @type {HTMLTextAreaElement | null} */ (
         document.getElementById('declarationText')
@@ -200,7 +200,7 @@ describe('declaration', () => {
         questionDetailsPreviewHTML +
         declarationHTML
       const res = /** @type {DeclarationQuestion} */ (
-        SetupPreview.DeclarationField()
+        SetupPreview(ComponentType.DeclarationField)
       )
       expect(res).toBeInstanceOf(DeclarationQuestion)
       expect(res).toBeDefined()
@@ -213,7 +213,7 @@ describe('declaration', () => {
         questionDetailsPreviewHTML +
         declarationHTML
       const res = /** @type {DeclarationQuestion} */ (
-        SetupPreview.DeclarationField()
+        SetupPreview(ComponentType.DeclarationField)
       )
       expect(res.question).toBe('Which quest would you like to pick?')
       expect(res.hintText).toBe('Choose one adventure that best suits you.')
@@ -231,7 +231,7 @@ describe('declaration', () => {
         questionDetailsPreviewHTML +
         emptyDeclarationHTML
       const res = /** @type {DeclarationQuestion} */ (
-        SetupPreview.DeclarationField()
+        SetupPreview(ComponentType.DeclarationField)
       )
       expect(res.declarationText).toBe('')
     })

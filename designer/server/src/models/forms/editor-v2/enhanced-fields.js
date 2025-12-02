@@ -2,7 +2,7 @@ import { QuestionEnhancedFields } from '~/src/common/constants/editor.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 
 export const enhancedFieldsPerComponentType =
-  /** @type {Record<ComponentType, QuestionEnhancedFields[]> } */ ({
+  /** @type {Partial<Record<ComponentType, QuestionEnhancedFields[]>>} */ ({
     TextField: [],
     MultilineTextField: [],
     YesNoField: [],

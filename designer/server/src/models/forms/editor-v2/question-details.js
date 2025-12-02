@@ -174,11 +174,9 @@ export function getDetails(
  * @returns {GovukField[]}
  */
 export function getExtraFields(question, validation) {
-  const extraFieldNames = /** @type {ComponentType[]} */ (
-    advancedSettingsPerComponentType[question.type]
-  )
+  const extraFieldNames = advancedSettingsPerComponentType[question.type]
 
-  if (extraFieldNames.length) {
+  if (extraFieldNames?.length) {
     return advancedSettingsFields(
       extraFieldNames,
       /** @type {TextFieldComponent} */ (question),
@@ -194,11 +192,9 @@ export function getExtraFields(question, validation) {
  * @returns {GovukField[]}
  */
 export function getEnhancedFields(question, validation) {
-  const extraFieldNames = /** @type {ComponentType[]} */ (
-    enhancedFieldsPerComponentType[question.type]
-  )
+  const extraFieldNames = enhancedFieldsPerComponentType[question.type]
 
-  if (extraFieldNames.length) {
+  if (extraFieldNames?.length) {
     return enhancedFields(
       extraFieldNames,
       /** @type {TextFieldComponent} */ (question),
