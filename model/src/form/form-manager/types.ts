@@ -1,6 +1,6 @@
 import { type Context } from 'joi'
 
-import { type Repeat } from '~/src/form/form-definition/types.js'
+import { type Repeat, type Section } from '~/src/form/form-definition/types.js'
 import { type ControllerType } from '~/src/pages/enums.js'
 
 export interface PatchPageFields {
@@ -15,11 +15,8 @@ export interface AddComponentQueryOptions {
   prepend?: boolean
 }
 
-export interface SectionAssignmentItem {
-  id?: string
+export type SectionAssignmentItem = Omit<Section, 'name'> & {
   name?: string
-  title: string
-  hideTitle?: boolean
   pageIds: string[]
 }
 
