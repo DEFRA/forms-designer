@@ -49,8 +49,7 @@ import {
 import { checkErrors } from '~/src/form/form-manager/errors.js'
 import {
   FormDefinitionError,
-  FormDefinitionErrorType,
-  type SectionAssignmentItem
+  FormDefinitionErrorType
 } from '~/src/form/form-manager/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import {
@@ -1016,43 +1015,6 @@ export const sectionsSchemaV2 = sectionsSchema
     id: idSchema.description('Unique identifier for the section')
   })
   .description('Section schema for V2 forms')
-
-/**
- * Schema for section assignment item
- */
-export const sectionAssignmentItemSchema = Joi.object<SectionAssignmentItem>()
-  .keys({
-    id: idSchema.optional(),
-    name: Joi.string().trim().min(1).optional(),
-    title: Joi.string().trim().min(1).required(),
-    hideTitle: Joi.boolean().optional(),
-    pageIds: Joi.array().items(Joi.string().uuid()).required()
-  })
-  .description('Section assignment item schema')
-
-/**
- * Schema for section assignment payload (bulk update sections with page assignments)
- */
-export const sectionAssignmentPayloadSchema = Joi.object<{
-  sections: SectionAssignmentItem[]
-}>()
-  .keys({
-    sections: Joi.array<SectionAssignmentItem>()
-      .items(sectionAssignmentItemSchema)
-      .unique('id', { ignoreUndefined: true })
-      .unique('name', { ignoreUndefined: true })
-      .unique('title')
-      .required()
-      .error(
-        checkErrors([
-          FormDefinitionError.UniqueSectionId,
-          FormDefinitionError.UniqueSectionName,
-          FormDefinitionError.UniqueSectionTitle
-        ])
-      )
-  })
-  .required()
-  .description('Section assignment payload schema')
 
 const feedbackSchema = Joi.object<FormDefinition['feedback']>()
   .description('Feedback configuration for the form')
