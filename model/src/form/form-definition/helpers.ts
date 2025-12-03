@@ -68,7 +68,9 @@ export function getHiddenFields(definition: FormDefinition) {
  * @param definition - form definition
  * @returns {boolean}
  */
-export function isFeedbackForm(definition: FormDefinition) {
+export function isFeedbackForm(definition: FormDefinition | undefined) {
   const feedback = 'FeedbackPageController' as ControllerType
-  return definition.pages.some((p) => p.controller === feedback)
+  return definition?.pages
+    ? definition.pages.some((p) => p.controller === feedback)
+    : false
 }
