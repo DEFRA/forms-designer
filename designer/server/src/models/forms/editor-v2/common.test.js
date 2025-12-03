@@ -437,22 +437,22 @@ describe('editor-v2 - model', () => {
           buildQuestionPage({
             id: 'p1',
             title: 'Page One',
-            section: 'section-1'
+            section: 'section-1-id'
           }),
           buildQuestionPage({
             id: 'p2',
             title: 'Page Two',
-            section: 'section-1'
+            section: 'section-1-id'
           }),
           buildQuestionPage({
             id: 'p3',
             title: 'Page Three',
-            section: 'section-2'
+            section: 'section-2-id'
           })
         ],
         sections: [
-          { name: 'section-1', title: 'First Section' },
-          { name: 'section-2', title: 'Second Section' }
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' },
+          { id: 'section-2-id', name: 'section-2', title: 'Second Section' }
         ]
       })
 
@@ -460,11 +460,13 @@ describe('editor-v2 - model', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0]).toEqual({
+        id: 'section-1-id',
         name: 'section-1',
         title: 'First Section',
         pages: [{ title: 'Page One' }, { title: 'Page Two' }]
       })
       expect(result[1]).toEqual({
+        id: 'section-2-id',
         name: 'section-2',
         title: 'Second Section',
         pages: [{ title: 'Page Three' }]
@@ -474,13 +476,20 @@ describe('editor-v2 - model', () => {
     it('should return section with empty pages array if no pages assigned', () => {
       const definition = buildDefinition({
         pages: [buildQuestionPage({ id: 'p1', title: 'Unassigned Page' })],
-        sections: [{ name: 'empty-section', title: 'Empty Section' }]
+        sections: [
+          {
+            id: 'empty-section-id',
+            name: 'empty-section',
+            title: 'Empty Section'
+          }
+        ]
       })
 
       const result = buildSectionsForPreview(definition)
 
       expect(result).toHaveLength(1)
       expect(result[0]).toEqual({
+        id: 'empty-section-id',
         name: 'empty-section',
         title: 'Empty Section',
         pages: []

@@ -100,24 +100,26 @@ describe('preview-helpers', () => {
           buildQuestionPage({
             id: 'p1',
             title: 'Page One',
-            section: 'section-1'
+            section: 'section-1-id'
           }),
           buildQuestionPage({
             id: 'p2',
             title: 'Page Two',
-            section: 'section-2'
+            section: 'section-2-id'
           })
         ],
         sections: [
-          { name: 'section-1', title: 'First Section' },
-          { name: 'section-2', title: 'Second Section' }
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' },
+          { id: 'section-2-id', name: 'section-2', title: 'Second Section' }
         ]
       })
 
       const result = buildSectionsForPreview(definition)
 
       expect(result).toHaveLength(2)
+      expect(result[0].id).toBe('section-1-id')
       expect(result[0].title).toBe('First Section')
+      expect(result[1].id).toBe('section-2-id')
       expect(result[1].title).toBe('Second Section')
     })
 
@@ -127,17 +129,19 @@ describe('preview-helpers', () => {
           buildQuestionPage({
             id: 'p1',
             title: 'Question page',
-            section: 'section-1',
+            section: 'section-1-id',
             components: [buildTextFieldComponent()]
           }),
           buildQuestionPage({
             id: 'p2',
             title: 'Guidance page',
-            section: 'section-1',
+            section: 'section-1-id',
             components: [buildMarkdownComponent({ content: 'Some guidance' })]
           })
         ],
-        sections: [{ name: 'section-1', title: 'First Section' }]
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' }
+        ]
       })
 
       const result = buildSectionsForPreview(definition)

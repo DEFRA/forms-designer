@@ -50,7 +50,6 @@ import {
   removeUniquelyMappedListsFromPage
 } from '~/src/lib/list.js'
 import { stringHasValue } from '~/src/lib/utils.js'
-import { SECTION_NAME_ALREADY_EXISTS } from '~/src/models/forms/editor-v2/common.js'
 
 jest.mock('~/src/lib/fetch.js')
 jest.mock('~/src/lib/list.js')
@@ -2088,25 +2087,6 @@ describe('editor.js', () => {
   })
 
   describe('addSection', () => {
-    const definitionWithSections = buildDefinition({
-      pages: [
-        {
-          id: 'p1',
-          path: '/page-one',
-          title: 'Page one',
-          components: [],
-          next: []
-        }
-      ],
-      sections: [
-        {
-          name: 'existing-section',
-          title: 'Existing Section',
-          hideTitle: false
-        }
-      ]
-    })
-
     const definitionWithoutSections = buildDefinition({
       pages: [
         {
@@ -2121,70 +2101,47 @@ describe('editor.js', () => {
     })
 
     test('should add a new section to the form', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: definitionWithoutSections.pages,
+        sections: [
+          {
+            id: expect.any(String),
+            name: 'new-section',
+            title: 'New Section',
+            hideTitle: false
+          }
+        ]
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(definitionWithoutSections)
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await addSection(formId, token, 'New Section')
 
       expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
-        formId,
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        expect.any(URL),
         expect.objectContaining({
-          sections: [
-            { name: 'new-section', title: 'New Section', hideTitle: false }
-          ]
-        }),
-        token
+          payload: {
+            sections: [
+              expect.objectContaining({
+                id: expect.any(String),
+                title: 'New Section',
+                hideTitle: false,
+                pageIds: []
+              })
+            ]
+          }
+        })
       )
       expect(result.sections).toHaveLength(1)
-      expect(result.sections[0].name).toBe('new-section')
-    })
-
-    test('should throw error if section name already exists', async () => {
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWithSections)
-
-      await expect(
-        addSection(formId, token, 'Existing Section')
-      ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
-      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
-    })
-
-    test('should throw error if slugified section name already exists', async () => {
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWithSections)
-
-      await expect(
-        addSection(formId, token, 'Existing-Section')
-      ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
-    })
-
-    test('should throw error if section title matches case-insensitively', async () => {
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWithSections)
-
-      await expect(
-        addSection(formId, token, 'existing section')
-      ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
-      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
-    })
-
-    test('should throw error if section title matches with different whitespace', async () => {
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWithSections)
-
-      await expect(
-        addSection(formId, token, '  Existing Section  ')
-      ).rejects.toThrow(SECTION_NAME_ALREADY_EXISTS)
-      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
+      expect(result.sections[0].title).toBe('New Section')
     })
   })
 
@@ -2195,7 +2152,7 @@ describe('editor.js', () => {
           id: 'p1',
           path: '/page-one',
           title: 'Page one',
-          section: 'section-to-remove',
+          section: 'section-id-to-remove',
           components: [],
           next: []
         },
@@ -2203,7 +2160,7 @@ describe('editor.js', () => {
           id: 'p2',
           path: '/page-two',
           title: 'Page two',
-          section: 'other-section',
+          section: 'other-section-id',
           components: [],
           next: []
         },
@@ -2211,60 +2168,112 @@ describe('editor.js', () => {
           id: 'p3',
           path: '/page-three',
           title: 'Page three',
-          section: 'section-to-remove',
+          section: 'section-id-to-remove',
           components: [],
           next: []
         }
       ],
       sections: [
         {
+          id: 'section-id-to-remove',
           name: 'section-to-remove',
           title: 'Section to Remove',
           hideTitle: false
         },
-        { name: 'other-section', title: 'Other Section', hideTitle: false }
+        {
+          id: 'other-section-id',
+          name: 'other-section',
+          title: 'Other Section',
+          hideTitle: false
+        }
       ]
     })
 
     test('should remove section and unassign all pages from it', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [
+          {
+            id: 'p1',
+            path: '/page-one',
+            title: 'Page one',
+            components: [],
+            next: []
+          },
+          {
+            id: 'p2',
+            path: '/page-two',
+            title: 'Page two',
+            section: 'other-section-id',
+            components: [],
+            next: []
+          },
+          {
+            id: 'p3',
+            path: '/page-three',
+            title: 'Page three',
+            components: [],
+            next: []
+          }
+        ],
+        sections: [
+          {
+            id: 'other-section-id',
+            name: 'other-section',
+            title: 'Other Section',
+            hideTitle: false
+          }
+        ]
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionWithPagesInSection))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
-      const result = await removeSection(formId, token, 'section-to-remove')
+      const result = await removeSection(formId, token, 'section-id-to-remove')
 
       expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
-        formId,
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        expect.any(URL),
         expect.objectContaining({
-          sections: [
-            { name: 'other-section', title: 'Other Section', hideTitle: false }
-          ]
-        }),
-        token
+          payload: {
+            sections: [
+              expect.objectContaining({
+                id: 'other-section-id',
+                name: 'other-section',
+                title: 'Other Section'
+              })
+            ]
+          }
+        })
       )
       expect(result.sections).toHaveLength(1)
-      expect(result.pages[0].section).toBeUndefined()
-      expect(result.pages[1].section).toBe('other-section')
-      expect(result.pages[2].section).toBeUndefined()
     })
 
     test('should handle removing a section that does not exist', async () => {
       const defWithOnlyOtherSection = buildDefinition({
         pages: [],
         sections: [
-          { name: 'other-section', title: 'Other Section', hideTitle: false }
+          {
+            id: 'other-section-id',
+            name: 'other-section',
+            title: 'Other Section',
+            hideTitle: false
+          }
         ]
       })
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(defWithOnlyOtherSection))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(defWithOnlyOtherSection)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await removeSection(formId, token, 'non-existent-section')
 
@@ -2287,84 +2296,143 @@ describe('editor.js', () => {
           id: 'p2',
           path: '/page-two',
           title: 'Page two',
-          section: 'existing-section',
+          section: 'existing-section-id',
           components: [],
           next: []
         }
       ],
       sections: [
         {
+          id: 'existing-section-id',
           name: 'existing-section',
           title: 'Existing Section',
           hideTitle: false
         },
-        { name: 'new-section', title: 'New Section', hideTitle: false }
+        {
+          id: 'new-section-id',
+          name: 'new-section',
+          title: 'New Section',
+          hideTitle: false
+        }
       ]
     })
 
     test('should assign a page to a section', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [
+          {
+            id: 'p1',
+            path: '/page-one',
+            title: 'Page one',
+            section: 'new-section-id',
+            components: [],
+            next: []
+          },
+          {
+            id: 'p2',
+            path: '/page-two',
+            title: 'Page two',
+            section: 'existing-section-id',
+            components: [],
+            next: []
+          }
+        ],
+        sections: definitionForAssign.sections
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForAssign))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await assignPageToSection(
         formId,
         token,
         'p1',
-        'new-section'
+        'new-section-id'
       )
 
       expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
-        formId,
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        expect.any(URL),
         expect.objectContaining({
-          pages: expect.arrayContaining([
-            expect.objectContaining({ id: 'p1', section: 'new-section' })
-          ])
-        }),
-        token
+          payload: {
+            sections: expect.arrayContaining([
+              expect.objectContaining({
+                id: 'new-section-id',
+                pageIds: expect.arrayContaining(['p1'])
+              })
+            ])
+          }
+        })
       )
-      expect(result.pages[0].section).toBe('new-section')
+      expect(result.pages[0].section).toBe('new-section-id')
     })
 
     test('should reassign a page from one section to another', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [
+          {
+            id: 'p1',
+            path: '/page-one',
+            title: 'Page one',
+            components: [],
+            next: []
+          },
+          {
+            id: 'p2',
+            path: '/page-two',
+            title: 'Page two',
+            section: 'new-section-id',
+            components: [],
+            next: []
+          }
+        ],
+        sections: definitionForAssign.sections
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForAssign))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await assignPageToSection(
         formId,
         token,
         'p2',
-        'new-section'
+        'new-section-id'
       )
 
-      expect(result.pages[1].section).toBe('new-section')
+      expect(result.pages[1].section).toBe('new-section-id')
     })
 
     test('should handle assigning a non-existent page', async () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForAssign))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(definitionForAssign)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await assignPageToSection(
         formId,
         token,
         'non-existent-page',
-        'new-section'
+        'new-section-id'
       )
 
       expect(result.pages[0].section).toBeUndefined()
-      expect(result.pages[1].section).toBe('existing-section')
+      expect(result.pages[1].section).toBe('existing-section-id')
     })
   })
 
@@ -2375,7 +2443,7 @@ describe('editor.js', () => {
           id: 'p1',
           path: '/page-one',
           title: 'Page one',
-          section: 'some-section',
+          section: 'some-section-id',
           components: [],
           next: []
         },
@@ -2388,26 +2456,49 @@ describe('editor.js', () => {
         }
       ],
       sections: [
-        { name: 'some-section', title: 'Some Section', hideTitle: false }
+        {
+          id: 'some-section-id',
+          name: 'some-section',
+          title: 'Some Section',
+          hideTitle: false
+        }
       ]
     })
 
     test('should unassign a page from its section', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [
+          {
+            id: 'p1',
+            path: '/page-one',
+            title: 'Page one',
+            components: [],
+            next: []
+          },
+          {
+            id: 'p2',
+            path: '/page-two',
+            title: 'Page two',
+            components: [],
+            next: []
+          }
+        ],
+        sections: definitionForUnassign.sections
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForUnassign))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await unassignPageFromSection(formId, token, 'p1')
 
       expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
-        formId,
-        expect.any(Object),
-        token
-      )
+      expect(mockedPutJson).toHaveBeenCalled()
       expect(result.pages[0].section).toBeUndefined()
     })
 
@@ -2415,9 +2506,11 @@ describe('editor.js', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForUnassign))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(definitionForUnassign)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await unassignPageFromSection(formId, token, 'p2')
 
@@ -2428,9 +2521,11 @@ describe('editor.js', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForUnassign))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(definitionForUnassign)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await unassignPageFromSection(
         formId,
@@ -2438,7 +2533,7 @@ describe('editor.js', () => {
         'non-existent-page'
       )
 
-      expect(result.pages[0].section).toBe('some-section')
+      expect(result.pages[0].section).toBe('some-section-id')
     })
   })
 
@@ -2446,48 +2541,107 @@ describe('editor.js', () => {
     const definitionForSettings = buildDefinition({
       pages: [],
       sections: [
-        { name: 'my-section', title: 'My Section', hideTitle: false },
-        { name: 'other-section', title: 'Other Section', hideTitle: true }
+        {
+          id: 'my-section-id',
+          name: 'my-section',
+          title: 'My Section',
+          hideTitle: false
+        },
+        {
+          id: 'other-section-id',
+          name: 'other-section',
+          title: 'Other Section',
+          hideTitle: true
+        }
       ]
     })
 
     test('should update hideTitle setting to true', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [],
+        sections: [
+          {
+            id: 'my-section-id',
+            name: 'my-section',
+            title: 'My Section',
+            hideTitle: true
+          },
+          {
+            id: 'other-section-id',
+            name: 'other-section',
+            title: 'Other Section',
+            hideTitle: true
+          }
+        ]
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForSettings))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
-
-      const result = await updateSectionSettings(formId, token, 'my-section', {
-        hideTitle: true
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
       })
 
-      expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
+      const result = await updateSectionSettings(
         formId,
+        token,
+        'my-section-id',
+        {
+          hideTitle: true
+        }
+      )
+
+      expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        expect.any(URL),
         expect.objectContaining({
-          sections: expect.arrayContaining([
-            expect.objectContaining({ name: 'my-section', hideTitle: true })
-          ])
-        }),
-        token
+          payload: {
+            sections: expect.arrayContaining([
+              expect.objectContaining({
+                id: 'my-section-id',
+                hideTitle: true
+              })
+            ])
+          }
+        })
       )
       expect(result.sections[0].hideTitle).toBe(true)
     })
 
     test('should update hideTitle setting to false', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [],
+        sections: [
+          {
+            id: 'my-section-id',
+            name: 'my-section',
+            title: 'My Section',
+            hideTitle: false
+          },
+          {
+            id: 'other-section-id',
+            name: 'other-section',
+            title: 'Other Section',
+            hideTitle: false
+          }
+        ]
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForSettings))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await updateSectionSettings(
         formId,
         token,
-        'other-section',
+        'other-section-id',
         { hideTitle: false }
       )
 
@@ -2495,17 +2649,37 @@ describe('editor.js', () => {
     })
 
     test('should default hideTitle to false when undefined', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [],
+        sections: [
+          {
+            id: 'my-section-id',
+            name: 'my-section',
+            title: 'My Section',
+            hideTitle: false
+          },
+          {
+            id: 'other-section-id',
+            name: 'other-section',
+            title: 'Other Section',
+            hideTitle: true
+          }
+        ]
+      })
+
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForSettings))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await updateSectionSettings(
         formId,
         token,
-        'my-section',
+        'my-section-id',
         {}
       )
 
@@ -2516,14 +2690,16 @@ describe('editor.js', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(structuredClone(definitionForSettings))
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(buildDefinition())
+        .mockResolvedValueOnce(definitionForSettings)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
 
       const result = await updateSectionSettings(
         formId,
         token,
-        'non-existent-section',
+        'non-existent-section-id',
         { hideTitle: true }
       )
 

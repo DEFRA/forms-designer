@@ -1,4 +1,9 @@
-import { Engine } from '@defra/forms-model'
+import {
+  Engine,
+  FormDefinitionError,
+  FormDefinitionErrorType
+} from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -19,7 +24,6 @@ import {
 } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { SECTION_NAME_ALREADY_EXISTS } from '~/src/models/forms/editor-v2/common.js'
 import {
   ROUTE_PATH_SECTIONS,
   handleSectionOperation
@@ -53,7 +57,14 @@ describe('Editor v2 sections routes', () => {
       }),
       buildSummaryPage({ id: 'cya-page' })
     ],
-    sections: [{ name: 'section-1', title: 'Section One', hideTitle: false }],
+    sections: [
+      {
+        id: 'section-1',
+        name: 'section-1',
+        title: 'Section One',
+        hideTitle: false
+      }
+    ],
     engine: Engine.V2
   })
 
@@ -146,11 +157,25 @@ describe('Editor v2 sections routes', () => {
       )
     })
 
-    test('should handle section name already exists error', async () => {
+    test('should handle duplicate section title error from API', async () => {
+      const cause = [
+        {
+          id: FormDefinitionError.UniqueSectionTitle,
+          detail: { path: ['sections', 1], pos: 1, dupePos: 0 },
+          message: '"sections[1]" contains a duplicate value',
+          type: FormDefinitionErrorType.Unique
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"sections[1]" contains a duplicate value', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-      jest
-        .mocked(addSection)
-        .mockRejectedValueOnce(new Error(SECTION_NAME_ALREADY_EXISTS))
+      jest.mocked(addSection).mockRejectedValueOnce(boomErr)
 
       const options = {
         method: 'post',
@@ -165,6 +190,51 @@ describe('Editor v2 sections routes', () => {
       const { response } = await renderResponse(server, options)
 
       expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        'sectionsValidationFailure',
+        expect.any(Joi.ValidationError)
+      )
+    })
+
+    test('should handle duplicate section name error from API', async () => {
+      const cause = [
+        {
+          id: FormDefinitionError.UniqueSectionName,
+          detail: { path: ['sections', 1], pos: 1, dupePos: 0 },
+          message: '"sections[1]" contains a duplicate value',
+          type: FormDefinitionErrorType.Unique
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"sections[1]" contains a duplicate value', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(addSection).mockRejectedValueOnce(boomErr)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/page/cya-page/check-answers-settings/sections',
+        auth,
+        payload: {
+          operation: 'add-section',
+          sectionHeading: 'Section One'
+        }
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        'sectionsValidationFailure',
+        expect.any(Joi.ValidationError)
+      )
     })
 
     test('should rethrow other errors', async () => {
