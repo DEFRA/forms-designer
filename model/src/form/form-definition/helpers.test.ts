@@ -285,6 +285,11 @@ describe('helpers', () => {
       } as unknown as FormDefinition
       expect(isFeedbackForm(def)).toBe(false)
     })
+
+    test('returns false when undefined', () => {
+      const def = {} as unknown as FormDefinition
+      expect(isFeedbackForm(def)).toBe(false)
+    })
   })
 })
 
