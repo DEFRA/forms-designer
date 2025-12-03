@@ -2,7 +2,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
-import { ControllerType } from '~/src/pages/enums.js'
+import { type ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
 /**
@@ -69,6 +69,6 @@ export function getHiddenFields(definition: FormDefinition) {
  * @returns {boolean}
  */
 export function isFeedbackForm(definition: FormDefinition) {
-  // @ts-expect-error - custom page controller
-  return definition.pages.some((p) => p.controller === ControllerType.Feedback)
+  const feedback = 'FeedbackPageController' as ControllerType
+  return definition.pages.some((p) => p.controller === feedback)
 }

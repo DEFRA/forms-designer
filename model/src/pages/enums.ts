@@ -12,6 +12,5 @@ export enum ControllerType {
   Terminal = 'TerminalPageController',
   Summary = 'SummaryPageController',
   SummaryWithConfirmationEmail = 'SummaryPageWithConfirmationEmailController',
-  Status = 'StatusPageController',
-  Feedback = 'FeedbackPageController'
+  Status = 'StatusPageController'
 }

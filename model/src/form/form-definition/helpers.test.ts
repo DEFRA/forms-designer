@@ -260,7 +260,7 @@ describe('helpers', () => {
     })
     const page2 = buildQuestionPage({
       // @ts-expect-error - custom controller
-      controller: ControllerType.Feedback,
+      controller: 'FeedbackPageController',
       title: 'give feedback',
       path: '/give-feedback',
       components: undefined,
