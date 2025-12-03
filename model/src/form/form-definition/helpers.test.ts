@@ -3,6 +3,7 @@ import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
 import {
   getHiddenFields,
   isConditionListItemRefValueData,
+  isFeedbackForm,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import { type FormDefinition } from '~/src/form/form-definition/types.js'
@@ -245,6 +246,44 @@ describe('helpers', () => {
           options: {}
         }
       ])
+    })
+  })
+
+  describe('isFeedbackForm', () => {
+    const page1 = buildQuestionPage({
+      controller: ControllerType.Page,
+      title: 'give feedback',
+      path: '/give-feedback',
+      components: undefined,
+      next: [],
+      id: '44711e08-3801-444d-8e37-a88867c48f04'
+    })
+    const page2 = buildQuestionPage({
+      // @ts-expect-error - custom controller
+      controller: ControllerType.Feedback,
+      title: 'give feedback',
+      path: '/give-feedback',
+      components: undefined,
+      next: [],
+      id: '44711e08-3801-444d-8e37-a88867c48f04'
+    })
+
+    test('returns true when contains FeedbackPageController', () => {
+      const def = {
+        name: 'form name',
+        conditions: [],
+        pages: [page1, page2]
+      } as unknown as FormDefinition
+      expect(isFeedbackForm(def)).toBe(true)
+    })
+
+    test('returns false when doesnt contain FeedbackPageController', () => {
+      const def = {
+        name: 'form name',
+        conditions: [],
+        pages: [page1]
+      } as unknown as FormDefinition
+      expect(isFeedbackForm(def)).toBe(false)
     })
   })
 })
