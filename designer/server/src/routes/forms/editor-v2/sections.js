@@ -1,4 +1,4 @@
-import { Scopes } from '@defra/forms-model'
+import { FormDefinitionError, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -10,14 +10,16 @@ import {
   unassignPageFromSection,
   updateSectionSettings
 } from '~/src/lib/editor.js'
+import {
+  createJoiError,
+  isInvalidFormErrorType
+} from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import {
-  CHANGES_SAVED_SUCCESSFULLY,
-  SECTION_NAME_ALREADY_EXISTS
-} from '~/src/models/forms/editor-v2/common.js'
+import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/sections.js'
+import { formErrorsToMessages } from '~/src/plugins/error-pages/form-errors.js'
 
 export const ROUTE_PATH_SECTIONS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/sections`
 
@@ -188,21 +190,20 @@ export default [
         if (notification) {
           yar.flash(sessionNames.successNotification, notification)
         }
-      } catch (error) {
-        const errorInstance = /** @type {Error} */ (error)
-        if (errorInstance.message === SECTION_NAME_ALREADY_EXISTS) {
-          yar.flash(errorKey, {
-            formErrors: {
-              sectionHeading: {
-                text: errorInstance.message,
-                href: '#sectionHeading'
-              }
-            },
-            formValues: payload
-          })
-        } else {
-          throw error
+      } catch (err) {
+        if (
+          isInvalidFormErrorType(err, FormDefinitionError.UniqueSectionName) ||
+          isInvalidFormErrorType(err, FormDefinitionError.UniqueSectionTitle)
+        ) {
+          const joiErr = createJoiError(
+            'sectionHeading',
+            formErrorsToMessages[FormDefinitionError.UniqueSectionTitle]
+          )
+
+          return redirectWithErrors(request, h, joiErr, errorKey)
         }
+
+        throw err
       }
 
       return h

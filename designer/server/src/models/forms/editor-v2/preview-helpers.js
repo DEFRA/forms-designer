@@ -63,17 +63,18 @@ export function buildPreviewErrorsUrl(slug) {
  * Build sections with their assigned pages for preview
  * Excludes guidance-only pages as they don't appear on the check answers page
  * @param {FormDefinition} definition
- * @returns {Array<{ name: string, title: string, pages: Array<{ title: string }> }>}
+ * @returns {Array<{ id: string, name: string, title: string, pages: Array<{ title: string }> }>}
  */
 export function buildSectionsForPreview(definition) {
   const sections = definition.sections
   const pages = definition.pages
 
   return sections.map((section) => ({
+    id: section.id ?? '',
     name: section.name,
     title: section.title,
     pages: pages
-      .filter((page) => page.section === section.name && !isGuidancePage(page))
+      .filter((page) => page.section === section.id && !isGuidancePage(page))
       .map((page) => ({
         title: getPageTitle(page)
       }))
@@ -164,7 +165,7 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  * @property {string} declarationText - Declaration text content
  * @property {boolean} needDeclaration - Whether declaration is required
  * @property {boolean} isConfirmationEmailSettingsPanel - Whether this is the confirmation email settings panel
- * @property {Array<{ name: string, title: string, pages: Array<{ title: string }> }>} [sections] - Sections for preview
+ * @property {Array<{ id: string, name: string, title: string, pages: Array<{ title: string }> }>} [sections] - Sections for preview
  * @property {Array<{ title: string }>} [unassignedPages] - Unassigned pages for preview
  * @property {{ hasDeclaration: boolean, declarationText: string }} [declaration] - Declaration info for preview
  */
