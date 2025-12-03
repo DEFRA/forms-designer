@@ -15,6 +15,14 @@ export interface AddComponentQueryOptions {
   prepend?: boolean
 }
 
+export interface SectionAssignmentItem {
+  id?: string
+  name?: string
+  title: string
+  hideTitle?: boolean
+  pageIds: string[]
+}
+
 // Enum of error types that can be raised through validating the form definition
 export enum FormDefinitionErrorType {
   Unique = 'unique', // Unique constraint
