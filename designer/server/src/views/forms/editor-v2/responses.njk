@@ -65,18 +65,19 @@
             { text: "Form submissions" },
             { text: "9 months after submission" },
             { html: submissionsButtonHtml }
-          ],
-          [
-            { text: "User feedback" },
-            { text: "9 months after submission" },
-            { html: feedbackButtonHtml }
           ]
         ]
         })
       }}
 
     </form>
-
+    {#
+    [
+      { text: "User feedback" },
+      { text: "9 months after submission" },
+      { html: feedbackButtonHtml }
+    ]
+    #}
   {% endcall %}
 {% endblock %}
 
