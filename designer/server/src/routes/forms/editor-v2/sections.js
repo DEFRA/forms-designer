@@ -191,13 +191,20 @@ export default [
           yar.flash(sessionNames.successNotification, notification)
         }
       } catch (err) {
-        if (
-          isInvalidFormErrorType(err, FormDefinitionError.UniqueSectionName) ||
-          isInvalidFormErrorType(err, FormDefinitionError.UniqueSectionTitle)
-        ) {
+        const sectionErrors = [
+          FormDefinitionError.UniqueSectionId,
+          FormDefinitionError.UniqueSectionName,
+          FormDefinitionError.UniqueSectionTitle
+        ]
+
+        const matchedError = sectionErrors.find((errorType) =>
+          isInvalidFormErrorType(err, errorType)
+        )
+
+        if (matchedError) {
           const joiErr = createJoiError(
             'sectionHeading',
-            formErrorsToMessages[FormDefinitionError.UniqueSectionTitle]
+            formErrorsToMessages[matchedError]
           )
 
           return redirectWithErrors(request, h, joiErr, errorKey)

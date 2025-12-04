@@ -24,6 +24,7 @@ import {
 } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { formErrorsToMessages } from '~/src/plugins/error-pages/form-errors.js'
 import {
   ROUTE_PATH_SECTIONS,
   handleSectionOperation
@@ -157,7 +158,7 @@ describe('Editor v2 sections routes', () => {
       )
     })
 
-    test('should handle duplicate section title error from API', async () => {
+    test('should handle duplicate section title error from API with correct message', async () => {
       const cause = [
         {
           id: FormDefinitionError.UniqueSectionTitle,
@@ -193,11 +194,18 @@ describe('Editor v2 sections routes', () => {
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
         'sectionsValidationFailure',
-        expect.any(Joi.ValidationError)
+        expect.objectContaining({
+          details: expect.arrayContaining([
+            expect.objectContaining({
+              message:
+                formErrorsToMessages[FormDefinitionError.UniqueSectionTitle]
+            })
+          ])
+        })
       )
     })
 
-    test('should handle duplicate section name error from API', async () => {
+    test('should handle duplicate section name error from API with correct message', async () => {
       const cause = [
         {
           id: FormDefinitionError.UniqueSectionName,
@@ -233,7 +241,60 @@ describe('Editor v2 sections routes', () => {
       expect(addErrorsToSession).toHaveBeenCalledWith(
         expect.anything(),
         'sectionsValidationFailure',
-        expect.any(Joi.ValidationError)
+        expect.objectContaining({
+          details: expect.arrayContaining([
+            expect.objectContaining({
+              message:
+                formErrorsToMessages[FormDefinitionError.UniqueSectionName]
+            })
+          ])
+        })
+      )
+    })
+
+    test('should handle duplicate section id error from API with correct message', async () => {
+      const cause = [
+        {
+          id: FormDefinitionError.UniqueSectionId,
+          detail: { path: ['sections', 1], pos: 1, dupePos: 0 },
+          message: '"sections[1]" contains a duplicate value',
+          type: FormDefinitionErrorType.Unique
+        }
+      ]
+
+      const boomErr = Boom.boomify(
+        new Error('"sections[1]" contains a duplicate value', { cause }),
+        {
+          data: { error: 'InvalidFormDefinitionError' }
+        }
+      )
+
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(addSection).mockRejectedValueOnce(boomErr)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/page/cya-page/check-answers-settings/sections',
+        auth,
+        payload: {
+          operation: 'add-section',
+          sectionHeading: 'Section One'
+        }
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        'sectionsValidationFailure',
+        expect.objectContaining({
+          details: expect.arrayContaining([
+            expect.objectContaining({
+              message: formErrorsToMessages[FormDefinitionError.UniqueSectionId]
+            })
+          ])
+        })
       )
     })
 
