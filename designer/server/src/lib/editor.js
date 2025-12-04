@@ -662,7 +662,7 @@ function buildSectionsWithPageIds(definition) {
     title: section.title,
     hideTitle: section.hideTitle ?? false,
     pageIds: definition.pages
-      .filter((page) => page.section === section.id && page.id)
+      .filter((page) => section.id && page.section === section.id && page.id)
       .map((page) => /** @type {string} */ (page.id))
   }))
 }
@@ -702,6 +702,7 @@ export async function addSection(formId, token, sectionTitle) {
   const sections = buildSectionsWithPageIds(definition)
   sections.push({
     id: randomUUID(),
+    name: slugify(sectionTitle),
     title: sectionTitle,
     hideTitle: false,
     pageIds: []

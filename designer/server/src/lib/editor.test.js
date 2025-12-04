@@ -2132,6 +2132,7 @@ describe('editor.js', () => {
             sections: [
               expect.objectContaining({
                 id: expect.any(String),
+                name: 'new-section',
                 title: 'New Section',
                 hideTitle: false,
                 pageIds: []
@@ -2141,6 +2142,7 @@ describe('editor.js', () => {
         })
       )
       expect(result.sections).toHaveLength(1)
+      expect(result.sections[0].name).toBe('new-section')
       expect(result.sections[0].title).toBe('New Section')
     })
   })
