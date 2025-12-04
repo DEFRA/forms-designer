@@ -29,7 +29,10 @@ import {
   ListQuestion,
   SelectComponentElements
 } from '~/src/form/form-editor/preview/list.js'
-import { LongAnswerQuestion } from '~/src/form/form-editor/preview/long-answer.js'
+import {
+  LongAnswerQuestion,
+  MultilineTextFieldComponentPreviewElements
+} from '~/src/form/form-editor/preview/long-answer.js'
 import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
 import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
 import {
@@ -102,6 +105,12 @@ const ComponentToPreviewQuestion = {
     const componentCoerced = /** @type {SelectFieldComponent} */ (component)
     const list = findDefinitionListFromComponent(componentCoerced, definition)
     return new SelectComponentElements(componentCoerced, list)
+  },
+  [ComponentType.MultilineTextField]: (component, _definition) => {
+    const componentCoerced = /** @type {MultilineTextFieldComponent} */ (
+      component
+    )
+    return new MultilineTextFieldComponentPreviewElements(componentCoerced)
   },
   [ComponentType.UkAddressField]: (component, _definition) => {
     const componentCoerced = /** @type {UkAddressFieldComponent} */ (component)
@@ -187,5 +196,5 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { AutocompleteFieldComponent, ComponentDef, DeclarationFieldComponent, EastingNorthingFieldComponent, LatLongFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, SelectFieldComponent, UkAddressFieldComponent, YesNoFieldComponent } from '~/src/components/types.js'
+ * @import { AutocompleteFieldComponent, ComponentDef, DeclarationFieldComponent, EastingNorthingFieldComponent, LatLongFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, SelectFieldComponent, UkAddressFieldComponent, YesNoFieldComponent } from '~/src/components/types.js'
  */

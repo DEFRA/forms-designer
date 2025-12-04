@@ -83,6 +83,15 @@ export interface NumberElements extends DomElementsBase {
   readonly values: NumberSettings
 }
 
+export interface MultilineTextFieldSettings extends BaseSettings {
+  maxLength: number
+  rows: number
+}
+
+export interface MultilineTextFieldElements extends DomElementsBase {
+  readonly values: MultilineTextFieldSettings
+}
+
 export interface LocationSettings extends BaseSettings {
   instructionText: string
 }
