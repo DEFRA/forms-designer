@@ -80,6 +80,19 @@ export function hasDataOrErrorForDisplay(
 
 /**
  * @param { ComponentType | undefined } questionType
+ */
+export function buildComponentDef(questionType) {
+  return /** @type {ComponentDef} */ ({
+    type: questionType ?? ComponentType.Html,
+    title: 'Dummy',
+    name: 'dummy',
+    options: { required: true },
+    schema: {}
+  })
+}
+
+/**
+ * @param { ComponentType | undefined } questionType
  * @returns {{
  *   baseErrors: Array<{type: string; template: string;}>;
  *   advancedSettingsErrors: []
@@ -90,16 +103,21 @@ export function getErrorTemplates(questionType) {
     return YesNoField.getAllPossibleErrors()
   }
 
-  const component = createComponent(
-    /** @type {ComponentDef} */ ({
-      type: questionType ?? ComponentType.Html,
-      title: 'Dummy',
-      name: 'dummy',
-      options: { required: true },
-      schema: {}
-    }),
-    {}
-  )
+  let component
+  try {
+    component = createComponent(buildComponentDef(questionType), {})
+  } catch (err) {
+    // @ts-expect-error - generic error object
+    if (err?.message === `Component type ${questionType} does not exist`) {
+      // Default to a TextFIeld if not yet configure for 'preview'
+      component = createComponent(
+        buildComponentDef(ComponentType.TextField),
+        {}
+      )
+    } else {
+      throw err
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
