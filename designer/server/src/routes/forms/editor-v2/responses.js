@@ -1,4 +1,5 @@
 import { Scopes } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -6,6 +7,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
+import { sendSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
 export const ROUTE_FULL_PATH_RESPONSES = '/library/{slug}/editor-v2/responses'
 
@@ -29,9 +31,12 @@ export function generateSuccessMessage(email) {
  * @param {string} slug
  */
 export function generateTitling(slug) {
+  const pageTitle = 'Download responses as an Excel spreadsheet'
+
   return {
+    pageTitle,
     pageHeading: {
-      text: 'Download responses as an Excel spreadsheet'
+      text: pageTitle
     },
     backLink: {
       text: 'Back to form overview',
@@ -119,9 +124,12 @@ export default [
       const metadata = await forms.get(slug, token)
 
       if (metadata.notificationEmail) {
-        // TODO - make API call to generate email, based on payload.action
-        // eslint-disable-next-line no-console
-        console.log('action', action)
+        if (action === 'submissions') {
+          await sendSubmissionsFile(metadata.id)
+        } else {
+          // TODO - make API call to generate CSAT email
+          throw Boom.notImplemented(`${action} not yet implemented`)
+        }
 
         yar.flash(
           sessionNames.successNotification,

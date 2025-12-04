@@ -3,12 +3,14 @@ import { StatusCodes } from 'http-status-codes'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { sendSubmissionsFile } from '~/src/services/formSubmissionService.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/services/formSubmissionService.js')
 
 describe('Editor v2 responses routes', () => {
   /** @type {Server} */
@@ -158,6 +160,10 @@ describe('Editor v2 responses routes', () => {
         notificationEmail: 'test@defratest.gov.uk'
       })
 
+      jest.mocked(sendSubmissionsFile).mockResolvedValueOnce({
+        fileId: '00000000-0000-0000-0000-000000000000'
+      })
+
       const options = {
         method: 'post',
         url: '/library/my-form-slug/editor-v2/responses',
@@ -171,8 +177,7 @@ describe('Editor v2 responses routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/library/my-form-slug/editor-v2/responses')
-
-      // TODO - ensure API call happened
+      expect(sendSubmissionsFile).toHaveBeenCalledTimes(1)
     })
   })
 })
