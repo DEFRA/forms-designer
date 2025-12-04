@@ -124,13 +124,11 @@ export default [
       const metadata = await forms.get(slug, token)
 
       if (metadata.notificationEmail) {
-        switch (action) {
-          case 'submissions':
-            await sendSubmissionsFile(metadata.id)
-            break
-          default:
-            // TODO - make API call to generate CSAT email
-            throw Boom.notImplemented(`${action} not yet implemented`)
+        if (action === 'submissions') {
+          await sendSubmissionsFile(metadata.id)
+        } else {
+          // TODO - make API call to generate CSAT email
+          throw Boom.notImplemented(`${action} not yet implemented`)
         }
 
         yar.flash(
