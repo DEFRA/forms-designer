@@ -125,7 +125,7 @@ export default [
 
       if (metadata.notificationEmail) {
         if (action === 'submissions') {
-          await sendSubmissionsFile(metadata.id)
+          await sendSubmissionsFile(metadata.id, token)
         } else {
           // TODO - make API call to generate CSAT email
           throw Boom.notImplemented(`${action} not yet implemented`)
