@@ -114,48 +114,48 @@ To add a new question type, you will need to add the new type to a series of fil
 model/src/components/enums.ts:
 
 ```
-	UnicornField = ‘UnicornField’
+  UnicornField = ‘UnicornField’
 ```
 
 model/src/components/types.ts:
 
 ```
-	export interface UnicornFieldComponent extends FormFieldBase {
-            type: ComponentType.UnicornField
-            options: FormFieldBase['options'] & {
-                condition?: string
-            }
-         }
+  export interface UnicornFieldComponent extends FormFieldBase {
+    type: ComponentType.UnicornField
+      options: FormFieldBase['options'] & {
+        condition?: string
+      }
+    }
 
-       . . .
+    . . .
 
-	export type InputFieldsComponentsDef =
-  	| TextFieldComponent
-  	. . .
-  	| UnicornFieldComponent
+  export type InputFieldsComponentsDef =
+    | TextFieldComponent
+    . . .
+    | UnicornFieldComponent
 ```
 
 model/src/components/component-types.ts:
 
 ```
-	{
-    		name: 'UnicornField',
-    		title: 'Unicorn field',
-    		type: ComponentType.UnicornField,
-    		hint: '',
-    		options: {},
-    		schema: {}
-  	}
+{
+  name: 'UnicornField',
+  title: 'Unicorn field',
+  type: ComponentType.UnicornField,
+  hint: '',
+  options: {},
+  schema: {}
+}
 
 ```
 
 client/src/i18n/translations/en.translation.json:
 
 ```
-	fieldTypeToName: {
-		. . .
-		"UnicornField": "Unicorn field",
-    		"UnicornField_info": "For internal processing"
+  fieldTypeToName: {
+    . . .
+    "UnicornField": "Unicorn field",
+    "UnicornField_info": "For internal processing"
 ```
 
 model/src/form/form-editor/index.ts:
