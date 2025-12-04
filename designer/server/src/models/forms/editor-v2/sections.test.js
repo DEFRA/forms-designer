@@ -49,26 +49,36 @@ describe('sections model', () => {
           buildQuestionPage({
             id: 'p1',
             title: 'Page one',
-            section: 'section-1',
+            section: 'section-1-id',
             components: [buildTextFieldComponent()]
           }),
           buildQuestionPage({
             id: 'p2',
             title: 'Page two',
-            section: 'section-1',
+            section: 'section-1-id',
             components: [buildTextFieldComponent()]
           }),
           buildQuestionPage({
             id: 'p3',
             title: 'Page three',
-            section: 'section-2',
+            section: 'section-2-id',
             components: [buildTextFieldComponent()]
           }),
           buildSummaryPage({ id: 'cya-page' })
         ],
         sections: [
-          { name: 'section-1', title: 'Section One', hideTitle: false },
-          { name: 'section-2', title: 'Section Two', hideTitle: true }
+          {
+            id: 'section-1-id',
+            name: 'section-1',
+            title: 'Section One',
+            hideTitle: false
+          },
+          {
+            id: 'section-2-id',
+            name: 'section-2',
+            title: 'Section Two',
+            hideTitle: true
+          }
         ]
       })
 
@@ -81,11 +91,13 @@ describe('sections model', () => {
       )
 
       expect(result.sections).toHaveLength(2)
+      expect(result.sections[0].id).toBe('section-1-id')
       expect(result.sections[0].name).toBe('section-1')
       expect(result.sections[0].title).toBe('Section One')
       expect(result.sections[0].hideTitle).toBe(false)
       expect(result.sections[0].number).toBe(1)
       expect(result.sections[0].pages).toHaveLength(2)
+      expect(result.sections[1].id).toBe('section-2-id')
       expect(result.sections[1].name).toBe('section-2')
       expect(result.sections[1].title).toBe('Section Two')
       expect(result.sections[1].hideTitle).toBe(true)
@@ -390,7 +402,9 @@ describe('sections model', () => {
     it('should handle hideTitle defaulting to false when undefined', () => {
       const definition = buildDefinition({
         pages: [buildSummaryPage({ id: 'cya-page' })],
-        sections: [{ name: 'section-1', title: 'Section One' }]
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'Section One' }
+        ]
       })
 
       const result = sectionsViewModel(
@@ -445,18 +459,20 @@ describe('sections model', () => {
           buildQuestionPage({
             id: 'p1',
             title: 'Question page',
-            section: 'section-1',
+            section: 'section-1-id',
             components: [buildTextFieldComponent()]
           }),
           buildQuestionPage({
             id: 'p2',
             title: 'Guidance page',
-            section: 'section-1',
+            section: 'section-1-id',
             components: [buildMarkdownComponent({ content: 'Some guidance' })]
           }),
           buildSummaryPage({ id: 'cya-page' })
         ],
-        sections: [{ name: 'section-1', title: 'Section One' }]
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'Section One' }
+        ]
       })
 
       const result = sectionsViewModel(

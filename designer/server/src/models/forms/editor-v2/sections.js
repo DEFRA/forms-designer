@@ -35,6 +35,7 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @typedef {object} SectionWithPages
+ * @property {string} id - The unique ID of the section
  * @property {string} name - The internal name/identifier of the section
  * @property {string} title - The display title of the section
  * @property {boolean} hideTitle - Whether to hide the section title in the form
@@ -52,12 +53,13 @@ function buildSectionsWithPages(definition) {
   const pages = definition.pages
 
   return sections.map((section, index) => ({
+    id: section.id ?? '',
     name: section.name,
     title: section.title,
     hideTitle: section.hideTitle ?? false,
     number: index + 1,
     pages: pages
-      .filter((page) => page.section === section.name)
+      .filter((page) => page.section === section.id)
       .map((page) => ({
         id: page.id ?? '',
         path: page.path,

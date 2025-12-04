@@ -32,7 +32,7 @@
     <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     <form method="post" action="{{ currentPath }}">
       <input type="hidden" name="operation" value="save-settings">
-      <input type="hidden" name="sectionId" value="{{ section.name }}">
+      <input type="hidden" name="sectionId" value="{{ section.id }}">
 
       <fieldset class="govuk-fieldset">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
@@ -62,7 +62,7 @@
   {% set sectionActions %}
     <form method="post" action="{{ currentPath }}" class="app-inline-form">
       <input type="hidden" name="operation" value="remove-section">
-      <input type="hidden" name="sectionId" value="{{ section.name }}">
+      <input type="hidden" name="sectionId" value="{{ section.id }}">
       {{ govukButton({
         text: "Remove section",
         classes: "govuk-button--warning"
@@ -70,7 +70,7 @@
     </form>
   {% endset %}
 
-  <div class="govuk-summary-card app-section-card" data-section-id="{{ section.name }}">
+  <div class="govuk-summary-card app-section-card" data-section-id="{{ section.id }}">
     <div class="govuk-summary-card__title-wrapper">
       <h2 class="govuk-summary-card__title">Section {{ section.number }}: {{ section.title }}</h2>
       <div class="govuk-summary-card__actions">

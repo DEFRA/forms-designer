@@ -27,7 +27,7 @@
             <div id="sections-preview">
               {% for section in previewModel.sections %}
                 {% if section.pages.length > 0 %}
-                  <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+                  <h4 class="govuk-heading-m" data-preview-section-id="{{ section.id }}">{{ section.title }}</h4>
                   <dl class="govuk-summary-list govuk-!-margin-bottom-9">
                     {% for page in section.pages %}
                     <div class="govuk-summary-list__row">
@@ -42,7 +42,7 @@
                     {% endfor %}
                   </dl>
                 {% else %}
-                  <h4 class="govuk-heading-m" data-preview-section-id="{{ section.name }}">{{ section.title }}</h4>
+                  <h4 class="govuk-heading-m" data-preview-section-id="{{ section.id }}">{{ section.title }}</h4>
                   <p class="govuk-hint">No pages in this section</p>
                 {% endif %}
               {% endfor %}
