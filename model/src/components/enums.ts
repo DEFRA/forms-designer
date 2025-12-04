@@ -25,3 +25,9 @@ export enum ComponentType {
   LatLongField = 'LatLongField',
   HiddenField = 'HiddenField'
 }
+
+export const PreviewTypeEnum = {
+  ...ComponentType,
+  Question: 'Question',
+  ListSortable: 'ListSortable'
+} as Record<string, string>

@@ -80,7 +80,7 @@ const SetupPreviewDefaultQuestion = () => {
 }
 
 export const SetupPreviewPartial =
-  /** @type {Partial<Record<ComponentType|'Question'|'ListSortable', () => PreviewQuestion>>} */ ({
+  /** @type {Partial<Record<PreviewType, () => PreviewQuestion>>} */ ({
     /**
      * @returns {Question}
      */
@@ -406,7 +406,7 @@ export const SetupPreviewPartial =
   })
 
 /**
- * @param { ComponentType|'Question'|'ListSortable' } type
+ * @param {PreviewType} type
  * @returns {PreviewQuestion}
  */
 export function SetupPreview(type) {
@@ -415,5 +415,5 @@ export function SetupPreview(type) {
 }
 
 /**
- * @import { ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { PreviewType, PreviewQuestion } from '@defra/forms-model'
  */

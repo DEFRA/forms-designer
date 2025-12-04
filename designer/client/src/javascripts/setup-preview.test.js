@@ -10,6 +10,7 @@ import {
   MonthYearQuestion,
   NumberOnlyQuestion,
   PhoneNumberQuestion,
+  PreviewTypeEnum,
   Question,
   RadioSortableQuestion,
   SelectSortableQuestion,
@@ -37,7 +38,7 @@ describe('SetupPreview', () => {
 
   describe('Question', () => {
     it('should create Question instance', () => {
-      const result = SetupPreview('Question')
+      const result = SetupPreview(PreviewTypeEnum.Question)
       expect(result).toBeInstanceOf(Question)
       expect(result).toBeDefined()
     })
@@ -205,7 +206,7 @@ Helium:2
 
   describe('ListSortable', () => {
     it('should create ListSortableQuestion instance', () => {
-      const result = SetupPreview('ListSortable')
+      const result = SetupPreview(PreviewTypeEnum.ListSortable)
       expect(result).toBeInstanceOf(ListSortableQuestion)
       expect(result).toBeDefined()
     })
