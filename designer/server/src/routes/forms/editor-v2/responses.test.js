@@ -161,7 +161,7 @@ describe('Editor v2 responses routes', () => {
       })
 
       jest.mocked(sendSubmissionsFile).mockResolvedValueOnce({
-        fileId: '00000000-0000-0000-0000-000000000000'
+        message: 'Generate file success'
       })
 
       const options = {
