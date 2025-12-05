@@ -345,7 +345,8 @@ export function getFormSpecificNavigation(
 ) {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
-    ['Overview', formPath]
+    ['Overview', formPath],
+    ['Responses', `${formPath}/editor-v2/responses`]
   ]
 
   if (metadata.draft) {

@@ -82,6 +82,7 @@ export function getFormSpecificNavigation(
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath],
+    ['Responses', `${formPath}/editor-v2/responses`],
     ['Editor', `${formPath}/editor-v2/pages`],
     ['Support', formsSupportPath]
   ]
