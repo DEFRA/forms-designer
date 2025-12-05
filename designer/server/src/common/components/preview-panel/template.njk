@@ -4,6 +4,6 @@
 {% call appPreviewPanelLayout({}) %}
     {% call appPreviewPanelTabs(params) %}
         {% set model = params.model %}
-        {%- include 'preview-components/' + params.questionType | lower + ".njk" -%}
+        {%- include 'preview-components/' + params.questionType | lower + ".njk" ignore missing -%}
     {% endcall %}
 {% endcall %}

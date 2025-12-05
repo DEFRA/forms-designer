@@ -6,7 +6,7 @@ import {
   allowedErrorTemplateFunctions
 } from '@defra/forms-model'
 
-const fieldMappings = /** @type {AdvancedFieldMappingsType } */ ({
+const fieldMappings = /** @type { Partial<AdvancedFieldMappingsType> } */ ({
   TextField: {
     min: 'minLength',
     max: 'maxLength'

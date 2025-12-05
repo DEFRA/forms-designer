@@ -112,6 +112,7 @@ describe('Editor v2 edit-list-resolve routes', () => {
       { id: 'new-id', text: 'New Item 3', value: 'New Item 3' }
     ])
 
+    /** @type {Partial<ComponentDef>} */
     const questionDetails = {
       id: 'q-id',
       type: ComponentType.AutocompleteField,
@@ -169,5 +170,5 @@ describe('Editor v2 edit-list-resolve routes', () => {
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { ListConflict, ListItem, PageQuestion } from '@defra/forms-model'
+ * @import { ComponentDef, ListConflict, ListItem, PageQuestion } from '@defra/forms-model'
  */

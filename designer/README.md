@@ -107,6 +107,85 @@ npm run test:since <commit-hash>
 npm run test:uncommitted
 ```
 
+## Adding a new question type (component type)
+
+To add a new question type, you will need to add the new type to a series of files. As an example, if we were to add a new `UnicornField` question type and wanted it to be selectable as a new question from the 'question ype' radio list, (assuming we are happy to use a default 'preview' implementation for the time being), you have to add:
+
+model/src/components/enums.ts:
+
+```
+  UnicornField = ‘UnicornField’
+```
+
+model/src/components/types.ts:
+
+```
+  export interface UnicornFieldComponent extends FormFieldBase {
+    type: ComponentType.UnicornField
+      options: FormFieldBase['options'] & {
+        condition?: string
+      }
+    }
+
+    . . .
+
+  export type InputFieldsComponentsDef =
+    | TextFieldComponent
+    . . .
+    | UnicornFieldComponent
+```
+
+model/src/components/component-types.ts:
+
+```
+{
+  name: 'UnicornField',
+  title: 'Unicorn field',
+  type: ComponentType.UnicornField,
+  hint: '',
+  options: {},
+  schema: {}
+}
+
+```
+
+client/src/i18n/translations/en.translation.json:
+
+```
+  fieldTypeToName: {
+    . . .
+    "UnicornField": "Unicorn field",
+    "UnicornField_info": "For internal processing"
+```
+
+model/src/form/form-editor/index.ts:
+
+```
+export const questionTypeSchema = Joi.string()
+. . .
+ComponentType.UnicornField
+)
+. . .
+```
+
+designer/server/src/models/forms/editor-v2/question-type.js:
+
+```
+const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
+. . .
+{
+    text: 'Unicorn',
+    hint: {
+      text: 'Rainbows and stuff'
+    },
+    value: ComponentType.UnicornField
+  },
+. . .
+```
+
+Further work would be required to define advanced field settings (if appropriate), and potentially to validate/handle the payload being saved from the 'question details' screen.
+Later, work would be required to properly implement the preview (this would involve changes to forms-runner to handle the new component class generation so error messages can be retrieved).
+
 ## License
 
 THIS INFORMATION IS LICENSED UNDER THE CONDITIONS OF THE OPEN GOVERNMENT LICENCE found at:
