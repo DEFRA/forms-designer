@@ -114,7 +114,7 @@ To add a new question type, you will need to add the new type to a series of fil
 model/src/components/enums.ts:
 
 ```
-  UnicornField = ‘UnicornField’
+  UnicornField = 'UnicornField'
 ```
 
 model/src/components/types.ts:
@@ -122,12 +122,12 @@ model/src/components/types.ts:
 ```
   export interface UnicornFieldComponent extends FormFieldBase {
     type: ComponentType.UnicornField
-      options: FormFieldBase['options'] & {
-        condition?: string
-      }
+    options: FormFieldBase['options'] & {
+      condition?: string
     }
+  }
 
-    . . .
+  . . .
 
   export type InputFieldsComponentsDef =
     | TextFieldComponent
