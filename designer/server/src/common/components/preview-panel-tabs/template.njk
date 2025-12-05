@@ -1,6 +1,7 @@
 {% from "preview-error-panel/macro.njk" import appPreviewErrorPanel %}
 {% from "preview-panel-layout/macro.njk" import appPreviewPanelLayout %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 <div class="govuk-!-margin-top-9">
   <div class="govuk-tabs" data-module="govuk-tabs">
@@ -30,6 +31,15 @@
           {{ caller() }}
         </div>
       </div>
+
+      {% if params.errorTemplates.invalidPreview %}
+        <div class="govuk-highlight-warning">
+          {{ govukWarningText({
+            text: "Unsupported component. Contact the developers if you did not expect to see this",
+            iconFallbackText: "Warning"
+          }) }}
+        </div>
+      {% endif %}
 
       {% if not params.hasPageSettingsTab %}
         <div class="govuk-button-group govuk-!-margin-top-3">
