@@ -183,6 +183,18 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
 . . .
 ```
 
+designer/server/src/common/constants/editor.js:
+
+```
+export const QuestionTypeDescriptions =
+  /** @type {{type: ComponentType, description: string }[]} */ ([
+  . . .
+  {
+    type: ComponentType.UnicornField,
+    description: 'Unicorn'
+  }
+```
+
 Further work would be required to define advanced field settings (if appropriate), and potentially to validate/handle the payload being saved from the 'question details' screen.
 Later, work would be required to properly implement the preview (this would involve changes to forms-runner to handle the new component class generation so error messages can be retrieved).
 

@@ -72,13 +72,6 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: ComponentType.DeclarationField
   },
   {
-    text: 'Unicorn',
-    hint: {
-      text: 'Rainbows and stuff'
-    },
-    value: ComponentType.UnicornField
-  },
-  {
     divider: 'or'
   },
   {

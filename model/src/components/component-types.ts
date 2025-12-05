@@ -187,13 +187,5 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     hint: '',
     options: {},
     schema: {}
-  },
-  {
-    name: 'UnicornField',
-    title: 'Unicorn field',
-    type: ComponentType.UnicornField,
-    hint: '',
-    options: {},
-    schema: {}
   }
 ])

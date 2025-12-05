@@ -43,8 +43,7 @@ export const questionTypeSchema = Joi.string()
     ComponentType.YesNoField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
-    ComponentType.AutocompleteField,
-    ComponentType.UnicornField
+    ComponentType.AutocompleteField
   )
   .description('The high-level type of question, including grouped types')
 

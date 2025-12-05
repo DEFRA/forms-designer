@@ -328,13 +328,6 @@ export interface SelectFieldComponent extends ListFieldBase {
   }
 }
 
-export interface UnicornFieldComponent extends FormFieldBase {
-  type: ComponentType.UnicornField
-  options: FormFieldBase['options'] & {
-    condition?: string
-  }
-}
-
 export type ComponentDef = FormComponentsDef | ContentComponentsDef
 
 // Components that render form fields
@@ -359,7 +352,6 @@ export type InputFieldsComponentsDef =
   | NationalGridFieldNumberFieldComponent
   | LatLongFieldComponent
   | HiddenFieldComponent
-  | UnicornFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =
