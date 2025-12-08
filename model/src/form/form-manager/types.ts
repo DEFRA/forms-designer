@@ -1,6 +1,6 @@
 import { type Context } from 'joi'
 
-import { type Repeat } from '~/src/form/form-definition/types.js'
+import { type Repeat, type Section } from '~/src/form/form-definition/types.js'
 import { type ControllerType } from '~/src/pages/enums.js'
 
 export interface PatchPageFields {
@@ -13,6 +13,11 @@ export interface PatchPageFields {
 
 export interface AddComponentQueryOptions {
   prepend?: boolean
+}
+
+export type SectionAssignmentItem = Omit<Section, 'name'> & {
+  name?: string
+  pageIds: string[]
 }
 
 // Enum of error types that can be raised through validating the form definition
@@ -29,6 +34,7 @@ export enum FormDefinitionError {
   UniquePagePath = 'unique_page_path',
   UniquePageComponentId = 'unique_page_component_id',
   UniquePageComponentName = 'unique_page_component_name',
+  UniqueSectionId = 'unique_section_id',
   UniqueSectionName = 'unique_section_name',
   UniqueSectionTitle = 'unique_section_title',
   UniqueListId = 'unique_list_id',
@@ -73,6 +79,10 @@ export const formDefinitionErrors: FormDefinitionErrors = {
   },
   [FormDefinitionError.UniquePageComponentName]: {
     key: 'name',
+    type: FormDefinitionErrorType.Unique
+  },
+  [FormDefinitionError.UniqueSectionId]: {
+    key: 'id',
     type: FormDefinitionErrorType.Unique
   },
   [FormDefinitionError.UniqueSectionName]: {

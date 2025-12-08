@@ -60,10 +60,15 @@ import {
 import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
 /**
- * @type {Record<ComponentType, typeof PreviewComponent>}
+ * @type {typeof PreviewComponent}
+ */
+const InputFieldComponentDefault = ShortAnswerQuestion
+
+/**
+ * @type {Partial<Record<ComponentType, typeof PreviewComponent>>}
  */
 const InputFieldComponentDictionary = {
-  [ComponentType.TextField]: ShortAnswerQuestion,
+  [ComponentType.TextField]: InputFieldComponentDefault,
   [ComponentType.Details]: ShortAnswerQuestion,
   [ComponentType.InsetText]: ShortAnswerQuestion,
   [ComponentType.Html]: ShortAnswerQuestion,
@@ -179,8 +184,9 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
         questionElements = new ComponentElements(component)
       }
 
-      const QuestionConstructor = InputFieldComponentDictionary[component.type]
-
+      const QuestionConstructor =
+        InputFieldComponentDictionary[component.type] ??
+        InputFieldComponentDefault
       const previewComponent = new QuestionConstructor(
         questionElements,
         questionRenderer

@@ -1,4 +1,8 @@
-import { ListSortableQuestion } from '@defra/forms-model'
+import {
+  ComponentType,
+  ListSortableQuestion,
+  PreviewTypeEnum
+} from '@defra/forms-model'
 
 import {
   list1HTML,
@@ -82,7 +86,7 @@ describe('list-sortable', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewTabsHTML
       const preview = /** @type {ListSortableQuestion} */ (
-        SetupPreview.RadiosField()
+        SetupPreview(ComponentType.RadiosField)
       )
       expect(preview.renderInput.fieldset?.legend.text).toBe(
         'Which quest would you like to pick?'
@@ -497,7 +501,7 @@ describe('list-sortable', () => {
     describe('editPanelListeners', () => {
       it('should update the List class when listeners are called', () => {
         const preview = /** @type {ListSortableQuestion} */ (
-          SetupPreview.ListSortable()
+          SetupPreview(PreviewTypeEnum.ListSortable)
         )
         const listEventListeners = new ListSortableEventListeners(
           preview,
@@ -586,7 +590,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -602,7 +606,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Done</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -633,7 +637,7 @@ describe('list-sortable', () => {
           x.textContent = 'Not up or down'
         })
 
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -649,7 +653,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -690,7 +694,7 @@ describe('list-sortable', () => {
           '<button id="edit-options-button">Re-order</button>' +
           '<button id="add-option-button">Add item</button>' +
           list1HTML
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
         const reorderButton = /** @type {HTMLElement} */ (
           document.getElementById('edit-options-button')
         )
@@ -911,7 +915,7 @@ describe('list-sortable', () => {
         '<button id="add-option-button">Add item</button>' +
         listEmptyHTML
       const preview = /** @type {ListSortableQuestion} */ (
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
       )
       expect(preview.listElementObjects).toHaveLength(0)
       document.body.innerHTML =
@@ -919,7 +923,7 @@ describe('list-sortable', () => {
         '<button id="add-option-button">Add item</button>' +
         list1HTML
       const preview2 = /** @type {ListSortableQuestion} */ (
-        SetupPreview.ListSortable()
+        SetupPreview(PreviewTypeEnum.ListSortable)
       )
       preview.resyncPreviewAfterReorder()
       expect(preview2.listElementObjects).toHaveLength(4)

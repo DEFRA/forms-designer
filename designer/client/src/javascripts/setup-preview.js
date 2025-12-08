@@ -73,34 +73,38 @@ import {
   UkAddressEventListeners
 } from '~/src/javascripts/preview/uk-address'
 
-export const SetupPreview =
-  /** @type {Record<ComponentType|'Question'|'ListSortable', () => PreviewQuestion>} */ ({
+const SetupPreviewDefaultQuestion = () => {
+  const questionElements = new QuestionDomElements()
+  const nunjucksRenderer = new NunjucksRenderer(questionElements)
+  const question = new Question(questionElements, nunjucksRenderer)
+  const listeners = new EventListeners(question, questionElements)
+  listeners.setupListeners()
+
+  return question
+}
+
+export const SetupPreviewPartial =
+  /** @type {Partial<Record<PreviewType, () => PreviewQuestion>>} */ ({
     /**
      * @returns {Question}
      */
     Question: () => {
-      const questionElements = new QuestionDomElements()
-      const nunjucksRenderer = new NunjucksRenderer(questionElements)
-      const question = new Question(questionElements, nunjucksRenderer)
-      const listeners = new EventListeners(question, questionElements)
-      listeners.setupListeners()
-
-      return question
+      return SetupPreviewDefaultQuestion()
     },
     Html: () => {
-      return SetupPreview.Question()
+      return SetupPreviewDefaultQuestion()
     },
     InsetText: () => {
-      return SetupPreview.Question()
+      return SetupPreviewDefaultQuestion()
     },
     Details: () => {
-      return SetupPreview.Question()
+      return SetupPreviewDefaultQuestion()
     },
     List: () => {
-      return SetupPreview.Question()
+      return SetupPreviewDefaultQuestion()
     },
     Markdown: () => {
-      return SetupPreview.Question()
+      return SetupPreviewDefaultQuestion()
     },
     /**
      * @returns {ShortAnswerQuestion}
@@ -404,9 +408,19 @@ export const SetupPreview =
       return latLongField
     },
     HiddenField: () => {
-      return SetupPreview.Question()
+      return SetupPreviewDefaultQuestion()
     }
   })
+
 /**
- * @import { PreviewQuestion, ComponentType } from '@defra/forms-model'
+ * @param {PreviewType} type
+ * @returns {PreviewQuestion}
+ */
+export function SetupPreview(type) {
+  const preview = SetupPreviewPartial[type]
+  return preview ? preview() : SetupPreviewDefaultQuestion()
+}
+
+/**
+ * @import { PreviewType, PreviewQuestion } from '@defra/forms-model'
  */

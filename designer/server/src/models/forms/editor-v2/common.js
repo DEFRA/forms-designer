@@ -16,7 +16,6 @@ export const GOVUK_LABEL__M = 'govuk-label--m'
 export const GOVUK_INPUT_WIDTH_2 = 'govuk-input--width-2'
 export const GOVUK_INPUT_WIDTH_3 = 'govuk-input--width-3'
 export const CHANGES_SAVED_SUCCESSFULLY = 'Changes saved successfully'
-export const SECTION_NAME_ALREADY_EXISTS = 'Section name already exists'
 
 /**
  * @param {FormDefinition} definition
@@ -83,6 +82,7 @@ export function getFormSpecificNavigation(
   const navigationItems = [
     ['Forms library', formsLibraryPath],
     ['Overview', formPath],
+    ['Responses', `${formPath}/editor-v2/responses`],
     ['Editor', `${formPath}/editor-v2/pages`],
     ['Support', formsSupportPath]
   ]

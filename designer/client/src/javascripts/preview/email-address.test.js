@@ -1,4 +1,4 @@
-import { EmailAddressQuestion } from '@defra/forms-model'
+import { ComponentType, EmailAddressQuestion } from '@defra/forms-model'
 
 import {
   questionDetailsLeftPanelHTML,
@@ -13,7 +13,7 @@ describe('email', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.EmailAddressField()
+      const res = SetupPreview(ComponentType.EmailAddressField)
       expect(res).toBeInstanceOf(EmailAddressQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

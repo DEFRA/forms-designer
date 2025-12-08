@@ -1,0 +1,86 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% set submissionsButtonHtml %}
+  {{ govukButton({
+    text: "Send submissions data",
+    name: "action",
+    value: "submissions",
+    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+    preventDoubleClick: true
+  }) }}
+{% endset %}
+
+{% set feedbackButtonHtml %}
+  {{ govukButton({
+    text: "Send feedback data",
+    name: "action",
+    value: "feedback",
+    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+    preventDoubleClick: true
+  }) }}
+{% endset %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+    {% if errorList | length %}
+      {{ govukErrorSummary({
+        titleText: "There is a problem",
+        errorList: errorList,
+        classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+      }) }}
+    {% endif %}
+
+    {% if notification | length %}
+      {{ govukNotificationBanner({
+          type: "success",
+          html: notification
+        }) }}
+    {% endif %}
+
+    <form class="form" method="post">
+
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [
+          { text: "Type of data" },
+          { text: "How long we keep it" },
+          { text: "Send to shared mailbox" }
+        ],
+        rows: [
+          [
+            { text: "Form submissions" },
+            { text: "9 months after submission" },
+            { html: submissionsButtonHtml }
+          ]
+        ]
+        })
+      }}
+
+    </form>
+    {#
+    [
+      { text: "User feedback" },
+      { text: "9 months after submission" },
+      { html: feedbackButtonHtml }
+    ]
+    #}
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

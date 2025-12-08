@@ -1,4 +1,4 @@
-import { UkAddressQuestion } from '@defra/forms-model'
+import { ComponentType, UkAddressQuestion } from '@defra/forms-model'
 
 import {
   questionDetailsLeftPanelHTML,
@@ -13,7 +13,7 @@ describe('address', () => {
     it('should create class', () => {
       document.body.innerHTML =
         questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-      const res = SetupPreview.UkAddressField()
+      const res = SetupPreview(ComponentType.UkAddressField)
       expect(res).toBeInstanceOf(UkAddressQuestion)
       expect(res).toBeDefined()
       expect(res.renderInput).toEqual({

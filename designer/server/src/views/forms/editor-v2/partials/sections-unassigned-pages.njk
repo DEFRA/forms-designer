@@ -24,7 +24,7 @@
           <select class="govuk-select" name="sectionId" required {% if sections.length == 0 %}disabled{% endif %}>
             <option value="">Select section</option>
             {% for section in sections %}
-            <option value="{{ section.name }}">{{ section.title }}</option>
+            <option value="{{ section.id }}">{{ section.title }}</option>
             {% endfor %}
           </select>
 

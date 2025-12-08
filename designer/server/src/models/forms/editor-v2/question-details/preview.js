@@ -242,7 +242,7 @@ export class EmptyRender {
 const emptyRender = new EmptyRender()
 
 export const ModelFactory =
-  /** @type {Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements|MultilineTextFieldElements) => Question>} */ ({
+  /** @type {Partial<Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements|MultilineTextFieldElements) => Question>>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -446,10 +446,16 @@ export const ModelFactory =
  * @returns {Question}
  */
 export function getPreviewConstructor(componentType, questionOrListElements) {
-  let QuestionConstructor = ModelFactory.Question
+  let QuestionConstructor =
+    /** @type {((q: ListElements | AutocompleteElements | NumberElements) => Question)} */ (
+      ModelFactory.Question
+    )
 
   if (componentType) {
-    QuestionConstructor = ModelFactory[componentType]
+    QuestionConstructor =
+      /** @type {((q: ListElements | AutocompleteElements | NumberElements) => Question)} */ (
+        ModelFactory[componentType] ?? ModelFactory.Question
+      )
   }
 
   return QuestionConstructor(questionOrListElements)

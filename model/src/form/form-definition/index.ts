@@ -174,6 +174,10 @@ const incompatibleConditionValidator = (
 const sectionsSchema = Joi.object<Section>()
   .description('A form section grouping related pages together')
   .keys({
+    id: Joi.string()
+      .uuid()
+      .optional()
+      .description('Unique identifier for the section (UUID)'),
     name: Joi.string()
       .trim()
       .required()
@@ -1003,6 +1007,15 @@ export const listSchemaV2 = listSchema
   })
   .description('List schema for V2 forms')
 
+/**
+ * V2 Joi schema for Sections
+ */
+export const sectionsSchemaV2 = sectionsSchema
+  .keys({
+    id: idSchema.description('Unique identifier for the section')
+  })
+  .description('Section schema for V2 forms')
+
 const feedbackSchema = Joi.object<FormDefinition['feedback']>()
   .description('Feedback configuration for the form')
   .keys({
@@ -1191,6 +1204,20 @@ export const formDefinitionV2Schema = formDefinitionSchema
         checkErrors([
           FormDefinitionError.UniqueConditionId,
           FormDefinitionError.UniqueConditionDisplayName
+        ])
+      ),
+    sections: Joi.array<Section>()
+      .items(sectionsSchemaV2)
+      .unique('id')
+      .unique('name')
+      .unique('title')
+      .required()
+      .description('Sections schema for V2 forms')
+      .error(
+        checkErrors([
+          FormDefinitionError.UniqueSectionId,
+          FormDefinitionError.UniqueSectionName,
+          FormDefinitionError.UniqueSectionTitle
         ])
       )
   })

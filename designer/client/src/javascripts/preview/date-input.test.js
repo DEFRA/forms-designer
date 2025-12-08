@@ -1,3 +1,5 @@
+import { ComponentType } from '@defra/forms-model'
+
 import {
   questionDetailsLeftPanelHTML,
   questionDetailsPreviewHTML
@@ -10,7 +12,7 @@ describe('date-input', () => {
   it('should create class', () => {
     document.body.innerHTML =
       questionDetailsLeftPanelHTML + questionDetailsPreviewHTML
-    const res = SetupPreview.DatePartsField()
+    const res = SetupPreview(ComponentType.DatePartsField)
     expect(res.renderInput).toEqual({
       id: 'dateInput',
       name: 'dateInput',

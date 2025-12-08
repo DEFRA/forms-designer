@@ -1,6 +1,6 @@
 {
   "name": "forms-designer",
-  "version": "3.0.587",
+  "version": "3.0.593",
   "private": true,
   "description": "Defra forms designer repository",
   "repository": {
@@ -77,6 +77,6 @@
   },
   "engines": {
     "node": "^22.11.0",
-    "npm": "^10.9.0"
+    "npm": ">=10.9.0 <11.6.4"
   }
 }

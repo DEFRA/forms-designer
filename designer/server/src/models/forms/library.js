@@ -286,7 +286,7 @@ export function overviewViewModel(metadata, formDef, notification) {
       buttons: !metadata.draft
         ? [{ text: 'Create draft to edit' }]
         : draftButtons,
-      links: !metadata.live
+      links: metadata.draft
         ? [
             {
               text: 'Delete draft',
@@ -345,7 +345,8 @@ export function getFormSpecificNavigation(
 ) {
   const navigationItems = [
     ['Forms library', formsLibraryPath],
-    ['Overview', formPath]
+    ['Overview', formPath],
+    ['Responses', `${formPath}/editor-v2/responses`]
   ]
 
   if (metadata.draft) {

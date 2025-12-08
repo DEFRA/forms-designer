@@ -1,6 +1,9 @@
 import { type LanguageMessages } from 'joi'
 
-import { type ComponentType } from '~/src/components/enums.js'
+import {
+  type ComponentType,
+  type PreviewTypeEnum
+} from '~/src/components/enums.js'
 import {
   type ListTypeContent,
   type ListTypeOption
@@ -380,3 +383,5 @@ export type ConditionalComponentsDef = Exclude<
   | UkAddressFieldComponent
   | FileUploadFieldComponent
 >
+
+export type PreviewType = keyof typeof PreviewTypeEnum
