@@ -1,3 +1,5 @@
+import { MULTILINE_TEXT_QUESTION_DEFAULT_ROWS } from '@defra/forms-model'
+
 import {
   EventListeners,
   QuestionDomElements
@@ -40,8 +42,12 @@ export class MultilineTextFieldDomElements extends QuestionDomElements {
 
     return {
       ...baseValues,
-      maxLength: this.maxLength?.value ? parseInt(this.maxLength.value, 10) : 0,
-      rows: this.rows?.value ? parseInt(this.rows.value, 10) : 5
+      maxLength: this.maxLength?.value
+        ? Number.parseInt(this.maxLength.value, 10)
+        : 0,
+      rows: this.rows?.value
+        ? Number.parseInt(this.rows.value, 10)
+        : MULTILINE_TEXT_QUESTION_DEFAULT_ROWS
     }
   }
 
@@ -97,7 +103,9 @@ export class MultilineTextFieldEventListeners extends EventListeners {
        */
       (target) => {
         const value = Number.parseInt(target.value, 10)
-        this._question.rows = Number.isNaN(value) ? 5 : value
+        this._question.rows = Number.isNaN(value)
+          ? MULTILINE_TEXT_QUESTION_DEFAULT_ROWS
+          : value
       },
       'input'
     ])

@@ -54,7 +54,7 @@ export class DomElements {
       )
       characterCountElements.forEach((element) => {
         // eslint-disable-next-line no-new
-        new CharacterCount(element)
+        new CharacterCount(element) // NOSONAR: javascript:S1848 - Constructor has side effects
       })
     }
   }

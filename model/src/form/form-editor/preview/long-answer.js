@@ -6,6 +6,13 @@ import {
 } from '~/src/form/form-editor/preview/question.js'
 
 /**
+ * @constant
+ * @type {number}
+ * The default number of rows for a multiline text field.
+ */
+export const MULTILINE_TEXT_QUESTION_DEFAULT_ROWS = 5
+
+/**
  * @implements {QuestionElements}
  */
 export class MultilineTextFieldComponentPreviewElements extends QuestionComponentElements {
@@ -26,7 +33,7 @@ export class MultilineTextFieldComponentPreviewElements extends QuestionComponen
     return {
       ...super._getValues(),
       maxLength: this._maxLength ?? 0,
-      rows: this._rows ?? 5
+      rows: this._rows ?? MULTILINE_TEXT_QUESTION_DEFAULT_ROWS
     }
   }
 }
