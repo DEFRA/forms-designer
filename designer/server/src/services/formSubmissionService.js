@@ -9,12 +9,29 @@ const submissionUrl = config.submissionUrl
  * @param {string} formId - the form id
  * @param {string} token - the user token
  */
-export async function sendSubmissionsFile(formId, token) {
+export async function sendFormSubmissionsFile(formId, token) {
   const postJsonByType = /** @type {typeof postJson<{ message: string }>} */ (
     postJson
   )
   const result = await postJsonByType(
     new URL(`/submissions/${formId}`, submissionUrl),
+    getHeaders(token)
+  )
+
+  return result.body
+}
+
+/**
+ * Generate and sends a submissions Excel file for this form
+ * @param {string} formId - the form id
+ * @param {string} token - the user token
+ */
+export async function sendFeedbackSubmissionsFile(formId, token) {
+  const postJsonByType = /** @type {typeof postJson<{ message: string }>} */ (
+    postJson
+  )
+  const result = await postJsonByType(
+    new URL(`/feedback/${formId}`, submissionUrl),
     getHeaders(token)
   )
 

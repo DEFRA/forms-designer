@@ -1,5 +1,4 @@
-import { Scopes } from '@defra/forms-model'
-import Boom from '@hapi/boom'
+import { Scopes, isFeedbackForm } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -7,7 +6,10 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
-import { sendSubmissionsFile } from '~/src/services/formSubmissionService.js'
+import {
+  sendFeedbackSubmissionsFile,
+  sendFormSubmissionsFile
+} from '~/src/services/formSubmissionService.js'
 
 export const ROUTE_FULL_PATH_RESPONSES = '/library/{slug}/editor-v2/responses'
 
@@ -71,6 +73,7 @@ export default [
       const { slug } = params
 
       const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       const formId = metadata.id
 
@@ -95,7 +98,8 @@ export default [
         formId,
         errorList,
         navigation,
-        notification
+        notification,
+        isFeedbackForm: isFeedbackForm(definition)
       })
     },
     options: {
@@ -125,9 +129,9 @@ export default [
 
       if (metadata.notificationEmail) {
         if (action === 'submissions') {
-          await sendSubmissionsFile(metadata.id, token)
+          await sendFormSubmissionsFile(metadata.id, token)
         } else {
-          throw Boom.notImplemented(`${action} not yet implemented`)
+          await sendFeedbackSubmissionsFile(metadata.id, token)
         }
 
         yar.flash(

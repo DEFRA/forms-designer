@@ -19,13 +19,17 @@
 {% endset %}
 
 {% set feedbackButtonHtml %}
-  {{ govukButton({
-    text: "Send feedback data",
-    name: "action",
-    value: "feedback",
-    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
-    preventDoubleClick: true
-  }) }}
+  {% if isFeedbackForm %}
+    <p class="govuk-body">Not applicable as this is a feedback form</p>
+  {% else %}
+    {{ govukButton({
+      text: "Send feedback data",
+      name: "action",
+      value: "feedback",
+      classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+      preventDoubleClick: true
+    }) }}
+  {% endif %}
 {% endset %}
 
 {% block content %}
@@ -65,19 +69,17 @@
             { text: "Form submissions" },
             { text: "9 months after submission" },
             { html: submissionsButtonHtml }
+          ],
+          [
+            { text: "User feedback" },
+            { text: "9 months after submission" },
+            { html: feedbackButtonHtml }
           ]
         ]
         })
       }}
 
     </form>
-    {#
-    [
-      { text: "User feedback" },
-      { text: "9 months after submission" },
-      { html: feedbackButtonHtml }
-    ]
-    #}
   {% endcall %}
 {% endblock %}
 
