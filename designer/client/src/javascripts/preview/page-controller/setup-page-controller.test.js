@@ -161,6 +161,58 @@ describe('setup-page-controller', () => {
         new Error(`Page not found with id ff2c6c10-f49b-44e4-bc70-5c85eb5a006a`)
       )
     })
+
+    it('should setup page with section info', async () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+
+      const sectionId = 'section-1-id'
+      const pageWithSection = buildQuestionPage({
+        id: pageId,
+        title: 'Page with section',
+        components,
+        section: sectionId
+      })
+      const definitionWithSection = buildDefinition({
+        pages: [pageWithSection],
+        sections: [{ id: sectionId, name: 'section-1', title: 'My Section' }]
+      })
+      jest.mocked(getPageAndDefinition).mockResolvedValue({
+        definition: definitionWithSection,
+        page: pageWithSection
+      })
+
+      const pageController = await setupPageController(pageId, definitionId)
+      expect(pageController).toBeInstanceOf(PreviewPageController)
+      expect(pageController.sectionTitle).toEqual({
+        classes: '',
+        text: 'My Section'
+      })
+    })
+
+    it('should handle page with section that does not exist in definition', async () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+
+      const pageWithMissingSection = buildQuestionPage({
+        id: pageId,
+        title: 'Page with missing section',
+        components,
+        section: 'non-existent-section'
+      })
+      const definitionWithoutSection = buildDefinition({
+        pages: [pageWithMissingSection],
+        sections: []
+      })
+      jest.mocked(getPageAndDefinition).mockResolvedValue({
+        definition: definitionWithoutSection,
+        page: pageWithMissingSection
+      })
+
+      const pageController = await setupPageController(pageId, definitionId)
+      expect(pageController).toBeInstanceOf(PreviewPageController)
+      expect(pageController.sectionTitle).toBeUndefined()
+    })
   })
 
   describe('setupGuidanceController', () => {
@@ -171,6 +223,35 @@ describe('setup-page-controller', () => {
 
       expect(guidancePage).toBeInstanceOf(GuidancePageController)
       expect(guidancePage.title).toBe('Where do you live?')
+    })
+
+    it('should setup with section info', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      const sectionInfo = {
+        title: 'Test Section',
+        hideTitle: false
+      }
+      const guidancePage = setupGuidanceController(sectionInfo)
+
+      expect(guidancePage).toBeInstanceOf(GuidancePageController)
+      expect(guidancePage.sectionTitle).toEqual({
+        classes: '',
+        text: 'Test Section'
+      })
+    })
+
+    it('should setup with hidden section title', () => {
+      document.body.innerHTML =
+        pageHeadingAndGuidanceHTML + questionDetailsPreviewHTML
+      const sectionInfo = {
+        title: 'Hidden Section',
+        hideTitle: true
+      }
+      const guidancePage = setupGuidanceController(sectionInfo)
+
+      expect(guidancePage).toBeInstanceOf(GuidancePageController)
+      expect(guidancePage.sectionTitle).toBeUndefined()
     })
   })
 
