@@ -18,7 +18,7 @@ export {
   includesFileUploadField,
   isControllerName,
   isSummaryPage,
-  removeCustomControllers,
+  replaceCustomControllers,
   showRepeaterSettings,
   summaryPageControllers
 } from '~/src/pages/helpers.js'

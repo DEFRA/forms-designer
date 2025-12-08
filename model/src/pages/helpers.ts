@@ -194,7 +194,7 @@ export function isSummaryPage(page: Page | undefined) {
  * @param {FormDefinition} definition
  * @returns {FormDefinition}
  */
-export function removeCustomControllers(definition: FormDefinition) {
+export function replaceCustomControllers(definition: FormDefinition) {
   const standardControllers = Object.values(ControllerType)
     .filter((x) => x !== ControllerType.SummaryWithConfirmationEmail)
     .map((x) => x.toString())

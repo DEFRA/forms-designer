@@ -30,7 +30,7 @@ import {
   hasNext,
   hasRepeater,
   isSummaryPage,
-  removeCustomControllers,
+  replaceCustomControllers,
   showRepeaterSettings
 } from '~/src/pages/helpers.js'
 import { PageTypes } from '~/src/pages/page-types.js'
@@ -506,7 +506,7 @@ describe('helpers', () => {
     })
   })
 
-  describe('removeCustomControllers', () => {
+  describe('replaceCustomControllers', () => {
     it('should replace custom controllers with PageController', () => {
       const page0 = buildQuestionPage({
         controller: ControllerType.Page
@@ -528,7 +528,7 @@ describe('helpers', () => {
       const definition = buildDefinition({
         pages: [page0, page1, page2, page3, page4, page5]
       })
-      const res = removeCustomControllers(definition)
+      const res = replaceCustomControllers(definition)
       expect(res.pages[0].controller).toBe(ControllerType.Page)
       expect(res.pages[1].controller).toBe(ControllerType.FileUpload)
       expect(res.pages[2].controller).toBe(ControllerType.Summary)
