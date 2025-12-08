@@ -84,7 +84,7 @@ export default [
       const navigation = getFormSpecificNavigation(
         formPath,
         metadata,
-        undefined,
+        definition,
         'Responses'
       )
 
@@ -107,7 +107,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${Scopes.FormPublish}`]
         }
       }
     }
@@ -153,7 +153,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [`+${Scopes.FormPublish}`]
         }
       }
     }
