@@ -5,11 +5,14 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
    * @type {string}
    */
   #guidanceText = ''
+
   /**
    * @param {Page|undefined} page
+   * @param {string} [guidanceText]
+   * @param {PageSectionInfo} [section]
    */
-  constructor(page, guidanceText = '') {
-    super(page)
+  constructor(page, guidanceText = '', section) {
+    super(page, section)
     this.#guidanceText = guidanceText
   }
 
@@ -59,5 +62,5 @@ export class SummaryPreviewSSR extends PagePreviewElementsSSR {
 }
 
 /**
- * @import { Page, SummaryPageElements } from '@defra/forms-model'
+ * @import { Page, PageSectionInfo, SummaryPageElements } from '@defra/forms-model'
  */

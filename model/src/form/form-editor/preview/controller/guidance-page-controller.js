@@ -17,7 +17,7 @@ export class GuidancePageController extends PreviewPageControllerBase {
   _guidanceComponent = PreviewPageControllerBase.createGuidanceComponent(false)
 
   /**
-   * @param {PagePreviewBaseElements} elements
+   * @param {PageOverviewElements} elements
    * @param {PageRenderer} renderer
    */
   constructor(elements, renderer) {
@@ -25,6 +25,7 @@ export class GuidancePageController extends PreviewPageControllerBase {
     if (elements.guidance.length) {
       this._guidanceComponent.content = elements.guidance
     }
+    this._section = elements.section
   }
 
   /**
@@ -60,5 +61,5 @@ export class GuidancePageController extends PreviewPageControllerBase {
 
 /**
  * @import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
- * @import { PageRenderer, PagePreviewBaseElements } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PageOverviewElements } from '~/src/form/form-editor/preview/types.js'
  */

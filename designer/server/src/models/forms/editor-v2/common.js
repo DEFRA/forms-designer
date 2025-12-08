@@ -133,5 +133,53 @@ export function tickBoxes(items, selectedItems) {
 }
 
 /**
- * @import { ComponentDef, FormMetadata, FormDefinition } from '@defra/forms-model'
+ * Get the Check Your Answers (Summary) page ID from the definition
+ * @param {FormDefinition} definition
+ * @returns {string | undefined}
+ */
+export function getCyaPageId(definition) {
+  const cyaPage = definition.pages.find((page) => isSummaryPage(page))
+  return cyaPage?.id
+}
+
+/**
+ * @typedef {object} SectionInfo
+ * @property {string} id - The section ID
+ * @property {string} title - The section title
+ * @property {boolean} hideTitle - Whether the section title is hidden
+ * @property {string} changeUrl - URL to change section assignment
+ */
+
+/**
+ * Get section information for a page
+ * @param {FormDefinition} definition
+ * @param {Page} page
+ * @param {string} slug
+ * @returns {SectionInfo | undefined}
+ */
+export function getSectionForPage(definition, page, slug) {
+  if (!page.section) {
+    return undefined
+  }
+
+  const section = definition.sections.find((s) => s.id === page.section)
+  if (!section) {
+    return undefined
+  }
+
+  const cyaPageId = getCyaPageId(definition)
+  const changeUrl = cyaPageId
+    ? editorv2Path(slug, `page/${cyaPageId}/check-answers-settings/sections`)
+    : ''
+
+  return {
+    id: section.id ?? '',
+    title: section.title,
+    hideTitle: section.hideTitle ?? false,
+    changeUrl
+  }
+}
+
+/**
+ * @import { ComponentDef, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

@@ -38,8 +38,15 @@ export class PagePreviewDomElements extends DomElements {
    * @type {HTMLButtonElement|null}
    */
   previewPageButton = null
+  /**
+   * @type {PageSectionInfo|undefined}
+   */
+  _section = undefined
 
-  constructor() {
+  /**
+   * @param {PageSectionInfo} [section]
+   */
+  constructor(section) {
     super()
     this.headingElement = /** @type {HTMLInputElement|null} */ (
       document.getElementById('pageHeading')
@@ -59,6 +66,7 @@ export class PagePreviewDomElements extends DomElements {
     this.previewPageButton = /** @type {HTMLButtonElement|null} */ (
       document.getElementById('preview-page')
     )
+    this._section = section
   }
 
   get guidance() {
@@ -79,6 +87,10 @@ export class PagePreviewDomElements extends DomElements {
 
   get repeatQuestion() {
     return this.questionSetNameElement?.value ?? undefined
+  }
+
+  get section() {
+    return this._section
   }
 
   findActiveReorderElement() {
@@ -285,5 +297,5 @@ export class PagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { PageOverviewElements, DomElementsBase } from '@defra/forms-model'
+ * @import { PageOverviewElements, PageSectionInfo, DomElementsBase } from '@defra/forms-model'
  */
