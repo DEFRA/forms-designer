@@ -9,28 +9,34 @@
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
 {% set submissionsButtonHtml %}
+  {% if isFeedbackForm %}
+    <p class="govuk-body">Not implemented yet</p>
+  {% else %}
+    {{ govukButton({
+      text: "Send submissions data",
+      name: "action",
+      value: "submissions",
+      classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+      preventDoubleClick: true
+    }) }}
+    {% endif %}
+{% endset %}
+
+{% set feedbackButtonHtml %}
   {{ govukButton({
-    text: "Send submissions data",
+    text: "Send feedback data",
     name: "action",
-    value: "submissions",
+    value: "feedback",
     classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
     preventDoubleClick: true
   }) }}
 {% endset %}
 
-{% set feedbackButtonHtml %}
-  {% if isFeedbackForm %}
-    <p class="govuk-body">Not applicable as this is a feedback form</p>
-  {% else %}
-    {{ govukButton({
-      text: "Send feedback data",
-      name: "action",
-      value: "feedback",
-      classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
-      preventDoubleClick: true
-    }) }}
-  {% endif %}
-{% endset %}
+{% set rowList = [[{ text: "Form submissions" }, { text: "9 months after submission" }, { html: submissionsButtonHtml }]] %}
+
+{% if not isFeedbackForm %}
+  {% set rowList = rowList.concat([[{ text: "User feedback" }, { text: "9 months after submission" }, { html: feedbackButtonHtml }]]) %}
+{% endif %}
 
 {% block content %}
   {% call appPageBody({
@@ -64,18 +70,7 @@
           { text: "How long we keep it" },
           { text: "Send to shared mailbox" }
         ],
-        rows: [
-          [
-            { text: "Form submissions" },
-            { text: "9 months after submission" },
-            { html: submissionsButtonHtml }
-          ],
-          [
-            { text: "User feedback" },
-            { text: "9 months after submission" },
-            { html: feedbackButtonHtml }
-          ]
-        ]
+        rows: rowList
         })
       }}
 
