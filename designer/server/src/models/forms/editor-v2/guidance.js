@@ -101,7 +101,7 @@ export function getGuidancePreviewModel(
   page,
   previewPageUrl,
   guidance = '',
-  sectionInfo
+  sectionInfo = undefined
 ) {
   const components = hasComponents(page) ? page.components : []
 
