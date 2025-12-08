@@ -482,6 +482,60 @@ describe('editor-v2 - questions model', () => {
         text: 'Simple question responses 1'
       })
     })
+    it('should get preview model with section info', () => {
+      const page = buildQuestionPage({
+        title: 'Page title',
+        components: undefined
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const sectionInfo = {
+        id: 'section1',
+        title: 'My Test Section',
+        hideTitle: false,
+        changeUrl: '/some/url'
+      }
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        '/page-preview-url',
+        '/error-preview-url',
+        '',
+        false,
+        sectionInfo
+      )
+      expect(previewModel.pageTitle.text).toBe('Page title')
+      expect(previewModel.sectionTitle).toEqual({
+        classes: '',
+        text: 'My Test Section'
+      })
+    })
+    it('should hide section title when hideTitle is true', () => {
+      const page = buildQuestionPage({
+        title: 'Page title',
+        components: undefined
+      })
+      const definition = buildDefinition({
+        pages: [page]
+      })
+      const sectionInfo = {
+        id: 'section1',
+        title: 'My Hidden Section',
+        hideTitle: true,
+        changeUrl: '/some/url'
+      }
+      const previewModel = getPreviewModel(
+        page,
+        definition,
+        '/page-preview-url',
+        '/error-preview-url',
+        '',
+        false,
+        sectionInfo
+      )
+      expect(previewModel.sectionTitle).toBeUndefined()
+    })
   })
 
   describe('dummyRenderer', () => {
