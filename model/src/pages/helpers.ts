@@ -214,5 +214,5 @@ export function replaceCustomControllers(definition: FormDefinition) {
       }
       return page
     })
-  }
+  } as FormDefinition
 }
