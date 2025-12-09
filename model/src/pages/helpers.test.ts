@@ -4,7 +4,12 @@ import {
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
-import { buildQuestionPage, buildRepeaterPage } from '~/src/__stubs__/pages.js'
+import {
+  buildFileUploadPage,
+  buildQuestionPage,
+  buildRepeaterPage,
+  buildSummaryPage
+} from '~/src/__stubs__/pages.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type Page,
@@ -25,6 +30,7 @@ import {
   hasNext,
   hasRepeater,
   isSummaryPage,
+  replaceCustomControllers,
   showRepeaterSettings
 } from '~/src/pages/helpers.js'
 import { PageTypes } from '~/src/pages/page-types.js'
@@ -497,6 +503,38 @@ describe('helpers', () => {
         title: 'Other'
       } as Page
       expect(isSummaryPage(page)).toBe(false)
+    })
+  })
+
+  describe('replaceCustomControllers', () => {
+    it('should replace custom controllers with PageController', () => {
+      const page0 = buildQuestionPage({
+        controller: ControllerType.Page
+      })
+      const page1 = buildFileUploadPage()
+      const page2 = buildSummaryPage()
+      const page3 = buildQuestionPage({
+        // @ts-expect-error - custom controller
+        controller: ControllerType.SummaryWithConfirmationEmail
+      })
+      const page4 = buildQuestionPage({
+        // @ts-expect-error - custom controller
+        controller: 'FeedbackPageController'
+      })
+      const page5 = buildQuestionPage({
+        // @ts-expect-error - custom controller
+        controller: 'OtherCustomPageController'
+      })
+      const definition = buildDefinition({
+        pages: [page0, page1, page2, page3, page4, page5]
+      })
+      const res = replaceCustomControllers(definition)
+      expect(res.pages[0].controller).toBe(ControllerType.Page)
+      expect(res.pages[1].controller).toBe(ControllerType.FileUpload)
+      expect(res.pages[2].controller).toBe(ControllerType.Summary)
+      expect(res.pages[3].controller).toBe(ControllerType.Page)
+      expect(res.pages[4].controller).toBe(ControllerType.Page)
+      expect(res.pages[5].controller).toBe(ControllerType.Page)
     })
   })
 })
