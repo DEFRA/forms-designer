@@ -159,6 +159,20 @@ export async function deleteForm(id, token) {
 }
 
 /**
+ * Delete form
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export async function deleteDraftOnly(id, token) {
+  const requestUrl = new URL(`./${id}/draft`, formsEndpoint)
+  const { response } = await delJson(requestUrl, {
+    ...getHeaders(token)
+  })
+
+  return response
+}
+
+/**
  * Create a draft form
  * @param {string} id - form ID
  * @param {string} token - auth token

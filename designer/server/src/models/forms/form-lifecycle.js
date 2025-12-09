@@ -63,7 +63,9 @@ export function deleteDraftConfirmationPageViewModel(
   formDefinition,
   errorList
 ) {
-  const pageTitle = 'Are you sure you want to delete this form?'
+  const pageTitle = form.live
+    ? 'Are you sure you want to delete this draft?'
+    : 'Are you sure you want to delete this form?'
 
   const formPath = formOverviewPath(form.slug)
   const navigation = getFormSpecificNavigation(formPath, form, formDefinition)
@@ -78,11 +80,15 @@ export function deleteDraftConfirmationPageViewModel(
 
     errorList,
 
-    warning: { text: 'You cannot recover deleted forms.' },
+    warning: {
+      text: form.live
+        ? 'You cannot recover deleted drafts.'
+        : 'You cannot recover deleted forms.'
+    },
 
     buttons: [
       {
-        text: 'Delete form',
+        text: form.live ? 'Delete draft' : 'Delete form',
         classes: 'govuk-button--warning'
       },
       {
