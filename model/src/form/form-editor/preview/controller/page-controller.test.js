@@ -91,6 +91,32 @@ describe('page-controller', () => {
       expect(pagePreviewElements.guidance).toBe('# This is a heading')
     })
 
+    it('should map a page with section to PagePreviewElements', () => {
+      const pageQuestion = buildQuestionPage({
+        title: 'Page title',
+        components: []
+      })
+      const sectionInfo = {
+        title: 'Test Section',
+        hideTitle: false
+      }
+      const pagePreviewElements = new PagePreviewElements(
+        pageQuestion,
+        sectionInfo
+      )
+      expect(pagePreviewElements.heading).toBe('Page title')
+      expect(pagePreviewElements.section).toEqual(sectionInfo)
+    })
+
+    it('should return undefined section when not provided', () => {
+      const pageQuestion = buildQuestionPage({
+        title: 'Page title',
+        components: []
+      })
+      const pagePreviewElements = new PagePreviewElements(pageQuestion)
+      expect(pagePreviewElements.section).toBeUndefined()
+    })
+
     it('should map a repeater page to PagePreviewElements', () => {
       const component = buildTextFieldComponent({
         title: 'Text field component'

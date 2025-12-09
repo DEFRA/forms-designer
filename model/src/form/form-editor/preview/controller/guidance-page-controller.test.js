@@ -79,4 +79,39 @@ describe('guidance page controller', () => {
       questionType: 'Markdown'
     })
   })
+
+  it('should show section title when section is provided', () => {
+    const sectionInfo = {
+      title: 'Test Section',
+      hideTitle: false
+    }
+    const elements = new PagePreviewElements(
+      buildGuidancePage({
+        title: 'Guidance page'
+      }),
+      sectionInfo
+    )
+    const controller = new GuidancePageController(elements, renderer)
+    expect(controller.sectionTitle).toEqual({
+      classes: '',
+      text: 'Test Section'
+    })
+    expect(controller.sectionTitleText).toBe('Test Section')
+  })
+
+  it('should hide section title when hideTitle is true', () => {
+    const sectionInfo = {
+      title: 'Hidden Section',
+      hideTitle: true
+    }
+    const elements = new PagePreviewElements(
+      buildGuidancePage({
+        title: 'Guidance page'
+      }),
+      sectionInfo
+    )
+    const controller = new GuidancePageController(elements, renderer)
+    expect(controller.sectionTitle).toBeUndefined()
+    expect(controller.sectionTitleText).toBeUndefined()
+  })
 })

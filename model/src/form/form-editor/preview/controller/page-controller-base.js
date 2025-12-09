@@ -40,12 +40,20 @@ export class PagePreviewElements {
   }
 
   /**
-   * @param {Page|undefined} page
+   * @type {PageSectionInfo | undefined}
+   * @protected
    */
-  constructor(page) {
+  _section = undefined
+
+  /**
+   * @param {Page|undefined} page
+   * @param {PageSectionInfo} [section]
+   */
+  constructor(page, section) {
     if (page !== undefined) {
       this._page = page
     }
+    this._section = section
   }
 
   get heading() {
@@ -77,6 +85,10 @@ export class PagePreviewElements {
 
   get hasRepeater() {
     return hasRepeater(this._page)
+  }
+
+  get section() {
+    return this._section
   }
 }
 
@@ -141,6 +153,13 @@ export class PreviewPageControllerBase {
    * @type {boolean}
    */
   _isRepeater = false
+
+  /**
+   * Section info for the page
+   * @type {PageSectionInfo | undefined}
+   * @protected
+   */
+  _section = undefined
 
   /**
    * @param {PagePreviewBaseElements} elements
@@ -312,7 +331,10 @@ export class PreviewPageControllerBase {
    * @protected
    */
   _getSectionTitleText() {
-    return this._sectionTitle
+    if (this._section && !this._section.hideTitle) {
+      return this._section.title
+    }
+    return undefined
   }
 
   /**
@@ -393,7 +415,7 @@ export class PreviewPageControllerBase {
 }
 
 /**
- * @import { PageRenderer, PageOverviewElements, PagePreviewBaseElements, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PageOverviewElements, PagePreviewBaseElements, PageSectionInfo, QuestionRenderer, QuestionBaseModel } from '~/src/form/form-editor/preview/types.js'
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { Page } from '~/src/form/form-definition/types.js'
  * @import { PagePreviewComponent, PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'

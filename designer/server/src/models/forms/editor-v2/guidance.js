@@ -16,7 +16,8 @@ import {
   SAVE,
   baseModelFields,
   getFormSpecificNavigation,
-  getPageNum
+  getPageNum,
+  getSectionForPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { PagePreviewElementsSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
@@ -86,6 +87,7 @@ function guidanceFields(
  * @param {Page|undefined} page
  * @param {string} previewPageUrl
  * @param {string} [guidance]
+ * @param {SectionInfo} [sectionInfo]
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string
  *    questionType?: ComponentType
@@ -95,17 +97,29 @@ function guidanceFields(
  *    }
  * }}
  */
-export function getGuidancePreviewModel(page, previewPageUrl, guidance = '') {
+export function getGuidancePreviewModel(
+  page,
+  previewPageUrl,
+  guidance = '',
+  sectionInfo = undefined
+) {
   const components = hasComponents(page) ? page.components : []
-  const elements = new PagePreviewElementsSSR(page, guidance)
-  const previewPageController = new GuidancePageController(
-    elements,
-    dummyRenderer
-  )
+
+  const sectionForPreview = sectionInfo
+    ? { title: sectionInfo.title, hideTitle: sectionInfo.hideTitle }
+    : undefined
+  const elements = new PagePreviewElementsSSR(page, guidance, sectionForPreview)
+  const {
+    pageTitle,
+    components: previewComponents,
+    guidance: previewGuidance,
+    sectionTitle
+  } = new GuidancePageController(elements, dummyRenderer)
   const previewController = /** @type {PagePreviewPanelMacro} */ ({
-    pageTitle: previewPageController.pageTitle,
-    components: previewPageController.components,
-    guidance: previewPageController.guidance
+    pageTitle,
+    components: previewComponents,
+    guidance: previewGuidance,
+    sectionTitle
   })
 
   return {
@@ -163,8 +177,11 @@ export function guidanceViewModel(
   const exitPageVal = page?.controller === ControllerType.Terminal
 
   const conditionDetails = getPageConditionDetails(definition, pageId)
+  const sectionInfo = page
+    ? getSectionForPage(definition, page, metadata.slug)
+    : undefined
   // prettier-ignore
-  const previewModel = getGuidancePreviewModel(page, previewPageUrl, guidanceTextVal)
+  const previewModel = getGuidancePreviewModel(page, previewPageUrl, guidanceTextVal, sectionInfo)
   return {
     ...baseModelFields(metadata.slug, pageTitle, formTitle),
     fields: {
@@ -191,11 +208,13 @@ export function guidanceViewModel(
     conditionDetails,
     hasPageCondition: Boolean(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
-    )
+    ),
+    sectionInfo
   }
 }
 
 /**
  * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { SectionInfo } from '~/src/models/forms/editor-v2/common.js'
  */

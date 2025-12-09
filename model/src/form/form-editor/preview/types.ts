@@ -142,10 +142,16 @@ export interface PagePreviewBaseElements {
   guidance: string
 }
 
+export interface PageSectionInfo {
+  title: string
+  hideTitle: boolean
+}
+
 export interface PageOverviewElements extends PagePreviewBaseElements {
   addHeading: boolean
   repeatQuestion: string | undefined
   hasRepeater: boolean
+  section?: PageSectionInfo
 }
 
 export interface SectionForPreview {
