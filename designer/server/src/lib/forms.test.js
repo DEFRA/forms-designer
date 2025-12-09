@@ -631,6 +631,28 @@ describe('Forms library routes', () => {
       })
     })
   })
+
+  describe('deleteDraftOnly', () => {
+    it('should call correct url', async () => {
+      const mockResponse = {
+        data: [formMetadata],
+        meta: {}
+      }
+      jest.spyOn(fetch, 'delJson').mockResolvedValueOnce({
+        /** @type { any } */
+        response: {},
+        body: mockResponse
+      })
+
+      await forms.deleteDraftOnly('form-id', 'token')
+
+      const fetchDelJsonMock = /** @type {jest.Mock} */ (fetch.delJson)
+      /** @type {Array<[URL, object]>} */
+      const mockCalls = fetchDelJsonMock.mock.calls
+      const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+      expect(calledUrl.href).toBe('http://localhost:3001/forms/form-id/draft')
+    })
+  })
 })
 
 /**
