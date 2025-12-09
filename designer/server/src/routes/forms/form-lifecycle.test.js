@@ -264,7 +264,7 @@ describe('Deleting a form', () => {
     await server.stop()
   })
 
-  test('The confirmation page is shown', async () => {
+  test('The confirmation page is shown - where the form will be deleted', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce({
       ...metadata,
       draft: state
@@ -289,6 +289,40 @@ describe('Deleting a form', () => {
 
     const $deleteButton = container.getByRole('button', {
       name: 'Delete form'
+    })
+    const $cancelButton = container.getByRole('button', {
+      name: 'Cancel'
+    })
+    expect($deleteButton).toBeInTheDocument()
+    expect($cancelButton).toBeInTheDocument()
+  })
+
+  test('The confirmation page is shown - where the draft-only will be deleted', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state,
+      live: state
+    })
+
+    const options = {
+      method: 'GET',
+      url: '/library/my-form/delete-draft',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', {
+      name: 'My form Are you sure you want to delete this draft?', // "My form" is the caption. Ugly but necessary.
+      level: 1
+    })
+    expect($heading).toBeInTheDocument()
+
+    const $warning = container.getByText('You cannot recover deleted drafts.')
+    expect($warning).toBeInTheDocument()
+
+    const $deleteButton = container.getByRole('button', {
+      name: 'Delete draft'
     })
     const $cancelButton = container.getByRole('button', {
       name: 'Cancel'
