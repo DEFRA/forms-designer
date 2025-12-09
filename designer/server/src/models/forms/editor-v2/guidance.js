@@ -109,15 +109,17 @@ export function getGuidancePreviewModel(
     ? { title: sectionInfo.title, hideTitle: sectionInfo.hideTitle }
     : undefined
   const elements = new PagePreviewElementsSSR(page, guidance, sectionForPreview)
-  const previewPageController = new GuidancePageController(
-    elements,
-    dummyRenderer
-  )
+  const {
+    pageTitle,
+    components: previewComponents,
+    guidance: previewGuidance,
+    sectionTitle
+  } = new GuidancePageController(elements, dummyRenderer)
   const previewController = /** @type {PagePreviewPanelMacro} */ ({
-    pageTitle: previewPageController.pageTitle,
-    components: previewPageController.components,
-    guidance: previewPageController.guidance,
-    sectionTitle: previewPageController.sectionTitle
+    pageTitle,
+    components: previewComponents,
+    guidance: previewGuidance,
+    sectionTitle
   })
 
   return {
