@@ -188,3 +188,33 @@ export function isSummaryPage(page: Page | undefined) {
     page?.controller ?? ControllerType.Page
   )
 }
+
+/**
+ * Revert any custom controllers to their parent/base class since engine-plugin has no knowledge of them
+ * @param {FormDefinition} definition
+ * @returns {FormDefinition}
+ */
+export function replaceCustomControllers(definition: FormDefinition) {
+  const standardControllers = new Set(
+    Object.values(ControllerType)
+      .filter((x) => x !== ControllerType.SummaryWithConfirmationEmail)
+      .map((x) => x.toString())
+  )
+
+  return {
+    ...definition,
+    pages: definition.pages.map((page) => {
+      if (
+        !standardControllers.has(
+          (page.controller ?? ControllerType.Page).toString()
+        )
+      ) {
+        return /** @type {Page} */ {
+          ...page,
+          controller: ControllerType.Page
+        }
+      }
+      return page
+    })
+  } as FormDefinition
+}
