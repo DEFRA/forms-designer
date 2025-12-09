@@ -297,7 +297,7 @@ describe('Deleting a form', () => {
     expect($cancelButton).toBeInTheDocument()
   })
 
-  test('When a form is draft, allow the deletion', async () => {
+  test('When a form is draft, allow the deletion of the form', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce({
       ...metadata,
       draft: state
@@ -313,6 +313,29 @@ describe('Deleting a form', () => {
 
     expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
     expect(response.headers.location).toBe(formsLibraryPath)
+    expect(forms.deleteForm).toHaveBeenCalled()
+    expect(forms.deleteDraftOnly).not.toHaveBeenCalled()
+  })
+
+  test('When a form has live as well as draft, allow the deletion of the draft', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state,
+      live: state
+    })
+
+    const options = {
+      method: 'POST',
+      url: '/library/my-form/delete-draft',
+      auth
+    }
+
+    const { response } = await renderResponse(server, options)
+
+    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(response.headers.location).toBe(formsLibraryPath)
+    expect(forms.deleteDraftOnly).toHaveBeenCalled()
+    expect(forms.deleteForm).not.toHaveBeenCalled()
   })
 
   test('Ensure the user is shown an error message when it occurs', async () => {
