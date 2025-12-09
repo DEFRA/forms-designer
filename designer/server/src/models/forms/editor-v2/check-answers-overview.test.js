@@ -1,3 +1,4 @@
+import { ControllerType } from '@defra/forms-model'
 import {
   buildDefinition,
   buildMarkdownComponent,
@@ -324,6 +325,66 @@ describe('check-answers-overview model', () => {
       expect(result.sections.link).toBe(
         '/library/test-form/editor-v2/page/cya-page/check-answers-settings/sections'
       )
+    })
+
+    it('should include confirmation email link for editing', () => {
+      const definition = buildDefinition({
+        pages: [buildSummaryPage({ id: 'cya-page', path: '/summary' })],
+        sections: []
+      })
+
+      const result = checkAnswersOverviewViewModel(
+        baseMetadata,
+        definition,
+        'cya-page'
+      )
+
+      expect(result.confirmationEmail.link).toBe(
+        '/library/test-form/editor-v2/page/cya-page/check-answers-settings/confirmation-email'
+      )
+    })
+
+    it('should show confirmation email disabled when controller is Summary', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildSummaryPage({
+            id: 'cya-page',
+            path: '/summary',
+            controller: ControllerType.Summary
+          })
+        ],
+        sections: []
+      })
+
+      const result = checkAnswersOverviewViewModel(
+        baseMetadata,
+        definition,
+        'cya-page'
+      )
+
+      expect(result.confirmationEmail.enabled).toBe(false)
+    })
+
+    it('should show confirmation email enabled when controller is SummaryWithConfirmationEmail', () => {
+      const definition = buildDefinition({
+        pages: [
+          {
+            id: 'cya-page',
+            title: 'Summary page',
+            path: '/summary',
+            controller: ControllerType.SummaryWithConfirmationEmail
+          }
+        ],
+        sections: []
+      })
+
+      const result = checkAnswersOverviewViewModel(
+        baseMetadata,
+        definition,
+        'cya-page'
+      )
+
+      expect(result.confirmationEmail.enabled).toBe(true)
     })
   })
 })
