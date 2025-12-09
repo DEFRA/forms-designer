@@ -209,6 +209,10 @@ export default [
         } else {
           // LIVE exists so only delete the DRAFT definition, not the whole form
           await forms.deleteDraftOnly(form.id, token)
+
+          logger.info(
+            `[draftDeleted] Draft for Form '${form.slug}' (${form.title}) successfully deleted - formId: ${form.id}`
+          )
         }
 
         yar.flash(
