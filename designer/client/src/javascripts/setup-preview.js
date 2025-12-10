@@ -44,6 +44,10 @@ import {
   ListSortableQuestionElements
 } from '~/src/javascripts/preview/list-sortable.js'
 import {
+  MultilineTextFieldDomElements,
+  MultilineTextFieldEventListeners
+} from '~/src/javascripts/preview/multiline-textfield.js'
+import {
   NationalGridDomElements,
   NationalGridEventListeners
 } from '~/src/javascripts/preview/national-grid.js'
@@ -133,13 +137,16 @@ export const SetupPreviewPartial =
       return numberField
     },
     MultilineTextField: () => {
-      const questionElements = new QuestionDomElements()
+      const questionElements = new MultilineTextFieldDomElements()
       const nunjucksRenderer = new NunjucksRenderer(questionElements)
       const textfield = new LongAnswerQuestion(
         questionElements,
         nunjucksRenderer
       )
-      const listeners = new EventListeners(textfield, questionElements)
+      const listeners = new MultilineTextFieldEventListeners(
+        textfield,
+        questionElements
+      )
       listeners.setupListeners()
 
       return textfield
