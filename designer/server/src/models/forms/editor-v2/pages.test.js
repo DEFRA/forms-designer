@@ -77,6 +77,62 @@ describe('editor-v2 - pages model', () => {
       expect(res.pages[0].title).toBe('Fave animal')
       expect(res.pages[1].title).toBe('Summary')
     })
+
+    test('should include sectionInfo when page has a section', () => {
+      const definitionWithSection = {
+        ...testFormDefinitionWithTwoQuestions,
+        sections: [
+          {
+            id: 'section-1',
+            name: 'section',
+            title: 'Test Section',
+            hideTitle: false
+          }
+        ]
+      }
+      definitionWithSection.pages[0].section = 'section-1'
+      const res = mapPageData('slug', definitionWithSection, undefined)
+      expect(/** @type {*} */ (res.pages[0]).sectionInfo).toEqual({
+        id: 'section-1',
+        title: 'Test Section',
+        hideTitle: false,
+        changeUrl:
+          '/library/slug/editor-v2/page/p2/check-answers-settings/sections'
+      })
+    })
+
+    test('should have undefined sectionInfo when page has no section', () => {
+      const res = mapPageData(
+        'slug',
+        testFormDefinitionWithNoQuestions,
+        undefined
+      )
+      expect(/** @type {*} */ (res.pages[0]).sectionInfo).toBeUndefined()
+    })
+
+    test('should include sectionInfo when page has empty title', () => {
+      const definitionWithSection = {
+        ...testFormDefinitionWithTwoQuestions,
+        sections: [
+          {
+            id: 'section-1',
+            name: 'section',
+            title: 'Test Section',
+            hideTitle: true
+          }
+        ]
+      }
+      definitionWithSection.pages[0].title = ''
+      definitionWithSection.pages[0].section = 'section-1'
+      const res = mapPageData('slug', definitionWithSection, undefined)
+      expect(/** @type {*} */ (res.pages[0]).sectionInfo).toEqual({
+        id: 'section-1',
+        title: 'Test Section',
+        hideTitle: true,
+        changeUrl:
+          '/library/slug/editor-v2/page/p2/check-answers-settings/sections'
+      })
+    })
   })
 
   describe('mapQuestionRows', () => {
