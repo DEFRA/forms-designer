@@ -8,7 +8,10 @@ import {
   isSummaryPage
 } from '@defra/forms-model'
 
-import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
+import {
+  getFormSpecificNavigation,
+  getSectionForPage
+} from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
@@ -173,6 +176,7 @@ export function mapPageData(slug, definition, filterOptions) {
         const isEndPage = isSummaryPage(page)
         const isExitPage = page.controller === ControllerType.Terminal
         const pageNum = definition.pages.findIndex((p) => p.id === page.id) + 1
+        const sectionInfo = getSectionForPage(definition, page, slug)
 
         if (page.title === '') {
           return {
@@ -182,7 +186,8 @@ export function mapPageData(slug, definition, filterOptions) {
             questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
             isEndPage,
             isExitPage,
-            editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
+            editUrl: determineEditUrl(page, isEndPage, editBaseUrl),
+            sectionInfo
           }
         }
         return {
@@ -191,7 +196,8 @@ export function mapPageData(slug, definition, filterOptions) {
           questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
           isEndPage,
           isExitPage,
-          editUrl: determineEditUrl(page, isEndPage, editBaseUrl)
+          editUrl: determineEditUrl(page, isEndPage, editBaseUrl),
+          sectionInfo
         }
       })
   }

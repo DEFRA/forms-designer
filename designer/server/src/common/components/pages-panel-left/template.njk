@@ -5,12 +5,25 @@
 {% set tagHtml %}
 <div class="govuk-button-group govuk-!-margin-bottom-2 govuk-!-margin-right-2">
   <span class="govuk-tag govuk-tag--pink govuk-!-margin-right-2">Exit page</span>
+  {% if params.sectionInfo %}
+    <span class="govuk-tag govuk-tag--blue govuk-!-margin-right-2">{{ params.sectionInfo.title }}</span>
+  {% endif %}
 </div>
 <div class="govuk-summary-card__title govuk-!-margin-0">{{ pageTitleText }}</div>
 {% endset %}
 
 {% set cardClass = "pages-panel-left-standard" if params.rows | length > 0 else "pages-panel-left-standard pages-panel-left-standard-hide-declaration" %}
 {% set cardTitle = { text: pageTitleText } %}
+
+{% if params.sectionInfo and not params.isEndPage and not params.isExitPage %}
+  {% set cardTitleHtml %}
+    <div class="govuk-!-margin-bottom-2">
+      <span class="govuk-tag govuk-tag--blue">{{ params.sectionInfo.title }}</span>
+    </div>
+    {{ pageTitleText }}
+  {% endset %}
+  {% set cardTitle = { html: cardTitleHtml } %}
+{% endif %}
 
 {% if params.isEndPage %}
   {% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end pages-panel-left-end-hide-declaration"%}
