@@ -30,9 +30,9 @@ export function generateSuccessMessage(email) {
 }
 
 /**
- * @param {string} slug
+ * @param {FormMetadata} metadata
  */
-export function generateTitling(slug) {
+export function generateTitling(metadata) {
   const pageTitle = 'Download responses as an Excel spreadsheet'
 
   return {
@@ -40,9 +40,12 @@ export function generateTitling(slug) {
     pageHeading: {
       text: pageTitle
     },
+    caption: {
+      text: metadata.title
+    },
     backLink: {
       text: 'Back to form overview',
-      href: `/library/${slug}`
+      href: `/library/${metadata.slug}`
     }
   }
 }
@@ -94,7 +97,7 @@ export default [
       )
 
       return h.view('forms/editor-v2/responses', {
-        ...generateTitling(slug),
+        ...generateTitling(metadata),
         formId,
         errorList,
         navigation,
