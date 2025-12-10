@@ -1,3 +1,5 @@
+import { CharacterCount } from 'govuk-frontend'
+
 /**
  * @implements {DomElementsBase}
  */
@@ -46,6 +48,14 @@ export class DomElements {
   setPreviewHTML(value) {
     if (this.preview) {
       this.preview.innerHTML = this._wrapHTML(value)
+      // Reinitialize GOV.UK CharacterCount components after DOM update
+      const characterCountElements = this.preview.querySelectorAll(
+        '[data-module="govuk-character-count"]'
+      )
+      characterCountElements.forEach((element) => {
+        // eslint-disable-next-line no-new
+        new CharacterCount(element) // NOSONAR: javascript:S1848 - Constructor has side effects
+      })
     }
   }
 

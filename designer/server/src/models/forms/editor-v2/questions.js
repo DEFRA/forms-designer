@@ -22,7 +22,8 @@ import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
-  getFormSpecificNavigation
+  getFormSpecificNavigation,
+  getSectionForPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
@@ -346,6 +347,8 @@ export const dummyRenderer = {
  * @param {string} previewPageUrl
  * @param {string} previewErrorsUrl
  * @param {string} [guidance]
+ * @param {boolean} [isGuidancePage]
+ * @param {SectionInfo} [sectionInfo]
  * @returns {PagePreviewPanelMacro & {
  *    previewPageUrl: string;
  *    previewErrorsUrl: string;
@@ -362,10 +365,15 @@ export function getPreviewModel(
   previewPageUrl,
   previewErrorsUrl,
   guidance = '',
-  isGuidancePage = false
+  isGuidancePage = false,
+  sectionInfo = undefined
 ) {
   const components = hasComponents(page) ? page.components : []
-  const elements = new PagePreviewElementsSSR(page, guidance)
+
+  const sectionForPreview = sectionInfo
+    ? { title: sectionInfo.title, hideTitle: sectionInfo.hideTitle }
+    : undefined
+  const elements = new PagePreviewElementsSSR(page, guidance, sectionForPreview)
   const previewPageController = new PreviewPageController(
     components,
     elements,
@@ -446,12 +454,13 @@ export function questionsViewModel(
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
   const itemOrder = getItemOrder(reorderDetails.questionOrder, components)
   const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${page.path}/${components[0]?.id}`
+  const sectionInfo = getSectionForPage(definition, page, metadata.slug)
 
   return {
     ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
     fields,
     // prettier-ignore
-    previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value),
+    previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value, false, sectionInfo),
     preview: {
       pageId: page.id,
       definitionId: metadata.id
@@ -483,7 +492,8 @@ export function questionsViewModel(
       conditionDetails.pageCondition && conditionDetails.pageConditionDetails
     ),
     itemOrder,
-    action: reorderDetails.action
+    action: reorderDetails.action,
+    sectionInfo
   }
 }
 
@@ -491,4 +501,5 @@ export function questionsViewModel(
  * @import { ComponentDef, FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
+ * @import { SectionInfo } from '~/src/models/forms/editor-v2/common.js'
  */

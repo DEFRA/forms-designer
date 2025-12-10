@@ -14,9 +14,11 @@ import {
   testFormDefinitionWithoutSummary
 } from '~/src/__stubs__/form-definition.js'
 import {
+  getCyaPageId,
   getPageNum,
   getQuestionNum,
   getQuestionsOnPage,
+  getSectionForPage,
   tickBoxes
 } from '~/src/models/forms/editor-v2/common.js'
 import {
@@ -185,6 +187,156 @@ describe('editor-v2 - model', () => {
     test('should handle undefined items', () => {
       const res = tickBoxes(undefined, ['value1'])
       expect(res).toEqual([])
+    })
+  })
+
+  describe('getCyaPageId', () => {
+    it('should return the summary page id when one exists', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'p1' }),
+          buildSummaryPage({ id: 'cya-page-id' })
+        ]
+      })
+
+      const result = getCyaPageId(definition)
+      expect(result).toBe('cya-page-id')
+    })
+
+    it('should return undefined when no summary page exists', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: 'p1' })]
+      })
+
+      const result = getCyaPageId(definition)
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when pages array is empty', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+
+      const result = getCyaPageId(definition)
+      expect(result).toBeUndefined()
+    })
+  })
+
+  describe('getSectionForPage', () => {
+    const testSlug = 'test-form'
+
+    it('should return section info when page has a section', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'p1', section: 'section-1-id' }),
+          buildSummaryPage({ id: 'cya-page' })
+        ],
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' }
+        ]
+      })
+      const page = definition.pages[0]
+
+      const result = getSectionForPage(definition, page, testSlug)
+
+      expect(result).toEqual({
+        id: 'section-1-id',
+        title: 'First Section',
+        hideTitle: false,
+        changeUrl: `/library/${testSlug}/editor-v2/page/cya-page/check-answers-settings/sections`
+      })
+    })
+
+    it('should return section info with hideTitle true when section has hideTitle', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'p1', section: 'section-1-id' }),
+          buildSummaryPage({ id: 'cya-page' })
+        ],
+        sections: [
+          {
+            id: 'section-1-id',
+            name: 'section-1',
+            title: 'Hidden Title Section',
+            hideTitle: true
+          }
+        ]
+      })
+      const page = definition.pages[0]
+
+      const result = getSectionForPage(definition, page, testSlug)
+
+      expect(result).toEqual({
+        id: 'section-1-id',
+        title: 'Hidden Title Section',
+        hideTitle: true,
+        changeUrl: `/library/${testSlug}/editor-v2/page/cya-page/check-answers-settings/sections`
+      })
+    })
+
+    it('should return undefined when page has no section', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: 'p1' })],
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' }
+        ]
+      })
+      const page = definition.pages[0]
+
+      const result = getSectionForPage(definition, page, testSlug)
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return undefined when section is not found in definition', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'p1', section: 'non-existent-section' })
+        ],
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' }
+        ]
+      })
+      const page = definition.pages[0]
+
+      const result = getSectionForPage(definition, page, testSlug)
+
+      expect(result).toBeUndefined()
+    })
+
+    it('should return empty changeUrl when no summary page exists', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: 'p1', section: 'section-1-id' })],
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'First Section' }
+        ]
+      })
+      const page = definition.pages[0]
+
+      const result = getSectionForPage(definition, page, testSlug)
+
+      expect(result).toEqual({
+        id: 'section-1-id',
+        title: 'First Section',
+        hideTitle: false,
+        changeUrl: ''
+      })
+    })
+
+    it('should handle section with undefined id', () => {
+      const definition = buildDefinition({
+        pages: [buildQuestionPage({ id: 'p1', section: 'section-1-id' })],
+        sections: [
+          { id: 'section-1-id', name: 'section-1', title: 'Section No ID' }
+        ]
+      })
+      // Manually unset the id to test the fallback
+      definition.sections[0].id = undefined
+      const page = definition.pages[0]
+
+      const result = getSectionForPage(definition, page, testSlug)
+
+      expect(result).toBeUndefined()
     })
   })
 

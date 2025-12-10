@@ -264,7 +264,7 @@ describe('Deleting a form', () => {
     await server.stop()
   })
 
-  test('The confirmation page is shown', async () => {
+  test('The confirmation page is shown - where the form will be deleted', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce({
       ...metadata,
       draft: state
@@ -297,7 +297,41 @@ describe('Deleting a form', () => {
     expect($cancelButton).toBeInTheDocument()
   })
 
-  test('When a form is draft, allow the deletion', async () => {
+  test('The confirmation page is shown - where the draft-only will be deleted', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state,
+      live: state
+    })
+
+    const options = {
+      method: 'GET',
+      url: '/library/my-form/delete-draft',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $heading = container.getByRole('heading', {
+      name: 'My form Are you sure you want to delete this draft?', // "My form" is the caption. Ugly but necessary.
+      level: 1
+    })
+    expect($heading).toBeInTheDocument()
+
+    const $warning = container.getByText('You cannot recover deleted drafts.')
+    expect($warning).toBeInTheDocument()
+
+    const $deleteButton = container.getByRole('button', {
+      name: 'Delete draft'
+    })
+    const $cancelButton = container.getByRole('button', {
+      name: 'Cancel'
+    })
+    expect($deleteButton).toBeInTheDocument()
+    expect($cancelButton).toBeInTheDocument()
+  })
+
+  test('When a form is draft, allow the deletion of the form', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce({
       ...metadata,
       draft: state
@@ -313,6 +347,29 @@ describe('Deleting a form', () => {
 
     expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
     expect(response.headers.location).toBe(formsLibraryPath)
+    expect(forms.deleteForm).toHaveBeenCalled()
+    expect(forms.deleteDraftOnly).not.toHaveBeenCalled()
+  })
+
+  test('When a form has live as well as draft, allow the deletion of the draft', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...metadata,
+      draft: state,
+      live: state
+    })
+
+    const options = {
+      method: 'POST',
+      url: '/library/my-form/delete-draft',
+      auth
+    }
+
+    const { response } = await renderResponse(server, options)
+
+    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+    expect(response.headers.location).toBe(formsLibraryPath)
+    expect(forms.deleteDraftOnly).toHaveBeenCalled()
+    expect(forms.deleteForm).not.toHaveBeenCalled()
   })
 
   test('Ensure the user is shown an error message when it occurs', async () => {

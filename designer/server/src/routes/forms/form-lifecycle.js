@@ -197,13 +197,23 @@ export default [
       const formDefinition = await forms.getDraftFormDefinition(form.id, token)
 
       try {
-        // Currently we don't support leaving the metadata widowed with no form definitions.
-        // Deleting a draft also deletes the form itself (as long as the form hasn't gone live).
-        await forms.deleteForm(form.id, token)
+        // DRAFT but no LIVE
+        if (!form.live) {
+          // Currently we don't support leaving the metadata widowed with no form definitions.
+          // Deleting a draft also deletes the form itself (as long as the form hasn't gone live).
+          await forms.deleteForm(form.id, token)
 
-        logger.info(
-          `[formDeleted] Form '${form.slug}' (${form.title}) successfully deleted - formId: ${form.id}`
-        )
+          logger.info(
+            `[formDeleted] Form '${form.slug}' (${form.title}) successfully deleted - formId: ${form.id}`
+          )
+        } else {
+          // LIVE exists so only delete the DRAFT definition, not the whole form
+          await forms.deleteDraftOnly(form.id, token)
+
+          logger.info(
+            `[draftDeleted] Draft for Form '${form.slug}' (${form.title}) successfully deleted - formId: ${form.id}`
+          )
+        }
 
         yar.flash(
           sessionNames.successNotification,

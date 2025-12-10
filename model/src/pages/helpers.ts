@@ -195,15 +195,17 @@ export function isSummaryPage(page: Page | undefined) {
  * @returns {FormDefinition}
  */
 export function replaceCustomControllers(definition: FormDefinition) {
-  const standardControllers = Object.values(ControllerType)
-    .filter((x) => x !== ControllerType.SummaryWithConfirmationEmail)
-    .map((x) => x.toString())
+  const standardControllers = new Set(
+    Object.values(ControllerType)
+      .filter((x) => x !== ControllerType.SummaryWithConfirmationEmail)
+      .map((x) => x.toString())
+  )
 
   return {
     ...definition,
     pages: definition.pages.map((page) => {
       if (
-        !standardControllers.includes(
+        !standardControllers.has(
           (page.controller ?? ControllerType.Page).toString()
         )
       ) {

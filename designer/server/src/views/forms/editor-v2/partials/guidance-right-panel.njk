@@ -8,5 +8,9 @@
 <script src="{{ getAssetPath("assets/nunjucks/govuk-components.js") }}"></script>
 <script type="module">
     import { setupGuidanceController } from "{{ getAssetPath("pagePreview.js") }}"
+    {% if sectionInfo %}
+    setupGuidanceController({{ { title: sectionInfo.title, hideTitle: sectionInfo.hideTitle } | dump | safe }})
+    {% else %}
     setupGuidanceController()
+    {% endif %}
 </script>

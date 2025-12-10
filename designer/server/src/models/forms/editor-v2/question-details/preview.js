@@ -242,7 +242,7 @@ export class EmptyRender {
 const emptyRender = new EmptyRender()
 
 export const ModelFactory =
-  /** @type {Partial<Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements) => Question>>} */ ({
+  /** @type {Partial<Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements|MultilineTextFieldElements) => Question>>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -258,7 +258,7 @@ export const ModelFactory =
       return new Question(questionElements, emptyRender)
     },
     /**
-     * @param {QuestionElements} questionElements
+     * @param {MultilineTextFieldElements} questionElements
      * @returns {Question}
      */
     MultilineTextField: (questionElements) => {
@@ -473,5 +473,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { AutocompleteElements, ListElement, ListElements, LocationElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, LocationElements, MultilineTextFieldElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */

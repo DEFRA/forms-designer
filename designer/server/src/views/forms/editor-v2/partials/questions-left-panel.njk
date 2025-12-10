@@ -37,6 +37,31 @@
                     {% endcall %}
                   {% endif %}
 
+                  {% if sectionInfo %}
+                    {{ govukSummaryList({
+                      rows: [{
+                        key: {
+                          text: 'Section',
+                          classes: 'govuk-!-width-one-quarter'
+                        },
+                        value: {
+                          text: sectionInfo.title,
+                          classes: 'govuk-!-width-one-half'
+                        },
+                        actions: {
+                          items: [
+                            {
+                              href: sectionInfo.changeUrl,
+                              text: 'Change',
+                              visuallyHiddenText: 'section',
+                              classes: 'govuk-link--no-visited-state govuk-!-width-one-quarter'
+                            }
+                          ]
+                        }
+                      }]
+                    }) }}
+                  {% endif %}
+
                   {% if questionRows | length %}
                     {% if action == 'reorder' %}
                       <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>

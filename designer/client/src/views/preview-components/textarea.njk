@@ -1,7 +1,12 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/character-count/macro.njk" import govukCharacterCount %}
 
 <div class="{{ model.previewClasses }}">
 
-{{ govukTextarea(model) }}
+{% if model.maxlength and model.maxlength > 0 %}
+  {{ govukCharacterCount(model) }}
+{% else %}
+  {{ govukTextarea(model) }}
+{% endif %}
 
 </div>

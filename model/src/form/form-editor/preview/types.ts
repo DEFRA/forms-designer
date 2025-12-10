@@ -83,6 +83,15 @@ export interface NumberElements extends DomElementsBase {
   readonly values: NumberSettings
 }
 
+export interface MultilineTextFieldSettings extends BaseSettings {
+  maxLength: number
+  rows: number
+}
+
+export interface MultilineTextFieldElements extends DomElementsBase {
+  readonly values: MultilineTextFieldSettings
+}
+
 export interface LocationSettings extends BaseSettings {
   instructionText: string
 }
@@ -142,10 +151,16 @@ export interface PagePreviewBaseElements {
   guidance: string
 }
 
+export interface PageSectionInfo {
+  title: string
+  hideTitle: boolean
+}
+
 export interface PageOverviewElements extends PagePreviewBaseElements {
   addHeading: boolean
   repeatQuestion: string | undefined
   hasRepeater: boolean
+  section?: PageSectionInfo
 }
 
 export interface SectionForPreview {

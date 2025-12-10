@@ -3,6 +3,7 @@ import {
   buildDefinition,
   buildMetaData,
   buildQuestionPage,
+  buildSummaryPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
@@ -125,6 +126,115 @@ describe('guidance model', () => {
 
       expect(result.pageTitle).toBe('Edit guidance page - Test form')
       expect(result.hasPageCondition).toBeTruthy()
+    })
+
+    it('should include section info when page has a section', () => {
+      const sectionId = 'section-1-id'
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            title: 'Guidance page',
+            path: '/guidance-page',
+            id: pageId,
+            section: sectionId,
+            components: undefined
+          }),
+          buildSummaryPage({ id: 'cya-page' })
+        ],
+        sections: [{ id: sectionId, name: 'section-1', title: 'My Section' }],
+        conditions: []
+      })
+
+      const result = guidanceViewModel(
+        metadata,
+        definition,
+        pageId,
+        'invalid',
+        undefined,
+        undefined
+      )
+
+      expect(result.sectionInfo).toEqual({
+        id: sectionId,
+        title: 'My Section',
+        hideTitle: false,
+        changeUrl:
+          '/library/test-form/editor-v2/page/cya-page/check-answers-settings/sections'
+      })
+      expect(result.previewModel.sectionTitle).toEqual({
+        classes: '',
+        text: 'My Section'
+      })
+    })
+
+    it('should not include section info when page has no section', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            title: 'Guidance page',
+            path: '/guidance-page',
+            id: pageId,
+            components: undefined
+          })
+        ],
+        conditions: []
+      })
+
+      const result = guidanceViewModel(
+        metadata,
+        definition,
+        pageId,
+        'invalid',
+        undefined,
+        undefined
+      )
+
+      expect(result.sectionInfo).toBeUndefined()
+      expect(result.previewModel.sectionTitle).toBeUndefined()
+    })
+
+    it('should hide section title in preview when hideTitle is true', () => {
+      const sectionId = 'section-1-id'
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            title: 'Guidance page',
+            path: '/guidance-page',
+            id: pageId,
+            section: sectionId,
+            components: undefined
+          }),
+          buildSummaryPage({ id: 'cya-page' })
+        ],
+        sections: [
+          {
+            id: sectionId,
+            name: 'section-1',
+            title: 'Hidden Section',
+            hideTitle: true
+          }
+        ],
+        conditions: []
+      })
+
+      const result = guidanceViewModel(
+        metadata,
+        definition,
+        pageId,
+        'invalid',
+        undefined,
+        undefined
+      )
+
+      expect(result.sectionInfo).toEqual({
+        id: sectionId,
+        title: 'Hidden Section',
+        hideTitle: true,
+        changeUrl:
+          '/library/test-form/editor-v2/page/cya-page/check-answers-settings/sections'
+      })
+      // Preview should not show title when hideTitle is true
+      expect(result.previewModel.sectionTitle).toBeUndefined()
     })
   })
 })

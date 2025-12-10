@@ -55,11 +55,33 @@ import {
 } from '~/src/javascripts/preview/page-controller/summary-page-controller.js'
 
 /**
+ * Get section info for a page from the definition
  * @param {Page} page
+ * @param {FormDefinition} definition
+ * @returns {PageSectionInfo | undefined}
+ */
+function getSectionInfoForPage(page, definition) {
+  if (!page.section) {
+    return undefined
+  }
+  const section = definition.sections.find((s) => s.id === page.section)
+  if (!section) {
+    return undefined
+  }
+  return {
+    title: section.title,
+    hideTitle: section.hideTitle === true
+  }
+}
+
+/**
+ * @param {Page} page
+ * @param {FormDefinition} definition
  * @returns {[ComponentDef[],PagePreviewDomElements,NunjucksPageRenderer]}
  */
-function baseControllerSetup(page) {
-  const elements = new PagePreviewDomElements()
+function baseControllerSetup(page, definition) {
+  const sectionInfo = getSectionInfoForPage(page, definition)
+  const elements = new PagePreviewDomElements(sectionInfo)
   const components = /** @type {ComponentDef[]} */ (
     hasComponents(page) ? page.components : []
   )
@@ -98,7 +120,7 @@ export async function setupPageController(pageId, definitionId) {
   if (!page) {
     throw new Error(`Page not found with id ${pageId}`)
   }
-  const [components, elements, renderer] = baseControllerSetup(page)
+  const [components, elements, renderer] = baseControllerSetup(page, definition)
 
   const previewPageController = new PreviewPageController(
     components,
@@ -136,8 +158,11 @@ export async function setupSummaryPageController(definitionId, initialState) {
   return previewPageController
 }
 
-export function setupGuidanceController() {
-  const elements = new PagePreviewDomElements()
+/**
+ * @param {PageSectionInfo} [sectionInfo]
+ */
+export function setupGuidanceController(sectionInfo) {
+  const elements = new PagePreviewDomElements(sectionInfo)
   const nunjucksRenderBase = new NunjucksRendererBase(elements)
   const renderer = new NunjucksPageRenderer(nunjucksRenderBase)
   const guidancePageController = new GuidancePageController(elements, renderer)
@@ -182,5 +207,5 @@ export async function setupReorderQuestionsController(pageId, definitionId) {
 }
 
 /**
- * @import { ComponentDef, Page, PreviewPageControllerBase, SummaryPageInitialState } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, Page, PageSectionInfo, PreviewPageControllerBase, SummaryPageInitialState } from '@defra/forms-model'
  */

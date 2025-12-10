@@ -45,6 +45,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
     this._showTitle = elements.addHeading
     this._sectionTitle = elements.repeatQuestion ?? ''
     this._isRepeater = elements.hasRepeater
+    this._section = elements.section
   }
 
   /**
@@ -187,7 +188,7 @@ export class PreviewPageController extends PreviewPageControllerBase {
     if (this._isRepeater) {
       return this.repeaterText
     }
-    return undefined
+    return super._getSectionTitleText()
   }
 
   /**
