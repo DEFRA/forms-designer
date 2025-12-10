@@ -53,7 +53,7 @@ export function generateTitling(metadata) {
 /**
  * @param {FormMetadata} metadata
  */
-export function generateErroList(metadata) {
+export function generateErrorList(metadata) {
   return metadata.notificationEmail
     ? []
     : [
@@ -80,7 +80,7 @@ export default [
 
       const formId = metadata.id
 
-      const errorList = generateErroList(metadata)
+      const errorList = generateErrorList(metadata)
 
       const formPath = formOverviewPath(slug)
 
