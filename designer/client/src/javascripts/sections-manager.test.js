@@ -5,19 +5,19 @@ import {
 
 describe('sections-manager', () => {
   const sectionsHTML = `
-    <div id="section-heading" class="govuk-input"></div>
+    <input id="sectionHeading" class="govuk-input" type="text" />
     <div id="sections-preview">
-      <div data-section-id="section-1" data-preview-section-id="section-1">
-        <h4 class="govuk-heading-m">Section 1</h4>
-      </div>
-      <div data-section-id="section-2" data-preview-section-id="section-2">
-        <h4 class="govuk-heading-m">Section 2</h4>
-      </div>
+      <h4 class="govuk-heading-m" data-preview-section-id="section-1">Section 1: Business details</h4>
+      <p class="govuk-hint">No pages in this section</p>
+      <h4 class="govuk-heading-m" data-preview-section-id="section-2">Section 2: Contact info</h4>
+      <p class="govuk-hint">No pages in this section</p>
+      <div data-section-id="section-1"></div>
+      <div data-section-id="section-2"></div>
     </div>
   `
 
   const minimalHTML = `
-    <div id="section-heading" class="govuk-input"></div>
+    <input id="sectionHeading" class="govuk-input" type="text" />
   `
 
   beforeEach(() => {
@@ -32,7 +32,7 @@ describe('sections-manager', () => {
         expect(manager).toBeInstanceOf(SectionsManager)
       })
 
-      it('should initialize even when section-heading does not exist', () => {
+      it('should initialize even when sectionHeading does not exist', () => {
         document.body.innerHTML = '<div id="some-other-element"></div>'
         const manager = new SectionsManager()
         expect(manager).toBeInstanceOf(SectionsManager)
@@ -40,7 +40,7 @@ describe('sections-manager', () => {
     })
 
     describe('setupEventListeners', () => {
-      it('should not error when section-heading input does not exist', () => {
+      it('should not error when sectionHeading input does not exist', () => {
         document.body.innerHTML = '<div id="other-element"></div>'
         expect(() => new SectionsManager()).not.toThrow()
       })
@@ -50,7 +50,7 @@ describe('sections-manager', () => {
         const manager = new SectionsManager()
         const showPlaceholderSpy = jest.spyOn(manager, 'showPlaceholderSection')
 
-        const input = document.getElementById('section-heading')
+        const input = document.getElementById('sectionHeading')
         input?.dispatchEvent(new FocusEvent('focus'))
 
         expect(showPlaceholderSpy).toHaveBeenCalled()
@@ -62,7 +62,7 @@ describe('sections-manager', () => {
         const updatePreviewSpy = jest.spyOn(manager, 'updateSectionPreview')
 
         const input = /** @type {HTMLInputElement} */ (
-          document.getElementById('section-heading')
+          document.getElementById('sectionHeading')
         )
         input.value = 'New section'
         input.dispatchEvent(new InputEvent('input'))
@@ -76,7 +76,7 @@ describe('sections-manager', () => {
         const clearPreviewSpy = jest.spyOn(manager, 'clearSectionPreview')
 
         const input = /** @type {HTMLInputElement} */ (
-          document.getElementById('section-heading')
+          document.getElementById('sectionHeading')
         )
         input.value = ''
         input.dispatchEvent(new FocusEvent('blur'))
@@ -90,7 +90,7 @@ describe('sections-manager', () => {
         const clearPreviewSpy = jest.spyOn(manager, 'clearSectionPreview')
 
         const input = /** @type {HTMLInputElement} */ (
-          document.getElementById('section-heading')
+          document.getElementById('sectionHeading')
         )
         input.value = 'Some section'
         input.dispatchEvent(new FocusEvent('blur'))
@@ -98,13 +98,13 @@ describe('sections-manager', () => {
         expect(clearPreviewSpy).not.toHaveBeenCalled()
       })
 
-      it('should attach blur event listener and not clear preview when input has only whitespace', () => {
+      it('should attach blur event listener and clear preview when input has only whitespace', () => {
         document.body.innerHTML = minimalHTML
         const manager = new SectionsManager()
         const clearPreviewSpy = jest.spyOn(manager, 'clearSectionPreview')
 
         const input = /** @type {HTMLInputElement} */ (
-          document.getElementById('section-heading')
+          document.getElementById('sectionHeading')
         )
         input.value = '   '
         input.dispatchEvent(new FocusEvent('blur'))
@@ -143,8 +143,8 @@ describe('sections-manager', () => {
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
 
-        const placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder).toBeNull()
+        const heading = document.getElementById('section-placeholder-heading')
+        expect(heading).toBeNull()
       })
 
       it('should add placeholder to preview with correct section number', () => {
@@ -152,38 +152,54 @@ describe('sections-manager', () => {
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
 
-        const placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder).not.toBeNull()
-        expect(placeholder?.querySelector('h4')?.textContent).toBe(
-          'Section 3 heading'
-        )
+        const heading = document.getElementById('section-placeholder-heading')
+        expect(heading).not.toBeNull()
+        expect(heading?.textContent).toBe('Section 3: heading')
       })
 
-      it('should add placeholder before first h4 if it exists', () => {
+      it('should add placeholder heading with highlight class', () => {
         document.body.innerHTML = sectionsHTML
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
 
-        const placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder).not.toBeNull()
-        expect(placeholder?.querySelector('h4')?.textContent).toBe(
-          'Section 3 heading'
-        )
+        const heading = document.getElementById('section-placeholder-heading')
+        expect(heading).not.toBeNull()
+        expect(heading?.classList.contains('highlight')).toBe(true)
       })
 
-      it('should add placeholder at start when no sections exist', () => {
+      it('should add placeholder hint text', () => {
+        document.body.innerHTML = sectionsHTML
+        const manager = new SectionsManager()
+        manager.showPlaceholderSection()
+
+        const hint = document.getElementById('section-placeholder-hint')
+        expect(hint).not.toBeNull()
+        expect(hint?.textContent).toBe('No pages in this section')
+      })
+
+      it('should add placeholder at end when no sections exist', () => {
         document.body.innerHTML = `
-          <div id="section-heading"></div>
+          <input id="sectionHeading" type="text" />
           <div id="sections-preview"></div>
         `
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
 
-        const placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder).not.toBeNull()
-        expect(placeholder?.querySelector('h4')?.textContent).toBe(
-          'Section 1 heading'
+        const heading = document.getElementById('section-placeholder-heading')
+        expect(heading).not.toBeNull()
+        expect(heading?.textContent).toBe('Section 1: heading')
+      })
+
+      it('should remove existing placeholder before adding new one', () => {
+        document.body.innerHTML = sectionsHTML
+        const manager = new SectionsManager()
+        manager.showPlaceholderSection()
+        manager.showPlaceholderSection()
+
+        const headings = document.querySelectorAll(
+          '#section-placeholder-heading'
         )
+        expect(headings).toHaveLength(1)
       })
     })
 
@@ -198,44 +214,44 @@ describe('sections-manager', () => {
         expect(showPlaceholderSpy).toHaveBeenCalled()
       })
 
-      it('should update placeholder heading with provided text', () => {
+      it('should update placeholder heading with provided text and section number', () => {
         document.body.innerHTML = sectionsHTML
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
         manager.updateSectionPreview('My Custom Section')
 
-        const placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder?.querySelector('h4')?.textContent).toBe(
-          'My Custom Section'
-        )
+        const heading = document.getElementById('section-placeholder-heading')
+        expect(heading?.textContent).toBe('Section 3: My Custom Section')
       })
 
-      it('should show default text when provided text is empty', () => {
+      it('should show empty heading text when provided text is empty', () => {
         document.body.innerHTML = sectionsHTML
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
         manager.updateSectionPreview('')
 
-        const placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder?.querySelector('h4')?.textContent).toBe(
-          'Section 3 heading'
-        )
+        const heading = document.getElementById('section-placeholder-heading')
+        expect(heading?.textContent).toBe('Section 3: ')
       })
     })
 
     describe('clearSectionPreview', () => {
-      it('should remove placeholder element when it exists', () => {
+      it('should remove placeholder heading and hint when they exist', () => {
         document.body.innerHTML = sectionsHTML
         const manager = new SectionsManager()
         manager.showPlaceholderSection()
 
-        let placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder).not.toBeNull()
+        let heading = document.getElementById('section-placeholder-heading')
+        let hint = document.getElementById('section-placeholder-hint')
+        expect(heading).not.toBeNull()
+        expect(hint).not.toBeNull()
 
         manager.clearSectionPreview()
 
-        placeholder = document.querySelector('.section-placeholder')
-        expect(placeholder).toBeNull()
+        heading = document.getElementById('section-placeholder-heading')
+        hint = document.getElementById('section-placeholder-hint')
+        expect(heading).toBeNull()
+        expect(hint).toBeNull()
       })
 
       it('should not error when placeholder does not exist', () => {
@@ -270,7 +286,7 @@ describe('sections-manager', () => {
         const section = document.querySelector(
           '[data-preview-section-id="section-1"]'
         )
-        expect(section?.classList.contains('app-section-highlight')).toBe(true)
+        expect(section?.classList.contains('highlight')).toBe(true)
       })
 
       it('should not add highlight class when section does not exist', () => {
@@ -279,7 +295,9 @@ describe('sections-manager', () => {
 
         manager.highlightPreviewSection('non-existent')
 
-        const highlighted = document.querySelector('.app-section-highlight')
+        const highlighted = document.querySelector(
+          '[data-preview-section-id].highlight'
+        )
         expect(highlighted).toBeNull()
       })
     })
@@ -295,17 +313,13 @@ describe('sections-manager', () => {
         const section2 = document.querySelector(
           '[data-preview-section-id="section-2"]'
         )
-        section1?.classList.add('app-section-highlight')
-        section2?.classList.add('app-section-highlight')
+        section1?.classList.add('highlight')
+        section2?.classList.add('highlight')
 
         manager.removePreviewHighlight()
 
-        expect(section1?.classList.contains('app-section-highlight')).toBe(
-          false
-        )
-        expect(section2?.classList.contains('app-section-highlight')).toBe(
-          false
-        )
+        expect(section1?.classList.contains('highlight')).toBe(false)
+        expect(section2?.classList.contains('highlight')).toBe(false)
       })
 
       it('should not error when no highlighted sections exist', () => {
@@ -314,18 +328,25 @@ describe('sections-manager', () => {
 
         expect(() => manager.removePreviewHighlight()).not.toThrow()
       })
+
+      it('should not error when preview element does not exist', () => {
+        document.body.innerHTML = minimalHTML
+        const manager = new SectionsManager()
+
+        expect(() => manager.removePreviewHighlight()).not.toThrow()
+      })
     })
   })
 
   describe('initSectionsManager', () => {
-    it('should return SectionsManager instance when section-heading element exists', () => {
+    it('should return SectionsManager instance when sectionHeading element exists', () => {
       document.body.innerHTML = minimalHTML
       const manager = initSectionsManager()
 
       expect(manager).toBeInstanceOf(SectionsManager)
     })
 
-    it('should return null when section-heading element does not exist', () => {
+    it('should return null when sectionHeading element does not exist', () => {
       document.body.innerHTML = '<div id="other-element"></div>'
       const manager = initSectionsManager()
 
