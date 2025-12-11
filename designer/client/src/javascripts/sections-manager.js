@@ -14,9 +14,8 @@ const NO_PAGES_IN_SECTION = 'No pages in this section'
  * @param {string} [heading]
  * @returns {string}
  */
-function getSectionTitle(sectionNumber, heading) {
-  const headingText = heading ?? 'heading'
-  return `Section ${sectionNumber}: ${headingText}`
+function getSectionTitle(sectionNumber, heading = 'heading') {
+  return `Section ${sectionNumber}: ${heading}`
 }
 
 /**
