@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -133,15 +134,13 @@ describe('Editor v2 responses routes', () => {
       })
 
       test('should handle boom error if boom received from API call', async () => {
-        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-        // TODO - implement test when API call is plubmed in
-
-        // jest.mocked(setPageSettings).mockImplementationOnce(() => {
-        //   throw buildBoom409(
-        //     'Duplicate page path',
-        //     ApiErrorCode.DuplicatePagePathPage
-        //   )
-        // })
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...testFormMetadata,
+          notificationEmail: 'something@text.com'
+        })
+        jest.mocked(sendFormSubmissionsFile).mockImplementationOnce(() => {
+          throw Boom.notFound()
+        })
 
         const options = {
           method: 'post',
@@ -151,13 +150,10 @@ describe('Editor v2 responses routes', () => {
         }
 
         const {
-          response: { headers, statusCode }
+          response: { statusCode }
         } = await renderResponse(server, options)
 
-        expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-        expect(headers.location).toBe(
-          '/library/my-form-slug/editor-v2/responses'
-        )
+        expect(statusCode).toBe(StatusCodes.NOT_FOUND)
       })
 
       test('should handle valid payload', async () => {
@@ -191,15 +187,13 @@ describe('Editor v2 responses routes', () => {
 
     describe('action=feedback', () => {
       test('should handle boom error if boom received from API call', async () => {
-        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-        // TODO - implement test when API call is plubmed in
-
-        // jest.mocked(setPageSettings).mockImplementationOnce(() => {
-        //   throw buildBoom409(
-        //     'Duplicate page path',
-        //     ApiErrorCode.DuplicatePagePathPage
-        //   )
-        // })
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...testFormMetadata,
+          notificationEmail: 'something@text.com'
+        })
+        jest.mocked(sendFeedbackSubmissionsFile).mockImplementationOnce(() => {
+          throw Boom.notFound()
+        })
 
         const options = {
           method: 'post',
@@ -209,13 +203,10 @@ describe('Editor v2 responses routes', () => {
         }
 
         const {
-          response: { headers, statusCode }
+          response: { statusCode }
         } = await renderResponse(server, options)
 
-        expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-        expect(headers.location).toBe(
-          '/library/my-form-slug/editor-v2/responses'
-        )
+        expect(statusCode).toBe(StatusCodes.NOT_FOUND)
       })
 
       test('should handle valid payload', async () => {
