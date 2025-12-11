@@ -36,7 +36,7 @@
       {# Sections summary row #}
       {%- set sectionsValueHtml %}
         {% if sections.count > 0 %}
-          {{ sections.count }} sections: {{ sections.titles | join(", ") }}
+          {{ sections.count }} {{ "section" if sections.count == 1 else "sections" }}: {{ sections.titles | join(", ") }}
         {% else %}
           <a class="govuk-link govuk-link--no-visited-state" href="{{ sections.link }}">Add and organise sections</a>
         {% endif %}
