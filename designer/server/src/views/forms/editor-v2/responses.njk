@@ -9,13 +9,17 @@
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
 {% set submissionsButtonHtml %}
-  {{ govukButton({
-    text: "Send submissions data",
-    name: "action",
-    value: "submissions",
-    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
-    preventDoubleClick: true
-  }) }}
+  {% if isFeedbackForm %}
+    <p class="govuk-body">Not implemented yet</p>
+  {% else %}
+    {{ govukButton({
+      text: "Send submissions data",
+      name: "action",
+      value: "submissions",
+      classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
+      preventDoubleClick: true
+    }) }}
+  {% endif %}
 {% endset %}
 
 {% set feedbackButtonHtml %}
@@ -28,9 +32,16 @@
   }) }}
 {% endset %}
 
+{% set rowList = [[{ text: "Form submissions" }, { text: "9 months after submission" }, { html: submissionsButtonHtml }]] %}
+
+{% if not isFeedbackForm %}
+  {% set rowList = rowList.concat([[{ text: "User feedback" }, { text: "9 months after submission" }, { html: feedbackButtonHtml }]]) %}
+{% endif %}
+
 {% block content %}
   {% call appPageBody({
     heading: pageHeading,
+    caption: caption,
     useNewMasthead: true,
     classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
     backLink: backLink
@@ -60,24 +71,11 @@
           { text: "How long we keep it" },
           { text: "Send to shared mailbox" }
         ],
-        rows: [
-          [
-            { text: "Form submissions" },
-            { text: "9 months after submission" },
-            { html: submissionsButtonHtml }
-          ]
-        ]
+        rows: rowList
         })
       }}
 
     </form>
-    {#
-    [
-      { text: "User feedback" },
-      { text: "9 months after submission" },
-      { html: feedbackButtonHtml }
-    ]
-    #}
   {% endcall %}
 {% endblock %}
 

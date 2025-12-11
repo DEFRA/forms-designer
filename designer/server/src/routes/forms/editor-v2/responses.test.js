@@ -1,9 +1,13 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
-import { sendSubmissionsFile } from '~/src/services/formSubmissionService.js'
+import {
+  sendFeedbackSubmissionsFile,
+  sendFormSubmissionsFile
+} from '~/src/services/formSubmissionService.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -94,90 +98,144 @@ describe('Editor v2 responses routes', () => {
   })
 
   describe('POST', () => {
-    test('should error if invalid payload key', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    describe('action=submissions', () => {
+      test('should error if invalid payload key', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/responses',
-        auth,
-        payload: { invalid: 'true' }
-      }
+        const options = {
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/responses',
+          auth,
+          payload: { invalid: 'true' }
+        }
 
-      const {
-        response: { statusCode }
-      } = await renderResponse(server, options)
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, options)
 
-      expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
-    })
-
-    test('should error if invalid payload value', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/responses',
-        auth,
-        payload: { action: 'invalid' }
-      }
-
-      const {
-        response: { statusCode }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
-    })
-
-    test('should handle boom error if boom received from API call', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-      // TODO - implement test when API call is plubmed in
-
-      // jest.mocked(setPageSettings).mockImplementationOnce(() => {
-      //   throw buildBoom409(
-      //     'Duplicate page path',
-      //     ApiErrorCode.DuplicatePagePathPage
-      //   )
-      // })
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/responses',
-        auth,
-        payload: { action: 'submissions' }
-      }
-
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/responses')
-    })
-
-    test('should handle valid payload', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce({
-        ...testFormMetadata,
-        notificationEmail: 'test@defratest.gov.uk'
+        expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
       })
 
-      jest.mocked(sendSubmissionsFile).mockResolvedValueOnce({
-        message: 'Generate file success'
+      test('should error if invalid payload value', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+        const options = {
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/responses',
+          auth,
+          payload: { action: 'invalid' }
+        }
+
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
       })
 
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/responses',
-        auth,
-        payload: { action: 'submissions' }
-      }
+      test('should handle boom error if boom received from API call', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...testFormMetadata,
+          notificationEmail: 'something@text.com'
+        })
+        jest.mocked(sendFormSubmissionsFile).mockImplementationOnce(() => {
+          throw Boom.notFound()
+        })
 
-      const {
-        response: { headers, statusCode }
-      } = await renderResponse(server, options)
+        const options = {
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/responses',
+          auth,
+          payload: { action: 'submissions' }
+        }
 
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/responses')
-      expect(sendSubmissionsFile).toHaveBeenCalledTimes(1)
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.NOT_FOUND)
+      })
+
+      test('should handle valid payload', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...testFormMetadata,
+          notificationEmail: 'test@defratest.gov.uk'
+        })
+
+        jest.mocked(sendFormSubmissionsFile).mockResolvedValueOnce({
+          message: 'Generate file success'
+        })
+
+        const options = {
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/responses',
+          auth,
+          payload: { action: 'submissions' }
+        }
+
+        const {
+          response: { headers, statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+        expect(headers.location).toBe(
+          '/library/my-form-slug/editor-v2/responses'
+        )
+        expect(sendFormSubmissionsFile).toHaveBeenCalledTimes(1)
+      })
+    })
+
+    describe('action=feedback', () => {
+      test('should handle boom error if boom received from API call', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...testFormMetadata,
+          notificationEmail: 'something@text.com'
+        })
+        jest.mocked(sendFeedbackSubmissionsFile).mockImplementationOnce(() => {
+          throw Boom.notFound()
+        })
+
+        const options = {
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/responses',
+          auth,
+          payload: { action: 'feedback' }
+        }
+
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.NOT_FOUND)
+      })
+
+      test('should handle valid payload', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...testFormMetadata,
+          notificationEmail: 'test@defratest.gov.uk'
+        })
+
+        jest.mocked(sendFormSubmissionsFile).mockResolvedValueOnce({
+          message: 'Generate file success'
+        })
+
+        const options = {
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/responses',
+          auth,
+          payload: { action: 'feedback' }
+        }
+
+        const {
+          response: { headers, statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+        expect(headers.location).toBe(
+          '/library/my-form-slug/editor-v2/responses'
+        )
+        expect(sendFeedbackSubmissionsFile).toHaveBeenCalledTimes(1)
+      })
     })
   })
 })

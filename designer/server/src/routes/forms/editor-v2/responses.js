@@ -1,5 +1,4 @@
-import { Scopes } from '@defra/forms-model'
-import Boom from '@hapi/boom'
+import { Scopes, isFeedbackForm } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -7,7 +6,10 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as forms from '~/src/lib/forms.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
-import { sendSubmissionsFile } from '~/src/services/formSubmissionService.js'
+import {
+  sendFeedbackSubmissionsFile,
+  sendFormSubmissionsFile
+} from '~/src/services/formSubmissionService.js'
 
 export const ROUTE_FULL_PATH_RESPONSES = '/library/{slug}/editor-v2/responses'
 
@@ -28,9 +30,9 @@ export function generateSuccessMessage(email) {
 }
 
 /**
- * @param {string} slug
+ * @param {FormMetadata} metadata
  */
-export function generateTitling(slug) {
+export function generateTitling(metadata) {
   const pageTitle = 'Download responses as an Excel spreadsheet'
 
   return {
@@ -38,9 +40,12 @@ export function generateTitling(slug) {
     pageHeading: {
       text: pageTitle
     },
+    caption: {
+      text: metadata.title
+    },
     backLink: {
       text: 'Back to form overview',
-      href: `/library/${slug}`
+      href: `/library/${metadata.slug}`
     }
   }
 }
@@ -48,7 +53,7 @@ export function generateTitling(slug) {
 /**
  * @param {FormMetadata} metadata
  */
-export function generateErroList(metadata) {
+export function generateErrorList(metadata) {
   return metadata.notificationEmail
     ? []
     : [
@@ -71,17 +76,18 @@ export default [
       const { slug } = params
 
       const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       const formId = metadata.id
 
-      const errorList = generateErroList(metadata)
+      const errorList = generateErrorList(metadata)
 
       const formPath = formOverviewPath(slug)
 
       const navigation = getFormSpecificNavigation(
         formPath,
         metadata,
-        undefined,
+        definition,
         'Responses'
       )
 
@@ -91,11 +97,12 @@ export default [
       )
 
       return h.view('forms/editor-v2/responses', {
-        ...generateTitling(slug),
+        ...generateTitling(metadata),
         formId,
         errorList,
         navigation,
-        notification
+        notification,
+        isFeedbackForm: isFeedbackForm(definition)
       })
     },
     options: {
@@ -125,9 +132,9 @@ export default [
 
       if (metadata.notificationEmail) {
         if (action === 'submissions') {
-          await sendSubmissionsFile(metadata.id, token)
+          await sendFormSubmissionsFile(metadata.id, token)
         } else {
-          throw Boom.notImplemented(`${action} not yet implemented`)
+          await sendFeedbackSubmissionsFile(metadata.id, token)
         }
 
         yar.flash(
