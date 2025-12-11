@@ -1,19 +1,21 @@
-const SECTION_HEADING_INPUT_ID = 'section-heading'
+const SECTION_HEADING_INPUT_ID = 'sectionHeading'
 const SECTIONS_PREVIEW_ID = 'sections-preview'
 
 const SECTION_CARD_SELECTOR = '[data-section-id]'
-const SECTION_PLACEHOLDER_CLASS = 'section-placeholder'
-const SECTION_HIGHLIGHT_CLASS = 'app-section-highlight'
+const PLACEHOLDER_HEADING_ID = 'section-placeholder-heading'
+const PLACEHOLDER_HINT_ID = 'section-placeholder-hint'
+const HIGHLIGHT_CLASS = 'highlight'
 
 const NO_PAGES_IN_SECTION = 'No pages in this section'
 
 /**
- * Generate section heading placeholder text
+ * Generate section title with number prefix
  * @param {number} sectionNumber
+ * @param {string} [heading]
  * @returns {string}
  */
-function getSectionHeadingPlaceholder(sectionNumber) {
-  return `Section ${sectionNumber} heading`
+function getSectionTitle(sectionNumber, heading = 'heading') {
+  return `Section ${sectionNumber}: ${heading}`
 }
 
 /**
@@ -77,21 +79,23 @@ export class SectionsManager {
       return
     }
 
-    const existingSections = document.querySelectorAll(SECTION_CARD_SELECTOR)
+    this.clearSectionPreview()
+
+    const existingSections = preview.querySelectorAll(
+      '[data-preview-section-id]'
+    )
     const nextNumber = existingSections.length + 1
 
-    const placeholderHtml = `
-      <div class="${SECTION_PLACEHOLDER_CLASS}">
-        <h4 class="govuk-heading-m">${getSectionHeadingPlaceholder(nextNumber)}</h4>
-        <p class="govuk-hint">${NO_PAGES_IN_SECTION}</p>
-      </div>
-    `
+    const placeholderHtml = `<h4 id="${PLACEHOLDER_HEADING_ID}" class="govuk-heading-m ${HIGHLIGHT_CLASS}">${getSectionTitle(nextNumber)}</h4>
+<p id="${PLACEHOLDER_HINT_ID}" class="govuk-hint">${NO_PAGES_IN_SECTION}</p>`
 
-    const firstSection = preview.querySelector('h4')
-    if (firstSection) {
-      firstSection.insertAdjacentHTML('beforebegin', placeholderHtml)
+    const unassignedPagesList = preview.querySelector(
+      'dl.govuk-summary-list:last-child'
+    )
+    if (unassignedPagesList) {
+      unassignedPagesList.insertAdjacentHTML('beforebegin', placeholderHtml)
     } else {
-      preview.insertAdjacentHTML('afterbegin', placeholderHtml)
+      preview.insertAdjacentHTML('beforeend', placeholderHtml)
     }
   }
 
@@ -99,24 +103,28 @@ export class SectionsManager {
    * @param {string} text
    */
   updateSectionPreview(text) {
-    const placeholder = document.querySelector(`.${SECTION_PLACEHOLDER_CLASS}`)
-    if (!placeholder) {
+    const heading = document.getElementById(PLACEHOLDER_HEADING_ID)
+    if (!heading) {
       this.showPlaceholderSection()
+      this.updateSectionPreview(text)
       return
     }
 
-    const heading = placeholder.querySelector('h4')
-    if (heading) {
-      const existingSections = document.querySelectorAll(SECTION_CARD_SELECTOR)
-      const nextNumber = existingSections.length + 1
-      heading.textContent = text || getSectionHeadingPlaceholder(nextNumber)
-    }
+    const preview = document.getElementById(SECTIONS_PREVIEW_ID)
+    const existingSections =
+      preview?.querySelectorAll('[data-preview-section-id]') ?? []
+    const nextNumber = existingSections.length + 1
+    heading.textContent = getSectionTitle(nextNumber, text)
   }
 
   clearSectionPreview() {
-    const placeholder = document.querySelector(`.${SECTION_PLACEHOLDER_CLASS}`)
-    if (placeholder) {
-      placeholder.remove()
+    const heading = document.getElementById(PLACEHOLDER_HEADING_ID)
+    const hint = document.getElementById(PLACEHOLDER_HINT_ID)
+    if (heading) {
+      heading.remove()
+    }
+    if (hint) {
+      hint.remove()
     }
   }
 
@@ -137,14 +145,21 @@ export class SectionsManager {
       `[data-preview-section-id="${sectionId}"]`
     )
     if (section) {
-      section.classList.add(SECTION_HIGHLIGHT_CLASS)
+      section.classList.add(HIGHLIGHT_CLASS)
     }
   }
 
   removePreviewHighlight() {
-    const highlighted = document.querySelectorAll(`.${SECTION_HIGHLIGHT_CLASS}`)
+    const preview = document.getElementById(SECTIONS_PREVIEW_ID)
+    if (!preview) {
+      return
+    }
+
+    const highlighted = preview.querySelectorAll(
+      `[data-preview-section-id].${HIGHLIGHT_CLASS}`
+    )
     highlighted.forEach((section) => {
-      section.classList.remove(SECTION_HIGHLIGHT_CLASS)
+      section.classList.remove(HIGHLIGHT_CLASS)
     })
   }
 }

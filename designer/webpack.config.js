@@ -55,6 +55,9 @@ export default /** @type {Configuration} */ ({
     },
     'items-reorder': {
       import: ['./javascripts/items-reorder.js']
+    },
+    sectionsPreview: {
+      import: ['./javascripts/sections-manager.js']
     }
   },
   experiments: {
