@@ -23,6 +23,11 @@ export function getTabs() {
       isActive: true
     },
     {
+      text: 'Admin tools',
+      url: '/admin/index',
+      isActive: false
+    },
+    {
       text: 'Support',
       url: `/${WebsiteLevel1Routes.SUPPORT}`,
       isActive: false

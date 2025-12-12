@@ -63,8 +63,8 @@ export function accountViewModel(user) {
 
   if (hasAdminRole(user)) {
     navigation.push({
-      text: 'Manage users',
-      url: '/manage/users',
+      text: 'System admin',
+      url: '/admin/index',
       isActive: false
     })
   }

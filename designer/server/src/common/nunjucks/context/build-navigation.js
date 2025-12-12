@@ -77,5 +77,21 @@ export function buildNavigation(request) {
 }
 
 /**
+ * @param {string} activePage
+ */
+export function buildAdminNavigation(activePage) {
+  const navigationItems = [
+    ['My account', '/auth/account'],
+    ['Manage users', '/manage/users'],
+    ['Admin tools', '/admin/index'],
+    ['Support', '/support']
+  ]
+
+  return navigationItems.map(([menuName, path]) =>
+    buildEntry(menuName, path, { isActive: menuName === activePage })
+  )
+}
+
+/**
  * @import { Request } from '@hapi/hapi'
  */
