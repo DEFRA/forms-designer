@@ -1,4 +1,9 @@
-import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  Engine,
+  FormDefinitionRequestType
+} from '@defra/forms-model'
 
 import {
   buildDefinition,
@@ -2143,7 +2148,8 @@ describe('editor.js', () => {
                 hideTitle: false,
                 pageIds: []
               })
-            ]
+            ],
+            requestType: FormDefinitionRequestType.CREATE_SECTION
           }
         })
       )
@@ -2255,7 +2261,8 @@ describe('editor.js', () => {
                 name: 'other-section',
                 title: 'Other Section'
               })
-            ]
+            ],
+            requestType: FormDefinitionRequestType.DELETE_SECTION
           }
         })
       )
@@ -2374,7 +2381,8 @@ describe('editor.js', () => {
                 id: 'new-section-id',
                 pageIds: expect.arrayContaining(['p1'])
               })
-            ])
+            ]),
+            requestType: FormDefinitionRequestType.ASSIGN_SECTIONS
           }
         })
       )
@@ -2611,7 +2619,8 @@ describe('editor.js', () => {
                 id: 'my-section-id',
                 hideTitle: true
               })
-            ])
+            ]),
+            requestType: FormDefinitionRequestType.ASSIGN_SECTIONS
           }
         })
       )
