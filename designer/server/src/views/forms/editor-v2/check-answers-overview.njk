@@ -33,6 +33,15 @@
         {% endif %}
       {% endset %}
 
+      {# Confirmation email summary row #}
+      {%- set confirmationEmailValueHtml %}
+        {% if not confirmationEmail.enabled %}
+          <span>Turned off</span>
+        {% else %}
+          <a class="govuk-link govuk-link--no-visited-state" href="{{ confirmationEmail.link }}">Turn off confirmation emails</a>
+        {% endif %}
+      {% endset %}
+
       {# Sections summary row #}
       {%- set sectionsValueHtml %}
         {% if sections.count > 0 %}
@@ -58,10 +67,29 @@
                 {
                   href: declaration.link,
                   text: "Change",
-                  visuallyHiddenText: "declaration text"
+                  visuallyHiddenText: "declaration text",
+                  classes: "govuk-link--no-visited-state"
                 }
               ]
             } if declaration.hasDeclaration
+          },
+          {
+            key: {
+              text: "Confirmation email (optional)"
+            },
+            value: {
+              html: confirmationEmailValueHtml
+            },
+            actions: {
+              items: [
+                {
+                  href: confirmationEmail.link,
+                  text: "Change",
+                  visuallyHiddenText: "confirmation email",
+                  classes: "govuk-link--no-visited-state"
+                }
+              ]
+            } if not confirmationEmail.enabled
           },
           {
             key: {
@@ -75,7 +103,8 @@
                 {
                   href: sections.link,
                   text: "Change",
-                  visuallyHiddenText: "sections"
+                  visuallyHiddenText: "sections",
+                  classes: "govuk-link--no-visited-state"
                 }
               ]
             } if sections.count > 0

@@ -92,6 +92,15 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       )
     },
 
+    // Confirmation email summary
+    confirmationEmail: {
+      enabled: showConfirmationEmail,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/confirmation-email`
+      )
+    },
+
     // Sections summary
     sections: {
       count: sectionsSummary.count,
