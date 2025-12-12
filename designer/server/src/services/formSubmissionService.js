@@ -23,7 +23,7 @@ export async function sendFormSubmissionsFile(formId, token) {
 
 /**
  * Generate and sends a submissions Excel file for this form
- * @param {string} formId - the form id
+ * @param { string | undefined } formId - the form id
  * @param {string} token - the user token
  */
 export async function sendFeedbackSubmissionsFile(formId, token) {
@@ -31,7 +31,7 @@ export async function sendFeedbackSubmissionsFile(formId, token) {
     postJson
   )
   const result = await postJsonByType(
-    new URL(`/feedback/${formId}`, submissionUrl),
+    new URL(`/feedback/${formId ?? ''}`, submissionUrl),
     getHeaders(token)
   )
 

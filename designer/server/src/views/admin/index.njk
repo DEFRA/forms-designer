@@ -8,16 +8,6 @@
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
-{% set submissionsButtonHtml %}
-  {{ govukButton({
-    text: "Send submissions data",
-    name: "action",
-    value: "submissions",
-    classes: "govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0",
-    preventDoubleClick: true
-  }) }}
-{% endset %}
-
 {% set feedbackButtonHtml %}
   {{ govukButton({
     text: "Send feedback data",
@@ -52,29 +42,30 @@
         }) }}
     {% endif %}
 
+    <h2 class="govuk-heading-m">Data management</h2>
+    <p class="govuk-body">Manage and export user data according to retention policies.</p>
+
     <form class="form" method="post">
 
-      {% if isFeedbackForm %}
-      <p class="govuk-body">You cannot get user feedback from here. 
-        Go to the 'responses' tab of a specific form to download user feedback. 
-        Or go to 'system admin' if you're an admin.
-      </p>
-      {% else %}
-        {{ govukTable({
-          firstCellIsHeader: true,
-          head: [
-            { text: "Type of data" },
-            { text: "How long we keep it" },
-            { text: "Send to shared mailbox" }
-          ],
-          rows: [
-            [{ text: "Form submissions" }, { text: "9 months after submission" }, { html: submissionsButtonHtml }],
-            [{ text: "User feedback" }, { text: "9 months after submission" }, { html: feedbackButtonHtml }]
+      {{ govukTable({
+        firstCellIsHeader: true,
+        head: [
+          { text: "Type of data" },
+          { text: "How long we keep it" },
+          { text: "Send to your email" }
+        ],
+        rows: [
+          [
+            { text: "User feedback across all forms" },
+            { text: "9 months after submission" },
+            { html: feedbackButtonHtml }
           ]
-          })
-        }}
-      {% endif %}
+        ]
+        })
+      }}
+
     </form>
+
   {% endcall %}
 {% endblock %}
 
