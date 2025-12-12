@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import {
   ComponentType,
   ControllerType,
+  FormDefinitionRequestType,
   hasComponents,
   hasComponentsEvenIfNoNext,
   hasRepeater,
@@ -673,16 +674,17 @@ function buildSectionsWithPageIds(definition) {
  * @param {string} formId
  * @param {string} token
  * @param {SectionAssignmentItem[]} sections
+ * @param {FormDefinitionRequestType} requestType
  * @returns {Promise<UpdateSectionsResponse>}
  */
-export async function updateSections(formId, token, sections) {
+export async function updateSections(formId, token, sections, requestType) {
   const putJsonBySectionsType =
     /** @type {typeof putJson<UpdateSectionsResponse>} */ (putJson)
 
   const { body } = await putJsonBySectionsType(
     buildRequestUrl(formId, 'sections'),
     {
-      payload: { sections },
+      payload: { sections, requestType },
       ...getHeaders(token)
     }
   )
@@ -708,7 +710,12 @@ export async function addSection(formId, token, sectionTitle) {
     pageIds: []
   })
 
-  await updateSections(formId, token, sections)
+  await updateSections(
+    formId,
+    token,
+    sections,
+    FormDefinitionRequestType.CREATE_SECTION
+  )
   return forms.getDraftFormDefinition(formId, token)
 }
 
@@ -724,7 +731,12 @@ export async function removeSection(formId, token, sectionId) {
     (s) => s.id !== sectionId
   )
 
-  await updateSections(formId, token, sections)
+  await updateSections(
+    formId,
+    token,
+    sections,
+    FormDefinitionRequestType.DELETE_SECTION
+  )
   return forms.getDraftFormDefinition(formId, token)
 }
 
@@ -747,7 +759,12 @@ export async function assignPageToSection(formId, token, pageId, sectionId) {
     return { ...section, pageIds: filteredPageIds }
   })
 
-  await updateSections(formId, token, sections)
+  await updateSections(
+    formId,
+    token,
+    sections,
+    FormDefinitionRequestType.ASSIGN_SECTIONS
+  )
   return forms.getDraftFormDefinition(formId, token)
 }
 
@@ -764,7 +781,12 @@ export async function unassignPageFromSection(formId, token, pageId) {
     pageIds: section.pageIds.filter((id) => id !== pageId)
   }))
 
-  await updateSections(formId, token, sections)
+  await updateSections(
+    formId,
+    token,
+    sections,
+    FormDefinitionRequestType.UNASSIGN_SECTIONS
+  )
   return forms.getDraftFormDefinition(formId, token)
 }
 
@@ -789,7 +811,12 @@ export async function updateSectionSettings(
     return section
   })
 
-  await updateSections(formId, token, sections)
+  await updateSections(
+    formId,
+    token,
+    sections,
+    FormDefinitionRequestType.ASSIGN_SECTIONS
+  )
   return forms.getDraftFormDefinition(formId, token)
 }
 
