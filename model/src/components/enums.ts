@@ -23,8 +23,7 @@ export enum ComponentType {
   OsGridRefField = 'OsGridRefField',
   NationalGridFieldNumberField = 'NationalGridFieldNumberField',
   LatLongField = 'LatLongField',
-  HiddenField = 'HiddenField',
-  UnicornField = 'UnicornField'
+  HiddenField = 'HiddenField'
 }
 
 export const PreviewTypeEnum = {

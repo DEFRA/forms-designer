@@ -549,17 +549,8 @@ describe('editor-v2 - question details model', () => {
       // @ts-expect-error - dynamic question type not yet defined in types
       const result = getErrorTemplates('newType')
       expect(result).toBeDefined()
-      expect(result).toHaveProperty('baseErrors')
-      expect(result.advancedSettingsErrors).toEqual([
-        {
-          template: '{{#label}} must be {{#limit}} characters or more',
-          type: 'min'
-        },
-        {
-          template: '{{#label}} must be {{#limit}} characters or less',
-          type: 'max'
-        }
-      ])
+      expect(result.advancedSettingsErrors).toEqual([])
+      expect(result.baseErrors).toEqual([])
     })
   })
 
