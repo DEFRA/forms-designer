@@ -119,9 +119,9 @@ describe('System admin routes', () => {
           ...testFormMetadata,
           notificationEmail: 'test@defratest.gov.uk'
         })
-        // @ts-expect-error - mocked only partial object
         jest
           .mocked(getUser)
+          // @ts-expect-error - mocked only partial object
           .mockResolvedValueOnce({ email: 'target@test.gov.uk' })
 
         jest.mocked(sendFeedbackSubmissionsFile).mockResolvedValueOnce({
