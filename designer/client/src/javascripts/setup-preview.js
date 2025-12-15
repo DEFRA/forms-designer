@@ -19,6 +19,7 @@ import {
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
+  UnsupportedQuestion,
   YesNoQuestion
 } from '@defra/forms-model'
 
@@ -68,6 +69,15 @@ import {
   UkAddressDomElements,
   UkAddressEventListeners
 } from '~/src/javascripts/preview/uk-address'
+import { UnsupportedQuestionDomElements } from '~/src/javascripts/preview/unsupported-question'
+
+const SetupPreviewUnsupportedQuestion = () => {
+  const questionElements = new UnsupportedQuestionDomElements()
+  const nunjucksRenderer = new NunjucksRenderer(questionElements)
+  const question = new UnsupportedQuestion(questionElements, nunjucksRenderer)
+
+  return question
+}
 
 const SetupPreviewDefaultQuestion = () => {
   const questionElements = new QuestionDomElements()
@@ -411,7 +421,7 @@ export const SetupPreviewPartial =
  */
 export function SetupPreview(type) {
   const preview = SetupPreviewPartial[type]
-  return preview ? preview() : SetupPreviewDefaultQuestion()
+  return preview ? preview() : SetupPreviewUnsupportedQuestion()
 }
 
 /**

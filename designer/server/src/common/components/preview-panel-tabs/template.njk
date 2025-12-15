@@ -32,15 +32,6 @@
         </div>
       </div>
 
-      {% if params.errorTemplates.invalidPreview %}
-        <div class="govuk-highlight-warning">
-          {{ govukWarningText({
-            text: "Unsupported component. Contact the developers if you did not expect to see this",
-            iconFallbackText: "Warning"
-          }) }}
-        </div>
-      {% endif %}
-
       {% if not params.hasPageSettingsTab %}
         <div class="govuk-button-group govuk-!-margin-top-3">
           {{ govukSkipLink({

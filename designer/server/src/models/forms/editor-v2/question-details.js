@@ -95,42 +95,27 @@ export function buildComponentDef(questionType) {
  * @param { ComponentType | undefined } questionType
  * @returns {{
  *   baseErrors: Array<{type: string; template: string;}>;
- *   advancedSettingsErrors: [];
- *   isValidPreview: boolean
+ *   advancedSettingsErrors: []
  * }}
  */
 export function getErrorTemplates(questionType) {
-  let invalidPreview = false
   let component
   if (questionType === ComponentType.YesNoField) {
     component = YesNoField
   } else {
     try {
       component = createComponent(buildComponentDef(questionType), {})
-    } catch (err) {
-      // @ts-expect-error - generic error object
-      if (err?.message === `Component type ${questionType} does not exist`) {
-        // Default to a TextFIeld if not yet configure for 'preview'
-        component = createComponent(
-          buildComponentDef(ComponentType.TextField),
-          {}
-        )
-        invalidPreview = true
-      } else {
-        throw err
-      }
-    }
+    } catch {}
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
-    'getAllPossibleErrors' in component
+    component && 'getAllPossibleErrors' in component
       ? component.getAllPossibleErrors()
       : { baseErrors: [], advancedSettingsErrors: [] }
 
   return {
-    ...errorTemplates,
-    invalidPreview
+    ...errorTemplates
   }
 }
 
