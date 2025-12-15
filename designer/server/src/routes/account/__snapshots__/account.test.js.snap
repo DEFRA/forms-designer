@@ -107,8 +107,8 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
             </a>
           </li>
             <li class="one-login-header__nav__list-item">
-              <a class="one-login-header__nav__link" href="/manage/users">
-                Manage users
+              <a class="one-login-header__nav__link" href="/admin/index">
+                System admin
               </a>
             </li>
           <li class="one-login-header__nav__list-item">
@@ -148,8 +148,8 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
-                <a class="service-header__nav-list-item-link"                  href="/manage/users">
-                  Manage users
+                <a class="service-header__nav-list-item-link"                  href="/admin/index">
+                  System admin
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
