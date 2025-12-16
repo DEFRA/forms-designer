@@ -5,6 +5,7 @@ import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -41,6 +42,8 @@ const zeroIsValidForFields = [
   'min',
   'max'
 ]
+
+const logger = createLogger()
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
@@ -105,7 +108,9 @@ export function getErrorTemplates(questionType) {
   } else {
     try {
       component = createComponent(buildComponentDef(questionType), {})
-    } catch {}
+    } catch {
+      logger.warn(`Invalid component type of '${questionType}' detected`)
+    }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
