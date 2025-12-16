@@ -117,7 +117,7 @@ export async function saveQuestion(
     listItems
   )
 
-  const questDetailsWithList = listId
+  const questionDetailsWithList = listId
     ? { ...questionDetails, list: listId }
     : questionDetails
 
@@ -125,11 +125,11 @@ export async function saveQuestion(
     const newPage = await addPageAndFirstQuestion(
       formId,
       token,
-      questDetailsWithList
+      questionDetailsWithList
     )
     return newPage.id ?? 'unknown'
   } else if (questionId === 'new') {
-    await addQuestion(formId, token, pageId, questDetailsWithList)
+    await addQuestion(formId, token, pageId, questionDetailsWithList)
   } else {
     await updateQuestion(
       formId,
@@ -137,7 +137,7 @@ export async function saveQuestion(
       definition,
       pageId,
       questionId,
-      questDetailsWithList
+      questionDetailsWithList
     )
   }
   return pageId
