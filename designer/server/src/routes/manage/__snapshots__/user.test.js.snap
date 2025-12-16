@@ -107,8 +107,8 @@ exports[`Create and edit user routes GET /manage/users should render view when c
             </a>
           </li>
             <li class="one-login-header__nav__list-item">
-              <a class="one-login-header__nav__link" href="/manage/users">
-                Manage users
+              <a class="one-login-header__nav__link" href="/admin/index">
+                System admin
               </a>
             </li>
           <li class="one-login-header__nav__list-item">
@@ -150,6 +150,12 @@ exports[`Create and edit user routes GET /manage/users should render view when c
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"aria-current="page"                  href="/manage/users/">
                   Manage users
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/admin/index">
+                  Admin tools
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
@@ -422,8 +428,8 @@ exports[`Create and edit user routes GET /manage/users should render view when d
             </a>
           </li>
             <li class="one-login-header__nav__list-item">
-              <a class="one-login-header__nav__link" href="/manage/users">
-                Manage users
+              <a class="one-login-header__nav__link" href="/admin/index">
+                System admin
               </a>
             </li>
           <li class="one-login-header__nav__list-item">
@@ -465,6 +471,12 @@ exports[`Create and edit user routes GET /manage/users should render view when d
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"aria-current="page"                  href="/manage/users/">
                   Manage users
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/admin/index">
+                  Admin tools
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
@@ -707,8 +719,8 @@ exports[`Create and edit user routes GET /manage/users should render view when e
             </a>
           </li>
             <li class="one-login-header__nav__list-item">
-              <a class="one-login-header__nav__link" href="/manage/users">
-                Manage users
+              <a class="one-login-header__nav__link" href="/admin/index">
+                System admin
               </a>
             </li>
           <li class="one-login-header__nav__list-item">
@@ -750,6 +762,12 @@ exports[`Create and edit user routes GET /manage/users should render view when e
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"aria-current="page"                  href="/manage/users/">
                   Manage users
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/admin/index">
+                  Admin tools
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
