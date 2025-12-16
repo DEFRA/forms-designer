@@ -11,6 +11,7 @@ import {
   isFormType,
   randomId
 } from '@defra/forms-model'
+import { merge } from '@hapi/hoek'
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -158,6 +159,10 @@ export async function updateQuestion(
   if (questionToChange) {
     // Side-effect to the component within the page
     questionToChange.type = questionDetails.type ?? ComponentType.TextField
+
+    // Merge any unsupported keys (e.g. customValidationMessage)
+    // from the source into the new question details
+    questionDetails = merge(questionToChange, questionDetails)
   }
 
   const payload = buildRepeaterPayload(page, origControllerType)
