@@ -54,18 +54,19 @@ import {
   UkAddressComponentPreviewElements,
   UkAddressQuestion
 } from '~/src/form/form-editor/preview/uk-address.js'
+import { UnsupportedQuestion } from '~/src/form/form-editor/preview/unsupported-question.js'
 import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
 /**
  * @type {typeof PreviewComponent}
  */
-const InputFieldComponentDefault = ShortAnswerQuestion
+const InvalidFieldComponent = UnsupportedQuestion
 
 /**
  * @type {Partial<Record<ComponentType, typeof PreviewComponent>>}
  */
 const InputFieldComponentDictionary = {
-  [ComponentType.TextField]: InputFieldComponentDefault,
+  [ComponentType.TextField]: ShortAnswerQuestion,
   [ComponentType.Details]: ShortAnswerQuestion,
   [ComponentType.InsetText]: ShortAnswerQuestion,
   [ComponentType.Html]: ShortAnswerQuestion,
@@ -176,8 +177,7 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
       }
 
       const QuestionConstructor =
-        InputFieldComponentDictionary[component.type] ??
-        InputFieldComponentDefault
+        InputFieldComponentDictionary[component.type] ?? InvalidFieldComponent
       const previewComponent = new QuestionConstructor(
         questionElements,
         questionRenderer

@@ -162,6 +162,13 @@ export function getDetails(
 
   questionOverride.type = questionType ?? questionOverride.type
 
+  const allComponentTypes = Object.values(ComponentType)
+
+  if (!allComponentTypes.includes(questionOverride.type)) {
+    // @ts-expect-error - invalid component type
+    questionOverride.type = 'UnsupportedQuestion'
+  }
+
   return {
     pageTitle: metadata.title,
     navigation: getFormSpecificNavigation(

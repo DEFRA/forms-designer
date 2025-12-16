@@ -6,7 +6,7 @@ export class UnsupportedQuestion extends Question {
    * @type {ComponentType}
    */
   // @ts-expect-error - invalid component type
-  componentType = 'unsupported-component'
+  componentType = 'UnsupportedQuestion'
   _questionTemplate = PreviewComponent.PATH + 'unsupportedquestion.njk'
 }
 
