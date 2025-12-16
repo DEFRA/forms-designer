@@ -30,13 +30,14 @@ export function buildListFromDetails(questionDetails, listItems, definition) {
   return {
     id: existingList ? existingList.id : undefined,
     name: existingList ? existingList.name : randomId(),
-    title: `List for question ${questionDetails.name}`,
+    title: existingList?.title ?? `List for question ${questionDetails.name}`,
     type: 'string',
     items: listItems.map((item) => {
       return {
         id: item.id,
         text: item.text,
         hint: item.hint,
+        condition: existingList?.items.find((x) => x.id === item.id)?.condition,
         value: stringHasValue(`${item.value}`) ? item.value : item.text
       }
     })

@@ -161,7 +161,8 @@ export function matchLists(definition, listRef, listItems) {
       id: found?.id,
       text: item.text,
       value: item.value,
-      hint: item.hint
+      hint: item.hint,
+      condition: found?.condition
     }
   }
 
