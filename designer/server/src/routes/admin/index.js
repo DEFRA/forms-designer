@@ -91,7 +91,10 @@ export default [
       const user = mapUserForAudit(auth.credentials.user)
       const { email } = await getUser(token, user.id)
 
-      yar.flash(sessionNames.successNotification, generateSuccessMessage(email))
+      yar.flash(
+        sessionNames.successNotification,
+        generateSuccessMessage(email.toLowerCase())
+      )
 
       // Redirect to same page
       return h.redirect('/admin/index').code(StatusCodes.SEE_OTHER)
