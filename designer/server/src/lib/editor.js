@@ -11,6 +11,7 @@ import {
   isFormType,
   randomId
 } from '@defra/forms-model'
+import { applyToDefaults } from '@hapi/hoek'
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -181,6 +182,8 @@ export async function updateQuestion(
     })
   }
 
+  applyOptions(questionDetails, questionToChange)
+
   const { body } = await putJsonByPageType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
     {
@@ -190,6 +193,19 @@ export async function updateQuestion(
   )
 
   return body
+}
+
+/**
+ * Merge any unsupported keys (e.g. customValidationMessage)
+ * from the source into the new question details options
+ * @param {Partial<ComponentDef>} questionDetails - the question details
+ * @param {ComponentDef | undefined} questionToChange - the current component
+ */
+function applyOptions(questionDetails, questionToChange) {
+  questionDetails.options = applyToDefaults(
+    questionToChange?.options ?? {},
+    questionDetails.options ?? {}
+  )
 }
 
 /**

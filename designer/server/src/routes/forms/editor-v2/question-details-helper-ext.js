@@ -30,13 +30,14 @@ export function buildListFromDetails(questionDetails, listItems, definition) {
   return {
     id: existingList ? existingList.id : undefined,
     name: existingList ? existingList.name : randomId(),
-    title: `List for question ${questionDetails.name}`,
+    title: existingList?.title ?? `List for question ${questionDetails.name}`,
     type: 'string',
     items: listItems.map((item) => {
       return {
         id: item.id,
         text: item.text,
         hint: item.hint,
+        condition: existingList?.items.find((x) => x.id === item.id)?.condition,
         value: stringHasValue(`${item.value}`) ? item.value : item.text
       }
     })
@@ -116,7 +117,7 @@ export async function saveQuestion(
     listItems
   )
 
-  const questDetailsWithList = listId
+  const questionDetailsWithList = listId
     ? { ...questionDetails, list: listId }
     : questionDetails
 
@@ -124,11 +125,11 @@ export async function saveQuestion(
     const newPage = await addPageAndFirstQuestion(
       formId,
       token,
-      questDetailsWithList
+      questionDetailsWithList
     )
     return newPage.id ?? 'unknown'
   } else if (questionId === 'new') {
-    await addQuestion(formId, token, pageId, questDetailsWithList)
+    await addQuestion(formId, token, pageId, questionDetailsWithList)
   } else {
     await updateQuestion(
       formId,
@@ -136,7 +137,7 @@ export async function saveQuestion(
       definition,
       pageId,
       questionId,
-      questDetailsWithList
+      questionDetailsWithList
     )
   }
   return pageId
