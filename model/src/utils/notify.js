@@ -1,3 +1,5 @@
+import RE2 from 're2'
+
 /**
  * Notify auto-translates ASCII hyphens to en dashes.
  * This method is used to escape ASCII hyphens so Notify doesn't translate the content.
@@ -7,11 +9,12 @@ export function escapeHyphens(str) {
   return str.replaceAll('-', '&hyphen;')
 }
 
-const dotRegex = /\s+\./gi
-const commaRegex = /\s+,/gi
-const colonRegex = /\s+:/gi
-const semicolonRegex = /\s+;/gi
-const exclamationRegex = /\s+!/gi
+// RE2 is used to mitigate the risk of DOS attacks that standard Regex is vulnerable to
+const dotRegex = new RE2(/\s+\./g)
+const commaRegex = new RE2(/\s+,/g)
+const colonRegex = new RE2(/\s+:/g)
+const semicolonRegex = new RE2(/\s+;/g)
+const exclamationRegex = new RE2(/\s+!/g)
 
 /**
  * Notify strips whitespace if it occurs before punctuation.
@@ -20,9 +23,9 @@ const exclamationRegex = /\s+!/gi
  */
 export function stripWhitespaceBeforePunctuation(str) {
   return str
-    .replaceAll(dotRegex, '.')
-    .replaceAll(commaRegex, ',')
-    .replaceAll(colonRegex, ':')
-    .replaceAll(semicolonRegex, ';')
-    .replaceAll(exclamationRegex, '!')
+    .replace(dotRegex, '.')
+    .replace(commaRegex, ',')
+    .replace(colonRegex, ':')
+    .replace(semicolonRegex, ';')
+    .replace(exclamationRegex, '!')
 }

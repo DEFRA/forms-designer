@@ -34,6 +34,10 @@ describe('Notify', () => {
         inStr:
           'This has various whitespace - plus punctuations     ,     .     :     ;     !  ',
         outStr: 'This has various whitespace - plus punctuations,.:;!  '
+      },
+      {
+        inStr: 'This has multiples     ,     .   .      ,         . ',
+        outStr: 'This has multiples,..,. '
       }
     ])("formats '$inStr' to '$outStr'", ({ inStr, outStr }) => {
       expect(stripWhitespaceBeforePunctuation(inStr)).toBe(outStr)
