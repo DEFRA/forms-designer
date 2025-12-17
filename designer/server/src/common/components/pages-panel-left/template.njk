@@ -6,7 +6,7 @@
 <div class="govuk-button-group govuk-!-margin-bottom-2 govuk-!-margin-right-2">
   <span class="govuk-tag govuk-tag--pink govuk-!-margin-right-2">Exit page</span>
   {% if params.sectionInfo %}
-    <span class="govuk-tag govuk-tag--blue govuk-!-margin-right-2">{{ params.sectionInfo.title }}</span>
+    <span class="govuk-tag govuk-tag--green govuk-!-margin-right-2">{{ params.sectionInfo.title }}</span>
   {% endif %}
 </div>
 <div class="govuk-summary-card__title govuk-!-margin-0">{{ pageTitleText }}</div>
@@ -18,7 +18,7 @@
 {% if params.sectionInfo and not params.isEndPage and not params.isExitPage %}
   {% set cardTitleHtml %}
     <div class="govuk-!-margin-bottom-2">
-      <span class="govuk-tag govuk-tag--blue">{{ params.sectionInfo.title }}</span>
+      <span class="govuk-tag govuk-tag--green">{{ params.sectionInfo.title }}</span>
     </div>
     {{ pageTitleText }}
   {% endset %}
