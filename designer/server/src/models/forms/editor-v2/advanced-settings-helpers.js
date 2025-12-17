@@ -34,22 +34,22 @@ export function getAdditionalOptions(payload) {
     {
       key: 'classes',
       getValue: () => payload.classes,
-      shouldInclude: () => payload.classes
+      shouldInclude: () => payload.classes !== undefined
     },
     {
       key: 'rows',
       getValue: () => payload.rows,
-      shouldInclude: () => payload.rows
+      shouldInclude: () => payload.rows !== undefined
     },
     {
       key: 'prefix',
       getValue: () => payload.prefix,
-      shouldInclude: () => payload.prefix
+      shouldInclude: () => payload.prefix !== undefined
     },
     {
       key: 'suffix',
       getValue: () => payload.suffix,
-      shouldInclude: () => payload.suffix
+      shouldInclude: () => payload.suffix !== undefined
     },
     {
       key: 'maxDaysInFuture',
