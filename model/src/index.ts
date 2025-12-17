@@ -22,6 +22,7 @@ export * from '~/src/manage/users.js'
 export * from '~/src/pages/index.js'
 export * from '~/src/utils/helpers.js'
 export * from '~/src/utils/markdown.js'
+export * from '~/src/utils/notify.js'
 export * from '~/src/form/form-audit/index.js'
 export * from '~/src/form/form-audit/enums.js'
 
