@@ -1,46 +1,37 @@
-import {
-  escapeHyphens,
-  stripWhitespaceBeforePunctuation
-} from '~/src/utils/notify.js'
+import { escapeNotifyContent } from '~/src/utils/notify.js'
 
 describe('Notify', () => {
-  describe('escapeHyphens', () => {
+  describe('escapeNotifyContent', () => {
     it.each([
       {
         inStr: 'This is a normal sentence without hyphens',
-        outStr: 'This is a normal sentence without hyphens'
+        outStr:
+          'This&nbsp;is&nbsp;a&nbsp;normal&nbsp;sentence&nbsp;without&nbsp;hyphens'
       },
       {
         inStr: 'This has one hyphen - in the middle',
-        outStr: 'This has one hyphen &hyphen; in the middle'
+        outStr:
+          'This&nbsp;has&nbsp;one&nbsp;hyphen&nbsp;&hyphen;&nbsp;in&nbsp;the&nbsp;middle'
       },
       {
         inStr: '-This has multiple hyphens - here - here - and here-',
         outStr:
-          '&hyphen;This has multiple hyphens &hyphen; here &hyphen; here &hyphen; and here&hyphen;'
-      }
-    ])("formats '$inStr' to '$outStr'", ({ inStr, outStr }) => {
-      expect(escapeHyphens(inStr)).toBe(outStr)
-    })
-  })
-
-  describe('stripWhitespaceBeforePunctuation', () => {
-    it.each([
-      {
-        inStr: 'This is a normal sentence without whitespace or punctuation',
-        outStr: 'This is a normal sentence without whitespace or punctuation'
+          '&hyphen;This&nbsp;has&nbsp;multiple&nbsp;hyphens&nbsp;&hyphen;&nbsp;here&nbsp;&hyphen;&nbsp;here&nbsp;&hyphen;&nbsp;and&nbsp;here&hyphen;'
       },
       {
         inStr:
           'This has various whitespace - plus punctuations     ,     .     :     ;     !  ',
-        outStr: 'This has various whitespace - plus punctuations,.:;!  '
+        outStr:
+          'This&nbsp;has&nbsp;various&nbsp;whitespace&nbsp;&hyphen;&nbsp;plus&nbsp;punctuations&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;!&nbsp;&nbsp;'
       },
       {
-        inStr: 'This has multiples     ,     .   .      ,         . ',
-        outStr: 'This has multiples,..,. '
+        inStr:
+          'This has multiples and tabs   ,   .   .      ,   \t  \t      . ',
+        outStr:
+          'This&nbsp;has&nbsp;multiples&nbsp;and&nbsp;tabs&nbsp;&nbsp;&nbsp;,&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;,&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;.&nbsp;'
       }
     ])("formats '$inStr' to '$outStr'", ({ inStr, outStr }) => {
-      expect(stripWhitespaceBeforePunctuation(inStr)).toBe(outStr)
+      expect(escapeNotifyContent(inStr)).toBe(outStr)
     })
   })
 })
