@@ -143,6 +143,10 @@ export default /** @type {Configuration} */ ({
         test: /\.(njk)$/,
         loader: 'nunjucks-loader',
         sideEffects: true
+      },
+      {
+        test: /\.node$/,
+        use: 'node-loader'
       }
     ]
   },
