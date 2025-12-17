@@ -412,7 +412,8 @@ describe('editor.js', () => {
       payload: {
         title: 'What is your name?',
         name: 'what-is-your-name',
-        type: ComponentType.TextField
+        type: ComponentType.TextField,
+        options: {}
       },
       headers: { Authorization: `Bearer ${token}` }
     }
@@ -469,7 +470,8 @@ describe('editor.js', () => {
 
         const expectedPut = {
           payload: {
-            type: ComponentType.FileUploadField
+            type: ComponentType.FileUploadField,
+            options: {}
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -509,7 +511,8 @@ describe('editor.js', () => {
 
         const expectedPut = {
           payload: {
-            type: ComponentType.FileUploadField
+            type: ComponentType.FileUploadField,
+            options: {}
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -630,6 +633,74 @@ describe('editor.js', () => {
         )
 
         expect(mockedPatchJson).not.toHaveBeenCalled()
+      })
+
+      test('preserves component options', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const formDefinitionWithOptions = /** @type {FormDefinition} */ ({
+          ...formDefinition,
+          pages: [
+            {
+              ...formDefinition.pages[0],
+              components: [
+                {
+                  ...formDefinition.pages[0].components?.at(0),
+                  options: {
+                    required: true,
+                    customValidationMessage: 'This is a custom email error',
+                    customValidationMessages: {
+                      'any.required': 'This is a custom required error',
+                      'string.empty': 'This is a custom empty string error',
+                      'string.email': 'This is a custom invalid email error'
+                    }
+                  }
+                }
+              ]
+            },
+            formDefinition.pages[1]
+          ]
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionWithOptions,
+          'p1',
+          'c1',
+          {
+            type: ComponentType.TextField,
+            options: { classes: 'govuk-input--width-10', required: false }
+          }
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/c1`,
+            formsEndpoint
+          ),
+          {
+            payload: {
+              type: ComponentType.TextField,
+              options: {
+                required: false,
+                customValidationMessage: 'This is a custom email error',
+                customValidationMessages: {
+                  'any.required': 'This is a custom required error',
+                  'string.empty': 'This is a custom empty string error',
+                  'string.email': 'This is a custom invalid email error'
+                },
+                classes: 'govuk-input--width-10'
+              }
+            },
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
       })
 
       test('does not interfere when page is not a repeater', async () => {
@@ -794,7 +865,8 @@ describe('editor.js', () => {
         const expectedPut = {
           payload: {
             type: ComponentType.TextField,
-            title: 'My first question'
+            title: 'My first question',
+            options: {}
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -853,7 +925,8 @@ describe('editor.js', () => {
 
       const expectedPut = {
         payload: {
-          type: ComponentType.RadiosField
+          type: ComponentType.RadiosField,
+          options: {}
         },
         headers: { Authorization: `Bearer ${token}` }
       }
