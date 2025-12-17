@@ -703,6 +703,63 @@ describe('editor.js', () => {
         )
       })
 
+      test('empty classes string overrides any current value in component options', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'c1' }
+        })
+
+        const formDefinitionWithOptions = /** @type {FormDefinition} */ ({
+          ...formDefinition,
+          pages: [
+            {
+              ...formDefinition.pages[0],
+              components: [
+                {
+                  ...formDefinition.pages[0].components?.at(0),
+                  options: {
+                    required: true,
+                    classes: 'govuk-input--width-10'
+                  }
+                }
+              ]
+            },
+            formDefinition.pages[1]
+          ]
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionWithOptions,
+          'p1',
+          'c1',
+          {
+            type: ComponentType.TextField,
+            options: { classes: '', required: false }
+          }
+        )
+
+        expect(mockedPatchJson).not.toHaveBeenCalled()
+
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/c1`,
+            formsEndpoint
+          ),
+          {
+            payload: {
+              type: ComponentType.TextField,
+              options: {
+                required: false,
+                classes: ''
+              }
+            },
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+      })
+
       test('does not interfere when page is not a repeater', async () => {
         mockedPutJson.mockResolvedValueOnce({
           response: createMockResponse(),
