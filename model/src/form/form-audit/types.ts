@@ -402,10 +402,10 @@ export interface AuthenticationLogoutDifferentDeviceMessage
   data: AuthenticationMessageData
 }
 
-export interface FormSubmissionsExcelRequestedMessage
+export interface FormSubmissionExcelRequestedMessage
   extends SubmissionMessageBase {
   category: AuditEventMessageCategory.FORM
-  type: AuditEventMessageType.FORM_SUBMISSIONS_EXCEL_REQUESTED
+  type: AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
   data: ExcelGenerationMessageData
 }
 
@@ -451,7 +451,7 @@ export type AuditMessage =
   | AuthenticationLogoutManualMessage
   | AuthenticationLogoutAutoMessage
   | AuthenticationLogoutDifferentDeviceMessage
-  | FormSubmissionsExcelRequestedMessage
+  | FormSubmissionExcelRequestedMessage
   | FormCsatExcelRequestedMessage
   | PlatformCsatExcelRequestedMessage
 

@@ -445,7 +445,7 @@ export const messageSchema = Joi.object<AuditMessage>()
           is: Joi.string()
             .trim()
             .valid(
-              AuditEventMessageType.FORM_SUBMISSIONS_EXCEL_REQUESTED,
+              AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
               AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED,
               AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
             ),
