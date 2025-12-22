@@ -226,6 +226,10 @@ export interface AuthenticationMessageBase extends MessageBase {
   source: AuditEventMessageSource.AUTHENTICATION
 }
 
+export interface SubmissionMessageBase extends MessageBase {
+  source: AuditEventMessageSource.FORMS_SUBMISSION
+}
+
 export interface FormCreatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_CREATED
