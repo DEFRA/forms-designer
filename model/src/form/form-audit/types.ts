@@ -137,6 +137,12 @@ export interface FormFileDownloadedMessageData {
   fileLink: string
 }
 
+export interface ExcelGenerationMessageData {
+  formId: string
+  formName: string
+  notificationEmail: string
+}
+
 export interface FormDefinitionS3Meta {
   fileId: string
   filename: string
@@ -190,6 +196,7 @@ export type MessageData =
   | FormUpdatedMessageData
   | EntitlementMessageData
   | AuthenticationMessageData
+  | ExcelGenerationMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -217,6 +224,10 @@ export interface EntitlementMessageBase extends MessageBase {
 
 export interface AuthenticationMessageBase extends MessageBase {
   source: AuditEventMessageSource.AUTHENTICATION
+}
+
+export interface SubmissionMessageBase extends MessageBase {
+  source: AuditEventMessageSource.FORMS_SUBMISSION
 }
 
 export interface FormCreatedMessage extends ManagerMessageBase {
@@ -391,6 +402,26 @@ export interface AuthenticationLogoutDifferentDeviceMessage
   data: AuthenticationMessageData
 }
 
+export interface FormSubmissionsExcelRequestedMessage
+  extends SubmissionMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_SUBMISSIONS_EXCEL_REQUESTED
+  data: ExcelGenerationMessageData
+}
+
+export interface FormCsatExcelRequestedMessage extends SubmissionMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+  data: ExcelGenerationMessageData
+}
+
+export interface PlatformCsatExcelRequestedMessage
+  extends SubmissionMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
+  data: ExcelGenerationMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -420,6 +451,9 @@ export type AuditMessage =
   | AuthenticationLogoutManualMessage
   | AuthenticationLogoutAutoMessage
   | AuthenticationLogoutDifferentDeviceMessage
+  | FormSubmissionsExcelRequestedMessage
+  | FormCsatExcelRequestedMessage
+  | PlatformCsatExcelRequestedMessage
 
 export interface AuditEvent {
   message: AuditMessage
