@@ -13,7 +13,10 @@ import {
   publishAuthenticationLogoutAutoEvent,
   publishAuthenticationLogoutDifferentDeviceEvent,
   publishAuthenticationLogoutManualEvent,
-  publishFormDownloadedEvent
+  publishFormCsatExcelRequestedEvent,
+  publishFormDownloadedEvent,
+  publishFormSubmissionExcelRequestedEvent,
+  publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
 
 jest.mock('~/src/messaging/publish-base.js')
@@ -296,6 +299,132 @@ describe('publish', () => {
       // Verify user info is in createdBy
       expect(callArgs.createdBy.id).toBe(authAuditUser.id)
       expect(callArgs.createdBy.displayName).toBe(authAuditUser.displayName)
+    })
+  })
+
+  describe('publishFormSubmissionExcelRequestedEvent', () => {
+    const testExcelData = {
+      formId: '507f1f77bcf86cd799439011',
+      formName: 'Test Form',
+      notificationEmail: 'test@example.gov.uk'
+    }
+
+    it('should publish FORM_SUBMISSION_EXCEL_REQUESTED event', async () => {
+      await publishFormSubmissionExcelRequestedEvent(
+        testExcelData,
+        authAuditUser
+      )
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: testExcelData.formId,
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        type: AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          formId: testExcelData.formId,
+          formName: testExcelData.formName,
+          notificationEmail: testExcelData.notificationEmail
+        }
+      })
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      const invalidData = { formId: 123 }
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormSubmissionExcelRequestedEvent(invalidData, authAuditUser)
+      ).rejects.toThrow(ValidationError)
+    })
+  })
+
+  describe('publishFormCsatExcelRequestedEvent', () => {
+    const testExcelData = {
+      formId: '507f1f77bcf86cd799439011',
+      formName: 'Test Form',
+      notificationEmail: 'test@example.gov.uk'
+    }
+
+    it('should publish FORM_CSAT_EXCEL_REQUESTED event', async () => {
+      await publishFormCsatExcelRequestedEvent(testExcelData, authAuditUser)
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: testExcelData.formId,
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        type: AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          formId: testExcelData.formId,
+          formName: testExcelData.formName,
+          notificationEmail: testExcelData.notificationEmail
+        }
+      })
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      const invalidData = { formId: 123 }
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormCsatExcelRequestedEvent(invalidData, authAuditUser)
+      ).rejects.toThrow(ValidationError)
+    })
+  })
+
+  describe('publishPlatformCsatExcelRequestedEvent', () => {
+    const platformExcelData = {
+      formId: 'platform',
+      formName: 'all',
+      notificationEmail: 'admin@example.gov.uk'
+    }
+
+    it('should publish PLATFORM_CSAT_EXCEL_REQUESTED event', async () => {
+      await publishPlatformCsatExcelRequestedEvent(
+        platformExcelData,
+        authAuditUser
+      )
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: 'platform',
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        type: AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          formId: platformExcelData.formId,
+          formName: platformExcelData.formName,
+          notificationEmail: platformExcelData.notificationEmail
+        }
+      })
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      const invalidData = { formId: 123 }
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishPlatformCsatExcelRequestedEvent(invalidData, authAuditUser)
+      ).rejects.toThrow(ValidationError)
     })
   })
 })

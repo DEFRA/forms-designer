@@ -226,10 +226,6 @@ export interface AuthenticationMessageBase extends MessageBase {
   source: AuditEventMessageSource.AUTHENTICATION
 }
 
-export interface SubmissionMessageBase extends MessageBase {
-  source: AuditEventMessageSource.FORMS_SUBMISSION
-}
-
 export interface FormCreatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_CREATED
@@ -403,20 +399,19 @@ export interface AuthenticationLogoutDifferentDeviceMessage
 }
 
 export interface FormSubmissionExcelRequestedMessage
-  extends SubmissionMessageBase {
+  extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
   data: ExcelGenerationMessageData
 }
 
-export interface FormCsatExcelRequestedMessage extends SubmissionMessageBase {
+export interface FormCsatExcelRequestedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
   data: ExcelGenerationMessageData
 }
 
-export interface PlatformCsatExcelRequestedMessage
-  extends SubmissionMessageBase {
+export interface PlatformCsatExcelRequestedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
   data: ExcelGenerationMessageData

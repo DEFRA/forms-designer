@@ -6,6 +6,7 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import { getUser } from '~/src/lib/manage.js'
+import { publishPlatformCsatExcelRequestedEvent } from '~/src/messaging/publish.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
 export const ROUTE_FULL_PATH = '/admin/index'
@@ -90,6 +91,15 @@ export default [
 
       const user = mapUserForAudit(auth.credentials.user)
       const { email } = await getUser(token, user.id)
+
+      await publishPlatformCsatExcelRequestedEvent(
+        {
+          formId: 'platform',
+          formName: 'all',
+          notificationEmail: email.toLowerCase()
+        },
+        user
+      )
 
       yar.flash(
         sessionNames.successNotification,

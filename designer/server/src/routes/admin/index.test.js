@@ -5,6 +5,7 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { getUser } from '~/src/lib/manage.js'
+import { publishPlatformCsatExcelRequestedEvent } from '~/src/messaging/publish.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
@@ -12,6 +13,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/messaging/publish.js')
 jest.mock('~/src/services/formSubmissionService.js')
 jest.mock('~/src/lib/manage.js')
 
@@ -115,6 +117,8 @@ describe('System admin routes', () => {
       })
 
       test('should handle valid payload', async () => {
+        const mockEmail = 'target@test.gov.uk'
+
         jest.mocked(forms.get).mockResolvedValueOnce({
           ...testFormMetadata,
           notificationEmail: 'test@defratest.gov.uk'
@@ -122,7 +126,7 @@ describe('System admin routes', () => {
         jest
           .mocked(getUser)
           // @ts-expect-error - mocked only partial object
-          .mockResolvedValueOnce({ email: 'target@test.gov.uk' })
+          .mockResolvedValueOnce({ email: mockEmail })
 
         jest.mocked(sendFeedbackSubmissionsFile).mockResolvedValueOnce({
           message: 'Generate file success'
@@ -142,6 +146,17 @@ describe('System admin routes', () => {
         expect(statusCode).toBe(StatusCodes.SEE_OTHER)
         expect(headers.location).toBe('/admin/index')
         expect(sendFeedbackSubmissionsFile).toHaveBeenCalledTimes(1)
+        expect(publishPlatformCsatExcelRequestedEvent).toHaveBeenCalledWith(
+          {
+            formId: 'platform',
+            formName: 'all',
+            notificationEmail: mockEmail.toLowerCase()
+          },
+          expect.objectContaining({
+            id: expect.any(String),
+            displayName: expect.any(String)
+          })
+        )
       })
     })
   })
