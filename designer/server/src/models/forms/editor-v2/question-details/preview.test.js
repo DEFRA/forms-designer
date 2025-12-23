@@ -20,6 +20,7 @@ import {
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
+  UnsupportedQuestion,
   YesNoQuestion
 } from '@defra/forms-model'
 
@@ -570,6 +571,16 @@ describe('preview', () => {
       )
 
       expect(previewModel).toBeInstanceOf(HiddenQuestion)
+    })
+
+    it('should get UnsupportedQuestion', () => {
+      const previewModel = getPreviewConstructor(
+        // @ts-expect-error - invalid field type
+        'UnknownField',
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(UnsupportedQuestion)
     })
   })
 

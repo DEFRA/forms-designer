@@ -18,6 +18,7 @@ import {
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
   UkAddressQuestion,
+  UnsupportedQuestion,
   YesNoQuestion,
   govukFieldIsChecked,
   govukFieldValueIsString
@@ -441,6 +442,14 @@ export const ModelFactory =
   })
 
 /**
+ * @param {QuestionElements} questionElements
+ * @returns {Question}
+ */
+const unsupportedField = (questionElements) => {
+  return new UnsupportedQuestion(questionElements, emptyRender)
+}
+
+/**
  * @param {ComponentType|undefined|'Question'} componentType
  * @param {QuestionPreviewElements} questionOrListElements
  * @returns {Question}
@@ -454,7 +463,7 @@ export function getPreviewConstructor(componentType, questionOrListElements) {
   if (componentType) {
     QuestionConstructor =
       /** @type {((q: ListElements | AutocompleteElements | NumberElements) => Question)} */ (
-        ModelFactory[componentType] ?? ModelFactory.Question
+        ModelFactory[componentType] ?? unsupportedField
       )
   }
 
