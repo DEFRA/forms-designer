@@ -26,4 +26,12 @@ describe('Scopes', () => {
       'user-edit'
     ])
   })
+
+  test('should return FormCreator scopes', () => {
+    expect(mapScopesToRoles([Roles.FormCreator])).toEqual([
+      'form-read',
+      'form-edit',
+      'form-delete'
+    ])
+  })
 })
