@@ -15,6 +15,7 @@ import {
   type AuthenticationMessageData,
   type ChangesMessageData,
   type EntitlementMessageData,
+  type ExcelGenerationMessageData,
   type FormCreatedMessageData,
   type FormDefinitionS3Meta,
   type FormFileDownloadedMessageData,
@@ -205,6 +206,18 @@ export const formFileDownloadedMessageData =
     .required()
     .description(
       'Schema for FORM_FILE_DOWNLOAD_SUCCESS and FORM_FILE_DOWNLOAD_FAILURE events'
+    )
+
+export const excelGenerationMessageData =
+  Joi.object<ExcelGenerationMessageData>()
+    .keys({
+      formId: Joi.string().required(),
+      formName: Joi.string().required(),
+      notificationEmail: Joi.string().email().required()
+    })
+    .required()
+    .description(
+      'Schema for Excel generation audit events (submissions and CSAT)'
     )
 
 export const authenticationMessageData =
@@ -427,6 +440,16 @@ export const messageSchema = Joi.object<AuditMessage>()
               AuditEventMessageType.FORM_FILE_DOWNLOAD_FAILURE
             ),
           then: formFileDownloadedMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(
+              AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
+              AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED,
+              AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
+            ),
+          then: excelGenerationMessageData
         }
       ],
       otherwise: Joi.forbidden()

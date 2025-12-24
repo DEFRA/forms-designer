@@ -5,6 +5,10 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import {
+  publishFormCsatExcelRequestedEvent,
+  publishFormSubmissionExcelRequestedEvent
+} from '~/src/messaging/publish.js'
+import {
   sendFeedbackSubmissionsFile,
   sendFormSubmissionsFile
 } from '~/src/services/formSubmissionService.js'
@@ -14,6 +18,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/messaging/publish.js')
 jest.mock('~/src/services/formSubmissionService.js')
 
 describe('Editor v2 responses routes', () => {
@@ -157,10 +162,12 @@ describe('Editor v2 responses routes', () => {
       })
 
       test('should handle valid payload', async () => {
-        jest.mocked(forms.get).mockResolvedValueOnce({
+        const mockMetadata = {
           ...testFormMetadata,
           notificationEmail: 'test@defratest.gov.uk'
-        })
+        }
+
+        jest.mocked(forms.get).mockResolvedValueOnce(mockMetadata)
 
         jest.mocked(sendFormSubmissionsFile).mockResolvedValueOnce({
           message: 'Generate file success'
@@ -182,6 +189,17 @@ describe('Editor v2 responses routes', () => {
           '/library/my-form-slug/editor-v2/responses'
         )
         expect(sendFormSubmissionsFile).toHaveBeenCalledTimes(1)
+        expect(publishFormSubmissionExcelRequestedEvent).toHaveBeenCalledWith(
+          {
+            formId: mockMetadata.id,
+            formName: mockMetadata.title,
+            notificationEmail: mockMetadata.notificationEmail
+          },
+          expect.objectContaining({
+            id: expect.any(String),
+            displayName: expect.any(String)
+          })
+        )
       })
     })
 
@@ -210,12 +228,14 @@ describe('Editor v2 responses routes', () => {
       })
 
       test('should handle valid payload', async () => {
-        jest.mocked(forms.get).mockResolvedValueOnce({
+        const mockMetadata = {
           ...testFormMetadata,
           notificationEmail: 'test@defratest.gov.uk'
-        })
+        }
 
-        jest.mocked(sendFormSubmissionsFile).mockResolvedValueOnce({
+        jest.mocked(forms.get).mockResolvedValueOnce(mockMetadata)
+
+        jest.mocked(sendFeedbackSubmissionsFile).mockResolvedValueOnce({
           message: 'Generate file success'
         })
 
@@ -235,6 +255,17 @@ describe('Editor v2 responses routes', () => {
           '/library/my-form-slug/editor-v2/responses'
         )
         expect(sendFeedbackSubmissionsFile).toHaveBeenCalledTimes(1)
+        expect(publishFormCsatExcelRequestedEvent).toHaveBeenCalledWith(
+          {
+            formId: mockMetadata.id,
+            formName: mockMetadata.title,
+            notificationEmail: mockMetadata.notificationEmail
+          },
+          expect.objectContaining({
+            id: expect.any(String),
+            displayName: expect.any(String)
+          })
+        )
       })
     })
   })

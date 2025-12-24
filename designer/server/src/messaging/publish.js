@@ -6,8 +6,11 @@ import {
   authenticationLogoutAutoMapper,
   authenticationLogoutDifferentDevicelMapper,
   authenticationLogoutManualMapper,
+  formCsatExcelRequestedMapper,
   formDownloadedMapper,
-  formFileDownloadedMapper
+  formFileDownloadedMapper,
+  formSubmissionExcelRequestedMapper,
+  platformCsatExcelRequestedMapper
 } from '~/src/messaging/mappers/events.js'
 import { publishEvent } from '~/src/messaging/publish-base.js'
 
@@ -114,5 +117,39 @@ export async function publishFormFileDownloadFailureEvent(
 }
 
 /**
+ * Publish 'form submission excel requested' event
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ */
+export async function publishFormSubmissionExcelRequestedEvent(data, user) {
+  const auditMessage = formSubmissionExcelRequestedMapper(data, user)
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
+ * Publish 'form CSAT excel requested' event
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ */
+export async function publishFormCsatExcelRequestedEvent(data, user) {
+  const auditMessage = formCsatExcelRequestedMapper(data, user)
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
+ * Publish 'platform CSAT excel requested' event
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ */
+export async function publishPlatformCsatExcelRequestedEvent(data, user) {
+  const auditMessage = platformCsatExcelRequestedMapper(data, user)
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
  * @import { AuditMessage, AuditUser } from '@defra/forms-model'
+ * @import { ExcelGenerationData } from '~/src/messaging/mappers/events.js'
  */

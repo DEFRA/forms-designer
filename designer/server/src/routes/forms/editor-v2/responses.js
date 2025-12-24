@@ -3,7 +3,12 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  publishFormCsatExcelRequestedEvent,
+  publishFormSubmissionExcelRequestedEvent
+} from '~/src/messaging/publish.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import {
@@ -131,10 +136,19 @@ export default [
       const metadata = await forms.get(slug, token)
 
       if (metadata.notificationEmail) {
+        const user = mapUserForAudit(auth.credentials.user)
+        const excelData = {
+          formId: metadata.id,
+          formName: metadata.title,
+          notificationEmail: metadata.notificationEmail
+        }
+
         if (action === 'submissions') {
           await sendFormSubmissionsFile(metadata.id, token)
+          await publishFormSubmissionExcelRequestedEvent(excelData, user)
         } else {
           await sendFeedbackSubmissionsFile(metadata.id, token)
+          await publishFormCsatExcelRequestedEvent(excelData, user)
         }
 
         yar.flash(

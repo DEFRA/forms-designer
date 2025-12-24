@@ -137,6 +137,85 @@ export function formFileDownloadedMapper(data, isSuccess) {
 }
 
 /**
+ * Base mapper for Excel generation events
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ * @param {AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED | AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED} type
+ * @returns {FormSubmissionExcelRequestedMessage | FormCsatExcelRequestedMessage | PlatformCsatExcelRequestedMessage}
+ */
+function excelGenerationBaseMapper(data, user, type) {
+  const now = new Date()
+  const { formId, formName, notificationEmail } = data
+
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.FORM,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type,
+    entityId: formId,
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    data: {
+      formId,
+      formName,
+      notificationEmail
+    },
+    messageCreatedAt: now
+  }
+}
+
+/**
+ * Mapper for form submission Excel requested event
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ * @returns {FormSubmissionExcelRequestedMessage}
+ */
+export function formSubmissionExcelRequestedMapper(data, user) {
+  return /** @type {FormSubmissionExcelRequestedMessage} */ (
+    excelGenerationBaseMapper(
+      data,
+      user,
+      AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
+    )
+  )
+}
+
+/**
+ * Mapper for form CSAT Excel requested event
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ * @returns {FormCsatExcelRequestedMessage}
+ */
+export function formCsatExcelRequestedMapper(data, user) {
+  return /** @type {FormCsatExcelRequestedMessage} */ (
+    excelGenerationBaseMapper(
+      data,
+      user,
+      AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+    )
+  )
+}
+
+/**
+ * Mapper for platform CSAT Excel requested event
+ * @param {ExcelGenerationData} data
+ * @param {AuditUser} user
+ * @returns {PlatformCsatExcelRequestedMessage}
+ */
+export function platformCsatExcelRequestedMapper(data, user) {
+  return /** @type {PlatformCsatExcelRequestedMessage} */ (
+    excelGenerationBaseMapper(
+      data,
+      user,
+      AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
+    )
+  )
+}
+
+/**
  * @typedef {object} FormDownloadData
  * @property {string} formId - The form ID
  * @property {string} slug - The form slug
@@ -144,5 +223,12 @@ export function formFileDownloadedMapper(data, isSuccess) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage } from '@defra/forms-model'
+ * @typedef {object} ExcelGenerationData
+ * @property {string} formId - The form ID (or 'platform' for platform-wide)
+ * @property {string} formName - The form name (or 'all' for platform-wide)
+ * @property {string} notificationEmail - The email address to send the download link
+ */
+
+/**
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage } from '@defra/forms-model'
  */
