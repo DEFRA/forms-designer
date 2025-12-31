@@ -138,7 +138,19 @@ export default [
             message: 'Failed to fetch form history',
             error: err
           })
-          history = { hasItems: false, items: [] }
+          history = {
+            heading: {
+              text: 'History',
+              size: 'medium',
+              level: '3'
+            },
+            items: [],
+            viewFullHistoryLink: {
+              text: 'View full history',
+              href: `${formOverviewPath(form.slug)}/history`
+            },
+            hasItems: false
+          }
         }
 
         const model = library.overviewViewModel(
