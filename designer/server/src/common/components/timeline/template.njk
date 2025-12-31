@@ -1,0 +1,18 @@
+{% if params.items | length %}
+<ol class="app-timeline">
+  {% for item in params.items %}
+  <li class="app-timeline__item{% if item.isFormWentLive %} app-timeline__item--highlight{% endif %}">
+    <p class="app-timeline__title govuk-!-margin-bottom-1">
+      <strong>{{ item.title }}</strong> <span class="app-timeline__user">by {{ item.user }}</span>
+    </p>
+    <p class="govuk-body-s govuk-!-margin-bottom-1 app-timeline__date">{{ item.date }}</p>
+    {% if item.description %}
+    <p class="govuk-body-s govuk-!-margin-bottom-0 app-timeline__description">{{ item.description | nl2br | safe }}</p>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ol>
+{% else %}
+<p class="govuk-body">No history available.</p>
+{% endif %}
+

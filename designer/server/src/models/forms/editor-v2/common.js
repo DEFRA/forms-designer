@@ -83,6 +83,7 @@ export function getFormSpecificNavigation(
     ['Forms library', formsLibraryPath],
     ['Overview', formPath],
     ['Responses', `${formPath}/editor-v2/responses`],
+    ['Form history', `${formPath}/history`],
     ['Editor', `${formPath}/editor-v2/pages`],
     ['Support', formsSupportPath]
   ]
