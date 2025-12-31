@@ -237,10 +237,44 @@ function buildFormCreatedDescription(data) {
   }
 
   if (details.length > 0) {
-    return parts.join('') + '\n\n' + details.map((d) => `• ${d}`).join('\n')
+    const bulletList = details.map((d) => `• ${d}`).join('\n')
+    return `${parts.join('')}\n\n${bulletList}`
   }
 
   return parts.join('')
+}
+
+/**
+ * Handlers for special event types that need custom logic
+ * @type {Record<string, (data: MessageData | undefined) => string | undefined>}
+ */
+const specialEventHandlers = {
+  [AuditEventMessageType.FORM_CREATED]: (data) =>
+    data ? buildFormCreatedDescription(data) : undefined,
+
+  [AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED]: (data) =>
+    data ? buildSupportContactDescription(data) : undefined,
+
+  [AuditEventMessageType.FORM_JSON_UPLOADED]: (data) => {
+    const filename = data ? safeGet(data, 'changes.new.value') : undefined
+    return filename
+      ? `Uploaded a form using a JSON file named '${filename}'.`
+      : undefined
+  },
+
+  [AuditEventMessageType.FORM_DRAFT_DELETED]: (data) => {
+    const formName = data ? safeGet(data, 'title') : undefined
+    return formName
+      ? `Deleted the form named '${formName}'.`
+      : 'Deleted the draft form.'
+  },
+
+  [AuditEventMessageType.FORM_MIGRATED]: (data) => {
+    const formName = data ? safeGet(data, 'title') : undefined
+    return formName
+      ? `Switched the form named '${formName}' to the new editor.`
+      : 'Switched to the new editor.'
+  }
 }
 
 /**
@@ -250,38 +284,9 @@ function buildFormCreatedDescription(data) {
  * @returns {string | undefined}
  */
 function getSpecialEventDescription(type, data) {
-  if (type === String(AuditEventMessageType.FORM_CREATED) && data) {
-    return buildFormCreatedDescription(data)
+  if (type in specialEventHandlers) {
+    return specialEventHandlers[type](data)
   }
-
-  if (
-    type === String(AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED) &&
-    data
-  ) {
-    return buildSupportContactDescription(data)
-  }
-
-  if (type === String(AuditEventMessageType.FORM_JSON_UPLOADED) && data) {
-    const filename = safeGet(data, 'changes.new.value')
-    return filename
-      ? `Uploaded a form using a JSON file named '${filename}'.`
-      : undefined
-  }
-
-  if (type === String(AuditEventMessageType.FORM_DRAFT_DELETED)) {
-    const formName = data ? safeGet(data, 'title') : undefined
-    return formName
-      ? `Deleted the form named '${formName}'.`
-      : 'Deleted the draft form.'
-  }
-
-  if (type === String(AuditEventMessageType.FORM_MIGRATED)) {
-    const formName = data ? safeGet(data, 'title') : undefined
-    return formName
-      ? `Switched the form named '${formName}' to the new editor.`
-      : 'Switched to the new editor.'
-  }
-
   return undefined
 }
 

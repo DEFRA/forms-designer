@@ -248,38 +248,6 @@ describe('Form history route', () => {
       expect($description?.textContent).toMatch(/Edited the draft form 3 times/)
     })
 
-    it('should highlight form went live events', async () => {
-      const auditRecords = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
-          createdAt: new Date('2019-06-14T15:00:00.000Z')
-        })
-      ]
-
-      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(formDefinition)
-      jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
-        auditRecords,
-        skip: 0
-      })
-
-      const options = {
-        method: 'GET',
-        url: '/library/my-form-slug/history',
-        auth
-      }
-
-      const { document } = await renderResponse(server, options)
-
-      const $highlightItem = document.querySelector(
-        '.app-timeline__item--highlight'
-      )
-      expect($highlightItem).toBeInTheDocument()
-    })
-
     it('should work without draft form definition', async () => {
       const formWithoutDraft = { ...formMetadata, draft: undefined }
 

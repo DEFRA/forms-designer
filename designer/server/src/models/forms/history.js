@@ -123,7 +123,7 @@ export function findConsecutiveEditGroup(records, startIndex) {
  */
 function buildConsolidatedTimelineItem(records) {
   const newestRecord = records[0]
-  const oldestRecord = records[records.length - 1]
+  const oldestRecord = /** @type {AuditRecord} */ (records.at(-1))
   const count = records.length
   const user = newestRecord.createdBy.displayName
 
