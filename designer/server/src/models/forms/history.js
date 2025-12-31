@@ -4,6 +4,7 @@ import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewBackLink, formOverviewPath } from '~/src/models/links.js'
 
 const OVERVIEW_HISTORY_LIMIT = 5
+const FORM_HISTORY_TITLE = 'Form history'
 
 /**
  * Event type to friendly name mapping
@@ -155,6 +156,85 @@ function safeGet(data, path) {
 }
 
 /**
+ * Field configurations for events that use buildUpdatedDescription
+ * @type {Record<string, { label: string, prevPath: string, newPath: string }>}
+ */
+const updatedFieldConfigs = {
+  [AuditEventMessageType.FORM_TITLE_UPDATED]: {
+    label: 'the form name',
+    prevPath: 'changes.previous.title',
+    newPath: 'changes.new.title'
+  },
+  [AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED]: {
+    label: 'the shared team address',
+    prevPath: 'changes.previous.teamEmail',
+    newPath: 'changes.new.teamEmail'
+  },
+  [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]: {
+    label: 'where submitted forms are sent',
+    prevPath: 'changes.previous.notificationEmail',
+    newPath: 'changes.new.notificationEmail'
+  },
+  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: {
+    label: 'the privacy notice link',
+    prevPath: 'changes.previous.privacyNoticeUrl',
+    newPath: 'changes.new.privacyNoticeUrl'
+  },
+  [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: {
+    label: 'the next steps guidance',
+    prevPath: 'changes.previous.submissionGuidance',
+    newPath: 'changes.new.submissionGuidance'
+  },
+  [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: {
+    label: 'the support phone number',
+    prevPath: 'changes.previous.phone',
+    newPath: 'changes.new.phone'
+  },
+  [AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED]: {
+    label: 'the support email address',
+    prevPath: 'changes.previous.address',
+    newPath: 'changes.new.address'
+  },
+  [AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED]: {
+    label: 'the support contact link',
+    prevPath: 'changes.previous.url',
+    newPath: 'changes.new.url'
+  }
+}
+
+/**
+ * Field configurations for events that use buildChangedDescription
+ * @type {Record<string, { label: string, prevPath: string, newPath: string }>}
+ */
+const changedFieldConfigs = {
+  [AuditEventMessageType.FORM_ORGANISATION_UPDATED]: {
+    label: 'the lead organisation',
+    prevPath: 'changes.previous.organisation',
+    newPath: 'changes.new.organisation'
+  },
+  [AuditEventMessageType.FORM_TEAM_NAME_UPDATED]: {
+    label: 'the team name',
+    prevPath: 'changes.previous.teamName',
+    newPath: 'changes.new.teamName'
+  }
+}
+
+/**
+ * Static descriptions for events that don't need data
+ * @type {Record<string, string>}
+ */
+const staticDescriptions = {
+  [AuditEventMessageType.FORM_JSON_DOWNLOADED]:
+    'Exported the form in JSON format.',
+  [AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT]: 'Made the form live.',
+  [AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE]:
+    'Created a draft version of the live form.',
+  [AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED]:
+    'Downloaded form submissions.',
+  [AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED]: 'Downloaded user feedback.'
+}
+
+/**
  * Gets a description for an event based on its data
  * @param {AuditRecord} record
  * @returns {string | undefined}
@@ -162,146 +242,71 @@ function safeGet(data, path) {
 export function getEventDescription(record) {
   const { type, data } = record
 
-  switch (type) {
-    case AuditEventMessageType.FORM_CREATED: {
-      return buildFormCreatedDescription(data)
-    }
-
-    case AuditEventMessageType.FORM_TITLE_UPDATED: {
-      return buildUpdatedDescription(
-        'the form name',
-        safeGet(data, 'changes.previous.title'),
-        safeGet(data, 'changes.new.title')
-      )
-    }
-
-    case AuditEventMessageType.FORM_ORGANISATION_UPDATED: {
-      return buildChangedDescription(
-        'the lead organisation',
-        safeGet(data, 'changes.previous.organisation'),
-        safeGet(data, 'changes.new.organisation')
-      )
-    }
-
-    case AuditEventMessageType.FORM_TEAM_NAME_UPDATED: {
-      return buildChangedDescription(
-        'the team name',
-        safeGet(data, 'changes.previous.teamName'),
-        safeGet(data, 'changes.new.teamName')
-      )
-    }
-
-    case AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED: {
-      return buildUpdatedDescription(
-        'the shared team address',
-        safeGet(data, 'changes.previous.teamEmail'),
-        safeGet(data, 'changes.new.teamEmail')
-      )
-    }
-
-    case AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED: {
-      return buildUpdatedDescription(
-        'where submitted forms are sent',
-        safeGet(data, 'changes.previous.notificationEmail'),
-        safeGet(data, 'changes.new.notificationEmail')
-      )
-    }
-
-    case AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED: {
-      return buildUpdatedDescription(
-        'the privacy notice link',
-        safeGet(data, 'changes.previous.privacyNoticeUrl'),
-        safeGet(data, 'changes.new.privacyNoticeUrl')
-      )
-    }
-
-    case AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED: {
-      return buildUpdatedDescription(
-        'the next steps guidance',
-        safeGet(data, 'changes.previous.submissionGuidance'),
-        safeGet(data, 'changes.new.submissionGuidance')
-      )
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED: {
-      return buildUpdatedDescription(
-        'the support phone number',
-        safeGet(data, 'changes.previous.phone'),
-        safeGet(data, 'changes.new.phone')
-      )
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED: {
-      return buildUpdatedDescription(
-        'the support email address',
-        safeGet(data, 'changes.previous.address'),
-        safeGet(data, 'changes.new.address')
-      )
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED: {
-      return buildUpdatedDescription(
-        'the support contact link',
-        safeGet(data, 'changes.previous.url'),
-        safeGet(data, 'changes.new.url')
-      )
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED: {
-      return buildSupportContactDescription(data)
-    }
-
-    case AuditEventMessageType.FORM_JSON_UPLOADED: {
-      const filename = safeGet(data, 'changes.new.value')
-      if (filename) {
-        return `Uploaded a form using a JSON file named '${filename}'.`
-      }
-      return undefined
-    }
-
-    case AuditEventMessageType.FORM_JSON_DOWNLOADED: {
-      return 'Exported the form in JSON format.'
-    }
-
-    case AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT: {
-      return 'Made the form live.'
-    }
-
-    case AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE: {
-      return 'Created a draft version of the live form.'
-    }
-
-    case AuditEventMessageType.FORM_DRAFT_DELETED: {
-      if (data) {
-        const formName = safeGet(data, 'title')
-        if (formName) {
-          return `Deleted the form named '${formName}'.`
-        }
-      }
-      return 'Deleted the draft form.'
-    }
-
-    case AuditEventMessageType.FORM_MIGRATED: {
-      if (data) {
-        const formName = safeGet(data, 'title')
-        if (formName) {
-          return `Switched the form named '${formName}' to the new editor.`
-        }
-      }
-      return 'Switched to the new editor.'
-    }
-
-    case AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED: {
-      return 'Downloaded form submissions.'
-    }
-
-    case AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED: {
-      return 'Downloaded user feedback.'
-    }
-
-    default:
-      return undefined
+  if (type in staticDescriptions) {
+    return staticDescriptions[type]
   }
+
+  if (type in updatedFieldConfigs) {
+    const config = updatedFieldConfigs[type]
+    return buildUpdatedDescription(
+      config.label,
+      data ? safeGet(data, config.prevPath) : undefined,
+      data ? safeGet(data, config.newPath) : undefined
+    )
+  }
+
+  if (type in changedFieldConfigs) {
+    const config = changedFieldConfigs[type]
+    return buildChangedDescription(
+      config.label,
+      data ? safeGet(data, config.prevPath) : undefined,
+      data ? safeGet(data, config.newPath) : undefined
+    )
+  }
+
+  return getSpecialEventDescription(type, data)
+}
+
+/**
+ * Gets description for special event types that need custom logic
+ * @param {string} type
+ * @param {MessageData | undefined} data
+ * @returns {string | undefined}
+ */
+function getSpecialEventDescription(type, data) {
+  if (type === String(AuditEventMessageType.FORM_CREATED) && data) {
+    return buildFormCreatedDescription(data)
+  }
+
+  if (
+    type === String(AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED) &&
+    data
+  ) {
+    return buildSupportContactDescription(data)
+  }
+
+  if (type === String(AuditEventMessageType.FORM_JSON_UPLOADED) && data) {
+    const filename = safeGet(data, 'changes.new.value')
+    return filename
+      ? `Uploaded a form using a JSON file named '${filename}'.`
+      : undefined
+  }
+
+  if (type === String(AuditEventMessageType.FORM_DRAFT_DELETED)) {
+    const formName = data ? safeGet(data, 'title') : undefined
+    return formName
+      ? `Deleted the form named '${formName}'.`
+      : 'Deleted the draft form.'
+  }
+
+  if (type === String(AuditEventMessageType.FORM_MIGRATED)) {
+    const formName = data ? safeGet(data, 'title') : undefined
+    return formName
+      ? `Switched the form named '${formName}' to the new editor.`
+      : 'Switched to the new editor.'
+  }
+
+  return undefined
 }
 
 /**
@@ -381,43 +386,59 @@ function buildChangedDescription(fieldName, oldValue, newValue) {
 }
 
 /**
+ * Builds a change string for a contact field
+ * @param {string} fieldLabel - The field label (e.g., 'phone number')
+ * @param {string | undefined} prevValue - Previous value
+ * @param {string | undefined} newValue - New value
+ * @returns {string | undefined}
+ */
+function buildContactChangeString(fieldLabel, prevValue, newValue) {
+  if (!newValue || newValue === prevValue) {
+    return undefined
+  }
+  return prevValue
+    ? `${fieldLabel} from '${prevValue}' to '${newValue}'`
+    : `${fieldLabel} to '${newValue}'`
+}
+
+/**
+ * Support contact field configurations for change detection
+ * @type {Array<{ label: string, prevPath: string, newPath: string }>}
+ */
+const supportContactFields = [
+  {
+    label: 'phone number',
+    prevPath: 'changes.previous.contact.phone',
+    newPath: 'changes.new.contact.phone'
+  },
+  {
+    label: 'email address',
+    prevPath: 'changes.previous.contact.email.address',
+    newPath: 'changes.new.contact.email.address'
+  },
+  {
+    label: 'online contact link',
+    prevPath: 'changes.previous.contact.online.url',
+    newPath: 'changes.new.contact.online.url'
+  }
+]
+
+/**
  * Builds a description for support contact updated event
  * The contact object can contain phone, email, and online sub-objects
  * @param {MessageData} data
  * @returns {string | undefined}
  */
 function buildSupportContactDescription(data) {
-  const changes = []
-
-  const prevPhone = safeGet(data, 'changes.previous.contact.phone')
-  const newPhone = safeGet(data, 'changes.new.contact.phone')
-  if (newPhone && newPhone !== prevPhone) {
-    if (prevPhone) {
-      changes.push(`phone number from '${prevPhone}' to '${newPhone}'`)
-    } else {
-      changes.push(`phone number to '${newPhone}'`)
-    }
-  }
-
-  const prevEmail = safeGet(data, 'changes.previous.contact.email.address')
-  const newEmail = safeGet(data, 'changes.new.contact.email.address')
-  if (newEmail && newEmail !== prevEmail) {
-    if (prevEmail) {
-      changes.push(`email address from '${prevEmail}' to '${newEmail}'`)
-    } else {
-      changes.push(`email address to '${newEmail}'`)
-    }
-  }
-
-  const prevOnline = safeGet(data, 'changes.previous.contact.online.url')
-  const newOnline = safeGet(data, 'changes.new.contact.online.url')
-  if (newOnline && newOnline !== prevOnline) {
-    if (prevOnline) {
-      changes.push(`online contact link from '${prevOnline}' to '${newOnline}'`)
-    } else {
-      changes.push(`online contact link to '${newOnline}'`)
-    }
-  }
+  const changes = supportContactFields
+    .map((field) =>
+      buildContactChangeString(
+        field.label,
+        safeGet(data, field.prevPath),
+        safeGet(data, field.newPath)
+      )
+    )
+    .filter(Boolean)
 
   if (changes.length === 0) {
     return undefined
@@ -427,9 +448,85 @@ function buildSupportContactDescription(data) {
     return `Updated the support ${changes[0]}.`
   }
 
-  // Multiple changes - list them
   const lastChange = changes.pop()
   return `Updated the support ${changes.join(', ')} and ${lastChange}.`
+}
+
+/**
+ * Event types that are always considered valid (don't need change comparison)
+ * @type {Set<string>}
+ */
+const alwaysValidEvents = new Set([
+  AuditEventMessageType.FORM_CREATED,
+  AuditEventMessageType.FORM_UPDATED,
+  AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
+  AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE,
+  AuditEventMessageType.FORM_DRAFT_DELETED,
+  AuditEventMessageType.FORM_MIGRATED,
+  AuditEventMessageType.FORM_JSON_UPLOADED,
+  AuditEventMessageType.FORM_JSON_DOWNLOADED,
+  AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
+  AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+])
+
+/**
+ * Field path configurations for single-field change detection
+ * @type {Record<string, { prevPath: string, newPath: string }>}
+ */
+const changeFieldPaths = {
+  [AuditEventMessageType.FORM_TITLE_UPDATED]: {
+    prevPath: 'changes.previous.title',
+    newPath: 'changes.new.title'
+  },
+  [AuditEventMessageType.FORM_ORGANISATION_UPDATED]: {
+    prevPath: 'changes.previous.organisation',
+    newPath: 'changes.new.organisation'
+  },
+  [AuditEventMessageType.FORM_TEAM_NAME_UPDATED]: {
+    prevPath: 'changes.previous.teamName',
+    newPath: 'changes.new.teamName'
+  },
+  [AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED]: {
+    prevPath: 'changes.previous.teamEmail',
+    newPath: 'changes.new.teamEmail'
+  },
+  [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]: {
+    prevPath: 'changes.previous.notificationEmail',
+    newPath: 'changes.new.notificationEmail'
+  },
+  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: {
+    prevPath: 'changes.previous.privacyNoticeUrl',
+    newPath: 'changes.new.privacyNoticeUrl'
+  },
+  [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: {
+    prevPath: 'changes.previous.submissionGuidance',
+    newPath: 'changes.new.submissionGuidance'
+  },
+  [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: {
+    prevPath: 'changes.previous.phone',
+    newPath: 'changes.new.phone'
+  },
+  [AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED]: {
+    prevPath: 'changes.previous.address',
+    newPath: 'changes.new.address'
+  },
+  [AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED]: {
+    prevPath: 'changes.previous.url',
+    newPath: 'changes.new.url'
+  }
+}
+
+/**
+ * Checks if any support contact field has changed
+ * @param {MessageData} data
+ * @returns {boolean}
+ */
+function hasSupportContactChange(data) {
+  return supportContactFields.some((field) => {
+    const prevValue = safeGet(data, field.prevPath)
+    const newValue = safeGet(data, field.newPath)
+    return Boolean(newValue && newValue !== prevValue)
+  })
 }
 
 /**
@@ -441,20 +538,7 @@ function buildSupportContactDescription(data) {
 export function hasActualChange(record) {
   const { type, data } = record
 
-  const alwaysValidEvents = [
-    AuditEventMessageType.FORM_CREATED,
-    AuditEventMessageType.FORM_UPDATED,
-    AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
-    AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE,
-    AuditEventMessageType.FORM_DRAFT_DELETED,
-    AuditEventMessageType.FORM_MIGRATED,
-    AuditEventMessageType.FORM_JSON_UPLOADED,
-    AuditEventMessageType.FORM_JSON_DOWNLOADED,
-    AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
-    AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
-  ]
-
-  if (alwaysValidEvents.includes(type)) {
+  if (alwaysValidEvents.has(type)) {
     return true
   }
 
@@ -462,85 +546,20 @@ export function hasActualChange(record) {
     return true
   }
 
-  switch (type) {
-    case AuditEventMessageType.FORM_TITLE_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.title')
-      const next = safeGet(data, 'changes.new.title')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_ORGANISATION_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.organisation')
-      const next = safeGet(data, 'changes.new.organisation')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_TEAM_NAME_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.teamName')
-      const next = safeGet(data, 'changes.new.teamName')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.teamEmail')
-      const next = safeGet(data, 'changes.new.teamEmail')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.notificationEmail')
-      const next = safeGet(data, 'changes.new.notificationEmail')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.privacyNoticeUrl')
-      const next = safeGet(data, 'changes.new.privacyNoticeUrl')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.submissionGuidance')
-      const next = safeGet(data, 'changes.new.submissionGuidance')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.phone')
-      const next = safeGet(data, 'changes.new.phone')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.address')
-      const next = safeGet(data, 'changes.new.address')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED: {
-      const prev = safeGet(data, 'changes.previous.url')
-      const next = safeGet(data, 'changes.new.url')
-      return prev !== next
-    }
-
-    case AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED: {
-      const prevPhone = safeGet(data, 'changes.previous.contact.phone')
-      const newPhone = safeGet(data, 'changes.new.contact.phone')
-      const prevEmail = safeGet(data, 'changes.previous.contact.email.address')
-      const newEmail = safeGet(data, 'changes.new.contact.email.address')
-      const prevOnline = safeGet(data, 'changes.previous.contact.online.url')
-      const newOnline = safeGet(data, 'changes.new.contact.online.url')
-
-      const phoneChanged = Boolean(newPhone && newPhone !== prevPhone)
-      const emailChanged = Boolean(newEmail && newEmail !== prevEmail)
-      const onlineChanged = Boolean(newOnline && newOnline !== prevOnline)
-
-      return phoneChanged || emailChanged || onlineChanged
-    }
-
-    default:
-      return true
+  if (type in changeFieldPaths) {
+    const fieldPaths = changeFieldPaths[type]
+    return (
+      safeGet(data, fieldPaths.prevPath) !== safeGet(data, fieldPaths.newPath)
+    )
   }
+
+  if (
+    String(type) === String(AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED)
+  ) {
+    return hasSupportContactChange(data)
+  }
+
+  return true
 }
 
 /**
@@ -732,7 +751,7 @@ export function historyViewModel(metadata, formDefinition, auditRecords) {
     formPath,
     metadata,
     formDefinition,
-    'Form history'
+    FORM_HISTORY_TITLE
   )
 
   const items = consolidateEditEvents(auditRecords)
@@ -740,9 +759,9 @@ export function historyViewModel(metadata, formDefinition, auditRecords) {
   return {
     backLink: formOverviewBackLink(metadata.slug),
     navigation,
-    pageTitle: 'Form history',
+    pageTitle: FORM_HISTORY_TITLE,
     pageHeading: {
-      text: 'Form history'
+      text: FORM_HISTORY_TITLE
     },
     caption: {
       text: metadata.title
