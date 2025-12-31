@@ -131,25 +131,6 @@ describe('Timeline Component', () => {
       expect($description).not.toBeInTheDocument()
     })
 
-    it('should highlight form went live events', () => {
-      const { document } = renderMacro('appTimeline', 'timeline/macro.njk', {
-        params: {
-          items: [
-            {
-              title: 'Form went live',
-              user: 'Samira Khan',
-              date: '14 June 2019 at 2:01pm',
-              isFormWentLive: true,
-              isConsolidated: false
-            }
-          ]
-        }
-      })
-
-      const $item = document.querySelector('.app-timeline__item')
-      expect($item).toHaveClass('app-timeline__item--highlight')
-    })
-
     it('should render consolidated edit events', () => {
       const { document } = renderMacro('appTimeline', 'timeline/macro.njk', {
         params: {

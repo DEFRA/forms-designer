@@ -1,7 +1,7 @@
 {% if params.items | length %}
 <ol class="app-timeline">
   {% for item in params.items %}
-  <li class="app-timeline__item{% if item.isFormWentLive %} app-timeline__item--highlight{% endif %}">
+  <li class="app-timeline__item">
     <p class="app-timeline__title govuk-!-margin-bottom-1">
       <strong>{{ item.title }}</strong> <span class="app-timeline__user">by {{ item.user }}</span>
     </p>
