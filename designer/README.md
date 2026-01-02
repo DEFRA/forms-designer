@@ -33,6 +33,7 @@ Base URLs should should include protocol, hostname, port number, e.g. `http://lo
 | name                              | description                                                                                                               | required | default | valid                       |
 | --------------------------------- | ------------------------------------------------------------------------------------------------------------------------- | :------- | ------- | :-------------------------- |
 | APP_BASE_URL                      | Base URL for each request.                                                                                                | yes      |         |                             |
+| AUDIT_URL                         | Base URL of the audit API.                                                                                                | yes      |         |                             |
 | AZURE_CLIENT_ID                   | Client ID of the Azure app registration.                                                                                  | yes      |         |                             |
 | AZURE_CLIENT_SECRET               | Client secret of the Azure app registration.                                                                              | yes      |         |                             |
 | LOG_LEVEL                         | Log level                                                                                                                 | yes      | info    | trace,debug,info,error      |
@@ -61,6 +62,7 @@ All values assume you are using the docker compose setup.
 
 ```
 APP_BASE_URL=http://localhost:3000
+AUDIT_URL=http://localhost:3004
 AZURE_CLIENT_ID="<OBTAIN VALUE FROM DEV TEAM>"
 AZURE_CLIENT_SECRET="<OBTAIN VALUE FROM DEV TEAM>"
 MANAGER_URL=http://localhost:3001

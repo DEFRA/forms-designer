@@ -8,8 +8,10 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import config from '~/src/config.js'
+import * as audit from '~/src/lib/audit.js'
 import * as forms from '~/src/lib/forms.js'
 import { getSortOptions } from '~/src/lib/sort.js'
+import { overviewHistoryViewModel } from '~/src/models/forms/history.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -127,13 +129,37 @@ export default [
           })
         }
 
+        let history
+        try {
+          const auditResponse = await audit.getFormHistory(form.id, token)
+          history = overviewHistoryViewModel(form, auditResponse.auditRecords)
+        } catch (err) {
+          request.log('error', {
+            message: 'Failed to fetch form history',
+            error: err
+          })
+          history = {
+            heading: {
+              text: 'History',
+              size: 'medium',
+              level: '3'
+            },
+            items: [],
+            viewFullHistoryLink: {
+              text: 'View full history',
+              href: `${formOverviewPath(form.slug)}/history`
+            },
+            hasItems: false
+          }
+        }
+
         const model = library.overviewViewModel(
           form,
           definition,
           yar.flash(sessionNames.successNotification).at(0)
         )
 
-        return h.view('forms/overview', { ...model, titleActionItems })
+        return h.view('forms/overview', { ...model, titleActionItems, history })
       },
       auth: {
         mode: 'required',

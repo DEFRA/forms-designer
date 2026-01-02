@@ -7,6 +7,7 @@
 {% from "grid-layout/macro.njk" import appGridLayout %}
 {% from "heading/macro.njk" import appHeading %}
 {% from "form-card/macro.njk" import appFormCard %}
+{% from "timeline/macro.njk" import appTimeline %}
 
 {% block beforeContent %}
   <div class="govuk-width-container app-width-container--wide">
@@ -315,6 +316,25 @@
   {% endcall %}
 {% endset %}
 
+{% set historySection %}
+  {% if history and history.hasItems %}
+    {{ appHeading(history.heading) }}
+    {{ appTimeline({ items: history.items }) }}
+    <p class="govuk-body govuk-!-margin-top-4">
+      <a class="govuk-link govuk-link--no-visited-state" href="{{ history.viewFullHistoryLink.href }}">{{ history.viewFullHistoryLink.text }}</a>
+    </p>
+  {% endif %}
+{% endset %}
+
+{% set sidebarContent %}
+  {{ appFormCard(formManage) }}
+  {% if history and history.hasItems %}
+    <div class="govuk-!-margin-top-6">
+      {{ historySection | safe }}
+    </div>
+  {% endif %}
+{% endset %}
+
 {% block content %}
   <div class="govuk-width-container app-width-container--wide">
     {{ appGridLayout([
@@ -336,7 +356,7 @@
           classes: "govuk-grid-column-two-thirds-from-desktop"
         },
         {
-          html: appFormCard(formManage),
+          html: sidebarContent,
           classes: "govuk-grid-column-one-third-from-desktop"
         }
       ]

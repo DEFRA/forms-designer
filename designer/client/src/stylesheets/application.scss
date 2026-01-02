@@ -1,4 +1,8 @@
-@use "govuk-frontend";
+@use "govuk-frontend" with (
+  $govuk-suppressed-warnings: (
+    "govuk-typography-scale-14"
+  )
+);
 @use "xgovuk-frontend";
 
 @use "components/breadcrumbs";
@@ -13,6 +17,7 @@
 @use "components/service-header";
 @use "components/sorting";
 @use "components/tag-env";
+@use "components/timeline";
 @use "components/button";
 @use "components/header";
 @use "components/sections";

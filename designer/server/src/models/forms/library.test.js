@@ -99,6 +99,9 @@ describe('Forms Library Models', () => {
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
             isActive: false
           }),
+          buildEntry('Form history', `${formPath}/history`, {
+            isActive: false
+          }),
           buildEntry('Editor', `${formPath}/editor`, { isActive: false }),
           buildEntry('Support', formsSupportPath, { isActive: false })
         ])
@@ -116,6 +119,9 @@ describe('Forms Library Models', () => {
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: true }),
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
+            isActive: false
+          }),
+          buildEntry('Form history', `${formPath}/history`, {
             isActive: false
           }),
           buildEntry('Editor', `${formPath}/editor-v2/pages`, {
@@ -139,6 +145,9 @@ describe('Forms Library Models', () => {
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
             isActive: false
           }),
+          buildEntry('Form history', `${formPath}/history`, {
+            isActive: false
+          }),
           buildEntry('Editor', `${formPath}/editor`, { isActive: true }),
           buildEntry('Support', formsSupportPath, { isActive: false })
         ])
@@ -156,6 +165,9 @@ describe('Forms Library Models', () => {
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: false }),
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
+            isActive: false
+          }),
+          buildEntry('Form history', `${formPath}/history`, {
             isActive: false
           }),
           buildEntry('Editor', `${formPath}/editor-v2/pages`, {
@@ -181,6 +193,9 @@ describe('Forms Library Models', () => {
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
             isActive: false
           }),
+          buildEntry('Form history', `${formPath}/history`, {
+            isActive: false
+          }),
           buildEntry('Support', formsSupportPath, { isActive: false })
         ])
       })
@@ -197,6 +212,9 @@ describe('Forms Library Models', () => {
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: false }),
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
+            isActive: false
+          }),
+          buildEntry('Form history', `${formPath}/history`, {
             isActive: false
           }),
           buildEntry('Support', formsSupportPath, { isActive: false })
@@ -219,6 +237,9 @@ describe('Forms Library Models', () => {
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
             isActive: false
           }),
+          buildEntry('Form history', `${formPath}/history`, {
+            isActive: false
+          }),
           buildEntry('Editor', `${formPath}/editor`, { isActive: false }),
           buildEntry('Support', formsSupportPath, { isActive: false })
         ])
@@ -237,6 +258,9 @@ describe('Forms Library Models', () => {
           buildEntry('Forms library', formsLibraryPath, { isActive: false }),
           buildEntry('Overview', formPath, { isActive: false }),
           buildEntry('Responses', `${formPath}/editor-v2/responses`, {
+            isActive: false
+          }),
+          buildEntry('Form history', `${formPath}/history`, {
             isActive: false
           }),
           buildEntry('Editor', `${formPath}/editor`, { isActive: false }),

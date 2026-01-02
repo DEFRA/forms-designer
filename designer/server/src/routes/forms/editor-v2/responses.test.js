@@ -67,8 +67,9 @@ describe('Editor v2 responses routes', () => {
         'service-header__nav-list-item--active'
       )
 
-      expect($links[7]).toHaveTextContent('Editor')
-      expect($links[8]).toHaveTextContent('Support')
+      expect($links[7]).toHaveTextContent('Form history')
+      expect($links[8]).toHaveTextContent('Editor')
+      expect($links[9]).toHaveTextContent('Support')
 
       const $error = container.queryByText(
         'the form overview to send data to a shared mailbox.',

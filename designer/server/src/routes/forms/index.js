@@ -30,6 +30,7 @@ import editorSections from '~/src/routes/forms/editor-v2/sections.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
 import editorUpload from '~/src/routes/forms/editor-v2/upload.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
+import history from '~/src/routes/forms/history.js'
 import library from '~/src/routes/forms/library.js'
 import notificationEmail from '~/src/routes/forms/notification-email.js'
 import privacyNotice from '~/src/routes/forms/privacy-notice.js'
@@ -63,6 +64,7 @@ export default [
   editorUpload,
   editorDownload,
   editorEditListResolve,
+  history,
   library,
   formLifecycle,
   contactPhone,
