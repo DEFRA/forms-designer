@@ -1,10 +1,28 @@
+import { isDate, parseISO } from 'date-fns'
+import { enGB } from 'date-fns/locale/en-GB'
+import { formatInTimeZone } from 'date-fns-tz'
+
+const UK_TIMEZONE = 'Europe/London'
+
 /**
  * Converts a date string or Date object to a Date object
  * @param {Date | string} date
  * @returns {Date}
  */
 export function toDate(date) {
-  return typeof date === 'string' ? new Date(date) : date
+  return isDate(date) ? date : parseISO(date)
+}
+
+/**
+ * Format a date in UK timezone (Europe/London) and locale (enGB)
+ * @param {Date} date
+ * @param {string} formatStr
+ * @returns {string}
+ */
+function format(date, formatStr) {
+  return formatInTimeZone(date, UK_TIMEZONE, formatStr, {
+    locale: enGB
+  })
 }
 
 /**
@@ -14,16 +32,7 @@ export function toDate(date) {
  */
 export function formatHistoryDate(date) {
   const dateObj = toDate(date)
-  const day = dateObj.getDate()
-  const month = dateObj.toLocaleString('en-GB', { month: 'long' })
-  const year = dateObj.getFullYear()
-  const time = dateObj.toLocaleString('en-GB', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  })
-
-  return `${day} ${month} ${year} at ${time}`
+  return format(dateObj, "d MMMM yyyy 'at' h:mmaaa")
 }
 
 /**
@@ -33,11 +42,7 @@ export function formatHistoryDate(date) {
  */
 export function formatTime(date) {
   const dateObj = toDate(date)
-  return dateObj.toLocaleString('en-GB', {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  })
+  return format(dateObj, 'h:mmaaa')
 }
 
 /**
@@ -47,24 +52,17 @@ export function formatTime(date) {
  */
 export function formatShortDate(date) {
   const dateObj = toDate(date)
-  const day = dateObj.getDate()
-  const month = dateObj.toLocaleString('en-GB', { month: 'long' })
-  return `${day} ${month}`
+  return format(dateObj, 'd MMMM')
 }
 
 /**
- * Checks if two dates are on the same day
+ * Checks if two dates are on the same day (in UK timezone)
  * @param {Date | string} date1
  * @param {Date | string} date2
  * @returns {boolean}
  */
 export function isSameDay(date1, date2) {
-  const d1 = toDate(date1)
-  const d2 = toDate(date2)
-
-  return (
-    d1.getUTCFullYear() === d2.getUTCFullYear() &&
-    d1.getUTCMonth() === d2.getUTCMonth() &&
-    d1.getUTCDate() === d2.getUTCDate()
-  )
+  const day1 = format(toDate(date1), 'yyyy-MM-dd')
+  const day2 = format(toDate(date2), 'yyyy-MM-dd')
+  return day1 === day2
 }
