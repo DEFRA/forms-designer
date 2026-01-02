@@ -1,4 +1,8 @@
-@use "govuk-frontend";
+@use "govuk-frontend" with (
+  $govuk-suppressed-warnings: (
+    "govuk-typography-scale-14"
+  )
+);
 @use "xgovuk-frontend";
 
 @use "components/breadcrumbs";
