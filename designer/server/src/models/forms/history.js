@@ -21,7 +21,7 @@ const FORM_HISTORY_TITLE = 'Form history'
 const eventFriendlyNames = {
   [AuditEventMessageType.FORM_CREATED]: 'Form created',
   [AuditEventMessageType.FORM_UPDATED]: 'Draft edited',
-  [AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT]: 'Form went live',
+  [AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT]: 'Form published',
   [AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE]:
     'Draft created from live form',
   [AuditEventMessageType.FORM_DRAFT_DELETED]: 'Draft form deleted',
@@ -49,7 +49,7 @@ const eventFriendlyNames = {
 }
 
 /**
- * Event types that represent "form went live"
+ * Event types that represent "form published"
  */
 const formWentLiveEventType = String(
   AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
@@ -279,7 +279,7 @@ export function historyViewModel(metadata, formDefinition, auditRecords) {
  * @property {string} [description] - Optional event description
  * @property {boolean} isConsolidated - Whether this is a consolidated item
  * @property {number} [count] - Number of consolidated events
- * @property {boolean} isFormWentLive - Whether this is a "form went live" event
+ * @property {boolean} isFormWentLive - Whether this is a "form published" event
  */
 
 /**

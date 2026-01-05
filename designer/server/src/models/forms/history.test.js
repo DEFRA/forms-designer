@@ -85,7 +85,7 @@ describe('history model', () => {
       const result = getEventFriendlyName(
         AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
       )
-      expect(result).toBe('Form went live')
+      expect(result).toBe('Form published')
     })
 
     it('returns correct friendly name for FORM_DRAFT_CREATED_FROM_LIVE', () => {
@@ -151,14 +151,14 @@ describe('history model', () => {
       expect(result.isFormWentLive).toBe(false)
     })
 
-    it('marks form went live events correctly', () => {
+    it('marks form published events correctly', () => {
       const record = createMockAuditRecord({
         type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
       })
 
       const result = buildTimelineItem(record)
 
-      expect(result.title).toBe('Form went live')
+      expect(result.title).toBe('Form published')
       expect(result.isFormWentLive).toBe(true)
     })
   })
@@ -390,7 +390,7 @@ describe('history model', () => {
       expect(result).toHaveLength(3)
       expect(result[0].title).toBe('Form created')
       expect(result[1].title).toBe('Form name updated')
-      expect(result[2].title).toBe('Form went live')
+      expect(result[2].title).toBe('Form published')
     })
 
     it('consolidates consecutive FORM_UPDATED events by same user', () => {
@@ -484,7 +484,7 @@ describe('history model', () => {
       expect(result).toHaveLength(3)
       expect(result[0].isConsolidated).toBe(true)
       expect(result[0].count).toBe(2)
-      expect(result[1].title).toBe('Form went live')
+      expect(result[1].title).toBe('Form published')
       expect(result[2].isConsolidated).toBe(false)
     })
 
@@ -578,7 +578,7 @@ describe('history model', () => {
 
       expect(result).toHaveLength(2)
       expect(result[0].title).toBe('Form created')
-      expect(result[1].title).toBe('Form went live')
+      expect(result[1].title).toBe('Form published')
     })
   })
 
