@@ -15,6 +15,7 @@ const client = getSNSClient()
  * @param {AuditMessage} message
  */
 export async function publishEvent(message) {
+  logger.info(`publishEvent snsTopicArn ${snsTopicArn}`)
   const command = new PublishCommand({
     TopicArn: snsTopicArn,
     Message: JSON.stringify(message)
