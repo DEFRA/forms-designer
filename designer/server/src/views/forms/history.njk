@@ -1,0 +1,18 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "timeline/macro.njk" import appTimeline %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-two-thirds",
+    backLink: backLink
+  }) %}
+    {{ appTimeline({ items: items }) }}
+  {% endcall %}
+{% endblock %}

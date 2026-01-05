@@ -1,0 +1,63 @@
+@use "../govuk-frontend" as *;
+
+.app-timeline {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  padding-left: govuk-spacing(4);
+
+  // Vertical line - blue
+  &::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: govuk-spacing(1);
+    bottom: govuk-spacing(1);
+    width: 4px;
+    background-color: govuk-colour("blue");
+  }
+}
+
+.app-timeline__item {
+  position: relative;
+  padding-bottom: govuk-spacing(4);
+
+  &:last-child {
+    padding-bottom: 0;
+  }
+
+  // Timeline marker - horizontal line
+  &::before {
+    content: "";
+    position: absolute;
+    left: -(govuk-spacing(4));
+    top: govuk-spacing(1);
+    width: 8px;
+    height: 4px;
+    background-color: govuk-colour("blue");
+  }
+}
+
+.app-timeline__title {
+  @include govuk-font($size: 16, $weight: regular);
+  margin: 0;
+}
+
+.app-timeline__title strong {
+  @include govuk-font($size: 16, $weight: bold);
+}
+
+.app-timeline__user {
+  @include govuk-font($size: 16, $weight: regular);
+  color: govuk-colour("dark-grey");
+}
+
+.app-timeline__date {
+  @include govuk-font($size: 14);
+  color: govuk-colour("dark-grey");
+}
+
+.app-timeline__description {
+  color: govuk-colour("dark-grey");
+}

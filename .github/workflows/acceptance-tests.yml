@@ -121,7 +121,7 @@ jobs:
           echo "" >> test-logs.txt
           echo "=== Forms-Designer Logs ===" >> test-logs.txt
           if [ -f designer.log ]; then
-            tail -200 designer.log >> test-logs.txt
+            cat designer.log >> test-logs.txt
           fi
 
           echo "" >> test-logs.txt

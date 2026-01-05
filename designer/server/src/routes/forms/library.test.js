@@ -1,12 +1,18 @@
-import { FormStatus, SchemaVersion } from '@defra/forms-model'
+import {
+  AuditEventMessageType,
+  FormStatus,
+  SchemaVersion
+} from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
 
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
+import * as audit from '~/src/lib/audit.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
+jest.mock('~/src/lib/audit.js')
 jest.mock('~/src/lib/forms.js')
 
 describe('Forms library routes', () => {
@@ -744,6 +750,14 @@ describe('Forms library routes', () => {
   })
 
   describe('Form overview', () => {
+    beforeEach(() => {
+      // Default mock for audit history - returns empty records
+      jest.mocked(audit.getFormHistory).mockResolvedValue({
+        auditRecords: [],
+        skip: 0
+      })
+    })
+
     describe('Draft buttons in side bar', () => {
       it('should show "Create draft to edit" when no draft exists', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce({
@@ -789,6 +803,82 @@ describe('Forms library routes', () => {
         expect($buttons).toHaveLength(2)
         expect($buttons?.[0]).toHaveTextContent('Edit draft')
         expect($buttons?.[1]).toHaveTextContent('Make draft live')
+      })
+    })
+
+    describe('History section', () => {
+      it('should display history section when audit records exist', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(formDefinitionV2)
+        jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
+          auditRecords: [
+            /** @type {import('@defra/forms-model').AuditRecord} */ ({
+              id: '1',
+              type: AuditEventMessageType.FORM_CREATED,
+              entityId: formMetadata.id,
+              createdAt: new Date(),
+              createdBy: author,
+              messageCreatedAt: new Date(),
+              recordCreatedAt: new Date(),
+              data: {
+                formId: formMetadata.id,
+                slug: formMetadata.slug,
+                title: formMetadata.title,
+                organisation: formMetadata.organisation,
+                teamName: formMetadata.teamName,
+                teamEmail: formMetadata.teamEmail
+              }
+            })
+          ],
+          skip: 0
+        })
+
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        // Find the timeline component
+        const $timeline = document.querySelector('.app-timeline')
+        expect($timeline).toBeInTheDocument()
+
+        // Find the history heading by looking for h3 containing 'History'
+        const $headings = document.querySelectorAll('h3')
+        const $historyHeading = Array.from($headings).find(
+          (h) => h.textContent?.trim() === 'History'
+        )
+        expect($historyHeading).toBeInTheDocument()
+      })
+
+      it('should handle audit API failure gracefully', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(formDefinitionV2)
+        jest
+          .mocked(audit.getFormHistory)
+          .mockRejectedValueOnce(new Error('API Error'))
+
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
+
+        // Should not throw - page should still render
+        const { container } = await renderResponse(server, options)
+
+        // Page should still render without error
+        const $heading = container.getByRole('heading', {
+          name: formMetadata.title,
+          level: 1
+        })
+        expect($heading).toBeInTheDocument()
       })
     })
   })
