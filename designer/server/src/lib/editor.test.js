@@ -412,8 +412,7 @@ describe('editor.js', () => {
       payload: {
         title: 'What is your name?',
         name: 'what-is-your-name',
-        type: ComponentType.TextField,
-        options: {}
+        type: ComponentType.TextField
       },
       headers: { Authorization: `Bearer ${token}` }
     }
@@ -470,8 +469,7 @@ describe('editor.js', () => {
 
         const expectedPut = {
           payload: {
-            type: ComponentType.FileUploadField,
-            options: {}
+            type: ComponentType.FileUploadField
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -511,8 +509,7 @@ describe('editor.js', () => {
 
         const expectedPut = {
           payload: {
-            type: ComponentType.FileUploadField,
-            options: {}
+            type: ComponentType.FileUploadField
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -635,7 +632,7 @@ describe('editor.js', () => {
         expect(mockedPatchJson).not.toHaveBeenCalled()
       })
 
-      test('preserves component options', async () => {
+      test('preserves customValidationMessage component options', async () => {
         mockedPutJson.mockResolvedValueOnce({
           response: createMockResponse(),
           body: { id: 'c1' }
@@ -922,8 +919,7 @@ describe('editor.js', () => {
         const expectedPut = {
           payload: {
             type: ComponentType.TextField,
-            title: 'My first question',
-            options: {}
+            title: 'My first question'
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -982,8 +978,7 @@ describe('editor.js', () => {
 
       const expectedPut = {
         payload: {
-          type: ComponentType.RadiosField,
-          options: {}
+          type: ComponentType.RadiosField
         },
         headers: { Authorization: `Bearer ${token}` }
       }
