@@ -11,7 +11,6 @@ import {
   isFormType,
   randomId
 } from '@defra/forms-model'
-import { applyToDefaults } from '@hapi/hoek'
 
 import config from '~/src/config.js'
 import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
@@ -202,10 +201,28 @@ export async function updateQuestion(
  * @param {ComponentDef | undefined} questionToChange - the current component
  */
 function applyOptions(questionDetails, questionToChange) {
-  questionDetails.options = applyToDefaults(
-    questionToChange?.options ?? {},
-    questionDetails.options ?? {}
-  )
+  if (
+    questionToChange?.options &&
+    'customValidationMessage' in questionToChange.options
+  ) {
+    questionDetails.options ??= {}
+
+    Object.assign(questionDetails.options, {
+      customValidationMessage: questionToChange.options.customValidationMessage
+    })
+  }
+
+  if (
+    questionToChange?.options &&
+    'customValidationMessages' in questionToChange.options
+  ) {
+    questionDetails.options ??= {}
+
+    Object.assign(questionDetails.options, {
+      customValidationMessages:
+        questionToChange.options.customValidationMessages
+    })
+  }
 }
 
 /**
