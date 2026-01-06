@@ -186,6 +186,7 @@ export async function updateQuestion(
   // break the upload 'any' file type functionality (which removes
   // the file type filter)
   if (questionDetails.type !== ComponentType.FileUploadField) {
+    // sonar.complexity - better to have this in here and in the applyOptions function.
     applyOptions(questionDetails, questionToChange)
   }
 
