@@ -470,8 +470,7 @@ describe('editor.js', () => {
 
         const expectedPut = {
           payload: {
-            type: ComponentType.FileUploadField,
-            options: {}
+            type: ComponentType.FileUploadField
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -511,8 +510,7 @@ describe('editor.js', () => {
 
         const expectedPut = {
           payload: {
-            type: ComponentType.FileUploadField,
-            options: {}
+            type: ComponentType.FileUploadField
           },
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -758,6 +756,81 @@ describe('editor.js', () => {
             headers: { Authorization: `Bearer ${token}` }
           }
         )
+      })
+
+      test('does NOT preserve component options for FileUploadField to avoid applyOptions regression', async () => {
+        mockedPutJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: { id: 'q1' }
+        })
+
+        // Create a form definition with a file upload component that has a fileTypeFilter
+        // When changing to 'any' file type, this filter should NOT be preserved
+        const fileUploadPage = testFormDefinitionWithFileUploadPage.pages[0]
+        const existingComponents =
+          /** @type {any} */ (fileUploadPage).components ?? []
+        const existingComponent = existingComponents[0]
+
+        const formDefinitionWithFileUploadOptions =
+          /** @type {FormDefinition} */ ({
+            ...testFormDefinitionWithFileUploadPage,
+            pages: [
+              {
+                ...fileUploadPage,
+                components: [
+                  {
+                    ...existingComponent,
+                    options: {
+                      fileTypeFilter: '.pdf,.doc,.docx' // This should NOT be preserved
+                    }
+                  }
+                ]
+              },
+              testFormDefinitionWithFileUploadPage.pages[1],
+              testFormDefinitionWithFileUploadPage.pages[2]
+            ]
+          })
+
+        // Update to 'any' file type - fileTypeFilter should be removed, not preserved
+        const updatedQuestionDetails = /** @type {Partial<ComponentDef>} */ ({
+          type: ComponentType.FileUploadField,
+          title: 'Updated file upload title',
+          options: {} // Empty options - setting to 'any' file type
+        })
+
+        await updateQuestion(
+          formId,
+          token,
+          formDefinitionWithFileUploadOptions,
+          'p1',
+          'q1',
+          updatedQuestionDetails
+        )
+
+        // Verify that the payload sent does NOT contain the old fileTypeFilter
+        // This ensures applyOptions was NOT called for FileUploadField
+        expect(mockedPutJson).toHaveBeenCalledWith(
+          new URL(
+            `./${formId}/definition/draft/pages/p1/components/q1`,
+            formsEndpoint
+          ),
+          {
+            payload: {
+              type: ComponentType.FileUploadField,
+              title: 'Updated file upload title',
+              options: {} // Should be empty, NOT merged with existing fileTypeFilter
+            },
+            headers: { Authorization: `Bearer ${token}` }
+          }
+        )
+
+        // Verify the old fileTypeFilter is NOT in the payload
+        const putJsonCallArgs = mockedPutJson.mock.calls[0]
+        expect(putJsonCallArgs).toBeDefined()
+
+        const callPayload = /** @type {any} */ (putJsonCallArgs[1]?.payload)
+        expect(callPayload?.options).toBeDefined()
+        expect(callPayload?.options).not.toHaveProperty('fileTypeFilter')
       })
 
       test('does not interfere when page is not a repeater', async () => {

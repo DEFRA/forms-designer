@@ -182,7 +182,12 @@ export async function updateQuestion(
     })
   }
 
-  applyOptions(questionDetails, questionToChange)
+  // Do not apply this to file upload questions because it will
+  // break the upload 'any' file type functionality (which removes
+  // the file type filter)
+  if (questionDetails.type !== ComponentType.FileUploadField) {
+    applyOptions(questionDetails, questionToChange)
+  }
 
   const { body } = await putJsonByPageType(
     buildRequestUrl(formId, `pages/${pageId}/components/${questionId}`),
