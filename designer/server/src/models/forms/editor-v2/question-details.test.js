@@ -4,7 +4,8 @@ import {
   buildFileUploadComponent,
   buildList,
   buildListItem,
-  buildQuestionPage
+  buildQuestionPage,
+  buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
 import { getSelectedFileTypesFromCSVMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
@@ -393,6 +394,52 @@ describe('editor-v2 - question details model', () => {
       )
       expect(details.question.type).toBe('FileUploadField')
     })
+
+    it('should handle unknon field', () => {
+      const metadata = /** @type {FormMetadata} */ ({
+        id: '67dd518b1f5c8b6e357e39cb',
+        slug: 'unknown',
+        title: 'unknown',
+        organisation: 'Defra',
+        teamName: 'Forms Team',
+        teamEmail: 'name@example.gov.uk'
+      })
+      const pageId = '54c46977-005f-4917-bcb5-9f502a4fb508'
+      const questionId = 'a592818a-cc2d-459f-a567-3af95e3f1d0e'
+
+      const definition = buildDefinition({
+        name: 'Unknown',
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            title: 'An unknown component',
+            components: [
+              buildTextFieldComponent({
+                name: 'ridhiw',
+                shortDescription: 'unknown',
+                hint: '',
+                options: { required: true },
+                schema: {},
+                id: questionId
+              })
+            ]
+          })
+        ],
+        engine: Engine.V2
+      })
+      const page = /** @type {PageQuestion} */ (definition.pages[0])
+      // @ts-expect-error - invalid question type
+      page.components[0].type = 'UnicornField'
+
+      const details = getDetails(
+        metadata,
+        definition,
+        pageId,
+        questionId,
+        undefined
+      )
+      expect(details.question.type).toBe('UnsupportedQuestion')
+    })
   })
 
   describe('overrideFormValuesForEnhancedAction', () => {
@@ -549,17 +596,8 @@ describe('editor-v2 - question details model', () => {
       // @ts-expect-error - dynamic question type not yet defined in types
       const result = getErrorTemplates('newType')
       expect(result).toBeDefined()
-      expect(result).toHaveProperty('baseErrors')
-      expect(result.advancedSettingsErrors).toEqual([
-        {
-          template: '{{#label}} must be {{#limit}} characters or more',
-          type: 'min'
-        },
-        {
-          template: '{{#label}} must be {{#limit}} characters or less',
-          type: 'max'
-        }
-      ])
+      expect(result.advancedSettingsErrors).toEqual([])
+      expect(result.baseErrors).toEqual([])
     })
   })
 
@@ -760,6 +798,6 @@ describe('editor-v2 - question details model', () => {
 })
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormEditor, GovukField, InputFieldsComponentsDef, List } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormEditor, FormMetadata, GovukField, InputFieldsComponentsDef, List, PageQuestion } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

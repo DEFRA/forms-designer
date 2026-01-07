@@ -199,3 +199,8 @@
   outline: 3px solid govuk-colour("yellow");
   outline-offset: 0;
 }
+
+.govuk-highlight-warning {
+  background-color: govuk-colour("light-pink");
+  padding-left: 10px;
+}

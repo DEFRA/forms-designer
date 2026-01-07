@@ -116,7 +116,7 @@ To add a new question type, you will need to add the new type to a series of fil
 model/src/components/enums.ts:
 
 ```
-  UnicornField = ‘UnicornField’
+  UnicornField = 'UnicornField'
 ```
 
 model/src/components/types.ts:
@@ -124,12 +124,12 @@ model/src/components/types.ts:
 ```
   export interface UnicornFieldComponent extends FormFieldBase {
     type: ComponentType.UnicornField
-      options: FormFieldBase['options'] & {
-        condition?: string
-      }
+    options: FormFieldBase['options'] & {
+      condition?: string
     }
+  }
 
-    . . .
+  . . .
 
   export type InputFieldsComponentsDef =
     | TextFieldComponent
@@ -183,6 +183,18 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: ComponentType.UnicornField
   },
 . . .
+```
+
+designer/server/src/common/constants/editor.js:
+
+```
+export const QuestionTypeDescriptions =
+  /** @type {{type: ComponentType, description: string }[]} */ ([
+  . . .
+  {
+    type: ComponentType.UnicornField,
+    description: 'Unicorn'
+  }
 ```
 
 Further work would be required to define advanced field settings (if appropriate), and potentially to validate/handle the payload being saved from the 'question details' screen.

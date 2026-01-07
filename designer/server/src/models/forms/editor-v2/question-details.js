@@ -5,6 +5,7 @@ import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -41,6 +42,8 @@ const zeroIsValidForFields = [
   'min',
   'max'
 ]
+
+const logger = createLogger()
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
@@ -99,33 +102,26 @@ export function buildComponentDef(questionType) {
  * }}
  */
 export function getErrorTemplates(questionType) {
-  if (questionType === ComponentType.YesNoField) {
-    return YesNoField.getAllPossibleErrors()
-  }
-
   let component
-  try {
-    component = createComponent(buildComponentDef(questionType), {})
-  } catch (err) {
-    // @ts-expect-error - generic error object
-    if (err?.message === `Component type ${questionType} does not exist`) {
-      // Default to a TextFIeld if not yet configure for 'preview'
-      component = createComponent(
-        buildComponentDef(ComponentType.TextField),
-        {}
-      )
-    } else {
-      throw err
+  if (questionType === ComponentType.YesNoField) {
+    component = YesNoField
+  } else {
+    try {
+      component = createComponent(buildComponentDef(questionType), {})
+    } catch {
+      logger.warn(`Invalid component type of '${questionType}' detected`)
     }
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
-    'getAllPossibleErrors' in component
+    component && 'getAllPossibleErrors' in component
       ? component.getAllPossibleErrors()
       : { baseErrors: [], advancedSettingsErrors: [] }
 
-  return errorTemplates
+  return {
+    ...errorTemplates
+  }
 }
 
 /**
@@ -170,6 +166,13 @@ export function getDetails(
   )
 
   questionOverride.type = questionType ?? questionOverride.type
+
+  const allComponentTypes = Object.values(ComponentType)
+
+  if (!allComponentTypes.includes(questionOverride.type)) {
+    // @ts-expect-error - invalid component type
+    questionOverride.type = 'UnsupportedQuestion'
+  }
 
   return {
     pageTitle: metadata.title,
