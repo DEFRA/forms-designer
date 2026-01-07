@@ -104,6 +104,30 @@ describe('Form history route', () => {
     })
   }
 
+  /**
+   * Creates a mock audit response with pagination
+   * @param {AuditRecord[]} records
+   * @param {object} [paginationOverrides]
+   */
+  function createMockAuditResponse(records, paginationOverrides = {}) {
+    return {
+      auditRecords: records,
+      meta: {
+        pagination: {
+          page: 1,
+          perPage: 25,
+          totalItems: records.length,
+          totalPages: 1,
+          ...paginationOverrides
+        },
+        sorting: {
+          sortBy: 'createdAt',
+          order: 'desc'
+        }
+      }
+    }
+  }
+
   describe('GET /library/{slug}/history', () => {
     it('should render the history page with audit records', async () => {
       const auditRecords = [
@@ -128,10 +152,9 @@ describe('Form history route', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(formDefinition)
-      jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
-        auditRecords,
-        skip: 0
-      })
+      jest
+        .mocked(audit.getFormHistory)
+        .mockResolvedValueOnce(createMockAuditResponse(auditRecords))
 
       const options = {
         method: 'GET',
@@ -162,10 +185,11 @@ describe('Form history route', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(formDefinition)
-      jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
-        auditRecords: [createMockAuditRecord()],
-        skip: 0
-      })
+      jest
+        .mocked(audit.getFormHistory)
+        .mockResolvedValueOnce(
+          createMockAuditResponse([createMockAuditRecord()])
+        )
 
       const options = {
         method: 'GET',
@@ -185,10 +209,9 @@ describe('Form history route', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(formDefinition)
-      jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
-        auditRecords: [],
-        skip: 0
-      })
+      jest
+        .mocked(audit.getFormHistory)
+        .mockResolvedValueOnce(createMockAuditResponse([]))
 
       const options = {
         method: 'GET',
@@ -230,10 +253,9 @@ describe('Form history route', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(formDefinition)
-      jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
-        auditRecords,
-        skip: 0
-      })
+      jest
+        .mocked(audit.getFormHistory)
+        .mockResolvedValueOnce(createMockAuditResponse(auditRecords))
 
       const options = {
         method: 'GET',
@@ -252,10 +274,11 @@ describe('Form history route', () => {
       const formWithoutDraft = { ...formMetadata, draft: undefined }
 
       jest.mocked(forms.get).mockResolvedValueOnce(formWithoutDraft)
-      jest.mocked(audit.getFormHistory).mockResolvedValueOnce({
-        auditRecords: [createMockAuditRecord()],
-        skip: 0
-      })
+      jest
+        .mocked(audit.getFormHistory)
+        .mockResolvedValueOnce(
+          createMockAuditResponse([createMockAuditRecord()])
+        )
 
       const options = {
         method: 'GET',
@@ -272,6 +295,133 @@ describe('Form history route', () => {
       })
       expect($heading).toBeInTheDocument()
       expect(forms.getDraftFormDefinition).not.toHaveBeenCalled()
+    })
+
+    it('should pass pagination parameters to audit service', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+      jest.mocked(audit.getFormHistory).mockResolvedValueOnce(
+        createMockAuditResponse([createMockAuditRecord()], {
+          page: 2,
+          perPage: 10,
+          totalItems: 50,
+          totalPages: 5
+        })
+      )
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/history?page=2&perPage=10',
+        auth
+      }
+
+      await renderResponse(server, options)
+
+      expect(audit.getFormHistory).toHaveBeenCalledWith(
+        formMetadata.id,
+        expect.any(String),
+        { page: 2, perPage: 10 }
+      )
+    })
+
+    it('should render pagination when multiple pages exist', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+      jest.mocked(audit.getFormHistory).mockResolvedValueOnce(
+        createMockAuditResponse([createMockAuditRecord()], {
+          page: 1,
+          perPage: 25,
+          totalItems: 100,
+          totalPages: 4
+        })
+      )
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/history',
+        auth
+      }
+
+      const { document } = await renderResponse(server, options)
+
+      const $pagination = document.querySelector('.govuk-pagination')
+      expect($pagination).toBeInTheDocument()
+    })
+
+    it('should not render pagination when only one page exists', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+      jest.mocked(audit.getFormHistory).mockResolvedValueOnce(
+        createMockAuditResponse([createMockAuditRecord()], {
+          page: 1,
+          perPage: 25,
+          totalItems: 5,
+          totalPages: 1
+        })
+      )
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/history',
+        auth
+      }
+
+      const { document } = await renderResponse(server, options)
+
+      const $pagination = document.querySelector('.govuk-pagination')
+      expect($pagination).not.toBeInTheDocument()
+    })
+
+    it('should redirect to first page when page exceeds total pages', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+      jest.mocked(audit.getFormHistory).mockResolvedValueOnce(
+        createMockAuditResponse([createMockAuditRecord()], {
+          page: 10,
+          perPage: 25,
+          totalItems: 50,
+          totalPages: 2
+        })
+      )
+
+      const response = await server.inject({
+        method: 'GET',
+        url: '/library/my-form-slug/history?page=10&perPage=25',
+        auth
+      })
+
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe(
+        '/library/my-form-slug/history?page=1&perPage=25'
+      )
+    })
+
+    it('should return 400 for invalid pagination parameters', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/library/my-form-slug/history?page=abc',
+        auth
+      })
+
+      expect(response.statusCode).toBe(400)
+    })
+
+    it('should return 400 for negative page number', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/library/my-form-slug/history?page=-1',
+        auth
+      })
+
+      expect(response.statusCode).toBe(400)
     })
   })
 })

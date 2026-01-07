@@ -58,6 +58,30 @@ function createMockAuditRecord(overrides = {}) {
   }
 }
 
+/**
+ * Creates mock API response with pagination meta
+ * @param {object[]} records
+ * @param {object} [paginationOverrides]
+ */
+function createMockApiResponse(records, paginationOverrides = {}) {
+  return {
+    auditRecords: records,
+    meta: {
+      pagination: {
+        page: 1,
+        perPage: 25,
+        totalItems: records.length,
+        totalPages: 1,
+        ...paginationOverrides
+      },
+      sorting: {
+        sortBy: 'createdAt',
+        order: 'desc'
+      }
+    }
+  }
+}
+
 describe('audit.js', () => {
   afterEach(() => {
     jest.clearAllMocks()
@@ -67,13 +91,12 @@ describe('audit.js', () => {
     const formId = '694c11d3c664844dfdaf7719'
     const token = 'someToken'
     const auditEndpoint = new URL('/audit/forms/', config.auditUrl)
-    const requestUrl = new URL(`./${formId}`, auditEndpoint)
     const expectedOptions = {
       headers: { Authorization: `Bearer ${token}` }
     }
 
     describe('when getJson succeeds', () => {
-      it('returns audit records and skip value', async () => {
+      it('returns audit records with pagination meta', async () => {
         const mockRecords = [
           createMockAuditRecord(),
           createMockAuditRecord({
@@ -81,39 +104,73 @@ describe('audit.js', () => {
             type: AuditEventMessageType.FORM_UPDATED
           })
         ]
+        const mockResponse = createMockApiResponse(mockRecords)
 
         mockedGetJson.mockResolvedValueOnce({
           response: createMockResponse(),
-          body: {
-            auditRecords: mockRecords,
-            skip: 0
-          }
+          body: mockResponse
         })
 
+        const requestUrl = new URL(`./${formId}`, auditEndpoint)
         const result = await getFormHistory(formId, token)
 
         expect(mockedGetJson).toHaveBeenCalledWith(requestUrl, expectedOptions)
-        expect(result).toEqual({
-          auditRecords: mockRecords,
-          skip: 0
-        })
+        expect(result).toEqual(mockResponse)
       })
 
       it('handles empty audit records array', async () => {
+        const mockResponse = createMockApiResponse([], { totalItems: 0 })
+
         mockedGetJson.mockResolvedValueOnce({
           response: createMockResponse(),
-          body: {
-            auditRecords: [],
-            skip: 0
-          }
+          body: mockResponse
         })
 
         const result = await getFormHistory(formId, token)
 
-        expect(result).toEqual({
-          auditRecords: [],
-          skip: 0
+        expect(result.auditRecords).toEqual([])
+        expect(result.meta.pagination.totalItems).toBe(0)
+      })
+
+      it('passes pagination options as query parameters', async () => {
+        const mockResponse = createMockApiResponse([createMockAuditRecord()], {
+          page: 2,
+          perPage: 10,
+          totalItems: 50,
+          totalPages: 5
         })
+
+        mockedGetJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: mockResponse
+        })
+
+        const result = await getFormHistory(formId, token, {
+          page: 2,
+          perPage: 10
+        })
+
+        const expectedUrl = new URL(`./${formId}`, auditEndpoint)
+        expectedUrl.searchParams.append('page', '2')
+        expectedUrl.searchParams.append('perPage', '10')
+
+        expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl, expectedOptions)
+        expect(result.meta.pagination.page).toBe(2)
+        expect(result.meta.pagination.perPage).toBe(10)
+      })
+
+      it('omits pagination params when not provided', async () => {
+        const mockResponse = createMockApiResponse([createMockAuditRecord()])
+
+        mockedGetJson.mockResolvedValueOnce({
+          response: createMockResponse(),
+          body: mockResponse
+        })
+
+        await getFormHistory(formId, token)
+
+        const expectedUrl = new URL(`./${formId}`, auditEndpoint)
+        expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl, expectedOptions)
       })
     })
 

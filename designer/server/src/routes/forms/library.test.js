@@ -754,7 +754,18 @@ describe('Forms library routes', () => {
       // Default mock for audit history - returns empty records
       jest.mocked(audit.getFormHistory).mockResolvedValue({
         auditRecords: [],
-        skip: 0
+        meta: {
+          pagination: {
+            page: 1,
+            perPage: 25,
+            totalItems: 0,
+            totalPages: 0
+          },
+          sorting: {
+            sortBy: 'createdAt',
+            order: 'desc'
+          }
+        }
       })
     })
 
@@ -832,7 +843,18 @@ describe('Forms library routes', () => {
               }
             })
           ],
-          skip: 0
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 25,
+              totalItems: 1,
+              totalPages: 1
+            },
+            sorting: {
+              sortBy: 'createdAt',
+              order: 'desc'
+            }
+          }
         })
 
         const options = {

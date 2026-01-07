@@ -69,6 +69,31 @@ function createMockFormMetadata() {
   })
 }
 
+/**
+ * Creates a mock audit response with pagination
+ * @param {AuditRecord[]} records
+ * @param {object} [paginationOverrides]
+ * @returns {AuditResponse}
+ */
+function createMockAuditResponse(records, paginationOverrides = {}) {
+  return /** @type {AuditResponse} */ ({
+    auditRecords: records,
+    meta: {
+      pagination: {
+        page: 1,
+        perPage: 25,
+        totalItems: records.length,
+        totalPages: 1,
+        ...paginationOverrides
+      },
+      sorting: {
+        sortBy: 'createdAt',
+        order: 'desc'
+      }
+    }
+  })
+}
+
 describe('history model', () => {
   describe('getEventFriendlyName', () => {
     it('returns correct friendly name for FORM_CREATED', () => {
@@ -636,8 +661,9 @@ describe('history model', () => {
           type: AuditEventMessageType.FORM_CREATED
         })
       ]
+      const auditResponse = createMockAuditResponse(records)
 
-      const result = historyViewModel(metadata, undefined, records)
+      const result = historyViewModel(metadata, undefined, auditResponse)
 
       expect(result.pageTitle).toBe('Form history')
       expect(result.pageHeading.text).toBe('Form history')
@@ -650,8 +676,9 @@ describe('history model', () => {
 
     it('includes navigation with Form history as active', () => {
       const metadata = createMockFormMetadata()
+      const auditResponse = createMockAuditResponse([])
 
-      const result = historyViewModel(metadata, undefined, [])
+      const result = historyViewModel(metadata, undefined, auditResponse)
 
       const historyNav = result.navigation.find(
         (nav) => nav.text === 'Form history'
@@ -662,8 +689,9 @@ describe('history model', () => {
 
     it('includes Responses in navigation', () => {
       const metadata = createMockFormMetadata()
+      const auditResponse = createMockAuditResponse([])
 
-      const result = historyViewModel(metadata, undefined, [])
+      const result = historyViewModel(metadata, undefined, auditResponse)
 
       const responsesNav = result.navigation.find(
         (nav) => nav.text === 'Responses'
@@ -674,14 +702,68 @@ describe('history model', () => {
 
     it('handles empty records', () => {
       const metadata = createMockFormMetadata()
-      const result = historyViewModel(metadata, undefined, [])
+      const auditResponse = createMockAuditResponse([])
+
+      const result = historyViewModel(metadata, undefined, auditResponse)
 
       expect(result.items).toHaveLength(0)
       expect(result.hasItems).toBe(false)
+    })
+
+    it('includes pagination data from audit response', () => {
+      const metadata = createMockFormMetadata()
+      const records = [createMockAuditRecord()]
+      const auditResponse = createMockAuditResponse(records, {
+        page: 2,
+        perPage: 10,
+        totalItems: 50,
+        totalPages: 5
+      })
+
+      const result = historyViewModel(metadata, undefined, auditResponse)
+
+      expect(result.pagination).toBeDefined()
+      expect(result.pagination?.page).toBe(2)
+      expect(result.pagination?.perPage).toBe(10)
+      expect(result.pagination?.totalItems).toBe(50)
+      expect(result.pagination?.totalPages).toBe(5)
+    })
+
+    it('builds pagination pages array', () => {
+      const metadata = createMockFormMetadata()
+      const records = [createMockAuditRecord()]
+      const auditResponse = createMockAuditResponse(records, {
+        page: 1,
+        perPage: 25,
+        totalItems: 100,
+        totalPages: 4
+      })
+
+      const result = historyViewModel(metadata, undefined, auditResponse)
+
+      expect(result.pagination?.pages).toBeDefined()
+      expect(result.pagination?.pages.length).toBeGreaterThan(0)
+    })
+
+    it('marks current page in pagination pages', () => {
+      const metadata = createMockFormMetadata()
+      const records = [createMockAuditRecord()]
+      const auditResponse = createMockAuditResponse(records, {
+        page: 2,
+        perPage: 25,
+        totalItems: 100,
+        totalPages: 4
+      })
+
+      const result = historyViewModel(metadata, undefined, auditResponse)
+
+      const currentPage = result.pagination?.pages.find((p) => p.number === '2')
+      expect(currentPage?.current).toBe(true)
     })
   })
 })
 
 /**
  * @import { AuditRecord, FormMetadata } from '@defra/forms-model'
+ * @import { AuditResponse } from '~/src/lib/audit.js'
  */
