@@ -1,20 +1,28 @@
-import { Scopes } from '@defra/forms-model'
+import { Scopes, paginationOptionFields } from '@defra/forms-model'
+import Boom from '@hapi/boom'
+import Joi from 'joi'
 
+import config from '~/src/config.js'
 import * as audit from '~/src/lib/audit.js'
 import * as forms from '~/src/lib/forms.js'
 import { historyViewModel } from '~/src/models/forms/history.js'
+import { formOverviewPath } from '~/src/models/links.js'
 
 export default [
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
+   * @satisfies {ServerRoute}
    */
   ({
     method: 'GET',
     path: '/library/{slug}/history',
     options: {
+      /**
+       * @param {RequestFormHistory} request
+       */
       async handler(request, h) {
-        const { auth, params } = request
+        const { auth, params, query } = request
         const { token } = auth.credentials
+        const { page, perPage } = query
 
         // Retrieve form by slug
         const form = await forms.get(params.slug, token)
@@ -25,14 +33,24 @@ export default [
           definition = await forms.getDraftFormDefinition(form.id, token)
         }
 
-        // Fetch form history
-        const auditResponse = await audit.getFormHistory(form.id, token)
+        // Fetch form history with pagination
+        const auditResponse = await audit.getFormHistory(form.id, token, {
+          page,
+          perPage
+        })
 
-        const model = historyViewModel(
-          form,
-          definition,
-          auditResponse.auditRecords
-        )
+        // Handle page overflow - redirect to first page before building view model
+        const { totalPages } = auditResponse.meta.pagination
+        if (totalPages > 0 && page > totalPages) {
+          const formPath = formOverviewPath(form.slug)
+          const redirectUrl = new URL(`${formPath}/history`, config.appBaseUrl)
+          redirectUrl.searchParams.set('page', '1')
+          redirectUrl.searchParams.set('perPage', String(perPage))
+
+          return h.redirect(redirectUrl.pathname + redirectUrl.search)
+        }
+
+        const model = historyViewModel(form, definition, auditResponse)
 
         return h.view('forms/history', model)
       },
@@ -42,11 +60,29 @@ export default [
           entity: 'user',
           scope: [`+${Scopes.FormRead}`]
         }
+      },
+      validate: {
+        query: Joi.object({
+          ...paginationOptionFields
+        }),
+        failAction: (request, _h, error) => {
+          request.log('error', {
+            message: error?.message,
+            stack: error?.stack
+          })
+
+          throw Boom.badRequest()
+        }
       }
     }
   })
 ]
 
 /**
- * @import { ServerRoute } from '@hapi/hapi'
+ * @typedef {Request<{ Params: { slug: string }; Query: PaginationOptions }>} RequestFormHistory
+ */
+
+/**
+ * @import { PaginationOptions } from '@defra/forms-model'
+ * @import { Request, ServerRoute } from '@hapi/hapi'
  */

@@ -1,91 +1,13 @@
 import { AuditEventMessageType } from '@defra/forms-model'
 
-/**
- * Safely gets a nested property value from changes data
- * @param {MessageData} data - The data object
- * @param {string} path - The nested path (e.g., 'changes.previous.title')
- * @returns {string | undefined}
- */
-export function safeGet(data, path) {
-  const parts = path.split('.')
-  /** @type {unknown} */
-  let current = data
-  for (const part of parts) {
-    if (
-      current === null ||
-      current === undefined ||
-      typeof current !== 'object'
-    ) {
-      return undefined
-    }
-    current = /** @type {Record<string, unknown>} */ (current)[part]
-  }
-  return typeof current === 'string' ? current : undefined
-}
-
-/**
- * Field configurations for events that use buildUpdatedDescription
- * @type {Record<string, { label: string, prevPath: string, newPath: string }>}
- */
-const updatedFieldConfigs = {
-  [AuditEventMessageType.FORM_TITLE_UPDATED]: {
-    label: 'the form name',
-    prevPath: 'changes.previous.title',
-    newPath: 'changes.new.title'
-  },
-  [AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED]: {
-    label: 'the shared team address',
-    prevPath: 'changes.previous.teamEmail',
-    newPath: 'changes.new.teamEmail'
-  },
-  [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]: {
-    label: 'where submitted forms are sent',
-    prevPath: 'changes.previous.notificationEmail',
-    newPath: 'changes.new.notificationEmail'
-  },
-  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: {
-    label: 'the privacy notice link',
-    prevPath: 'changes.previous.privacyNoticeUrl',
-    newPath: 'changes.new.privacyNoticeUrl'
-  },
-  [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: {
-    label: 'the next steps guidance',
-    prevPath: 'changes.previous.submissionGuidance',
-    newPath: 'changes.new.submissionGuidance'
-  },
-  [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: {
-    label: 'the support phone number',
-    prevPath: 'changes.previous.phone',
-    newPath: 'changes.new.phone'
-  },
-  [AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED]: {
-    label: 'the support email address',
-    prevPath: 'changes.previous.address',
-    newPath: 'changes.new.address'
-  },
-  [AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED]: {
-    label: 'the support contact link',
-    prevPath: 'changes.previous.url',
-    newPath: 'changes.new.url'
-  }
-}
-
-/**
- * Field configurations for events that use buildChangedDescription
- * @type {Record<string, { label: string, prevPath: string, newPath: string }>}
- */
-const changedFieldConfigs = {
-  [AuditEventMessageType.FORM_ORGANISATION_UPDATED]: {
-    label: 'the lead organisation',
-    prevPath: 'changes.previous.organisation',
-    newPath: 'changes.new.organisation'
-  },
-  [AuditEventMessageType.FORM_TEAM_NAME_UPDATED]: {
-    label: 'the team name',
-    prevPath: 'changes.previous.teamName',
-    newPath: 'changes.new.teamName'
-  }
-}
+import {
+  fieldConfigs,
+  supportContactFields
+} from '~/src/models/forms/history-field-config.js'
+import {
+  buildFieldChangeDescription,
+  safeGet
+} from '~/src/models/forms/history-utils.js'
 
 /**
  * Static descriptions for events that don't need data
@@ -101,70 +23,6 @@ const staticDescriptions = {
     'Downloaded form submissions.',
   [AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED]: 'Downloaded user feedback.'
 }
-
-/**
- * Builds an "Updated" description string (for most field changes)
- * Returns undefined if old and new values are identical (no actual change)
- * @param {string} fieldName
- * @param {string | undefined} oldValue
- * @param {string | undefined} newValue
- * @returns {string | undefined}
- */
-function buildUpdatedDescription(fieldName, oldValue, newValue) {
-  if (oldValue && newValue && oldValue === newValue) {
-    return undefined
-  }
-  if (oldValue && newValue) {
-    return `Updated ${fieldName} from '${oldValue}' to '${newValue}'.`
-  }
-  if (newValue) {
-    return `Set ${fieldName} to '${newValue}'.`
-  }
-  return undefined
-}
-
-/**
- * Builds a "Changed" description string (for organisation/team name)
- * Returns undefined if old and new values are identical (no actual change)
- * @param {string} fieldName
- * @param {string | undefined} oldValue
- * @param {string | undefined} newValue
- * @returns {string | undefined}
- */
-function buildChangedDescription(fieldName, oldValue, newValue) {
-  if (oldValue && newValue && oldValue === newValue) {
-    return undefined
-  }
-  if (oldValue && newValue) {
-    return `Changed ${fieldName} from '${oldValue}' to '${newValue}'.`
-  }
-  if (newValue) {
-    return `Set ${fieldName} to '${newValue}'.`
-  }
-  return undefined
-}
-
-/**
- * Support contact field configurations for change detection
- * @type {Array<{ label: string, prevPath: string, newPath: string }>}
- */
-export const supportContactFields = [
-  {
-    label: 'phone number',
-    prevPath: 'changes.previous.contact.phone',
-    newPath: 'changes.new.contact.phone'
-  },
-  {
-    label: 'email address',
-    prevPath: 'changes.previous.contact.email.address',
-    newPath: 'changes.new.contact.email.address'
-  },
-  {
-    label: 'online contact link',
-    prevPath: 'changes.previous.contact.online.url',
-    newPath: 'changes.new.contact.online.url'
-  }
-]
 
 /**
  * Builds a change string for a contact field
@@ -189,6 +47,7 @@ function buildContactChangeString(fieldLabel, prevValue, newValue) {
  * @returns {string | undefined}
  */
 function buildSupportContactDescription(data) {
+  /** @type {string[]} */
   const changes = supportContactFields
     .map((field) =>
       buildContactChangeString(
@@ -197,7 +56,7 @@ function buildSupportContactDescription(data) {
         safeGet(data, field.newPath)
       )
     )
-    .filter(Boolean)
+    .filter((v) => v !== undefined)
 
   if (changes.length === 0) {
     return undefined
@@ -207,8 +66,10 @@ function buildSupportContactDescription(data) {
     return `Updated the support ${changes[0]}.`
   }
 
-  const lastChange = changes.pop()
-  return `Updated the support ${changes.join(', ')} and ${lastChange}.`
+  // Use non-mutating approach to get last item and rest
+  const lastChange = changes.at(-1)
+  const otherChanges = changes.slice(0, -1)
+  return `Updated the support ${otherChanges.join(', ')} and ${lastChange}.`
 }
 
 /**
@@ -302,18 +163,10 @@ export function getEventDescription(record) {
     return staticDescriptions[type]
   }
 
-  if (type in updatedFieldConfigs) {
-    const config = updatedFieldConfigs[type]
-    return buildUpdatedDescription(
-      config.label,
-      data ? safeGet(data, config.prevPath) : undefined,
-      data ? safeGet(data, config.newPath) : undefined
-    )
-  }
-
-  if (type in changedFieldConfigs) {
-    const config = changedFieldConfigs[type]
-    return buildChangedDescription(
+  if (type in fieldConfigs) {
+    const config = fieldConfigs[type]
+    return buildFieldChangeDescription(
+      config.verb,
       config.label,
       data ? safeGet(data, config.prevPath) : undefined,
       data ? safeGet(data, config.newPath) : undefined

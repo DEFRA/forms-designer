@@ -1,6 +1,7 @@
 {% extends "layouts/page.njk" %}
 
 {% from "page-body/macro.njk" import appPageBody %}
+{% from "pagination/macro.njk" import appPagination %}
 {% from "timeline/macro.njk" import appTimeline %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
@@ -14,5 +15,15 @@
     backLink: backLink
   }) %}
     {{ appTimeline({ items: items }) }}
+
+    {% if pagination and pagination.totalPages > 1 %}
+      <hr class="govuk-section-break govuk-section-break--l govuk-section-break--visible govuk-!-margin-top-6">
+    {% endif %}
+
+    {{ appPagination({
+      baseUrl: "/library/" + form.slug + "/history",
+      pagination: pagination,
+      search: {}
+    }) }}
   {% endcall %}
 {% endblock %}

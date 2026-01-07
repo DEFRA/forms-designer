@@ -1,4 +1,4 @@
-import { SchemaVersion } from '@defra/forms-model'
+import { SchemaVersion, buildPaginationPages } from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -12,12 +12,13 @@ import {
 } from '~/src/models/links.js'
 
 /**
- * @typedef {object} PaginationPage
- * @property {string} [number] - The page number (if it's a page).
- * @property {string} [href] - The URL for the page.
- * @property {boolean} [current] - Whether this page is the current page.
- * @property {boolean} [ellipsis] - Whether this entry is an ellipsis.
+ * Maps API sort field names to URL query parameter values
+ * @type {Record<string, string>}
  */
+const SORT_FIELD_MAP = {
+  updatedAt: 'updated',
+  title: 'title'
+}
 
 /**
  * @typedef {object} ListViewModel
@@ -26,7 +27,7 @@ import {
  * @property {{ text: string }} [pageDescription] - The page description.
  * @property {{ text: string, href: string, classes?: string }[]} [pageActions] - The page actions.
  * @property {FormMetadata[]} formItems - The form items.
- * @property {(PaginationResult & { pages: Array<PaginationPage> }) | undefined} pagination - The pagination details, including pages for the pagination component.
+ * @property {PaginationResultWithPages | undefined} pagination - The pagination details, including pages for the pagination component.
  * @property {string} [notification] - The notification to display
  * @property {SortingOptions | undefined} sorting - The sorting options.
  * @property {SearchOptions | undefined} search - The search options.
@@ -55,9 +56,13 @@ export async function listViewModel(token, listOptions, notification) {
     const pages = buildPaginationPages(
       paginationMeta.page,
       paginationMeta.totalPages,
-      paginationMeta.perPage,
-      sortingMeta,
-      searchMeta
+      (pageNumber) =>
+        createLibraryPageHref(
+          pageNumber,
+          paginationMeta.perPage,
+          sortingMeta,
+          searchMeta
+        )
     )
     pagination = {
       ...paginationMeta,
@@ -92,107 +97,46 @@ export async function listViewModel(token, listOptions, notification) {
 }
 
 /**
- * Builds the pages array for the pagination component following the GOV.UK Design System pattern
- * @see {@link https://design-system.service.gov.uk/components/pagination/}
- * @param {number} currentPage
- * @param {number} totalPages
- * @param {number} perPage
- * @param {SortingOptions} [sorting]
- * @param {SearchOptions} [search]
- * @returns {Array<PaginationPage>}
+ * Creates a href for a library pagination page
+ * @param {number} pageNumber - The page number
+ * @param {number} perPage - Items per page
+ * @param {SortingOptions} [sorting] - Sorting options
+ * @param {SearchOptions} [search] - Search options
+ * @returns {string} The href for the page
  */
-function buildPaginationPages(
-  currentPage,
-  totalPages,
-  perPage,
-  sorting,
-  search
-) {
-  const pages = []
+function createLibraryPageHref(pageNumber, perPage, sorting, search) {
+  const queryParams = new URLSearchParams({
+    page: pageNumber.toString(),
+    perPage: perPage.toString()
+  })
 
-  /**
-   * Creates a pagination page item.
-   * @param {number} pageNumber - The page number.
-   * @param {boolean} [isCurrent] - Whether this page is the current page.
-   * @returns {PaginationPage} The pagination page item.
-   */
-  function createPageItem(pageNumber, isCurrent = false) {
-    const queryParams = new URLSearchParams({
-      page: pageNumber.toString(),
-      perPage: perPage.toString()
-    })
+  if (sorting?.sortBy && sorting.order) {
+    const sortValue = SORT_FIELD_MAP[sorting.sortBy] ?? sorting.sortBy
 
-    if (sorting?.sortBy && sorting.order) {
-      const sortValue = sorting.sortBy === 'updatedAt' ? 'updated' : 'title'
-      // Converts sort order to proper case (e.g., "asc" -> "Asc", "desc" -> "Desc")
-      queryParams.set(
-        'sort',
-        `${sortValue}${sorting.order.charAt(0).toUpperCase()}${sorting.order.slice(1)}`
-      )
-    }
-
-    if (search?.title) {
-      queryParams.set('title', search.title)
-    }
-
-    if (search?.author !== undefined) {
-      queryParams.set('author', search.author === '' ? 'all' : search.author)
-    }
-
-    if (search?.organisations?.length) {
-      search.organisations.forEach((org) =>
-        queryParams.append('organisations', org)
-      )
-    }
-
-    if (search?.status?.length) {
-      search.status.forEach((status) => queryParams.append('status', status))
-    }
-
-    return {
-      number: String(pageNumber),
-      href: `${formsLibraryPath}?${queryParams}`,
-      current: isCurrent
-    }
+    const sortOrder =
+      sorting.order.charAt(0).toUpperCase() + sorting.order.slice(1)
+    queryParams.set('sort', `${sortValue}${sortOrder}`)
   }
 
-  // Always show the first page
-  pages.push(createPageItem(1, currentPage === 1))
-
-  let adjacentStartPage = currentPage - 1
-  let adjacentEndPage = currentPage + 1
-
-  // adjacentStartPage (in range) is at least 2
-  if (adjacentStartPage < 2) {
-    adjacentStartPage = 2
+  if (search?.title) {
+    queryParams.set('title', search.title)
   }
 
-  // Ensure adjacentEndPage (in range) is at most totalPages - 1
-  if (adjacentEndPage > totalPages - 1) {
-    adjacentEndPage = totalPages - 1
+  if (search?.author !== undefined) {
+    queryParams.set('author', search.author === '' ? 'all' : search.author)
   }
 
-  // Add ellipsis after first page if needed
-  if (adjacentStartPage > 2) {
-    pages.push({ ellipsis: true })
+  if (search?.organisations?.length) {
+    search.organisations.forEach((org) =>
+      queryParams.append('organisations', org)
+    )
   }
 
-  // Add pages between adjacentStartPage and adjacentEndPage
-  for (let i = adjacentStartPage; i <= adjacentEndPage; i++) {
-    pages.push(createPageItem(i, i === currentPage))
+  if (search?.status?.length) {
+    search.status.forEach((status) => queryParams.append('status', status))
   }
 
-  // Add ellipsis before last page if needed
-  if (adjacentEndPage < totalPages - 1) {
-    pages.push({ ellipsis: true })
-  }
-
-  // Always show the last page if totalPages > 1
-  if (totalPages > 1) {
-    pages.push(createPageItem(totalPages, currentPage === totalPages))
-  }
-
-  return pages
+  return `${formsLibraryPath}?${queryParams}`
 }
 
 /**
@@ -366,5 +310,5 @@ export function getFormSpecificNavigation(
 }
 
 /**
- * @import { FormDefinition, FormMetadata, PaginationResult, QueryOptions, SortingOptions, SearchOptions, FilterOptions } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, PaginationResultWithPages, QueryOptions, SortingOptions, SearchOptions, FilterOptions } from '@defra/forms-model'
  */

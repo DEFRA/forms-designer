@@ -1,4 +1,4 @@
-import { AuditEventMessageType } from '@defra/forms-model'
+import { AuditEventMessageType, buildPaginationPages } from '@defra/forms-model'
 
 import { filterNoChangeEvents } from '~/src/models/forms/history-change-detection.js'
 import {
@@ -49,18 +49,6 @@ const eventFriendlyNames = {
 }
 
 /**
- * Event types that represent "form published"
- */
-const formWentLiveEventType = String(
-  AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
-)
-
-/**
- * Event types that represent draft edits (consolidatable)
- */
-const consolidatableEventType = String(AuditEventMessageType.FORM_UPDATED)
-
-/**
  * Gets the friendly name for an event type
  * @param {string} eventType
  * @returns {string}
@@ -75,7 +63,7 @@ export function getEventFriendlyName(eventType) {
  * @returns {boolean}
  */
 export function isConsolidatableEvent(record) {
-  return String(record.type) === consolidatableEventType
+  return record.type === AuditEventMessageType.FORM_UPDATED
 }
 
 /**
@@ -123,7 +111,13 @@ export function findConsecutiveEditGroup(records, startIndex) {
  */
 function buildConsolidatedTimelineItem(records) {
   const newestRecord = records[0]
-  const oldestRecord = /** @type {AuditRecord} */ (records.at(-1))
+  const oldestRecord = records.at(-1)
+
+  // Defensive check - should never happen as this is called with non-empty groups
+  if (!oldestRecord) {
+    throw new Error('Cannot build consolidated item from empty records')
+  }
+
   const count = records.length
   const user = newestRecord.createdBy.displayName
 
@@ -158,8 +152,8 @@ export function buildTimelineItem(record) {
   const user = record.createdBy.displayName
   const date = formatHistoryDate(record.createdAt)
   const description = getEventDescription(record)
-  const recordType = String(record.type)
-  const isFormWentLive = recordType === formWentLiveEventType
+  const isFormWentLive =
+    record.type === AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
 
   return {
     title,
@@ -174,6 +168,7 @@ export function buildTimelineItem(record) {
 /**
  * Consolidates consecutive FORM_UPDATED events by the same user
  * Also filters out events where there's no actual change
+ * Note: Records are expected to be sorted by createdAt descending (newest first) from the API
  * @param {AuditRecord[]} records - Records sorted by createdAt descending (newest first)
  * @returns {TimelineItem[]}
  */
@@ -237,13 +232,29 @@ export function overviewHistoryViewModel(metadata, auditRecords) {
 }
 
 /**
+ * Creates a href for a history pagination page
+ * @param {number} pageNumber - The page number
+ * @param {number} perPage - Items per page
+ * @param {string} basePath - Base path for the history page
+ * @returns {string} The href for the page
+ */
+function createHistoryPageHref(pageNumber, perPage, basePath) {
+  const queryParams = new URLSearchParams({
+    page: pageNumber.toString(),
+    perPage: perPage.toString()
+  })
+
+  return `${basePath}?${queryParams}`
+}
+
+/**
  * Builds the full history page view model
  * @param {FormMetadata} metadata
  * @param {FormDefinition | undefined} formDefinition
- * @param {AuditRecord[]} auditRecords - Records sorted by createdAt descending
+ * @param {AuditResponse} auditResponse - API response with records and meta
  * @returns {HistoryViewModel}
  */
-export function historyViewModel(metadata, formDefinition, auditRecords) {
+export function historyViewModel(metadata, formDefinition, auditResponse) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -252,7 +263,21 @@ export function historyViewModel(metadata, formDefinition, auditRecords) {
     FORM_HISTORY_TITLE
   )
 
+  const { auditRecords, meta } = auditResponse
   const items = consolidateEditEvents(auditRecords)
+
+  const { page, perPage, totalItems, totalPages } = meta.pagination
+  const historyPath = `${formPath}/history`
+  const pages = buildPaginationPages(page, totalPages, (pageNumber) =>
+    createHistoryPageHref(pageNumber, perPage, historyPath)
+  )
+  const pagination = {
+    page,
+    perPage,
+    totalItems,
+    totalPages,
+    pages
+  }
 
   return {
     backLink: formOverviewBackLink(metadata.slug),
@@ -266,7 +291,8 @@ export function historyViewModel(metadata, formDefinition, auditRecords) {
     },
     items,
     hasItems: items.length > 0,
-    form: metadata
+    form: metadata,
+    pagination
   }
 }
 
@@ -302,8 +328,10 @@ export function historyViewModel(metadata, formDefinition, auditRecords) {
  * @property {TimelineItem[]} items - All timeline items
  * @property {boolean} hasItems - Whether there are items to display
  * @property {FormMetadata} form - The form metadata
+ * @property {PaginationResultWithPages} [pagination] - Pagination data
  */
 
 /**
- * @import { AuditRecord, FormDefinition, FormMetadata } from '@defra/forms-model'
+ * @import { AuditRecord, FormDefinition, FormMetadata, PaginationResultWithPages } from '@defra/forms-model'
+ * @import { AuditResponse } from '~/src/lib/audit.js'
  */
