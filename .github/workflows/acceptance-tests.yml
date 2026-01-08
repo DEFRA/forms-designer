@@ -127,6 +127,8 @@ jobs:
           echo "" >> test-logs.txt
           echo "=== Docker Containers ===" >> test-logs.txt
           docker ps -a >> test-logs.txt || true
+          MANAGER_ID=`docker ps | grep forms-manager | awk '{print $1}'`
+          docker logs $MANAGER_ID >> test-logs.txt
 
       - name: Upload test report
         if: always()
