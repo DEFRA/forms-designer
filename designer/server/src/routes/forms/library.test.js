@@ -486,7 +486,7 @@ describe('Forms library routes', () => {
     })
 
     describe('Validation', () => {
-      it('should show error page for invalid sort parameter', async () => {
+      it('should redirect to default for invalid sort parameter', async () => {
         const options = {
           method: 'GET',
           url: '/library?sort=invalid',
@@ -494,10 +494,11 @@ describe('Forms library routes', () => {
         }
 
         const response = await server.inject(options)
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
       })
 
-      it('should show error page for invalid pagination parameters', async () => {
+      it('should redirect to default for invalid pagination parameters', async () => {
         const options = {
           method: 'GET',
           url: '/library?page=invalid&perPage=invalid',
@@ -505,7 +506,32 @@ describe('Forms library routes', () => {
         }
 
         const response = await server.inject(options)
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
+      })
+
+      it('should redirect to default for negative page number', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?page=-1',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
+      })
+
+      it('should redirect to default for perPage exceeding max value', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?perPage=201',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
       })
     })
 

@@ -1,5 +1,4 @@
 import { Scopes, paginationOptionFields } from '@defra/forms-model'
-import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import config from '~/src/config.js'
@@ -65,13 +64,18 @@ export default [
         query: Joi.object({
           ...paginationOptionFields
         }),
-        failAction: (request, _h, error) => {
+        failAction: (request, h, error) => {
+          const { params } = request
           request.log('error', {
             message: error?.message,
             stack: error?.stack
           })
 
-          throw Boom.badRequest()
+          // Redirect to default pagination on invalid query params
+          const formPath = formOverviewPath(params.slug)
+          const redirectUrl = new URL(`${formPath}/history`, config.appBaseUrl)
+
+          return h.redirect(redirectUrl.pathname).takeover()
         }
       }
     }

@@ -3,7 +3,6 @@ import {
   paginationOptionFields,
   searchOptionFields
 } from '@defra/forms-model'
-import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -90,13 +89,16 @@ export default [
             .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
             .optional()
         }),
-        failAction: (request, _h, error) => {
+        failAction: (request, h, error) => {
           request.log('error', {
             message: error?.message,
             stack: error?.stack
           })
 
-          throw Boom.badRequest()
+          // Redirect to default pagination on invalid query params
+          const redirectUrl = new URL('/library', config.appBaseUrl)
+
+          return h.redirect(redirectUrl.pathname).takeover()
         }
       }
     }
