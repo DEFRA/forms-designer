@@ -404,24 +404,48 @@ describe('Form history route', () => {
       )
     })
 
-    it('should return 400 for invalid pagination parameters', async () => {
+    it('should redirect to default pagination for invalid page parameter', async () => {
       const response = await server.inject({
         method: 'GET',
         url: '/library/my-form-slug/history?page=abc',
         auth
       })
 
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/library/my-form-slug/history')
     })
 
-    it('should return 400 for negative page number', async () => {
+    it('should redirect to default pagination for negative page number', async () => {
       const response = await server.inject({
         method: 'GET',
         url: '/library/my-form-slug/history?page=-1',
         auth
       })
 
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/library/my-form-slug/history')
+    })
+
+    it('should redirect to default pagination for invalid perPage parameter', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/library/my-form-slug/history?perPage=abc',
+        auth
+      })
+
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/library/my-form-slug/history')
+    })
+
+    it('should redirect to default pagination for perPage exceeding max value', async () => {
+      const response = await server.inject({
+        method: 'GET',
+        url: '/library/my-form-slug/history?perPage=201',
+        auth
+      })
+
+      expect(response.statusCode).toBe(302)
+      expect(response.headers.location).toBe('/library/my-form-slug/history')
     })
   })
 })
