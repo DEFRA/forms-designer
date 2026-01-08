@@ -486,7 +486,7 @@ describe('Forms library routes', () => {
     })
 
     describe('Validation', () => {
-      it('should show error page for invalid sort parameter', async () => {
+      it('should redirect to default for invalid sort parameter', async () => {
         const options = {
           method: 'GET',
           url: '/library?sort=invalid',
@@ -494,10 +494,11 @@ describe('Forms library routes', () => {
         }
 
         const response = await server.inject(options)
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
       })
 
-      it('should show error page for invalid pagination parameters', async () => {
+      it('should redirect to default for invalid pagination parameters', async () => {
         const options = {
           method: 'GET',
           url: '/library?page=invalid&perPage=invalid',
@@ -505,7 +506,32 @@ describe('Forms library routes', () => {
         }
 
         const response = await server.inject(options)
-        expect(response.statusCode).toBe(400)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
+      })
+
+      it('should redirect to default for negative page number', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?page=-1',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
+      })
+
+      it('should redirect to default for perPage exceeding max value', async () => {
+        const options = {
+          method: 'GET',
+          url: '/library?perPage=201',
+          auth
+        }
+
+        const response = await server.inject(options)
+        expect(response.statusCode).toBe(302)
+        expect(response.headers.location).toBe('/library')
       })
     })
 
@@ -754,7 +780,18 @@ describe('Forms library routes', () => {
       // Default mock for audit history - returns empty records
       jest.mocked(audit.getFormHistory).mockResolvedValue({
         auditRecords: [],
-        skip: 0
+        meta: {
+          pagination: {
+            page: 1,
+            perPage: 25,
+            totalItems: 0,
+            totalPages: 0
+          },
+          sorting: {
+            sortBy: 'createdAt',
+            order: 'desc'
+          }
+        }
       })
     })
 
@@ -832,7 +869,18 @@ describe('Forms library routes', () => {
               }
             })
           ],
-          skip: 0
+          meta: {
+            pagination: {
+              page: 1,
+              perPage: 25,
+              totalItems: 1,
+              totalPages: 1
+            },
+            sorting: {
+              sortBy: 'createdAt',
+              order: 'desc'
+            }
+          }
         })
 
         const options = {
