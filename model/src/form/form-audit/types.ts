@@ -470,3 +470,16 @@ export type AuditRecord = AuditMessage & AuditInputMeta
 export interface MessageBody {
   Message: string
 }
+
+/**
+ * Consolidated audit record that represents multiple grouped events.
+ * Combines AuditRecord with consolidation metadata.
+ */
+export type ConsolidatedAuditRecord = AuditRecord & {
+  /** Number of events consolidated into this record */
+  consolidatedCount: number
+  /** Timestamp of the earliest event in the group */
+  consolidatedFrom: Date
+  /** Timestamp of the latest event in the group */
+  consolidatedTo: Date
+}
