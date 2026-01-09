@@ -25,70 +25,90 @@ export interface SupportContactFieldConfig {
 }
 
 /**
+ * Creates a field configuration for audit events.
+ */
+function createFieldConfig(
+  label: string,
+  verb: 'Updated' | 'Changed',
+  fieldName: string
+): FieldConfig {
+  return {
+    label,
+    verb,
+    prevPath: `changes.previous.${fieldName}`,
+    newPath: `changes.new.${fieldName}`
+  }
+}
+
+/**
+ * Creates a support contact field configuration.
+ */
+function createSupportContactField(
+  label: string,
+  contactPath: string
+): SupportContactFieldConfig {
+  return {
+    label,
+    prevPath: `changes.previous.contact.${contactPath}`,
+    newPath: `changes.new.contact.${contactPath}`
+  }
+}
+
+/**
  * Field configurations for audit events with change tracking.
  * Maps event types to their data paths and display labels.
  */
 export const fieldConfigs: Record<string, FieldConfig> = {
-  [AuditEventMessageType.FORM_TITLE_UPDATED]: {
-    label: 'the form name',
-    verb: 'Updated',
-    prevPath: 'changes.previous.title',
-    newPath: 'changes.new.title'
-  },
-  [AuditEventMessageType.FORM_ORGANISATION_UPDATED]: {
-    label: 'the lead organisation',
-    verb: 'Changed',
-    prevPath: 'changes.previous.organisation',
-    newPath: 'changes.new.organisation'
-  },
-  [AuditEventMessageType.FORM_TEAM_NAME_UPDATED]: {
-    label: 'the team name',
-    verb: 'Changed',
-    prevPath: 'changes.previous.teamName',
-    newPath: 'changes.new.teamName'
-  },
-  [AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED]: {
-    label: 'the shared team address',
-    verb: 'Updated',
-    prevPath: 'changes.previous.teamEmail',
-    newPath: 'changes.new.teamEmail'
-  },
-  [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]: {
-    label: 'where submitted forms are sent',
-    verb: 'Updated',
-    prevPath: 'changes.previous.notificationEmail',
-    newPath: 'changes.new.notificationEmail'
-  },
-  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: {
-    label: 'the privacy notice link',
-    verb: 'Updated',
-    prevPath: 'changes.previous.privacyNoticeUrl',
-    newPath: 'changes.new.privacyNoticeUrl'
-  },
-  [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: {
-    label: 'the next steps guidance',
-    verb: 'Updated',
-    prevPath: 'changes.previous.submissionGuidance',
-    newPath: 'changes.new.submissionGuidance'
-  },
-  [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: {
-    label: 'the support phone number',
-    verb: 'Updated',
-    prevPath: 'changes.previous.phone',
-    newPath: 'changes.new.phone'
-  },
-  [AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED]: {
-    label: 'the support email address',
-    verb: 'Updated',
-    prevPath: 'changes.previous.address',
-    newPath: 'changes.new.address'
-  },
-  [AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED]: {
-    label: 'the support contact link',
-    verb: 'Updated',
-    prevPath: 'changes.previous.url',
-    newPath: 'changes.new.url'
-  }
+  [AuditEventMessageType.FORM_TITLE_UPDATED]: createFieldConfig(
+    'the form name',
+    'Updated',
+    'title'
+  ),
+  [AuditEventMessageType.FORM_ORGANISATION_UPDATED]: createFieldConfig(
+    'the lead organisation',
+    'Changed',
+    'organisation'
+  ),
+  [AuditEventMessageType.FORM_TEAM_NAME_UPDATED]: createFieldConfig(
+    'the team name',
+    'Changed',
+    'teamName'
+  ),
+  [AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED]: createFieldConfig(
+    'the shared team address',
+    'Updated',
+    'teamEmail'
+  ),
+  [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]: createFieldConfig(
+    'where submitted forms are sent',
+    'Updated',
+    'notificationEmail'
+  ),
+  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: createFieldConfig(
+    'the privacy notice link',
+    'Updated',
+    'privacyNoticeUrl'
+  ),
+  [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: createFieldConfig(
+    'the next steps guidance',
+    'Updated',
+    'submissionGuidance'
+  ),
+  [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: createFieldConfig(
+    'the support phone number',
+    'Updated',
+    'phone'
+  ),
+  [AuditEventMessageType.FORM_SUPPORT_EMAIL_UPDATED]: createFieldConfig(
+    'the support email address',
+    'Updated',
+    'address'
+  ),
+  [AuditEventMessageType.FORM_SUPPORT_ONLINE_UPDATED]: createFieldConfig(
+    'the support contact link',
+    'Updated',
+    'url'
+  )
 }
 
 /**
@@ -96,21 +116,9 @@ export const fieldConfigs: Record<string, FieldConfig> = {
  * Used when checking FORM_SUPPORT_CONTACT_UPDATED events.
  */
 export const supportContactFields: SupportContactFieldConfig[] = [
-  {
-    label: 'phone number',
-    prevPath: 'changes.previous.contact.phone',
-    newPath: 'changes.new.contact.phone'
-  },
-  {
-    label: 'email address',
-    prevPath: 'changes.previous.contact.email.address',
-    newPath: 'changes.new.contact.email.address'
-  },
-  {
-    label: 'online contact link',
-    prevPath: 'changes.previous.contact.online.url',
-    newPath: 'changes.new.contact.online.url'
-  }
+  createSupportContactField('phone number', 'phone'),
+  createSupportContactField('email address', 'email.address'),
+  createSupportContactField('online contact link', 'online.url')
 ]
 
 /**
