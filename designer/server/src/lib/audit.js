@@ -18,15 +18,22 @@ const auditEndpoint = new URL('/audit/forms/', config.auditUrl)
 
 /**
  * @typedef {object} AuditResponse
- * @property {AuditRecord[]} auditRecords - Array of audit records
+ * @property {(AuditRecord | ConsolidatedAuditRecord)[]} auditRecords - Array of audit records
  * @property {AuditResponseMeta} meta - Response metadata
+ */
+
+/**
+ * @typedef {object} AuditHistoryOptions
+ * @property {number} [page] - Page number
+ * @property {number} [perPage] - Items per page
+ * @property {boolean} [consolidate] - Whether to consolidate consecutive edit events
  */
 
 /**
  * Get form audit history
  * @param {string} formId - The form ID
  * @param {string} token - Auth token
- * @param {PaginationOptions} [options] - Pagination options
+ * @param {AuditHistoryOptions} [options] - Query options
  * @returns {Promise<AuditResponse>}
  */
 export async function getFormHistory(formId, token, options) {
@@ -42,11 +49,15 @@ export async function getFormHistory(formId, token, options) {
     requestUrl.searchParams.append('perPage', String(options.perPage))
   }
 
+  if (options?.consolidate) {
+    requestUrl.searchParams.append('consolidate', 'true')
+  }
+
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
 }
 
 /**
- * @import { AuditRecord, PaginationOptions, PaginationResult } from '@defra/forms-model'
+ * @import { AuditRecord, ConsolidatedAuditRecord, PaginationOptions, PaginationResult } from '@defra/forms-model'
  */

@@ -133,7 +133,9 @@ export default [
 
         let history
         try {
-          const auditResponse = await audit.getFormHistory(form.id, token)
+          const auditResponse = await audit.getFormHistory(form.id, token, {
+            consolidate: true
+          })
           history = overviewHistoryViewModel(form, auditResponse.auditRecords)
         } catch (err) {
           request.log('error', {

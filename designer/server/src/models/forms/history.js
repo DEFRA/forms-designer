@@ -1,6 +1,9 @@
-import { AuditEventMessageType, buildPaginationPages } from '@defra/forms-model'
+import {
+  AuditEventMessageType,
+  buildPaginationPages,
+  isConsolidatedRecord
+} from '@defra/forms-model'
 
-import { filterNoChangeEvents } from '~/src/models/forms/history-change-detection.js'
 import {
   formatHistoryDate,
   formatShortDate,
@@ -58,71 +61,18 @@ export function getEventFriendlyName(eventType) {
 }
 
 /**
- * Checks if an audit record is a consolidatable event type (draft edit)
- * @param {AuditRecord} record
- * @returns {boolean}
- */
-export function isConsolidatableEvent(record) {
-  return record.type === AuditEventMessageType.FORM_UPDATED
-}
-
-/**
- * Checks if two audit records were created by the same user
- * @param {AuditRecord} record1
- * @param {AuditRecord} record2
- * @returns {boolean}
- */
-export function isSameUser(record1, record2) {
-  return record1.createdBy.id === record2.createdBy.id
-}
-
-/**
- * Finds consecutive consolidatable events by the same user starting from a given index
- * @param {AuditRecord[]} records - The filtered records array
- * @param {number} startIndex - Index to start searching from
- * @returns {{ group: AuditRecord[], nextIndex: number }}
- */
-export function findConsecutiveEditGroup(records, startIndex) {
-  const currentRecord = records[startIndex]
-  const group = [currentRecord]
-  let nextIndex = startIndex + 1
-
-  while (nextIndex < records.length) {
-    const nextRecord = records[nextIndex]
-
-    if (
-      isConsolidatableEvent(nextRecord) &&
-      isSameUser(currentRecord, nextRecord)
-    ) {
-      group.push(nextRecord)
-      nextIndex++
-    } else {
-      break
-    }
-  }
-
-  return { group, nextIndex }
-}
-
-/**
- * Builds a consolidated timeline item from multiple edit events
- * @param {AuditRecord[]} records - Records in the group (newest first)
+ * Builds a timeline item from a consolidated audit record.
+ * Consolidated records have consolidatedCount > 1 and include
+ * consolidatedFrom and consolidatedTo timestamps.
+ * @param {ConsolidatedAuditRecord} record - Pre-consolidated record from API
  * @returns {TimelineItem}
  */
-function buildConsolidatedTimelineItem(records) {
-  const newestRecord = records[0]
-  const oldestRecord = records.at(-1)
+function buildConsolidatedTimelineItem(record) {
+  const user = record.createdBy.displayName
+  const count = record.consolidatedCount
 
-  // Defensive check - should never happen as this is called with non-empty groups
-  if (!oldestRecord) {
-    throw new Error('Cannot build consolidated item from empty records')
-  }
-
-  const count = records.length
-  const user = newestRecord.createdBy.displayName
-
-  const startDate = new Date(oldestRecord.createdAt)
-  const endDate = new Date(newestRecord.createdAt)
+  const startDate = new Date(record.consolidatedFrom)
+  const endDate = new Date(record.consolidatedTo)
 
   let timeRange
   if (isSameDay(startDate, endDate)) {
@@ -134,7 +84,7 @@ function buildConsolidatedTimelineItem(records) {
   return {
     title: 'Draft edited',
     user,
-    date: formatHistoryDate(newestRecord.createdAt),
+    date: formatHistoryDate(record.createdAt),
     description: `Edited the draft form ${count} times between ${timeRange}.`,
     isConsolidated: true,
     count,
@@ -166,54 +116,33 @@ export function buildTimelineItem(record) {
 }
 
 /**
- * Consolidates consecutive FORM_UPDATED events by the same user
- * Also filters out events where there's no actual change
- * Note: Records are expected to be sorted by createdAt descending (newest first) from the API
- * @param {AuditRecord[]} records - Records sorted by createdAt descending (newest first)
+ * Builds timeline items from audit records.
+ * Handles both regular and pre-consolidated records from the API.
+ * When consolidate=true is passed to the API, consecutive FORM_UPDATED
+ * events by the same user are already grouped.
+ * @param {(AuditRecord | ConsolidatedAuditRecord)[]} records - Records from API
  * @returns {TimelineItem[]}
  */
-export function consolidateEditEvents(records) {
-  const filteredRecords = filterNoChangeEvents(records)
-
-  if (filteredRecords.length === 0) {
-    return []
-  }
-
-  /** @type {TimelineItem[]} */
-  const result = []
-  let i = 0
-
-  while (i < filteredRecords.length) {
-    const currentRecord = filteredRecords[i]
-
-    if (isConsolidatableEvent(currentRecord)) {
-      const { group, nextIndex } = findConsecutiveEditGroup(filteredRecords, i)
-
-      if (group.length > 1) {
-        result.push(buildConsolidatedTimelineItem(group))
-      } else {
-        result.push(buildTimelineItem(currentRecord))
-      }
-
-      i = nextIndex
-    } else {
-      result.push(buildTimelineItem(currentRecord))
-      i++
+export function buildTimelineItems(records) {
+  return records.map((record) => {
+    if (isConsolidatedRecord(record)) {
+      return buildConsolidatedTimelineItem(record)
     }
-  }
-
-  return result
+    return buildTimelineItem(record)
+  })
 }
 
 /**
  * Builds the view model for the overview sidebar history section
  * @param {FormMetadata} metadata
- * @param {AuditRecord[]} auditRecords - Records sorted by createdAt descending
+ * @param {(AuditRecord | ConsolidatedAuditRecord)[]} auditRecords - Records from API
  * @returns {OverviewHistoryViewModel}
  */
 export function overviewHistoryViewModel(metadata, auditRecords) {
-  const consolidatedItems = consolidateEditEvents(auditRecords)
-  const items = consolidatedItems.slice(0, OVERVIEW_HISTORY_LIMIT)
+  const items = buildTimelineItems(auditRecords).slice(
+    0,
+    OVERVIEW_HISTORY_LIMIT
+  )
   const formPath = formOverviewPath(metadata.slug)
 
   return {
@@ -264,7 +193,7 @@ export function historyViewModel(metadata, formDefinition, auditResponse) {
   )
 
   const { auditRecords, meta } = auditResponse
-  const items = consolidateEditEvents(auditRecords)
+  const items = buildTimelineItems(auditRecords)
 
   const { page, perPage, totalItems, totalPages } = meta.pagination
   const historyPath = `${formPath}/history`
@@ -332,6 +261,6 @@ export function historyViewModel(metadata, formDefinition, auditResponse) {
  */
 
 /**
- * @import { AuditRecord, FormDefinition, FormMetadata, PaginationResultWithPages } from '@defra/forms-model'
+ * @import { AuditRecord, ConsolidatedAuditRecord, FormDefinition, FormMetadata, PaginationResultWithPages } from '@defra/forms-model'
  * @import { AuditResponse } from '~/src/lib/audit.js'
  */
