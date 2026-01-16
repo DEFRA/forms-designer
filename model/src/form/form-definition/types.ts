@@ -190,6 +190,15 @@ export interface Output {
   emailAddress: string
 }
 
+export interface FormOption {
+  optionName: string
+  optionValue: string
+}
+
+export interface FormOptions {
+  showReferenceNumber: boolean
+}
+
 /**
  * Interface for `formDefinitionSchema` Joi schema
  */
@@ -207,6 +216,7 @@ export interface FormDefinition {
   declaration?: string // Deprecated in v2
   skipSummary?: never
   metadata?: Record<string, unknown>
+  options?: FormOptions
   outputEmail?: string // Deprecated
   output?: {
     audience: OutputAudience

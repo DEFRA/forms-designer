@@ -22,7 +22,7 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       return h.view(
-        'forms/editor-v2/check-answers-overview',
+        'forms/editor-v2/check-answers-settings/check-answers-overview',
         viewModel.checkAnswersOverviewViewModel(metadata, definition, pageId)
       )
     },

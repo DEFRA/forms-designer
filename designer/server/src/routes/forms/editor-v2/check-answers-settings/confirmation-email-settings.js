@@ -10,7 +10,7 @@ import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import * as viewModel from '~/src/models/forms/editor-v2/confirmation-email-settings.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { postAuthSettings } from '~/src/routes/forms/editor-v2/check-answers-settings.js'
+import { postAuthSettings } from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
 
 export const ROUTE_FULL_PATH_CONFIRMATION_EMAIL_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/confirmation-email`
 
@@ -46,7 +46,7 @@ export default [
       )
 
       return h.view(
-        'forms/editor-v2/confirmation-email-settings',
+        'forms/editor-v2/check-answers-settings/confirmation-email-settings',
         viewModel.confirmationEmailSettingsViewModel(
           metadata,
           definition,

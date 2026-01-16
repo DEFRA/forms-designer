@@ -42,6 +42,15 @@
         {% endif %}
       {% endset %}
 
+      {# Reference number summary row #}
+      {%- set referenceNumberValueHtml %}
+        {% if referenceNumber.enabled %}
+          <span>Turned on</span>
+        {% else %}
+          <a class="govuk-link govuk-link--no-visited-state" href="{{ referenceNumber.link }}">Turn on the reference number</a>
+        {% endif %}
+      {% endset %}
+
       {# Sections summary row #}
       {%- set sectionsValueHtml %}
         {% if sections.count > 0 %}
@@ -56,7 +65,8 @@
         rows: [
           {
             key: {
-              text: "Declaration text (optional)"
+              text: "Declaration text (optional)",
+              classes: "govuk-summary-list__key40"
             },
             value: {
               html: declarationValueHtml,
@@ -90,6 +100,24 @@
                 }
               ]
             } if not confirmationEmail.enabled
+          },
+          {
+            key: {
+              text: "Reference number (optional)"
+            },
+            value: {
+              html: referenceNumberValueHtml
+            },
+            actions: {
+              items: [
+                {
+                  href: referenceNumber.link,
+                  text: "Change",
+                  visuallyHiddenText: "reference number",
+                  classes: "govuk-link--no-visited-state"
+                }
+              ]
+            } if referenceNumber.enabled
           },
           {
             key: {

@@ -41,6 +41,9 @@ const postJsonByComponentType = /** @type {typeof postJson<ComponentDef>} */ (
 const delJsonByComponentType = /** @type {typeof delJson<ComponentDef>} */ (
   delJson
 )
+const postJsonByOptionType = /** @type {typeof postJson<FormOption>} */ (
+  postJson
+)
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
@@ -507,6 +510,20 @@ export async function setConfirmationEmailSettings(
 }
 
 /**
+ * Set an option value in the form definition
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} optionName
+ * @param {string} optionValue
+ */
+export async function setFormOption(formId, token, optionName, optionValue) {
+  await postJsonByOptionType(buildRequestUrl(formId, `options/${optionName}`), {
+    payload: { optionValue },
+    ...getHeaders(token)
+  })
+}
+
+/**
  * Re-order the pages as per list of ids
  * @param {string} formId
  * @param {string} token
@@ -854,5 +871,5 @@ export async function updateSectionSettings(
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputConfirmationEmailSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat, Section, SectionAssignmentItem } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputConfirmationEmailSettings, FormOption, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat, Section, SectionAssignmentItem } from '@defra/forms-model'
  */

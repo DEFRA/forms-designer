@@ -1,43 +1,27 @@
-import {
-  Scopes,
-  declarationTextSchema,
-  needDeclarationSchema
-} from '@defra/forms-model'
+import { Scopes, enableReferenceNumberSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { setCheckAnswersDeclaration } from '~/src/lib/editor.js'
+import { setFormOption } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import * as viewModel from '~/src/models/forms/editor-v2/check-answers-settings.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
+import * as viewModel from '~/src/models/forms/editor-v2/reference-number-settings.js'
 import { editorv2Path } from '~/src/models/links.js'
+import { postAuthSettings } from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
 
-export const ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/declaration`
+export const ROUTE_FULL_PATH_REFERENCE_NUMBER_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/reference-number-settings`
 
-const errorKey = sessionNames.validationFailure.editorCheckAnswersSettings
+const errorKey = sessionNames.validationFailure.editorReferenceNumberSettings
 const notificationKey = sessionNames.successNotification
 
 export const schema = Joi.object().keys({
-  needDeclaration: needDeclarationSchema,
-  declarationText: Joi.when('needDeclaration', {
-    is: 'true',
-    then: declarationTextSchema.required().messages({
-      '*': 'Enter the information you need users to declare or agree to'
-    })
-  })
+  enableReferenceNumber: enableReferenceNumberSchema
 })
 
-/** @type {RouteOptions['auth']} */
-export const postAuthSettings = {
-  mode: 'required',
-  access: {
-    entity: 'user',
-    scope: [`+${Scopes.FormEdit}`]
-  }
-}
+const REFERENCE_NUMBER_OPTION_KEY = 'showReferenceNumber'
 
 export default [
   /**
@@ -45,10 +29,9 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS,
+    path: ROUTE_FULL_PATH_REFERENCE_NUMBER_SETTINGS,
     async handler(request, h) {
-      const { yar } = request
-      const { params, auth } = request
+      const { params, auth, yar } = request
       const { token } = auth.credentials
       const { slug, pageId } = params
 
@@ -65,8 +48,8 @@ export default [
       )
 
       return h.view(
-        'forms/editor-v2/check-answers-settings',
-        viewModel.checkAnswersSettingsViewModel(
+        'forms/editor-v2/check-answers-settings/reference-number-settings',
+        viewModel.referenceNumberSettingsViewModel(
           metadata,
           definition,
           pageId,
@@ -86,33 +69,29 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Payload: Partial<FormEditorInputCheckAnswersSettings> }>}
+   * @satisfies {ServerRoute<{ Payload: FormEditorInputReferenceNumberSettings }>}
    */
   ({
     method: 'POST',
-    path: ROUTE_FULL_PATH_CHECK_ANSWERS_SETTINGS,
+    path: ROUTE_FULL_PATH_REFERENCE_NUMBER_SETTINGS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug, pageId } = /** @type {{ slug: string, pageId: string }} */ (
-        params
-      )
+      const { slug } = /** @type {{ slug: string, pageId: string }} */ (params)
       const { token } = auth.credentials
 
       // Form metadata and page components
       const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      await setCheckAnswersDeclaration(
+      await setFormOption(
         metadata.id,
         token,
-        pageId,
-        definition,
-        payload
+        REFERENCE_NUMBER_OPTION_KEY,
+        payload.enableReferenceNumber ? 'true' : 'false'
       )
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      // Redirect to pages list
+      // Redirect to pages list - same as check-answers-settings page.
       return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -128,6 +107,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputCheckAnswersSettings } from '@defra/forms-model'
- * @import { RouteOptions, ServerRoute } from '@hapi/hapi'
+ * @import { FormEditorInputReferenceNumberSettings } from '@defra/forms-model'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

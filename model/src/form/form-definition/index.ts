@@ -1134,6 +1134,11 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     phaseBanner: phaseBannerSchema
       .optional()
       .description('Phase banner configuration'),
+    options: Joi.object({
+      showReferenceNumber: Joi.boolean().default(false).required()
+    })
+      .optional()
+      .description('Options for the form'),
     outputEmail: Joi.string()
       .trim()
       .email({ tlds: { allow: ['uk'] } })

@@ -14,7 +14,6 @@ import {
   getUnassignedPageTitlesForPreview
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
-  CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
   PAGE_OVERVIEW_TITLE,
   getCheckAnswersTabConfig
@@ -52,6 +51,7 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
 
   const page = getPageFromDefinition(definition, pageId)
   const declarationInfo = getDeclarationInfo(page)
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const sectionsSummary = getSectionsSummary(definition)
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
 
@@ -67,7 +67,6 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
     slug,
     pageTitle,
     cardTitle: PAGE_OVERVIEW_TITLE,
-    cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageTitle,
     tabConfig: getCheckAnswersTabConfig(
       slug,
@@ -89,6 +88,15 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       link: editorv2Path(
         slug,
         `page/${pageId}/check-answers-settings/declaration`
+      )
+    },
+
+    // Reference number summary
+    referenceNumber: {
+      enabled: showReferenceNumber,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/reference-number-settings`
       )
     },
 

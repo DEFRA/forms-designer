@@ -1,0 +1,85 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
+{% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+  heading: pageHeading,
+  description: pageDescription,
+  caption: pageCaption,
+  actions: pageActions,
+  classes: "govuk-grid-column-full",
+  backLink: backLink,
+  useNewMasthead: true,
+  errorList: badRequestErrorList
+}) %}
+
+  <div class="govuk-grid-column-one-half-from-desktop">
+
+    {% call appEditorCard({
+      titles: tabConfig,
+      id: 'page-settings',
+      caption: cardCaption,
+      heading: cardHeading,
+      notification: notification,
+      errorList: errorList
+    }) %}
+
+      <form id="referenceNumberForm" class="form" method="post">
+
+        {{ govukWarningText({
+          text: "The reference number is automatically switched on if you add a payment option to your form.",
+          iconFallbackText: "Warning"
+        }) }}
+
+        {% call govukFieldset({
+          legend: {
+            text: "Do you want to turn on the reference number?",
+            classes: "govuk-fieldset__legend--m",
+            isPageHeading: false
+          }
+        }) %}
+
+          <p class="govuk-body">The reference number is switched off by default but you can turn it on if you want to share it with users.</p>
+
+          {{ govukCheckboxes(fields.enableReferenceNumber) }}
+
+          <div class="govuk-button-group govuk-!-margin-top-6">
+            {{ govukSkipLink({
+              text: "Skip to page preview",
+              href: "#tab-preview",
+              classes: "govuk-!-margin-right-4"
+            }) }}
+
+            {{ govukButton({
+              text: 'Save changes'
+            }) }}
+          </div>
+
+        {% endcall %}
+
+      </form>
+    {% endcall %}
+
+  </div>
+  <div class="govuk-grid-column-one-half-from-desktop preview-panel page-preview-panel" id="preview-panel">
+    {%- include "../views/forms/editor-v2/partials/check-answers-right-panel.njk" -%}
+  </div>
+  {% endcall %}
+
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
