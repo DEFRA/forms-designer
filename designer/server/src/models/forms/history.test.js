@@ -2,12 +2,9 @@ import { AuditEventMessageType } from '@defra/forms-model'
 
 import {
   buildTimelineItem,
-  consolidateEditEvents,
-  findConsecutiveEditGroup,
+  buildTimelineItems,
   getEventFriendlyName,
   historyViewModel,
-  isConsolidatableEvent,
-  isSameUser,
   overviewHistoryViewModel
 } from '~/src/models/forms/history.js'
 
@@ -45,6 +42,39 @@ function createMockAuditRecord(overrides = {}) {
 }
 
 /**
+ * Creates a mock consolidated audit record
+ * @param {Partial<ConsolidatedAuditRecord>} [overrides]
+ * @returns {ConsolidatedAuditRecord}
+ */
+function createMockConsolidatedRecord(overrides = {}) {
+  return /** @type {ConsolidatedAuditRecord} */ ({
+    id: '68948579d5659369f1e634c6',
+    messageId: '46bcc5ee-49e7-4eb9-9b2b-02e41faa7ec1',
+    category: 'FORM',
+    type: AuditEventMessageType.FORM_UPDATED,
+    schemaVersion: 1,
+    source: 'FORMS_MANAGER',
+    entityId: '694c11d3c664844dfdaf7719',
+    createdAt: new Date('2019-06-14T16:30:00.000Z'),
+    createdBy: {
+      id: '86758ba9-92e7-4287-9751-7705e449688e',
+      displayName: 'Chris Smith'
+    },
+    data: {
+      formId: '694c11d3c664844dfdaf7719',
+      slug: 'test-form',
+      requestType: 'UPDATE_COMPONENT'
+    },
+    messageCreatedAt: new Date('2019-06-14T16:30:00.100Z'),
+    recordCreatedAt: new Date('2019-06-14T16:30:00.200Z'),
+    consolidatedCount: 3,
+    consolidatedFrom: new Date('2019-06-14T14:30:00.000Z'),
+    consolidatedTo: new Date('2019-06-14T16:30:00.000Z'),
+    ...overrides
+  })
+}
+
+/**
  * Creates a mock form metadata
  * @returns {FormMetadata}
  */
@@ -71,7 +101,7 @@ function createMockFormMetadata() {
 
 /**
  * Creates a mock audit response with pagination
- * @param {AuditRecord[]} records
+ * @param {(AuditRecord | ConsolidatedAuditRecord)[]} records
  * @param {object} [paginationOverrides]
  * @returns {AuditResponse}
  */
@@ -188,202 +218,13 @@ describe('history model', () => {
     })
   })
 
-  describe('isConsolidatableEvent', () => {
-    it('returns true for FORM_UPDATED events', () => {
-      const record = createMockAuditRecord({
-        type: AuditEventMessageType.FORM_UPDATED
-      })
-      expect(isConsolidatableEvent(record)).toBe(true)
-    })
-
-    it('returns false for FORM_CREATED events', () => {
-      const record = createMockAuditRecord({
-        type: AuditEventMessageType.FORM_CREATED
-      })
-      expect(isConsolidatableEvent(record)).toBe(false)
-    })
-
-    it('returns false for FORM_LIVE_CREATED_FROM_DRAFT events', () => {
-      const record = createMockAuditRecord({
-        type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
-      })
-      expect(isConsolidatableEvent(record)).toBe(false)
-    })
-
-    it('returns false for FORM_TITLE_UPDATED events', () => {
-      const record = createMockAuditRecord({
-        type: AuditEventMessageType.FORM_TITLE_UPDATED
-      })
-      expect(isConsolidatableEvent(record)).toBe(false)
-    })
-  })
-
-  describe('isSameUser', () => {
-    it('returns true when records have the same user id', () => {
-      const record1 = createMockAuditRecord({
-        createdBy: { id: 'user-123', displayName: 'Chris Smith' }
-      })
-      const record2 = createMockAuditRecord({
-        createdBy: { id: 'user-123', displayName: 'Chris Smith' }
-      })
-      expect(isSameUser(record1, record2)).toBe(true)
-    })
-
-    it('returns false when records have different user ids', () => {
-      const record1 = createMockAuditRecord({
-        createdBy: { id: 'user-123', displayName: 'Chris Smith' }
-      })
-      const record2 = createMockAuditRecord({
-        createdBy: { id: 'user-456', displayName: 'Alex Patel' }
-      })
-      expect(isSameUser(record1, record2)).toBe(false)
-    })
-
-    it('returns true even if display names differ but ids match', () => {
-      const record1 = createMockAuditRecord({
-        createdBy: { id: 'user-123', displayName: 'Chris Smith' }
-      })
-      const record2 = createMockAuditRecord({
-        createdBy: { id: 'user-123', displayName: 'Christopher Smith' }
-      })
-      expect(isSameUser(record1, record2)).toBe(true)
-    })
-  })
-
-  describe('findConsecutiveEditGroup', () => {
-    it('finds all consecutive edits by the same user', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
-
-      const { group, nextIndex } = findConsecutiveEditGroup(records, 0)
-
-      expect(group).toHaveLength(3)
-      expect(nextIndex).toBe(3)
-    })
-
-    it('stops at different user', () => {
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: 'user-1', displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: 'user-1', displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: 'user-2', displayName: 'Alex Patel' }
-        })
-      ]
-
-      const { group, nextIndex } = findConsecutiveEditGroup(records, 0)
-
-      expect(group).toHaveLength(2)
-      expect(nextIndex).toBe(2)
-    })
-
-    it('stops at non-consolidatable event', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
-
-      const { group, nextIndex } = findConsecutiveEditGroup(records, 0)
-
-      expect(group).toHaveLength(1)
-      expect(nextIndex).toBe(1)
-    })
-
-    it('returns single item group when no consecutive edits', () => {
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: 'user-1', displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_CREATED,
-          createdBy: { id: 'user-1', displayName: 'Chris Smith' }
-        })
-      ]
-
-      const { group, nextIndex } = findConsecutiveEditGroup(records, 0)
-
-      expect(group).toHaveLength(1)
-      expect(nextIndex).toBe(1)
-    })
-
-    it('works from middle of array', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_CREATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
-
-      const { group, nextIndex } = findConsecutiveEditGroup(records, 1)
-
-      expect(group).toHaveLength(2)
-      expect(group[0].id).toBe('2')
-      expect(group[1].id).toBe('3')
-      expect(nextIndex).toBe(3)
-    })
-  })
-
-  describe('consolidateEditEvents', () => {
+  describe('buildTimelineItems', () => {
     it('returns empty array for empty input', () => {
-      const result = consolidateEditEvents([])
+      const result = buildTimelineItems([])
       expect(result).toEqual([])
     })
 
-    it('does not consolidate non-FORM_UPDATED events', () => {
+    it('builds timeline items for regular records', () => {
       const records = [
         createMockAuditRecord({
           id: '1',
@@ -410,7 +251,7 @@ describe('history model', () => {
         })
       ]
 
-      const result = consolidateEditEvents(records)
+      const result = buildTimelineItems(records)
 
       expect(result).toHaveLength(3)
       expect(result[0].title).toBe('Form created')
@@ -418,30 +259,14 @@ describe('history model', () => {
       expect(result[2].title).toBe('Form published')
     })
 
-    it('consolidates consecutive FORM_UPDATED events by same user', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T16:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T15:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T14:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
+    it('handles pre-consolidated records from API', () => {
+      const consolidatedRecord = createMockConsolidatedRecord({
+        consolidatedCount: 3,
+        consolidatedFrom: new Date('2019-06-14T14:30:00.000Z'),
+        consolidatedTo: new Date('2019-06-14T16:30:00.000Z')
+      })
 
-      const result = consolidateEditEvents(records)
+      const result = buildTimelineItems([consolidatedRecord])
 
       expect(result).toHaveLength(1)
       expect(result[0].title).toBe('Draft edited')
@@ -452,158 +277,60 @@ describe('history model', () => {
       )
     })
 
-    it('does not consolidate FORM_UPDATED events by different users', () => {
+    it('handles mix of regular and consolidated records', () => {
       const records = [
-        createMockAuditRecord({
+        createMockConsolidatedRecord({
           id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T16:30:00.000Z'),
-          createdBy: { id: 'user-1', displayName: 'Chris Smith' }
+          consolidatedCount: 5,
+          consolidatedFrom: new Date('2019-06-14T14:00:00.000Z'),
+          consolidatedTo: new Date('2019-06-14T16:00:00.000Z')
         }),
         createMockAuditRecord({
           id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T15:30:00.000Z'),
-          createdBy: { id: 'user-2', displayName: 'Alex Patel' }
-        })
-      ]
-
-      const result = consolidateEditEvents(records)
-
-      expect(result).toHaveLength(2)
-      expect(result[0].isConsolidated).toBe(false)
-      expect(result[1].isConsolidated).toBe(false)
-    })
-
-    it('stops consolidation when different event type interrupts', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T17:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T16:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
+          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
+          createdAt: new Date('2019-06-14T13:00:00.000Z')
         }),
         createMockAuditRecord({
           id: '3',
-          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
-          createdAt: new Date('2019-06-14T15:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '4',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T14:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
+          type: AuditEventMessageType.FORM_CREATED,
+          createdAt: new Date('2019-06-14T12:00:00.000Z')
         })
       ]
 
-      const result = consolidateEditEvents(records)
+      const result = buildTimelineItems(records)
 
       expect(result).toHaveLength(3)
       expect(result[0].isConsolidated).toBe(true)
-      expect(result[0].count).toBe(2)
+      expect(result[0].count).toBe(5)
       expect(result[1].title).toBe('Form published')
-      expect(result[2].isConsolidated).toBe(false)
+      expect(result[1].isConsolidated).toBe(false)
+      expect(result[2].title).toBe('Form created')
     })
 
-    it('shows time range for same-day edits', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T16:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T15:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
+    it('shows time range for same-day consolidated edits', () => {
+      const consolidatedRecord = createMockConsolidatedRecord({
+        consolidatedCount: 2,
+        consolidatedFrom: new Date('2019-06-14T15:30:00.000Z'),
+        consolidatedTo: new Date('2019-06-14T16:30:00.000Z')
+      })
 
-      const result = consolidateEditEvents(records)
+      const result = buildTimelineItems([consolidatedRecord])
 
       expect(result).toHaveLength(1)
       expect(result[0].description).toMatch(/times between.*and/)
     })
 
-    it('shows date range for multi-day edits', () => {
-      const userId = 'user-1'
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-15T16:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T15:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
+    it('shows date range for multi-day consolidated edits', () => {
+      const consolidatedRecord = createMockConsolidatedRecord({
+        consolidatedCount: 2,
+        consolidatedFrom: new Date('2019-06-14T15:30:00.000Z'),
+        consolidatedTo: new Date('2019-06-15T16:30:00.000Z')
+      })
 
-      const result = consolidateEditEvents(records)
+      const result = buildTimelineItems([consolidatedRecord])
 
       expect(result).toHaveLength(1)
       expect(result[0].description).toMatch(/14 June and 15 June/)
-    })
-
-    it('filters out no-change events from timeline', () => {
-      const records = [
-        createMockAuditRecord({
-          id: '1',
-          type: AuditEventMessageType.FORM_CREATED,
-          createdAt: new Date('2019-06-14T16:00:00.000Z')
-        }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_TEAM_NAME_UPDATED,
-          createdAt: new Date('2019-06-14T15:00:00.000Z'),
-          data: {
-            formId: 'form-id',
-            slug: 'test-form',
-            changes: {
-              previous: { teamName: 'Same Team' },
-              new: { teamName: 'Same Team' }
-            }
-          }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_TEAM_EMAIL_UPDATED,
-          createdAt: new Date('2019-06-14T15:00:00.000Z'),
-          data: {
-            formId: 'form-id',
-            slug: 'test-form',
-            changes: {
-              previous: { teamEmail: 'same@example.gov.uk' },
-              new: { teamEmail: 'same@example.gov.uk' }
-            }
-          }
-        }),
-        createMockAuditRecord({
-          id: '4',
-          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT,
-          createdAt: new Date('2019-06-14T14:00:00.000Z')
-        })
-      ]
-
-      const result = consolidateEditEvents(records)
-
-      expect(result).toHaveLength(2)
-      expect(result[0].title).toBe('Form created')
-      expect(result[1].title).toBe('Form published')
     })
   })
 
@@ -649,6 +376,28 @@ describe('history model', () => {
 
       expect(result.items).toHaveLength(0)
       expect(result.hasItems).toBe(false)
+    })
+
+    it('handles consolidated records from API', () => {
+      const metadata = createMockFormMetadata()
+      const records = [
+        createMockConsolidatedRecord({
+          consolidatedCount: 10,
+          consolidatedFrom: new Date('2019-06-14T10:00:00.000Z'),
+          consolidatedTo: new Date('2019-06-14T16:00:00.000Z')
+        }),
+        createMockAuditRecord({
+          id: '2',
+          type: AuditEventMessageType.FORM_CREATED
+        })
+      ]
+
+      const result = overviewHistoryViewModel(metadata, records)
+
+      expect(result.items).toHaveLength(2)
+      expect(result.items[0].isConsolidated).toBe(true)
+      expect(result.items[0].count).toBe(10)
+      expect(result.items[1].isConsolidated).toBe(false)
     })
   })
 
@@ -760,10 +509,31 @@ describe('history model', () => {
       const currentPage = result.pagination?.pages.find((p) => p.number === '2')
       expect(currentPage?.current).toBe(true)
     })
+
+    it('handles consolidated records from API', () => {
+      const metadata = createMockFormMetadata()
+      const records = [
+        createMockConsolidatedRecord({
+          consolidatedCount: 15
+        }),
+        createMockAuditRecord({
+          id: '2',
+          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
+        })
+      ]
+      const auditResponse = createMockAuditResponse(records)
+
+      const result = historyViewModel(metadata, undefined, auditResponse)
+
+      expect(result.items).toHaveLength(2)
+      expect(result.items[0].isConsolidated).toBe(true)
+      expect(result.items[0].count).toBe(15)
+      expect(result.items[1].title).toBe('Form published')
+    })
   })
 })
 
 /**
- * @import { AuditRecord, FormMetadata } from '@defra/forms-model'
+ * @import { AuditRecord, ConsolidatedAuditRecord, FormMetadata } from '@defra/forms-model'
  * @import { AuditResponse } from '~/src/lib/audit.js'
  */
