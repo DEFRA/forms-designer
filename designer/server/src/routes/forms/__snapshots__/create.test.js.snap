@@ -167,7 +167,7 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 
 
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
         <div class="govuk-form-group">
@@ -473,7 +473,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
   <form method="post" novalidate>
 
 
-    <div id="main-content" class="govuk-width-container app-width-container--wide">
+    <div class="govuk-width-container app-width-container--wide">
       <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
   <h1 class="govuk-heading-l">
@@ -484,7 +484,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
 
     </div>
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
             <input type="hidden" name="title" value="">
@@ -747,7 +747,7 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
 
 
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
         <div class="govuk-form-group">

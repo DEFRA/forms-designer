@@ -1,6 +1,6 @@
 {% from "govuk/macros/attributes.njk" import govukAttributes %}
 
-<div class="app-masthead{%- if params.classes %} {{ params.classes }}{% endif -%}"
+<div id="main-content" class="app-masthead{%- if params.classes %} {{ params.classes }}{% endif -%}"
   {{- govukAttributes(params.attributes) }}>
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
