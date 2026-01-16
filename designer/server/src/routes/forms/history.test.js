@@ -228,26 +228,18 @@ describe('Form history route', () => {
 
     it('should consolidate consecutive edit events by same user', async () => {
       const userId = 'user-1'
-      const auditRecords = [
-        createMockAuditRecord({
+      // Mock a pre-consolidated record from the API (consolidation happens server-side)
+      const consolidatedRecord = {
+        ...createMockAuditRecord({
           id: '1',
           type: AuditEventMessageType.FORM_UPDATED,
           createdAt: new Date('2019-06-14T16:30:00.000Z'),
           createdBy: { id: userId, displayName: 'Chris Smith' }
         }),
-        createMockAuditRecord({
-          id: '2',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T15:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        }),
-        createMockAuditRecord({
-          id: '3',
-          type: AuditEventMessageType.FORM_UPDATED,
-          createdAt: new Date('2019-06-14T14:30:00.000Z'),
-          createdBy: { id: userId, displayName: 'Chris Smith' }
-        })
-      ]
+        consolidatedCount: 3,
+        consolidatedFrom: new Date('2019-06-14T14:30:00.000Z'),
+        consolidatedTo: new Date('2019-06-14T16:30:00.000Z')
+      }
 
       jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
       jest
@@ -255,7 +247,7 @@ describe('Form history route', () => {
         .mockResolvedValueOnce(formDefinition)
       jest
         .mocked(audit.getFormHistory)
-        .mockResolvedValueOnce(createMockAuditResponse(auditRecords))
+        .mockResolvedValueOnce(createMockAuditResponse([consolidatedRecord]))
 
       const options = {
         method: 'GET',
@@ -322,7 +314,7 @@ describe('Form history route', () => {
       expect(audit.getFormHistory).toHaveBeenCalledWith(
         formMetadata.id,
         expect.any(String),
-        { page: 2, perPage: 10 }
+        { page: 2, perPage: 10, consolidate: true }
       )
     })
 
