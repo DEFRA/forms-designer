@@ -9,7 +9,7 @@ export const locationHintDefaults = {
     'An OS grid reference number is made up of 2 letters followed by either 6, 8 or 10 numbers, for example, TQ123456',
 
   NationalGridFieldNumberField:
-    'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589',
+    'A National Grid field number is made up of 2 letters and 8 numbers, for example, NG 1234 5678',
 
   LatLongField:
     'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767'
