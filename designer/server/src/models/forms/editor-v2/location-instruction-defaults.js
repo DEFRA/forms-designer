@@ -25,7 +25,7 @@ export const locationInstructionDefaults = {
   3. Using the map, locate the land or building. Use the +/- icons to zoom in and out.
   4. In the top toolbar, select the fourth icon along ('Where am I?') - it looks like a target.
   5. Click on the land or building.
-  6. A pop-up box will appear showing the land details for this location. The National Grid field number is the third number from the top of the list. It is made up of 2 letters and 8 numbers, for example, SO04188589.`,
+  6. A pop-up box will appear showing the land details for this location. The National Grid field number is the third number from the top of the list. It is made up of 2 letters and 8 numbers, for example, NG 1234 5678.`,
 
   LatLongField: `Use the [MAGIC map tool](https://magic.defra.gov.uk/) to find the latitude and longitude for your land or buildings. Follow these instructions:
 

@@ -411,7 +411,7 @@ export function buildNationalGridFieldNumberFieldComponent(
     id: '3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r',
     name: 'NationalGridFieldNumberField',
     title: 'National Grid field number',
-    hint: 'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589',
+    hint: 'A National Grid field number is made up of 2 letters and 8 numbers, for example, NG 1234 5678',
     options: {},
     ...partialComponent,
     type: ComponentType.NationalGridFieldNumberField
