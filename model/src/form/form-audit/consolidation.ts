@@ -1,8 +1,4 @@
 import { AuditEventMessageType } from '~/src/form/form-audit/enums.js'
-import {
-  type AuditRecord,
-  type ConsolidatedAuditRecord
-} from '~/src/form/form-audit/types.js'
 
 /**
  * Field configuration for audit events with change tracking.
@@ -118,7 +114,9 @@ export const fieldConfigs: Record<string, FieldConfig> = {
 export const supportContactFields: SupportContactFieldConfig[] = [
   createSupportContactField('phone number', 'phone'),
   createSupportContactField('email address', 'email.address'),
-  createSupportContactField('online contact link', 'online.url')
+  createSupportContactField('email response time', 'email.responseTime'),
+  createSupportContactField('online contact link', 'online.url'),
+  createSupportContactField('online contact text', 'online.text')
 ]
 
 /**
@@ -141,10 +139,12 @@ export const alwaysValidEvents = new Set<string>([
 /**
  * Type guard to check if an audit record is consolidated.
  * @param record - The audit record to check
- * @returns True if the record has consolidation metadata
+ * @returns True if the record has consolidation metadata with count > 1
  */
-export function isConsolidatedRecord(
-  record: AuditRecord | ConsolidatedAuditRecord
-): record is ConsolidatedAuditRecord {
-  return 'consolidatedCount' in record && record.consolidatedCount > 1
+export function isConsolidatedRecord(record: object): boolean {
+  return (
+    'consolidatedCount' in record &&
+    typeof record.consolidatedCount === 'number' &&
+    record.consolidatedCount > 1
+  )
 }

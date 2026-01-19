@@ -117,9 +117,19 @@ describe('consolidation', () => {
         'changes.new.contact.email.address'
       ],
       [
+        'email response time',
+        'changes.previous.contact.email.responseTime',
+        'changes.new.contact.email.responseTime'
+      ],
+      [
         'online contact link',
         'changes.previous.contact.online.url',
         'changes.new.contact.online.url'
+      ],
+      [
+        'online contact text',
+        'changes.previous.contact.online.text',
+        'changes.new.contact.online.text'
       ]
     ])(
       'should have correct configuration for %s',
@@ -129,8 +139,8 @@ describe('consolidation', () => {
       }
     )
 
-    it('should have exactly 3 support contact fields', () => {
-      expect(supportContactFields).toHaveLength(3)
+    it('should have exactly 5 support contact fields', () => {
+      expect(supportContactFields).toHaveLength(5)
     })
   })
 
