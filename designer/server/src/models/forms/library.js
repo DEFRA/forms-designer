@@ -212,7 +212,7 @@ export function overviewViewModel(metadata, formDef, notification) {
       heading: {
         text: 'Manage form',
         size: 'medium',
-        level: '3'
+        level: '2'
       },
 
       // Adjust default action when draft is available
