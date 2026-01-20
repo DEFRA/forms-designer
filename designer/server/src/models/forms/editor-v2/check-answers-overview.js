@@ -34,6 +34,62 @@ function getSectionsSummary(definition) {
 }
 
 /**
+ * @param {string} slug
+ * @param {string} pageId
+ * @param {{ hasDeclaration: boolean, declarationText: string }} declarationInfo
+ * @param {{ count: number, titles: string[] }} sectionsSummary
+ * @param {boolean} showConfirmationEmail
+ * @param {boolean} showReferenceNumber
+ */
+function buildSummaries(
+  slug,
+  pageId,
+  declarationInfo,
+  sectionsSummary,
+  showConfirmationEmail,
+  showReferenceNumber
+) {
+  return {
+    // Declaration summary
+    declaration: {
+      hasDeclaration: declarationInfo.hasDeclaration,
+      text: declarationInfo.hasDeclaration
+        ? declarationInfo.declarationText
+        : null,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/declaration`
+      )
+    },
+
+    // Reference number summary
+    referenceNumber: {
+      enabled: showReferenceNumber,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/reference-number-settings`
+      )
+    },
+
+    // Confirmation email summary
+    confirmationEmail: {
+      enabled: showConfirmationEmail,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/confirmation-email`
+      )
+    },
+
+    // Sections summary
+    sections: {
+      count: sectionsSummary.count,
+      titles: sectionsSummary.titles,
+      link: editorv2Path(slug, `page/${pageId}/check-answers-settings/sections`)
+    }
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -79,42 +135,14 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       text: BACK_TO_ADD_AND_EDIT_PAGES
     },
 
-    // Declaration summary
-    declaration: {
-      hasDeclaration: declarationInfo.hasDeclaration,
-      text: declarationInfo.hasDeclaration
-        ? declarationInfo.declarationText
-        : null,
-      link: editorv2Path(
-        slug,
-        `page/${pageId}/check-answers-settings/declaration`
-      )
-    },
-
-    // Reference number summary
-    referenceNumber: {
-      enabled: showReferenceNumber,
-      link: editorv2Path(
-        slug,
-        `page/${pageId}/check-answers-settings/reference-number-settings`
-      )
-    },
-
-    // Confirmation email summary
-    confirmationEmail: {
-      enabled: showConfirmationEmail,
-      link: editorv2Path(
-        slug,
-        `page/${pageId}/check-answers-settings/confirmation-email`
-      )
-    },
-
-    // Sections summary
-    sections: {
-      count: sectionsSummary.count,
-      titles: sectionsSummary.titles,
-      link: editorv2Path(slug, `page/${pageId}/check-answers-settings/sections`)
-    },
+    ...buildSummaries(
+      slug,
+      pageId,
+      declarationInfo,
+      sectionsSummary,
+      showConfirmationEmail,
+      showReferenceNumber
+    ),
 
     // Preview model
     previewModel: {
