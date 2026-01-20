@@ -37,7 +37,7 @@
     {% endif %}
   {% endblock %}
 
-  <main class="govuk-main-wrapper {%- if mainClasses %} {{ mainClasses }}{% endif %}" id="main-head-content" {%- if mainLang %} lang="{{ mainLang }}"{% endif %}>
+  <main class="govuk-main-wrapper {%- if mainClasses %} {{ mainClasses }}{% endif %}" id="main-content" {%- if mainLang %} lang="{{ mainLang }}"{% endif %}>
     {% block mainStart %}{% endblock %}
 
     {% block content %}{% endblock %}
