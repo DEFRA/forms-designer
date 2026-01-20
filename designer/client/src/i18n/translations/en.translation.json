@@ -217,7 +217,9 @@
     "LatLongField": "Latitude and longitude",
     "LatLongField_info": "Allows users to enter latitude and longitude coordinates",
     "HiddenField": "Hidden field",
-    "HiddenField_info": "For internal processing"
+    "HiddenField_info": "For internal processing",
+    "PaymentField": "Payment",
+    "PaymentField_info": "Allows users to make a payment"
   },
   "fileUploadFieldEditComponent": {
     "helpTextField": {
