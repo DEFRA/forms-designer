@@ -41,9 +41,6 @@ const postJsonByComponentType = /** @type {typeof postJson<ComponentDef>} */ (
 const delJsonByComponentType = /** @type {typeof delJson<ComponentDef>} */ (
   delJson
 )
-const postJsonByOptionType = /** @type {typeof postJson<FormOption>} */ (
-  postJson
-)
 
 /**
  * @param {Partial<ComponentDef>} questionDetails
@@ -517,6 +514,9 @@ export async function setConfirmationEmailSettings(
  * @param {string} optionValue
  */
 export async function setFormOption(formId, token, optionName, optionValue) {
+  const postJsonByOptionType =
+    /** @type {typeof postJson<{ optionValue: string }>} */ (postJson)
+
   await postJsonByOptionType(buildRequestUrl(formId, `options/${optionName}`), {
     payload: { optionValue },
     ...getHeaders(token)
@@ -871,5 +871,5 @@ export async function updateSectionSettings(
 }
 
 /**
- * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputConfirmationEmailSettings, FormOption, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat, Section, SectionAssignmentItem } from '@defra/forms-model'
+ * @import { ComponentDef, FormEditorInputCheckAnswersSettings, FormEditorInputConfirmationEmailSettings, FormEditorInputPageSettings, FormDefinition, ConditionWrapperV2, Page, PageRepeat, Section, SectionAssignmentItem } from '@defra/forms-model'
  */

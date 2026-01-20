@@ -190,11 +190,6 @@ export interface Output {
   emailAddress: string
 }
 
-export interface FormOption {
-  optionName: string
-  optionValue: string
-}
-
 export interface FormOptions {
   showReferenceNumber: boolean
 }

@@ -96,6 +96,7 @@ export function getPreviewModel(
     componentRows: previewPageController.componentRows,
     hasPageSettingsTab: true,
     showConfirmationEmail: previewPageController.showConfirmationEmail,
+    showReferenceNumber: false, // unused
     declarationText,
     needDeclaration,
     isConfirmationEmailSettingsPanel: true

@@ -37,10 +37,12 @@ import {
   CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS,
   CHECK_ANSWERS_TAB_DECLARATION,
   CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
+  CHECK_ANSWERS_TAB_REFERENCE_NUMBER,
   CHECK_ANSWERS_TAB_SECTIONS,
   PAGE_OVERVIEW_TITLE,
   TAB_TITLE_CONFIRMATION_EMAIL,
   TAB_TITLE_DECLARATION,
+  TAB_TITLE_REFERENCE_NUMBER,
   TAB_TITLE_SECTIONS,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
@@ -792,11 +794,12 @@ describe('editor-v2 - model', () => {
         CHECK_ANSWERS_TAB_PAGE_OVERVIEW
       )
 
-      expect(result).toHaveLength(4)
+      expect(result).toHaveLength(5)
       expect(result.map((t) => t.title)).toEqual([
         PAGE_OVERVIEW_TITLE,
         TAB_TITLE_DECLARATION,
         TAB_TITLE_CONFIRMATION_EMAIL,
+        TAB_TITLE_REFERENCE_NUMBER,
         TAB_TITLE_SECTIONS
       ])
     })
@@ -812,6 +815,7 @@ describe('editor-v2 - model', () => {
       expect(result[1].isActive).toBe(false)
       expect(result[2].isActive).toBe(false)
       expect(result[3].isActive).toBe(false)
+      expect(result[4].isActive).toBe(false)
     })
 
     it('should mark declaration tab as active', () => {
@@ -825,6 +829,7 @@ describe('editor-v2 - model', () => {
       expect(result[1].isActive).toBe(true)
       expect(result[2].isActive).toBe(false)
       expect(result[3].isActive).toBe(false)
+      expect(result[4].isActive).toBe(false)
     })
 
     it('should mark confirmation emails tab as active', () => {
@@ -838,6 +843,21 @@ describe('editor-v2 - model', () => {
       expect(result[1].isActive).toBe(false)
       expect(result[2].isActive).toBe(true)
       expect(result[3].isActive).toBe(false)
+      expect(result[4].isActive).toBe(false)
+    })
+
+    it('should mark reference-number tab as active', () => {
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_REFERENCE_NUMBER
+      )
+
+      expect(result[0].isActive).toBe(false)
+      expect(result[1].isActive).toBe(false)
+      expect(result[2].isActive).toBe(false)
+      expect(result[3].isActive).toBe(true)
+      expect(result[4].isActive).toBe(false)
     })
 
     it('should mark sections tab as active', () => {
@@ -850,7 +870,8 @@ describe('editor-v2 - model', () => {
       expect(result[0].isActive).toBe(false)
       expect(result[1].isActive).toBe(false)
       expect(result[2].isActive).toBe(false)
-      expect(result[3].isActive).toBe(true)
+      expect(result[3].isActive).toBe(false)
+      expect(result[4].isActive).toBe(true)
     })
 
     it('should have correct full path links', () => {
@@ -870,6 +891,9 @@ describe('editor-v2 - model', () => {
         `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS}`
       )
       expect(result[3].link).toBe(
+        `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_REFERENCE_NUMBER}`
+      )
+      expect(result[4].link).toBe(
         `/library/${testSlug}/editor-v2/page/${testPageId}/${CHECK_ANSWERS_TAB_SECTIONS}`
       )
     })

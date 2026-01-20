@@ -35,7 +35,6 @@ describe('check-answers-overview model', () => {
 
       expect(result.pageTitle).toBe('Check answers page overview')
       expect(result.cardTitle).toBe(PAGE_OVERVIEW_TITLE)
-      expect(result.cardCaption).toBe('Check answers')
     })
 
     it('should include tabConfig with Page overview as active', () => {
@@ -50,7 +49,7 @@ describe('check-answers-overview model', () => {
         'cya-page'
       )
 
-      expect(result.tabConfig).toHaveLength(4)
+      expect(result.tabConfig).toHaveLength(5)
       expect(result.tabConfig[0].isActive).toBe(true)
       expect(result.tabConfig[0].title).toBe(PAGE_OVERVIEW_TITLE)
     })

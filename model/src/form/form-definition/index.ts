@@ -1046,6 +1046,10 @@ const phaseBannerSchema = Joi.object<PhaseBanner>()
       .description('Development phase of the service (alpha or beta)')
   })
 
+const optionsSchema = Joi.object({
+  showReferenceNumber: Joi.boolean().default(false).required()
+}).description('Options for the form')
+
 const outputSchema = Joi.object<FormDefinition['output']>()
   .description('Configuration for form submission output')
   .keys({
@@ -1134,11 +1138,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     phaseBanner: phaseBannerSchema
       .optional()
       .description('Phase banner configuration'),
-    options: Joi.object({
-      showReferenceNumber: Joi.boolean().default(false).required()
-    })
-      .optional()
-      .description('Options for the form'),
+    options: optionsSchema.optional().description('Options for the form'),
     outputEmail: Joi.string()
       .trim()
       .email({ tlds: { allow: ['uk'] } })

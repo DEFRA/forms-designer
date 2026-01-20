@@ -32,10 +32,10 @@ export default [
           definition = await forms.getDraftFormDefinition(form.id, token)
         }
 
-        // Fetch form history with pagination
         const auditResponse = await audit.getFormHistory(form.id, token, {
           page,
-          perPage
+          perPage,
+          consolidate: true
         })
 
         // Handle page overflow - redirect to first page before building view model
