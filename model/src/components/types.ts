@@ -258,8 +258,8 @@ export interface MonthYearFieldComponent extends DateFieldBase {
 export interface PaymentFieldComponent extends FormFieldBase {
   type: ComponentType.PaymentField
   options: FormFieldBase['options'] & {
-    amount: number
-    description: string
+    amount?: number
+    description?: string
   }
 }
 
