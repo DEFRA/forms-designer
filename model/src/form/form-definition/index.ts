@@ -577,11 +577,18 @@ export const componentSchema = Joi.object<ComponentDef>()
         .description('Custom error messages keyed by validation rule name'),
       amount: Joi.when('type', {
         is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
-        then: Joi.number().min(0.01).required().description('Payment amount')
+        then: Joi.number()
+          .min(0.3)
+          .max(100000)
+          .required()
+          .description('Payment amount in GBP (£0.30 - £100,000)')
       }).description('Payment amount - for PaymentField only'),
       description: Joi.when('type', {
         is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
-        then: Joi.string().required().description('Payment description')
+        then: Joi.string()
+          .max(230)
+          .required()
+          .description('Payment description (max 230 chars)')
       }).description('Payment description - for PaymentField only')
     })
       .default({})
