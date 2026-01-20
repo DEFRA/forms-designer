@@ -391,6 +391,7 @@ export type ConditionalComponentsDef = Exclude<
   | MonthYearFieldComponent
   | UkAddressFieldComponent
   | FileUploadFieldComponent
+  | PaymentFieldComponent
 >
 
 export type PreviewType = keyof typeof PreviewTypeEnum
