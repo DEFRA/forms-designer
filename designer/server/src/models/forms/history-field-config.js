@@ -84,9 +84,19 @@ export const supportContactFields = [
     newPath: 'changes.new.contact.email.address'
   },
   {
+    label: 'email response time',
+    prevPath: 'changes.previous.contact.email.responseTime',
+    newPath: 'changes.new.contact.email.responseTime'
+  },
+  {
     label: 'online contact link',
     prevPath: 'changes.previous.contact.online.url',
     newPath: 'changes.new.contact.online.url'
+  },
+  {
+    label: 'online contact text',
+    prevPath: 'changes.previous.contact.online.text',
+    newPath: 'changes.new.contact.online.text'
   }
 ]
 
