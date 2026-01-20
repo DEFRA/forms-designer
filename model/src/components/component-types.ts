@@ -187,5 +187,12 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     hint: '',
     options: {},
     schema: {}
+  },
+  {
+    name: 'PaymentField',
+    title: 'Payment field',
+    type: ComponentType.PaymentField,
+    hint: '',
+    options: {}
   }
 ])

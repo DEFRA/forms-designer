@@ -574,7 +574,17 @@ export const componentSchema = Joi.object<ComponentDef>()
       customValidationMessages: Joi.object<LanguageMessages>()
         .unknown(true)
         .optional()
-        .description('Custom error messages keyed by validation rule name')
+        .description('Custom error messages keyed by validation rule name'),
+      amount: Joi.when('type', {
+        is: Joi.string().valid(ComponentType.PaymentField),
+        then: Joi.number().min(0.01).required().description('Payment amount'),
+        otherwise: Joi.forbidden()
+      }).description('Payment amount - for PaymentField only'),
+      description: Joi.when('type', {
+        is: Joi.string().valid(ComponentType.PaymentField),
+        then: Joi.string().required().description('Payment description'),
+        otherwise: Joi.forbidden()
+      }).description('Payment description - for PaymentField only')
     })
       .default({})
       .unknown(true)

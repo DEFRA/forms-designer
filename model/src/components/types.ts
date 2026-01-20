@@ -255,6 +255,14 @@ export interface MonthYearFieldComponent extends DateFieldBase {
   }
 }
 
+export interface PaymentFieldComponent extends FormFieldBase {
+  type: ComponentType.PaymentField
+  options: FormFieldBase['options'] & {
+    amount: number
+    description: string
+  }
+}
+
 // Content Fields
 export interface DetailsComponent extends ContentFieldBase {
   type: ComponentType.Details
@@ -352,6 +360,7 @@ export type InputFieldsComponentsDef =
   | NationalGridFieldNumberFieldComponent
   | LatLongFieldComponent
   | HiddenFieldComponent
+  | PaymentFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =
