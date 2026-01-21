@@ -24,7 +24,8 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
     border-bottom: 1px solid #008938;
     padding-left: 10px;
 
-    p {
+    p,
+    h2 {
       margin-bottom: 0;
       color: #005a30;
       padding: 2px 8px 3px;

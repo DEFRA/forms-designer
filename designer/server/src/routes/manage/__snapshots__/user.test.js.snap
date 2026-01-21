@@ -174,7 +174,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-content">
 
 
 
@@ -495,7 +495,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-content">
 
   <form method="post" novalidate>
 
@@ -786,7 +786,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-content">
 
 
 

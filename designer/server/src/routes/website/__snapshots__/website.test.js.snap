@@ -181,7 +181,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">
@@ -1552,7 +1552,7 @@ exports[`Health check route /get-started should load get Get Started page 1`] = 
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">
@@ -1853,7 +1853,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">
@@ -2493,7 +2493,7 @@ exports[`Health check route /resources should load Does this need to be... page 
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">
@@ -2822,7 +2822,7 @@ exports[`Health check route /resources/accessibility-and-inclusion should load A
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">
@@ -3250,7 +3250,7 @@ exports[`Health check route /support should shows the Defra Forms Website Suppor
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">
@@ -3511,7 +3511,7 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
 <div>
   <div class="govuk-width-container">

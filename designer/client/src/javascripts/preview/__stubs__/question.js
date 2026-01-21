@@ -347,7 +347,7 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
     <div id="preview-container-inner">
       <!-- Before content -->
       <div id="before-content" class="preview-before-content">
-        <p class="govuk-body-s">Previews</p>
+        <h2 class="govuk-body-s">Previews</h2>
       </div>
 
       <div class="govuk-!-margin-top-9">
