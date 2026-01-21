@@ -16,7 +16,7 @@ describe('national-grid', () => {
     it('should create instance from component', () => {
       const component = buildNationalGridFieldNumberFieldComponent({
         title: 'Enter National Grid field number',
-        hint: 'For example, SO04188589',
+        hint: 'For example, NG 1234 5678',
         options: {
           instructionText: 'Enter the 10-character field number'
         }
@@ -26,7 +26,7 @@ describe('national-grid', () => {
       const values = /** @type {LocationSettings} */ (elements.values)
 
       expect(values.question).toBe('Enter National Grid field number')
-      expect(values.hintText).toBe('For example, SO04188589')
+      expect(values.hintText).toBe('For example, NG 1234 5678')
       expect(values.instructionText).toBe('Enter the 10-character field number')
     })
   })
@@ -52,7 +52,7 @@ describe('national-grid', () => {
       const elements = new LocationPreviewElements({
         ...baseElements,
         question: 'Enter field number',
-        hintText: 'Example: SO04188589',
+        hintText: 'Example: NG 1234 5678',
         instructionText: 'Use National Grid format',
         userClasses: 'custom-class'
       })

@@ -574,7 +574,22 @@ export const componentSchema = Joi.object<ComponentDef>()
       customValidationMessages: Joi.object<LanguageMessages>()
         .unknown(true)
         .optional()
-        .description('Custom error messages keyed by validation rule name')
+        .description('Custom error messages keyed by validation rule name'),
+      amount: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
+        then: Joi.number()
+          .min(0.3)
+          .max(100000)
+          .required()
+          .description('Payment amount in GBP (£0.30 - £100,000)')
+      }).description('Payment amount - for PaymentField only'),
+      description: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
+        then: Joi.string()
+          .max(230)
+          .required()
+          .description('Payment description (max 230 chars)')
+      }).description('Payment description - for PaymentField only')
     })
       .default({})
       .unknown(true)
@@ -1046,6 +1061,10 @@ const phaseBannerSchema = Joi.object<PhaseBanner>()
       .description('Development phase of the service (alpha or beta)')
   })
 
+const optionsSchema = Joi.object({
+  showReferenceNumber: Joi.boolean().default(false).required()
+}).description('Options for the form')
+
 const outputSchema = Joi.object<FormDefinition['output']>()
   .description('Configuration for form submission output')
   .keys({
@@ -1134,6 +1153,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     phaseBanner: phaseBannerSchema
       .optional()
       .description('Phase banner configuration'),
+    options: optionsSchema.optional().description('Options for the form'),
     outputEmail: Joi.string()
       .trim()
       .email({ tlds: { allow: ['uk'] } })

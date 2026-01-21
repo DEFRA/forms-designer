@@ -72,7 +72,7 @@ describe('advanced-settings-mappers', () => {
       const result = mapBaseQuestionDetails(payload)
 
       expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
-        'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589'
+        'A National Grid field number is made up of 2 letters and 8 numbers, for example, NG 1234 5678'
       )
     })
 
@@ -133,7 +133,7 @@ describe('advanced-settings-mappers', () => {
       const result = mapBaseQuestionDetails(payload)
 
       expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
-        'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589'
+        'A National Grid field number is made up of 2 letters and 8 numbers, for example, NG 1234 5678'
       )
     })
 
