@@ -67,7 +67,7 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Classes
     ],
     NationalGridFieldNumberField: [
-      QuestionAdvancedSettings.GiveInstructionsNoMap,
+      QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
       QuestionAdvancedSettings.Classes
     ],
@@ -258,19 +258,6 @@ export const allAdvancedSettingsFields =
         text: "For example, a symbol or abbreviation for the type of information you're asking for, like, 'per item' or 'Kg'"
       },
       classes: GOVUK_INPUT_WIDTH_3
-    },
-    [QuestionAdvancedSettings.GiveInstructionsNoMap]: {
-      name: 'giveInstructions',
-      id: 'giveInstructions',
-      classes: 'govuk-checkboxes--small',
-      formGroup: { classes: 'app-settings-checkboxes' },
-      items: [
-        {
-          value: 'true',
-          text: 'Give instructions to help users answer this question',
-          checked: false
-        }
-      ]
     },
     [QuestionAdvancedSettings.GiveInstructions]: {
       name: 'giveInstructions',
