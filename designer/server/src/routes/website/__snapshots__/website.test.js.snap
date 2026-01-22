@@ -1897,7 +1897,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
   <ol class="app-step-nav__steps">
     <li class="app-step-nav__step" id="step-1">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -1907,7 +1907,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Forms criteria</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Review the forms criteria to find out if your
@@ -1917,7 +1917,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-2">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -1927,7 +1927,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Success measures</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You should agree the success measures for your
@@ -1938,7 +1938,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-3">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -1948,7 +1948,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Agree timescales</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You should agree timescales with the Defra
@@ -1959,7 +1959,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-4">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -1969,7 +1969,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Wireframe</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You should create a plan or wireframe version
@@ -1993,7 +1993,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-5">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2003,7 +2003,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
         <span class="js-step-title">Build your form using the Defra Form Designer</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">When the Defra Forms team has reviewed your
@@ -2020,7 +2020,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-6">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2030,7 +2030,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Review of your form by the Defra Forms team</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Once you've built your first draft, send a
@@ -2048,7 +2048,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-7">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
               <span class="app-step-nav__circle-inner">
                   <span class="app-step-nav__circle-background">
@@ -2058,7 +2058,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
               </span>
           </span>
           <span class="js-step-title">Set up a mailbox to receive form submissions</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Form submissions must be sent to a shared
@@ -2073,7 +2073,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-8">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number ">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2083,7 +2083,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Data protection impact assessment</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You must contact your local Data Protection
@@ -2106,7 +2106,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-9">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2116,7 +2116,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Privacy notice</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You must provide an online link to a relevant
@@ -2145,7 +2145,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-10">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2155,7 +2155,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">How users will find your form</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">If your form is going to be available for
@@ -2172,7 +2172,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-11">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2182,7 +2182,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Make the form live</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">When your form is ready to publish, the Defra
@@ -2195,7 +2195,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-12">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2205,7 +2205,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Support</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Once your form is live, you should continue to
