@@ -170,7 +170,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     name: 'NationalGridFieldNumberField',
     title: 'National Grid field number',
     type: ComponentType.NationalGridFieldNumberField,
-    hint: 'A National Grid field number is made up of 2 letters and 8 numbers, for example, SO04188589',
+    hint: 'A National Grid field number is made up of 2 letters and 8 numbers, for example, NG 1234 5678',
     options: {}
   },
   {
@@ -187,5 +187,12 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     hint: '',
     options: {},
     schema: {}
+  },
+  {
+    name: 'PaymentField',
+    title: 'Payment field',
+    type: ComponentType.PaymentField,
+    hint: '',
+    options: {}
   }
 ])

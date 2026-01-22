@@ -287,7 +287,7 @@ describe('history-event-descriptions', () => {
 
       const result = getEventDescription(record)
       expect(result).toBe(
-        "Updated the support email address to 'support@defra.gov.uk'."
+        "Updated the support email address to 'support@defra.gov.uk' and email response time to '22'."
       )
     })
 
@@ -314,7 +314,7 @@ describe('history-event-descriptions', () => {
 
       const result = getEventDescription(record)
       expect(result).toBe(
-        "Updated the support online contact link to 'https://www.gov.uk/guidance/contact-defra'."
+        "Updated the support online contact link to 'https://www.gov.uk/guidance/contact-defra' and online contact text to 'some link'."
       )
     })
 

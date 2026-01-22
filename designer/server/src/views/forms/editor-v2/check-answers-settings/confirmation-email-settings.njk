@@ -9,6 +9,7 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -36,6 +37,10 @@
     }) %}
 
       <form id="confirmationEmailForm" class="form" method="post">
+        {{ govukWarningText({
+          text: "If you turn off confirmation emails, users will not receive a copy of their answers",
+          iconFallbackText: "Warning"
+        }) }}
 
         {% call govukFieldset({
           legend: {
