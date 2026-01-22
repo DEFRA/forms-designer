@@ -118,6 +118,7 @@ export const QuestionAdvancedSettings =
     Regex: 'regex',
     Rows: 'rows',
     GiveInstructions: 'giveInstructions',
+    GiveInstructionsNoMap: 'giveInstructionsNoMap',
     InstructionText: 'instructionText'
   }
 
