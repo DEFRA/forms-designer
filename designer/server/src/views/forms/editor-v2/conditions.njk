@@ -28,7 +28,7 @@
       {% endcall %}
     {% endif %}
 
-    <div class="editor-card-title">{{ cardTitle }}</div>
+    <h2 class="editor-card-title">{{ cardTitle }}</h2>
 
     {% if (summaryTable.rows | length) %}
       {{ govukTable(summaryTable) }}
