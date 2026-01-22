@@ -123,7 +123,7 @@ export function getPreviewModel(
     componentRows: previewPageController.componentRows,
     hasPageSettingsTab: true,
     showConfirmationEmail: previewPageController.showConfirmationEmail,
-    showReferenceNumber: false, // unused
+    showReferenceNumber: false, // unused by preview so just send a default value
     declarationText,
     needDeclaration,
     isConfirmationEmailSettingsPanel: false
