@@ -314,7 +314,8 @@ describe('System admin routes', () => {
           expect.objectContaining({
             id: expect.any(String),
             displayName: expect.any(String)
-          })
+          }),
+          2
         )
 
         // Verify form definitions were requested
@@ -354,7 +355,8 @@ describe('System admin routes', () => {
 
         // Verify audit event published
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
-          expect.any(Object)
+          expect.any(Object),
+          1
         )
       })
 
@@ -394,7 +396,8 @@ describe('System admin routes', () => {
 
         // Verify definitions were requested
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
-          expect.any(Object)
+          expect.any(Object),
+          2
         )
       })
 
@@ -435,7 +438,8 @@ describe('System admin routes', () => {
 
         // Verify all forms were processed
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
-          expect.any(Object)
+          expect.any(Object),
+          12
         )
 
         // Verify all form definitions were fetched
