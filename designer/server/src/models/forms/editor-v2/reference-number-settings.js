@@ -33,7 +33,7 @@ import {
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
- * Constructs the settings fields for the confirmation email settings page, specifically the radio button options.
+ * Constructs the settings fields for the reference number settings page.
  * @param {boolean} enableReferenceNumber
  * @param {ValidationFailure<FormEditor>} [validation]
  */
@@ -49,7 +49,7 @@ export function settingsFields(enableReferenceNumber, validation) {
           checked: enableReferenceNumber
         }
       ],
-      ...insertValidationErrors(validation?.formErrors.enableReferenceNumberVal)
+      ...insertValidationErrors(validation?.formErrors.enableReferenceNumber)
     }
   }
 }

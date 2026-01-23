@@ -34,7 +34,7 @@ describe('Editor v2 reference-number-settings routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number',
       auth
     }
 
@@ -169,7 +169,7 @@ describe('Editor v2 reference-number-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/reference-number-settings',
+      url: '/library/my-form-slug/editor-v2/page/p2/check-answers-settings/reference-number',
       auth,
       payload: {
         // Checkbox unchecked - field is omitted
@@ -198,7 +198,7 @@ describe('Editor v2 reference-number-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number',
       auth,
       payload: {
         enableReferenceNumber: 'true' // Checkbox checked sends string 'true'
@@ -227,7 +227,7 @@ describe('Editor v2 reference-number-settings routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number-settings',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number',
       auth,
       payload: {
         enableBadOption: 'true' // Checkbox checked sends string 'true'
@@ -240,7 +240,7 @@ describe('Editor v2 reference-number-settings routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number-settings'
+      '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number'
     )
     expect(setFormOption).not.toHaveBeenCalled()
   })

@@ -67,7 +67,7 @@ function buildSummaries(
       enabled: showReferenceNumber,
       link: editorv2Path(
         slug,
-        `page/${pageId}/check-answers-settings/reference-number-settings`
+        `page/${pageId}/check-answers-settings/reference-number`
       )
     },
 

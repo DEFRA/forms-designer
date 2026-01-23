@@ -12,7 +12,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/reference-number-settin
 import { editorv2Path } from '~/src/models/links.js'
 import { postAuthSettings } from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
 
-export const ROUTE_FULL_PATH_REFERENCE_NUMBER_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/reference-number-settings`
+export const ROUTE_FULL_PATH_REFERENCE_NUMBER_SETTINGS = `/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/reference-number`
 
 const errorKey = sessionNames.validationFailure.editorReferenceNumberSettings
 const notificationKey = sessionNames.successNotification
@@ -76,7 +76,7 @@ export default [
     path: ROUTE_FULL_PATH_REFERENCE_NUMBER_SETTINGS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
-      const { slug } = /** @type {{ slug: string, pageId: string }} */ (params)
+      const { slug } = /** @type {{ slug: string }} */ (params)
       const { token } = auth.credentials
 
       // Form metadata and page components

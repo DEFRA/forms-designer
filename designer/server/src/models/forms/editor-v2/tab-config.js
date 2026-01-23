@@ -20,7 +20,7 @@ export const CHECK_ANSWERS_TAB_DECLARATION =
 export const CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS =
   'check-answers-settings/confirmation-email'
 export const CHECK_ANSWERS_TAB_REFERENCE_NUMBER =
-  'check-answers-settings/reference-number-settings'
+  'check-answers-settings/reference-number'
 export const CHECK_ANSWERS_TAB_SECTIONS = 'check-answers-settings/sections'
 
 /**
