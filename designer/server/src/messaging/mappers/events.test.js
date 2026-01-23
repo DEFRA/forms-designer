@@ -10,7 +10,8 @@ import {
   authenticationLoginMapper,
   authenticationLogoutAutoMapper,
   authenticationLogoutDifferentDevicelMapper,
-  authenticationLogoutManualMapper
+  authenticationLogoutManualMapper,
+  formsBackupRequestedMapper
 } from '~/src/messaging/mappers/events.js'
 
 describe('authentication-events', () => {
@@ -96,6 +97,31 @@ describe('authentication-events', () => {
             userId: authAuditUser.id,
             email: authAuditUser.email,
             displayName: authAuditUser.displayName
+          }
+        }
+      )
+    })
+  })
+
+  describe('formsBackupRequestedMapper', () => {
+    it('should map a payload into a FORMS_BACKUP_REQUESTED event', () => {
+      const totalForms = 12
+
+      expect(formsBackupRequestedMapper({ totalForms }, authAuditUser)).toEqual(
+        {
+          schemaVersion: AuditEventMessageSchemaVersion.V1,
+          category: AuditEventMessageCategory.FORM,
+          source: AuditEventMessageSource.FORMS_DESIGNER,
+          type: AuditEventMessageType.FORMS_BACKUP_REQUESTED,
+          entityId: 'All Forms',
+          createdAt: expect.any(Date),
+          createdBy: {
+            id: authAuditUser.id,
+            displayName: authAuditUser.displayName
+          },
+          messageCreatedAt: expect.any(Date),
+          data: {
+            totalForms
           }
         }
       )
