@@ -13,7 +13,6 @@ import {
   stringHasValue
 } from '~/src/lib/utils.js'
 import {
-  GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation
@@ -28,54 +27,29 @@ import {
 import { dummyRenderer } from '~/src/models/forms/editor-v2/questions.js'
 import {
   CHECK_ANSWERS_CAPTION,
-  CHECK_ANSWERS_TAB_DECLARATION,
+  CHECK_ANSWERS_TAB_REFERENCE_NUMBER,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
- * @param {string | undefined} needDeclarationVal
- * @param {string | undefined} declarationTextVal
+ * Constructs the settings fields for the reference number settings page.
+ * @param {boolean} enableReferenceNumber
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function settingsFields(
-  needDeclarationVal,
-  declarationTextVal,
-  validation
-) {
+export function settingsFields(enableReferenceNumber, validation) {
   return {
-    needDeclaration: {
-      name: 'needDeclaration',
-      id: 'needDeclaration',
-      hint: {
-        text: 'Use a declaration if you need users to declare or agree to something before they submit the form'
-      },
+    enableReferenceNumber: {
+      name: 'enableReferenceNumber',
+      id: 'enableReferenceNumber',
       items: [
         {
-          value: 'false',
-          text: 'No'
-        },
-        {
           value: 'true',
-          text: 'Yes'
+          text: 'Turn on the reference number',
+          checked: enableReferenceNumber
         }
       ],
-      value: needDeclarationVal,
-      ...insertValidationErrors(validation?.formErrors.needDeclaration)
-    },
-    declarationText: {
-      name: 'declarationText',
-      id: 'declarationText',
-      label: {
-        text: 'Declaration text',
-        classes: GOVUK_LABEL__M
-      },
-      hint: {
-        text: 'Use a declaration if you need users to declare or agree to something before they submit the form'
-      },
-      rows: 3,
-      value: declarationTextVal,
-      ...insertValidationErrors(validation?.formErrors.declarationText)
+      ...insertValidationErrors(validation?.formErrors.enableReferenceNumber)
     }
   }
 }
@@ -84,20 +58,21 @@ export function settingsFields(
  * @param { Page | undefined } page
  * @param {FormDefinition} definition
  * @param {string} previewPageUrl
- * @param {ReturnType<typeof settingsFields>} fields
+ * @param {string} declarationText
+ * @param {boolean} needDeclaration
  * @param {boolean} showConfirmationEmail
+ * @param {boolean} showReferenceNumber
  * @returns {PagePreviewPanelMacro & PreviewModelExtras}
  */
 export function getPreviewModel(
   page,
   definition,
   previewPageUrl,
-  fields,
-  showConfirmationEmail
+  declarationText,
+  needDeclaration,
+  showConfirmationEmail,
+  showReferenceNumber
 ) {
-  const declarationText = fields.declarationText.value ?? ''
-  const needDeclaration = Boolean(fields.needDeclaration.value)
-
   const elements = new SummaryPreviewSSR(
     page,
     declarationText,
@@ -119,25 +94,26 @@ export function getPreviewModel(
     sectionTitle: previewPageController.sectionTitle,
     buttonText: previewPageController.buttonText,
     previewPageUrl,
-    questionType: ComponentType.TextField, // components[0]?.type
+    questionType: ComponentType.TextField,
     componentRows: previewPageController.componentRows,
     hasPageSettingsTab: true,
     showConfirmationEmail: previewPageController.showConfirmationEmail,
-    showReferenceNumber: false, // unused by preview so just send a default value
+    showReferenceNumber,
     declarationText,
     needDeclaration,
-    isConfirmationEmailSettingsPanel: false
+    isConfirmationEmailSettingsPanel: true
   }
 }
 
 /**
+ * Creates the view model for the reference number settings page.
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {string[]} [notification]
  */
-export function checkAnswersSettingsViewModel(
+export function referenceNumberSettingsViewModel(
   metadata,
   definition,
   pageId,
@@ -152,7 +128,7 @@ export function checkAnswersSettingsViewModel(
     definition,
     'Editor'
   )
-  const { formValues, formErrors } = validation ?? {}
+  const { formErrors } = validation ?? {}
 
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
@@ -163,22 +139,23 @@ export function checkAnswersSettingsViewModel(
     })
   )
 
-  const declarationTextVal =
-    formValues?.declarationText ?? guidanceComponent?.content
-  const needDeclarationVal =
-    formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
+  const declarationText = guidanceComponent?.content ?? ''
+  const needDeclaration = stringHasValue(declarationText)
+
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
-  const fields = settingsFields(
-    needDeclarationVal,
-    declarationTextVal,
-    validation
-  )
-  const pageHeading = 'Declaration'
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
+  const fields = settingsFields(showReferenceNumber, validation)
+  const pageHeading = 'Reference number'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
-  // prettier-ignore
   const basePreviewModel = getPreviewModel(
-    page, definition, previewPageUrl, fields, showConfirmationEmail
+    page,
+    definition,
+    previewPageUrl,
+    declarationText,
+    needDeclaration,
+    showConfirmationEmail,
+    showReferenceNumber
   )
   const previewModel = enrichPreviewModel(basePreviewModel, definition)
 
@@ -195,7 +172,7 @@ export function checkAnswersSettingsViewModel(
     tabConfig: getCheckAnswersTabConfig(
       metadata.slug,
       pageId,
-      CHECK_ANSWERS_TAB_DECLARATION
+      CHECK_ANSWERS_TAB_REFERENCE_NUMBER
     ),
     navigation,
     errorList: buildErrorList(formErrors),

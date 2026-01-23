@@ -8,7 +8,6 @@ import {
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import {
-  BACK_TO_ADD_AND_EDIT_PAGES,
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
@@ -152,10 +151,6 @@ export function sectionsViewModel(
     sections: sectionsWithPages,
     unassignedPages,
     currentPath,
-    backLink: {
-      href: editorv2Path(slug, `page/${pageId}/check-answers-settings`),
-      text: BACK_TO_ADD_AND_EDIT_PAGES
-    },
     navigation,
     errorList: buildErrorList(validation?.formErrors),
     formErrors: validation?.formErrors,

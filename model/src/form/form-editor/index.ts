@@ -306,6 +306,10 @@ export const disableConfirmationEmailSchema = Joi.boolean()
   .valid(true)
   .description('Whether confirmation emails should be disabled')
 
+export const enableReferenceNumberSchema = Joi.boolean()
+  .valid(true)
+  .description('Whether reference number should be enabled')
+
 export const minSchema = Joi.number()
   .empty('')
   .integer()

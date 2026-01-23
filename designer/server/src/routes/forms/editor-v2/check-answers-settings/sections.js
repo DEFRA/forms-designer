@@ -144,7 +144,7 @@ export default [
       )
 
       return h.view(
-        'forms/editor-v2/sections',
+        'forms/editor-v2/check-answers-settings/sections',
         viewModel.sectionsViewModel(
           metadata,
           definition,

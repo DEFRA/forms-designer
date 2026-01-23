@@ -196,26 +196,6 @@ describe('sections model', () => {
       expect(result.unassignedPages[1].isGuidance).toBe(false)
     })
 
-    it('should build correct back link', () => {
-      const definition = buildDefinition({
-        pages: [buildSummaryPage({ id: 'cya-page' })],
-        sections: []
-      })
-
-      const result = sectionsViewModel(
-        baseMetadata,
-        definition,
-        'cya-page',
-        undefined,
-        undefined
-      )
-
-      expect(result.backLink.href).toBe(
-        '/library/test-form/editor-v2/page/cya-page/check-answers-settings'
-      )
-      expect(result.backLink.text).toBe('Back to add and edit pages')
-    })
-
     it('should build correct current path', () => {
       const definition = buildDefinition({
         pages: [buildSummaryPage({ id: 'cya-page' })],

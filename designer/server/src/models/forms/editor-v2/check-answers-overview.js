@@ -14,7 +14,6 @@ import {
   getUnassignedPageTitlesForPreview
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
-  CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
   PAGE_OVERVIEW_TITLE,
   getCheckAnswersTabConfig
@@ -31,6 +30,62 @@ function getSectionsSummary(definition) {
   return {
     count: sections.length,
     titles: sections.map((section) => section.title)
+  }
+}
+
+/**
+ * @param {string} slug
+ * @param {string} pageId
+ * @param {{ hasDeclaration: boolean, declarationText: string }} declarationInfo
+ * @param {{ count: number, titles: string[] }} sectionsSummary
+ * @param {boolean} showConfirmationEmail
+ * @param {boolean} showReferenceNumber
+ */
+function buildSummaries(
+  slug,
+  pageId,
+  declarationInfo,
+  sectionsSummary,
+  showConfirmationEmail,
+  showReferenceNumber
+) {
+  return {
+    // Declaration summary
+    declaration: {
+      hasDeclaration: declarationInfo.hasDeclaration,
+      text: declarationInfo.hasDeclaration
+        ? declarationInfo.declarationText
+        : null,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/declaration`
+      )
+    },
+
+    // Reference number summary
+    referenceNumber: {
+      enabled: showReferenceNumber,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/reference-number`
+      )
+    },
+
+    // Confirmation email summary
+    confirmationEmail: {
+      enabled: showConfirmationEmail,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/confirmation-email`
+      )
+    },
+
+    // Sections summary
+    sections: {
+      count: sectionsSummary.count,
+      titles: sectionsSummary.titles,
+      link: editorv2Path(slug, `page/${pageId}/check-answers-settings/sections`)
+    }
   }
 }
 
@@ -52,6 +107,7 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
 
   const page = getPageFromDefinition(definition, pageId)
   const declarationInfo = getDeclarationInfo(page)
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const sectionsSummary = getSectionsSummary(definition)
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
 
@@ -67,7 +123,6 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
     slug,
     pageTitle,
     cardTitle: PAGE_OVERVIEW_TITLE,
-    cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageTitle,
     tabConfig: getCheckAnswersTabConfig(
       slug,
@@ -80,33 +135,14 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       text: BACK_TO_ADD_AND_EDIT_PAGES
     },
 
-    // Declaration summary
-    declaration: {
-      hasDeclaration: declarationInfo.hasDeclaration,
-      text: declarationInfo.hasDeclaration
-        ? declarationInfo.declarationText
-        : null,
-      link: editorv2Path(
-        slug,
-        `page/${pageId}/check-answers-settings/declaration`
-      )
-    },
-
-    // Confirmation email summary
-    confirmationEmail: {
-      enabled: showConfirmationEmail,
-      link: editorv2Path(
-        slug,
-        `page/${pageId}/check-answers-settings/confirmation-email`
-      )
-    },
-
-    // Sections summary
-    sections: {
-      count: sectionsSummary.count,
-      titles: sectionsSummary.titles,
-      link: editorv2Path(slug, `page/${pageId}/check-answers-settings/sections`)
-    },
+    ...buildSummaries(
+      slug,
+      pageId,
+      declarationInfo,
+      sectionsSummary,
+      showConfirmationEmail,
+      showReferenceNumber
+    ),
 
     // Preview model
     previewModel: {
