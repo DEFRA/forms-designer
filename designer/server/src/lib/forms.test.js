@@ -653,6 +653,73 @@ describe('Forms library routes', () => {
       expect(calledUrl.href).toBe('http://localhost:3001/forms/form-id/draft')
     })
   })
+
+  describe('listAll', () => {
+    it('should fetch all forms across multiple pages as generator', async () => {
+      const form1 = { ...formMetadata, id: 'form-1', slug: 'form-1' }
+      const form2 = { ...formMetadata, id: 'form-2', slug: 'form-2' }
+      const form3 = { ...formMetadata, id: 'form-3', slug: 'form-3' }
+
+      // Mock responses for 3 pages
+      jest
+        .spyOn(fetch, 'getJson')
+        .mockResolvedValueOnce({
+          body: { data: [form1, form2], meta: { total: 3 } },
+          /** @type { any } */
+          response: {}
+        })
+        .mockResolvedValueOnce({
+          body: { data: [form3], meta: { total: 3 } },
+          /** @type { any } */
+          response: {}
+        })
+
+      const result = []
+      for await (const form of forms.listAll('test-token')) {
+        result.push(form)
+      }
+
+      expect(result).toEqual([form1, form2, form3])
+      expect(result).toHaveLength(3)
+    })
+
+    it('should yield nothing when no forms available', async () => {
+      jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+        body: { data: [], meta: { total: 0 } },
+        /** @type { any } */
+        response: {}
+      })
+
+      const result = []
+      for await (const form of forms.listAll('test-token')) {
+        result.push(form)
+      }
+
+      expect(result).toEqual([])
+    })
+
+    it('should pass options through to list function', async () => {
+      const form1 = { ...formMetadata, id: 'form-1', slug: 'form-1' }
+
+      jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+        body: { data: [form1], meta: { total: 1 } },
+        /** @type { any } */
+        response: {}
+      })
+
+      const filters = { title: 'test' }
+      const result = []
+      for await (const form of forms.listAll('test-token', filters)) {
+        result.push(form)
+      }
+
+      expect(result).toEqual([form1])
+
+      const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+      const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+      expect(calledUrl.searchParams.get('title')).toBe('test')
+    })
+  })
 })
 
 /**

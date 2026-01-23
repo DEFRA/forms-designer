@@ -190,6 +190,10 @@ export interface AuditUser {
   displayName: string
 }
 
+export interface FormsBackupRequestedMessageData {
+  totalForms: number
+}
+
 export type MessageData =
   | FormMessageChangesData
   | FormMessageActivitiesData
@@ -197,6 +201,8 @@ export type MessageData =
   | EntitlementMessageData
   | AuthenticationMessageData
   | ExcelGenerationMessageData
+  | FormFileDownloadedMessageData
+  | FormsBackupRequestedMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -417,6 +423,11 @@ export interface PlatformCsatExcelRequestedMessage extends DesignerMessageBase {
   data: ExcelGenerationMessageData
 }
 
+export interface FormsBackupRequestedMessage extends DesignerMessageBase {
+  type: AuditEventMessageType.FORMS_BACKUP_REQUESTED
+  data: FormsBackupRequestedMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -449,6 +460,7 @@ export type AuditMessage =
   | FormSubmissionExcelRequestedMessage
   | FormCsatExcelRequestedMessage
   | PlatformCsatExcelRequestedMessage
+  | FormsBackupRequestedMessage
 
 export interface AuditEvent {
   message: AuditMessage
