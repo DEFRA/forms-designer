@@ -75,6 +75,7 @@ describe('Forms library routes', () => {
 
     afterEach(() => {
       jest.restoreAllMocks()
+      jest.clearAllMocks()
     })
 
     it('Forms library list page without pagination data', async () => {
@@ -673,6 +674,11 @@ describe('Forms library routes', () => {
           /** @type { any } */
           response: {}
         })
+        .mockResolvedValueOnce({
+          body: { data: [], meta: { total: 0 } },
+          /** @type { any } */
+          response: {}
+        })
 
       const result = []
       for await (const form of forms.listAll('test-token')) {
@@ -701,11 +707,18 @@ describe('Forms library routes', () => {
     it('should pass options through to list function', async () => {
       const form1 = { ...formMetadata, id: 'form-1', slug: 'form-1' }
 
-      jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
-        body: { data: [form1], meta: { total: 1 } },
-        /** @type { any } */
-        response: {}
-      })
+      jest
+        .spyOn(fetch, 'getJson')
+        .mockResolvedValueOnce({
+          body: { data: [form1], meta: { total: 1 } },
+          /** @type { any } */
+          response: {}
+        })
+        .mockResolvedValueOnce({
+          body: { data: [], meta: { total: 0 } },
+          /** @type { any } */
+          response: {}
+        })
 
       const filters = { title: 'test' }
       const result = []
