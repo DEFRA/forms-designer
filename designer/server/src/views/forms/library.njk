@@ -30,6 +30,9 @@
     </div>
   </div>
 
+  {% set formCount = pagination.totalItems if pagination else formItems | length %}
+  {% set formCountText = formCount + (" form" if formCount == 1 else " forms") %}
+
   <div class="govuk-grid-row">
     <aside class="govuk-grid-column-one-third-from-desktop">
       {{ appSearch({
@@ -42,19 +45,12 @@
     </aside>
     <div class="govuk-grid-column-two-thirds-from-desktop">
       {% if formItems | length %}
-        <h2 class="govuk-heading-m">
-          {{ (pagination.totalItems if pagination else formItems | length)
-            + (
-              " form" if (pagination.totalItems if pagination else formItems | length) == 1
-              else " forms"
-            )
-          }}
-        </h2>
+        <h2 class="govuk-heading-m">{{ formCountText }}</h2>
+        <span class="govuk-visually-hidden" role="status">{{ formCountText }}</span>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
       {% else %}
-        <h2 id="search-results-heading" class="govuk-heading-m">
-          0 forms
-        </h2>
+        <h2 class="govuk-heading-m">{{ formCountText }}</h2>
+        <span class="govuk-visually-hidden" role="status">{{ formCountText }}</span>
         <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
         <h3 class="govuk-heading-m govuk-!-padding-top-4">
           There are no matching forms
