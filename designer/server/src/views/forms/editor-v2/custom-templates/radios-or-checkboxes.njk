@@ -155,7 +155,7 @@
 {% if not state.editRow.expanded and not state.isReordering %}
 <div class="govuk-button-group">
   <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="enhancedAction" value="add-item">
-    Add item
+    Add<span class="govuk-visually-hidden"> list</span> item
   </button>
 
   {% if state.listItems.length > 1 %}
