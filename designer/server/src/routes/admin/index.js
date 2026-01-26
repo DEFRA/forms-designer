@@ -214,7 +214,7 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
       // Process in batches
       if (batch.length >= concurrency) {
         await Promise.all(
-          batch.map((metadata) => processForm(metadata, token, archive))
+          batch.map((formMetadata) => processForm(formMetadata, token, archive))
         )
         batch = []
       }
@@ -223,7 +223,7 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
     // Process remaining forms in batch
     if (batch.length > 0) {
       await Promise.all(
-        batch.map((metadata) => processForm(metadata, token, archive))
+        batch.map((formMetadata) => processForm(formMetadata, token, archive))
       )
     }
     // no forms, 404 response
