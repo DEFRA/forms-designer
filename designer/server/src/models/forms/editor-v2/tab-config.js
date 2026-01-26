@@ -3,6 +3,7 @@ import { editorv2Path } from '~/src/models/links.js'
 export const PAGE_OVERVIEW_TITLE = 'Page overview'
 export const TAB_TITLE_DECLARATION = 'Declaration'
 export const TAB_TITLE_CONFIRMATION_EMAIL = 'Confirmation email'
+export const TAB_TITLE_REFERENCE_NUMBER = 'Reference number'
 export const TAB_TITLE_SECTIONS = 'Sections'
 export const CHECK_ANSWERS_CAPTION = 'Check answers'
 
@@ -18,6 +19,8 @@ export const CHECK_ANSWERS_TAB_DECLARATION =
   'check-answers-settings/declaration'
 export const CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS =
   'check-answers-settings/confirmation-email'
+export const CHECK_ANSWERS_TAB_REFERENCE_NUMBER =
+  'check-answers-settings/reference-number'
 export const CHECK_ANSWERS_TAB_SECTIONS = 'check-answers-settings/sections'
 
 /**
@@ -35,6 +38,10 @@ export function getCheckAnswersTabConfig(slug, pageId, activeTab) {
     {
       title: TAB_TITLE_CONFIRMATION_EMAIL,
       link: CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS
+    },
+    {
+      title: TAB_TITLE_REFERENCE_NUMBER,
+      link: CHECK_ANSWERS_TAB_REFERENCE_NUMBER
     },
     { title: TAB_TITLE_SECTIONS, link: CHECK_ANSWERS_TAB_SECTIONS }
   ]

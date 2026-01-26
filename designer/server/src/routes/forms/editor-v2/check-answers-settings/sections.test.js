@@ -28,7 +28,7 @@ import { formErrorsToMessages } from '~/src/plugins/error-pages/form-errors.js'
 import {
   ROUTE_PATH_SECTIONS,
   handleSectionOperation
-} from '~/src/routes/forms/editor-v2/sections.js'
+} from '~/src/routes/forms/editor-v2/check-answers-settings/sections.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 

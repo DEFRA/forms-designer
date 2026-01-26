@@ -126,6 +126,11 @@ export interface FormEditor {
   disableConfirmationEmail: boolean
 
   /**
+   * Whether reference numbers should be enabled
+   */
+  enableReferenceNumber: boolean
+
+  /**
    * The min length a field can have
    */
   minLength: string
@@ -319,6 +324,11 @@ export type FormEditorInputCheckAnswersSettings = Pick<
 export type FormEditorInputConfirmationEmailSettings = Pick<
   FormEditor,
   'disableConfirmationEmail'
+>
+
+export type FormEditorInputReferenceNumberSettings = Pick<
+  FormEditor,
+  'enableReferenceNumber'
 >
 
 export type FormEditorInputQuestion = Pick<

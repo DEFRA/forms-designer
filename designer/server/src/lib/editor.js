@@ -507,6 +507,23 @@ export async function setConfirmationEmailSettings(
 }
 
 /**
+ * Set an option value in the form definition
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} optionName
+ * @param {string} optionValue
+ */
+export async function setFormOption(formId, token, optionName, optionValue) {
+  const postJsonByOptionType =
+    /** @type {typeof postJson<{ optionValue: string }>} */ (postJson)
+
+  await postJsonByOptionType(buildRequestUrl(formId, `options/${optionName}`), {
+    payload: { optionValue },
+    ...getHeaders(token)
+  })
+}
+
+/**
  * Re-order the pages as per list of ids
  * @param {string} formId
  * @param {string} token

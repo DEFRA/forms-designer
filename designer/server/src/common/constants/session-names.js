@@ -27,6 +27,9 @@ export const sessionNames = {
     editorConfirmationEmailSettings: /** @type {const} */ (
       'confirmationEmailSettingsValidationFailure'
     ),
+    editorReferenceNumberSettings: /** @type {const} */ (
+      'referenceNumberSettingsValidationFailure'
+    ),
     editorGuidance: /** @type {const} */ ('guidanceValidationFailure'),
     editorPage: /** @type {const} */ ('pageValidationFailure'),
     editorQuestions: /** @type {const} */ ('questionsValidationFailure'),

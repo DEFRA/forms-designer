@@ -4,14 +4,16 @@ import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
-import editorCheckAnswersOverview from '~/src/routes/forms/editor-v2/check-answers-overview.js'
-import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings.js'
+import editorCheckAnswersOverview from '~/src/routes/forms/editor-v2/check-answers-settings/check-answers-overview.js'
+import confirmationEmailSettings from '~/src/routes/forms/editor-v2/check-answers-settings/confirmation-email-settings.js'
+import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
+import referenceNumberSettings from '~/src/routes/forms/editor-v2/check-answers-settings/reference-number-settings.js'
+import editorSections from '~/src/routes/forms/editor-v2/check-answers-settings/sections.js'
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
 import editorConditionDelete from '~/src/routes/forms/editor-v2/condition-delete.js'
 import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
 import editorConditionsJoin from '~/src/routes/forms/editor-v2/conditions-join.js'
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
-import confirmationEmailSettings from '~/src/routes/forms/editor-v2/confirmation-email-settings.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
 import editorEditListResolve from '~/src/routes/forms/editor-v2/edit-list-resolve.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
@@ -26,7 +28,6 @@ import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-or-page-
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import editorResponses from '~/src/routes/forms/editor-v2/responses.js'
-import editorSections from '~/src/routes/forms/editor-v2/sections.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
 import editorUpload from '~/src/routes/forms/editor-v2/upload.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
@@ -73,5 +74,6 @@ export default [
   submissionGuidance,
   privacyNotice,
   notificationEmail,
-  confirmationEmailSettings
+  confirmationEmailSettings,
+  referenceNumberSettings
 ].flat()

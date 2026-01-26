@@ -162,6 +162,7 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  * @property {string} buttonText - Text for the submit button
  * @property {boolean} hasPageSettingsTab - Whether page settings tab is shown
  * @property {boolean} showConfirmationEmail - Whether confirmation email is shown
+ * @property {boolean} showReferenceNumber - Whether reference number is shown
  * @property {string} declarationText - Declaration text content
  * @property {boolean} needDeclaration - Whether declaration is required
  * @property {boolean} isConfirmationEmailSettingsPanel - Whether this is the confirmation email settings panel
