@@ -22,8 +22,8 @@
   {{ govukInput(fields.questionSetName) }}
 {% endset -%}
 
-<h1 class="govuk-heading-l">Settings</h1>
-<h2 class="govuk-heading-m">Page heading and guidance text</h2>
+<h2 class="govuk-heading-l">Settings</h2>
+<h3 class="govuk-heading-m">Page heading and guidance text</h3>
 
 {{ govukCheckboxes(fields.pageHeadingAndGuidance | setConditionalAttribute("true", pageHeadingAndGuidanceHtml)) }}
 
