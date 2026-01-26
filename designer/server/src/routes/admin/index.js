@@ -172,14 +172,9 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
   const user = mapUserForAudit(auth.credentials.user)
 
   try {
-    request.logger.info(
-      '[downloadAllForms] Starting forms backup download for user'
-    )
-
     const startedAt = performance.now()
 
     const stream = new PassThrough()
-
     // Create archive
     const archive = Archiver('zip', { zlib: { level: 9 } })
 
@@ -250,15 +245,6 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
     await archive.finalize()
 
     const durationMs = performance.now() - startedAt
-    request.logger.info(
-      {
-        totalForms,
-        durationMs,
-        userId: user.id
-      },
-      '[downloadAllForms] Completed forms backup download'
-    )
-
     // Publish audit event
     await publishFormsBackupRequestedEvent(user, totalForms, durationMs)
     return response
