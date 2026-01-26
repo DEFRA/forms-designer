@@ -99,7 +99,7 @@ export default [
         return downloadAllFormsAsZip(request, h)
       }
 
-      // feedback action
+      // feedback action: Request all forms by omitting the formId
       await sendFeedbackSubmissionsFile(undefined, token)
 
       const user = mapUserForAudit(auth.credentials.user)
