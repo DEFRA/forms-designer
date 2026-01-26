@@ -106,25 +106,27 @@ describe('authentication-events', () => {
   describe('formsBackupRequestedMapper', () => {
     it('should map a payload into a FORMS_BACKUP_REQUESTED event', () => {
       const totalForms = 12
+      const durationMs = 1234
 
-      expect(formsBackupRequestedMapper({ totalForms }, authAuditUser)).toEqual(
-        {
-          schemaVersion: AuditEventMessageSchemaVersion.V1,
-          category: AuditEventMessageCategory.FORM,
-          source: AuditEventMessageSource.FORMS_DESIGNER,
-          type: AuditEventMessageType.FORMS_BACKUP_REQUESTED,
-          entityId: 'All Forms',
-          createdAt: expect.any(Date),
-          createdBy: {
-            id: authAuditUser.id,
-            displayName: authAuditUser.displayName
-          },
-          messageCreatedAt: expect.any(Date),
-          data: {
-            totalForms
-          }
+      expect(
+        formsBackupRequestedMapper({ totalForms, durationMs }, authAuditUser)
+      ).toEqual({
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        type: AuditEventMessageType.FORMS_BACKUP_REQUESTED,
+        entityId: 'All Forms',
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        messageCreatedAt: expect.any(Date),
+        data: {
+          totalForms,
+          durationMs
         }
-      )
+      })
     })
   })
 })

@@ -154,9 +154,17 @@ export async function publishPlatformCsatExcelRequestedEvent(data, user) {
  * Publish 'forms backup requested' event
  * @param {AuditUser} user - The user requesting the backup
  * @param {number} totalForms - The total number of forms being backed up
+ * @param {number} durationMs - How long the backup took in milliseconds
  */
-export async function publishFormsBackupRequestedEvent(user, totalForms) {
-  const auditMessage = formsBackupRequestedMapper({ totalForms }, user)
+export async function publishFormsBackupRequestedEvent(
+  user,
+  totalForms,
+  durationMs
+) {
+  const auditMessage = formsBackupRequestedMapper(
+    { totalForms, durationMs },
+    user
+  )
   return validateAndPublishEvent(auditMessage)
 }
 

@@ -632,7 +632,7 @@ describe('Forms library routes', () => {
       })
     })
 
-    describe('getFormDefinition', () => {
+    describe('getLiveFormDefinition', () => {
       const token = auth.credentials.token
 
       beforeEach(() => {
@@ -646,7 +646,7 @@ describe('Forms library routes', () => {
           body: formDefinition
         })
 
-        const result = await forms.getFormDefinition('form-id', token)
+        const result = await forms.getLiveFormDefinition('form-id', token)
 
         expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
           headers: { Authorization: `Bearer ${token}` }

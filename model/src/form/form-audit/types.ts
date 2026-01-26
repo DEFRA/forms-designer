@@ -192,6 +192,7 @@ export interface AuditUser {
 
 export interface FormsBackupRequestedMessageData {
   totalForms: number
+  durationMs: number
 }
 
 export type MessageData =

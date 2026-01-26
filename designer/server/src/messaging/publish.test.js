@@ -431,9 +431,14 @@ describe('publish', () => {
 
   describe('publishFormsBackupRequestedEvent', () => {
     const totalForms = 12
+    const durationMs = 1234
 
     it('should publish FORMS_BACKUP_REQUESTED event', async () => {
-      await publishFormsBackupRequestedEvent(authAuditUser, totalForms)
+      await publishFormsBackupRequestedEvent(
+        authAuditUser,
+        totalForms,
+        durationMs
+      )
 
       expect(publishEvent).toHaveBeenCalledWith({
         entityId: 'All Forms',
@@ -448,7 +453,8 @@ describe('publish', () => {
           displayName: authAuditUser.displayName
         },
         data: {
-          totalForms
+          totalForms,
+          durationMs
         }
       })
     })
@@ -458,7 +464,7 @@ describe('publish', () => {
 
       await expect(
         // @ts-expect-error - invalid schema
-        publishFormsBackupRequestedEvent(invalidUser, '12')
+        publishFormsBackupRequestedEvent(invalidUser, '12', '123')
       ).rejects.toThrow(ValidationError)
     })
   })

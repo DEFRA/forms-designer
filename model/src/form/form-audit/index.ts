@@ -103,7 +103,8 @@ export const formUpdatedMessageData = formMessageDataBase
 
 export const formsBackupRequestedMessageData =
   Joi.object<FormsBackupRequestedMessageData>().keys({
-    totalForms: Joi.number().integer().min(0).required()
+    totalForms: Joi.number().integer().min(0).required(),
+    durationMs: Joi.number().min(0).required()
   })
 export const formTitleChanges = Joi.object<FormTitleChanges>()
   .keys({

@@ -290,7 +290,7 @@ describe('System admin routes', () => {
           .mocked(forms.getDraftFormDefinition)
           .mockResolvedValue(testFormDefinitionWithSinglePage)
         jest
-          .mocked(forms.getFormDefinition)
+          .mocked(forms.getLiveFormDefinition)
           .mockResolvedValue(testFormDefinitionWithSinglePage)
 
         const options = {
@@ -315,11 +315,12 @@ describe('System admin routes', () => {
             id: expect.any(String),
             displayName: expect.any(String)
           }),
-          2
+          2,
+          expect.any(Number)
         )
 
         // Verify form definitions were requested
-        expect(forms.getFormDefinition).toHaveBeenCalledTimes(2)
+        expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(2)
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(2)
       })
 
@@ -334,7 +335,7 @@ describe('System admin routes', () => {
         })
 
         jest
-          .mocked(forms.getFormDefinition)
+          .mocked(forms.getLiveFormDefinition)
           .mockResolvedValue(testFormDefinitionWithSinglePage)
 
         const options = {
@@ -349,23 +350,25 @@ describe('System admin routes', () => {
         expect(response.statusCode).toBe(StatusCodes.OK)
 
         // Verify only live definition was requested (draft wasn't fetched because metadata.draft is undefined)
-        expect(forms.getFormDefinition).toHaveBeenCalledTimes(1)
+        expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
         // Draft definition should not be called when form.draft is undefined
         expect(forms.getDraftFormDefinition).not.toHaveBeenCalled()
 
         // Verify audit event published
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
           expect.any(Object),
-          1
+          1,
+          expect.any(Number)
         )
       })
 
-      test('should continue processing when a definition fetch fails', async () => {
+      test('should throw error if one of the api calls fails', async () => {
         const form1 = Promise.resolve(testFormMetadata)
         const form2 = Promise.resolve({
           ...testFormMetadata,
           id: 'form-2',
-          slug: 'form-2'
+          slug: 'form-2',
+          draft: undefined
         })
 
         jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
@@ -375,7 +378,7 @@ describe('System admin routes', () => {
 
         // Form 1 definition fetch fails, form 2 will succeed
         jest
-          .mocked(forms.getFormDefinition)
+          .mocked(forms.getLiveFormDefinition)
           .mockRejectedValueOnce(new Error('API error'))
           .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
 
@@ -391,14 +394,16 @@ describe('System admin routes', () => {
         }
 
         const response = await server.inject(options)
-
-        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+        expect(response.result).toMatchObject({
+          message: 'Failed to download forms',
+          error: 'API error'
+        })
 
         // Verify definitions were requested
-        expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
-          expect.any(Object),
-          2
-        )
+        expect(publishFormsBackupRequestedEvent).not.toHaveBeenCalled()
+        expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(2)
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
       })
 
       test('should process forms in batches', async () => {
@@ -419,7 +424,7 @@ describe('System admin routes', () => {
         })
 
         jest
-          .mocked(forms.getFormDefinition)
+          .mocked(forms.getLiveFormDefinition)
           .mockResolvedValue(testFormDefinitionWithSinglePage)
         jest
           .mocked(forms.getDraftFormDefinition)
@@ -439,11 +444,12 @@ describe('System admin routes', () => {
         // Verify all forms were processed
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
           expect.any(Object),
-          12
+          12,
+          expect.any(Number)
         )
 
         // Verify all form definitions were fetched
-        expect(forms.getFormDefinition).toHaveBeenCalledTimes(12)
+        expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(12)
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(12)
       })
     })

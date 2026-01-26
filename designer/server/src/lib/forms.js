@@ -115,7 +115,7 @@ export async function getDraftFormDefinition(id, token) {
  * @param {string} id
  * @param {string} token
  */
-export async function getFormDefinition(id, token) {
+export async function getLiveFormDefinition(id, token) {
   const getJsonByType = /** @type {typeof getJson<FormDefinition>} */ (getJson)
 
   const requestUrl = new URL(`./${id}/definition`, formsEndpoint)

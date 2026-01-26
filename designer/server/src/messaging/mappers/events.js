@@ -216,7 +216,7 @@ export function platformCsatExcelRequestedMapper(data, user) {
 }
 
 /**
- * @param {{totalForms: number}} data
+ * @param {{totalForms: number, durationMs: number}} data
  * @param {AuditUser} user
  * @returns {AuditMessage}
  */

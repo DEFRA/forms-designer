@@ -1,3 +1,4 @@
+import { performance } from 'node:perf_hooks'
 import { PassThrough } from 'node:stream'
 
 import { Scopes, getErrorMessage } from '@defra/forms-model'
@@ -138,28 +139,25 @@ export default [
 
 /**
  * Process a single form - fetch definitions and append to archive
- * @param {FormMetadata} form
+ * @param {FormMetadata} metadata
  * @param {string} token
  * @param {ReturnType<Archiver>} archive
- * @param {import('pino').Logger} logger
  * @returns {Promise<boolean>} true if successful, false if failed
  */
-async function processForm(form, token, archive, logger) {
-  try {
-    // Add metadata first under {id}/metadata.json
-    const metadataName = `${form.id}/metadata.json`
-    const metadataJson = JSON.stringify(form, null, 2)
-    archive.append(metadataJson, { name: metadataName })
+async function processForm(metadata, token, archive) {
+  // Add metadata first under {id}/metadata.json
+  const metadataName = `${metadata.id}/metadata.json`
+  const metadataJson = JSON.stringify(metadata, null, 2)
+  archive.append(metadataJson, { name: metadataName })
 
-    // Then append definitions under {id}/definition_*.json
-    const definition = await getFormDefinitions(form.id, form.draft, token)
-    appendFormDefinitionsToArchive(form.id, archive, definition)
-    return true
-  } catch (err) {
-    const errorMsg = `Failed to download form "${form.slug}": ${getErrorMessage(err)}`
-    logger.warn(`[downloadAllForms] ${errorMsg}`)
-    return false
-  }
+  // Then append definitions under {id}/definition_*.json
+  const definition = await getFormDefinitions(
+    metadata.id,
+    !!metadata.draft,
+    token
+  )
+  appendFormDefinitionsToArchive(metadata.id, archive, definition)
+  return true
 }
 
 /**
@@ -177,6 +175,8 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
     request.logger.info(
       '[downloadAllForms] Starting forms backup download for user'
     )
+
+    const startedAt = performance.now()
 
     const stream = new PassThrough()
 
@@ -213,13 +213,13 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
     let batch = []
 
     // Process forms as they're yielded from the generator
-    for await (const formMetadata of forms.listAll(token)) {
+    for await (const metadata of forms.listAll(token)) {
       totalForms++
-      batch.push(formMetadata)
+      batch.push(metadata)
       // Process in batches
       if (batch.length >= concurrency) {
         await Promise.all(
-          batch.map((form) => processForm(form, token, archive, request.logger))
+          batch.map((metadata) => processForm(metadata, token, archive))
         )
         batch = []
       }
@@ -228,7 +228,7 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
     // Process remaining forms in batch
     if (batch.length > 0) {
       await Promise.all(
-        batch.map((form) => processForm(form, token, archive, request.logger))
+        batch.map((metadata) => processForm(metadata, token, archive))
       )
     }
     // no forms, 404 response
@@ -249,8 +249,18 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
 
     await archive.finalize()
 
+    const durationMs = performance.now() - startedAt
+    request.logger.info(
+      {
+        totalForms,
+        durationMs,
+        userId: user.id
+      },
+      '[downloadAllForms] Completed forms backup download'
+    )
+
     // Publish audit event
-    await publishFormsBackupRequestedEvent(user, totalForms)
+    await publishFormsBackupRequestedEvent(user, totalForms, durationMs)
     return response
   } catch (err) {
     request.logger.error(
@@ -268,16 +278,16 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
 
 /**
  * Retrieve both live and draft form definitions
- * @param {string} id - The form ID
- * @param { FormMetadataState | undefined} draftState - Whether to include draft definition
+ * @param {string} id - The form metadata ID
+ * @param { boolean } includeDraft - Whether to include draft definition
  * @param {string} token - Auth token
  * @returns {Promise<{ liveDefinition: FormDefinition | null, draftDefinition: FormDefinition | null }>}
  */
-async function getFormDefinitions(id, draftState, token) {
+async function getFormDefinitions(id, includeDraft, token) {
   const [liveDefinition, draftDefinition] = await Promise.all([
-    forms.getFormDefinition(id, token).catch(() => null),
-    draftState
-      ? forms.getDraftFormDefinition(id, token).catch(() => null)
+    forms.getLiveFormDefinition(id, token),
+    includeDraft
+      ? forms.getDraftFormDefinition(id, token)
       : Promise.resolve(null)
   ])
 
