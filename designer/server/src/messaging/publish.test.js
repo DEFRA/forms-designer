@@ -16,6 +16,7 @@ import {
   publishFormCsatExcelRequestedEvent,
   publishFormDownloadedEvent,
   publishFormSubmissionExcelRequestedEvent,
+  publishFormsBackupRequestedEvent,
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
 
@@ -424,6 +425,46 @@ describe('publish', () => {
       await expect(
         // @ts-expect-error - invalid schema
         publishPlatformCsatExcelRequestedEvent(invalidData, authAuditUser)
+      ).rejects.toThrow(ValidationError)
+    })
+  })
+
+  describe('publishFormsBackupRequestedEvent', () => {
+    const totalForms = 12
+    const durationMs = 1234
+
+    it('should publish FORMS_BACKUP_REQUESTED event', async () => {
+      await publishFormsBackupRequestedEvent(
+        authAuditUser,
+        totalForms,
+        durationMs
+      )
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: 'All Forms',
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        type: AuditEventMessageType.FORMS_BACKUP_REQUESTED,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          totalForms,
+          durationMs
+        }
+      })
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      const invalidUser = {}
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishFormsBackupRequestedEvent(invalidUser, '12', '123')
       ).rejects.toThrow(ValidationError)
     })
   })

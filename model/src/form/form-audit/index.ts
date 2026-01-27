@@ -45,7 +45,8 @@ import {
   type FormTitleUpdatedMessageData,
   type FormUpdatedMessageData,
   type FormUploadedChanges,
-  type FormUploadedMessageData
+  type FormUploadedMessageData,
+  type FormsBackupRequestedMessageData
 } from '~/src/form/form-audit/types.js'
 import {
   contactSchema,
@@ -100,6 +101,11 @@ export const formUpdatedMessageData = formMessageDataBase
   })
   .required()
 
+export const formsBackupRequestedMessageData =
+  Joi.object<FormsBackupRequestedMessageData>().keys({
+    totalForms: Joi.number().integer().min(0).required(),
+    durationMs: Joi.number().min(0).required()
+  })
 export const formTitleChanges = Joi.object<FormTitleChanges>()
   .keys({
     title: titleSchema
@@ -450,6 +456,12 @@ export const messageSchema = Joi.object<AuditMessage>()
               AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
             ),
           then: excelGenerationMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORMS_BACKUP_REQUESTED),
+          then: formsBackupRequestedMessageData
         }
       ],
       otherwise: Joi.forbidden()
