@@ -150,11 +150,7 @@ async function processForm(metadata, token, archive) {
   archive.append(metadataJson, { name: metadataName })
 
   // Then append definitions under {id}/definition_*.json
-  const definition = await getFormDefinitions(
-    metadata.id,
-    !!metadata.draft,
-    token
-  )
+  const definition = await getFormDefinitions(metadata.id, token)
   appendFormDefinitionsToArchive(metadata.id, archive, definition)
 }
 
@@ -322,19 +318,28 @@ function appendManifestToArchive(archive, totalForms, manifestEntities) {
 /**
  * Retrieve both live and draft form definitions
  * @param {string} id - The form metadata ID
- * @param { boolean } includeDraft - Whether to include draft definition
  * @param {string} token - Auth token
- * @returns {Promise<{ liveDefinition: FormDefinition | null, draftDefinition: FormDefinition | null }>}
+ * @returns {Promise<{ liveDefinition?: FormDefinition , draftDefinition?: FormDefinition }>}
  */
-async function getFormDefinitions(id, includeDraft, token) {
+async function getFormDefinitions(id, token) {
   const [liveDefinition, draftDefinition] = await Promise.all([
-    forms.getLiveFormDefinition(id, token),
-    includeDraft
-      ? forms.getDraftFormDefinition(id, token)
-      : Promise.resolve(null)
+    forms.getLiveFormDefinition(id, token).catch(ignore404Error),
+    forms.getDraftFormDefinition(id, token).catch(ignore404Error)
   ])
 
   return { liveDefinition, draftDefinition }
+}
+
+/**
+ *
+ * @param {Error & {data?:{statusCode: StatusCodes}}} err
+ * @returns {undefined | never}
+ */
+function ignore404Error(err) {
+  if (err.data?.statusCode === StatusCodes.NOT_FOUND) {
+    return undefined
+  }
+  throw err
 }
 
 /**
@@ -358,5 +363,5 @@ function appendFormDefinitionsToArchive(id, archive, definition) {
 
 /**
  * @import { ServerRoute , Request, ResponseToolkit, ResponseObject} from '@hapi/hapi'
- * @import { FormMetadata, FormDefinition ,FormMetadataState} from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */
