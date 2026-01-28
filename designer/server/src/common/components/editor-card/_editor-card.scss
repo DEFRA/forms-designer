@@ -1,10 +1,9 @@
 @use "../govuk-frontend" as *;
-
-$defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
+@use "../../../../../client/src/stylesheets/variables/colours" as *;
 
 .editor-card {
   &-background {
-    background-color: govuk-colour("light-grey");
+    background-color: $app-light-grey;
     padding-bottom: 10px;
   }
 

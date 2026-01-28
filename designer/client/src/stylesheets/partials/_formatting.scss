@@ -1,8 +1,9 @@
 @use "../govuk-frontend" as *;
+@use "../variables/colours" as *;
 
 .formatting-example {
   margin: govuk-spacing(3) 0 govuk-spacing(4);
-  background: govuk-colour("light-grey");
+  background: $app-light-grey;
   overflow-x: auto;
   white-space: pre-wrap;
 
