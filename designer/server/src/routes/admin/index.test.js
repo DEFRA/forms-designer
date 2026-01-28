@@ -368,9 +368,17 @@ describe('System admin routes', () => {
           yield formWithoutDraft
         })
 
+        const notFoundError = Object.assign(new Error('Not found'), {
+          data: { statusCode: StatusCodes.NOT_FOUND }
+        })
+
         jest
           .mocked(forms.getLiveFormDefinition)
           .mockResolvedValue(testFormDefinitionWithSinglePage)
+
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockRejectedValueOnce(notFoundError)
 
         const options = {
           method: 'post',
@@ -383,10 +391,10 @@ describe('System admin routes', () => {
 
         expect(response.statusCode).toBe(StatusCodes.OK)
 
-        // Verify only live definition was requested (draft wasn't fetched because metadata.draft is undefined)
+        // Verify live definition was requested
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
-        // Draft definition should not be called when form.draft is undefined
-        expect(forms.getDraftFormDefinition).not.toHaveBeenCalled()
+        // Draft definition is always requested and 404 is ignored
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
 
         // Verify audit event published
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
@@ -437,7 +445,7 @@ describe('System admin routes', () => {
         // Verify definitions were requested
         expect(publishFormsBackupRequestedEvent).not.toHaveBeenCalled()
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(2)
-        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(2)
       })
 
       test('should ignore 404 when fetching live definition', async () => {
@@ -448,7 +456,7 @@ describe('System admin routes', () => {
         })
 
         const notFoundError = Object.assign(new Error('Not found'), {
-          statusCode: StatusCodes.NOT_FOUND
+          data: { statusCode: StatusCodes.NOT_FOUND }
         })
 
         jest
@@ -486,7 +494,7 @@ describe('System admin routes', () => {
         })
 
         const notFoundError = Object.assign(new Error('Not found'), {
-          statusCode: StatusCodes.NOT_FOUND
+          data: { statusCode: StatusCodes.NOT_FOUND }
         })
 
         jest
