@@ -142,7 +142,6 @@ export default [
  * @param {FormMetadata} metadata
  * @param {string} token
  * @param {ReturnType<Archiver>} archive
- * @returns {Promise<boolean>} true if successful, false if failed
  */
 async function processForm(metadata, token, archive) {
   // Add metadata first under {id}/metadata.json
@@ -157,7 +156,6 @@ async function processForm(metadata, token, archive) {
     token
   )
   appendFormDefinitionsToArchive(metadata.id, archive, definition)
-  return true
 }
 
 /**
@@ -173,66 +171,24 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
 
   try {
     const startedAt = performance.now()
+    const { archive, stream } = createArchiveStream()
+    const response = createZipResponse(responseToolkit, stream)
 
-    const stream = new PassThrough()
-    // Create archive
-    const archive = Archiver('zip', { zlib: { level: 9 } })
+    attachArchiveEventHandlers(archive, stream, request)
 
-    // Pipe archive to PassThrough stream
-    archive.pipe(stream)
+    const { totalForms, manifestEntities } = await processAllForms(
+      token,
+      archive
+    )
 
-    // Set headers
-    const response = responseToolkit.response(stream)
-    response.header('Content-Type', 'application/zip')
-    response.header('Content-Disposition', 'attachment; filename="forms.zip"')
-
-    // Handle archive events
-    archive.on('warning', (/**  @type {Error} */ err) => {
-      request.logger.warn(
-        err,
-        `[downloadAllForms] Archive warning - ${getErrorMessage(err)}`
-      )
-    })
-
-    archive.on('error', (/**  @type {Error} */ err) => {
-      request.logger.error(
-        err,
-        `[downloadAllForms] Archive error - ${getErrorMessage(err)}`
-      )
-      stream.destroy(err)
-    })
-
-    // 5 promises at a time
-    const concurrency = 5
-    let totalForms = 0
-    let batch = []
-
-    // Process forms as they're yielded from the generator
-    for await (const metadata of forms.listAll(token)) {
-      totalForms++
-      batch.push(metadata)
-      // Process in batches
-      if (batch.length >= concurrency) {
-        await Promise.all(
-          batch.map((formMetadata) => processForm(formMetadata, token, archive))
-        )
-        batch = []
-      }
-    }
-
-    // Process remaining forms in batch
-    if (batch.length > 0) {
-      await Promise.all(
-        batch.map((formMetadata) => processForm(formMetadata, token, archive))
-      )
-    }
-    // no forms, 404 response
     if (totalForms === 0) {
       request.logger.warn('[downloadAllForms] No forms found for download')
       return responseToolkit
         .response({ message: 'No forms available to download' })
         .code(StatusCodes.NOT_FOUND)
     }
+
+    appendManifestToArchive(archive, totalForms, manifestEntities)
 
     request.logger.info(
       {
@@ -245,7 +201,6 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
     await archive.finalize()
 
     const durationMs = performance.now() - startedAt
-    // Publish audit event
     await publishFormsBackupRequestedEvent(user, totalForms, durationMs)
     return response
   } catch (err) {
@@ -260,6 +215,108 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
       })
       .code(StatusCodes.INTERNAL_SERVER_ERROR)
   }
+}
+
+/**
+ * Create archive and stream
+ * @returns {{ archive: ReturnType<Archiver>, stream: PassThrough }}
+ */
+function createArchiveStream() {
+  const stream = new PassThrough()
+  const archive = Archiver('zip', { zlib: { level: 9 } })
+  archive.pipe(stream)
+  return { archive, stream }
+}
+
+/**
+ * Build a response with zip headers
+ * @param {ResponseToolkit<{ Payload: { action: string; }; }>} responseToolkit
+ * @param {PassThrough} stream
+ */
+function createZipResponse(responseToolkit, stream) {
+  const response = responseToolkit.response(stream)
+  response.header('Content-Type', 'application/zip')
+  response.header('Content-Disposition', 'attachment; filename="forms.zip"')
+  return response
+}
+
+/**
+ * Attach archive event handlers
+ * @param {ReturnType<Archiver>} archive
+ * @param {PassThrough} stream
+ * @param {Request<{ Payload: { action: string } }>} request
+ */
+function attachArchiveEventHandlers(archive, stream, request) {
+  archive.on('warning', (/**  @type {Error} */ err) => {
+    request.logger.warn(
+      err,
+      `[downloadAllForms] Archive warning - ${getErrorMessage(err)}`
+    )
+  })
+
+  archive.on('error', (/**  @type {Error} */ err) => {
+    request.logger.error(
+      err,
+      `[downloadAllForms] Archive error - ${getErrorMessage(err)}`
+    )
+    stream.destroy(err)
+  })
+}
+
+/**
+ * Process all forms and append metadata/definitions to archive
+ * @param {string} token
+ * @param {ReturnType<Archiver>} archive
+ * @returns {Promise<{ totalForms: number, manifestEntities: { id: string, title: string, slug: string }[] }>}
+ */
+async function processAllForms(token, archive) {
+  const concurrency = 5
+  let totalForms = 0
+  let batch = []
+  /** @type {{ id: string, title: string, slug: string }[]} */
+  const manifestEntities = []
+
+  for await (const metadata of forms.listAll(token)) {
+    totalForms++
+    manifestEntities.push({
+      id: metadata.id,
+      title: metadata.title,
+      slug: metadata.slug
+    })
+    batch.push(metadata)
+    if (batch.length >= concurrency) {
+      await Promise.all(
+        batch.map((formMetadata) => processForm(formMetadata, token, archive))
+      )
+      batch = []
+    }
+  }
+
+  if (batch.length > 0) {
+    await Promise.all(
+      batch.map((formMetadata) => processForm(formMetadata, token, archive))
+    )
+  }
+
+  return { totalForms, manifestEntities }
+}
+
+/**
+ * Append manifest.json to archive
+ * @param {ReturnType<Archiver>} archive
+ * @param {number} totalForms
+ * @param {{ id: string, title: string, slug: string }[]} manifestEntities
+ */
+function appendManifestToArchive(archive, totalForms, manifestEntities) {
+  const manifest = {
+    forms: {
+      count: totalForms,
+      entities: manifestEntities
+    }
+  }
+  archive.append(JSON.stringify(manifest, null, 2), {
+    name: 'manifest.json'
+  })
 }
 
 /**

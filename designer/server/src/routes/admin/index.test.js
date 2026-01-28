@@ -1,4 +1,5 @@
 import Boom from '@hapi/boom'
+import archiver from 'archiver'
 import { StatusCodes } from 'http-status-codes'
 
 import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
@@ -82,6 +83,20 @@ jest.mock('archiver', () => {
     default: factory
   }
 })
+
+function getManifestJsonFromArchive() {
+  const archiverMock = jest.mocked(archiver)
+  const instance = archiverMock.mock.results[0]?.value
+  const appendCalls = instance?.append?.mock.calls ?? []
+  const manifestCall = appendCalls.find(
+    (/** @type {{name:string}[]} */ call) => call[1]?.name === 'manifest.json'
+  )
+  if (!manifestCall) {
+    return undefined
+  }
+  return JSON.parse(manifestCall[0])
+}
+
 describe('System admin routes', () => {
   /** @type {Server} */
   let server
@@ -319,6 +334,25 @@ describe('System admin routes', () => {
           expect.any(Number)
         )
 
+        const manifest = getManifestJsonFromArchive()
+        expect(manifest).toMatchObject({
+          forms: {
+            count: 2,
+            entities: expect.arrayContaining([
+              expect.objectContaining({
+                id: testFormMetadata.id,
+                title: testFormMetadata.title,
+                slug: testFormMetadata.slug
+              }),
+              expect.objectContaining({
+                id: 'form-2',
+                title: testFormMetadata.title,
+                slug: 'form-2'
+              })
+            ])
+          }
+        })
+
         // Verify form definitions were requested
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(2)
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(2)
@@ -524,6 +558,14 @@ describe('System admin routes', () => {
           expect.any(Number)
         )
 
+        const manifest = getManifestJsonFromArchive()
+        expect(manifest).toMatchObject({
+          forms: {
+            count: 12
+          }
+        })
+        expect(manifest.forms.entities).toHaveLength(12)
+
         // Verify all form definitions were fetched
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(12)
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(12)
@@ -534,5 +576,5 @@ describe('System admin routes', () => {
 /**
  * @import { Server } from '@hapi/hapi'
  * @import Archiver from 'archiver'
- * @import {Writable, PassThrough} from 'node:stream'
+ * @import {PassThrough} from 'node:stream'
  */
