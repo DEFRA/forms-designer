@@ -420,6 +420,18 @@ describe('editor-v2 - question details advanced settings model', () => {
       expect(result[0]).toHaveProperty('items')
       expect(result[0].items?.[0]).toHaveProperty('checked', true)
     })
+
+    test('should remove instruction hint text for NationalGridFieldNumberFields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.NationalGridFieldNumberField,
+        name: 'location',
+        title: 'location title',
+        options: {}
+      })
+      const result = advancedSettingsFields(['giveInstructions'], question)
+      expect(result[0].items).toHaveLength(1)
+      expect(result[0].items?.at(0)?.hint?.text).toBeUndefined()
+    })
   })
 
   describe('enhancedFields', () => {

@@ -268,7 +268,10 @@ export const allAdvancedSettingsFields =
         {
           value: 'true',
           text: 'Give instructions to help users answer this question',
-          checked: false
+          checked: false,
+          hint: {
+            text: 'Only appears when JavaScript is turned off.'
+          }
         }
       ]
     },
@@ -282,6 +285,7 @@ export const allAdvancedSettingsFields =
       hint: {
         text: 'You can use markdown formatting.'
       },
+      formGroup: { classes: 'govuk-!-margin-top-2' },
       rows: 8
     }
   })
