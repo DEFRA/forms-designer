@@ -162,6 +162,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   background-color: #e5f5ff;
   outline: 4px solid #ffdd00;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 3px solid govuk-colour("black");
 }
 
 .border-left-container {

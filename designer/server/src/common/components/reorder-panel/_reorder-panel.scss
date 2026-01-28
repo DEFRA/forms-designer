@@ -103,6 +103,7 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
 .items-container .app-reorderable-list__item.highlight-dragging .govuk-summary-card__title-wrapper {
   outline: 2px solid $govuk-focus-colour;
+  border-bottom: 3px solid govuk-colour("black");
 }
 
 .items-container .check-answers-item {
