@@ -362,7 +362,7 @@ describe('System admin routes', () => {
         )
       })
 
-      test('should throw error if one of the api calls fails', async () => {
+      test('should throw error if one of the api calls fails (non 404 error)', async () => {
         const form1 = Promise.resolve(testFormMetadata)
         const form2 = Promise.resolve({
           ...testFormMetadata,
@@ -403,6 +403,82 @@ describe('System admin routes', () => {
         // Verify definitions were requested
         expect(publishFormsBackupRequestedEvent).not.toHaveBeenCalled()
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(2)
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
+      })
+
+      test('should ignore 404 when fetching live definition', async () => {
+        const form1 = Promise.resolve(testFormMetadata)
+
+        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
+          yield await form1
+        })
+
+        const notFoundError = Object.assign(new Error('Not found'), {
+          statusCode: StatusCodes.NOT_FOUND
+        })
+
+        jest
+          .mocked(forms.getLiveFormDefinition)
+          .mockRejectedValueOnce(notFoundError)
+
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+        const options = {
+          method: 'post',
+          url: '/admin/index',
+          auth,
+          payload: { action: 'download' }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
+          expect.any(Object),
+          1,
+          expect.any(Number)
+        )
+        expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
+      })
+
+      test('should ignore 404 when fetching draft definition', async () => {
+        const form1 = Promise.resolve(testFormMetadata)
+
+        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
+          yield await form1
+        })
+
+        const notFoundError = Object.assign(new Error('Not found'), {
+          statusCode: StatusCodes.NOT_FOUND
+        })
+
+        jest
+          .mocked(forms.getLiveFormDefinition)
+          .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockRejectedValueOnce(notFoundError)
+
+        const options = {
+          method: 'post',
+          url: '/admin/index',
+          auth,
+          payload: { action: 'download' }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
+          expect.any(Object),
+          1,
+          expect.any(Number)
+        )
+        expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
       })
 

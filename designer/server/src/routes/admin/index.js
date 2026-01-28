@@ -271,13 +271,25 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
  */
 async function getFormDefinitions(id, includeDraft, token) {
   const [liveDefinition, draftDefinition] = await Promise.all([
-    forms.getLiveFormDefinition(id, token),
+    forms.getLiveFormDefinition(id, token).catch(ignore404Error),
     includeDraft
-      ? forms.getDraftFormDefinition(id, token)
+      ? forms.getDraftFormDefinition(id, token).catch(ignore404Error)
       : Promise.resolve(null)
   ])
 
   return { liveDefinition, draftDefinition }
+}
+
+/**
+ *
+ * @param {Error & {statusCode: StatusCodes}} err
+ * @returns {null | never}
+ */
+function ignore404Error(err) {
+  if (err.statusCode === StatusCodes.NOT_FOUND) {
+    return null
+  }
+  throw err
 }
 
 /**
