@@ -170,7 +170,8 @@ export const baseSchema = Joi.object().keys({
       then: Joi.number().required().messages({
         'any.required': 'Enter a payment amount',
         'number.min': 'Payment amount must be between £0.30 and £100,000',
-        'number.max': 'Payment amount must be between £0.30 and £100,000'
+        'number.max': 'Payment amount must be between £0.30 and £100,000',
+        'number.base': 'Payment amount must be between £0.30 and £100,000'
       }),
       otherwise: Joi.number().empty('')
     }
