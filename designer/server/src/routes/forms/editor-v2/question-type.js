@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   QuestionTypeSubGroup,
   Scopes,
   dateSubSchema,
@@ -12,6 +13,7 @@ import Joi from 'joi'
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
@@ -22,7 +24,7 @@ import {
   getQuestionSessionState,
   mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { requiresPageTitle } from '~/src/lib/utils.js'
+import { hasPaymentQuestionInForm, requiresPageTitle } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
@@ -174,7 +176,7 @@ export default [
       const { slug, pageId, questionId, stateId } = params
 
       // Form metadata and page components
-      const { page } = await getFormPage(slug, pageId, token)
+      const { page, definition } = await getFormPage(slug, pageId, token)
 
       // Ensure there's a page title when adding multiple questions
       if (questionId === 'new' && requiresPageTitle(page)) {
@@ -187,6 +189,20 @@ export default [
 
       const { questionType, writtenAnswerSub, dateSub, locationSub, listSub } =
         payload
+
+      // Ensure there's no existing payment question when adding multiple questions,
+      // since only one payment question allowed per form
+      if (
+        questionId === 'new' &&
+        questionType === ComponentType.PaymentField &&
+        hasPaymentQuestionInForm(definition)
+      ) {
+        const error = createJoiError(
+          'questionType',
+          'You can only add one payment question to a form'
+        )
+        return redirectWithErrors(request, h, error, errorKey)
+      }
 
       const suppliedQuestionType =
         /** @type {ComponentType} */
@@ -249,6 +265,6 @@ export default [
 ]
 
 /**
- * @import { ComponentType, FormEditorInputPage } from '@defra/forms-model'
+ * @import { FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

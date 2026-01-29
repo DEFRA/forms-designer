@@ -129,6 +129,12 @@ export function onlyDeclarationComponents(components: ComponentDef[]): boolean {
     .every((component) => component.type === ComponentType.DeclarationField)
 }
 
+export function includesPaymentField(components: ComponentDef[]): boolean {
+  return components.some(
+    (component) => component.type === ComponentType.PaymentField
+  )
+}
+
 const SHOW_REPEATER_CONTROLLERS = [ControllerType.Page, ControllerType.Repeat]
 
 export function showRepeaterSettings(page: Page): boolean {
@@ -140,6 +146,9 @@ export function showRepeaterSettings(page: Page): boolean {
       return false
     }
     if (onlyDeclarationComponents(page.components)) {
+      return false
+    }
+    if (includesPaymentField(page.components)) {
       return false
     }
   }

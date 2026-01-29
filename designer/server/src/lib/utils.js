@@ -295,6 +295,27 @@ export function requiresPageTitle(page) {
 }
 
 /**
+ * Helper function to determine if a payment question already exists in the form
+ * @param {FormDefinition} definition - the form definition
+ * @returns {boolean}
+ */
+export function hasPaymentQuestionInForm(definition) {
+  if (definition.pages.length === 0) {
+    return false
+  }
+
+  for (const page of definition.pages) {
+    const hasPayment = hasComponents(page)
+      ? page.components.some((comp) => comp.type === ComponentType.PaymentField)
+      : false
+    if (hasPayment) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ComponentDef, FormDefinition, Item, List, ListItem, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'

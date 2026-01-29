@@ -484,7 +484,11 @@ export function questionsViewModel(
     buttonText: SAVE_AND_CONTINUE,
     preventAddQuestion:
       components.some((comp) => comp.type === ComponentType.FileUploadField) ||
-      reorderDetails.action === 'reorder',
+      reorderDetails.action === 'reorder' ||
+      components.some((comp) => comp.type === ComponentType.PaymentField),
+    preventConditions: components.some(
+      (comp) => comp.type === ComponentType.PaymentField
+    ),
     notification,
     previewPageUrl,
     conditionDetails,
