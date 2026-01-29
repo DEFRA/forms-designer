@@ -46,6 +46,18 @@
   {% endfor %}
 </div>
 
+<!-- Outputs Cards -->
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-full">
+    <h2 class="govuk-heading-l govuk-!-margin-top-4">Outputs</h2>
+  </div>
+</div>
+<div class="govuk-grid-row">
+  {% for card in features.formDesigner.outputs %}
+    {{ featureCard(card) }}
+  {% endfor %}
+</div>
+
 <!-- Advanced Features Cards -->
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-full">

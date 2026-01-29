@@ -79,7 +79,12 @@ export const FeatureIcons = {
   SOME_AVAILABLE: 'some-available',
   API_FIRST: 'api-first',
   PENCIL: 'pencil',
-  PENCIL_BOX: 'pencil-box'
+  PENCIL_BOX: 'pencil-box',
+  MAP: 'map',
+  SHAREPOINT: 'sharepoint',
+  PAYMENT: 'payment',
+  MAP_ADVANCED: 'map-advanced',
+  REFERENCE_NUMBERS: 'reference-numbers'
 }
 
 /**

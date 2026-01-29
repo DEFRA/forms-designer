@@ -20,6 +20,11 @@ export default {
 * what happens after someone submits the form
 * privacy policy
 * organisation details`
+      },
+      {
+        heading: 'Auditing',
+        icon: FeatureIcons.AUDITING,
+        markdown: `See the changes made to your form over time with a clear audit trial.`
       }
     ],
     formDesign: [
@@ -57,6 +62,16 @@ export default {
         heading: 'Form declaration',
         icon: FeatureIcons.FORM_DECLARATION,
         markdown: `Include declaration text at the end of the form for users to agree to.`
+      },
+      {
+        heading: 'Page sections',
+        icon: FeatureIcons.PAGE_SECTIONS,
+        markdown: `Categorise questions into sections.`
+      },
+      {
+        heading: 'Map questions',
+        icon: FeatureIcons.MAP,
+        markdown: `Gather location information from a user with an interactive map.`
       }
     ],
     textAndNumbers: [
@@ -102,46 +117,31 @@ export default {
         markdown: `Preview your form in real time as you build it. Use the preview link to test the layout and conditions end to end. Share a preview link with others without affecting your form.`
       },
       {
-        heading: 'Submitted forms',
-        icon: FeatureIcons.SUBMITTED_FORMS,
-        markdown: `Data from a form submission is automatically sent to the shared mailbox you signed up with.`
-      }
-    ],
-    featuresComingSoon: [
-      {
-        heading: 'Confirmation emails',
-        classes: 'govuk-card--coming-soon',
-        icon: FeatureIcons.CONFIRMATION_EMAILS,
-        markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
-- name of form
-- date and time of submission
-- what happens next
-- support information`
-      },
-      {
         heading: 'Save and exit',
         icon: FeatureIcons.SAVE_EXIT,
         markdown: `Users can save their form progress and return within 28 days using a magic link.`
       },
       {
-        heading: 'User management',
-        icon: FeatureIcons.USER_MANAGEMENT,
-        markdown: `Manage user access and permissions for your forms.`
+        heading: 'Reference numbers',
+        icon: FeatureIcons.REFERENCE_NUMBERS,
+        markdown: `Each form submission is assigned a unique reference number that users can use to track their application.`
+      }
+    ],
+    outputs: [
+      {
+        heading: 'Submitted forms',
+        icon: FeatureIcons.SUBMITTED_FORMS,
+        markdown: `Data from a form submission is automatically sent to the shared mailbox you signed up with.`
       },
       {
-        heading: 'Auditing',
-        icon: FeatureIcons.AUDITING,
-        markdown: `See the changes made to your form over time with a clear audit trial.`
-      },
-      {
-        heading: 'API integration',
-        icon: FeatureIcons.API_INTEGRATION,
-        markdown: `Import data from form submissions into your backend system.`
-      },
-      {
-        heading: 'Page sections',
-        icon: FeatureIcons.PAGE_SECTIONS,
-        markdown: `Categorise questions into sections. Show and hide sections from users and use section headings on the 'check your answers page'.`
+        heading: 'Confirmation emails',
+        icon: FeatureIcons.CONFIRMATION_EMAILS,
+        markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
+- a copy of their answers
+- name of form
+- date and time of submission
+- what happens next
+- support information`
       },
       {
         heading: 'Data output',
@@ -150,6 +150,33 @@ export default {
 1. In a human readable format (standard HTML email)
 2. In a machine readable format that robots and computers can easily read
 `
+      },
+      {
+        heading: 'API integration',
+        icon: FeatureIcons.API_INTEGRATION,
+        markdown: `Import data from form submissions into your backend system.`
+      },
+      {
+        heading: 'Sharepoint integration',
+        icon: FeatureIcons.SHAREPOINT,
+        markdown: `Send form submission data directly to your SharePoint site.`
+      }
+    ],
+    featuresComingSoon: [
+      {
+        heading: 'User management',
+        icon: FeatureIcons.USER_MANAGEMENT,
+        markdown: `Manage user access and permissions for your forms.`
+      },
+      {
+        heading: 'GOV.UK Pay',
+        icon: FeatureIcons.PAYMENT,
+        markdown: `Collect payments as part of your form. Support for fixed and variable payment amounts.`
+      },
+      {
+        heading: 'Map questions',
+        icon: FeatureIcons.MAP_ADVANCED,
+        markdown: `Advanced map interactions including drawing shapes, lines, and data layers.`
       }
     ]
   },
