@@ -1037,7 +1037,7 @@ export const testFormDefinitionWithPaymentQuestion = buildDefinition({
   pages: [
     buildQuestionPage({
       id: 'p1',
-      title: '',
+      title: 'Page 1',
       section: 'section',
       components: [
         buildTextFieldComponent({

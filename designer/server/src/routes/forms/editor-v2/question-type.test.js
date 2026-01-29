@@ -284,7 +284,7 @@ describe('Editor v2 question routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p1/questions'
+      '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321'
     )
   })
 
