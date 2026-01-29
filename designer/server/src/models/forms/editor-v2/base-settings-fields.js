@@ -12,7 +12,6 @@ import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
 import {
   getListFromComponent,
-  handlePrecision,
   insertValidationErrors,
   mapListToTextareaStr
 } from '~/src/lib/utils.js'
@@ -170,15 +169,12 @@ export const baseSchema = Joi.object().keys({
     'questionType',
     {
       is: 'PaymentField',
-      then: Joi.number()
-        .required()
-        .custom((value, helpers) => handlePrecision(value, helpers, 2))
-        .messages({
-          'any.required': 'Enter a payment amount',
-          'number.min': PAYMENT_RANGE_ERROR_MESSAGE,
-          'number.max': PAYMENT_RANGE_ERROR_MESSAGE,
-          'number.base': PAYMENT_RANGE_ERROR_MESSAGE
-        }),
+      then: Joi.number().required().messages({
+        'any.required': 'Enter a payment amount',
+        'number.min': PAYMENT_RANGE_ERROR_MESSAGE,
+        'number.max': PAYMENT_RANGE_ERROR_MESSAGE,
+        'number.base': PAYMENT_RANGE_ERROR_MESSAGE
+      }),
       otherwise: Joi.number().empty('')
     }
   ),
@@ -258,7 +254,10 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
       return `${addressField?.options.usePostcodeLookup === true}`
     }
     case 'paymentAmount': {
-      return getPaymentAmount(questionFields)
+      const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
+        questionFields
+      )
+      return paymentField?.options.amount
     }
     case 'paymentDescription': {
       const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
@@ -269,18 +268,6 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
     default:
       return undefined
   }
-}
-
-/**
- * @param { FormComponentsDef | undefined } questionFields
- */
-function getPaymentAmount(questionFields) {
-  const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
-    questionFields
-  )
-  return paymentField?.options.amount
-    ? paymentField.options.amount.toFixed(2)
-    : undefined
 }
 
 /**
