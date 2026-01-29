@@ -114,7 +114,7 @@ describe('Editor v2 question routes', () => {
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
-    expect($radios).toHaveLength(23)
+    expect($radios).toHaveLength(24)
     expect($radios[0]).toHaveAccessibleName('Written answer')
     expect($radios[1]).toHaveAccessibleName('Short answer (a single line)')
     expect($radios[2]).toHaveAccessibleName(
@@ -136,14 +136,15 @@ describe('Editor v2 question routes', () => {
     expect($radios[14]).toHaveAccessibleName('Supporting evidence')
     expect($radios[15]).toHaveAccessibleName('Email address')
     expect($radios[16]).toHaveAccessibleName('Declaration')
-    expect($radios[17]).toHaveAccessibleName(
+    expect($radios[17]).toHaveAccessibleName('Payment')
+    expect($radios[18]).toHaveAccessibleName(
       'A list of options that users can choose from'
     )
-    expect($radios[18]).toHaveAccessibleName('Yes or No')
-    expect($radios[19]).toHaveAccessibleName('Checkboxes')
-    expect($radios[20]).toHaveAccessibleName('Radios')
-    expect($radios[21]).toHaveAccessibleName('Autocomplete')
-    expect($radios[22]).toHaveAccessibleName('Select')
+    expect($radios[19]).toHaveAccessibleName('Yes or No')
+    expect($radios[20]).toHaveAccessibleName('Checkboxes')
+    expect($radios[21]).toHaveAccessibleName('Radios')
+    expect($radios[22]).toHaveAccessibleName('Autocomplete')
+    expect($radios[23]).toHaveAccessibleName('Select')
   })
 
   test('GET - should render the question fields in the view - with payments enabled', async () => {
