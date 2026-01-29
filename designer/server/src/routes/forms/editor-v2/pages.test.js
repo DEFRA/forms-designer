@@ -133,14 +133,15 @@ describe('Editor v2 pages routes', () => {
 
     const $mainHeading = container.getByRole('heading', { level: 1 })
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
+    const $cardTitles = container.getAllByRole('heading', { level: 3 })
     const $actions = container.getAllByRole('button')
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
 
     expect($pageTitles[0]).toHaveTextContent('2 pages')
-    expect($pageTitles[1]).toHaveTextContent('Page 1: Page one')
-    expect($pageTitles[2]).toHaveTextContent('Page 2: Page two')
-    expect($pageTitles[3]).toHaveTextContent('End pages')
+    expect($pageTitles[1]).toHaveTextContent('End pages')
+    expect($cardTitles[0]).toHaveTextContent('Page 1: Page one')
+    expect($cardTitles[1]).toHaveTextContent('Page 2: Page two')
 
     expect($actions).toHaveLength(7)
     expect($actions[2]).toHaveTextContent('Add new page')
@@ -196,14 +197,17 @@ describe('Editor v2 pages routes', () => {
 
     const $mainHeading = container.getByRole('heading', { level: 1 })
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
+    const $cardTitles = container.getAllByRole('heading', { level: 3 })
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
 
     expect($pageTitles[0]).toHaveTextContent('Filter pages by condition')
     expect($pageTitles[1]).toHaveTextContent('1 page')
-    expect($pageTitles[2]).toHaveTextContent('Fave animal')
-    expect($pageTitles[3]).toHaveTextContent('End pages')
-    expect($pageTitles[4]).toHaveTextContent('Check your answers')
+    expect($pageTitles[2]).toHaveTextContent('End pages')
+    expect($cardTitles[0]).toHaveTextContent('Applied filters:')
+    expect($cardTitles[1]).toHaveTextContent('Conditions not applied to pages')
+    expect($cardTitles[2]).toHaveTextContent('Fave animal')
+    expect($cardTitles[3]).toHaveTextContent('Check your answers')
   })
 
   test('POST - should create filter based on selected conditions', async () => {
