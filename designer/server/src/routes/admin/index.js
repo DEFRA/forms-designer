@@ -1,18 +1,26 @@
-import { Scopes } from '@defra/forms-model'
+import { performance } from 'node:perf_hooks'
+import { PassThrough } from 'node:stream'
+
+import { Scopes, getErrorMessage } from '@defra/forms-model'
+import Archiver from 'archiver'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import * as forms from '~/src/lib/forms.js'
 import { getUser } from '~/src/lib/manage.js'
-import { publishPlatformCsatExcelRequestedEvent } from '~/src/messaging/publish.js'
+import {
+  publishFormsBackupRequestedEvent,
+  publishPlatformCsatExcelRequestedEvent
+} from '~/src/messaging/publish.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
 export const ROUTE_FULL_PATH = '/admin/index'
 
 const schema = Joi.object({
-  action: Joi.string().valid('feedback').required()
+  action: Joi.string().valid('feedback', 'download').required()
 })
 
 /**
@@ -77,16 +85,21 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: { action: string } }>}
+   * @satisfies {ServerRoute<{ Payload: { action: string } }>}
    */
   ({
     method: 'POST',
     path: ROUTE_FULL_PATH,
     async handler(request, h) {
-      const { auth, yar } = request
+      const { auth, yar, payload } = request
       const { token } = auth.credentials
+      const { action } = payload
 
-      // Request all forms by omitting the formId
+      if (action === 'download') {
+        return downloadAllFormsAsZip(request, h)
+      }
+
+      // feedback action: Request all forms by omitting the formId
       await sendFeedbackSubmissionsFile(undefined, token)
 
       const user = mapUserForAudit(auth.credentials.user)
@@ -125,6 +138,230 @@ export default [
 ]
 
 /**
- * @import { ServerRoute } from '@hapi/hapi'
- * @import { FormMetadata } from '@defra/forms-model'
+ * Process a single form - fetch definitions and append to archive
+ * @param {FormMetadata} metadata
+ * @param {string} token
+ * @param {ReturnType<Archiver>} archive
+ */
+async function processForm(metadata, token, archive) {
+  // Add metadata first under {id}/metadata.json
+  const metadataName = `${metadata.id}/metadata.json`
+  const metadataJson = JSON.stringify(metadata, null, 2)
+  archive.append(metadataJson, { name: metadataName })
+
+  // Then append definitions under {id}/definition_*.json
+  const definition = await getFormDefinitions(metadata.id, token)
+  appendFormDefinitionsToArchive(metadata.id, archive, definition)
+}
+
+/**
+ * Download all forms as a ZIP file
+ * @param {Request<{ Payload: { action: string } }>} request
+ * @param {ResponseToolkit<{ Payload: { action: string; }; }>} responseToolkit
+ * @returns {Promise<ResponseObject>}
+ */
+async function downloadAllFormsAsZip(request, responseToolkit) {
+  const { auth } = request
+  const { token } = auth.credentials
+  const user = mapUserForAudit(auth.credentials.user)
+
+  try {
+    const startedAt = performance.now()
+    const { archive, stream } = createArchiveStream()
+    const response = createZipResponse(responseToolkit, stream)
+
+    attachArchiveEventHandlers(archive, stream, request)
+
+    const { totalForms, manifestEntities } = await processAllForms(
+      token,
+      archive
+    )
+
+    if (totalForms === 0) {
+      request.logger.warn('[downloadAllForms] No forms found for download')
+      return responseToolkit
+        .response({ message: 'No forms available to download' })
+        .code(StatusCodes.NOT_FOUND)
+    }
+
+    appendManifestToArchive(archive, totalForms, manifestEntities)
+
+    request.logger.info(
+      {
+        totalForms,
+        userId: user.id
+      },
+      '[downloadAllForms] Finalizing archive'
+    )
+
+    await archive.finalize()
+
+    const durationMs = performance.now() - startedAt
+    await publishFormsBackupRequestedEvent(user, totalForms, durationMs)
+    return response
+  } catch (err) {
+    request.logger.error(
+      err,
+      `[downloadAllForms] Failed to create ZIP - ${getErrorMessage(err)}`
+    )
+    return responseToolkit
+      .response({
+        message: 'Failed to download forms',
+        error: getErrorMessage(err)
+      })
+      .code(StatusCodes.INTERNAL_SERVER_ERROR)
+  }
+}
+
+/**
+ * Create archive and stream
+ * @returns {{ archive: ReturnType<Archiver>, stream: PassThrough }}
+ */
+function createArchiveStream() {
+  const stream = new PassThrough()
+  const archive = Archiver('zip', { zlib: { level: 9 } })
+  archive.pipe(stream)
+  return { archive, stream }
+}
+
+/**
+ * Build a response with zip headers
+ * @param {ResponseToolkit<{ Payload: { action: string; }; }>} responseToolkit
+ * @param {PassThrough} stream
+ */
+function createZipResponse(responseToolkit, stream) {
+  const response = responseToolkit.response(stream)
+  response.header('Content-Type', 'application/zip')
+  response.header('Content-Disposition', 'attachment; filename="forms.zip"')
+  return response
+}
+
+/**
+ * Attach archive event handlers
+ * @param {ReturnType<Archiver>} archive
+ * @param {PassThrough} stream
+ * @param {Request<{ Payload: { action: string } }>} request
+ */
+function attachArchiveEventHandlers(archive, stream, request) {
+  archive.on('warning', (/**  @type {Error} */ err) => {
+    request.logger.warn(
+      err,
+      `[downloadAllForms] Archive warning - ${getErrorMessage(err)}`
+    )
+  })
+
+  archive.on('error', (/**  @type {Error} */ err) => {
+    request.logger.error(
+      err,
+      `[downloadAllForms] Archive error - ${getErrorMessage(err)}`
+    )
+    stream.destroy(err)
+  })
+}
+
+/**
+ * Process all forms and append metadata/definitions to archive
+ * @param {string} token
+ * @param {ReturnType<Archiver>} archive
+ * @returns {Promise<{ totalForms: number, manifestEntities: { id: string, title: string, slug: string }[] }>}
+ */
+async function processAllForms(token, archive) {
+  const concurrency = 5
+  let totalForms = 0
+  let batch = []
+  /** @type {{ id: string, title: string, slug: string }[]} */
+  const manifestEntities = []
+
+  for await (const metadata of forms.listAll(token)) {
+    totalForms++
+    manifestEntities.push({
+      id: metadata.id,
+      title: metadata.title,
+      slug: metadata.slug
+    })
+    batch.push(metadata)
+    if (batch.length >= concurrency) {
+      await Promise.all(
+        batch.map((formMetadata) => processForm(formMetadata, token, archive))
+      )
+      batch = []
+    }
+  }
+
+  if (batch.length > 0) {
+    await Promise.all(
+      batch.map((formMetadata) => processForm(formMetadata, token, archive))
+    )
+  }
+
+  return { totalForms, manifestEntities }
+}
+
+/**
+ * Append manifest.json to archive
+ * @param {ReturnType<Archiver>} archive
+ * @param {number} totalForms
+ * @param {{ id: string, title: string, slug: string }[]} manifestEntities
+ */
+function appendManifestToArchive(archive, totalForms, manifestEntities) {
+  const manifest = {
+    forms: {
+      count: totalForms,
+      entities: manifestEntities
+    }
+  }
+  archive.append(JSON.stringify(manifest, null, 2), {
+    name: 'manifest.json'
+  })
+}
+
+/**
+ * Retrieve both live and draft form definitions
+ * @param {string} id - The form metadata ID
+ * @param {string} token - Auth token
+ * @returns {Promise<{ liveDefinition?: FormDefinition , draftDefinition?: FormDefinition }>}
+ */
+async function getFormDefinitions(id, token) {
+  const [liveDefinition, draftDefinition] = await Promise.all([
+    forms.getLiveFormDefinition(id, token).catch(ignore404Error),
+    forms.getDraftFormDefinition(id, token).catch(ignore404Error)
+  ])
+
+  return { liveDefinition, draftDefinition }
+}
+
+/**
+ *
+ * @param {Error & {data?:{statusCode: StatusCodes}}} err
+ * @returns {undefined | never}
+ */
+function ignore404Error(err) {
+  if (err.data?.statusCode === StatusCodes.NOT_FOUND) {
+    return undefined
+  }
+  throw err
+}
+
+/**
+ * Append form definitions using id-based folder paths
+ * @param {string} id form ID
+ * @param {ReturnType<Archiver>} archive archive instance
+ * @param {Awaited<ReturnType<getFormDefinitions>>} definition form definitions
+ */
+function appendFormDefinitionsToArchive(id, archive, definition) {
+  const liveFilename = `${id}/definition_live.json`
+  const draftFilename = `${id}/definition_draft.json`
+  if (definition.liveDefinition) {
+    const jsonString = JSON.stringify(definition.liveDefinition, null, 2)
+    archive.append(jsonString, { name: liveFilename })
+  }
+  if (definition.draftDefinition) {
+    const jsonString = JSON.stringify(definition.draftDefinition, null, 2)
+    archive.append(jsonString, { name: draftFilename })
+  }
+}
+
+/**
+ * @import { ServerRoute , Request, ResponseToolkit, ResponseObject} from '@hapi/hapi'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */

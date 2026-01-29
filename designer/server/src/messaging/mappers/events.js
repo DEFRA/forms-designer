@@ -216,6 +216,29 @@ export function platformCsatExcelRequestedMapper(data, user) {
 }
 
 /**
+ * @param {{totalForms: number, durationMs: number}} data
+ * @param {AuditUser} user
+ * @returns {AuditMessage}
+ */
+export function formsBackupRequestedMapper(data, user) {
+  const now = new Date()
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.FORM,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type: AuditEventMessageType.FORMS_BACKUP_REQUESTED,
+    entityId: 'All Forms',
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    messageCreatedAt: now,
+    data
+  }
+}
+
+/**
  * @typedef {object} FormDownloadData
  * @property {string} formId - The form ID
  * @property {string} slug - The form slug
@@ -230,5 +253,5 @@ export function platformCsatExcelRequestedMapper(data, user) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage } from '@defra/forms-model'
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage, AuditMessage } from '@defra/forms-model'
  */

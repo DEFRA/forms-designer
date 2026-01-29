@@ -111,6 +111,20 @@ export async function getDraftFormDefinition(id, token) {
 }
 
 /**
+ * Get form definition
+ * @param {string} id
+ * @param {string} token
+ */
+export async function getLiveFormDefinition(id, token) {
+  const getJsonByType = /** @type {typeof getJson<FormDefinition>} */ (getJson)
+
+  const requestUrl = new URL(`./${id}/definition`, formsEndpoint)
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body
+}
+
+/**
  * Update draft form definition
  * @param {string} id
  * @param {FormDefinition} definition - form definition
@@ -206,6 +220,35 @@ export async function updateMetadata(id, metadata, token) {
   })
 
   return body
+}
+
+/**
+ * List all forms with pagination support (generator function)
+ * @param {string} token
+ * @param {Partial<QueryOptions>} options
+ * @yields {AsyncGenerator<FormMetadata, void, unknown>}
+ */
+export async function* listAll(token, options = {}) {
+  let page = 1
+  let hasMore = true
+  const perPage = 50
+
+  while (hasMore) {
+    const result = await list(token, {
+      page,
+      perPage,
+      ...options
+    })
+
+    if (Array.isArray(result.data) && result.data.length > 0) {
+      for (const form of result.data) {
+        yield form
+      }
+      page++
+    } else {
+      hasMore = false
+    }
+  }
 }
 
 /**
