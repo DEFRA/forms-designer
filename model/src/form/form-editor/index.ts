@@ -402,7 +402,6 @@ export const paymentDescriptionSchema = Joi.string()
   .description('Description of payment - appears in payment providers pages')
 
 export const paymentAmountSchema = Joi.number()
-  .empty('')
   .min(0.3)
   .max(100000)
   .description('Amount of payment in pounds')
