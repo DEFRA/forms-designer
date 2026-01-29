@@ -183,7 +183,8 @@ export function buildOperatorField(
         id: `items[${idx}].operator`,
         name: `items[${idx}][operator]`,
         label: {
-          text: 'Condition type'
+          text: 'Condition type',
+          classes: 'govuk-label--s'
         },
         items: [{ text: 'Select a condition type', value: '' }].concat(
           operatorNames
@@ -229,7 +230,8 @@ export function buildConditionsFields(
     id: `items[${idx}].componentId`,
     name: `items[${idx}][componentId]`,
     label: {
-      text: 'Select a question'
+      text: 'Select a question',
+      classes: 'govuk-label--s'
     },
     classes: 'govuk-input--width-20',
     items: componentItems,
@@ -334,7 +336,7 @@ export function buildConditionEditor(definition, validation, state) {
     name: 'displayName',
     label: {
       text: 'Condition name',
-      classes: 'govuk-label--m'
+      classes: 'govuk-label--s'
     },
     classes: 'govuk-input--width-20',
     value: conditionWrapper?.displayName,

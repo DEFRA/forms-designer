@@ -67,7 +67,8 @@ export function relativeDateValueViewModel(idx, item, validation) {
     id: `items[${idx}].value.period`,
     name: `items[${idx}][value][period]`,
     label: {
-      text: 'Period'
+      text: 'Period',
+      classes: 'govuk-label--s'
     },
     classes: GOVUK_INPUT_WIDTH_10,
     value: periodValue,
@@ -219,7 +220,8 @@ function buildListItemValueField(
     name: `items[${idx}][value][itemId]`,
     fieldset: {
       legend: {
-        text: SELECT_A_VALUE
+        text: SELECT_A_VALUE,
+        classes: 'govuk-fieldset__legend--s'
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -248,7 +250,8 @@ function buildBooleanValueField(idx, item, validation) {
     name: `items[${idx}][value]`,
     fieldset: {
       legend: {
-        text: SELECT_A_VALUE
+        text: SELECT_A_VALUE,
+        classes: 'govuk-fieldset__legend--s'
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -278,7 +281,8 @@ function buildDeclarationValueField(idx, _item, _validation) {
     name: `items[${idx}][value]`,
     fieldset: {
       legend: {
-        text: SELECT_A_VALUE
+        text: SELECT_A_VALUE,
+        classes: 'govuk-fieldset__legend--s'
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -360,7 +364,8 @@ function buildStringValueField(idx, item, validation) {
     id: `items[${idx}].value`,
     name: `items[${idx}][value]`,
     label: {
-      text: 'Enter a value'
+      text: 'Enter a value',
+      classes: 'govuk-label--s'
     },
     classes: GOVUK_INPUT_WIDTH_10,
     value: isConditionStringValueDataV2(item) ? item.value : undefined,
@@ -378,7 +383,8 @@ function buildNumberValueField(idx, item, validation) {
     id: `items[${idx}].value`,
     name: `items[${idx}][value]`,
     label: {
-      text: 'Enter a value'
+      text: 'Enter a value',
+      classes: 'govuk-label--s'
     },
     classes: 'govuk-input--width-5',
     attributes: {
