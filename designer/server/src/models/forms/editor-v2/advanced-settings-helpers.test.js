@@ -80,6 +80,18 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({})
     })
 
+    it('should map paymentAmount to options.amount', () => {
+      const result = getAdditionalOptions({ paymentAmount: '225' })
+      expect(result).toEqual({ amount: '225' })
+    })
+
+    it('should map paymentDescription to options.description', () => {
+      const result = getAdditionalOptions({
+        paymentDescription: 'Payment desc'
+      })
+      expect(result).toEqual({ description: 'Payment desc' })
+    })
+
     it('should combine multiple options', () => {
       const result = getAdditionalOptions({
         classes: 'custom-class',

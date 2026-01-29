@@ -93,6 +93,25 @@ export function buildTextFieldComponent(partialTextField = {}) {
 }
 
 /**
+ * @param {Partial<PaymentFieldComponent>} partialTextField
+ * @returns {PaymentFieldComponent}
+ */
+export function buildPaymentFieldComponent(partialTextField = {}) {
+  return /** @satisfies {PaymentFieldComponent} */ {
+    id: '407dd0d7-cce9-4f43-8e1f-7d89cb698875',
+    name: 'PaymentField',
+    title: 'Payment field',
+    type: ComponentType.PaymentField,
+    hint: '',
+    options: {
+      amount: 250,
+      description: 'Payment description'
+    },
+    ...partialTextField
+  }
+}
+
+/**
  * @param {Partial<FileUploadFieldComponent>} partialFileUploadField
  * @returns {FileUploadFieldComponent}
  */
@@ -1010,6 +1029,40 @@ export const testFormDefinitionWithMultipleV2ConditionsWithUnassigned =
       }
     ]
   })
+
+/**
+ * @satisfies {FormDefinition}
+ */
+export const testFormDefinitionWithPaymentQuestion = buildDefinition({
+  pages: [
+    buildQuestionPage({
+      id: 'p1',
+      title: '',
+      section: 'section',
+      components: [
+        buildTextFieldComponent({
+          id: 'q1',
+          title: 'This is your first question'
+        })
+      ],
+      next: [{ path: '/payment' }]
+    }),
+    buildQuestionPage({
+      id: 'p2',
+      title: '',
+      section: 'section',
+      components: [
+        buildPaymentFieldComponent({
+          id: 'q2'
+        })
+      ],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'c2'
+    })
+  ]
+})
 
 /**
  * @import { DeclarationFieldComponent, FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, PaymentFieldComponent, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'

@@ -5,6 +5,7 @@ import Joi from 'joi'
 import {
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithOneQuestionNoPageTitle,
+  testFormDefinitionWithPaymentQuestion,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -251,6 +252,30 @@ describe('Editor v2 question routes', () => {
       url: '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321',
       auth,
       payload: { questionType: 'UkAddressField' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
+
+  test('POST - adding new payment question should redisplay with error if already a payment question in form', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithPaymentQuestion)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321',
+      auth,
+      payload: { questionType: 'PaymentField' }
     }
 
     const {

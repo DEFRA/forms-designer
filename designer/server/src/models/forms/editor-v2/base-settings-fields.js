@@ -37,6 +37,8 @@ const TABULAR_DATA = 'tabular-data'
 const DOCUMENTS = 'documents'
 const IMAGES = 'images'
 const ANY = 'any'
+const PAYMENT_RANGE_ERROR_MESSAGE =
+  'Enter a valid payment amount between £0.30 and £100,000'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
@@ -169,9 +171,9 @@ export const baseSchema = Joi.object().keys({
       is: 'PaymentField',
       then: Joi.number().required().messages({
         'any.required': 'Enter a payment amount',
-        'number.min': 'Enter a valid payment amount between £0.30 and £100,000',
-        'number.max': 'Enter a valid payment amount between £0.30 and £100,000',
-        'number.base': 'Enter a valid payment amount between £0.30 and £100,000'
+        'number.min': PAYMENT_RANGE_ERROR_MESSAGE,
+        'number.max': PAYMENT_RANGE_ERROR_MESSAGE,
+        'number.base': PAYMENT_RANGE_ERROR_MESSAGE
       }),
       otherwise: Joi.number().empty('')
     }

@@ -347,6 +347,13 @@ describe('utils', () => {
       })
       expect(hasPaymentQuestionInForm(definition)).toBe(false)
     })
+
+    it('should return false if form has no pages', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(false)
+    })
   })
 })
 
