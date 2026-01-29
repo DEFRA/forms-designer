@@ -6,6 +6,7 @@ import {
   buildDefinition,
   buildList,
   buildListItem,
+  buildPaymentComponent,
   buildQuestionPage,
   buildTextFieldComponent,
   testFormDefinitionWithNoQuestions,
@@ -20,6 +21,7 @@ import {
   getComponentsOnPageFromDefinition,
   getHeaders,
   getListFromComponent,
+  hasPaymentQuestionInForm,
   mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
@@ -312,6 +314,38 @@ describe('utils', () => {
           'e36fdaad-1395-4efe-bfec-ceae7efaf8e3'
         )
       ).toEqual([])
+    })
+  })
+
+  describe('hasPaymentQuestionInForm', () => {
+    it('should return true if form contains payment question', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const paymentFieldComponent = buildPaymentComponent()
+      const page2 = buildQuestionPage({
+        components: [paymentFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(true)
+    })
+
+    it('should return false if form doesnt contain payment question', () => {
+      const textFieldComponent1 = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent1]
+      })
+      const textFieldComponent2 = buildTextFieldComponent()
+      const page2 = buildQuestionPage({
+        components: [textFieldComponent2]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(false)
     })
   })
 })

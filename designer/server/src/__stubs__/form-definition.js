@@ -186,6 +186,24 @@ export function buildMarkdownComponent(partialComponent) {
 }
 
 /**
+ * @param {Partial<PaymentFieldComponent>} partialComponent
+ * @returns {PaymentFieldComponent}
+ */
+export function buildPaymentComponent(partialComponent = {}) {
+  return {
+    id: '45678',
+    type: ComponentType.PaymentField,
+    name: 'payment',
+    title: 'payment',
+    options: {
+      amount: 125,
+      description: 'Payment description'
+    },
+    ...partialComponent
+  }
+}
+
+/**
  * Builder to create a Form Definition
  * @param {Partial<FormDefinition>} definitionPartial
  * @returns {FormDefinition}
@@ -994,5 +1012,5 @@ export const testFormDefinitionWithMultipleV2ConditionsWithUnassigned =
   })
 
 /**
- * @import { DeclarationFieldComponent, FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
+ * @import { DeclarationFieldComponent, FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, PaymentFieldComponent, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
  */
