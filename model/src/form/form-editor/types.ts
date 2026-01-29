@@ -304,6 +304,16 @@ export interface FormEditor {
    * Denotes if the UK address question supports postcode lookup
    */
   usePostcodeLookup: string
+
+  /**
+   * Amount of payment in pounds
+   */
+  paymentAmount: string
+
+  /**
+   * Description of the payment (will appear in the payment provider's pages)
+   */
+  paymentDescription: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -539,6 +549,9 @@ export interface GovukField {
   formGroup?: {
     classes?: string
   }
+  prefix?: {
+    text?: string
+  }
   preContent?: {
     path?: string
   }
@@ -585,6 +598,8 @@ export interface FormEditorGovukField {
   autoCompleteOptions?: GovukField
   usePostcodeLookup?: GovukField
   declarationText?: GovukField
+  paymentAmount?: GovukField
+  paymentDescription?: GovukField
   errorMessage?: { text: string }
 }
 

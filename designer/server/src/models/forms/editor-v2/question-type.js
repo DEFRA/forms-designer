@@ -72,6 +72,13 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
     value: ComponentType.DeclarationField
   },
   {
+    text: 'Payment',
+    hint: {
+      text: 'Ask users to pay for something'
+    },
+    value: ComponentType.PaymentField
+  },
+  {
     divider: 'or'
   },
   {

@@ -154,7 +154,25 @@ export const baseSchema = Joi.object().keys({
     }
   ),
   jsEnabled: questionDetailsFullSchema.jsEnabledSchema,
-  usePostcodeLookup: questionDetailsFullSchema.usePostcodeLookupSchema
+  usePostcodeLookup: questionDetailsFullSchema.usePostcodeLookupSchema,
+  paymentAmount: questionDetailsFullSchema.paymentAmountSchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.number().required().messages({
+        required: 'Enter payment amount'
+      })
+    }
+  ),
+  paymentDescription: questionDetailsFullSchema.paymentDescriptionSchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.string().required().messages({
+        required: 'Enter payment description'
+      })
+    }
+  )
 })
 
 const ALL_LOCATION_HINTS = Object.values(locationHintDefaults)
@@ -328,6 +346,11 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question
 ])
 
+export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.PaymentAmount,
+  QuestionBaseSettings.PaymentDescription
+])
+
 /**
  * Map of component types to their respective field lists
  * @type {Map<ComponentType, FormEditorGovukFieldBaseKeys[]>}
@@ -344,7 +367,8 @@ const COMPONENT_TYPE_TO_FIELDS = new Map([
   [ComponentType.OsGridRefField, locationFields],
   [ComponentType.NationalGridFieldNumberField, locationFields],
   [ComponentType.LatLongField, locationFields],
-  [ComponentType.HiddenField, hiddenFields]
+  [ComponentType.HiddenField, hiddenFields],
+  [ComponentType.PaymentField, paymentFields]
 ])
 
 /**
