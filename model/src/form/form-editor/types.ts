@@ -381,6 +381,8 @@ export type FormEditorInputQuestion = Pick<
   | 'usePostcodeLookup'
   | 'giveInstructions'
   | 'instructionText'
+  | 'paymentAmount'
+  | 'paymentDescription'
 >
 
 export type FormEditorInputPageSettings = Pick<

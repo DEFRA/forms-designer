@@ -43,8 +43,12 @@ export const baseSchema = Joi.object().keys({
   question: questionDetailsFullSchema.questionSchema.when('enhancedAction', {
     is: Joi.exist(),
     then: Joi.string().optional().allow(''),
-    otherwise: Joi.string().trim().required().messages({
-      '*': 'Enter a question'
+    otherwise: Joi.when('questionType', {
+      is: 'PaymentField',
+      then: Joi.string().optional().allow(''),
+      otherwise: Joi.string().trim().required().messages({
+        '*': 'Enter a question'
+      })
     })
   }),
   hintText: questionDetailsFullSchema.hintTextSchema,
@@ -66,8 +70,12 @@ export const baseSchema = Joi.object().keys({
     {
       is: Joi.exist(),
       then: Joi.string().optional().allow(''),
-      otherwise: Joi.string().trim().required().messages({
-        '*': 'Enter a short description'
+      otherwise: Joi.when('questionType', {
+        is: 'PaymentField',
+        then: Joi.string().optional().allow(''),
+        otherwise: Joi.string().trim().required().messages({
+          '*': 'Enter a short description'
+        })
       })
     }
   ),
@@ -160,8 +168,11 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'PaymentField',
       then: Joi.number().required().messages({
-        required: 'Enter payment amount'
-      })
+        'any.required': 'Enter a payment amount',
+        'number.min': 'Payment amount must be between £0.30 and £100,000',
+        'number.max': 'Payment amount must be between £0.30 and £100,000'
+      }),
+      otherwise: Joi.number().empty('')
     }
   ),
   paymentDescription: questionDetailsFullSchema.paymentDescriptionSchema.when(
@@ -169,8 +180,10 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'PaymentField',
       then: Joi.string().required().messages({
-        required: 'Enter payment description'
-      })
+        'string.empty': 'Enter a payment description',
+        'string.max': 'Payment description must be 230 characters or less'
+      }),
+      otherwise: Joi.string().optional().allow('')
     }
   )
 })
@@ -236,6 +249,18 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
         questionFields
       )
       return `${addressField?.options.usePostcodeLookup === true}`
+    }
+    case 'paymentAmount': {
+      const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
+        questionFields
+      )
+      return paymentField?.options.amount
+    }
+    case 'paymentDescription': {
+      const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
+        questionFields
+      )
+      return paymentField?.options.description
     }
     default:
       return undefined
@@ -465,6 +490,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent, FormDefinitionError } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent, PaymentFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

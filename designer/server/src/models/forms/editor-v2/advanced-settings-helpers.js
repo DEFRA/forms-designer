@@ -82,6 +82,16 @@ export function getAdditionalOptions(payload) {
           payload.instructionText
         )
       }
+    },
+    {
+      key: 'amount',
+      getValue: () => payload.paymentAmount,
+      shouldInclude: () => payload.paymentAmount !== undefined
+    },
+    {
+      key: 'description',
+      getValue: () => payload.paymentDescription,
+      shouldInclude: () => payload.paymentDescription !== undefined
     }
   ]
 

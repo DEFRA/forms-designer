@@ -69,7 +69,8 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.EastingNorthingField,
     ComponentType.OsGridRefField,
     ComponentType.NationalGridFieldNumberField,
-    ComponentType.LatLongField
+    ComponentType.LatLongField,
+    ComponentType.PaymentField
   )
   .description('The specific component type to use for this question')
 
@@ -396,11 +397,11 @@ export const usePostcodeLookupSchema = Joi.string()
 
 export const paymentDescriptionSchema = Joi.string()
   .trim()
+  .max(230)
   .required()
   .description('Description of payment - appears in payment providers pages')
 
 export const paymentAmountSchema = Joi.number()
-  .empty('')
   .min(0.3)
   .max(100000)
   .description('Amount of payment in pounds')
