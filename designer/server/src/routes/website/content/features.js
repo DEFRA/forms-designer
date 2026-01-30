@@ -202,12 +202,12 @@ export default {
         markdown: `Integrate forms directly into your existing applications with minimal setup and configuration.`
       },
       {
-        heading: 'API-first Design',
+        heading: 'API-first design',
         icon: FeatureIcons.API_FIRST,
         markdown: `Built with developers in mind, featuring comprehensive APIs for form creation, management, and data retrieval.`
       },
       {
-        heading: 'Custom Styling',
+        heading: 'Custom styling',
         icon: FeatureIcons.CUSTOM_STYLING,
         markdown: `Full control over form appearance and styling to match your application's design system.`
       }
@@ -241,6 +241,14 @@ export default {
             title: 'Load forms from a custom source',
             description:
               'Forms can be persisted and loaded in any service of your choosing. Example options: filesystem, database, API, etc.'
+          },
+          {
+            icon: FeatureIcons.AUDITING,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.NOT_AVAILABLE,
+            title: 'Auditing',
+            description:
+              'Track changes made to your form over time with a clear audit trail for compliance and governance.'
           }
         ]
       },
@@ -313,11 +321,19 @@ export default {
           },
           {
             icon: FeatureIcons.CUSTOM_STYLING,
-            designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: FeatureComparisonIcons.NOT_AVAILABLE,
+            designer: FeatureComparisonIcons.NOT_AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
             title: 'Fully customisable page content',
             description:
               'Form designer allows you to add questions (input fields, selection fields) on a page. Developer plugin allows you to add components (input fields, selection fields, guidance, HTML, etc) to a page. Developer plugin does not enforce the order of these components.'
+          },
+          {
+            icon: FeatureIcons.PAGE_SECTIONS,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Page sections',
+            description:
+              'Categorise questions into sections for better organisation and user experience.'
           }
         ]
       },
@@ -335,7 +351,7 @@ export default {
           {
             icon: FeatureIcons.FILE_UPLOAD,
             designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.SOME_AVAILABLE,
             title: 'File upload',
             description:
               'Allow users to upload documents, images and other files as part of their form submission.'
@@ -352,6 +368,93 @@ export default {
             title: 'Yes or no',
             description:
               'Simple radio button selection for yes/no questions and confirmations.'
+          }
+        ]
+      },
+      {
+        title: 'Location',
+        children: [
+          {
+            icon: FeatureIcons.ADDRESS_LOOKUP,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Address and postcode lookup',
+            description:
+              'Search for addresses using postcodes with autocomplete functionality.'
+          },
+          {
+            icon: FeatureIcons.MAP,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Map questions',
+            description:
+              'Gather location information from users with an interactive map.'
+          }
+        ]
+      },
+      {
+        title: 'Outputs',
+        children: [
+          {
+            icon: FeatureIcons.SUBMITTED_FORMS,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Submitted forms as emails',
+            description:
+              'Data from form submissions is automatically sent to the shared mailbox you signed up with.'
+          },
+          {
+            icon: FeatureIcons.DATA_OUTPUT,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Email formats',
+            description:
+              'Choose how to retrieve submission data in human readable (HTML email) or machine readable format.'
+          },
+          {
+            icon: FeatureIcons.EXCEL_DOWNLOAD,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.NOT_AVAILABLE,
+            title: 'Export to Excel',
+            description:
+              'Download all form responses as an Excel document for analysis and record keeping.'
+          },
+          {
+            icon: FeatureIcons.API_INTEGRATION,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'API integration',
+            description:
+              'Import data from form submissions into your backend system.'
+          },
+          {
+            icon: FeatureIcons.SHAREPOINT,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.NOT_AVAILABLE,
+            title: 'Sharepoint integration',
+            description:
+              'Send form submission data directly to your SharePoint site.'
+          }
+        ]
+      },
+      {
+        title: 'Customer communication',
+        children: [
+          {
+            icon: FeatureIcons.CONFIRMATION_EMAILS,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Confirmation emails',
+            description:
+              'Users receive a confirmation email after submitting a form with a copy of their answers, submission details, and next steps.'
+          },
+          {
+            icon: FeatureIcons.SURVEY,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.NOT_AVAILABLE,
+            title: 'Customer satisfaction exit survey',
+            description:
+              'Gather feedback from users after they submit their form to improve your service.'
           }
         ]
       },
@@ -375,12 +478,20 @@ export default {
               'Test how your form looks and behaves before publishing it to users.'
           },
           {
-            icon: FeatureIcons.SUBMITTED_FORMS,
-            designer: FeatureComparisonIcons.NOT_AVAILABLE,
-            plugin: FeatureComparisonIcons.AVAILABLE,
-            title: 'Submitted forms',
+            icon: FeatureIcons.SAVE_EXIT,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: 'someAvailable',
+            title: 'Save and exit',
             description:
-              'View and manage form submissions from users, including data export and analysis.'
+              'Users can save their form progress and return within 28 days using a magic link. The plugin offers an API for save and return functionality, but service teams are responsible for providing the user interface.'
+          },
+          {
+            icon: FeatureIcons.REFERENCE_NUMBERS,
+            designer: FeatureComparisonIcons.AVAILABLE,
+            plugin: FeatureComparisonIcons.AVAILABLE,
+            title: 'Reference numbers',
+            description:
+              'Each form submission is assigned a unique reference number that users can use to track their application.'
           },
           {
             icon: FeatureIcons.PENCIL,
@@ -404,52 +515,20 @@ export default {
         title: 'Features coming soon',
         children: [
           {
-            icon: FeatureIcons.CONFIRMATION_EMAILS,
-            designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: FeatureComparisonIcons.AVAILABLE,
-            title: 'Confirmation emails',
-            description:
-              'Automatically send confirmation emails to users after they submit a form.'
-          },
-          {
-            icon: FeatureIcons.SAVE_EXIT,
-            designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: 'someAvailable',
-            title: 'Save and exit',
-            description:
-              'The plugin offers an API so save and return can function, however service teams using the plugin are responsible for integrating with this and providing the user interface (e.g. implementing a portal with user auth that allows them to resume an application, or their own magic link implementation, etc). Only the hosted Designer offers a complete end-to-end save and exit feature.'
-          },
-          {
-            icon: FeatureIcons.AUDITING,
+            icon: FeatureIcons.PAYMENT,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.NOT_AVAILABLE,
-            title: 'Auditing',
+            title: 'GOV.UK Pay',
             description:
-              'Track changes and maintain audit trails for compliance and governance purposes.'
+              'Collect payments as part of your form with support for fixed and variable payment amounts.'
           },
           {
-            icon: FeatureIcons.API_INTEGRATION,
+            icon: FeatureIcons.MAP_ADVANCED,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
-            title: 'API integration',
+            title: 'Advanced map questions',
             description:
-              'Connect forms to external systems and services through REST APIs and webhooks.'
-          },
-          {
-            icon: FeatureIcons.PAGE_SECTIONS,
-            designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: FeatureComparisonIcons.AVAILABLE,
-            title: 'Page sections',
-            description:
-              'Organise form content into logical sections for better user experience and navigation.'
-          },
-          {
-            icon: FeatureIcons.DATA_OUTPUT,
-            designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: FeatureComparisonIcons.AVAILABLE,
-            title: 'Data output',
-            description:
-              'Export form submissions in various formats including JSON, CSV and PDF for analysis and processing.'
+              'Advanced map interactions including drawing shapes, lines, and data layers.'
           }
         ]
       },
