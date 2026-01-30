@@ -14,10 +14,10 @@ export default {
     },
     whatsNew: {
       date: {
-        text: '14 June 2025',
-        iso: '2025-06-14T14:01:00.000Z'
+        text: '30 January 2026',
+        iso: '2026-01-30T15:00:00.000Z'
       },
-      text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+      text: 'Confirmation emails now include customer answers and unique reference numbers.'
     }
   },
   whatsNew: {

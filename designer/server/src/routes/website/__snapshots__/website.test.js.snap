@@ -3775,6 +3775,195 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
           <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">January 2026</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Customers get a unique reference number for their form submissions, which is also sent in the confirmation email.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Confirmation emails now include customer answers.</p>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">December 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Form sections in Check your answers page:</p>
+<ul>
+<li>add section headings to the Check your answers page to help users quickly review their answers on longer forms</li>
+<li>edit the Check your answers page and select the Sections tab to add section headings and assign pages to each section</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Download submissions to Excel:</p>
+<ul>
+<li>download a spreadsheet of all submissions received for your form in the last 9 months</li>
+<li>from the Forms library page, select your form and open the Responses tab</li>
+<li>choose Send submissions data to receive an email with a download link</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Delete a draft form:</p>
+<ul>
+<li>delete draft forms that are no longer needed from the Form library page</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Customer satisfaction exit survey:</p>
+<ul>
+<li>a customer survey has been added to the end of all live forms</li>
+<li>view survey responses from the Responses tab by choosing Send feedback data</li>
+</ul>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">November 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Location questions:</p>
+<ul>
+<li>collect location data from users with four new question types:<ul>
+<li>Easting and northing</li>
+<li>Ordnance Survey (OS) grid reference</li>
+<li>National Grid field number</li>
+<li>Longitude and latitude</li>
+</ul>
+</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Declaration questions:</p>
+<ul>
+<li>new declaration question type allows users to formally agree to something</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Postcode lookup for UK Address question type:</p>
+<ul>
+<li>allow users to look up an address from a postcode</li>
+<li>enable this by modifying your UK Address question and checking the Use postcode lookup checkbox</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Support for multiple output emails:</p>
+<ul>
+<li>each output email can have a different address and format</li>
+<li>supports teams using robotics with manual fallback routes</li>
+<li>contact the Forms team to enable this feature</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Confirmation email toggle:</p>
+<ul>
+<li>turn confirmation emails on or off from the Check Your Answers page Editor</li>
+<li>new Confirmation email tab added</li>
+<li>confirmation emails are enabled by default</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Upload any file type:</p>
+<ul>
+<li>Upload supporting evidence question type updated to allow any file type</li>
+<li>enable by selecting the Accept any file checkbox in the Page Editor</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Demoting H1 markdown:</p>
+<ul>
+<li>markdown heading levels automatically adjust to maintain proper page structure</li>
+<li>if an H1 exists, new markdown headings are adjusted to the appropriate level</li>
+</ul>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--l">October 2025</caption>
           <thead class="govuk-table__head">
           <tr class="govuk-table__row">
@@ -3784,21 +3973,88 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           </thead>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
-            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite. <a class="govuk-link" href="https://forms.defra.gov.uk" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk (opens in new tab)</a> has been launched to:</p>
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite at <a class="govuk-link" href="https://forms.defra.gov.uk" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk (opens in new tab)</a>:</p>
 <ul>
-<li>describe our offering</li>
-<li>showcase the features available in our Form Designer application and developer plugin</li>
-<li>provide a step-by-step guide to getting started with Defra Forms and making a form live</li>
-<li>offer a collection of resources to support form creation</li>
+<li>describes our offering</li>
+<li>showcases features available in our Form Designer application and developer plugin</li>
+<li>provides a step-by-step guide to getting started with Defra Forms and making a form live</li>
+<li>offers a collection of resources to support form creation</li>
 </ul>
-<p>Confirmation emails for form submissions:</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Confirmation emails for form submissions:</p>
 <ul>
-<li>members of the public can now request confirmation emails when submitting a form.</li>
-<li>this feature is automatically enabled for all newly created forms and is available as an opt-in for existing forms.</li>
-<li>we&#39;ll be rolling this out to all forms soon. If you&#39;d like this enabled for an existing form as a priority, please reach out to us.</li>
-<li>improved error messaging:</li>
-<li>we&#39;ve enhanced the error messages shown when deleting questions, pages, or list items that are referenced in conditions.</li>
+<li>members of the public can now request confirmation emails when submitting a form</li>
+<li>automatically enabled for all newly created forms</li>
+<li>available as an opt-in for existing forms</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Improved error messaging:</p>
+<ul>
+<li>enhanced error messages when deleting questions, pages, or list items that are referenced in conditions</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Forms with exceptionally large lists can now be saved.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Filter pages in your form by condition.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Added phase banner with an email link to provide feedback.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Support for &#39;add another&#39; items up to 200 items.</p>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">August 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>User management feature:</p>
+<ul>
+<li>new user management functionality released</li>
+<li>production users set as Form Creators by default</li>
+<li>publishing restricted to the Forms team during Private Beta</li>
 </ul>
 </td>
           </tr>
@@ -3814,7 +4070,9 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           </thead>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>Final updates for conditions:</p>
 <ul>
 <li>delete conditions</li>
@@ -3822,49 +4080,28 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
 <li>apply conditions to a guidance page</li>
 <li>view the conditions listing page</li>
 </ul>
-<p>Enhancements to Interactive Preview Panel:</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Enhancements to Interactive Preview Panel:</p>
 <ul>
 <li>better keyboard navigation using skip links</li>
 <li>termination pages</li>
-<li>fixes for defects like lost repeater settings and hint text</li>
 </ul>
 </td>
           </tr>
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Developer Plugin</td>
+            <td class="govuk-table__cell">
+                Developer Plugin
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>v2.0.1 introduces breaking changes with new Save and Return functionality moved into a <code>saveAndReturn</code> plugin registration option, replacing previous separate functions:</p>
 <ul>
 <li>keyGenerator</li>
 <li>sessionHydrator</li>
 <li>sessionPersister</li>
-</ul>
-</td>
-          </tr>
-          </tbody>
-        </table>
-          <table class="govuk-table">
-          <caption class="govuk-table__caption govuk-table__caption--l">August 2025</caption>
-          <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
-          </tr>
-          </thead>
-          <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
-            <td class="govuk-table__cell collapse-first-p-margin"><p>Final updates for conditions:</p>
-<ul>
-<li>delete conditions</li>
-<li>create and manage combined conditions</li>
-<li>apply conditions to a guidance page</li>
-<li>view the conditions listing page</li>
-</ul>
-<p>Enhancements to Interactive Preview Panel:</p>
-<ul>
-<li>better keyboard navigation using skip links</li>
-<li>termination pages</li>
-<li>fixes for defects like lost repeater settings and hint text</li>
 </ul>
 </td>
           </tr>
@@ -3880,7 +4117,9 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           </thead>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>Service moved to new domain <a class="govuk-link" href="https://forms.defra.gov.uk/" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk/ (opens in new tab)</a> to improve access for colleagues across different ALBs.</p>
 <p>No disruption expected:</p>
 <ul>
