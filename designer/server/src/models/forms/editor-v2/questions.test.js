@@ -15,11 +15,13 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
+import { buildPaymentComponent } from '~/src/__stubs__/form-definition.js'
 import {
   constructReorderQuestion,
   dummyRenderer,
   getPreviewModel,
   hasUnderlyingHeadingData,
+  mapQuestionTitle,
   questionsViewModel
 } from '~/src/models/forms/editor-v2/questions.js'
 
@@ -587,6 +589,20 @@ describe('editor-v2 - questions model', () => {
         hint: '',
         type: 'TextField'
       })
+    })
+  })
+
+  describe('mapQuestionTitle', () => {
+    test('should map title', () => {
+      expect(mapQuestionTitle(buildPaymentComponent())).toBe('Payment required')
+      expect(mapQuestionTitle(buildTextFieldComponent())).toBe('Text field')
+      expect(
+        mapQuestionTitle(
+          buildTextFieldComponent({
+            options: { required: false }
+          })
+        )
+      ).toBe('Text field (optional)')
     })
   })
 })
