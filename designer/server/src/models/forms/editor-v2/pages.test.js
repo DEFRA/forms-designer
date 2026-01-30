@@ -8,6 +8,7 @@ import {
   testFormDefinitionWithMultipleV2ConditionsWithUnassigned,
   testFormDefinitionWithNoPages,
   testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithPayment,
   testFormDefinitionWithRepeater,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
@@ -20,7 +21,8 @@ import {
   mapCondition,
   mapMarkdown,
   mapPageData,
-  mapQuestionRows
+  mapQuestionRows,
+  mapTitle
 } from '~/src/models/forms/editor-v2/pages.js'
 
 /**
@@ -162,6 +164,11 @@ describe('editor-v2 - pages model', () => {
         testFormDefinitionWithRepeater.pages[0]
       )
 
+      const resPagePayment = mapQuestionRows(
+        testFormDefinitionWithPayment,
+        testFormDefinitionWithPayment.pages[0]
+      )
+
       const conditionTestDefinition = structuredClone(
         testFormDefinitionWithMultipleV2Conditions
       )
@@ -219,6 +226,16 @@ describe('editor-v2 - pages model', () => {
         value: {
           html: '<pre class="break-on-newlines"><p class="govuk-body">Declaration text</p></pre>',
           classes: 'with-ellipsis'
+        }
+      })
+
+      expect(resPagePayment).toHaveLength(2)
+      expect(resPagePayment[0]).toEqual({
+        key: {
+          text: 'Payment for'
+        },
+        value: {
+          text: 'Payment description'
         }
       })
 
@@ -418,6 +435,15 @@ describe('editor-v2 - pages model', () => {
         'isBobV2',
         'isUnassignedCond'
       ])
+    })
+  })
+
+  describe('mapTitle', () => {
+    test('should generate correct title', () => {
+      expect(mapTitle(testFormDefinitionWithPayment.pages[0])).toBe('Payment')
+      expect(
+        mapTitle(testFormDefinitionWithExistingSummaryDeclaration.pages[1])
+      ).toBe('Check your answers')
     })
   })
 })

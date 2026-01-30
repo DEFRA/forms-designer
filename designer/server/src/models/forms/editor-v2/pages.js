@@ -36,11 +36,11 @@ export function isGuidancePage(page) {
 
 /**
  * @param {Page} page
- * @param {boolean} isSummaryPage
+ * @param {boolean} isSummary
  * @param {string} editBaseUrl
  */
-export function determineEditUrl(page, isSummaryPage, editBaseUrl) {
-  if (isSummaryPage) {
+export function determineEditUrl(page, isSummary, editBaseUrl) {
+  if (isSummary) {
     return `${editBaseUrl}${page.id}/check-answers-settings`
   }
 
