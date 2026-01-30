@@ -36,11 +36,11 @@ export function isGuidancePage(page) {
 
 /**
  * @param {Page} page
- * @param {boolean} isSummary
+ * @param {boolean} isSummaryPage
  * @param {string} editBaseUrl
  */
-export function determineEditUrl(page, isSummary, editBaseUrl) {
-  if (isSummary) {
+export function determineEditUrl(page, isSummaryPage, editBaseUrl) {
+  if (isSummaryPage) {
     return `${editBaseUrl}${page.id}/check-answers-settings`
   }
 
@@ -135,7 +135,7 @@ export function mapQuestionRows(definition, page) {
       },
       {
         key: { text: 'Total amount' },
-        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
+        value: { text: `£${paymentComponent?.options.amount?.toFixed(2)}` }
       }
     ]
   }

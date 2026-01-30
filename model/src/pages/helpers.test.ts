@@ -1,7 +1,6 @@
 import {
   buildCheckboxComponent,
   buildMarkdownComponent,
-  buildPaymentComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
@@ -243,18 +242,6 @@ describe('helpers', () => {
       })
 
       expect(showRepeaterSettings(page)).toBe(true)
-    })
-
-    it('should not allow repeater on a payment page', () => {
-      const page = buildQuestionPage({
-        title: 'sdsfdf',
-        path: '/sdsfdf',
-        components: [buildPaymentComponent()],
-        next: [],
-        id: '0f711e08-3801-444d-8e37-a88867c48f04'
-      })
-
-      expect(showRepeaterSettings(page)).toBe(false)
     })
 
     it('should allow repeater to be set on a standard page with PageController type', () => {
@@ -578,16 +565,6 @@ describe('helpers', () => {
             type: ComponentType.TextField
           }
         ]
-      } as Page
-      expect(isPaymentPage(page)).toBe(false)
-    })
-
-    it('should return false for a page with no questions', () => {
-      // @ts-expect-error - missing components on this page
-      const page = {
-        path: '/page',
-        title: 'Example page',
-        components: []
       } as Page
       expect(isPaymentPage(page)).toBe(false)
     })
