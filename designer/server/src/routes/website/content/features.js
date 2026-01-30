@@ -7,6 +7,7 @@ export default {
   formDesigner: [
     {
       title: 'Form management',
+      id: 'form-management',
       items: [
         {
           heading: 'Library of existing forms',
@@ -32,6 +33,7 @@ export default {
     },
     {
       title: 'Form design',
+      id: 'form-design',
       items: [
         {
           heading: 'Page types',
@@ -77,6 +79,7 @@ export default {
     },
     {
       title: 'Text and numbers',
+      id: 'text-and-numbers',
       items: [
         {
           heading: 'Text & Numbers',
@@ -99,6 +102,7 @@ export default {
     },
     {
       title: 'Selecting from a list',
+      id: 'selecting-from-a-list',
       items: [
         {
           heading: 'Yes or no',
@@ -114,6 +118,7 @@ export default {
     },
     {
       title: 'Location',
+      id: 'location',
       items: [
         {
           heading: 'Address and postcode lookup',
@@ -129,6 +134,7 @@ export default {
     },
     {
       title: 'Outputs',
+      id: 'outputs',
       items: [
         {
           heading: 'Submitted forms as emails',
@@ -162,6 +168,7 @@ export default {
     },
     {
       title: 'Customer communication',
+      id: 'customer-communication',
       items: [
         {
           heading: 'Confirmation emails',
@@ -182,6 +189,7 @@ export default {
     },
     {
       title: 'Advanced features',
+      id: 'advanced-features',
       items: [
         {
           heading: 'Repeating questions',

@@ -209,7 +209,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </li>
   </ul>
   <div class="govuk-tabs__panel" id="forms-designer">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4">Form management</h2>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="form-management">Form management</h2>
+        </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -266,11 +270,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Form design</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="form-design">Form design</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -387,11 +391,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Text and numbers</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="text-and-numbers">Text and numbers</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -435,11 +439,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Selecting from a list</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="selecting-from-a-list">Selecting from a list</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -466,11 +470,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Location</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="location">Location</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -505,11 +509,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Outputs</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="outputs">Outputs</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -593,11 +597,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Customer communication</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="customer-communication">Customer communication</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -639,11 +643,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4">Advanced features</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="advanced-features">Advanced features</h2>
         </div>
+      </div>
     
     
       <div class="govuk-grid-row">
@@ -708,11 +712,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </div>
     
       </div>
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-full">
-            <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon</h2>
-          </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon</h2>
         </div>
+      </div>
     
         <p class="govuk-body-l">We&#39;re working on exciting new capabilities to enhance your form building experience.</p>
     
