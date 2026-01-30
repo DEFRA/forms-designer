@@ -533,6 +533,28 @@ export const testFormDefinitionWithExistingSummaryDeclaration = buildDefinition(
 /**
  * @satisfies {FormDefinition}
  */
+export const testFormDefinitionWithPayment = buildDefinition({
+  pages: [
+    buildQuestionPage({
+      id: 'p1',
+      section: 'section',
+      components: [
+        buildPaymentFieldComponent({
+          title: 'This is your payment'
+        })
+      ],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'p2',
+      components: []
+    })
+  ]
+})
+
+/**
+ * @satisfies {FormDefinition}
+ */
 export const testFormDefinitionWithMissingPageIds = buildDefinition({
   pages: [
     buildQuestionPage({
