@@ -26,7 +26,17 @@ If you're taking part in private beta, ask for support by sending a message to t
           <tbody class="govuk-table__body">
           {% for update in month.updates %}
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">{{ update.product }}</td>
+            <td class="govuk-table__cell">
+              {% if update.product.length === 1 %}
+                {{ update.product[0] }}
+              {% else %}
+                <ul class="govuk-list">
+                  {% for prod in update.product %}
+                    <li>{{ prod }}</li>
+                  {% endfor %}
+                </ul>
+              {% endif %}
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin">{{ update.content | markdown({ baseUrl: appBaseUrl }) | safe }}</td>
           </tr>
           {% endfor %}
