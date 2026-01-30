@@ -210,8 +210,10 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
   </ul>
   <div class="govuk-tabs__panel" id="forms-designer">
     <h2 class="govuk-heading-l govuk-!-margin-top-4">Form management</h2>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -226,7 +228,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -248,7 +250,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -263,17 +265,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Form Design Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Form design</h2>
       </div>
-    </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Form design</h2>
+          </div>
+        </div>
     
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -295,7 +296,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -310,7 +311,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -325,7 +326,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -340,7 +341,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -355,7 +356,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -370,7 +371,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -385,17 +386,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Information Types Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Text and numbers</h2>
       </div>
-    </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Text and numbers</h2>
+          </div>
+        </div>
     
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -419,7 +419,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -434,17 +434,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Selection Options Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Selecting from a list</h2>
       </div>
-    </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Selecting from a list</h2>
+          </div>
+        </div>
     
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -466,16 +465,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Location Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Location</h2>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Location</h2>
+          </div>
+        </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -490,7 +489,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -505,16 +504,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Outputs Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Outputs</h2>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Outputs</h2>
+          </div>
+        </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -529,7 +528,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -548,7 +547,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -563,7 +562,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -578,7 +577,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -593,16 +592,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Customer Communication Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Customer communication</h2>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Customer communication</h2>
+          </div>
+        </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -624,7 +623,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -639,16 +638,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Advanced Features Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Advanced features</h2>
       </div>
-    </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4">Advanced features</h2>
+          </div>
+        </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -663,7 +662,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -678,7 +677,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -693,7 +692,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -708,20 +707,17 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Features Coming Soon Section -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon
-        </h2>
       </div>
-    </div>
+        <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full">
+            <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon</h2>
+          </div>
+        </div>
     
-    <p class="govuk-body-l">We're working on exciting new capabilities to enhance
-      your form building experience.</p>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+        <p class="govuk-body-l">We&#39;re working on exciting new capabilities to enhance your form building experience.</p>
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -736,7 +732,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -751,7 +747,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
+      </div>
   </div>
   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="developer-plugin">
     <h2 class="govuk-heading-l govuk-!-margin-top-4">Developer Plugin</h2>

@@ -4,76 +4,84 @@ import {
 } from '~/src/routes/website/constants.js'
 
 export default {
-  formDesigner: {
-    formManagement: [
-      {
-        heading: 'Library of existing forms',
-        icon: FeatureIcons.LIBRARY,
-        markdown: 'Search for forms by title, keyword, author and status.'
-      },
-      {
-        heading: 'Form information',
-        icon: FeatureIcons.FORM_INFO,
-        markdown: `Add data about your form including:
+  formDesigner: [
+    {
+      title: 'Form management',
+      items: [
+        {
+          heading: 'Library of existing forms',
+          icon: FeatureIcons.LIBRARY,
+          markdown: 'Search for forms by title, keyword, author and status.'
+        },
+        {
+          heading: 'Form information',
+          icon: FeatureIcons.FORM_INFO,
+          markdown: `Add data about your form including:
 * where submission data is sent
 * contact details for support
 * what happens after someone submits the form
 * privacy policy
 * organisation details`
-      },
-      {
-        heading: 'Auditing',
-        icon: FeatureIcons.AUDITING,
-        markdown: `See the changes made to your form over time with a clear audit trial.`
-      }
-    ],
-    formDesign: [
-      {
-        heading: 'Page types',
-        icon: FeatureIcons.PAGE_TYPES,
-        markdown: `The Defra Form Designer supports:
+        },
+        {
+          heading: 'Auditing',
+          icon: FeatureIcons.AUDITING,
+          markdown: `See the changes made to your form over time with a clear audit trial.`
+        }
+      ]
+    },
+    {
+      title: 'Form design',
+      items: [
+        {
+          heading: 'Page types',
+          icon: FeatureIcons.PAGE_TYPES,
+          markdown: `The Defra Form Designer supports:
 - question pages
 - guidance pages
 - check your answers pages
 - confirmation pages
 - exit pages`
-      },
-      {
-        heading: 'Error messages',
-        icon: FeatureIcons.ERROR_MESSAGES,
-        markdown: `Error messages are automatically generated using a short description and can be previewed in real time too.`
-      },
-      {
-        heading: 'Answer limits',
-        icon: FeatureIcons.ANSWER_LIMITS,
-        markdown: `Limit the answers users can provide. For example, minimum and maximum character lengths or date ranges.`
-      },
-      {
-        heading: 'Form guidance',
-        icon: FeatureIcons.FORM_GUIDANCE,
-        markdown: `Add guidance and hint text to question or create a specific guidance page.`
-      },
-      {
-        heading: 'Conditions',
-        icon: FeatureIcons.CONDITIONS,
-        markdown: `Use conditions to show or skip pages based on answers. Combine 2 conditions together for complex routing.`
-      },
-      {
-        heading: 'Form declaration',
-        icon: FeatureIcons.FORM_DECLARATION,
-        markdown: `Include declaration text at the end of the form for users to agree to.`
-      },
-      {
-        heading: 'Page sections',
-        icon: FeatureIcons.PAGE_SECTIONS,
-        markdown: `Categorise questions into sections.`
-      }
-    ],
-    textAndNumbers: [
-      {
-        heading: 'Text & Numbers',
-        icon: FeatureIcons.TEXT_NUMBERS,
-        markdown: `You can ask users for:
+        },
+        {
+          heading: 'Error messages',
+          icon: FeatureIcons.ERROR_MESSAGES,
+          markdown: `Error messages are automatically generated using a short description and can be previewed in real time too.`
+        },
+        {
+          heading: 'Answer limits',
+          icon: FeatureIcons.ANSWER_LIMITS,
+          markdown: `Limit the answers users can provide. For example, minimum and maximum character lengths or date ranges.`
+        },
+        {
+          heading: 'Form guidance',
+          icon: FeatureIcons.FORM_GUIDANCE,
+          markdown: `Add guidance and hint text to question or create a specific guidance page.`
+        },
+        {
+          heading: 'Conditions',
+          icon: FeatureIcons.CONDITIONS,
+          markdown: `Use conditions to show or skip pages based on answers. Combine 2 conditions together for complex routing.`
+        },
+        {
+          heading: 'Form declaration',
+          icon: FeatureIcons.FORM_DECLARATION,
+          markdown: `Include declaration text at the end of the form for users to agree to.`
+        },
+        {
+          heading: 'Page sections',
+          icon: FeatureIcons.PAGE_SECTIONS,
+          markdown: `Categorise questions into sections.`
+        }
+      ]
+    },
+    {
+      title: 'Text and numbers',
+      items: [
+        {
+          heading: 'Text & Numbers',
+          icon: FeatureIcons.TEXT_NUMBERS,
+          markdown: `You can ask users for:
 - a long or short written answer
 - a number
 - a date
@@ -81,119 +89,142 @@ export default {
 - a phone number
 - an email address
 - supporting information like a file or image`
-      },
-      {
-        heading: 'File upload',
-        icon: FeatureIcons.FILE_UPLOAD,
-        markdown: `Allow users to securely upload supporting documents.`
-      }
-    ],
-    selectingFromAList: [
-      {
-        heading: 'Yes or no',
-        icon: FeatureIcons.YES_NO,
-        markdown: `Ask users to select answers from a list of options. Formats include:
+        },
+        {
+          heading: 'File upload',
+          icon: FeatureIcons.FILE_UPLOAD,
+          markdown: `Allow users to securely upload supporting documents.`
+        }
+      ]
+    },
+    {
+      title: 'Selecting from a list',
+      items: [
+        {
+          heading: 'Yes or no',
+          icon: FeatureIcons.YES_NO,
+          markdown: `Ask users to select answers from a list of options. Formats include:
 - Yes or no
 - Checkboxes
 - Radios
 - Autocomplete
 - Select`
-      }
-    ],
-    location: [
-      {
-        heading: 'Address and postcode lookup',
-        icon: FeatureIcons.ADDRESS_LOOKUP,
-        markdown: `Search for addresses using postcodes with autocomplete functionality.`
-      },
-      {
-        heading: 'Map questions',
-        icon: FeatureIcons.MAP,
-        markdown: `Gather location information from a user with an interactive map.`
-      }
-    ],
-    outputs: [
-      {
-        heading: 'Submitted forms as emails',
-        icon: FeatureIcons.SUBMITTED_FORMS,
-        markdown: `Data from a form submission is automatically sent to the shared mailbox you signed up with.`
-      },
-      {
-        heading: 'Email formats',
-        icon: FeatureIcons.DATA_OUTPUT,
-        markdown: `Choose how to retrieve submission data.
+        }
+      ]
+    },
+    {
+      title: 'Location',
+      items: [
+        {
+          heading: 'Address and postcode lookup',
+          icon: FeatureIcons.ADDRESS_LOOKUP,
+          markdown: `Search for addresses using postcodes with autocomplete functionality.`
+        },
+        {
+          heading: 'Map questions',
+          icon: FeatureIcons.MAP,
+          markdown: `Gather location information from a user with an interactive map.`
+        }
+      ]
+    },
+    {
+      title: 'Outputs',
+      items: [
+        {
+          heading: 'Submitted forms as emails',
+          icon: FeatureIcons.SUBMITTED_FORMS,
+          markdown: `Data from a form submission is automatically sent to the shared mailbox you signed up with.`
+        },
+        {
+          heading: 'Email formats',
+          icon: FeatureIcons.DATA_OUTPUT,
+          markdown: `Choose how to retrieve submission data.
 1. In a human readable format (standard HTML email)
 2. In a machine readable format that robots and computers can easily read
 `
-      },
-      {
-        heading: 'Export to Excel',
-        icon: FeatureIcons.EXCEL_DOWNLOAD,
-        markdown: `Download all form responses as an Excel document.`
-      },
-      {
-        heading: 'API integration',
-        icon: FeatureIcons.API_INTEGRATION,
-        markdown: `Import data from form submissions into your backend system.`
-      },
-      {
-        heading: 'Sharepoint integration',
-        icon: FeatureIcons.SHAREPOINT,
-        markdown: `Send form submission data directly to your SharePoint site.`
-      }
-    ],
-    customerCommunication: [
-      {
-        heading: 'Confirmation emails',
-        icon: FeatureIcons.CONFIRMATION_EMAILS,
-        markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
+        },
+        {
+          heading: 'Export to Excel',
+          icon: FeatureIcons.EXCEL_DOWNLOAD,
+          markdown: `Download all form responses as an Excel document.`
+        },
+        {
+          heading: 'API integration',
+          icon: FeatureIcons.API_INTEGRATION,
+          markdown: `Import data from form submissions into your backend system.`
+        },
+        {
+          heading: 'Sharepoint integration',
+          icon: FeatureIcons.SHAREPOINT,
+          markdown: `Send form submission data directly to your SharePoint site.`
+        }
+      ]
+    },
+    {
+      title: 'Customer communication',
+      items: [
+        {
+          heading: 'Confirmation emails',
+          icon: FeatureIcons.CONFIRMATION_EMAILS,
+          markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
 - a copy of their answers
 - name of form
 - date and time of submission
 - what happens next
 - support information`
-      },
-      {
-        heading: 'Customer satisfaction exit survey',
-        icon: FeatureIcons.SURVEY,
-        markdown: `Gather feedback from users after they submit their form to improve your service.`
-      }
-    ],
-    advancedFeatures: [
-      {
-        heading: 'Repeating questions',
-        icon: FeatureIcons.REPEATING_QUESTIONS,
-        markdown: `Get repeated sets of data from users with repeating questions. Design the question once and set the number of times you want users to answer it.`
-      },
-      {
-        heading: 'Previewing a form',
-        icon: FeatureIcons.PREVIEW,
-        markdown: `Preview your form in real time as you build it. Use the preview link to test the layout and conditions end to end. Share a preview link with others without affecting your form.`
-      },
-      {
-        heading: 'Save and exit',
-        icon: FeatureIcons.SAVE_EXIT,
-        markdown: `Users can save their form progress and return within 28 days using a magic link.`
-      },
-      {
-        heading: 'Reference numbers',
-        icon: FeatureIcons.REFERENCE_NUMBERS,
-        markdown: `Each form submission is assigned a unique reference number that users can use to track their application.`
-      }
-    ],
-    featuresComingSoon: [
-      {
-        heading: 'GOV.UK Pay',
-        icon: FeatureIcons.PAYMENT,
-        markdown: `Collect payments as part of your form. Support for fixed and variable payment amounts.`
-      },
-      {
-        heading: 'Map questions',
-        icon: FeatureIcons.MAP_ADVANCED,
-        markdown: `Advanced map interactions including drawing shapes, lines, and data layers.`
-      }
-    ]
-  },
+        },
+        {
+          heading: 'Customer satisfaction exit survey',
+          icon: FeatureIcons.SURVEY,
+          markdown: `Gather feedback from users after they submit their form to improve your service.`
+        }
+      ]
+    },
+    {
+      title: 'Advanced features',
+      items: [
+        {
+          heading: 'Repeating questions',
+          icon: FeatureIcons.REPEATING_QUESTIONS,
+          markdown: `Get repeated sets of data from users with repeating questions. Design the question once and set the number of times you want users to answer it.`
+        },
+        {
+          heading: 'Previewing a form',
+          icon: FeatureIcons.PREVIEW,
+          markdown: `Preview your form in real time as you build it. Use the preview link to test the layout and conditions end to end. Share a preview link with others without affecting your form.`
+        },
+        {
+          heading: 'Save and exit',
+          icon: FeatureIcons.SAVE_EXIT,
+          markdown: `Users can save their form progress and return within 28 days using a magic link.`
+        },
+        {
+          heading: 'Reference numbers',
+          icon: FeatureIcons.REFERENCE_NUMBERS,
+          markdown: `Each form submission is assigned a unique reference number that users can use to track their application.`
+        }
+      ]
+    },
+    {
+      title: 'Features coming soon',
+      id: 'coming-soon',
+      description:
+        "We're working on exciting new capabilities to enhance your form building experience.",
+      comingSoon: true,
+      items: [
+        {
+          heading: 'GOV.UK Pay',
+          icon: FeatureIcons.PAYMENT,
+          markdown: `Collect payments as part of your form. Support for fixed and variable payment amounts.`
+        },
+        {
+          heading: 'Map questions',
+          icon: FeatureIcons.MAP_ADVANCED,
+          markdown: `Advanced map interactions including drawing shapes, lines, and data layers.`
+        }
+      ]
+    }
+  ],
   developerPlugin: {
     keyFeatures: [
       {
