@@ -63,7 +63,6 @@ export const FeatureIcons = {
   SUBMITTED_FORMS: 'submitted-forms',
   CONFIRMATION_EMAILS: 'confirmation-emails',
   SAVE_EXIT: 'save-exit',
-  USER_MANAGEMENT: 'user-management',
   AUDITING: 'auditing',
   API_INTEGRATION: 'api-integration',
   PAGE_SECTIONS: 'page-sections',
@@ -84,7 +83,10 @@ export const FeatureIcons = {
   SHAREPOINT: 'sharepoint',
   PAYMENT: 'payment',
   MAP_ADVANCED: 'map-advanced',
-  REFERENCE_NUMBERS: 'reference-numbers'
+  REFERENCE_NUMBERS: 'reference-numbers',
+  ADDRESS_LOOKUP: 'address-lookup',
+  EXCEL_DOWNLOAD: 'excel-download',
+  SURVEY: 'survey'
 }
 
 /**

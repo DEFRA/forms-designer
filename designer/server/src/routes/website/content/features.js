@@ -67,11 +67,6 @@ export default {
         heading: 'Page sections',
         icon: FeatureIcons.PAGE_SECTIONS,
         markdown: `Categorise questions into sections.`
-      },
-      {
-        heading: 'Map questions',
-        icon: FeatureIcons.MAP,
-        markdown: `Gather location information from a user with an interactive map.`
       }
     ],
     textAndNumbers: [
@@ -105,6 +100,65 @@ export default {
 - Select`
       }
     ],
+    location: [
+      {
+        heading: 'Address and postcode lookup',
+        icon: FeatureIcons.ADDRESS_LOOKUP,
+        markdown: `Search for addresses using postcodes with autocomplete functionality.`
+      },
+      {
+        heading: 'Map questions',
+        icon: FeatureIcons.MAP,
+        markdown: `Gather location information from a user with an interactive map.`
+      }
+    ],
+    outputs: [
+      {
+        heading: 'Submitted forms as emails',
+        icon: FeatureIcons.SUBMITTED_FORMS,
+        markdown: `Data from a form submission is automatically sent to the shared mailbox you signed up with.`
+      },
+      {
+        heading: 'Email formats',
+        icon: FeatureIcons.DATA_OUTPUT,
+        markdown: `Choose how to retrieve submission data.
+1. In a human readable format (standard HTML email)
+2. In a machine readable format that robots and computers can easily read
+`
+      },
+      {
+        heading: 'Export to Excel',
+        icon: FeatureIcons.EXCEL_DOWNLOAD,
+        markdown: `Download all form responses as an Excel document.`
+      },
+      {
+        heading: 'API integration',
+        icon: FeatureIcons.API_INTEGRATION,
+        markdown: `Import data from form submissions into your backend system.`
+      },
+      {
+        heading: 'Sharepoint integration',
+        icon: FeatureIcons.SHAREPOINT,
+        markdown: `Send form submission data directly to your SharePoint site.`
+      }
+    ],
+    customerCommunication: [
+      {
+        heading: 'Confirmation emails',
+        icon: FeatureIcons.CONFIRMATION_EMAILS,
+        markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
+- a copy of their answers
+- name of form
+- date and time of submission
+- what happens next
+- support information`
+      },
+      {
+        heading: 'Customer satisfaction exit survey',
+        icon: FeatureIcons.SURVEY,
+        markdown: `Gather feedback from users after they submit their form to improve your service.`
+      }
+    ],
     advancedFeatures: [
       {
         heading: 'Repeating questions',
@@ -127,47 +181,7 @@ export default {
         markdown: `Each form submission is assigned a unique reference number that users can use to track their application.`
       }
     ],
-    outputs: [
-      {
-        heading: 'Submitted forms',
-        icon: FeatureIcons.SUBMITTED_FORMS,
-        markdown: `Data from a form submission is automatically sent to the shared mailbox you signed up with.`
-      },
-      {
-        heading: 'Confirmation emails',
-        icon: FeatureIcons.CONFIRMATION_EMAILS,
-        markdown: `Users receive a confirmation email after submitting a form. Confirmation emails include:
-- a copy of their answers
-- name of form
-- date and time of submission
-- what happens next
-- support information`
-      },
-      {
-        heading: 'Data output',
-        icon: FeatureIcons.DATA_OUTPUT,
-        markdown: `Choose how to retrieve submission data.
-1. In a human readable format (standard HTML email)
-2. In a machine readable format that robots and computers can easily read
-`
-      },
-      {
-        heading: 'API integration',
-        icon: FeatureIcons.API_INTEGRATION,
-        markdown: `Import data from form submissions into your backend system.`
-      },
-      {
-        heading: 'Sharepoint integration',
-        icon: FeatureIcons.SHAREPOINT,
-        markdown: `Send form submission data directly to your SharePoint site.`
-      }
-    ],
     featuresComingSoon: [
-      {
-        heading: 'User management',
-        icon: FeatureIcons.USER_MANAGEMENT,
-        markdown: `Manage user access and permissions for your forms.`
-      },
       {
         heading: 'GOV.UK Pay',
         icon: FeatureIcons.PAYMENT,
@@ -231,7 +245,7 @@ export default {
         ]
       },
       {
-        title: 'Form Design',
+        title: 'Form design',
         children: [
           {
             icon: FeatureIcons.PENCIL_BOX,
@@ -308,13 +322,13 @@ export default {
         ]
       },
       {
-        title: 'Information Types',
+        title: 'Information types',
         children: [
           {
             icon: FeatureIcons.TEXT_NUMBERS,
             designer: FeatureComparisonIcons.AVAILABLE,
             plugin: FeatureComparisonIcons.AVAILABLE,
-            title: 'Text & Numbers',
+            title: 'Text & numbers',
             description:
               'Standard text input fields for names, addresses, numbers and other alphanumeric data.'
           },
@@ -342,7 +356,7 @@ export default {
         ]
       },
       {
-        title: 'Advanced Features',
+        title: 'Advanced features',
         children: [
           {
             icon: FeatureIcons.REPEATING_QUESTIONS,
@@ -404,14 +418,6 @@ export default {
             title: 'Save and exit',
             description:
               'The plugin offers an API so save and return can function, however service teams using the plugin are responsible for integrating with this and providing the user interface (e.g. implementing a portal with user auth that allows them to resume an application, or their own magic link implementation, etc). Only the hosted Designer offers a complete end-to-end save and exit feature.'
-          },
-          {
-            icon: FeatureIcons.USER_MANAGEMENT,
-            designer: FeatureComparisonIcons.AVAILABLE,
-            plugin: FeatureComparisonIcons.NOT_AVAILABLE,
-            title: 'User management',
-            description:
-              'Manage user accounts, permissions and access controls for form administration.'
           },
           {
             icon: FeatureIcons.AUDITING,

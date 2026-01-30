@@ -385,21 +385,6 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
-      <div class="govuk-card govuk-card--contained govuk-card--feature ">
-        <div class="govuk-card__content">
-          <div class="govuk-card__header">
-            <div class="feature-icon">
-              <img src="/assets/images/website/svgs/map.svg" alt="Icon for Map questions" role="img" />
-            </div>
-            <h3 class="govuk-heading-s">Map questions</h3>
-          </div>
-          <p>Gather location information from a user with an interactive map.</p>
-    
-        </div>
-      </div>
-    </div>
-    
     </div>
     
     <!-- Information Types Cards -->
@@ -483,6 +468,45 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     
     </div>
     
+    <!-- Location Cards -->
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l govuk-!-margin-top-4">Location</h2>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/address-lookup.svg" alt="Icon for Address and postcode lookup" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Address and postcode lookup</h3>
+          </div>
+          <p>Search for addresses using postcodes with autocomplete functionality.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/map.svg" alt="Icon for Map questions" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Map questions</h3>
+          </div>
+          <p>Gather location information from a user with an interactive map.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+    </div>
+    
     <!-- Outputs Cards -->
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -510,18 +534,11 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
+              <img src="/assets/images/website/svgs/excel-download.svg" alt="Icon for Download all form responses as an Excel document" role="img" />
             </div>
-            <h3 class="govuk-heading-s">Confirmation emails</h3>
+            <h3 class="govuk-heading-s">Download all form responses as an Excel document</h3>
           </div>
-          <p>Users receive a confirmation email after submitting a form. Confirmation emails include:</p>
-    <ul>
-    <li>a copy of their answers</li>
-    <li>name of form</li>
-    <li>date and time of submission</li>
-    <li>what happens next</li>
-    <li>support information</li>
-    </ul>
+          <p>Export all form submissions to an Excel spreadsheet for analysis and record keeping.</p>
     
         </div>
       </div>
@@ -640,6 +657,52 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
             <h3 class="govuk-heading-s">Reference numbers</h3>
           </div>
           <p>Each form submission is assigned a unique reference number that users can use to track their application.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+    </div>
+    
+    <!-- Customer Communication Cards -->
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-full">
+        <h2 class="govuk-heading-l govuk-!-margin-top-4">Customer communication</h2>
+      </div>
+    </div>
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Confirmation emails</h3>
+          </div>
+          <p>Users receive a confirmation email after submitting a form. Confirmation emails include:</p>
+    <ul>
+    <li>a copy of their answers</li>
+    <li>name of form</li>
+    <li>date and time of submission</li>
+    <li>what happens next</li>
+    <li>support information</li>
+    </ul>
+    
+        </div>
+      </div>
+    </div>
+    
+        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/survey.svg" alt="Icon for Customer satisfaction exit survey" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Customer satisfaction exit survey</h3>
+          </div>
+          <p>Gather feedback from users after they submit their form to improve your service.</p>
     
         </div>
       </div>
