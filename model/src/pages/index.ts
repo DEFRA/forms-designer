@@ -17,6 +17,8 @@ export {
   hasRepeater,
   includesFileUploadField,
   isControllerName,
+  isEndPage,
+  isPaymentPage,
   isSummaryPage,
   replaceCustomControllers,
   showRepeaterSettings,

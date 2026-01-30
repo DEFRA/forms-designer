@@ -75,7 +75,7 @@ describe('editor-v2 - pages model', () => {
         '4a82930a-b8f5-498c-adae-6158bb2aeeb5'
       ])
       expect(res.pages[0].title).toBe('Fave animal')
-      expect(res.pages[1].title).toBe('Summary')
+      expect(res.pages[1].title).toBe('Check your answers')
     })
 
     test('should include sectionInfo when page has a section', () => {

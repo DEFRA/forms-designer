@@ -227,3 +227,26 @@ export function replaceCustomControllers(definition: FormDefinition) {
     })
   } as FormDefinition
 }
+
+/**
+ * Helper function to determine if the current page contains a payment question
+ * @param page - the page of the form
+ * @returns {boolean}
+ */
+export function isPaymentPage(page: Page | undefined) {
+  if (hasComponentsEvenIfNoNext(page)) {
+    return page.components.some(
+      (comp) => comp.type === ComponentType.PaymentField
+    )
+  }
+  return false
+}
+
+/**
+ * Helper function to determine if the current page is an end page i.e. summary page or payment page
+ * @param page - the page of the form
+ * @returns {boolean}
+ */
+export function isEndPage(page: Page | undefined) {
+  return isSummaryPage(page) || isPaymentPage(page)
+}

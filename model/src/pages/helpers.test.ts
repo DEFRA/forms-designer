@@ -29,6 +29,8 @@ import {
   hasFormComponents,
   hasNext,
   hasRepeater,
+  isEndPage,
+  isPaymentPage,
   isSummaryPage,
   replaceCustomControllers,
   showRepeaterSettings
@@ -535,6 +537,75 @@ describe('helpers', () => {
       expect(res.pages[3].controller).toBe(ControllerType.Page)
       expect(res.pages[4].controller).toBe(ControllerType.Page)
       expect(res.pages[5].controller).toBe(ControllerType.Page)
+    })
+  })
+
+  describe('isPaymentPage', () => {
+    it('should return true for a page containing a payment question', () => {
+      const page = {
+        path: '/page',
+        title: 'Example page',
+        components: [
+          {
+            name: 'payment',
+            type: ComponentType.PaymentField
+          }
+        ]
+      } as Page
+      expect(isPaymentPage(page)).toBe(true)
+    })
+
+    it('should return false for a page without a payment question', () => {
+      const page = {
+        path: '/page',
+        title: 'Example page',
+        components: [
+          {
+            name: 'payment',
+            type: ComponentType.TextField
+          }
+        ]
+      } as Page
+      expect(isPaymentPage(page)).toBe(false)
+    })
+  })
+
+  describe('isEndPage', () => {
+    it('should return true for a page containing a payment question', () => {
+      const page = {
+        path: '/page',
+        title: 'Example page',
+        components: [
+          {
+            name: 'payment',
+            type: ComponentType.PaymentField
+          }
+        ]
+      } as Page
+      expect(isEndPage(page)).toBe(true)
+    })
+
+    it('should return true for a summary page', () => {
+      const page = {
+        controller: ControllerType.Summary,
+        path: '/summary',
+        title: 'Summary'
+      } as Page
+      expect(isEndPage(page)).toBe(true)
+    })
+
+    it('should return false for a page that isnt summary or payment', () => {
+      const page = {
+        path: '/page',
+        title: 'Example page',
+        components: [
+          {
+            name: 'text',
+            type: ComponentType.TextField
+          }
+        ]
+      } as Page
+      expect(isEndPage(page)).toBe(false)
     })
   })
 })

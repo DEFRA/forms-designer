@@ -104,10 +104,8 @@ describe('Pages left panel component', () => {
     })
 
     it('should render page widget heading', () => {
-      expect($headings[0]).toHaveClass('govuk-heading-m')
-      expect($headings[0]).toHaveTextContent('End pages')
-      expect($headings[1]).toHaveClass('govuk-summary-card__title')
-      expect($headings[1]).toHaveTextContent('Check your answers')
+      expect($headings[0]).toHaveClass('govuk-summary-card__title')
+      expect($headings[0]).toHaveTextContent('My title')
     })
   })
 })
