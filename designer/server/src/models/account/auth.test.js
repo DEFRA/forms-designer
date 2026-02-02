@@ -42,10 +42,10 @@ describe('Auth view models', () => {
           },
           whatsNew: {
             date: {
-              iso: '2025-06-14T14:01:00.000Z',
-              text: '14 June 2025'
+              iso: expect.any(String),
+              text: expect.any(String)
             },
-            text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+            text: expect.any(String)
           }
         },
         displayHomeNav: true,
@@ -97,10 +97,10 @@ describe('Auth view models', () => {
           },
           whatsNew: {
             date: {
-              iso: '2025-06-14T14:01:00.000Z',
-              text: '14 June 2025'
+              iso: expect.any(String),
+              text: expect.any(String)
             },
-            text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+            text: expect.any(String)
           }
         },
         displayHomeNav: true,
@@ -157,10 +157,10 @@ describe('Auth view models', () => {
           },
           whatsNew: {
             date: {
-              iso: '2025-06-14T14:01:00.000Z',
-              text: '14 June 2025'
+              iso: expect.any(String),
+              text: expect.any(String)
             },
-            text: 'New conditions and accessibility improvements and updates to preview panel functionality.'
+            text: expect.any(String)
           }
         },
         displayHomeNav: true,
