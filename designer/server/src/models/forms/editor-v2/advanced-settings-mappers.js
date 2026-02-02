@@ -76,6 +76,13 @@ export function mapBaseQuestionDetails(payload) {
     )
   }
 
+  if (payload.questionType === ComponentType.PaymentField) {
+    payload = {
+      ...payload,
+      question: 'Payment required'
+    }
+  }
+
   const baseComponent = {
     type: payload.questionType,
     title: payload.question,
