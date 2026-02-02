@@ -285,6 +285,160 @@ describe('ItemReorder Class', () => {
     itemReorderInstance.container = originalContainer
   })
 
+  test('initFocusListeners should return early if container is null', () => {
+    if (!itemReorderInstance) throw new Error()
+    const addEventSpy = jest.spyOn(
+      /** @type {HTMLOListElement} */ (itemReorderInstance.container),
+      'addEventListener'
+    )
+
+    itemReorderInstance.container = null
+    addEventSpy.mockClear()
+    itemReorderInstance.initFocusListeners()
+    expect(addEventSpy).not.toHaveBeenCalled()
+  })
+
+  describe('handleFocusOut', () => {
+    test('should return early if container is null', () => {
+      if (!itemReorderInstance) throw new Error()
+      const originalContainer = itemReorderInstance.container
+      itemReorderInstance.container = null
+
+      const mockEvent = new FocusEvent('focusout')
+      expect(() => itemReorderInstance?.handleFocusOut(mockEvent)).not.toThrow()
+
+      itemReorderInstance.container = originalContainer
+    })
+
+    test('should return early if event target is not an HTMLElement', () => {
+      if (!itemReorderInstance || !container) throw new Error()
+
+      const listItem = container.querySelector('[data-id="page1"]')
+      if (!listItem) throw new Error()
+
+      listItem.classList.add('reorder-panel-focus')
+
+      const mockEvent = /** @type {FocusEvent} */ (
+        /** @type {any} */ ({
+          target: document.createTextNode('text'),
+          relatedTarget: null
+        })
+      )
+
+      itemReorderInstance.handleFocusOut(mockEvent)
+      expect(listItem.classList.contains('reorder-panel-focus')).toBe(true)
+    })
+
+    test('should return early if closest list item is not found', () => {
+      if (!itemReorderInstance || !container) throw new Error()
+
+      const orphanElement = document.createElement('span')
+      container.appendChild(orphanElement)
+
+      const mockEvent = /** @type {FocusEvent} */ (
+        /** @type {any} */ ({
+          target: orphanElement,
+          relatedTarget: null
+        })
+      )
+
+      expect(() => itemReorderInstance?.handleFocusOut(mockEvent)).not.toThrow()
+    })
+
+    test('should remove panelFocusClass when focus leaves the list item', () => {
+      if (!itemReorderInstance || !container) throw new Error()
+
+      const listItem = container.querySelector('[data-id="page1"]')
+      if (!listItem) throw new Error()
+
+      listItem.classList.add('reorder-panel-focus')
+
+      const button = listItem.querySelector('.js-reorderable-list-up')
+      if (!button) throw new Error()
+
+      const outsideElement = container.querySelector('[data-id="page2"]')
+
+      const mockEvent = /** @type {FocusEvent} */ (
+        /** @type {any} */ ({
+          target: button,
+          relatedTarget: outsideElement
+        })
+      )
+
+      itemReorderInstance.handleFocusOut(mockEvent)
+      expect(listItem.classList.contains('reorder-panel-focus')).toBe(false)
+    })
+
+    test('should not remove panelFocusClass when focus stays within the list item', () => {
+      if (!itemReorderInstance || !container) throw new Error()
+
+      const listItem = container.querySelector('[data-id="page1"]')
+      if (!listItem) throw new Error()
+
+      listItem.classList.add('reorder-panel-focus')
+
+      const upButton = listItem.querySelector('.js-reorderable-list-up')
+      const downButton = listItem.querySelector('.js-reorderable-list-down')
+      if (!upButton || !downButton) throw new Error()
+
+      const mockEvent = /** @type {FocusEvent} */ (
+        /** @type {any} */ ({
+          target: upButton,
+          relatedTarget: downButton
+        })
+      )
+
+      itemReorderInstance.handleFocusOut(mockEvent)
+      expect(listItem.classList.contains('reorder-panel-focus')).toBe(true)
+    })
+
+    test('should remove panelFocusClass when relatedTarget is null', () => {
+      if (!itemReorderInstance || !container) throw new Error()
+
+      const listItem = container.querySelector('[data-id="page1"]')
+      if (!listItem) throw new Error()
+
+      listItem.classList.add('reorder-panel-focus')
+
+      const button = listItem.querySelector('.js-reorderable-list-up')
+      if (!button) throw new Error()
+
+      const mockEvent = /** @type {FocusEvent} */ (
+        /** @type {any} */ ({
+          target: button,
+          relatedTarget: null
+        })
+      )
+
+      itemReorderInstance.handleFocusOut(mockEvent)
+      expect(listItem.classList.contains('reorder-panel-focus')).toBe(false)
+    })
+
+    test('should respond to focusout event dispatched on the container', () => {
+      if (!itemReorderInstance || !container) throw new Error()
+
+      const listItem = container.querySelector('[data-id="page2"]')
+      if (!listItem) throw new Error()
+
+      listItem.classList.add('reorder-panel-focus')
+
+      const button = listItem.querySelector('.js-reorderable-list-down')
+      if (!button) throw new Error()
+
+      const focusOutEvent = new FocusEvent('focusout', {
+        bubbles: true,
+        relatedTarget: null
+      })
+      Object.defineProperty(focusOutEvent, 'target', {
+        value: button,
+        writable: false
+      })
+
+      container.dispatchEvent(focusOutEvent)
+      expect(listItem.classList.contains('reorder-panel-focus')).toBe(false)
+    })
+  })
+
   test('initButtonListeners should return early if container is null', () => {
     if (!itemReorderInstance) throw new Error()
     const addEventSpy = jest.spyOn(
