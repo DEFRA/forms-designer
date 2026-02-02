@@ -1,76 +1,20 @@
 {% from "feature-card/macro.njk" import featureCard %}
 
-<h2 class="govuk-heading-l govuk-!-margin-top-4">Form Management</h2>
-<div class="govuk-grid-row">
-  {% for card in features.formDesigner.formManagement %}
-    {{ featureCard(card) }}
-  {% endfor %}
-</div>
-
-<!-- Form Design Cards -->
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4">Form design</h2>
+{% for section in features.formDesigner %}
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      <h2 class="govuk-heading-l govuk-!-margin-top-4" id="{{ section.id }}">{{ section.title }}</h2>
+    </div>
   </div>
-</div>
 
-<div class="govuk-grid-row">
-  {% for card in features.formDesigner.formDesign %}
-    {{ featureCard(card) }}
-  {% endfor %}
-</div>
+  {% if section.description %}
+    <p class="govuk-body-l">{{ section.description }}</p>
+  {% endif %}
 
-<!-- Information Types Cards -->
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4">Text and numbers</h2>
+  <div class="govuk-grid-row">
+    {% for card in section.items %}
+      {{ featureCard(card, section.comingSoon) }}
+    {% endfor %}
   </div>
-</div>
-
-<div class="govuk-grid-row">
-  {% for card in features.formDesigner.textAndNumbers %}
-    {{ featureCard(card) }}
-  {% endfor %}
-</div>
-
-<!-- Selection Options Cards -->
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4">Selecting from a list</h2>
-  </div>
-</div>
-
-<div class="govuk-grid-row">
-  {% for card in features.formDesigner.selectingFromAList %}
-    {{ featureCard(card) }}
-  {% endfor %}
-</div>
-
-<!-- Advanced Features Cards -->
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4">Advanced features</h2>
-  </div>
-</div>
-<div class="govuk-grid-row">
-  {% for card in features.formDesigner.advancedFeatures %}
-    {{ featureCard(card) }}
-  {% endfor %}
-</div>
-
-<!-- Features Coming Soon Section -->
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-full">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon
-    </h2>
-  </div>
-</div>
-
-<p class="govuk-body-l">We're working on exciting new capabilities to enhance
-  your form building experience.</p>
-<div class="govuk-grid-row">
-  {% for card in features.formDesigner.featuresComingSoon %}
-    {{ featureCard(card, true) }}
-  {% endfor %}
-</div>
+{% endfor %}
 
