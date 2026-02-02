@@ -28,6 +28,8 @@ const operatorSchema = conditionDataSchemaV2.extract('operator')
 const valueSchema = conditionDataSchemaV2.extract('value')
 const typeSchema = conditionDataSchemaV2.extract('type')
 
+const GOVUK_LABEL_S = 'govuk-label--s'
+
 /**
  * @type {Joi.ObjectSchema<ConditionWrapperPayload>}
  * Custom condition wrapper payload schema that
@@ -184,7 +186,7 @@ export function buildOperatorField(
         name: `items[${idx}][operator]`,
         label: {
           text: 'Condition type',
-          classes: 'govuk-label--s'
+          classes: GOVUK_LABEL_S
         },
         items: [{ text: 'Select a condition type', value: '' }].concat(
           operatorNames
@@ -231,7 +233,7 @@ export function buildConditionsFields(
     name: `items[${idx}][componentId]`,
     label: {
       text: 'Select a question',
-      classes: 'govuk-label--s'
+      classes: GOVUK_LABEL_S
     },
     classes: 'govuk-input--width-20',
     items: componentItems,
@@ -336,7 +338,7 @@ export function buildConditionEditor(definition, validation, state) {
     name: 'displayName',
     label: {
       text: 'Condition name',
-      classes: 'govuk-label--s'
+      classes: GOVUK_LABEL_S
     },
     classes: 'govuk-input--width-20',
     value: conditionWrapper?.displayName,

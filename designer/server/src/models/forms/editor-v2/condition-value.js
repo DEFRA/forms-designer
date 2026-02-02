@@ -18,6 +18,8 @@ const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
 const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
+const GOVUK_LABEL_S = 'govuk-label--s'
+const GOVUK_FIELDSET_LEGEND_S = 'govuk-fieldset__legend--s'
 const SELECT_A_VALUE = 'Select a value'
 
 /**
@@ -68,7 +70,7 @@ export function relativeDateValueViewModel(idx, item, validation) {
     name: `items[${idx}][value][period]`,
     label: {
       text: 'Period',
-      classes: 'govuk-label--s'
+      classes: GOVUK_LABEL_S
     },
     classes: GOVUK_INPUT_WIDTH_10,
     value: periodValue,
@@ -221,7 +223,7 @@ function buildListItemValueField(
     fieldset: {
       legend: {
         text: SELECT_A_VALUE,
-        classes: 'govuk-fieldset__legend--s'
+        classes: GOVUK_FIELDSET_LEGEND_S
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -251,7 +253,7 @@ function buildBooleanValueField(idx, item, validation) {
     fieldset: {
       legend: {
         text: SELECT_A_VALUE,
-        classes: 'govuk-fieldset__legend--s'
+        classes: GOVUK_FIELDSET_LEGEND_S
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -282,7 +284,7 @@ function buildDeclarationValueField(idx, _item, _validation) {
     fieldset: {
       legend: {
         text: SELECT_A_VALUE,
-        classes: 'govuk-fieldset__legend--s'
+        classes: GOVUK_FIELDSET_LEGEND_S
       }
     },
     classes: GOVUK_RADIOS_SMALL,
@@ -365,7 +367,7 @@ function buildStringValueField(idx, item, validation) {
     name: `items[${idx}][value]`,
     label: {
       text: 'Enter a value',
-      classes: 'govuk-label--s'
+      classes: GOVUK_LABEL_S
     },
     classes: GOVUK_INPUT_WIDTH_10,
     value: isConditionStringValueDataV2(item) ? item.value : undefined,
@@ -384,7 +386,7 @@ function buildNumberValueField(idx, item, validation) {
     name: `items[${idx}][value]`,
     label: {
       text: 'Enter a value',
-      classes: 'govuk-label--s'
+      classes: GOVUK_LABEL_S
     },
     classes: 'govuk-input--width-5',
     attributes: {
