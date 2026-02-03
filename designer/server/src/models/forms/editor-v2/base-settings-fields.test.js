@@ -921,7 +921,7 @@ describe('editor-v2 - advanced settings fields model', () => {
         buildDefinition(),
         undefined
       )
-      expect(result1).toBe(125)
+      expect(result1).toBe('125.00')
       expect(result2).toBe('Payment description')
     })
 
