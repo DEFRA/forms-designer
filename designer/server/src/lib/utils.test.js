@@ -21,6 +21,7 @@ import {
   getComponentsOnPageFromDefinition,
   getHeaders,
   getListFromComponent,
+  handlePrecision,
   hasPaymentQuestionInForm,
   mapListToTextareaStr,
   noListToSave
@@ -353,6 +354,32 @@ describe('utils', () => {
         pages: []
       })
       expect(hasPaymentQuestionInForm(definition)).toBe(false)
+    })
+  })
+
+  describe('handlePrecision', () => {
+    const mockHelpers = {
+      error: jest.fn().mockImplementation((text) => {
+        return text
+      })
+    }
+    it('should return required if undefined', () => {
+      expect(handlePrecision(undefined, mockHelpers, 2)).toBe('any.required')
+    })
+    it('should return required if not a number', () => {
+      expect(handlePrecision('a123', mockHelpers, 2)).toBe('any.required')
+    })
+    it('should return value if no decimals', () => {
+      expect(handlePrecision(123, mockHelpers, 2)).toBe(123)
+    })
+    it('should return value if 1 decimal place', () => {
+      expect(handlePrecision(123.5, mockHelpers, 2)).toBe(123.5)
+    })
+    it('should return value if 2 decimal places', () => {
+      expect(handlePrecision(123.56, mockHelpers, 2)).toBe(123.56)
+    })
+    it('should return error if 3 decimal places', () => {
+      expect(handlePrecision(123.567, mockHelpers, 2)).toBe('number.base')
     })
   })
 })
