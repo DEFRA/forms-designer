@@ -258,12 +258,7 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
       return `${addressField?.options.usePostcodeLookup === true}`
     }
     case 'paymentAmount': {
-      const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
-        questionFields
-      )
-      return paymentField?.options.amount
-        ? paymentField.options.amount.toFixed(2)
-        : undefined
+      return getPaymentAmount(questionFields)
     }
     case 'paymentDescription': {
       const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
@@ -274,6 +269,18 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
     default:
       return undefined
   }
+}
+
+/**
+ * @param { FormComponentsDef | undefined } questionFields
+ */
+function getPaymentAmount(questionFields) {
+  const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
+    questionFields
+  )
+  return paymentField?.options.amount
+    ? paymentField.options.amount.toFixed(2)
+    : undefined
 }
 
 /**
