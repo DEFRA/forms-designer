@@ -135,7 +135,7 @@ export function mapQuestionRows(definition, page) {
       },
       {
         key: { text: 'Total amount' },
-        value: { text: `£${paymentComponent?.options.amount?.toFixed(2)}` }
+        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
       }
     ]
   }
