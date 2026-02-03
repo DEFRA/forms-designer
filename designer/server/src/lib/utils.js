@@ -316,6 +316,27 @@ export function hasPaymentQuestionInForm(definition) {
 }
 
 /**
+ * Custom Joi validator for decimal precision
+ * (since Joi's own precision validator relies on passing 'convert: false' to validation)
+ * @param {any} value
+ * @param {any} helpers
+ * @param {number} precision - number of decimal places allowed
+ */
+export function handlePrecision(value, helpers, precision) {
+  if (!value || typeof value !== 'number') {
+    return helpers.error('any.required')
+  }
+
+  const decimalPos = `${value}`.lastIndexOf('.')
+  if (decimalPos === -1) {
+    return value
+  }
+
+  const decimalPlaces = `${value}`.substring(decimalPos + 1).length
+  return decimalPlaces <= precision ? value : helpers.error('number.base')
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ComponentDef, FormDefinition, Item, List, ListItem, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'
