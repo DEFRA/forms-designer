@@ -117,7 +117,7 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   // Build preview model
   const sectionsForPreview = buildSectionsForPreview(definition)
   const unassignedPages = getUnassignedPageTitlesForPreview(definition)
-  const paymentInfo = getPaymentInfo(definition)
+  const paymentInfo = getPaymentInfo(definition, slug)
 
   return {
     ...baseModelFields(slug, `${pageTitle} - ${formTitle}`, formTitle),
