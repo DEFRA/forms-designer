@@ -84,23 +84,6 @@
           {% endfor %}
           <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
           <h2 class="govuk-heading-m">End pages</h2>
-          {% if paymentInfo and paymentInfo.hasPayment %}
-            <div class="govuk-grid-row page-row">
-              <div class="govuk-grid-column-one-half-from-desktop govuk-grid-column-full-from-tablet govuk-grid-column-full-from-mobile">
-              {{ appPagesPanelLeft({
-                formName: name,
-                pageTitle: "Payment",
-                pageEditUrl: paymentInfo.editUrl,
-                pagePreviewUrl: previewBaseUrl + paymentInfo.path + "?force",
-                rows: [
-                  { key: { text: "Payment for" }, value: { text: paymentInfo.description } },
-                  { key: { text: "Total amount" }, value: { text: paymentInfo.amount } }
-                ],
-                isPaymentPage: true
-                }) }}
-              </div>
-            </div>
-          {% endif %}
           {% for page in endPages %}
             <div class="govuk-grid-row page-row">
               <div class="govuk-grid-column-one-half-from-desktop govuk-grid-column-full-from-tablet govuk-grid-column-full-from-mobile">

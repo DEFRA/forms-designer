@@ -126,6 +126,23 @@ export function mapQuestionRows(definition, page) {
     /** @type {string} */ (page.id)
   )
 
+  const isPayment = isPaymentPage(page)
+  if (isPayment) {
+    const paymentComponent = components.find(
+      (comp) => comp.type === ComponentType.PaymentField
+    )
+    return [
+      {
+        key: { text: 'Payment for' },
+        value: { text: paymentComponent?.options.description }
+      },
+      {
+        key: { text: 'Total amount' },
+        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
+      }
+    ]
+  }
+
   const isSummary = isSummaryPage(page)
 
   const rows = components.map((comp, idx) =>
