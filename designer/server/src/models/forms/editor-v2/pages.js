@@ -15,7 +15,10 @@ import {
   getSectionForPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
-import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
+import {
+  buildPreviewUrl,
+  getPaymentInfo
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -440,6 +443,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
 
   const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
   const mappedData = mapPageData(metadata.slug, definition, filter)
+  const paymentInfo = getPaymentInfo(definition)
 
   // @ts-expect-error - dynamic property on page
   const standardPages = mappedData.pages.filter((page) => !page.isEndPage)
@@ -458,7 +462,8 @@ export function pagesViewModel(metadata, definition, filter, notification) {
     pageActions,
     rightSideActions,
     conditions,
-    notification
+    notification,
+    paymentInfo
   }
 
   return {

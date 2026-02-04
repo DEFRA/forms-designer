@@ -108,4 +108,79 @@ describe('Pages left panel component', () => {
       expect($headings[0]).toHaveTextContent('My title')
     })
   })
+
+  describe('With end page and payment info', () => {
+    beforeEach(() => {
+      const { container } = renderMacro(
+        'appPagesPanelLeft',
+        'pages-panel-left/macro.njk',
+        {
+          params: {
+            formName: 'test-form-1',
+            pageNum: 1,
+            pageId: 'abcDEF',
+            pageTitle: 'My title',
+            rows: [],
+            isEndPage: true,
+            showMoveButtons: false,
+            paymentInfo: {
+              hasPayment: true,
+              description: 'Application fee',
+              amount: '£100.00'
+            }
+          }
+        }
+      )
+
+      $headings = container.getAllByRole('heading')
+      $keys = container.getAllByRole('term')
+      $values = container.getAllByRole('definition')
+    })
+
+    it('should render payment card and page title', () => {
+      expect($headings[0]).toHaveClass('govuk-summary-card__title')
+      expect($headings[0]).toHaveTextContent('Payment')
+      expect($headings[1]).toHaveClass('govuk-summary-card__title')
+      expect($headings[1]).toHaveTextContent('My title')
+    })
+
+    it('should render payment details', () => {
+      expect($keys[0]).toHaveTextContent('Payment for')
+      expect($values[0]).toHaveTextContent('Application fee')
+      expect($keys[1]).toHaveTextContent('Total amount')
+      expect($values[1]).toHaveTextContent('£100.00')
+    })
+  })
+
+  describe('With end page and no payment', () => {
+    beforeEach(() => {
+      const { container } = renderMacro(
+        'appPagesPanelLeft',
+        'pages-panel-left/macro.njk',
+        {
+          params: {
+            formName: 'test-form-1',
+            pageNum: 1,
+            pageId: 'abcDEF',
+            pageTitle: 'My title',
+            rows: [],
+            isEndPage: true,
+            showMoveButtons: false,
+            paymentInfo: {
+              hasPayment: false,
+              description: '',
+              amount: ''
+            }
+          }
+        }
+      )
+
+      $headings = container.getAllByRole('heading')
+    })
+
+    it('should not render payment card when hasPayment is false', () => {
+      expect($headings).toHaveLength(1)
+      expect($headings[0]).toHaveTextContent('My title')
+    })
+  })
 })
