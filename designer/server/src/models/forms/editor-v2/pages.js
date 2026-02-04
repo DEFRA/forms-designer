@@ -428,14 +428,10 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   const mappedData = mapPageData(metadata.slug, definition, filter)
   const paymentInfo = getPaymentInfo(definition, metadata.slug)
 
-  // Payment pages should appear in standard pages (not end pages) as they contain questions
-  const standardPages = mappedData.pages.filter(
-    // @ts-expect-error - dynamic property on page
-    (page) => !page.isEndPage || isPaymentPage(page)
-  )
-  // Exclude payment pages from endPages - they show as a separate payment card via paymentInfo
+  // @ts-expect-error - dynamic property on page
+  const standardPages = mappedData.pages.filter((page) => !page.isEndPage)
+  // @ts-expect-error - dynamic property on page
   const endPages = mappedData.pages.filter(
-    // @ts-expect-error - dynamic property on page
     (page) => page.isEndPage && !isPaymentPage(page)
   )
 
