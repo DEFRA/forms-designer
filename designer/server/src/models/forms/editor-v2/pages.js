@@ -431,9 +431,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   // @ts-expect-error - dynamic property on page
   const standardPages = mappedData.pages.filter((page) => !page.isEndPage)
   // @ts-expect-error - dynamic property on page
-  const endPages = mappedData.pages.filter(
-    (page) => page.isEndPage && !isPaymentPage(page)
-  )
+  const endPages = mappedData.pages.filter((page) => page.isEndPage)
 
   const pageListModel = {
     standardPages,
