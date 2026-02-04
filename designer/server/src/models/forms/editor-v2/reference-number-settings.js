@@ -3,7 +3,8 @@ import {
   ControllerType,
   FormStatus,
   SummaryPageController,
-  hasComponentsEvenIfNoNext
+  hasComponentsEvenIfNoNext,
+  isPaymentPage
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -35,9 +36,14 @@ import { formOverviewPath } from '~/src/models/links.js'
 /**
  * Constructs the settings fields for the reference number settings page.
  * @param {boolean} enableReferenceNumber
+ * @param {boolean} formHasPayment
  * @param {ValidationFailure<FormEditor>} [validation]
  */
-export function settingsFields(enableReferenceNumber, validation) {
+export function settingsFields(
+  enableReferenceNumber,
+  formHasPayment,
+  validation
+) {
   return {
     enableReferenceNumber: {
       name: 'enableReferenceNumber',
@@ -46,7 +52,8 @@ export function settingsFields(enableReferenceNumber, validation) {
         {
           value: 'true',
           text: 'Turn on the reference number',
-          checked: enableReferenceNumber
+          checked: enableReferenceNumber,
+          disabled: formHasPayment
         }
       ],
       ...insertValidationErrors(validation?.formErrors.enableReferenceNumber)
@@ -144,7 +151,8 @@ export function referenceNumberSettingsViewModel(
 
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
-  const fields = settingsFields(showReferenceNumber, validation)
+  const formHasPayment = definition.pages.some((page) => isPaymentPage(page))
+  const fields = settingsFields(showReferenceNumber, formHasPayment, validation)
   const pageHeading = 'Reference number'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
