@@ -21,8 +21,7 @@ export default {
   // Configure mocks for JavaScript imports
   moduleNameMapper: {
     '\\.(css|scss)$': '<rootDir>/test/mocks/webpack/stylesheet.cjs',
-    '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.cjs',
-    '\\.njk$': '<rootDir>/test/mocks/webpack/template.cjs'
+    '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.cjs'
   },
 
   // Enable Babel transforms for node_modules
