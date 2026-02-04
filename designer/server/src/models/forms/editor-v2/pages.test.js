@@ -229,8 +229,24 @@ describe('editor-v2 - pages model', () => {
         }
       })
 
-      // Payment page with single PaymentField component - question row is hidden (same as other single-question pages)
-      expect(resPagePayment).toHaveLength(0)
+      // Payment page with single PaymentField component - details should be populated
+      expect(resPagePayment).toHaveLength(2)
+      expect(resPagePayment[0]).toEqual({
+        key: {
+          text: 'Payment for'
+        },
+        value: {
+          text: 'Payment description'
+        }
+      })
+      expect(resPagePayment[1]).toEqual({
+        key: {
+          text: 'Total amount'
+        },
+        value: {
+          text: '£250.00'
+        }
+      })
 
       expect(resPageSummaryRepeater).toHaveLength(1)
 
