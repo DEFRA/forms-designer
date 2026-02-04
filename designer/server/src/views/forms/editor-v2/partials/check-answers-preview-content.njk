@@ -1,4 +1,5 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 
 <div id="preview-container-inner">
   <div id="before-content" class="preview-before-content">
@@ -63,6 +64,30 @@
                 </dl>
               {% endif %}
             </div>
+
+            {% if previewModel.payment and previewModel.payment.hasPayment %}
+              <h4 class="govuk-heading-m">Payment details</h4>
+              {{ govukSummaryList({
+                rows: [
+                  {
+                    key: { text: "Payment for" },
+                    value: { text: previewModel.payment.description }
+                  },
+                  {
+                    key: { text: "Total amount" },
+                    value: { text: previewModel.payment.amount }
+                  },
+                  {
+                    key: { text: "Reference" },
+                    value: { text: "ABC-DEF-123" }
+                  },
+                  {
+                    key: { text: "Date details were entered" },
+                    value: { text: "DD Month YYYY - HH:MM:SS" }
+                  }
+                ]
+              }) }}
+            {% endif %}
 
             {% if previewModel.showConfirmationEmail %}
               <div class="govuk-!-margin-top-6">

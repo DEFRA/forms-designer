@@ -11,6 +11,7 @@ import {
   buildPreviewUrl,
   buildSectionsForPreview,
   getDeclarationInfo,
+  getPaymentInfo,
   getUnassignedPageTitlesForPreview
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
@@ -116,6 +117,7 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   // Build preview model
   const sectionsForPreview = buildSectionsForPreview(definition)
   const unassignedPages = getUnassignedPageTitlesForPreview(definition)
+  const paymentInfo = getPaymentInfo(definition)
 
   return {
     ...baseModelFields(slug, `${pageTitle} - ${formTitle}`, formTitle),
@@ -152,7 +154,8 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       showConfirmationEmail,
       declarationText: declarationInfo.declarationText,
       needDeclaration: declarationInfo.hasDeclaration,
-      isConfirmationEmailSettingsPanel: false
+      isConfirmationEmailSettingsPanel: false,
+      payment: paymentInfo
     },
     previewPageUrl,
 
