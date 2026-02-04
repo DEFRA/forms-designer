@@ -172,5 +172,44 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  */
 
 /**
- * @import { FormDefinition, FormStatus, Page, MarkdownComponent } from '@defra/forms-model'
+ * @typedef {object} PaymentInfo
+ * @property {boolean} hasPayment - Whether the form has a payment field
+ * @property {string} description - Payment description
+ * @property {string} amount - Formatted payment amount (e.g., "£300.00")
+ */
+
+/**
+ * Get payment info from the form definition
+ * @param {FormDefinition} definition
+ * @returns {PaymentInfo}
+ */
+export function getPaymentInfo(definition) {
+  for (const page of definition.pages) {
+    if (!hasComponentsEvenIfNoNext(page)) {
+      continue
+    }
+
+    const paymentComponent = /** @type {PaymentFieldComponent | undefined} */ (
+      page.components.find((comp) => comp.type === ComponentType.PaymentField)
+    )
+
+    if (paymentComponent) {
+      const amount = paymentComponent.options.amount ?? 0
+      return {
+        hasPayment: true,
+        description: paymentComponent.options.description ?? '',
+        amount: `£${amount.toFixed(2)}`
+      }
+    }
+  }
+
+  return {
+    hasPayment: false,
+    description: '',
+    amount: ''
+  }
+}
+
+/**
+ * @import { FormDefinition, FormStatus, Page, MarkdownComponent, PaymentFieldComponent } from '@defra/forms-model'
  */
