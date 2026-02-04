@@ -394,7 +394,10 @@ describe('preview-helpers', () => {
       expect(result).toEqual({
         hasPayment: false,
         description: '',
-        amount: ''
+        amount: '',
+        pageId: '',
+        path: '',
+        editUrl: ''
       })
     })
 
@@ -409,7 +412,10 @@ describe('preview-helpers', () => {
       expect(result).toEqual({
         hasPayment: false,
         description: '',
-        amount: ''
+        amount: '',
+        pageId: '',
+        path: '',
+        editUrl: ''
       })
     })
 
@@ -418,6 +424,7 @@ describe('preview-helpers', () => {
         pages: [
           buildQuestionPage({
             id: 'p1',
+            path: '/page-1',
             components: [
               {
                 id: 'payment-1',
@@ -435,12 +442,15 @@ describe('preview-helpers', () => {
         sections: []
       })
 
-      const result = getPaymentInfo(definition)
+      const result = getPaymentInfo(definition, 'my-form')
 
       expect(result).toEqual({
         hasPayment: true,
         description: 'Processing fee for your application.',
-        amount: '£300.00'
+        amount: '£300.00',
+        pageId: 'p1',
+        path: '/page-1',
+        editUrl: '/library/my-form/editor-v2/page/p1/questions'
       })
     })
 
@@ -476,6 +486,7 @@ describe('preview-helpers', () => {
         pages: [
           buildQuestionPage({
             id: 'p1',
+            path: '/page-1',
             components: [
               {
                 id: 'payment-1',
@@ -495,7 +506,10 @@ describe('preview-helpers', () => {
       expect(result).toEqual({
         hasPayment: true,
         description: '',
-        amount: '£0.00'
+        amount: '£0.00',
+        pageId: 'p1',
+        path: '/page-1',
+        editUrl: ''
       })
     })
 

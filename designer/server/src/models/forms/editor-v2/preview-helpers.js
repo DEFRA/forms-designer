@@ -176,14 +176,18 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  * @property {boolean} hasPayment - Whether the form has a payment field
  * @property {string} description - Payment description
  * @property {string} amount - Formatted payment amount (e.g., "£300.00")
+ * @property {string} pageId - ID of the page containing the payment field
+ * @property {string} path - Path of the payment page
+ * @property {string} editUrl - URL to edit the payment page
  */
 
 /**
  * Get payment info from the form definition
  * @param {FormDefinition} definition
+ * @param {string} [slug]
  * @returns {PaymentInfo}
  */
-export function getPaymentInfo(definition) {
+export function getPaymentInfo(definition, slug) {
   for (const page of definition.pages) {
     if (!hasComponentsEvenIfNoNext(page)) {
       continue
@@ -194,11 +198,19 @@ export function getPaymentInfo(definition) {
     )
 
     if (paymentComponent) {
-      const amount = paymentComponent.options.amount ?? 0
+      const amount = paymentComponent.options.amount
+      const pageId = page.id ?? ''
+      const editUrl =
+        slug && pageId
+          ? `/library/${slug}/editor-v2/page/${pageId}/questions`
+          : ''
       return {
         hasPayment: true,
-        description: paymentComponent.options.description ?? '',
-        amount: `£${amount.toFixed(2)}`
+        description: paymentComponent.options.description,
+        amount: `£${amount.toFixed(2)}`,
+        pageId,
+        path: page.path,
+        editUrl
       }
     }
   }
@@ -206,7 +218,10 @@ export function getPaymentInfo(definition) {
   return {
     hasPayment: false,
     description: '',
-    amount: ''
+    amount: '',
+    pageId: '',
+    path: '',
+    editUrl: ''
   }
 }
 

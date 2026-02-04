@@ -126,23 +126,6 @@ export function mapQuestionRows(definition, page) {
     /** @type {string} */ (page.id)
   )
 
-  const isPayment = isPaymentPage(page)
-  if (isPayment) {
-    const paymentComponent = components.find(
-      (comp) => comp.type === ComponentType.PaymentField
-    )
-    return [
-      {
-        key: { text: 'Payment for' },
-        value: { text: paymentComponent?.options.description }
-      },
-      {
-        key: { text: 'Total amount' },
-        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
-      }
-    ]
-  }
-
   const isSummary = isSummaryPage(page)
 
   const rows = components.map((comp, idx) =>
@@ -443,12 +426,18 @@ export function pagesViewModel(metadata, definition, filter, notification) {
 
   const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
   const mappedData = mapPageData(metadata.slug, definition, filter)
-  const paymentInfo = getPaymentInfo(definition)
+  const paymentInfo = getPaymentInfo(definition, metadata.slug)
 
-  // @ts-expect-error - dynamic property on page
-  const standardPages = mappedData.pages.filter((page) => !page.isEndPage)
-  // @ts-expect-error - dynamic property on page
-  const endPages = mappedData.pages.filter((page) => page.isEndPage)
+  // Payment pages should appear in standard pages (not end pages) as they contain questions
+  const standardPages = mappedData.pages.filter(
+    // @ts-expect-error - dynamic property on page
+    (page) => !page.isEndPage || isPaymentPage(page)
+  )
+  // Exclude payment pages from endPages - they show as a separate payment card via paymentInfo
+  const endPages = mappedData.pages.filter(
+    // @ts-expect-error - dynamic property on page
+    (page) => page.isEndPage && !isPaymentPage(page)
+  )
 
   const pageListModel = {
     standardPages,
