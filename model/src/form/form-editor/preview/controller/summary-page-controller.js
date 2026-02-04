@@ -46,6 +46,11 @@ export class SummaryPageController extends PreviewPageControllerBase {
    * @private
    */
   _unassignedPages = []
+  /**
+   * @type {PaymentPreviewInfo | undefined}
+   * @private
+   */
+  _payment
 
   /**
    * @param {SummaryPageElements} elements
@@ -67,6 +72,7 @@ export class SummaryPageController extends PreviewPageControllerBase {
       elements.isConfirmationEmailSettingsPanel
     this._sections = elements.sections ?? []
     this._unassignedPages = elements.unassignedPages ?? []
+    this._payment = elements.payment
   }
 
   /**
@@ -180,6 +186,13 @@ export class SummaryPageController extends PreviewPageControllerBase {
   }
 
   /**
+   * @returns {PaymentPreviewInfo | undefined}
+   */
+  get payment() {
+    return this._payment
+  }
+
+  /**
    * @returns {Markdown[]}
    * @protected
    */
@@ -208,7 +221,7 @@ export class SummaryPageController extends PreviewPageControllerBase {
 /**
  * @import { ComponentDef, ContentComponentsDef, ListComponent, FormComponentsDef } from '~/src/components/types.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements, SectionForPreview } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements, SectionForPreview, PaymentPreviewInfo } from '~/src/form/form-editor/preview/types.js'
  * @import { SummaryRowActionItem, SummaryRow } from '~/src/form/form-editor/macros/types.js'
  * @import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
  */

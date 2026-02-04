@@ -129,10 +129,16 @@ export class PreviewPageController extends PreviewPageControllerBase {
         }
       : {}
 
+    const headingClasses =
+      'headingClasses' in component.renderInput
+        ? { headingClasses: largeTitle ? 'govuk-heading-l' : 'govuk-heading-m' }
+        : {}
+
     return {
       ...component.renderInput,
       ...fieldset,
-      ...label
+      ...label,
+      ...headingClasses
     }
   }
 
