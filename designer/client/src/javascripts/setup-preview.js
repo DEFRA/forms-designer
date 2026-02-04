@@ -12,6 +12,7 @@ import {
   NationalGridQuestion,
   NumberOnlyQuestion,
   OsGridRefQuestion,
+  PaymentQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -61,6 +62,10 @@ import {
   OsGridRefDomElements,
   OsGridRefEventListeners
 } from '~/src/javascripts/preview/os-grid-ref.js'
+import {
+  PaymentDomElements,
+  PaymentEventListeners
+} from '~/src/javascripts/preview/payment.js'
 import {
   EventListeners,
   QuestionDomElements
@@ -419,6 +424,18 @@ export const SetupPreviewPartial =
     },
     HiddenField: () => {
       return SetupPreviewDefaultQuestion()
+    },
+    /**
+     * @returns {PaymentQuestion}
+     */
+    PaymentField: () => {
+      const paymentElements = new PaymentDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(paymentElements)
+      const paymentField = new PaymentQuestion(paymentElements, nunjucksRenderer)
+      const listeners = new PaymentEventListeners(paymentField, paymentElements)
+      listeners.setupListeners()
+
+      return paymentField
     }
   })
 

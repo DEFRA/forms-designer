@@ -60,6 +60,10 @@ export class SummaryPagePreviewDomElements extends DomElements {
    * @type {Array<{ title: string }>}
    */
   unassignedPages
+  /**
+   * @type {PaymentPreviewInfo | undefined}
+   */
+  payment
 
   /**
    * @param {SummaryPageInitialState} initialState
@@ -88,6 +92,7 @@ export class SummaryPagePreviewDomElements extends DomElements {
       initialState.isConfirmationEmailSettingsPanel
     this.sections = initialState.sections ?? []
     this.unassignedPages = initialState.unassignedPages ?? []
+    this.payment = initialState.payment
   }
 
   get declarationText() {
@@ -256,5 +261,5 @@ export class SummaryPagePreviewListeners extends PageListenerBase {
 }
 
 /**
- * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState, SectionForPreview } from '@defra/forms-model'
+ * @import { SummaryPageElements, SummaryPageController, SummaryPageInitialState, SectionForPreview, PaymentPreviewInfo } from '@defra/forms-model'
  */

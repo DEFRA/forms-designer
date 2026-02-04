@@ -11,6 +11,7 @@ import {
   NationalGridQuestion,
   NumberOnlyQuestion,
   OsGridRefQuestion,
+  PaymentQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -136,6 +137,16 @@ export class QuestionPreviewElements {
    * @protected
    */
   _giveInstructions = false
+  /**
+   * @type {number}
+   * @protected
+   */
+  _paymentAmount = 0
+  /**
+   * @type {string}
+   * @protected
+   */
+  _paymentDescription = ''
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -178,6 +189,14 @@ export class QuestionPreviewElements {
     },
     giveInstructions: (field, instance) => {
       instance._giveInstructions = getCheckedValue(field)
+    },
+    paymentAmount: (field, instance) => {
+      const value = getValueAsString(field)
+      const amount = parseFloat(value)
+      instance._paymentAmount = isNaN(amount) ? 0 : amount
+    },
+    paymentDescription: (field, instance) => {
+      instance._paymentDescription = getValueAsString(field)
     }
   }
 
@@ -209,7 +228,9 @@ export class QuestionPreviewElements {
       items: this._items,
       content: this._content,
       // Only include instructionText if giveInstructions is checked
-      instructionText: this._giveInstructions ? this._instructionText : ''
+      instructionText: this._giveInstructions ? this._instructionText : '',
+      paymentAmount: this._paymentAmount,
+      paymentDescription: this._paymentDescription
     }
   }
 
@@ -243,7 +264,7 @@ export class EmptyRender {
 const emptyRender = new EmptyRender()
 
 export const ModelFactory =
-  /** @type {Partial<Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements|MultilineTextFieldElements) => Question>>} */ ({
+  /** @type {Partial<Record<ComponentType|'Question', (q: ListElements|AutocompleteElements|NumberElements|MultilineTextFieldElements|PaymentElements) => Question>>} */ ({
     /**
      * @param {QuestionElements} questionElements
      * @returns {Question}
@@ -438,6 +459,13 @@ export const ModelFactory =
      */
     HiddenField: (questionElements) => {
       return new HiddenQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {PaymentElements} questionElements
+     * @returns {Question}
+     */
+    PaymentField: (questionElements) => {
+      return new PaymentQuestion(questionElements, emptyRender)
     }
   })
 
@@ -482,5 +510,5 @@ export function getPreviewModel(govukFields, state, componentType) {
   return question.renderInput
 }
 /**
- * @import { AutocompleteElements, ListElement, ListElements, LocationElements, MultilineTextFieldElements, NumberElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
+ * @import { AutocompleteElements, ListElement, ListElements, LocationElements, MultilineTextFieldElements, NumberElements, PaymentElements, QuestionElements, QuestionRenderer, QuestionBaseModel, GovukField, QuestionSessionState, ComponentType, PreviewQuestion } from '@defra/forms-model'
  */
