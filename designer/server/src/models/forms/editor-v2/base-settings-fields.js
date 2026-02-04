@@ -12,6 +12,7 @@ import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionBaseSettings } from '~/src/common/constants/editor.js'
 import {
   getListFromComponent,
+  handlePrecision,
   insertValidationErrors,
   mapListToTextareaStr
 } from '~/src/lib/utils.js'
@@ -37,14 +38,20 @@ const TABULAR_DATA = 'tabular-data'
 const DOCUMENTS = 'documents'
 const IMAGES = 'images'
 const ANY = 'any'
+const PAYMENT_RANGE_ERROR_MESSAGE =
+  'Enter a valid payment amount between £0.30 and £100,000'
 
 export const baseSchema = Joi.object().keys({
   name: questionDetailsFullSchema.nameSchema,
   question: questionDetailsFullSchema.questionSchema.when('enhancedAction', {
     is: Joi.exist(),
     then: Joi.string().optional().allow(''),
-    otherwise: Joi.string().trim().required().messages({
-      '*': 'Enter a question'
+    otherwise: Joi.when('questionType', {
+      is: 'PaymentField',
+      then: Joi.string().optional().allow(''),
+      otherwise: Joi.string().trim().required().messages({
+        '*': 'Enter a question'
+      })
     })
   }),
   hintText: questionDetailsFullSchema.hintTextSchema,
@@ -66,8 +73,12 @@ export const baseSchema = Joi.object().keys({
     {
       is: Joi.exist(),
       then: Joi.string().optional().allow(''),
-      otherwise: Joi.string().trim().required().messages({
-        '*': 'Enter a short description'
+      otherwise: Joi.when('questionType', {
+        is: 'PaymentField',
+        then: Joi.string().optional().allow(''),
+        otherwise: Joi.string().trim().required().messages({
+          '*': 'Enter a short description'
+        })
       })
     }
   ),
@@ -154,7 +165,34 @@ export const baseSchema = Joi.object().keys({
     }
   ),
   jsEnabled: questionDetailsFullSchema.jsEnabledSchema,
-  usePostcodeLookup: questionDetailsFullSchema.usePostcodeLookupSchema
+  usePostcodeLookup: questionDetailsFullSchema.usePostcodeLookupSchema,
+  paymentAmount: questionDetailsFullSchema.paymentAmountSchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.number()
+        .required()
+        .custom((value, helpers) => handlePrecision(value, helpers, 2))
+        .messages({
+          'any.required': 'Enter a payment amount',
+          'number.min': PAYMENT_RANGE_ERROR_MESSAGE,
+          'number.max': PAYMENT_RANGE_ERROR_MESSAGE,
+          'number.base': PAYMENT_RANGE_ERROR_MESSAGE
+        }),
+      otherwise: Joi.number().empty('')
+    }
+  ),
+  paymentDescription: questionDetailsFullSchema.paymentDescriptionSchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.string().required().messages({
+        'string.empty': 'Enter a payment description',
+        'string.max': 'Payment description must be 230 characters or less'
+      }),
+      otherwise: Joi.string().optional().allow('')
+    }
+  )
 })
 
 const ALL_LOCATION_HINTS = Object.values(locationHintDefaults)
@@ -219,9 +257,30 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
       )
       return `${addressField?.options.usePostcodeLookup === true}`
     }
+    case 'paymentAmount': {
+      return getPaymentAmount(questionFields)
+    }
+    case 'paymentDescription': {
+      const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
+        questionFields
+      )
+      return paymentField?.options.description
+    }
     default:
       return undefined
   }
+}
+
+/**
+ * @param { FormComponentsDef | undefined } questionFields
+ */
+function getPaymentAmount(questionFields) {
+  const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
+    questionFields
+  )
+  return paymentField?.options.amount
+    ? paymentField.options.amount.toFixed(2)
+    : undefined
 }
 
 /**
@@ -328,6 +387,11 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question
 ])
 
+export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.PaymentAmount,
+  QuestionBaseSettings.PaymentDescription
+])
+
 /**
  * Map of component types to their respective field lists
  * @type {Map<ComponentType, FormEditorGovukFieldBaseKeys[]>}
@@ -344,7 +408,8 @@ const COMPONENT_TYPE_TO_FIELDS = new Map([
   [ComponentType.OsGridRefField, locationFields],
   [ComponentType.NationalGridFieldNumberField, locationFields],
   [ComponentType.LatLongField, locationFields],
-  [ComponentType.HiddenField, hiddenFields]
+  [ComponentType.HiddenField, hiddenFields],
+  [ComponentType.PaymentField, paymentFields]
 ])
 
 /**
@@ -441,6 +506,6 @@ export function getFileUploadFields(questionFields, validation) {
 }
 
 /**
- * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, FormEditorInputQuestion, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBase, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent, FormDefinitionError } from '@defra/forms-model'
+ * @import { FormDefinition, ComponentDef, FormEditor, FormEditorGovukField, GovukField, InputFieldsComponentsDef, Item, FormEditorGovukFieldBaseKeys, FormComponentsDef, UkAddressFieldComponent, DeclarationFieldComponent, PaymentFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

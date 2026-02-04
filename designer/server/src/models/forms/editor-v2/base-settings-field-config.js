@@ -126,6 +126,31 @@ export const allBaseSettingsFields = {
         }
       }
     ]
+  },
+  paymentAmount: {
+    id: 'paymentAmount',
+    name: 'paymentAmount',
+    idPrefix: 'paymentAmount',
+    prefix: {
+      text: '£'
+    },
+    label: {
+      text: 'Payment amount',
+      classes: GOVUK_LABEL__M
+    },
+    classes: 'govuk-input--width-5'
+  },
+  paymentDescription: {
+    id: 'paymentDescription',
+    name: 'paymentDescription',
+    idPrefix: 'paymentDescription',
+    label: {
+      text: 'Payment description',
+      classes: GOVUK_LABEL__M
+    },
+    hint: {
+      text: "Tell users what the payment is for, for example, 'Processing fees for your application'"
+    }
   }
 }
 

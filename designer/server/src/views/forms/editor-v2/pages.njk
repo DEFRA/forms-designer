@@ -37,36 +37,54 @@
   <div class="govuk-grid-row">
     {%- include "../views/forms/editor-v2/partials/conditions-filter.njk" -%}
 
-    {% set pageCount = pages | length %}
+    {% set standardPageCount = standardPages | length %}
     <div class="{{ conditions.rightPanelClass }}">
-      {% if pageCount > 0 %}
-        <div class="govuk-grid-row govuk-!-margin-bottom-0">
-          <div class="govuk-grid-column-full-from-desktop govuk-grid-column-full-from-tablet govuk-grid-column-full">
+      <div class="govuk-grid-row govuk-!-margin-bottom-0">
+        <div class="govuk-grid-column-full-from-desktop govuk-grid-column-full-from-tablet govuk-grid-column-full">
 
-            <h2 class="govuk-heading-m govuk-!-margin-bottom-0 app-pages-header__title">
-            {% if pageCount > 1 %}
-            {{ pageCount - 1 }} page{{ 's' if pageCount > 2 else '' }}
+          <h2 class="govuk-heading-m govuk-!-margin-bottom-0 app-pages-header__title">
+            {% if standardPageCount > 0 %}
+              {{ standardPageCount }} page{{ 's' if standardPageCount > 1 else '' }}
             {% endif %}
-            </h2>
-            {% if rightSideActions %}
-              <div class="app-pages-header__actions govuk-button-group">
-                {% for action in rightSideActions %}
-                  {{ govukButton({
-                    text: action.text,
-                    href: action.href,
-                    classes: action.classes + " govuk-!-margin-bottom-0 app-pages-header__action-button",
-                    attributes: action.attributes,
-                    element: "a"
-                  }) }}
-                {% endfor %}
-              </div>
-            {% endif %}
-          </div>
+          </h2>
+          {% if rightSideActions %}
+            <div class="app-pages-header__actions govuk-button-group">
+              {% for action in rightSideActions %}
+                {{ govukButton({
+                  text: action.text,
+                  href: action.href,
+                  classes: action.classes + " govuk-!-margin-bottom-0 app-pages-header__action-button",
+                  attributes: action.attributes,
+                  element: "a"
+                }) }}
+              {% endfor %}
+            </div>
+          {% endif %}
         </div>
-        <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-0 govuk-!-margin-bottom-5">
-      {% endif %}
+      </div>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible govuk-!-margin-top-0 govuk-!-margin-bottom-5">
       <form class="form">
-          {% for page in pages %}
+          {% for page in standardPages %}
+            <div class="govuk-grid-row page-row">
+              <div class="govuk-grid-column-one-half-from-desktop govuk-grid-column-full-from-tablet govuk-grid-column-full-from-mobile">
+              {{ appPagesPanelLeft({
+                formName: name,
+                pageNum: page.pageNum,
+                pageId: page.id,
+                pageTitle: page.title,
+                pageEditUrl: page.editUrl,
+                pagePreviewUrl: previewBaseUrl + page.path + "?force",
+                rows: page.questionRows,
+                isEndPage: page.isEndPage,
+                isExitPage: page.isExitPage,
+                sectionInfo: page.sectionInfo
+                }) }}
+              </div>
+            </div>
+          {% endfor %}
+          <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+          <h2 class="govuk-heading-m">End pages</h2>
+          {% for page in endPages %}
             <div class="govuk-grid-row page-row">
               <div class="govuk-grid-column-one-half-from-desktop govuk-grid-column-full-from-tablet govuk-grid-column-full-from-mobile">
               {{ appPagesPanelLeft({

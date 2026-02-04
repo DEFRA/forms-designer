@@ -6,6 +6,7 @@ import {
   MIN_NUMBER_OF_REPEAT_ITEMS,
   PreviewPageController,
   hasComponents,
+  includesPaymentField,
   isFormType,
   showRepeaterSettings
 } from '@defra/forms-model'
@@ -221,6 +222,18 @@ export function constructReorderQuestion(component, focus) {
 }
 
 /**
+ * @param {ComponentDef} component
+ */
+export function mapQuestionTitle(component) {
+  if (component.type === ComponentType.PaymentField) {
+    return 'Payment required'
+  }
+  return component.options?.required === false
+    ? `${component.title} (optional)`
+    : component.title
+}
+
+/**
  * @param {ComponentDef[]} components
  * @param {string} baseUrl
  * @param {string} questionOrder
@@ -237,10 +250,7 @@ function mapQuestionRows(components, baseUrl, questionOrder, focus) {
           classes: 'govuk-!-width-one-quarter'
         },
         value: {
-          text:
-            comp2.options?.required === false
-              ? `${comp2.title} (optional)`
-              : comp2.title,
+          text: mapQuestionTitle(comp2),
           classes: 'govuk-!-width-one-half'
         },
         actions: {
@@ -484,7 +494,9 @@ export function questionsViewModel(
     buttonText: SAVE_AND_CONTINUE,
     preventAddQuestion:
       components.some((comp) => comp.type === ComponentType.FileUploadField) ||
-      reorderDetails.action === 'reorder',
+      reorderDetails.action === 'reorder' ||
+      includesPaymentField(components),
+    preventConditions: includesPaymentField(components),
     notification,
     previewPageUrl,
     conditionDetails,

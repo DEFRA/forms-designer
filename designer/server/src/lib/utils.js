@@ -3,6 +3,7 @@ import {
   getYesNoList,
   hasComponents,
   hasListField,
+  includesPaymentField,
   isFormType
 } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
@@ -292,6 +293,48 @@ export function getFormComponentsCount(page) {
  */
 export function requiresPageTitle(page) {
   return !!page && getFormComponentsCount(page) > 0 && !hasPageTitle(page)
+}
+
+/**
+ * Helper function to determine if a payment question already exists in the form
+ * @param {FormDefinition} definition - the form definition
+ * @returns {boolean}
+ */
+export function hasPaymentQuestionInForm(definition) {
+  if (definition.pages.length === 0) {
+    return false
+  }
+
+  for (const page of definition.pages) {
+    const hasPayment = hasComponents(page)
+      ? includesPaymentField(page.components)
+      : false
+    if (hasPayment) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Custom Joi validator for decimal precision
+ * (since Joi's own precision validator relies on passing 'convert: false' to validation)
+ * @param {any} value
+ * @param {any} helpers
+ * @param {number} precision - number of decimal places allowed
+ */
+export function handlePrecision(value, helpers, precision) {
+  if (!value || typeof value !== 'number') {
+    return helpers.error('any.required')
+  }
+
+  const decimalPos = `${value}`.lastIndexOf('.')
+  if (decimalPos === -1) {
+    return value
+  }
+
+  const decimalPlaces = `${value}`.substring(decimalPos + 1).length
+  return decimalPlaces <= precision ? value : helpers.error('number.base')
 }
 
 /**

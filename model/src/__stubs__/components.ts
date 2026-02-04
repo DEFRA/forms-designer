@@ -18,6 +18,7 @@ import {
   type NationalGridFieldNumberFieldComponent,
   type NumberFieldComponent,
   type OsGridRefFieldComponent,
+  type PaymentFieldComponent,
   type RadiosFieldComponent,
   type SelectFieldComponent,
   type TelephoneNumberFieldComponent,
@@ -281,6 +282,25 @@ export function buildCheckboxComponent(
     options: {},
     ...partialListComponent,
     type: ComponentType.CheckboxesField
+  }
+}
+
+/**
+ * @param {Partial<PaymentFieldComponent>} partialComponent
+ * @returns {PaymentFieldComponent}
+ */
+export function buildPaymentComponent(
+  partialComponent: Partial<PaymentFieldComponent> = {}
+): PaymentFieldComponent {
+  return {
+    name: 'Payment',
+    title: 'Some payment',
+    options: {
+      amount: 125,
+      description: 'Payment description'
+    },
+    ...partialComponent,
+    type: ComponentType.PaymentField
   }
 }
 
