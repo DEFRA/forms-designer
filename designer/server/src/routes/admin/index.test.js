@@ -53,7 +53,10 @@ jest.mock('archiver', () => {
     mockOn = jest.fn().mockReturnValue(instance)
     mockFinalize = jest.fn().mockImplementation(() => {
       for (const stream of mockStreams) {
-        stream.end()
+        if (!stream.writableEnded && !stream.destroyed) {
+          stream.write(Buffer.from('zip'))
+          stream.end()
+        }
         stream.emit('close')
       }
     })
@@ -314,6 +317,9 @@ describe('System admin routes', () => {
         expect(response.headers['content-disposition']).toBe(
           'attachment; filename="forms.zip"'
         )
+        expect(Number(response.headers['content-length'])).toBe(
+          response.payload.length
+        )
 
         // Verify audit event published
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
@@ -379,6 +385,9 @@ describe('System admin routes', () => {
         const response = await server.inject(options)
 
         expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(Number(response.headers['content-length'])).toBe(
+          response.payload.length
+        )
 
         // Verify live definition was requested
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
@@ -461,6 +470,9 @@ describe('System admin routes', () => {
         const response = await server.inject(options)
 
         expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(Number(response.headers['content-length'])).toBe(
+          response.payload.length
+        )
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
           expect.any(Object),
           1,
@@ -497,6 +509,9 @@ describe('System admin routes', () => {
         const response = await server.inject(options)
 
         expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(Number(response.headers['content-length'])).toBe(
+          response.payload.length
+        )
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
           expect.any(Object),
           1,
@@ -533,6 +548,9 @@ describe('System admin routes', () => {
         const response = await server.inject(options)
 
         expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(Number(response.headers['content-length'])).toBe(
+          response.payload.length
+        )
 
         // Verify all forms were processed
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
