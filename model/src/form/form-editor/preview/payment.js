@@ -26,8 +26,8 @@ export class PaymentComponentPreviewElements extends QuestionComponentElements {
    */
   constructor(component) {
     super(component)
-    this._paymentAmount = component.options.amount ?? 0
-    this._paymentDescription = component.options.description ?? ''
+    this._paymentAmount = component.options.amount
+    this._paymentDescription = component.options.description
   }
 
   /**

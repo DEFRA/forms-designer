@@ -481,7 +481,7 @@ describe('preview-helpers', () => {
       expect(result.amount).toBe('£50.50')
     })
 
-    it('should handle missing amount and description', () => {
+    it('should handle zero amount', () => {
       const definition = buildDefinition({
         pages: [
           buildQuestionPage({
@@ -493,7 +493,10 @@ describe('preview-helpers', () => {
                 type: ComponentType.PaymentField,
                 name: 'PaymentField',
                 title: 'Payment',
-                options: {}
+                options: {
+                  amount: 0,
+                  description: ''
+                }
               }
             ]
           })

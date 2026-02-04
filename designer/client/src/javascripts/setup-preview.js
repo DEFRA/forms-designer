@@ -431,7 +431,10 @@ export const SetupPreviewPartial =
     PaymentField: () => {
       const paymentElements = new PaymentDomElements()
       const nunjucksRenderer = new NunjucksRenderer(paymentElements)
-      const paymentField = new PaymentQuestion(paymentElements, nunjucksRenderer)
+      const paymentField = new PaymentQuestion(
+        paymentElements,
+        nunjucksRenderer
+      )
       const listeners = new PaymentEventListeners(paymentField, paymentElements)
       listeners.setupListeners()
 

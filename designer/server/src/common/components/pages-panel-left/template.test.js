@@ -121,7 +121,10 @@ describe('Pages left panel component', () => {
             pageEditUrl: '/library/my-form/editor-v2/page/p1/questions',
             pagePreviewUrl: '/preview/page-1?force',
             rows: [
-              { key: { text: 'Payment for' }, value: { text: 'Application fee' } },
+              {
+                key: { text: 'Payment for' },
+                value: { text: 'Application fee' }
+              },
               { key: { text: 'Total amount' }, value: { text: '£100.00' } }
             ],
             isPaymentPage: true
@@ -158,7 +161,8 @@ describe('Pages left panel component', () => {
             pageNum: 1,
             pageId: 'abcDEF',
             pageTitle: 'Check your answers',
-            pageEditUrl: '/library/my-form/editor-v2/page/abcDEF/check-answers-settings',
+            pageEditUrl:
+              '/library/my-form/editor-v2/page/abcDEF/check-answers-settings',
             pagePreviewUrl: '/preview/check-answers?force',
             rows: [],
             isEndPage: true

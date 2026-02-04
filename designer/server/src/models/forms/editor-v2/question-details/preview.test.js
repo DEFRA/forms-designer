@@ -289,7 +289,9 @@ describe('preview', () => {
         items: [],
         prefix: 'pre',
         suffix: 'suf',
-        instructionText: ''
+        instructionText: '',
+        paymentAmount: 0,
+        paymentDescription: ''
       })
     })
 
@@ -307,7 +309,9 @@ describe('preview', () => {
         items: [],
         prefix: '',
         suffix: '',
-        instructionText: ''
+        instructionText: '',
+        paymentAmount: 0,
+        paymentDescription: ''
       })
     })
 
