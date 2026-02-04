@@ -109,7 +109,7 @@ describe('Pages left panel component', () => {
     })
   })
 
-  describe('With end page and payment info', () => {
+  describe('With payment page', () => {
     beforeEach(() => {
       const { container } = renderMacro(
         'appPagesPanelLeft',
@@ -117,17 +117,14 @@ describe('Pages left panel component', () => {
         {
           params: {
             formName: 'test-form-1',
-            pageNum: 1,
-            pageId: 'abcDEF',
-            pageTitle: 'My title',
-            rows: [],
-            isEndPage: true,
-            showMoveButtons: false,
-            paymentInfo: {
-              hasPayment: true,
-              description: 'Application fee',
-              amount: '£100.00'
-            }
+            pageTitle: 'Payment',
+            pageEditUrl: '/library/my-form/editor-v2/page/p1/questions',
+            pagePreviewUrl: '/preview/page-1?force',
+            rows: [
+              { key: { text: 'Payment for' }, value: { text: 'Application fee' } },
+              { key: { text: 'Total amount' }, value: { text: '£100.00' } }
+            ],
+            isPaymentPage: true
           }
         }
       )
@@ -137,11 +134,9 @@ describe('Pages left panel component', () => {
       $values = container.getAllByRole('definition')
     })
 
-    it('should render payment card and page title', () => {
+    it('should render payment card title', () => {
       expect($headings[0]).toHaveClass('govuk-summary-card__title')
       expect($headings[0]).toHaveTextContent('Payment')
-      expect($headings[1]).toHaveClass('govuk-summary-card__title')
-      expect($headings[1]).toHaveTextContent('My title')
     })
 
     it('should render payment details', () => {
@@ -152,7 +147,7 @@ describe('Pages left panel component', () => {
     })
   })
 
-  describe('With end page and no payment', () => {
+  describe('With end page (no payment)', () => {
     beforeEach(() => {
       const { container } = renderMacro(
         'appPagesPanelLeft',
@@ -162,15 +157,11 @@ describe('Pages left panel component', () => {
             formName: 'test-form-1',
             pageNum: 1,
             pageId: 'abcDEF',
-            pageTitle: 'My title',
+            pageTitle: 'Check your answers',
+            pageEditUrl: '/library/my-form/editor-v2/page/abcDEF/check-answers-settings',
+            pagePreviewUrl: '/preview/check-answers?force',
             rows: [],
-            isEndPage: true,
-            showMoveButtons: false,
-            paymentInfo: {
-              hasPayment: false,
-              description: '',
-              amount: ''
-            }
+            isEndPage: true
           }
         }
       )
@@ -178,9 +169,9 @@ describe('Pages left panel component', () => {
       $headings = container.getAllByRole('heading')
     })
 
-    it('should not render payment card when hasPayment is false', () => {
+    it('should render only the end page card', () => {
       expect($headings).toHaveLength(1)
-      expect($headings[0]).toHaveTextContent('My title')
+      expect($headings[0]).toHaveTextContent('Check your answers')
     })
   })
 })

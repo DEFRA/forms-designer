@@ -25,47 +25,18 @@
   {% set cardTitle = { html: cardTitleHtml } %}
 {% endif %}
 
-{% if params.isEndPage %}
+{% if params.isPaymentPage %}
+  {% set cardClass = "pages-panel-left-end" %}
+  {% set cardTitle = { text: params.pageTitle } %}
+{% elif params.isEndPage %}
   {% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end pages-panel-left-end-hide-declaration"%}
-  {% if params.paymentInfo and params.paymentInfo.hasPayment %}
-    {{ govukSummaryList({
-      card: {
-        title: { text: "Payment" },
-        actions: {
-          items: [
-            {
-              href: "#",
-              text: "Edit",
-              classes: 'govuk-link--no-visited-state govuk-link--disabled'
-            },
-            {
-              href: "#",
-              text: "Preview",
-              classes: 'govuk-link--no-visited-state govuk-link--disabled'
-            }
-          ]
-        },
-        classes: "pages-panel-left-end"
-      },
-      rows: [
-        {
-          key: { text: "Payment for" },
-          value: { text: params.paymentInfo.description }
-        },
-        {
-          key: { text: "Total amount" },
-          value: { text: params.paymentInfo.amount }
-        }
-      ]
-    }) }}
-  {% endif %}
   {% set cardTitle = { text: params.pageTitle } %}
 {% elif params.isExitPage %}
   {% set cardClass = "pages-panel-left-exit" if params.rows | length else "pages-panel-left-exit pages-panel-left-exit-hide-declaration"%}
   {% set cardTitle = { html: tagHtml } %}
 {% endif %}
 
-{% set visuallyHiddenText = "" if params.isEndPage else " page " + params.pageNum %}
+{% set visuallyHiddenText = "" if params.isEndPage or params.isPaymentPage else " page " + params.pageNum %}
 
 {{ govukSummaryList({
   card: {
