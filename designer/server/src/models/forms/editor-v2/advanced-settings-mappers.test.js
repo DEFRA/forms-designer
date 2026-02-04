@@ -34,11 +34,25 @@ describe('advanced-settings-mappers', () => {
       })
     })
 
-    it('should apply default hint for EastingNorthingField when no hint provided', () => {
+    it('should not apply default hint for EastingNorthingField when no hint provided', () => {
       const payload = {
         questionType: ComponentType.EastingNorthingField,
         question: 'Location',
         name: 'location'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBeUndefined()
+    })
+
+    it('should update default hint for EastingNorthingField when changing location component type', () => {
+      const payload = {
+        questionType: ComponentType.EastingNorthingField,
+        question: 'Location',
+        name: 'location',
+        hintText:
+          'An OS grid reference number is made up of 2 letters followed by either 6, 8 or 10 numbers, for example, TQ123456'
       }
 
       const result = mapBaseQuestionDetails(payload)
@@ -48,11 +62,25 @@ describe('advanced-settings-mappers', () => {
       )
     })
 
-    it('should apply default hint for OsGridRefField when no hint provided', () => {
+    it('should not apply default hint for OsGridRefField when no hint provided', () => {
       const payload = {
         questionType: ComponentType.OsGridRefField,
         question: 'Grid reference',
         name: 'gridRef'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBeUndefined()
+    })
+
+    it('should update default hint for OsGridRefField when changing location component type', () => {
+      const payload = {
+        questionType: ComponentType.OsGridRefField,
+        question: 'Location',
+        name: 'location',
+        hintText:
+          'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767'
       }
 
       const result = mapBaseQuestionDetails(payload)
@@ -62,11 +90,25 @@ describe('advanced-settings-mappers', () => {
       )
     })
 
-    it('should apply default hint for NationalGridFieldNumberField when no hint provided', () => {
+    it('should not apply default hint for NationalGridFieldNumberField when no hint provided', () => {
       const payload = {
         questionType: ComponentType.NationalGridFieldNumberField,
         question: 'Grid number',
         name: 'gridNumber'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBeUndefined()
+    })
+
+    it('should update default hint for NationalGridFieldNumberField when changing location component type', () => {
+      const payload = {
+        questionType: ComponentType.NationalGridFieldNumberField,
+        question: 'Location',
+        name: 'location',
+        hintText:
+          'For Great Britain, the latitude will be a number between 49.850 and 60.859. The longitude will be a number between -13.687 and 1.767'
       }
 
       const result = mapBaseQuestionDetails(payload)
@@ -76,11 +118,25 @@ describe('advanced-settings-mappers', () => {
       )
     })
 
-    it('should apply default hint for LatLongField when no hint provided', () => {
+    it('should not apply default hint for LatLongField when no hint provided', () => {
       const payload = {
         questionType: ComponentType.LatLongField,
         question: 'Coordinates',
         name: 'coordinates'
+      }
+
+      const result = mapBaseQuestionDetails(payload)
+
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBeUndefined()
+    })
+
+    it('should update default hint for LatLongField when changing location component type', () => {
+      const payload = {
+        questionType: ComponentType.LatLongField,
+        question: 'Location',
+        name: 'location',
+        hintText:
+          'An OS grid reference number is made up of 2 letters followed by either 6, 8 or 10 numbers, for example, TQ123456'
       }
 
       const result = mapBaseQuestionDetails(payload)
@@ -306,9 +362,7 @@ describe('advanced-settings-mappers', () => {
       const result = mapQuestionDetails(payload)
 
       expect(result.type).toBe(ComponentType.EastingNorthingField)
-      expect(/** @type {{ hint?: string }} */ (result).hint).toBe(
-        'For example. Easting: 248741, Northing: 63688'
-      )
+      expect(/** @type {{ hint?: string }} */ (result).hint).toBeUndefined()
     })
   })
 })
