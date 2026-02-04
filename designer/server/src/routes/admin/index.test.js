@@ -246,10 +246,8 @@ describe('System admin routes', () => {
 
     describe('action=download', () => {
       test('should error if no forms available', async () => {
-        // Mock generator that yields nothing
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          // Empty generator
-        })
+        // Mock that returns empty array
+        jest.mocked(forms.listAll).mockResolvedValueOnce([])
 
         const options = {
           method: 'post',
@@ -266,11 +264,9 @@ describe('System admin routes', () => {
         })
       })
 
-      test('should handle listAll generator errors', async () => {
-        // Mock generator that throws
-        jest.mocked(forms.listAll).mockImplementationOnce(() => {
-          throw new Error('API error')
-        })
+      test('should handle listAll errors', async () => {
+        // Mock that throws
+        jest.mocked(forms.listAll).mockRejectedValueOnce(new Error('API error'))
 
         const options = {
           method: 'post',
@@ -289,17 +285,12 @@ describe('System admin routes', () => {
       })
 
       test('should download all forms successfully with both live and draft definitions', async () => {
-        const mockForms = Promise.resolve([
+        const mockForms = [
           testFormMetadata,
           { ...testFormMetadata, id: 'form-2', slug: 'form-2' }
-        ])
+        ]
 
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          const formsArray = await mockForms
-          for (const form of formsArray) {
-            yield form
-          }
-        })
+        jest.mocked(forms.listAll).mockResolvedValueOnce(mockForms)
 
         jest
           .mocked(forms.getDraftFormDefinition)
@@ -359,14 +350,12 @@ describe('System admin routes', () => {
       })
 
       test('should handle forms with only live definition (no draft)', async () => {
-        const formWithoutDraft = Promise.resolve({
+        const formWithoutDraft = {
           ...testFormMetadata,
           draft: undefined
-        })
+        }
 
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          yield formWithoutDraft
-        })
+        jest.mocked(forms.listAll).mockResolvedValueOnce([formWithoutDraft])
 
         const notFoundError = Object.assign(new Error('Not found'), {
           data: { statusCode: StatusCodes.NOT_FOUND }
@@ -405,18 +394,15 @@ describe('System admin routes', () => {
       })
 
       test('should throw error if one of the api calls fails (non 404 error)', async () => {
-        const form1 = Promise.resolve(testFormMetadata)
-        const form2 = Promise.resolve({
+        const form1 = testFormMetadata
+        const form2 = {
           ...testFormMetadata,
           id: 'form-2',
           slug: 'form-2',
           draft: undefined
-        })
+        }
 
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          yield await form1
-          yield await form2
-        })
+        jest.mocked(forms.listAll).mockResolvedValueOnce([form1, form2])
 
         // Form 1 definition fetch fails, form 2 will succeed
         jest
@@ -449,11 +435,9 @@ describe('System admin routes', () => {
       })
 
       test('should ignore 404 when fetching live definition', async () => {
-        const form1 = Promise.resolve(testFormMetadata)
+        const form1 = testFormMetadata
 
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          yield await form1
-        })
+        jest.mocked(forms.listAll).mockResolvedValueOnce([form1])
 
         const notFoundError = Object.assign(new Error('Not found'), {
           data: { statusCode: StatusCodes.NOT_FOUND }
@@ -487,11 +471,9 @@ describe('System admin routes', () => {
       })
 
       test('should ignore 404 when fetching draft definition', async () => {
-        const form1 = Promise.resolve(testFormMetadata)
+        const form1 = testFormMetadata
 
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          yield await form1
-        })
+        jest.mocked(forms.listAll).mockResolvedValueOnce([form1])
 
         const notFoundError = Object.assign(new Error('Not found'), {
           data: { statusCode: StatusCodes.NOT_FOUND }
@@ -524,22 +506,15 @@ describe('System admin routes', () => {
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
       })
 
-      test('should process forms in batches', async () => {
-        // Create 12 forms to test batching (concurrency is 5 in the code)
-        const mockForms = Promise.resolve(
-          Array.from({ length: 12 }, (_, i) => ({
-            ...testFormMetadata,
-            id: `form-${i}`,
-            slug: `form-${i}`
-          }))
-        )
+      test('should process multiple forms in parallel', async () => {
+        // Create 12 forms to test parallel processing
+        const mockForms = Array.from({ length: 12 }, (_, i) => ({
+          ...testFormMetadata,
+          id: `form-${i}`,
+          slug: `form-${i}`
+        }))
 
-        jest.mocked(forms.listAll).mockImplementationOnce(async function* () {
-          const formsArray = await mockForms
-          for (const form of formsArray) {
-            yield form
-          }
-        })
+        jest.mocked(forms.listAll).mockResolvedValueOnce(mockForms)
 
         jest
           .mocked(forms.getLiveFormDefinition)

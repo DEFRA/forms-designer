@@ -266,35 +266,20 @@ function attachArchiveEventHandlers(archive, stream, request) {
  * @returns {Promise<{ totalForms: number, manifestEntities: { id: string, title: string, slug: string }[] }>}
  */
 async function processAllForms(token, archive) {
-  const concurrency = 5
-  let totalForms = 0
-  let batch = []
+  const allForms = await forms.listAll(token)
+
   /** @type {{ id: string, title: string, slug: string }[]} */
-  const manifestEntities = []
+  const manifestEntities = allForms.map((metadata) => ({
+    id: metadata.id,
+    title: metadata.title,
+    slug: metadata.slug
+  }))
 
-  for await (const metadata of forms.listAll(token)) {
-    totalForms++
-    manifestEntities.push({
-      id: metadata.id,
-      title: metadata.title,
-      slug: metadata.slug
-    })
-    batch.push(metadata)
-    if (batch.length >= concurrency) {
-      await Promise.all(
-        batch.map((formMetadata) => processForm(formMetadata, token, archive))
-      )
-      batch = []
-    }
-  }
+  await Promise.all(
+    allForms.map((metadata) => processForm(metadata, token, archive))
+  )
 
-  if (batch.length > 0) {
-    await Promise.all(
-      batch.map((formMetadata) => processForm(formMetadata, token, archive))
-    )
-  }
-
-  return { totalForms, manifestEntities }
+  return { totalForms: allForms.length, manifestEntities }
 }
 
 /**
