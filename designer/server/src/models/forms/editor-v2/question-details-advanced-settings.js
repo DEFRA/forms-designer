@@ -187,6 +187,9 @@ export function advancedSettingsFields(options, question, validation) {
         ),
         items: fieldSettings.items?.map((item) => ({
           ...item,
+          ...(question.type === ComponentType.NationalGridFieldNumberField && {
+            hint: undefined
+          }),
           checked: isCheckboxSelected(
             /** @type {string | undefined} */ (formValues[fieldName])
           )

@@ -209,9 +209,15 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     </li>
   </ul>
   <div class="govuk-tabs__panel" id="forms-designer">
-    <h2 class="govuk-heading-l govuk-!-margin-top-4">Form Management</h2>
     <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="form-management">Form management</h2>
+        </div>
+      </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -226,7 +232,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -248,17 +254,31 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/auditing.svg" alt="Icon for Auditing" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Auditing</h3>
+          </div>
+          <p>See the changes made to your form over time with a clear audit trial.</p>
     
-    <!-- Form Design Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Form design</h2>
+        </div>
       </div>
     </div>
     
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="form-design">Form design</h2>
+        </div>
+      </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -280,7 +300,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -295,7 +315,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -310,7 +330,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -325,7 +345,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -340,7 +360,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -355,17 +375,31 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/page-sections.svg" alt="Icon for Page sections" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Page sections</h3>
+          </div>
+          <p>Categorise questions into sections.</p>
     
-    <!-- Information Types Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Text and numbers</h2>
+        </div>
       </div>
     </div>
     
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="text-and-numbers">Text and numbers</h2>
+        </div>
+      </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -389,7 +423,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -404,17 +438,16 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
-    
-    <!-- Selection Options Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Selecting from a list</h2>
       </div>
-    </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="selecting-from-a-list">Selecting from a list</h2>
+        </div>
+      </div>
     
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -436,16 +469,189 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-    </div>
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="location">Location</h2>
+        </div>
+      </div>
     
-    <!-- Advanced Features Cards -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4">Advanced features</h2>
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/address-lookup.svg" alt="Icon for Address and postcode lookup" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Address and postcode lookup</h3>
+          </div>
+          <p>Search for addresses using postcodes with autocomplete functionality.</p>
+    
+        </div>
       </div>
     </div>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+    
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/map.svg" alt="Icon for Map questions" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Map questions</h3>
+          </div>
+          <p>Gather location information from a user with an interactive map.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="outputs">Outputs</h2>
+        </div>
+      </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="Icon for Submitted forms as emails" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Submitted forms as emails</h3>
+          </div>
+          <p>Data from a form submission is automatically sent to the shared mailbox you signed up with.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/data-output.svg" alt="Icon for Email formats" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Email formats</h3>
+          </div>
+          <p>Choose how to retrieve submission data.</p>
+    <ol>
+    <li>In a human readable format (standard HTML email)</li>
+    <li>In a machine readable format that robots and computers can easily read</li>
+    </ol>
+    
+        </div>
+      </div>
+    </div>
+    
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/excel-download.svg" alt="Icon for Export to Excel" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Export to Excel</h3>
+          </div>
+          <p>Download all form responses as an Excel document.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for API integration" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">API integration</h3>
+          </div>
+          <p>Import data from form submissions into your backend system.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/sharepoint.svg" alt="Icon for Sharepoint integration" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Sharepoint integration</h3>
+          </div>
+          <p>Send form submission data directly to your SharePoint site.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="customer-communication">Customer communication</h2>
+        </div>
+      </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Confirmation emails</h3>
+          </div>
+          <p>Users receive a confirmation email after submitting a form. Confirmation emails include:</p>
+    <ul>
+    <li>a copy of their answers</li>
+    <li>name of form</li>
+    <li>date and time of submission</li>
+    <li>what happens next</li>
+    <li>support information</li>
+    </ul>
+    
+        </div>
+      </div>
+    </div>
+    
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
+        <div class="govuk-card__content">
+          <div class="govuk-card__header">
+            <div class="feature-icon">
+              <img src="/assets/images/website/svgs/survey.svg" alt="Icon for Customer satisfaction exit survey" role="img" />
+            </div>
+            <h3 class="govuk-heading-s">Customer satisfaction exit survey</h3>
+          </div>
+          <p>Gather feedback from users after they submit their form to improve your service.</p>
+    
+        </div>
+      </div>
+    </div>
+    
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="advanced-features">Advanced features</h2>
+        </div>
+      </div>
+    
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -460,7 +666,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
@@ -475,57 +681,8 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature ">
-        <div class="govuk-card__content">
-          <div class="govuk-card__header">
-            <div class="feature-icon">
-              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="Icon for Submitted forms" role="img" />
-            </div>
-            <h3 class="govuk-heading-s">Submitted forms</h3>
-          </div>
-          <p>Data from a form submission is automatically sent to the shared mailbox you signed up with.</p>
-    
-        </div>
-      </div>
-    </div>
-    
-    </div>
-    
-    <!-- Features Coming Soon Section -->
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-full">
-        <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon
-        </h2>
-      </div>
-    </div>
-    
-    <p class="govuk-body-l">We're working on exciting new capabilities to enhance
-      your form building experience.</p>
-    <div class="govuk-grid-row">
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
-      <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
-        <div class="govuk-card__content">
-          <div class="govuk-card__header">
-            <div class="feature-icon">
-              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
-            </div>
-            <h3 class="govuk-heading-s">Confirmation emails</h3>
-          </div>
-          <p>Users receive a confirmation email after submitting a form. Confirmation emails include:</p>
-    <ul>
-    <li>name of form</li>
-    <li>date and time of submission</li>
-    <li>what happens next</li>
-    <li>support information</li>
-    </ul>
-    
-        </div>
-      </div>
-    </div>
-    
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
-      <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
@@ -539,86 +696,62 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
-      <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      <div class="govuk-card govuk-card--contained govuk-card--feature ">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/user-management.svg" alt="Icon for User management" role="img" />
+              <img src="/assets/images/website/svgs/reference-numbers.svg" alt="Icon for Reference numbers" role="img" />
             </div>
-            <h3 class="govuk-heading-s">User management</h3>
+            <h3 class="govuk-heading-s">Reference numbers</h3>
           </div>
-          <p>Manage user access and permissions for your forms.</p>
+          <p>Each form submission is assigned a unique reference number that users can use to track their application.</p>
     
         </div>
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+      </div>
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-full">
+          <h2 class="govuk-heading-l govuk-!-margin-top-4" id="coming-soon">Features coming soon</h2>
+        </div>
+      </div>
+    
+        <p class="govuk-body-l">We&#39;re working on exciting new capabilities to enhance your form building experience.</p>
+    
+      <div class="govuk-grid-row">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/auditing.svg" alt="Icon for Auditing" role="img" />
+              <img src="/assets/images/website/svgs/payment.svg" alt="Icon for GOV.UK Pay" role="img" />
             </div>
-            <h3 class="govuk-heading-s">Auditing</h3>
+            <h3 class="govuk-heading-s">GOV.UK Pay</h3>
           </div>
-          <p>See the changes made to your form over time with a clear audit trial.</p>
+          <p>Collect payments as part of your form. Support for fixed and variable payment amounts.</p>
     
         </div>
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
+          <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
       <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for API integration" role="img" />
+              <img src="/assets/images/website/svgs/map-advanced.svg" alt="Icon for Map questions" role="img" />
             </div>
-            <h3 class="govuk-heading-s">API integration</h3>
+            <h3 class="govuk-heading-s">Map questions</h3>
           </div>
-          <p>Import data from form submissions into your backend system.</p>
+          <p>Advanced map interactions including drawing shapes, lines, and data layers.</p>
     
         </div>
       </div>
     </div>
     
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
-      <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
-        <div class="govuk-card__content">
-          <div class="govuk-card__header">
-            <div class="feature-icon">
-              <img src="/assets/images/website/svgs/page-sections.svg" alt="Icon for Page sections" role="img" />
-            </div>
-            <h3 class="govuk-heading-s">Page sections</h3>
-          </div>
-          <p>Categorise questions into sections. Show and hide sections from users and use section headings on the &#39;check your answers page&#39;.</p>
-    
-        </div>
       </div>
-    </div>
-    
-        <div class="govuk-grid-column-full govuk-grid-column-one-third-from-desktop">
-      <div class="govuk-card govuk-card--contained govuk-card--feature govuk-card--coming-soon">
-        <div class="govuk-card__content">
-          <div class="govuk-card__header">
-            <div class="feature-icon">
-              <img src="/assets/images/website/svgs/data-output.svg" alt="Icon for Data output" role="img" />
-            </div>
-            <h3 class="govuk-heading-s">Data output</h3>
-          </div>
-          <p>Choose how to retrieve submission data.</p>
-    <ol>
-    <li>In a human readable format (standard HTML email)</li>
-    <li>In a machine readable format that robots and computers can easily read</li>
-    </ol>
-    
-        </div>
-      </div>
-    </div>
-    
-    </div>
   </div>
   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="developer-plugin">
     <h2 class="govuk-heading-l govuk-!-margin-top-4">Developer Plugin</h2>
@@ -659,9 +792,9 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/api-first.svg" alt="Icon for API-first Design" role="img" />
+              <img src="/assets/images/website/svgs/api-first.svg" alt="Icon for API-first design" role="img" />
             </div>
-            <h3 class="govuk-heading-s">API-first Design</h3>
+            <h3 class="govuk-heading-s">API-first design</h3>
           </div>
           <p>Built with developers in mind, featuring comprehensive APIs for form creation, management, and data retrieval.</p>
     
@@ -674,9 +807,9 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/custom-styling.svg" alt="Icon for Custom Styling" role="img" />
+              <img src="/assets/images/website/svgs/custom-styling.svg" alt="Icon for Custom styling" role="img" />
             </div>
-            <h3 class="govuk-heading-s">Custom Styling</h3>
+            <h3 class="govuk-heading-s">Custom styling</h3>
           </div>
           <p>Full control over form appearance and styling to match your application&#39;s design system.</p>
     
@@ -792,8 +925,25 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     
             </td>
         </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/auditing.svg" alt="Icon for Auditing" role="img" />
+                  Auditing
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Track changes made to your form over time with a clear audit trail for compliance and governance.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
+            </td>
+        </tr>
         <tr class="govuk-table__row comparison-category-header">
-          <th scope="colgroup" colspan="3" class="govuk-table__header">Form Design</th>
+          <th scope="colgroup" colspan="3" class="govuk-table__header">Form design</th>
         </tr>
           <tr class="govuk-table__row">
             <th scope="row" colspan="1" class="govuk-table__header">
@@ -940,22 +1090,39 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
               <span class="govuk-body-s govuk-!-margin-top-1">Form designer allows you to add questions (input fields, selection fields) on a page. Developer plugin allows you to add components (input fields, selection fields, guidance, HTML, etc) to a page. Developer plugin does not enforce the order of these components.</span>
             </th>
             <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-            <td class="govuk-table__cell">
                 <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
     
             </td>
-        </tr>
-        <tr class="govuk-table__row comparison-category-header">
-          <th scope="colgroup" colspan="3" class="govuk-table__header">Information Types</th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
         </tr>
           <tr class="govuk-table__row">
             <th scope="row" colspan="1" class="govuk-table__header">
               <span class="feature-info">
-              <img src="/assets/images/website/svgs/text-numbers.svg" alt="Icon for Text &amp; Numbers" role="img" />
-                  Text &amp; Numbers
+              <img src="/assets/images/website/svgs/page-sections.svg" alt="Icon for Page sections" role="img" />
+                  Page sections
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Categorise questions into sections for better organisation and user experience.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+        <tr class="govuk-table__row comparison-category-header">
+          <th scope="colgroup" colspan="3" class="govuk-table__header">Information types</th>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/text-numbers.svg" alt="Icon for Text &amp; numbers" role="img" />
+                  Text &amp; numbers
               </span>
               <span class="govuk-body-s govuk-!-margin-top-1">Standard text input fields for names, addresses, numbers and other alphanumeric data.</span>
             </th>
@@ -981,7 +1148,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
     
             </td>
             <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
+                <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
     
             </td>
         </tr>
@@ -1006,7 +1173,169 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
             </td>
         </tr>
         <tr class="govuk-table__row comparison-category-header">
-          <th scope="colgroup" colspan="3" class="govuk-table__header">Advanced Features</th>
+          <th scope="colgroup" colspan="3" class="govuk-table__header">Location</th>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/address-lookup.svg" alt="Icon for Address and postcode lookup" role="img" />
+                  Address and postcode lookup
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Search for addresses using postcodes with autocomplete functionality.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/map.svg" alt="Icon for Map questions" role="img" />
+                  Map questions
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Gather location information from users with an interactive map.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+        <tr class="govuk-table__row comparison-category-header">
+          <th scope="colgroup" colspan="3" class="govuk-table__header">Outputs</th>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="Icon for Submitted forms as emails" role="img" />
+                  Submitted forms as emails
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Data from form submissions is automatically sent to the shared mailbox you signed up with.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/data-output.svg" alt="Icon for Email formats" role="img" />
+                  Email formats
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Choose how to retrieve submission data in human readable (HTML email) or machine readable format.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/excel-download.svg" alt="Icon for Export to Excel" role="img" />
+                  Export to Excel
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Download all form responses as an Excel document for analysis and record keeping.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for API integration" role="img" />
+                  API integration
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Import data from form submissions into your backend system.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/sharepoint.svg" alt="Icon for Sharepoint integration" role="img" />
+                  Sharepoint integration
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Send form submission data directly to your SharePoint site.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
+            </td>
+        </tr>
+        <tr class="govuk-table__row comparison-category-header">
+          <th scope="colgroup" colspan="3" class="govuk-table__header">Customer communication</th>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
+                  Confirmation emails
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Users receive a confirmation email after submitting a form with a copy of their answers, submission details, and next steps.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/survey.svg" alt="Icon for Customer satisfaction exit survey" role="img" />
+                  Customer satisfaction exit survey
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Gather feedback from users after they submit their form to improve your service.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+    
+            </td>
+        </tr>
+        <tr class="govuk-table__row comparison-category-header">
+          <th scope="colgroup" colspan="3" class="govuk-table__header">Advanced features</th>
         </tr>
           <tr class="govuk-table__row">
             <th scope="row" colspan="1" class="govuk-table__header">
@@ -1045,13 +1374,30 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
           <tr class="govuk-table__row">
             <th scope="row" colspan="1" class="govuk-table__header">
               <span class="feature-info">
-              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="Icon for Submitted forms" role="img" />
-                  Submitted forms
+              <img src="/assets/images/website/svgs/save-exit.svg" alt="Icon for Save and exit" role="img" />
+                  Save and exit
               </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">View and manage form submissions from users, including data export and analysis.</span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Users can save their form progress and return within 28 days using a magic link. The plugin offers an API for save and return functionality, but service teams are responsible for providing the user interface.</span>
             </th>
             <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
+                <span class="govuk-tag govuk-tag--green">✓</span>
+    
+            </td>
+            <td class="govuk-table__cell">
+                <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
+    
+            </td>
+        </tr>
+          <tr class="govuk-table__row">
+            <th scope="row" colspan="1" class="govuk-table__header">
+              <span class="feature-info">
+              <img src="/assets/images/website/svgs/reference-numbers.svg" alt="Icon for Reference numbers" role="img" />
+                  Reference numbers
+              </span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Each form submission is assigned a unique reference number that users can use to track their application.</span>
+            </th>
+            <td class="govuk-table__cell">
+                <span class="govuk-tag govuk-tag--green">✓</span>
     
             </td>
             <td class="govuk-table__cell">
@@ -1099,44 +1445,10 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
           <tr class="govuk-table__row">
             <th scope="row" colspan="1" class="govuk-table__header">
               <span class="feature-info">
-              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
-                  Confirmation emails
+              <img src="/assets/images/website/svgs/payment.svg" alt="Icon for GOV.UK Pay" role="img" />
+                  GOV.UK Pay
               </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">Automatically send confirmation emails to users after they submit a form.</span>
-            </th>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-        </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" colspan="1" class="govuk-table__header">
-              <span class="feature-info">
-              <img src="/assets/images/website/svgs/save-exit.svg" alt="Icon for Save and exit" role="img" />
-                  Save and exit
-              </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">The plugin offers an API so save and return can function, however service teams using the plugin are responsible for integrating with this and providing the user interface (e.g. implementing a portal with user auth that allows them to resume an application, or their own magic link implementation, etc). Only the hosted Designer offers a complete end-to-end save and exit feature.</span>
-            </th>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-            <td class="govuk-table__cell">
-                <span class="feature-partial-small" style="margin-left:1rem;" aria-hidden="true"></span>
-    
-            </td>
-        </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" colspan="1" class="govuk-table__header">
-              <span class="feature-info">
-              <img src="/assets/images/website/svgs/user-management.svg" alt="Icon for User management" role="img" />
-                  User management
-              </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">Manage user accounts, permissions and access controls for form administration.</span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Collect payments as part of your form with support for fixed and variable payment amounts.</span>
             </th>
             <td class="govuk-table__cell">
                 <span class="govuk-tag govuk-tag--green">✓</span>
@@ -1150,61 +1462,10 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
           <tr class="govuk-table__row">
             <th scope="row" colspan="1" class="govuk-table__header">
               <span class="feature-info">
-              <img src="/assets/images/website/svgs/auditing.svg" alt="Icon for Auditing" role="img" />
-                  Auditing
+              <img src="/assets/images/website/svgs/map-advanced.svg" alt="Icon for Advanced map questions" role="img" />
+                  Advanced map questions
               </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">Track changes and maintain audit trails for compliance and governance purposes.</span>
-            </th>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--red govuk-tag--dark-red">—</span>
-    
-            </td>
-        </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" colspan="1" class="govuk-table__header">
-              <span class="feature-info">
-              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for API integration" role="img" />
-                  API integration
-              </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">Connect forms to external systems and services through REST APIs and webhooks.</span>
-            </th>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-        </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" colspan="1" class="govuk-table__header">
-              <span class="feature-info">
-              <img src="/assets/images/website/svgs/page-sections.svg" alt="Icon for Page sections" role="img" />
-                  Page sections
-              </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">Organise form content into logical sections for better user experience and navigation.</span>
-            </th>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-            <td class="govuk-table__cell">
-                <span class="govuk-tag govuk-tag--green">✓</span>
-    
-            </td>
-        </tr>
-          <tr class="govuk-table__row">
-            <th scope="row" colspan="1" class="govuk-table__header">
-              <span class="feature-info">
-              <img src="/assets/images/website/svgs/data-output.svg" alt="Icon for Data output" role="img" />
-                  Data output
-              </span>
-              <span class="govuk-body-s govuk-!-margin-top-1">Export form submissions in various formats including JSON, CSV and PDF for analysis and processing.</span>
+              <span class="govuk-body-s govuk-!-margin-top-1">Advanced map interactions including drawing shapes, lines, and data layers.</span>
             </th>
             <td class="govuk-table__cell">
                 <span class="govuk-tag govuk-tag--green">✓</span>
@@ -3518,6 +3779,195 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
           <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">January 2026</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Customers get a unique reference number for their form submissions, which is also sent in the confirmation email.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Confirmation emails now include customer answers.</p>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">December 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Form sections in Check your answers page:</p>
+<ul>
+<li>add section headings to the Check your answers page to help users quickly review their answers on longer forms</li>
+<li>edit the Check your answers page and select the Sections tab to add section headings and assign pages to each section</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Download submissions to Excel:</p>
+<ul>
+<li>download a spreadsheet of all submissions received for your form in the last 9 months</li>
+<li>from the Forms library page, select your form and open the Responses tab</li>
+<li>choose Send submissions data to receive an email with a download link</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Delete a draft form:</p>
+<ul>
+<li>delete draft forms that are no longer needed from the Form library page</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Customer satisfaction exit survey:</p>
+<ul>
+<li>a customer survey has been added to the end of all live forms</li>
+<li>view survey responses from the Responses tab by choosing Send feedback data</li>
+</ul>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">November 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Location questions:</p>
+<ul>
+<li>collect location data from users with four new question types:<ul>
+<li>Easting and northing</li>
+<li>Ordnance Survey (OS) grid reference</li>
+<li>National Grid field number</li>
+<li>Longitude and latitude</li>
+</ul>
+</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Declaration questions:</p>
+<ul>
+<li>new declaration question type allows users to formally agree to something</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Postcode lookup for UK Address question type:</p>
+<ul>
+<li>allow users to look up an address from a postcode</li>
+<li>enable this by modifying your UK Address question and checking the Use postcode lookup checkbox</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Support for multiple output emails:</p>
+<ul>
+<li>each output email can have a different address and format</li>
+<li>supports teams using robotics with manual fallback routes</li>
+<li>contact the Forms team to enable this feature</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Confirmation email toggle:</p>
+<ul>
+<li>turn confirmation emails on or off from the Check Your Answers page Editor</li>
+<li>new Confirmation email tab added</li>
+<li>confirmation emails are enabled by default</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Upload any file type:</p>
+<ul>
+<li>Upload supporting evidence question type updated to allow any file type</li>
+<li>enable by selecting the Accept any file checkbox in the Page Editor</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                <ul class="govuk-list">
+                    <li>Form Designer</li>
+                    <li>Developer Plugin</li>
+                </ul>
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Demoting H1 markdown:</p>
+<ul>
+<li>markdown heading levels automatically adjust to maintain proper page structure</li>
+<li>if an H1 exists, new markdown headings are adjusted to the appropriate level</li>
+</ul>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
           <caption class="govuk-table__caption govuk-table__caption--l">October 2025</caption>
           <thead class="govuk-table__head">
           <tr class="govuk-table__row">
@@ -3527,21 +3977,88 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           </thead>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
-            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite. <a class="govuk-link" href="https://forms.defra.gov.uk" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk (opens in new tab)</a> has been launched to:</p>
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Launch of the Defra Forms microsite at <a class="govuk-link" href="https://forms.defra.gov.uk" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk (opens in new tab)</a>:</p>
 <ul>
-<li>describe our offering</li>
-<li>showcase the features available in our Form Designer application and developer plugin</li>
-<li>provide a step-by-step guide to getting started with Defra Forms and making a form live</li>
-<li>offer a collection of resources to support form creation</li>
+<li>describes our offering</li>
+<li>showcases features available in our Form Designer application and developer plugin</li>
+<li>provides a step-by-step guide to getting started with Defra Forms and making a form live</li>
+<li>offers a collection of resources to support form creation</li>
 </ul>
-<p>Confirmation emails for form submissions:</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Confirmation emails for form submissions:</p>
 <ul>
-<li>members of the public can now request confirmation emails when submitting a form.</li>
-<li>this feature is automatically enabled for all newly created forms and is available as an opt-in for existing forms.</li>
-<li>we&#39;ll be rolling this out to all forms soon. If you&#39;d like this enabled for an existing form as a priority, please reach out to us.</li>
-<li>improved error messaging:</li>
-<li>we&#39;ve enhanced the error messages shown when deleting questions, pages, or list items that are referenced in conditions.</li>
+<li>members of the public can now request confirmation emails when submitting a form</li>
+<li>automatically enabled for all newly created forms</li>
+<li>available as an opt-in for existing forms</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Improved error messaging:</p>
+<ul>
+<li>enhanced error messages when deleting questions, pages, or list items that are referenced in conditions</li>
+</ul>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Forms with exceptionally large lists can now be saved.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Filter pages in your form by condition.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Added phase banner with an email link to provide feedback.</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Support for &#39;add another&#39; items up to 200 items.</p>
+</td>
+          </tr>
+          </tbody>
+        </table>
+          <table class="govuk-table">
+          <caption class="govuk-table__caption govuk-table__caption--l">August 2025</caption>
+          <thead class="govuk-table__head">
+          <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
+            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
+          </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>User management feature:</p>
+<ul>
+<li>new user management functionality released</li>
+<li>production users set as Form Creators by default</li>
+<li>publishing restricted to the Forms team during Private Beta</li>
 </ul>
 </td>
           </tr>
@@ -3557,7 +4074,9 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           </thead>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>Final updates for conditions:</p>
 <ul>
 <li>delete conditions</li>
@@ -3565,49 +4084,28 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
 <li>apply conditions to a guidance page</li>
 <li>view the conditions listing page</li>
 </ul>
-<p>Enhancements to Interactive Preview Panel:</p>
+</td>
+          </tr>
+            <tr class="govuk-table__row">
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
+            <td class="govuk-table__cell collapse-first-p-margin"><p>Enhancements to Interactive Preview Panel:</p>
 <ul>
 <li>better keyboard navigation using skip links</li>
 <li>termination pages</li>
-<li>fixes for defects like lost repeater settings and hint text</li>
 </ul>
 </td>
           </tr>
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Developer Plugin</td>
+            <td class="govuk-table__cell">
+                Developer Plugin
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>v2.0.1 introduces breaking changes with new Save and Return functionality moved into a <code>saveAndReturn</code> plugin registration option, replacing previous separate functions:</p>
 <ul>
 <li>keyGenerator</li>
 <li>sessionHydrator</li>
 <li>sessionPersister</li>
-</ul>
-</td>
-          </tr>
-          </tbody>
-        </table>
-          <table class="govuk-table">
-          <caption class="govuk-table__caption govuk-table__caption--l">August 2025</caption>
-          <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header govuk-!-width-one-quarter">Product</th>
-            <th scope="col" class="govuk-table__header govuk-!-width-three-quarters">Update</th>
-          </tr>
-          </thead>
-          <tbody class="govuk-table__body">
-            <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
-            <td class="govuk-table__cell collapse-first-p-margin"><p>Final updates for conditions:</p>
-<ul>
-<li>delete conditions</li>
-<li>create and manage combined conditions</li>
-<li>apply conditions to a guidance page</li>
-<li>view the conditions listing page</li>
-</ul>
-<p>Enhancements to Interactive Preview Panel:</p>
-<ul>
-<li>better keyboard navigation using skip links</li>
-<li>termination pages</li>
-<li>fixes for defects like lost repeater settings and hint text</li>
 </ul>
 </td>
           </tr>
@@ -3623,7 +4121,9 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
           </thead>
           <tbody class="govuk-table__body">
             <tr class="govuk-table__row">
-            <td class="govuk-table__cell">Form Designer</td>
+            <td class="govuk-table__cell">
+                Form Designer
+            </td>
             <td class="govuk-table__cell collapse-first-p-margin"><p>Service moved to new domain <a class="govuk-link" href="https://forms.defra.gov.uk/" target="_blank" rel="noreferrer noopener">https://forms.defra.gov.uk/ (opens in new tab)</a> to improve access for colleagues across different ALBs.</p>
 <p>No disruption expected:</p>
 <ul>

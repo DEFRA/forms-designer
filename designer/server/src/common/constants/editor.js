@@ -77,6 +77,10 @@ export const QuestionTypeDescriptions =
     {
       type: ComponentType.LatLongField,
       description: 'Location: Latitude and longitude'
+    },
+    {
+      type: ComponentType.PaymentField,
+      description: 'Payment'
     }
   ])
 
@@ -93,7 +97,9 @@ export const QuestionBaseSettings = {
   TabularDataTypes: 'tabularDataTypes',
   RadiosOrCheckboxes: 'radiosOrCheckboxes',
   AutoCompleteOptions: 'autoCompleteOptions',
-  UsePostcodeLookup: 'usePostcodeLookup'
+  UsePostcodeLookup: 'usePostcodeLookup',
+  PaymentAmount: 'paymentAmount',
+  PaymentDescription: 'paymentDescription'
 }
 
 /**

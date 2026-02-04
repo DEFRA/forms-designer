@@ -8,6 +8,7 @@ import {
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import config from '~/src/config.js'
 import {
   getPageFromDefinition,
   insertValidationErrors
@@ -70,6 +71,13 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
       text: 'Ask users to formally agree to something'
     },
     value: ComponentType.DeclarationField
+  },
+  {
+    text: 'Payment',
+    hint: {
+      text: 'Ask users to pay for something'
+    },
+    value: ComponentType.PaymentField
   },
   {
     divider: 'or'
@@ -172,6 +180,12 @@ export function filterQuestionTypes(questionId, questionTypes, page, state) {
     ? page.components.filter((c) => isFormType(c.type))
     : []
   const formComponentCount = components.length
+
+  // TODO Temporary - remove later
+  const allowPayments = config.featureFlagAllowPayments
+  if (!allowPayments) {
+    questionTypes = questionTypes.filter((qt) => qt.text !== 'Payment')
+  }
 
   if (
     page?.controller === ControllerType.Repeat ||

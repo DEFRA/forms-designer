@@ -897,6 +897,34 @@ describe('editor-v2 - advanced settings fields model', () => {
       expect(result).toBe('true')
     })
 
+    test('should return paymentAmount as number and payment description as string', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.PaymentField,
+        name: 'payment',
+        title: 'payment',
+        options: {
+          amount: 125,
+          description: 'Payment description'
+        }
+      })
+      const result1 = getFieldValue(
+        'paymentAmount',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      const result2 = getFieldValue(
+        'paymentDescription',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result1).toBe('125.00')
+      expect(result2).toBe('Payment description')
+    })
+
     test('should return undefined for unknown field', () => {
       const result = getFieldValue(
         /** @type {any} */ ('unknownField'),

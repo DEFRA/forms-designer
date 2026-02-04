@@ -5,9 +5,11 @@ import Joi from 'joi'
 import {
   testFormDefinitionWithNoQuestions,
   testFormDefinitionWithOneQuestionNoPageTitle,
+  testFormDefinitionWithPaymentQuestion,
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -20,6 +22,7 @@ import { deriveQuestionType } from '~/src/routes/forms/editor-v2/question-type.j
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
+jest.mock('~/src/config.ts')
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js', () => {
   const original = jest.requireActual('~/src/lib/error-helper.js')
@@ -76,7 +79,7 @@ describe('Editor v2 question routes', () => {
     )
   })
 
-  test('GET - should render the question fields in the view', async () => {
+  test('GET - should render the question fields in the view - with payments disabled', async () => {
     jest
       .mocked(getQuestionSessionState)
       .mockReturnValue(simpleSessionWithTextField)
@@ -141,6 +144,75 @@ describe('Editor v2 question routes', () => {
     expect($radios[20]).toHaveAccessibleName('Radios')
     expect($radios[21]).toHaveAccessibleName('Autocomplete')
     expect($radios[22]).toHaveAccessibleName('Select')
+  })
+
+  test('GET - should render the question fields in the view - with payments enabled', async () => {
+    jest.mocked(config).featureFlagAllowPayments = true
+    jest
+      .mocked(getQuestionSessionState)
+      .mockReturnValue(simpleSessionWithTextField)
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/c1/type/54321',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mastheadHeading = container.getByText('Test form')
+    const $cardTitle = container.getByText('Question 1')
+    const $cardCaption = container.getByText('Page 1: question 1')
+
+    const $radios = container.getAllByRole('radio')
+
+    const $actions = container.getAllByRole('button')
+
+    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($cardTitle).toHaveTextContent('Question 1')
+    expect($cardTitle).toHaveClass('editor-card-title')
+    expect($cardCaption).toHaveTextContent('Page 1: question 1')
+    expect($cardCaption).toHaveClass('govuk-caption-l')
+
+    expect($actions).toHaveLength(3)
+    expect($actions[2]).toHaveTextContent('Save and continue')
+
+    expect($radios).toHaveLength(24)
+    expect($radios[0]).toHaveAccessibleName('Written answer')
+    expect($radios[1]).toHaveAccessibleName('Short answer (a single line)')
+    expect($radios[2]).toHaveAccessibleName(
+      'Long answer (more than a single line)'
+    )
+    expect($radios[3]).toHaveAccessibleName('Numbers only')
+    expect($radios[4]).toHaveAccessibleName('Date')
+    expect($radios[5]).toHaveAccessibleName('Day, month and year')
+    expect($radios[6]).toHaveAccessibleName('Month and year')
+    expect($radios[7]).toHaveAccessibleName('Location')
+    expect($radios[8]).toHaveAccessibleName('UK address')
+    expect($radios[9]).toHaveAccessibleName('Easting and northing')
+    expect($radios[10]).toHaveAccessibleName(
+      'Ordnance Survey (OS) grid reference'
+    )
+    expect($radios[11]).toHaveAccessibleName('National Grid field number')
+    expect($radios[12]).toHaveAccessibleName('Latitude and longitude')
+    expect($radios[13]).toHaveAccessibleName('Phone number')
+    expect($radios[14]).toHaveAccessibleName('Supporting evidence')
+    expect($radios[15]).toHaveAccessibleName('Email address')
+    expect($radios[16]).toHaveAccessibleName('Declaration')
+    expect($radios[17]).toHaveAccessibleName('Payment')
+    expect($radios[18]).toHaveAccessibleName(
+      'A list of options that users can choose from'
+    )
+    expect($radios[19]).toHaveAccessibleName('Yes or No')
+    expect($radios[20]).toHaveAccessibleName('Checkboxes')
+    expect($radios[21]).toHaveAccessibleName('Radios')
+    expect($radios[22]).toHaveAccessibleName('Autocomplete')
+    expect($radios[23]).toHaveAccessibleName('Select')
   })
 
   test('POST - should error if missing mandatory fields', async () => {
@@ -259,6 +331,30 @@ describe('Editor v2 question routes', () => {
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
       '/library/my-form-slug/editor-v2/page/p1/questions'
+    )
+  })
+
+  test('POST - adding new payment question should redisplay with error if already a payment question in form', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithPaymentQuestion)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321',
+      auth,
+      payload: { questionType: 'PaymentField' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/new/type/54321'
     )
   })
 

@@ -9,6 +9,8 @@ const textFieldQuestions = [
   QuestionBaseSettings.Question,
   QuestionBaseSettings.Name,
   QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.PaymentAmount,
+  QuestionBaseSettings.PaymentDescription,
   QuestionAdvancedSettings.ExactFiles,
   QuestionAdvancedSettings.Min,
   QuestionAdvancedSettings.Max,

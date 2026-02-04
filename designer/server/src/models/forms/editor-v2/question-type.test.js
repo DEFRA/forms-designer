@@ -5,7 +5,10 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
+import config from '~/src/config.js'
 import { filterQuestionTypes } from '~/src/models/forms/editor-v2/question-type.js'
+
+jest.mock('~/src/config.ts')
 
 const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
   {
@@ -35,6 +38,13 @@ const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
       text: 'An email address, for example, name@example.com'
     },
     value: ComponentType.EmailAddressField
+  },
+  {
+    text: 'Payment',
+    hint: {
+      text: 'Ask user to make a payment'
+    },
+    value: ComponentType.PaymentField
   }
 ])
 
@@ -204,6 +214,40 @@ describe('editor-v2 - question type model', () => {
       expect(res).toHaveLength(4)
       expect(res[2].text).toBe('Supporting evidence')
     })
+  })
+
+  test('should include payments if featureflag set', () => {
+    jest.mocked(config).featureFlagAllowPayments = true
+    const textFieldComponent = buildTextFieldComponent({ id: '123' })
+    const res = filterQuestionTypes(
+      '111',
+      testQuestionTypeItems,
+      buildQuestionPage({
+        components: [textFieldComponent]
+      }),
+      {
+        questionType: ComponentType.MultilineTextField
+      }
+    )
+    expect(res).toHaveLength(5)
+    expect(res.map((x) => x.text)).toContain('Payment')
+  })
+
+  test('should include payments if featureflag not set', () => {
+    jest.mocked(config).featureFlagAllowPayments = false
+    const textFieldComponent = buildTextFieldComponent({ id: '123' })
+    const res = filterQuestionTypes(
+      '111',
+      testQuestionTypeItems,
+      buildQuestionPage({
+        components: [textFieldComponent]
+      }),
+      {
+        questionType: ComponentType.MultilineTextField
+      }
+    )
+    expect(res).toHaveLength(4)
+    expect(res.map((x) => x.text)).not.toContain('Payment')
   })
 })
 

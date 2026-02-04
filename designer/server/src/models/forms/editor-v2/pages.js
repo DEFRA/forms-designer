@@ -4,7 +4,9 @@ import {
   FormStatus,
   hasComponents,
   hasComponentsEvenIfNoNext,
+  isEndPage as isAnEndPage,
   isFormType,
+  isPaymentPage,
   isSummaryPage
 } from '@defra/forms-model'
 
@@ -34,11 +36,11 @@ export function isGuidancePage(page) {
 
 /**
  * @param {Page} page
- * @param {boolean} isEndPage
+ * @param {boolean} isSummary
  * @param {string} editBaseUrl
  */
-export function determineEditUrl(page, isEndPage, editBaseUrl) {
-  if (isEndPage) {
+export function determineEditUrl(page, isSummary, editBaseUrl) {
+  if (isSummary) {
     return `${editBaseUrl}${page.id}/check-answers-settings`
   }
 
@@ -121,6 +123,23 @@ export function mapQuestionRows(definition, page) {
     /** @type {string} */ (page.id)
   )
 
+  const isPayment = isPaymentPage(page)
+  if (isPayment) {
+    const paymentComponent = components.find(
+      (comp) => comp.type === ComponentType.PaymentField
+    )
+    return [
+      {
+        key: { text: 'Payment for' },
+        value: { text: paymentComponent?.options.description }
+      },
+      {
+        key: { text: 'Total amount' },
+        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
+      }
+    ]
+  }
+
   const isSummary = isSummaryPage(page)
 
   const rows = components.map((comp, idx) =>
@@ -152,6 +171,23 @@ export function mapQuestionRows(definition, page) {
 }
 
 /**
+ * @param {Page} page
+ * @returns {string}
+ */
+export function mapTitle(page) {
+  if (isSummaryPage(page)) {
+    return 'Check your answers'
+  }
+  if (isPaymentPage(page)) {
+    return 'Payment'
+  }
+  if (page.title === '') {
+    return hasComponents(page) ? page.components[0].title : ''
+  }
+  return page.title
+}
+
+/**
  * @param {string} slug
  * @param {FormDefinition} definition
  * @param { string[] | undefined } filterOptions
@@ -169,34 +205,24 @@ export function mapPageData(slug, definition, filterOptions) {
       .filter(
         (p) =>
           !filterOptions?.length ||
-          isSummaryPage(p) ||
-          filterOptions.includes(p.condition ?? 'unknown')
+          filterOptions.includes(p.condition ?? 'unknown') ||
+          isAnEndPage(p)
       )
       .map((page) => {
-        const isEndPage = isSummaryPage(page)
+        const isEndPage = isAnEndPage(page)
+        const isSummary = isSummaryPage(page)
         const isExitPage = page.controller === ControllerType.Terminal
         const pageNum = definition.pages.findIndex((p) => p.id === page.id) + 1
         const sectionInfo = getSectionForPage(definition, page, slug)
 
-        if (page.title === '') {
-          return {
-            ...page,
-            pageNum,
-            title: hasComponents(page) ? page.components[0].title : '',
-            questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
-            isEndPage,
-            isExitPage,
-            editUrl: determineEditUrl(page, isEndPage, editBaseUrl),
-            sectionInfo
-          }
-        }
         return {
           ...page,
+          title: mapTitle(page),
           pageNum,
           questionRows: mapQuestionRows(definition, hideFirstGuidance(page)),
           isEndPage,
           isExitPage,
-          editUrl: determineEditUrl(page, isEndPage, editBaseUrl),
+          editUrl: determineEditUrl(page, isSummary, editBaseUrl),
           sectionInfo
         }
       })
@@ -341,21 +367,21 @@ export function buildConditionsFilter(definition, filter) {
 /**
  * Add conditional actions based on page count
  * @param {Array<any>} pageActions
- * @param {number} numOfNonSummaryPages
+ * @param {number} numOfNonEndPages
  * @param {string} slug
  * @param {string} previewBaseUrl
  */
 function addConditionalActions(
   pageActions,
-  numOfNonSummaryPages,
+  numOfNonEndPages,
   slug,
   previewBaseUrl
 ) {
-  if (numOfNonSummaryPages > 1) {
+  if (numOfNonEndPages > 1) {
     pageActions.push(buildReorderAction(slug))
   }
 
-  if (numOfNonSummaryPages > 0) {
+  if (numOfNonEndPages > 0) {
     pageActions.push({
       text: 'Preview form',
       href: previewBaseUrl,
@@ -401,13 +427,13 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   const rightSideActions = buildRightSideActions(metadata.slug)
   const conditions = buildConditionsFilter(definition, filter)
 
-  const numOfNonSummaryPages = definition.pages.filter(
-    (x) => !isSummaryPage(x)
+  const numOfNonEndPages = definition.pages.filter(
+    (x) => !isAnEndPage(x)
   ).length
 
   addConditionalActions(
     pageActions,
-    numOfNonSummaryPages,
+    numOfNonEndPages,
     metadata.slug,
     previewBaseUrl
   )
@@ -415,8 +441,14 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
   const mappedData = mapPageData(metadata.slug, definition, filter)
 
+  // @ts-expect-error - dynamic property on page
+  const standardPages = mappedData.pages.filter((page) => !page.isEndPage)
+  // @ts-expect-error - dynamic property on page
+  const endPages = mappedData.pages.filter((page) => page.isEndPage)
+
   const pageListModel = {
-    ...mappedData,
+    standardPages,
+    endPages,
     pageTitle,
     formSlug: metadata.slug,
     previewBaseUrl,

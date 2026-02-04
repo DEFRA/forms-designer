@@ -43,7 +43,8 @@ export const questionTypeSchema = Joi.string()
     ComponentType.YesNoField,
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
-    ComponentType.AutocompleteField
+    ComponentType.AutocompleteField,
+    ComponentType.PaymentField
   )
   .description('The high-level type of question, including grouped types')
 
@@ -68,7 +69,8 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.EastingNorthingField,
     ComponentType.OsGridRefField,
     ComponentType.NationalGridFieldNumberField,
-    ComponentType.LatLongField
+    ComponentType.LatLongField,
+    ComponentType.PaymentField
   )
   .description('The specific component type to use for this question')
 
@@ -393,6 +395,18 @@ export const usePostcodeLookupSchema = Joi.string()
     'Indicates whether a UK address component supports postcode lookup. Empty string or "true" values are accepted.'
   )
 
+export const paymentDescriptionSchema = Joi.string()
+  .trim()
+  .max(230)
+  .required()
+  .description('Description of payment - appears in payment providers pages')
+
+export const paymentAmountSchema = Joi.number()
+  .empty('')
+  .min(0.3)
+  .max(100000)
+  .description('Amount of payment in pounds')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -564,6 +578,8 @@ export const questionDetailsFullSchema = {
   minLengthSchema,
   minSchema,
   nameSchema,
+  paymentAmountSchema,
+  paymentDescriptionSchema,
   precisionSchema,
   prefixSchema,
   questionOptionalSchema,

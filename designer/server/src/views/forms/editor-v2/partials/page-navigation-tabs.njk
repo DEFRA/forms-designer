@@ -1,11 +1,13 @@
-<nav class="app-page-navigation" aria-label="Page options">
-  {% if questionId !== 'new' %}
-    <div class="app-page-navigation__list">
-      <div class="app-page-navigation__item{% if currentTab == 'conditions' %} app-page-navigation__item--current{% endif %}">
-        <a class="app-page-navigation__link" href="{{ baseUrl }}/conditions"{% if currentTab == 'conditions' %} aria-current="page"{% endif %}>
-          Conditions
-        </a>
+{% if not preventConditions %}
+  <nav class="app-page-navigation" aria-label="Page options">
+    {% if questionId !== 'new' %}
+      <div class="app-page-navigation__list">
+        <div class="app-page-navigation__item{% if currentTab == 'conditions' %} app-page-navigation__item--current{% endif %}">
+          <a class="app-page-navigation__link" href="{{ baseUrl }}/conditions"{% if currentTab == 'conditions' %} aria-current="page"{% endif %}>
+            Conditions
+          </a>
+        </div>
       </div>
-    </div>
-  {% endif %}
-</nav>
+    {% endif %}
+  </nav>
+{% endif %}

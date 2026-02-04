@@ -1,5 +1,8 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import {
+  type ComponentDef,
+  type PaymentFieldComponent
+} from '~/src/components/types.js'
 
 /**
  * Defaults for creating new components
@@ -193,6 +196,9 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     title: 'Payment field',
     type: ComponentType.PaymentField,
     hint: '',
-    options: {}
-  }
+    options: {
+      amount: 1,
+      description: 'payment desc'
+    }
+  } as PaymentFieldComponent
 ])
