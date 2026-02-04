@@ -219,7 +219,7 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
  */
 function createArchiveStream() {
   const stream = new PassThrough()
-  const archive = Archiver('zip', { zlib: { level: 9 } })
+  const archive = Archiver('zip', { zlib: { level: 1 } })
   archive.pipe(stream)
   return { archive, stream }
 }
