@@ -16,6 +16,7 @@ export {
   hasNext,
   hasRepeater,
   includesFileUploadField,
+  includesPaymentField,
   isControllerName,
   isEndPage,
   isPaymentPage,

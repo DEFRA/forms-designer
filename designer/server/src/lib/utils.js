@@ -3,6 +3,7 @@ import {
   getYesNoList,
   hasComponents,
   hasListField,
+  includesPaymentField,
   isFormType
 } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
@@ -306,7 +307,7 @@ export function hasPaymentQuestionInForm(definition) {
 
   for (const page of definition.pages) {
     const hasPayment = hasComponents(page)
-      ? page.components.some((comp) => comp.type === ComponentType.PaymentField)
+      ? includesPaymentField(page.components)
       : false
     if (hasPayment) {
       return true

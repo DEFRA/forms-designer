@@ -6,6 +6,7 @@ import {
   MIN_NUMBER_OF_REPEAT_ITEMS,
   PreviewPageController,
   hasComponents,
+  includesPaymentField,
   isFormType,
   showRepeaterSettings
 } from '@defra/forms-model'
@@ -494,10 +495,8 @@ export function questionsViewModel(
     preventAddQuestion:
       components.some((comp) => comp.type === ComponentType.FileUploadField) ||
       reorderDetails.action === 'reorder' ||
-      components.some((comp) => comp.type === ComponentType.PaymentField),
-    preventConditions: components.some(
-      (comp) => comp.type === ComponentType.PaymentField
-    ),
+      includesPaymentField(components),
+    preventConditions: includesPaymentField(components),
     notification,
     previewPageUrl,
     conditionDetails,
