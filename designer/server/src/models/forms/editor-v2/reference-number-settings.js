@@ -151,7 +151,7 @@ export function referenceNumberSettingsViewModel(
 
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
-  const formHasPayment = definition.pages.some((page) => isPaymentPage(page))
+  const formHasPayment = definition.pages.some((pg) => isPaymentPage(pg))
   const fields = settingsFields(showReferenceNumber, formHasPayment, validation)
   const pageHeading = 'Reference number'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
