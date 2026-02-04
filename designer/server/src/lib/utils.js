@@ -334,7 +334,7 @@ export function handlePrecision(value, helpers, precision) {
   }
 
   const decimalPlaces = `${value}`.substring(decimalPos + 1).length
-  return decimalPlaces <= precision ? value : helpers.error('number.base')
+  return decimalPlaces <= precision ? value : helpers.error('number.precision')
 }
 
 /**

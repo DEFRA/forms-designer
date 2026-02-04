@@ -177,7 +177,9 @@ export const baseSchema = Joi.object().keys({
           'any.required': 'Enter a payment amount',
           'number.min': PAYMENT_RANGE_ERROR_MESSAGE,
           'number.max': PAYMENT_RANGE_ERROR_MESSAGE,
-          'number.base': PAYMENT_RANGE_ERROR_MESSAGE
+          'number.base': PAYMENT_RANGE_ERROR_MESSAGE,
+          'number.precision':
+            'Enter an amount with no more than 2 decimal places'
         }),
       otherwise: Joi.number().empty('')
     }

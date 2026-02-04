@@ -379,7 +379,7 @@ describe('utils', () => {
       expect(handlePrecision(123.56, mockHelpers, 2)).toBe(123.56)
     })
     it('should return error if 3 decimal places', () => {
-      expect(handlePrecision(123.567, mockHelpers, 2)).toBe('number.base')
+      expect(handlePrecision(123.567, mockHelpers, 2)).toBe('number.precision')
     })
   })
 })
