@@ -168,7 +168,7 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead">
 
 
 
