@@ -27,9 +27,7 @@
 
 {% if params.isEndPage %}
   {% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end pages-panel-left-end-hide-declaration"%}
-  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-  <h2 class="govuk-heading-m">End pages</h2>
-  {% set cardTitle = { text: "Check your answers", headingLevel: 3 } %}
+  {% set cardTitle = { text: params.pageTitle, headingLevel: 3 } %}
 {% elif params.isExitPage %}
   {% set cardClass = "pages-panel-left-exit" if params.rows | length else "pages-panel-left-exit pages-panel-left-exit-hide-declaration"%}
   {% set cardTitle = { html: tagHtml, headingLevel: 3 } %}

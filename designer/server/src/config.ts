@@ -58,6 +58,7 @@ export interface Config {
   snsEndpoint: string
   snsTopicArn: string
   featureFlagUseEntitlementApi: boolean
+  featureFlagAllowPayments: boolean
 }
 
 // Define config schema
@@ -172,7 +173,8 @@ const schema = joi.object<Config>({
   awsRegion: joi.string().default('eu-west-2'),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
-  featureFlagUseEntitlementApi: joi.boolean().default(false)
+  featureFlagUseEntitlementApi: joi.boolean().default(false),
+  featureFlagAllowPayments: joi.boolean().default(false)
 })
 
 // Validate config
@@ -222,7 +224,8 @@ const result = schema.validate(
     awsRegion: process.env.AWS_REGION,
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
-    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API
+    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
+    featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS
   },
   { abortEarly: false }
 )

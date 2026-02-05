@@ -6,6 +6,7 @@ import {
   buildDefinition,
   buildList,
   buildListItem,
+  buildPaymentComponent,
   buildQuestionPage,
   buildTextFieldComponent,
   testFormDefinitionWithNoQuestions,
@@ -20,6 +21,8 @@ import {
   getComponentsOnPageFromDefinition,
   getHeaders,
   getListFromComponent,
+  handlePrecision,
+  hasPaymentQuestionInForm,
   mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
@@ -312,6 +315,71 @@ describe('utils', () => {
           'e36fdaad-1395-4efe-bfec-ceae7efaf8e3'
         )
       ).toEqual([])
+    })
+  })
+
+  describe('hasPaymentQuestionInForm', () => {
+    it('should return true if form contains payment question', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const paymentFieldComponent = buildPaymentComponent()
+      const page2 = buildQuestionPage({
+        components: [paymentFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(true)
+    })
+
+    it('should return false if form doesnt contain payment question', () => {
+      const textFieldComponent1 = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent1]
+      })
+      const textFieldComponent2 = buildTextFieldComponent()
+      const page2 = buildQuestionPage({
+        components: [textFieldComponent2]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(false)
+    })
+
+    it('should return false if form has no pages', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(false)
+    })
+  })
+
+  describe('handlePrecision', () => {
+    const mockHelpers = {
+      error: jest.fn().mockImplementation((text) => {
+        return text
+      })
+    }
+    it('should return required if undefined', () => {
+      expect(handlePrecision(undefined, mockHelpers, 2)).toBe('any.required')
+    })
+    it('should return required if not a number', () => {
+      expect(handlePrecision('a123', mockHelpers, 2)).toBe('any.required')
+    })
+    it('should return value if no decimals', () => {
+      expect(handlePrecision(123, mockHelpers, 2)).toBe(123)
+    })
+    it('should return value if 1 decimal place', () => {
+      expect(handlePrecision(123.5, mockHelpers, 2)).toBe(123.5)
+    })
+    it('should return value if 2 decimal places', () => {
+      expect(handlePrecision(123.56, mockHelpers, 2)).toBe(123.56)
+    })
+    it('should return error if 3 decimal places', () => {
+      expect(handlePrecision(123.567, mockHelpers, 2)).toBe('number.precision')
     })
   })
 })

@@ -149,8 +149,10 @@
 
                   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
                   {%- include "../../../../views/forms/editor-v2/partials/page-settings.njk" -%}
-                  <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
-                  {%- include "../../../../views/forms/editor-v2/partials/conditions.njk" -%}
+                  {% if not preventConditions %}
+                    <hr class="govuk-section-break govuk-section-break--xl govuk-section-break--visible">
+                    {%- include "../../../../views/forms/editor-v2/partials/conditions.njk" -%}
+                  {% endif %}
                 </div>
               </div>
             </div>

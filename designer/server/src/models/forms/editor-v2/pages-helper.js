@@ -3,7 +3,7 @@ import {
   hasComponents,
   hasComponentsEvenIfNoNext,
   hasConditionSupport,
-  isSummaryPage
+  isEndPage
 } from '@defra/forms-model'
 
 import { stringHasValue } from '~/src/lib/utils.js'
@@ -33,7 +33,7 @@ export function constructReorderPage(page, focus) {
  * @param {Page[]} pages
  */
 export function excludeEndPages(pages) {
-  return pages.filter((page) => !isSummaryPage(page))
+  return pages.filter((page) => !isEndPage(page))
 }
 
 /**
