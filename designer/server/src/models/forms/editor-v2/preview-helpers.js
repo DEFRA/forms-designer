@@ -141,6 +141,7 @@ export function getDeclarationInfo(page) {
 export function enrichPreviewModel(basePreviewModel, definition) {
   const sections = buildSectionsForPreview(definition)
   const unassignedPages = getUnassignedPageTitlesForPreview(definition)
+  const payment = getPaymentInfo(definition)
 
   return {
     ...basePreviewModel,
@@ -149,7 +150,8 @@ export function enrichPreviewModel(basePreviewModel, definition) {
     declaration: {
       hasDeclaration: basePreviewModel.needDeclaration,
       declarationText: basePreviewModel.declarationText
-    }
+    },
+    payment
   }
 }
 
