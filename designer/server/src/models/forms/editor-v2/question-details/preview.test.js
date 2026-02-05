@@ -13,6 +13,7 @@ import {
   NationalGridQuestion,
   NumberOnlyQuestion,
   OsGridRefQuestion,
+  PaymentQuestion,
   PhoneNumberQuestion,
   Question,
   RadioSortableQuestion,
@@ -577,6 +578,15 @@ describe('preview', () => {
       expect(previewModel).toBeInstanceOf(HiddenQuestion)
     })
 
+    it('should get PaymentField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.PaymentField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(PaymentQuestion)
+    })
+
     it('should get UnsupportedQuestion', () => {
       const previewModel = getPreviewConstructor(
         // @ts-expect-error - invalid field type
@@ -1085,6 +1095,55 @@ describe('preview', () => {
       })
       // Location fields have a complex structure that may vary
       expect(previewModel).toHaveProperty('id')
+    })
+
+    it('should get PaymentField', () => {
+      const paymentFields = [
+        ...basePageFields,
+        {
+          name: 'paymentAmount',
+          id: 'paymentAmount',
+          label: { text: 'Amount', classes: 'govuk-label--m' },
+          value: '150'
+        },
+        {
+          name: 'paymentDescription',
+          id: 'paymentDescription',
+          label: { text: 'Description', classes: 'govuk-label--m' },
+          value: 'Application fee'
+        }
+      ]
+      const previewModel = getPreviewModel(
+        paymentFields,
+        {},
+        ComponentType.PaymentField
+      )
+      expect(previewModel).toMatchObject({
+        amount: '150.00',
+        description: 'Application fee',
+        headingClasses: 'govuk-heading-m'
+      })
+    })
+
+    it('should handle invalid paymentAmount', () => {
+      const paymentFields = [
+        ...basePageFields,
+        {
+          name: 'paymentAmount',
+          id: 'paymentAmount',
+          label: { text: 'Amount', classes: 'govuk-label--m' },
+          value: 'invalid'
+        }
+      ]
+      const previewModel = getPreviewModel(
+        paymentFields,
+        {},
+        ComponentType.PaymentField
+      )
+      expect(previewModel).toMatchObject({
+        amount: '0.00',
+        description: 'Payment description'
+      })
     })
   })
 })

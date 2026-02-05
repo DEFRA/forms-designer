@@ -237,6 +237,31 @@ export class LocationPreviewElements extends QuestionPreviewElements {
 }
 
 /**
+ * @implements {PaymentElements}
+ */
+export class PaymentPreviewElements extends QuestionPreviewElements {
+  /**
+   * @param {BaseSettings & {paymentAmount: number, paymentDescription: string}} elements
+   */
+  constructor({ paymentAmount, paymentDescription, ...elements }) {
+    super(elements)
+    this._paymentAmount = paymentAmount
+    this._paymentDescription = paymentDescription
+  }
+
+  /**
+   * @returns {PaymentSettings}
+   */
+  get values() {
+    return {
+      ...super.values,
+      paymentAmount: this._paymentAmount,
+      paymentDescription: this._paymentDescription
+    }
+  }
+}
+
+/**
  * @implements {PageOverviewElements}
  */
 export class PagePreviewElements {
@@ -452,5 +477,5 @@ export class NumberPreviewElements {
 /**
  * @import { ListElement } from  '~/src/form/form-editor/types.js'
  * @import { PagePreviewPanelMacro } from '~/src/form/form-editor/macros/types.js'
- * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings, DeclarationElements, DeclarationSettings, LocationElements, LocationSettings } from  '~/src/form/form-editor/preview/types.js'
+ * @import { BaseSettings, ListElements, NumberSettings, RenderContext, QuestionBaseModel, QuestionRenderer, AutocompleteElements, PageOverviewElements, PageRenderer, UkAddressElements, UkAddressSettings, DeclarationElements, DeclarationSettings, LocationElements, LocationSettings, PaymentElements, PaymentSettings } from  '~/src/form/form-editor/preview/types.js'
  */

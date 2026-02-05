@@ -16,6 +16,7 @@ import {
   buildNationalGridFieldNumberFieldComponent,
   buildNumberFieldComponent,
   buildOsGridRefFieldComponent,
+  buildPaymentComponent,
   buildRadiosComponent,
   buildSelectFieldComponent,
   buildTelephoneNumberFieldComponent,
@@ -41,6 +42,7 @@ import { MonthYearQuestion } from '~/src/form/form-editor/preview/month-year.js'
 import { NationalGridQuestion } from '~/src/form/form-editor/preview/national-grid.js'
 import { NumberOnlyQuestion } from '~/src/form/form-editor/preview/number-only.js'
 import { OsGridRefQuestion } from '~/src/form/form-editor/preview/os-grid-ref.js'
+import { PaymentQuestion } from '~/src/form/form-editor/preview/payment.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
 import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
@@ -170,6 +172,16 @@ describe('helpers', () => {
         type: 'OsGridRefFieldComponent',
         buildComponent: buildOsGridRefFieldComponent,
         expected: OsGridRefQuestion
+      },
+      {
+        type: 'PaymentFieldComponent',
+        buildComponent: (/** @type {unknown} */ _content) =>
+          buildPaymentComponent({
+            title: 'What is your answer?',
+            hint: 'hint text',
+            options: { amount: 100, description: 'Test payment' }
+          }),
+        expected: PaymentQuestion
       }
     ])('should map $type', ({ buildComponent, expected }) => {
       const question = buildComponent(componentContent)
