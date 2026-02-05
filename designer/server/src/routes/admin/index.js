@@ -168,8 +168,6 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
   try {
     const startedAt = performance.now()
     const { archive, stream } = createArchiveStream()
-    const response = createZipResponse(responseToolkit, stream)
-
     attachArchiveEventHandlers(archive, stream, request)
 
     const { totalForms, manifestEntities } = await processAllForms(
@@ -194,11 +192,11 @@ async function downloadAllFormsAsZip(request, responseToolkit) {
       '[downloadAllForms] Finalizing archive'
     )
 
-    await archive.finalize()
+    const buffer = await finalizeArchiveToBuffer(archive, stream)
 
     const durationMs = performance.now() - startedAt
     await publishFormsBackupRequestedEvent(user, totalForms, durationMs)
-    return response
+    return createZipResponseFromBuffer(responseToolkit, buffer)
   } catch (err) {
     request.logger.error(
       err,
@@ -227,13 +225,35 @@ function createArchiveStream() {
 /**
  * Build a response with zip headers
  * @param {ResponseToolkit<{ Payload: { action: string; }; }>} responseToolkit
- * @param {PassThrough} stream
+ * @param {Buffer} buffer
+ * @returns {ResponseObject}
  */
-function createZipResponse(responseToolkit, stream) {
-  const response = responseToolkit.response(stream)
+function createZipResponseFromBuffer(responseToolkit, buffer) {
+  const response = responseToolkit.response(buffer)
   response.header('Content-Type', 'application/zip')
   response.header('Content-Disposition', 'attachment; filename="forms.zip"')
+  response.header('Content-Length', buffer.length.toString())
   return response
+}
+
+/**
+ * Finalize archive and resolve to a buffer
+ * @param {ReturnType<Archiver>} archive
+ * @param {PassThrough} stream
+ * @returns {Promise<Buffer>}
+ */
+async function finalizeArchiveToBuffer(archive, stream) {
+  /** @type {Buffer[]} */
+  const chunks = []
+
+  const bufferPromise = new Promise((resolve, reject) => {
+    stream.on('data', (chunk) => chunks.push(chunk))
+    stream.on('end', () => resolve(Buffer.concat(chunks)))
+    stream.on('error', reject)
+  })
+
+  await archive.finalize()
+  return bufferPromise
 }
 
 /**
@@ -266,35 +286,20 @@ function attachArchiveEventHandlers(archive, stream, request) {
  * @returns {Promise<{ totalForms: number, manifestEntities: { id: string, title: string, slug: string }[] }>}
  */
 async function processAllForms(token, archive) {
-  const concurrency = 5
-  let totalForms = 0
-  let batch = []
+  const allForms = await forms.listAll(token)
+
   /** @type {{ id: string, title: string, slug: string }[]} */
-  const manifestEntities = []
+  const manifestEntities = allForms.map((metadata) => ({
+    id: metadata.id,
+    title: metadata.title,
+    slug: metadata.slug
+  }))
 
-  for await (const metadata of forms.listAll(token)) {
-    totalForms++
-    manifestEntities.push({
-      id: metadata.id,
-      title: metadata.title,
-      slug: metadata.slug
-    })
-    batch.push(metadata)
-    if (batch.length >= concurrency) {
-      await Promise.all(
-        batch.map((formMetadata) => processForm(formMetadata, token, archive))
-      )
-      batch = []
-    }
-  }
+  await Promise.all(
+    allForms.map((metadata) => processForm(metadata, token, archive))
+  )
 
-  if (batch.length > 0) {
-    await Promise.all(
-      batch.map((formMetadata) => processForm(formMetadata, token, archive))
-    )
-  }
-
-  return { totalForms, manifestEntities }
+  return { totalForms: allForms.length, manifestEntities }
 }
 
 /**

@@ -223,15 +223,16 @@ export async function updateMetadata(id, metadata, token) {
 }
 
 /**
- * List all forms with pagination support (generator function)
+ * List all forms with pagination support
  * @param {string} token
  * @param {Partial<QueryOptions>} options
- * @yields {AsyncGenerator<FormMetadata, void, unknown>}
+ * @returns {Promise<FormMetadata[]>}
  */
-export async function* listAll(token, options = {}) {
+export async function listAll(token, options = {}) {
   let page = 1
   let hasMore = true
-  const perPage = 50
+  const perPage = 200
+  const allForms = []
 
   while (hasMore) {
     const result = await list(token, {
@@ -241,14 +242,14 @@ export async function* listAll(token, options = {}) {
     })
 
     if (Array.isArray(result.data) && result.data.length > 0) {
-      for (const form of result.data) {
-        yield form
-      }
+      allForms.push(...result.data)
       page++
     } else {
       hasMore = false
     }
   }
+
+  return allForms
 }
 
 /**

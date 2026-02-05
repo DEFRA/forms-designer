@@ -736,26 +736,20 @@ describe('Forms library routes', () => {
           response: {}
         })
 
-      const result = []
-      for await (const form of forms.listAll('test-token')) {
-        result.push(form)
-      }
+      const result = await forms.listAll('test-token')
 
       expect(result).toEqual([form1, form2, form3])
       expect(result).toHaveLength(3)
     })
 
-    it('should yield nothing when no forms available', async () => {
+    it('should return empty array when no forms available', async () => {
       jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
         body: { data: [], meta: { total: 0 } },
         /** @type { any } */
         response: {}
       })
 
-      const result = []
-      for await (const form of forms.listAll('test-token')) {
-        result.push(form)
-      }
+      const result = await forms.listAll('test-token')
 
       expect(result).toEqual([])
     })
@@ -777,10 +771,7 @@ describe('Forms library routes', () => {
         })
 
       const filters = { title: 'test' }
-      const result = []
-      for await (const form of forms.listAll('test-token', filters)) {
-        result.push(form)
-      }
+      const result = await forms.listAll('test-token', filters)
 
       expect(result).toEqual([form1])
 
