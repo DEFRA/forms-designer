@@ -25,10 +25,7 @@
   {% set cardTitle = { html: cardTitleHtml } %}
 {% endif %}
 
-{% if params.isPaymentPage %}
-  {% set cardClass = "pages-panel-left-end" %}
-  {% set cardTitle = { text: params.pageTitle } %}
-{% elif params.isEndPage %}
+{% if params.isEndPage %}
   {% set cardClass = "pages-panel-left-end" if params.rows | length else "pages-panel-left-end pages-panel-left-end-hide-declaration"%}
   {% set cardTitle = { text: params.pageTitle } %}
 {% elif params.isExitPage %}
@@ -36,7 +33,7 @@
   {% set cardTitle = { html: tagHtml } %}
 {% endif %}
 
-{% set visuallyHiddenText = "" if params.isEndPage or params.isPaymentPage else " page " + params.pageNum %}
+{% set visuallyHiddenText = "" if params.isEndPage else " page " + params.pageNum %}
 
 {{ govukSummaryList({
   card: {
