@@ -1,4 +1,4 @@
-import { FormStatus } from '@defra/forms-model'
+import { ComponentType, FormStatus } from '@defra/forms-model'
 import {
   buildDefinition,
   buildMarkdownComponent,
@@ -17,6 +17,7 @@ import {
   buildSectionsForPreview,
   enrichPreviewModel,
   getDeclarationInfo,
+  getPaymentInfo,
   getUnassignedPageTitlesForPreview,
   truncateText
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
@@ -222,6 +223,64 @@ describe('preview-helpers', () => {
       expect(result).toHaveLength(1)
       expect(result[0].title).toBe('Question page')
     })
+
+    it('should include payment pages with component title when page has no title', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: '',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 100,
+                  description: 'Application fee'
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('Payment')
+    })
+
+    it('should include payment pages with page title when set', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            title: 'Make a payment',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 100,
+                  description: 'Application fee'
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getUnassignedPageTitlesForPreview(definition)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('Make a payment')
+    })
   })
 
   describe('getDeclarationInfo', () => {
@@ -315,6 +374,178 @@ describe('preview-helpers', () => {
       expect(basePreviewModel).not.toHaveProperty('sections')
       expect(basePreviewModel).not.toHaveProperty('unassignedPages')
       expect(basePreviewModel).not.toHaveProperty('declaration')
+    })
+  })
+
+  describe('getPaymentInfo', () => {
+    it('should return hasPayment false when no payment field exists', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            components: [buildTextFieldComponent()]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition)
+
+      expect(result).toEqual({
+        hasPayment: false,
+        description: '',
+        amount: '',
+        pageId: '',
+        path: '',
+        editUrl: ''
+      })
+    })
+
+    it('should return hasPayment false when pages have no components', () => {
+      const definition = buildDefinition({
+        pages: [buildSummaryPage({ id: 'cya', components: [] })],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition)
+
+      expect(result).toEqual({
+        hasPayment: false,
+        description: '',
+        amount: '',
+        pageId: '',
+        path: '',
+        editUrl: ''
+      })
+    })
+
+    it('should return payment info when payment field exists', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            path: '/page-1',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 300,
+                  description: 'Processing fee for your application.'
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition, 'my-form')
+
+      expect(result).toEqual({
+        hasPayment: true,
+        description: 'Processing fee for your application.',
+        amount: '£300.00',
+        pageId: 'p1',
+        path: '/page-1',
+        editUrl: '/library/my-form/editor-v2/page/p1/questions'
+      })
+    })
+
+    it('should format payment amount with two decimal places', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 50.5,
+                  description: 'Fee'
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition)
+
+      expect(result.amount).toBe('£50.50')
+    })
+
+    it('should handle zero amount', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            path: '/page-1',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 0,
+                  description: ''
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition)
+
+      expect(result).toEqual({
+        hasPayment: true,
+        description: '',
+        amount: '£0.00',
+        pageId: 'p1',
+        path: '/page-1',
+        editUrl: ''
+      })
+    })
+
+    it('should find payment field in any page', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            components: [buildTextFieldComponent()]
+          }),
+          buildQuestionPage({
+            id: 'p2',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 100,
+                  description: 'Application fee'
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition)
+
+      expect(result.hasPayment).toBe(true)
+      expect(result.amount).toBe('£100.00')
     })
   })
 })

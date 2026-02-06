@@ -55,6 +55,30 @@
     {{ govukSummaryList(params.componentRows) }}
   {% endif %}
 
+  {% if params.payment and params.payment.hasPayment %}
+    <h4 class="govuk-heading-m">Payment details</h4>
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: { text: "Payment for" },
+          value: { text: params.payment.description }
+        },
+        {
+          key: { text: "Total amount" },
+          value: { text: params.payment.amount }
+        },
+        {
+          key: { text: "Reference" },
+          value: { text: "ABC-DEF-123" }
+        },
+        {
+          key: { text: "Date details were entered" },
+          value: { text: "DD Month YYYY HH:MMam/pm" }
+        }
+      ]
+    }) }}
+  {% endif %}
+
   {% if params.showConfirmationEmail %}
     <div class="govuk-!-margin-top-6">
       {{ govukInput({

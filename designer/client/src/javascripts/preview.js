@@ -17,6 +17,7 @@ import '~/src/views/preview-components/textarea.njk'
 import '~/src/views/preview-components/textfield.njk'
 import '~/src/views/preview-components/ukaddressfield.njk'
 import '~/src/views/preview-components/hiddenfield.njk'
+import '~/src/views/preview-components/paymentfield.njk'
 import '~/src/views/preview-components/unsupportedquestion.njk'
 
 import { ErrorPreview } from '~/src/javascripts/error-preview/error-preview'

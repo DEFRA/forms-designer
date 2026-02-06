@@ -108,4 +108,74 @@ describe('Pages left panel component', () => {
       expect($headings[0]).toHaveTextContent('My title')
     })
   })
+
+  describe('With payment page', () => {
+    beforeEach(() => {
+      const { container } = renderMacro(
+        'appPagesPanelLeft',
+        'pages-panel-left/macro.njk',
+        {
+          params: {
+            formName: 'test-form-1',
+            pageTitle: 'Payment',
+            pageEditUrl: '/library/my-form/editor-v2/page/p1/questions',
+            pagePreviewUrl: '/preview/page-1?force',
+            rows: [
+              {
+                key: { text: 'Payment for' },
+                value: { text: 'Application fee' }
+              },
+              { key: { text: 'Total amount' }, value: { text: '£100.00' } }
+            ],
+            isPaymentPage: true
+          }
+        }
+      )
+
+      $headings = container.getAllByRole('heading')
+      $keys = container.getAllByRole('term')
+      $values = container.getAllByRole('definition')
+    })
+
+    it('should render payment card title', () => {
+      expect($headings[0]).toHaveClass('govuk-summary-card__title')
+      expect($headings[0]).toHaveTextContent('Payment')
+    })
+
+    it('should render payment details', () => {
+      expect($keys[0]).toHaveTextContent('Payment for')
+      expect($values[0]).toHaveTextContent('Application fee')
+      expect($keys[1]).toHaveTextContent('Total amount')
+      expect($values[1]).toHaveTextContent('£100.00')
+    })
+  })
+
+  describe('With end page (no payment)', () => {
+    beforeEach(() => {
+      const { container } = renderMacro(
+        'appPagesPanelLeft',
+        'pages-panel-left/macro.njk',
+        {
+          params: {
+            formName: 'test-form-1',
+            pageNum: 1,
+            pageId: 'abcDEF',
+            pageTitle: 'Check your answers',
+            pageEditUrl:
+              '/library/my-form/editor-v2/page/abcDEF/check-answers-settings',
+            pagePreviewUrl: '/preview/check-answers?force',
+            rows: [],
+            isEndPage: true
+          }
+        }
+      )
+
+      $headings = container.getAllByRole('heading')
+    })
+
+    it('should render only the end page card', () => {
+      expect($headings).toHaveLength(1)
+      expect($headings[0]).toHaveTextContent('Check your answers')
+    })
+  })
 })

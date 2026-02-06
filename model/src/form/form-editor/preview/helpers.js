@@ -47,6 +47,10 @@ import {
   OsGridRefComponentPreviewElements,
   OsGridRefQuestion
 } from '~/src/form/form-editor/preview/os-grid-ref.js'
+import {
+  PaymentComponentPreviewElements,
+  PaymentQuestion
+} from '~/src/form/form-editor/preview/payment.js'
 import { PhoneNumberQuestion } from '~/src/form/form-editor/preview/phone-number.js'
 import { QuestionComponentElements } from '~/src/form/form-editor/preview/question.js'
 import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
@@ -93,7 +97,8 @@ const InputFieldComponentDictionary = {
   [ComponentType.OsGridRefField]: OsGridRefQuestion,
   [ComponentType.NationalGridFieldNumberField]: NationalGridQuestion,
   [ComponentType.LatLongField]: LatLongQuestion,
-  [ComponentType.HiddenField]: HiddenQuestion
+  [ComponentType.HiddenField]: HiddenQuestion,
+  [ComponentType.PaymentField]: PaymentQuestion
 }
 
 /**
@@ -154,6 +159,10 @@ const ComponentToPreviewQuestion = {
   [ComponentType.LatLongField]: (component, _definition) => {
     const componentCoerced = /** @type {LatLongFieldComponent} */ (component)
     return new LatLongComponentPreviewElements(componentCoerced)
+  },
+  [ComponentType.PaymentField]: (component, _definition) => {
+    const componentCoerced = /** @type {PaymentFieldComponent} */ (component)
+    return new PaymentComponentPreviewElements(componentCoerced)
   }
 }
 
@@ -202,5 +211,5 @@ export function mapComponentToPreviewQuestion(questionRenderer, definition) {
  * @import { Question } from '~/src/form/form-editor/preview/question.js'
  * @import { PreviewComponent } from '~/src/form/form-editor/preview/preview.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { AutocompleteFieldComponent, ComponentDef, DeclarationFieldComponent, EastingNorthingFieldComponent, LatLongFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, SelectFieldComponent, UkAddressFieldComponent, YesNoFieldComponent } from '~/src/components/types.js'
+ * @import { AutocompleteFieldComponent, ComponentDef, DeclarationFieldComponent, EastingNorthingFieldComponent, LatLongFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, PaymentFieldComponent, SelectFieldComponent, UkAddressFieldComponent, YesNoFieldComponent } from '~/src/components/types.js'
  */

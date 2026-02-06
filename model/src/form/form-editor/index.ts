@@ -670,7 +670,9 @@ export function govukFieldValueIsString(
     'autoCompleteOptions',
     'classes',
     'prefix',
-    'suffix'
+    'suffix',
+    'paymentAmount',
+    'paymentDescription'
   ].includes(`${govukField.name}`)
 }
 
