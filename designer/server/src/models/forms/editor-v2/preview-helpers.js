@@ -6,6 +6,7 @@ import {
   isSummaryPage
 } from '@defra/forms-model'
 
+import { formatCurrency } from '~/src/common/nunjucks/filters/index.js'
 import config from '~/src/config.js'
 import { stringHasValue } from '~/src/lib/utils.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
@@ -209,7 +210,7 @@ export function getPaymentInfo(definition, slug) {
       return {
         hasPayment: true,
         description: paymentComponent.options.description,
-        amount: `£${amount.toFixed(2)}`,
+        amount: formatCurrency(amount),
         pageId,
         path: page.path,
         editUrl

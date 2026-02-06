@@ -10,6 +10,7 @@ import {
   isSummaryPage
 } from '@defra/forms-model'
 
+import { formatCurrency } from '~/src/common/nunjucks/filters/index.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
@@ -128,17 +129,17 @@ export function mapQuestionRows(definition, page) {
 
   const isPayment = isPaymentPage(page)
   if (isPayment) {
-    const paymentComponent = components.find(
-      (comp) => comp.type === ComponentType.PaymentField
+    const paymentComponent = /** @type {PaymentFieldComponent} */ (
+      components.find((comp) => comp.type === ComponentType.PaymentField)
     )
     return [
       {
         key: { text: 'Payment for' },
-        value: { text: paymentComponent?.options.description }
+        value: { text: paymentComponent.options.description }
       },
       {
         key: { text: 'Total amount' },
-        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
+        value: { text: formatCurrency(paymentComponent.options.amount) }
       }
     ]
   }
@@ -473,5 +474,5 @@ export function pagesViewModel(metadata, definition, filter, notification) {
 }
 
 /**
- * @import { ComponentDef, ConditionDetails, GovukSummaryListRow, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionDetails, GovukSummaryListRow, MarkdownComponent, PaymentFieldComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

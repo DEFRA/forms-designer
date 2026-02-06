@@ -107,7 +107,10 @@ export class PaymentQuestion extends Question {
   _renderInput() {
     const amount =
       typeof this._paymentAmount === 'number'
-        ? this._paymentAmount.toFixed(2)
+        ? new Intl.NumberFormat('en-GB', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          }).format(this._paymentAmount)
         : '0.00'
 
     return {
