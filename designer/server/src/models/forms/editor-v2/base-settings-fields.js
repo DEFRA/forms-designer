@@ -221,7 +221,7 @@ function getLocationFieldHint(questionType, validationResult, storedHint) {
   if (validationResult !== undefined) {
     return validationResult
   }
-  if (storedHint) {
+  if (storedHint !== undefined) {
     return storedHint
   }
   return getDefaultLocationHint(questionType)
