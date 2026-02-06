@@ -10,7 +10,7 @@ import {
   isSummaryPage
 } from '@defra/forms-model'
 
-import { formatCurrency } from '~/src/common/nunjucks/filters/index.js'
+import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
