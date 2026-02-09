@@ -80,7 +80,8 @@ function questionsHeadingFields(pageHeadingSettings, validation) {
             isCheckboxSelected(formValues?.pageHeadingAndGuidance) ||
             hasUnderlyingHeadingData(pageHeadingVal, guidanceTextVal)
         }
-      ]
+      ],
+      ...insertValidationErrors(validation?.formErrors.pageHeadingAndGuidance)
     },
     pageHeading: {
       name: 'pageHeading',
@@ -132,7 +133,8 @@ function questionsRepeaterFields(repeaterSettings, validation) {
             isCheckboxSelected(formValues?.repeater) ||
             hasUnderlyingRepeaterData(minItems, maxItems, questionSetName)
         }
-      ]
+      ],
+      ...insertValidationErrors(validation?.formErrors.repeater)
     },
     repeaterRange: {
       fieldset: {
