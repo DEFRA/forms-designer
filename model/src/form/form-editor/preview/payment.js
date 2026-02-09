@@ -6,6 +6,22 @@ import {
 } from '~/src/form/form-editor/preview/question.js'
 
 /**
+ * Formats a currency amount with thousand separators and two decimal places
+ * @param {number} value
+ * @param {'en-GB'} [locale] - locale for formatting
+ * @param {'GBP'} [currency] - currency code
+ * @returns {string} Formatted amount (e.g., "£1,234.56")
+ */
+function formatCurrency(value, locale = 'en-GB', currency = 'GBP') {
+  const formatter = new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency
+  })
+
+  return formatter.format(value)
+}
+
+/**
  * @implements {PaymentElements}
  */
 export class PaymentComponentPreviewElements extends QuestionComponentElements {
@@ -107,8 +123,8 @@ export class PaymentQuestion extends Question {
   _renderInput() {
     const amount =
       typeof this._paymentAmount === 'number'
-        ? this._paymentAmount.toFixed(2)
-        : '0.00'
+        ? formatCurrency(this._paymentAmount)
+        : '£0.00'
 
     return {
       ...super._renderInput(),
