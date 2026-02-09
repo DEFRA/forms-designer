@@ -12,4 +12,10 @@ describe('#formatCurrency', () => {
       expect(formatCurrency('5500000', 'en-US', 'USD')).toBe('$5,500,000.00')
     })
   })
+
+  describe('With thousand separators', () => {
+    test('Should format large amounts with thousand separators', () => {
+      expect(formatCurrency(20000)).toBe('£20,000.00')
+    })
+  })
 })

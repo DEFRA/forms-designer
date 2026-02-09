@@ -547,5 +547,32 @@ describe('preview-helpers', () => {
       expect(result.hasPayment).toBe(true)
       expect(result.amount).toBe('£100.00')
     })
+
+    it('should format large amounts with thousand separators', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'p1',
+            components: [
+              {
+                id: 'payment-1',
+                type: ComponentType.PaymentField,
+                name: 'PaymentField',
+                title: 'Payment',
+                options: {
+                  amount: 20000,
+                  description: 'Large payment'
+                }
+              }
+            ]
+          })
+        ],
+        sections: []
+      })
+
+      const result = getPaymentInfo(definition)
+
+      expect(result.amount).toBe('£20,000.00')
+    })
   })
 })

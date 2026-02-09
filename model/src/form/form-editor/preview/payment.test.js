@@ -129,7 +129,7 @@ describe('payment', () => {
       const question = new PaymentQuestion(elements, renderer)
 
       // @ts-expect-error - amount exists on PaymentModel
-      expect(question.renderInput.amount).toBe('150.50')
+      expect(question.renderInput.amount).toBe('£150.50')
       // @ts-expect-error - description exists on PaymentModel
       expect(question.renderInput.description).toBe('Test payment')
     })
@@ -155,7 +155,7 @@ describe('payment', () => {
       const question = new PaymentQuestion(elements, renderer)
 
       // @ts-expect-error - amount exists on PaymentModel
-      expect(question.renderInput.amount).toBe('0.00')
+      expect(question.renderInput.amount).toBe('£0.00')
     })
 
     it('should handle non-number amount', () => {
@@ -168,7 +168,7 @@ describe('payment', () => {
       const question = new PaymentQuestion(elements, renderer)
 
       // @ts-expect-error - amount exists on PaymentModel
-      expect(question.renderInput.amount).toBe('0.00')
+      expect(question.renderInput.amount).toBe('£0.00')
     })
   })
 })

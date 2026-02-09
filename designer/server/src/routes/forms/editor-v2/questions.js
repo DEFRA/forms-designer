@@ -95,6 +95,36 @@ export const schema = Joi.object().keys({
   itemOrder: Joi.any().custom(customItemOrder)
 })
 
+/**
+ * Override checkboxes and revalidate against schema (if JS is disabled, it's possible to enter details
+ * without checking the parent checkbox)
+ * @param {FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean}} payload
+ */
+export function revalidateCheckboxesWithOverride(payload) {
+  const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
+  if (!isExpanded && payload.pageHeading) {
+    // Override if not 'checked' in non-JS when page heading supplied
+    payload.pageHeadingAndGuidance = 'true'
+  }
+
+  const isRepeat = isCheckboxSelected(payload.repeater)
+  if (
+    !isRepeat &&
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (payload.minItems !== undefined ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      payload.maxItems !== undefined ||
+      payload.questionSetName)
+  ) {
+    // Error if not 'checked' in non-JS when repeater fields supplied
+    payload.repeater = 'true'
+  }
+
+  const { error } = schema.validate(payload)
+
+  return error
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string } }>}
@@ -158,7 +188,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: Pick<FormEditorInputPageSettings, 'pageHeadingAndGuidance' | 'pageHeading' | 'movement' | 'itemOrder' | 'saveReorder'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean} }>}
    */
   ({
     method: 'POST',
@@ -238,6 +268,14 @@ export default [
           )
         }
 
+        // Override checkboxes and revalidate in case JS is off
+        if (action !== 'reorder') {
+          const checkboxError = revalidateCheckboxesWithOverride(payload)
+          if (checkboxError) {
+            return redirectWithErrors(request, h, checkboxError, errorKey)
+          }
+        }
+
         await setPageSettings(metadata.id, token, pageId, definition, payload)
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
@@ -281,5 +319,5 @@ export default [
 
 /**
  * @import { FormEditorInputPageSettings } from '@defra/forms-model'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
