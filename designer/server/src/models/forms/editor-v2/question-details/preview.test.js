@@ -1119,7 +1119,7 @@ describe('preview', () => {
         ComponentType.PaymentField
       )
       expect(previewModel).toMatchObject({
-        amount: '150.00',
+        amount: '£150.00',
         description: 'Application fee',
         headingClasses: 'govuk-heading-m'
       })
@@ -1141,7 +1141,7 @@ describe('preview', () => {
         ComponentType.PaymentField
       )
       expect(previewModel).toMatchObject({
-        amount: '0.00',
+        amount: '£0.00',
         description: 'Payment description'
       })
     })
