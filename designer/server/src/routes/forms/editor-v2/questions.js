@@ -99,8 +99,13 @@ export const schema = Joi.object().keys({
  * Override checkboxes and revalidate against schema (if JS is disabled, it's possible to enter details
  * without checking the parent checkbox)
  * @param {FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean}} payload
+ * @param {string} action
  */
-export function revalidateCheckboxesWithOverride(payload) {
+export function revalidateCheckboxesWithOverride(payload, action) {
+  if (action === 'reorder') {
+    return undefined
+  }
+
   const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
   if (!isExpanded && payload.pageHeading) {
     // Override if not 'checked' in non-JS when page heading supplied
@@ -271,11 +276,9 @@ export default [
         }
 
         // Override checkboxes and revalidate in case JS is off
-        if (action !== 'reorder') {
-          const checkboxError = revalidateCheckboxesWithOverride(payload)
-          if (checkboxError) {
-            return redirectWithErrors(request, h, checkboxError, errorKey)
-          }
+        const checkboxError = revalidateCheckboxesWithOverride(payload, action)
+        if (checkboxError) {
+          return redirectWithErrors(request, h, checkboxError, errorKey)
         }
 
         await setPageSettings(metadata.id, token, pageId, definition, payload)

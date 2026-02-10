@@ -526,7 +526,23 @@ describe('Editor v2 questions routes', () => {
         ...payloadCheckboxes
       }
       // @ts-expect-error - dynamic payload
-      const result = revalidateCheckboxesWithOverride(payloadCheckboxes)
+      const result = revalidateCheckboxesWithOverride(payloadCheckboxes, 'save')
+      expect(result).toBeUndefined()
+      expect(payloadCheckboxes).toEqual(expectedPayload)
+    })
+
+    test('should leave payload unchanged if reordering', () => {
+      const payloadCheckboxes = {
+        saveReorder: false
+      }
+      const expectedPayload = {
+        ...payloadCheckboxes
+      }
+      // @ts-expect-error - dynamic payload
+      const result = revalidateCheckboxesWithOverride(
+        payloadCheckboxes,
+        'reorder'
+      )
       expect(result).toBeUndefined()
       expect(payloadCheckboxes).toEqual(expectedPayload)
     })
@@ -546,7 +562,7 @@ describe('Editor v2 questions routes', () => {
         repeater: 'true'
       }
       // @ts-expect-error - dynamic payload
-      const result = revalidateCheckboxesWithOverride(payloadCheckboxes)
+      const result = revalidateCheckboxesWithOverride(payloadCheckboxes, 'save')
       expect(result).toBeUndefined()
       expect(payloadCheckboxes).toEqual(expectedPayload)
     })
