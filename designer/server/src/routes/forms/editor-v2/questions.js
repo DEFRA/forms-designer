@@ -120,7 +120,9 @@ export function revalidateCheckboxesWithOverride(payload) {
     payload.repeater = 'true'
   }
 
-  const { error } = schema.validate(payload)
+  const { error } = schema.validate(payload, {
+    abortEarly: false
+  })
 
   return error
 }
