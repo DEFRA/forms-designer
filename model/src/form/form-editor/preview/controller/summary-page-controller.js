@@ -1,3 +1,4 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { hasFormField } from '~/src/components/helpers.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { PreviewPageControllerBase } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
@@ -79,18 +80,25 @@ export class SummaryPageController extends PreviewPageControllerBase {
    * @returns {{ rows: SummaryRow[] }}
    */
   get componentRows() {
-    const rows = this._componentDefs.map((component) => {
-      const summaryRowHeading = component.shortDescription ?? ''
-      return {
-        key: { text: summaryRowHeading },
-        value: { text: EXAMPLE_TEXT },
-        actions: {
-          items: [
-            { href: '#', text: 'Change', visuallyHiddenText: summaryRowHeading }
-          ]
+    const rows = this._componentDefs
+      // Exclude payment field as displayed in a section at the bottom
+      .filter((comp) => comp.type !== ComponentType.PaymentField)
+      .map((component) => {
+        const summaryRowHeading = component.shortDescription ?? ''
+        return {
+          key: { text: summaryRowHeading },
+          value: { text: EXAMPLE_TEXT },
+          actions: {
+            items: [
+              {
+                href: '#',
+                text: 'Change',
+                visuallyHiddenText: summaryRowHeading
+              }
+            ]
+          }
         }
-      }
-    })
+      })
     return {
       rows
     }

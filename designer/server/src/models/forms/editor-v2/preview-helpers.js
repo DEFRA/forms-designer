@@ -3,6 +3,7 @@ import {
   ControllerType,
   getPageTitle,
   hasComponentsEvenIfNoNext,
+  isPaymentPage,
   isSummaryPage
 } from '@defra/forms-model'
 
@@ -96,7 +97,8 @@ export function getUnassignedPageTitlesForPreview(definition) {
         !page.section &&
         !isSummaryPage(page) &&
         page.controller !== ControllerType.Status &&
-        !isGuidancePage(page)
+        !isGuidancePage(page) &&
+        !isPaymentPage(page)
     )
     .map((page) => ({
       title: getPageTitle(page)

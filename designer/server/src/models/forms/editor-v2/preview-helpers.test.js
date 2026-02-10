@@ -224,7 +224,7 @@ describe('preview-helpers', () => {
       expect(result[0].title).toBe('Question page')
     })
 
-    it('should include payment pages with component title when page has no title', () => {
+    it('should exclude payment pages from normal summary area', () => {
       const definition = buildDefinition({
         pages: [
           buildQuestionPage({
@@ -249,37 +249,7 @@ describe('preview-helpers', () => {
 
       const result = getUnassignedPageTitlesForPreview(definition)
 
-      expect(result).toHaveLength(1)
-      expect(result[0].title).toBe('Payment')
-    })
-
-    it('should include payment pages with page title when set', () => {
-      const definition = buildDefinition({
-        pages: [
-          buildQuestionPage({
-            id: 'p1',
-            title: 'Make a payment',
-            components: [
-              {
-                id: 'payment-1',
-                type: ComponentType.PaymentField,
-                name: 'PaymentField',
-                title: 'Payment',
-                options: {
-                  amount: 100,
-                  description: 'Application fee'
-                }
-              }
-            ]
-          })
-        ],
-        sections: []
-      })
-
-      const result = getUnassignedPageTitlesForPreview(definition)
-
-      expect(result).toHaveLength(1)
-      expect(result[0].title).toBe('Make a payment')
+      expect(result).toHaveLength(0)
     })
   })
 

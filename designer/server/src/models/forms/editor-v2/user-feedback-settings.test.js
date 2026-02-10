@@ -5,10 +5,8 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import {
-  getPreviewModel,
-  settingsFields
-} from '~/src/models/forms/editor-v2/user-feedback-settings.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
+import { settingsFields } from '~/src/models/forms/editor-v2/user-feedback-settings.js'
 
 describe('user feedback settings', () => {
   describe('settingsFields', () => {
@@ -83,7 +81,8 @@ describe('user feedback settings', () => {
         'http://preview-url',
         '',
         false,
-        true
+        true,
+        false
       )
 
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
@@ -115,7 +114,8 @@ describe('user feedback settings', () => {
         'http://another-url',
         '',
         false,
-        true
+        true,
+        false
       )
 
       expect(previewModel.pageTitle).toEqual({
@@ -145,7 +145,8 @@ describe('user feedback settings', () => {
         'http://test-url',
         declarationText,
         true,
-        true
+        true,
+        false
       )
 
       expect(previewModel.components).toHaveLength(1)

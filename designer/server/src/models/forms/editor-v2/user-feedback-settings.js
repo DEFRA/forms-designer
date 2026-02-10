@@ -2,7 +2,6 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  SummaryPageController,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
@@ -12,19 +11,17 @@ import {
   insertValidationErrors,
   stringHasValue
 } from '~/src/lib/utils.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import {
-  DECLARATION_PREVIEW_TITLE,
   SUMMARY_CONTROLLER_TEMPLATE,
   buildPreviewUrl,
   enrichPreviewModel
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
-import { dummyRenderer } from '~/src/models/forms/editor-v2/questions.js'
 import {
   CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_USER_FEEDBACK,
@@ -51,55 +48,6 @@ export function settingsFields(disableUserFeedback, validation) {
       ],
       ...insertValidationErrors(validation?.formErrors.disableUserFeedback)
     }
-  }
-}
-
-/**
- * @param { Page | undefined } page
- * @param {FormDefinition} definition
- * @param {string} previewPageUrl
- * @param {string} declarationText
- * @param {boolean} needDeclaration
- * @param {boolean} showConfirmationEmail
- * @returns {PagePreviewPanelMacro & PreviewModelExtras}
- */
-export function getPreviewModel(
-  page,
-  definition,
-  previewPageUrl,
-  declarationText,
-  needDeclaration,
-  showConfirmationEmail
-) {
-  const elements = new SummaryPreviewSSR(
-    page,
-    declarationText,
-    needDeclaration,
-    showConfirmationEmail
-  )
-
-  const previewPageController = new SummaryPageController(
-    elements,
-    definition,
-    dummyRenderer
-  )
-
-  return {
-    previewTitle: DECLARATION_PREVIEW_TITLE,
-    pageTitle: previewPageController.pageTitle,
-    components: previewPageController.components,
-    guidance: previewPageController.guidance,
-    sectionTitle: previewPageController.sectionTitle,
-    buttonText: previewPageController.buttonText,
-    previewPageUrl,
-    questionType: ComponentType.TextField,
-    componentRows: previewPageController.componentRows,
-    hasPageSettingsTab: true,
-    showConfirmationEmail: previewPageController.showConfirmationEmail,
-    showReferenceNumber: false, // unused
-    declarationText,
-    needDeclaration,
-    isConfirmationEmailSettingsPanel: true
   }
 }
 
@@ -143,6 +91,7 @@ export function userFeedbackSettingsViewModel(
   const disableUserFeedback = definition.options?.disableUserFeedback ?? false
 
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const fields = settingsFields(disableUserFeedback, validation)
   const pageHeading = 'User feedback'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
@@ -154,7 +103,8 @@ export function userFeedbackSettingsViewModel(
     previewPageUrl,
     declarationText,
     needDeclaration,
-    showConfirmationEmail
+    showConfirmationEmail,
+    showReferenceNumber
   )
   const previewModel = enrichPreviewModel(basePreviewModel, definition)
 
@@ -190,7 +140,6 @@ export function userFeedbackSettingsViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
- * @import { PreviewModelExtras } from '~/src/models/forms/editor-v2/preview-helpers.js'
  */

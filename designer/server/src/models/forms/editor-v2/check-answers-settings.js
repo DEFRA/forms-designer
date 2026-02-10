@@ -2,7 +2,6 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  SummaryPageController,
   hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
@@ -12,20 +11,18 @@ import {
   insertValidationErrors,
   stringHasValue
 } from '~/src/lib/utils.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
 import {
   GOVUK_LABEL__M,
   SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import {
-  DECLARATION_PREVIEW_TITLE,
   SUMMARY_CONTROLLER_TEMPLATE,
   buildPreviewUrl,
   enrichPreviewModel
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
-import { dummyRenderer } from '~/src/models/forms/editor-v2/questions.js'
 import {
   CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_DECLARATION,
@@ -81,56 +78,6 @@ export function settingsFields(
 }
 
 /**
- * @param { Page | undefined } page
- * @param {FormDefinition} definition
- * @param {string} previewPageUrl
- * @param {ReturnType<typeof settingsFields>} fields
- * @param {boolean} showConfirmationEmail
- * @returns {PagePreviewPanelMacro & PreviewModelExtras}
- */
-export function getPreviewModel(
-  page,
-  definition,
-  previewPageUrl,
-  fields,
-  showConfirmationEmail
-) {
-  const declarationText = fields.declarationText.value ?? ''
-  const needDeclaration = Boolean(fields.needDeclaration.value)
-
-  const elements = new SummaryPreviewSSR(
-    page,
-    declarationText,
-    needDeclaration,
-    showConfirmationEmail
-  )
-
-  const previewPageController = new SummaryPageController(
-    elements,
-    definition,
-    dummyRenderer
-  )
-
-  return {
-    previewTitle: DECLARATION_PREVIEW_TITLE,
-    pageTitle: previewPageController.pageTitle,
-    components: previewPageController.components,
-    guidance: previewPageController.guidance,
-    sectionTitle: previewPageController.sectionTitle,
-    buttonText: previewPageController.buttonText,
-    previewPageUrl,
-    questionType: ComponentType.TextField, // components[0]?.type
-    componentRows: previewPageController.componentRows,
-    hasPageSettingsTab: true,
-    showConfirmationEmail: previewPageController.showConfirmationEmail,
-    showReferenceNumber: false, // unused by preview so just send a default value
-    declarationText,
-    needDeclaration,
-    isConfirmationEmailSettingsPanel: false
-  }
-}
-
-/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -152,7 +99,7 @@ export function checkAnswersSettingsViewModel(
     definition,
     'Editor'
   )
-  const { formValues, formErrors } = validation ?? {}
+  const { formErrors } = validation ?? {}
 
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponentsEvenIfNoNext(page) ? page.components : []
@@ -163,14 +110,13 @@ export function checkAnswersSettingsViewModel(
     })
   )
 
-  const declarationTextVal =
-    formValues?.declarationText ?? guidanceComponent?.content
-  const needDeclarationVal =
-    formValues?.needDeclaration ?? `${stringHasValue(declarationTextVal)}`
+  const declarationText = guidanceComponent?.content ?? ''
+  const needDeclaration = stringHasValue(declarationText)
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const fields = settingsFields(
-    needDeclarationVal,
-    declarationTextVal,
+    needDeclaration ? 'true' : 'false',
+    declarationText,
     validation
   )
   const pageHeading = 'Declaration'
@@ -178,7 +124,7 @@ export function checkAnswersSettingsViewModel(
 
   // prettier-ignore
   const basePreviewModel = getPreviewModel(
-    page, definition, previewPageUrl, fields, showConfirmationEmail
+    page, definition, previewPageUrl, declarationText, needDeclaration, showConfirmationEmail, showReferenceNumber
   )
   const previewModel = enrichPreviewModel(basePreviewModel, definition)
 
