@@ -538,8 +538,8 @@ describe('Editor v2 questions routes', () => {
       const expectedPayload = {
         ...payloadCheckboxes
       }
-      // @ts-expect-error - dynamic payload
       const result = revalidateCheckboxesWithOverride(
+        // @ts-expect-error - dynamic payload
         payloadCheckboxes,
         'reorder'
       )
