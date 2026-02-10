@@ -41,6 +41,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
 import {
   customItemOrder,
+  getForm,
   mergeMissingComponentsIntoOrder
 } from '~/src/routes/forms/editor-v2/helpers.js'
 
@@ -211,8 +212,7 @@ export default [
         )
 
       // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const { metadata, definition } = await getForm(slug, token)
       const page = getPageFromDefinition(definition, pageId)
 
       if (!page) {
