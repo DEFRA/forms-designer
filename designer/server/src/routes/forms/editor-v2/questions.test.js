@@ -19,6 +19,7 @@ import { buildBoom409 } from '~/src/lib/__stubs__/editor.js'
 import { reorderQuestions, setPageSettings } from '~/src/lib/editor.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { revalidateCheckboxesWithOverride } from '~/src/routes/forms/editor-v2/questions.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -515,8 +516,99 @@ describe('Editor v2 questions routes', () => {
       ['q1', 'q2', 'q3', 'q4']
     )
   })
+
+  describe('revalidateCheckboxesWithOverride', () => {
+    test('should leave payload unchanged if no child details', () => {
+      const payloadCheckboxes = {
+        saveReorder: false
+      }
+      const expectedPayload = {
+        ...payloadCheckboxes
+      }
+      // @ts-expect-error - dynamic payload
+      const result = revalidateCheckboxesWithOverride(payloadCheckboxes, 'save')
+      expect(result).toBeUndefined()
+      expect(payloadCheckboxes).toEqual(expectedPayload)
+    })
+
+    test('should leave payload unchanged if reordering', () => {
+      const payloadCheckboxes = {
+        saveReorder: false
+      }
+      const expectedPayload = {
+        ...payloadCheckboxes
+      }
+      const result = revalidateCheckboxesWithOverride(
+        // @ts-expect-error - dynamic payload
+        payloadCheckboxes,
+        'reorder'
+      )
+      expect(result).toBeUndefined()
+      expect(payloadCheckboxes).toEqual(expectedPayload)
+    })
+
+    test('should set parent checkboxes if child details', () => {
+      const payloadCheckboxes = {
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text',
+        minItems: 2,
+        maxItems: 5,
+        questionSetName: 'Cows',
+        saveReorder: false
+      }
+      const expectedPayload = {
+        ...payloadCheckboxes,
+        pageHeadingAndGuidance: 'true',
+        repeater: 'true'
+      }
+      // @ts-expect-error - dynamic payload
+      const result = revalidateCheckboxesWithOverride(payloadCheckboxes, 'save')
+      expect(result).toBeUndefined()
+      expect(payloadCheckboxes).toEqual(expectedPayload)
+    })
+
+    test('should show error if amended payload is invalid', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithNoQuestions)
+
+      const payloadCheckboxes = {
+        pageHeading: 'New page heading',
+        guidanceText: 'New guidance text',
+        minItems: 2,
+        saveReorder: false
+      }
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/page/p1/questions',
+        auth,
+        payload: payloadCheckboxes
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe(
+        '/library/my-form-slug/editor-v2/page/p1/questions'
+      )
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        'questionsValidationFailure',
+        new Joi.ValidationError(
+          'Enter the maximum number of times someone can answer these questions. "questionSetName" is required',
+          [],
+          undefined
+        )
+      )
+    })
+  })
 })
 
 /**
  * @import { Server } from '@hapi/hapi'
+ * @import { FormEditorInputPageSettings } from '@defra/forms-model'
  */
