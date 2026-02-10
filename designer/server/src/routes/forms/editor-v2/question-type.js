@@ -24,7 +24,11 @@ import {
   getQuestionSessionState,
   mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { hasPaymentQuestionInForm, requiresPageTitle } from '~/src/lib/utils.js'
+import {
+  getComponentFromDefinition,
+  hasPaymentQuestionInForm,
+  requiresPageTitle
+} from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
@@ -190,18 +194,24 @@ export default [
       const { questionType, writtenAnswerSub, dateSub, locationSub, listSub } =
         payload
 
-      // Ensure there's no existing payment question when adding multiple questions,
-      // since only one payment question allowed per form
-      if (
-        questionId === 'new' &&
-        questionType === ComponentType.PaymentField &&
-        hasPaymentQuestionInForm(definition)
-      ) {
-        const error = createJoiError(
-          'questionType',
-          'You can only add one payment question to a form'
-        )
-        return redirectWithErrors(request, h, error, errorKey)
+      // Ensure there's no existing payment question,
+      // since only one payment question allowed per form.
+      // Skip if the current question is already the payment question.
+      if (questionType === ComponentType.PaymentField) {
+        const existingComponent =
+          questionId !== 'new'
+            ? getComponentFromDefinition(definition, pageId, questionId)
+            : undefined
+        const isCurrentQuestionPayment =
+          existingComponent?.type === ComponentType.PaymentField
+
+        if (!isCurrentQuestionPayment && hasPaymentQuestionInForm(definition)) {
+          const error = createJoiError(
+            'questionType',
+            'You can only add one payment question to a form'
+          )
+          return redirectWithErrors(request, h, error, errorKey)
+        }
       }
 
       const suppliedQuestionType =
