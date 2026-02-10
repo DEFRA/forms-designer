@@ -5,11 +5,13 @@ import {
   CHECK_ANSWERS_TAB_PAGE_OVERVIEW,
   CHECK_ANSWERS_TAB_REFERENCE_NUMBER,
   CHECK_ANSWERS_TAB_SECTIONS,
+  CHECK_ANSWERS_TAB_USER_FEEDBACK,
   PAGE_OVERVIEW_TITLE,
   TAB_TITLE_CONFIRMATION_EMAIL,
   TAB_TITLE_DECLARATION,
   TAB_TITLE_REFERENCE_NUMBER,
   TAB_TITLE_SECTIONS,
+  TAB_TITLE_USER_FEEDBACK,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
 
@@ -35,6 +37,10 @@ describe('tab-config', () => {
       expect(TAB_TITLE_SECTIONS).toBe('Sections')
     })
 
+    it('should export TAB_TITLE_USER_FEEDBACK', () => {
+      expect(TAB_TITLE_USER_FEEDBACK).toBe('User feedback')
+    })
+
     it('should export CHECK_ANSWERS_CAPTION', () => {
       expect(CHECK_ANSWERS_CAPTION).toBe('Check answers')
     })
@@ -48,6 +54,9 @@ describe('tab-config', () => {
         'check-answers-settings/confirmation-email'
       )
       expect(CHECK_ANSWERS_TAB_SECTIONS).toBe('check-answers-settings/sections')
+      expect(CHECK_ANSWERS_TAB_USER_FEEDBACK).toBe(
+        'check-answers-settings/user-feedback'
+      )
     })
   })
 
@@ -55,20 +64,21 @@ describe('tab-config', () => {
     const testSlug = 'test-form'
     const testPageId = 'cya-page'
 
-    it('should return all four tabs', () => {
+    it('should return all six tabs', () => {
       const result = getCheckAnswersTabConfig(
         testSlug,
         testPageId,
         CHECK_ANSWERS_TAB_PAGE_OVERVIEW
       )
 
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(6)
       expect(result.map((t) => t.title)).toEqual([
         PAGE_OVERVIEW_TITLE,
         TAB_TITLE_DECLARATION,
         TAB_TITLE_CONFIRMATION_EMAIL,
         TAB_TITLE_REFERENCE_NUMBER,
-        TAB_TITLE_SECTIONS
+        TAB_TITLE_SECTIONS,
+        TAB_TITLE_USER_FEEDBACK
       ])
     })
 
@@ -84,6 +94,7 @@ describe('tab-config', () => {
       expect(result[2].isActive).toBe(false)
       expect(result[3].isActive).toBe(false)
       expect(result[4].isActive).toBe(false)
+      expect(result[5].isActive).toBe(false)
     })
 
     it('should mark declaration tab as active', () => {
@@ -98,6 +109,7 @@ describe('tab-config', () => {
       expect(result[2].isActive).toBe(false)
       expect(result[3].isActive).toBe(false)
       expect(result[4].isActive).toBe(false)
+      expect(result[5].isActive).toBe(false)
     })
 
     it('should mark confirmation emails tab as active', () => {
@@ -112,6 +124,7 @@ describe('tab-config', () => {
       expect(result[2].isActive).toBe(true)
       expect(result[3].isActive).toBe(false)
       expect(result[4].isActive).toBe(false)
+      expect(result[5].isActive).toBe(false)
     })
 
     it('should mark reference number tab as active', () => {
@@ -126,6 +139,7 @@ describe('tab-config', () => {
       expect(result[2].isActive).toBe(false)
       expect(result[3].isActive).toBe(true)
       expect(result[4].isActive).toBe(false)
+      expect(result[5].isActive).toBe(false)
     })
 
     it('should mark sections tab as active', () => {
@@ -140,6 +154,22 @@ describe('tab-config', () => {
       expect(result[2].isActive).toBe(false)
       expect(result[3].isActive).toBe(false)
       expect(result[4].isActive).toBe(true)
+      expect(result[5].isActive).toBe(false)
+    })
+
+    it('should mark user feedback tab as active', () => {
+      const result = getCheckAnswersTabConfig(
+        testSlug,
+        testPageId,
+        CHECK_ANSWERS_TAB_USER_FEEDBACK
+      )
+
+      expect(result[0].isActive).toBe(false)
+      expect(result[1].isActive).toBe(false)
+      expect(result[2].isActive).toBe(false)
+      expect(result[3].isActive).toBe(false)
+      expect(result[4].isActive).toBe(false)
+      expect(result[5].isActive).toBe(true)
     })
 
     it('should have correct full path links', () => {

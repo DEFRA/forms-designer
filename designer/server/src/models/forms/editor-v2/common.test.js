@@ -44,6 +44,7 @@ import {
   TAB_TITLE_DECLARATION,
   TAB_TITLE_REFERENCE_NUMBER,
   TAB_TITLE_SECTIONS,
+  TAB_TITLE_USER_FEEDBACK,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
 
@@ -787,20 +788,21 @@ describe('editor-v2 - model', () => {
     const testSlug = 'test-form'
     const testPageId = 'cya-page'
 
-    it('should return all four tabs', () => {
+    it('should return all six tabs', () => {
       const result = getCheckAnswersTabConfig(
         testSlug,
         testPageId,
         CHECK_ANSWERS_TAB_PAGE_OVERVIEW
       )
 
-      expect(result).toHaveLength(5)
+      expect(result).toHaveLength(6)
       expect(result.map((t) => t.title)).toEqual([
         PAGE_OVERVIEW_TITLE,
         TAB_TITLE_DECLARATION,
         TAB_TITLE_CONFIRMATION_EMAIL,
         TAB_TITLE_REFERENCE_NUMBER,
-        TAB_TITLE_SECTIONS
+        TAB_TITLE_SECTIONS,
+        TAB_TITLE_USER_FEEDBACK
       ])
     })
 

@@ -9,6 +9,7 @@ import confirmationEmailSettings from '~/src/routes/forms/editor-v2/check-answer
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
 import referenceNumberSettings from '~/src/routes/forms/editor-v2/check-answers-settings/reference-number-settings.js'
 import editorSections from '~/src/routes/forms/editor-v2/check-answers-settings/sections.js'
+import userFeedbackSettings from '~/src/routes/forms/editor-v2/check-answers-settings/user-feedback-settings.js'
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
 import editorConditionDelete from '~/src/routes/forms/editor-v2/condition-delete.js'
 import editorCondition from '~/src/routes/forms/editor-v2/condition.js'
@@ -75,5 +76,6 @@ export default [
   privacyNotice,
   notificationEmail,
   confirmationEmailSettings,
-  referenceNumberSettings
+  referenceNumberSettings,
+  userFeedbackSettings
 ].flat()

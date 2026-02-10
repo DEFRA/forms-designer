@@ -312,6 +312,10 @@ export const enableReferenceNumberSchema = Joi.boolean()
   .valid(true)
   .description('Whether reference number should be enabled')
 
+export const disableUserFeedbackSchema = Joi.boolean()
+  .valid(true)
+  .description('Whether user feedback should be disabled')
+
 export const minSchema = Joi.number()
   .empty('')
   .integer()

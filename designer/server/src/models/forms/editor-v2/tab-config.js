@@ -5,6 +5,7 @@ export const TAB_TITLE_DECLARATION = 'Declaration'
 export const TAB_TITLE_CONFIRMATION_EMAIL = 'Confirmation email'
 export const TAB_TITLE_REFERENCE_NUMBER = 'Reference number'
 export const TAB_TITLE_SECTIONS = 'Sections'
+export const TAB_TITLE_USER_FEEDBACK = 'User feedback'
 export const CHECK_ANSWERS_CAPTION = 'Check answers'
 
 /**
@@ -22,6 +23,8 @@ export const CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS =
 export const CHECK_ANSWERS_TAB_REFERENCE_NUMBER =
   'check-answers-settings/reference-number'
 export const CHECK_ANSWERS_TAB_SECTIONS = 'check-answers-settings/sections'
+export const CHECK_ANSWERS_TAB_USER_FEEDBACK =
+  'check-answers-settings/user-feedback'
 
 /**
  * Get the tab configuration for check answers pages with full absolute paths
@@ -43,7 +46,11 @@ export function getCheckAnswersTabConfig(slug, pageId, activeTab) {
       title: TAB_TITLE_REFERENCE_NUMBER,
       link: CHECK_ANSWERS_TAB_REFERENCE_NUMBER
     },
-    { title: TAB_TITLE_SECTIONS, link: CHECK_ANSWERS_TAB_SECTIONS }
+    { title: TAB_TITLE_SECTIONS, link: CHECK_ANSWERS_TAB_SECTIONS },
+    {
+      title: TAB_TITLE_USER_FEEDBACK,
+      link: CHECK_ANSWERS_TAB_USER_FEEDBACK
+    }
   ]
   return tabs.map((tab) => ({
     title: tab.title,

@@ -41,6 +41,7 @@ function getSectionsSummary(definition) {
  * @param {{ count: number, titles: string[] }} sectionsSummary
  * @param {boolean} showConfirmationEmail
  * @param {boolean} showReferenceNumber
+ * @param {boolean} disableUserFeedback
  */
 function buildSummaries(
   slug,
@@ -48,7 +49,8 @@ function buildSummaries(
   declarationInfo,
   sectionsSummary,
   showConfirmationEmail,
-  showReferenceNumber
+  showReferenceNumber,
+  disableUserFeedback
 ) {
   return {
     // Declaration summary
@@ -86,6 +88,15 @@ function buildSummaries(
       count: sectionsSummary.count,
       titles: sectionsSummary.titles,
       link: editorv2Path(slug, `page/${pageId}/check-answers-settings/sections`)
+    },
+
+    // User feedback summary
+    userFeedback: {
+      enabled: !disableUserFeedback,
+      link: editorv2Path(
+        slug,
+        `page/${pageId}/check-answers-settings/user-feedback`
+      )
     }
   }
 }
@@ -111,6 +122,7 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const sectionsSummary = getSectionsSummary(definition)
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
+  const disableUserFeedback = definition.options?.disableUserFeedback ?? false
 
   const previewPageUrl = `${buildPreviewUrl(slug, FormStatus.Draft)}${page?.path}?force`
 
@@ -143,7 +155,8 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
       declarationInfo,
       sectionsSummary,
       showConfirmationEmail,
-      showReferenceNumber
+      showReferenceNumber,
+      disableUserFeedback
     ),
 
     // Preview model

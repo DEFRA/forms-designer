@@ -30,6 +30,9 @@ export const sessionNames = {
     editorReferenceNumberSettings: /** @type {const} */ (
       'referenceNumberSettingsValidationFailure'
     ),
+    editorUserFeedbackSettings: /** @type {const} */ (
+      'userFeedbackSettingsValidationFailure'
+    ),
     editorGuidance: /** @type {const} */ ('guidanceValidationFailure'),
     editorPage: /** @type {const} */ ('pageValidationFailure'),
     editorQuestions: /** @type {const} */ ('questionsValidationFailure'),

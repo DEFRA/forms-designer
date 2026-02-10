@@ -60,13 +60,22 @@
         {% endif %}
       {% endset %}
 
+      {# User feedback summary row #}
+      {%- set userFeedbackValueHtml %}
+        {% if not userFeedback.enabled %}
+          <span>Removed</span>
+        {% else %}
+          <a class="govuk-link govuk-link--no-visited-state" href="{{ userFeedback.link }}">Remove the GOV.UK  feedback page</a>
+        {% endif %}
+      {% endset %}
+
       {{ govukSummaryList({
         classes: "govuk-!-margin-bottom-0",
         rows: [
           {
             key: {
               text: "Declaration text (optional)",
-              classes: "govuk-summary-list__key40"
+              classes: "govuk-summary-list__width40"
             },
             value: {
               html: declarationValueHtml,
@@ -80,7 +89,8 @@
                   visuallyHiddenText: "declaration text",
                   classes: "govuk-link--no-visited-state"
                 }
-              ]
+              ],
+              classes: "govuk-summary-list__width15"
             } if declaration.hasDeclaration
           },
           {
@@ -136,6 +146,24 @@
                 }
               ]
             } if sections.count > 0
+          },
+          {
+            key: {
+              text: "User feedback (optional)"
+            },
+            value: {
+              html: userFeedbackValueHtml
+            },
+            actions: {
+              items: [
+                {
+                  href: userFeedback.link,
+                  text: "Change",
+                  visuallyHiddenText: "user feedback",
+                  classes: "govuk-link--no-visited-state"
+                }
+              ]
+            } if not userFeedback.enabled
           }
         ]
       }) }}
