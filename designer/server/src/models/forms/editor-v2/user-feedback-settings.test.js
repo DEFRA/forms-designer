@@ -6,73 +6,56 @@ import {
 } from '@defra/forms-model/stubs'
 
 import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
-import { settingsFields } from '~/src/models/forms/editor-v2/confirmation-email-settings.js'
+import { settingsFields } from '~/src/models/forms/editor-v2/user-feedback-settings.js'
 
-describe('confirmation email settings', () => {
+describe('user feedback settings', () => {
   describe('settingsFields', () => {
     it('should create checkbox field with value false (confirmation email enabled)', () => {
-      const fields = settingsFields('false')
+      const fields = settingsFields(false)
 
-      expect(fields.disableConfirmationEmail).toEqual({
-        name: 'disableConfirmationEmail',
-        id: 'disableConfirmationEmail',
+      expect(fields.disableUserFeedback).toEqual({
+        name: 'disableUserFeedback',
+        id: 'disableUserFeedback',
         items: [
           {
             value: 'true',
-            text: 'Turn off the confirmation email',
+            text: 'Remove GOV.UK feedback page',
             checked: false
           }
         ]
       })
     })
 
-    it('should create checkbox field with value true (confirmation email disabled)', () => {
-      const fields = settingsFields('true')
+    it('should create checkbox field with value true (user feedback disabled)', () => {
+      const fields = settingsFields(true)
 
-      expect(fields.disableConfirmationEmail).toEqual({
-        name: 'disableConfirmationEmail',
-        id: 'disableConfirmationEmail',
+      expect(fields.disableUserFeedback).toEqual({
+        name: 'disableUserFeedback',
+        id: 'disableUserFeedback',
         items: [
           {
             value: 'true',
-            text: 'Turn off the confirmation email',
+            text: 'Remove GOV.UK feedback page',
             checked: true
           }
         ]
       })
     })
-
-    it('should create checkbox field with undefined value', () => {
-      const fields = settingsFields(undefined)
-
-      expect(fields.disableConfirmationEmail).toEqual({
-        name: 'disableConfirmationEmail',
-        id: 'disableConfirmationEmail',
-        items: [
-          {
-            value: 'true',
-            text: 'Turn off the confirmation email',
-            checked: false
-          }
-        ]
-      })
-    })
-
     it('should include validation errors when provided', () => {
       const validation = {
         formErrors: {
-          disableConfirmationEmail: {
+          disableUserFeedback: {
             text: 'Select an option',
-            href: '#disableConfirmationEmail'
+            href: '#disableUserFeedback'
           }
         },
         formValues: {}
       }
 
       // @ts-expect-error - Partial validation object for testing error handling
-      const fields = settingsFields('false', validation)
+      const fields = settingsFields(undefined, validation)
 
-      expect(fields.disableConfirmationEmail.errorMessage).toEqual({
+      expect(fields.disableUserFeedback.errorMessage).toEqual({
         text: 'Select an option'
       })
     })
@@ -140,33 +123,6 @@ describe('confirmation email settings', () => {
         classes: ''
       })
       expect(previewModel.previewPageUrl).toBe('http://another-url')
-    })
-
-    it('should handle summary page with confirmation email controller', () => {
-      const page = buildSummaryPage()
-      const definition = buildDefinition({
-        pages: [
-          buildQuestionPage({
-            components: [
-              buildTextFieldComponent({
-                shortDescription: 'Full name'
-              })
-            ]
-          })
-        ]
-      })
-      const previewModel = getPreviewModel(
-        page,
-        definition,
-        'http://test-url',
-        '',
-        false,
-        false,
-        false
-      )
-
-      expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
-      expect(previewModel.previewTitle).toBe('Preview of Check answers page')
     })
 
     it('should include declaration in preview when provided', () => {

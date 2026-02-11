@@ -131,6 +131,11 @@ export interface FormEditor {
   enableReferenceNumber: boolean
 
   /**
+   * Whether user feedback should be disabled
+   */
+  disableUserFeedback: boolean
+
+  /**
    * The min length a field can have
    */
   minLength: string
@@ -339,6 +344,11 @@ export type FormEditorInputConfirmationEmailSettings = Pick<
 export type FormEditorInputReferenceNumberSettings = Pick<
   FormEditor,
   'enableReferenceNumber'
+>
+
+export type FormEditorInputUserFeedbackSettings = Pick<
+  FormEditor,
+  'disableUserFeedback'
 >
 
 export type FormEditorInputQuestion = Pick<
