@@ -100,6 +100,44 @@ export function deriveQuestionType(
   return /** @type {string | undefined} */ questionType
 }
 
+/**
+ * Validates the selected question type is allowed.
+ * Returns a validation error if not, or undefined if valid.
+ * @param {ComponentType} questionType
+ * @param {string} questionId
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ * @returns {Joi.ValidationError | undefined}
+ */
+export function validateQuestionType(
+  questionType,
+  questionId,
+  pageId,
+  definition
+) {
+  if (questionType !== ComponentType.PaymentField) {
+    return undefined
+  }
+
+  // Allow re-selecting payment on the question that's already a payment field
+  const existingComponent =
+    questionId !== 'new'
+      ? getComponentFromDefinition(definition, pageId, questionId)
+      : undefined
+
+  if (
+    existingComponent?.type !== ComponentType.PaymentField &&
+    hasPaymentQuestionInForm(definition)
+  ) {
+    return createJoiError(
+      'questionType',
+      'You can only add one payment question to a form'
+    )
+  }
+
+  return undefined
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string }, Payload: undefined }>}
@@ -194,24 +232,14 @@ export default [
       const { questionType, writtenAnswerSub, dateSub, locationSub, listSub } =
         payload
 
-      // Ensure there's no existing payment question,
-      // since only one payment question allowed per form.
-      // Skip if the current question is already the payment question.
-      if (questionType === ComponentType.PaymentField) {
-        const existingComponent =
-          questionId !== 'new'
-            ? getComponentFromDefinition(definition, pageId, questionId)
-            : undefined
-        const isCurrentQuestionPayment =
-          existingComponent?.type === ComponentType.PaymentField
-
-        if (!isCurrentQuestionPayment && hasPaymentQuestionInForm(definition)) {
-          const error = createJoiError(
-            'questionType',
-            'You can only add one payment question to a form'
-          )
-          return redirectWithErrors(request, h, error, errorKey)
-        }
+      const questionTypeError = validateQuestionType(
+        /** @type {ComponentType} */ (questionType),
+        questionId,
+        pageId,
+        definition
+      )
+      if (questionTypeError) {
+        return redirectWithErrors(request, h, questionTypeError, errorKey)
       }
 
       const suppliedQuestionType =
@@ -275,6 +303,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPage } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
