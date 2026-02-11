@@ -127,9 +127,10 @@ export function validatePreSchema(request, h) {
   const state = getQuestionSessionState(yar, stateId)
 
   const jsEnabled = payload.jsEnabled === 'true'
-  const listItems = jsEnabled
-    ? /** @type {ListItem[]} */ (JSON.parse(payload.listItemsData))
-    : state?.listItems
+  const listItems =
+    jsEnabled && payload.listItemsData
+      ? /** @type {ListItem[]} */ (JSON.parse(payload.listItemsData))
+      : state?.listItems
 
   const { error } = preSchema.validate({
     ...payload,
