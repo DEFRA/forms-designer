@@ -23,3 +23,10 @@ createAll(SkipLink)
 createAll(Tabs)
 createAll(NotificationBanner)
 createAll(ServiceHeader)
+
+const jsElem = /** @type { HTMLInputElement | null } */ (
+  document.getElementById('jsEnabled')
+)
+if (jsElem) {
+  jsElem.value = 'true'
+}
