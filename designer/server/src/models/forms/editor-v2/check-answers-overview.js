@@ -2,12 +2,15 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  SummaryPageController
+  SummaryPageController,
+  hasComponentsEvenIfNoNext
 } from '@defra/forms-model'
 
-import { getPageFromDefinition } from '~/src/lib/utils.js'
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { getPageFromDefinition, stringHasValue } from '~/src/lib/utils.js'
 import {
   BACK_TO_ADD_AND_EDIT_PAGES,
+  SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
@@ -106,6 +109,78 @@ function buildSummaries(
         `page/${pageId}/check-answers-settings/user-feedback`
       )
     }
+  }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} pageHeading
+ * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {string[]} [notification]
+ */
+export function checkAnswersSettingsBaseViewModel(
+  metadata,
+  definition,
+  pageId,
+  pageHeading,
+  validation,
+  notification
+) {
+  const formTitle = metadata.title
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+  const page = getPageFromDefinition(definition, pageId)
+  const components = hasComponentsEvenIfNoNext(page) ? page.components : []
+
+  const { formErrors } = validation ?? {}
+
+  const guidanceComponent = /** @type { MarkdownComponent | undefined } */ (
+    components.find((comp, idx) => {
+      return comp.type === ComponentType.Markdown && idx === 0
+    })
+  )
+
+  const declarationText = guidanceComponent?.content ?? ''
+  const needDeclaration = stringHasValue(declarationText)
+  const showConfirmationEmail = page?.controller !== ControllerType.Summary
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
+  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
+
+  // prettier-ignore
+  const previewModel = getPreviewModel(
+    page, definition, previewPageUrl, declarationText, needDeclaration, showConfirmationEmail, showReferenceNumber
+  )
+
+  return {
+    ...baseModelFields(
+      metadata.slug,
+      `${pageHeading} - ${formTitle}`,
+      formTitle
+    ),
+    cardTitle: pageHeading,
+    cardHeading: pageHeading,
+    navigation,
+    errorList: buildErrorList(formErrors),
+    formErrors: validation?.formErrors,
+    formValues: validation?.formValues,
+    previewModel,
+    preview: {
+      pageId: page?.id,
+      definitionId: metadata.id,
+      pageTemplate: SUMMARY_CONTROLLER_TEMPLATE
+    },
+    buttonText: SAVE_AND_CONTINUE,
+    notification,
+    declarationText,
+    needDeclaration,
+    page
   }
 }
 
@@ -241,6 +316,7 @@ export function getPreviewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, Page, PagePreviewPanelMacro } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
  * @import { PreviewModelExtras } from '~/src/models/forms/editor-v2/preview-helpers.js'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

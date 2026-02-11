@@ -2,6 +2,7 @@ import {
   ControllerType,
   FormStatus,
   getPageTitle,
+  isPaymentPage,
   isSummaryPage
 } from '@defra/forms-model'
 
@@ -81,7 +82,8 @@ function getUnassignedPages(definition) {
       (page) =>
         !page.section &&
         !isSummaryPage(page) &&
-        page.controller !== ControllerType.Status
+        page.controller !== ControllerType.Status &&
+        !isPaymentPage(page)
     )
     .map((page) => ({
       id: page.id ?? '',
