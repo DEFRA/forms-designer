@@ -27,6 +27,6 @@ createAll(ServiceHeader)
 const jsElem = /** @type { HTMLInputElement | null } */ (
   document.getElementById('jsEnabled')
 )
-if (jsElem) {
+if (jsElem && jsElem instanceof HTMLInputElement) {
   jsElem.value = 'true'
 }
