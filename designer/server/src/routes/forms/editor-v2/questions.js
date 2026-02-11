@@ -3,6 +3,7 @@ import {
   MIN_NUMBER_OF_REPEAT_ITEMS,
   Scopes,
   guidanceTextSchema,
+  jsEnabledSchema,
   maxItemsSchema,
   minItemsSchema,
   pageHeadingAndGuidanceSchema,
@@ -93,17 +94,18 @@ export const schema = Joi.object().keys({
   }),
   saveReorder: Joi.boolean().default(false).optional(),
   movement: Joi.string().optional(),
-  itemOrder: Joi.any().custom(customItemOrder)
+  itemOrder: Joi.any().custom(customItemOrder),
+  jsEnabled: jsEnabledSchema
 })
 
 /**
  * Override checkboxes and revalidate against schema (if JS is disabled, it's possible to enter details
  * without checking the parent checkbox)
- * @param {FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean}} payload
+ * @param {FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean, jsEnabled: string }} payload
  * @param {string} action
  */
 export function revalidateCheckboxesWithOverride(payload, action) {
-  if (action === 'reorder') {
+  if (action === 'reorder' || payload.jsEnabled === 'true') {
     return undefined
   }
 
@@ -196,7 +198,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean} }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean, jsEnabled: string } }>}
    */
   ({
     method: 'POST',
