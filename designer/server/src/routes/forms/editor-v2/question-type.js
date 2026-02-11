@@ -24,7 +24,11 @@ import {
   getQuestionSessionState,
   mergeQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { hasPaymentQuestionInForm, requiresPageTitle } from '~/src/lib/utils.js'
+import {
+  getComponentFromDefinition,
+  hasPaymentQuestionInForm,
+  requiresPageTitle
+} from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
@@ -94,6 +98,44 @@ export function deriveQuestionType(
     return listSub
   }
   return /** @type {string | undefined} */ questionType
+}
+
+/**
+ * Validates the selected question type is allowed.
+ * Returns a validation error if not, or undefined if valid.
+ * @param {ComponentType} questionType
+ * @param {string} questionId
+ * @param {string} pageId
+ * @param {FormDefinition} definition
+ * @returns {Joi.ValidationError | undefined}
+ */
+export function validateQuestionType(
+  questionType,
+  questionId,
+  pageId,
+  definition
+) {
+  if (questionType !== ComponentType.PaymentField) {
+    return undefined
+  }
+
+  // Allow re-selecting payment on the question that's already a payment field
+  const existingComponent =
+    questionId !== 'new'
+      ? getComponentFromDefinition(definition, pageId, questionId)
+      : undefined
+
+  if (
+    existingComponent?.type !== ComponentType.PaymentField &&
+    hasPaymentQuestionInForm(definition)
+  ) {
+    return createJoiError(
+      'questionType',
+      'You can only add one payment question to a form'
+    )
+  }
+
+  return undefined
 }
 
 export default [
@@ -190,18 +232,14 @@ export default [
       const { questionType, writtenAnswerSub, dateSub, locationSub, listSub } =
         payload
 
-      // Ensure there's no existing payment question when adding multiple questions,
-      // since only one payment question allowed per form
-      if (
-        questionId === 'new' &&
-        questionType === ComponentType.PaymentField &&
-        hasPaymentQuestionInForm(definition)
-      ) {
-        const error = createJoiError(
-          'questionType',
-          'You can only add one payment question to a form'
-        )
-        return redirectWithErrors(request, h, error, errorKey)
+      const questionTypeError = validateQuestionType(
+        /** @type {ComponentType} */ (questionType),
+        questionId,
+        pageId,
+        definition
+      )
+      if (questionTypeError) {
+        return redirectWithErrors(request, h, questionTypeError, errorKey)
       }
 
       const suppliedQuestionType =
@@ -265,6 +303,6 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputPage } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditorInputPage } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

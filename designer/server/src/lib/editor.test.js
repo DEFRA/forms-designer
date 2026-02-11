@@ -2210,6 +2210,42 @@ describe('editor.js', () => {
       expect(controllerType).toBeNull()
       expect(additionalProperties).toEqual({})
     })
+
+    test('should clear repeat controller when component changed to PaymentField', () => {
+      const page = /** @type {PageRepeat} */ ({
+        controller: ControllerType.Repeat
+      })
+      const components = /** @type {ComponentDef[]} */ ([
+        { type: ComponentType.PaymentField }
+      ])
+      const payload = {
+        repeater: 'true',
+        minItems: 1,
+        maxItems: 4,
+        questionSetName: 'a repeater'
+      }
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBeNull()
+      expect(additionalProperties).toEqual({})
+    })
+
+    test('should not set repeat controller when PaymentField is present', () => {
+      const page = /** @type {Page} */ ({})
+      const components = /** @type {ComponentDef[]} */ ([
+        { type: ComponentType.PaymentField }
+      ])
+      const payload = {
+        repeater: 'yes',
+        minItems: 1,
+        maxItems: 5,
+        questionSetName: 'test'
+      }
+      const { controllerType, additionalProperties } =
+        getControllerTypeAndProperties(page, components, payload)
+      expect(controllerType).toBeUndefined()
+      expect(additionalProperties).toEqual({})
+    })
   })
 
   describe('stringHasValue', () => {

@@ -358,6 +358,54 @@ describe('Editor v2 question routes', () => {
     )
   })
 
+  test('POST - converting existing question to payment should redisplay with error if already a payment question in form', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithPaymentQuestion)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/question/q1/type/54321',
+      auth,
+      payload: { questionType: 'PaymentField' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p1/question/q1/type/54321'
+    )
+  })
+
+  test('POST - re-selecting payment type on existing payment question should not error', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithPaymentQuestion)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p2/question/q2/type/54321',
+      auth,
+      payload: { questionType: 'PaymentField' }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/page/p2/question/q2/details/54321'
+    )
+  })
+
   test('POST - existing questions should not redirect to page overview with errors if there is no title', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
