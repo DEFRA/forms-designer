@@ -155,6 +155,16 @@ export interface FormMetadata {
   privacyNoticeUrl?: string
 
   /**
+   * The text of the privacy notice
+   */
+  privacyNoticeText?: string
+
+  /**
+   * The type of the privacy notice (text or link)
+   */
+  privacyNoticeType?: string
+
+  /**
    * Email address where form responses are sent
    */
   notificationEmail?: string
@@ -216,6 +226,8 @@ export type FormMetadataInput = Pick<
   | 'teamEmail'
   | 'contact'
   | 'submissionGuidance'
+  | 'privacyNoticeType'
+  | 'privacyNoticeText'
   | 'privacyNoticeUrl'
   | 'notificationEmail'
 >

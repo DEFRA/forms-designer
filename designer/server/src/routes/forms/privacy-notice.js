@@ -1,4 +1,4 @@
-import { Scopes, privacyNoticeUrlSchema } from '@defra/forms-model'
+import { Scopes, privacyNoticeTextSchema, privacyNoticeTypeSchema, privacyNoticeUrlSchema } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -13,12 +13,26 @@ export const ROUTE_PATH_EDIT_PRIVACY_NOTICE =
   '/library/{slug}/edit/privacy-notice'
 
 export const schema = Joi.object().keys({
-  privacyNoticeUrl: privacyNoticeUrlSchema.required().messages({
-    'string.empty': 'Enter a link to a privacy notice for this form',
-    'string.uri':
-      'Enter a link to a privacy notice for this form in the correct format',
-    'string.uriCustomScheme':
-      'Enter a link to a privacy notice for this form in the correct format'
+  privacyNoticeType: privacyNoticeTypeSchema.required().messages({
+    'any.required': 'Choose how you want to add a privacy notice'
+  }),
+  privacyNoticeText: Joi.when('privacyNoticeType', {
+    is: 'text',
+    then: privacyNoticeTextSchema.required().messages({
+      'string.empty': 'Enter text for the privacy notice'
+    }),
+    otherwise: Joi.string().allow('')
+  }),
+  privacyNoticeUrl: Joi.when('privacyNoticeType', {
+    is : 'link',
+    then: privacyNoticeUrlSchema.required().messages({
+      'string.empty': 'Enter a link to a privacy notice for this form',
+      'string.uri':
+        'Enter a link to a privacy notice for this form in the correct format',
+      'string.uriCustomScheme':
+        'Enter a link to a privacy notice for this form in the correct format'
+    }),
+    otherwise: Joi.string().allow('')
   })
 })
 
@@ -58,7 +72,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'privacyNoticeUrl'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string }, Payload: Pick<FormMetadataInput, 'privacyNoticeType' | 'privacyNoticeText' | 'privacyNoticeUrl'> }>}
    */
   ({
     method: 'POST',
@@ -66,18 +80,18 @@ export default [
     async handler(request, h) {
       const { auth, params, payload, yar } = request
       const { slug } = params
-      const { privacyNoticeUrl } = payload
+      const { privacyNoticeType, privacyNoticeText, privacyNoticeUrl } = payload
       const { token } = auth.credentials
 
       // Retrieve form by slug
       const { id } = await forms.get(slug, token)
 
       // Update the metadata with the privacy notice url
-      await forms.updateMetadata(id, { privacyNoticeUrl }, token)
+      await forms.updateMetadata(id, { privacyNoticeType, privacyNoticeText, privacyNoticeUrl }, token)
 
       yar.flash(
         sessionNames.successNotification,
-        'Link to a privacy notice has been updated'
+        'Privacy notice has been updated'
       )
 
       return h.redirect(formOverviewPath(slug)).code(StatusCodes.SEE_OTHER)

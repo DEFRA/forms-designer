@@ -208,6 +208,32 @@
     classes: "govuk-!-margin-top-8"
   }) }}
 
+  {% set isPrivacyText = form.privacyNoticeType == "text" and form.privacyNoticeText %}
+
+  {%- set privacyNoticeHtml %}
+    {% if isPrivacyText %}
+      <div class="app-prose-scope with-ellipsis">
+        {{ form.privacyNoticeText | markdown | safe }}
+      </div>
+    {% else %}
+        <a class="govuk-link govuk-link--no-visited-state" target="_blank" href="{{ form.privacyNoticeUrl }}">{{ form.privacyNoticeUrl }}</a>
+    {% endif %}
+  {% endset %}
+
+  {% set privacyPreview = {
+      href: "/library/" + form.slug + "/edit/privacy-notice",
+      text: "Preview",
+      visuallyHiddenText: "privacy notice"
+    }
+  %}
+
+  {% set privacyChange = {
+      href: "/library/" + form.slug + "/edit/privacy-notice",
+      text: "Change",
+      visuallyHiddenText: "privacy notice"
+    }
+  %}
+
   {{ govukSummaryList({
     classes: "govuk-!-margin-bottom-8",
     rows: [
@@ -216,18 +242,14 @@
           text: "Privacy notice"
         },
         value: {
-          html: '<a class="govuk-link govuk-link--no-visited-state" target="_blank" href="' + form.privacyNoticeUrl + '">' + form.privacyNoticeUrl + '</a>'
-          if form.privacyNoticeUrl else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/privacy-notice">Enter link to privacy notice</a>'
+          html: privacyNoticeHtml
+          if form.privacyNoticeUrl or form.privacyNoticeText else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/privacy-notice">Add privacy notice</a>'
         },
         actions: {
-          items: [
-            {
-              href: "/library/" + form.slug + "/edit/privacy-notice",
-              text: "Change",
-              visuallyHiddenText: "privacy notice"
-            }
-          ]
-        } if form.privacyNoticeUrl
+          items:  [
+              privacyPreview, privacyChange
+            ] if isPrivacyText else [ privacyChange ]
+        }
       }
     ]
   }) }}
