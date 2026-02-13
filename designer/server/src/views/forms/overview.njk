@@ -238,7 +238,7 @@
       text: "Change",
       visuallyHiddenText: "privacy notice",
       classes: 'govuk-link--no-visited-state'
-    }
+    } if form.privacyNoticeUrl or form.privacyNoticeText else {}
   %}
 
   {{ govukSummaryList({
