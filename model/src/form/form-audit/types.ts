@@ -60,6 +60,8 @@ export interface FormSupportOnlineChanges {
 }
 
 export interface FormPrivacyNoticeChanges {
+  privacyNoticeType?: string
+  privacyNoticeText?: string
   privacyNoticeUrl?: string
 }
 

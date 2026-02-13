@@ -56,7 +56,7 @@ describe('Forms privacy notice', () => {
     lists: []
   }
 
-  test('GET - should check correct privacy notice url is rendered in the view', async () => {
+  test('GET - should check correct privacy notice info is rendered in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
@@ -70,9 +70,16 @@ describe('Forms privacy notice', () => {
 
     const { container } = await renderResponse(server, options)
 
+    const $radio1 = container.getByRole('radio', {
+      name: 'Directly to the form'
+    })
+    const $radio2 = container.getByRole('radio', {
+      name: 'Link to a privacy notice on GOV.UK'
+    })
+    expect($radio1).toBeInTheDocument()
+    expect($radio2).toBeInTheDocument()
     const $privacyNoticeUrl = container.getByRole('textbox', {
-      name: 'Link to privacy notice for this form',
-      description: 'For example, https://www.gov.uk/help/privacy-notice'
+      name: 'Enter link'
     })
 
     expect($privacyNoticeUrl).toHaveValue(
@@ -95,7 +102,10 @@ describe('Forms privacy notice', () => {
       method: 'post',
       url: '/library/my-form-slug/edit/privacy-notice',
       auth,
-      payload: { privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1' }
+      payload: {
+        privacyNoticeType: 'link',
+        privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1'
+      }
     }
 
     const {

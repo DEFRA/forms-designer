@@ -52,6 +52,16 @@ export function buildPreviewUrl(slug, status) {
 }
 
 /**
+ * Builds a URL for previewing the user-defined privacy notice.
+ * @param {string} slug - The unique identifier for the form.
+ */
+export function buildPrivacyPreviewUrl(slug) {
+  const encodedSlug = encodeURIComponent(slug)
+
+  return `${config.previewUrl}/help/privacy/${encodedSlug}`
+}
+
+/**
  * Builds a URL for previewing error messages for a question based on its slug.
  * @param {string} slug - The unique identifier for the form.
  */

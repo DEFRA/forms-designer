@@ -33,9 +33,17 @@ describe('edit - model - privacy notice', () => {
   it('should test privacy policy view model', () => {
     const result = privacyNoticyViewModel(formMetadata)
     expect(result.pageTitle).toBe('Privacy notice for this form')
-    expect(result.field.id).toBe('privacyNoticeUrl')
-    expect(result.field.name).toBe('privacyNoticeUrl')
-    expect(result.field.value).toBe('https://www.gov.uk/help/privacy-notice')
+    expect(result.fields.privacyNoticeType.id).toBe('privacyNoticeType')
+    expect(result.fields.privacyNoticeType.name).toBe('privacyNoticeType')
+
+    expect(result.fields.privacyNoticeText.id).toBe('privacyNoticeText')
+    expect(result.fields.privacyNoticeText.name).toBe('privacyNoticeText')
+
+    expect(result.fields.privacyNoticeUrl.id).toBe('privacyNoticeUrl')
+    expect(result.fields.privacyNoticeUrl.name).toBe('privacyNoticeUrl')
+    expect(result.fields.privacyNoticeUrl.value).toBe(
+      'https://www.gov.uk/help/privacy-notice'
+    )
   })
 })
 
