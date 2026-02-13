@@ -4,7 +4,7 @@
 {% set questionGroupErrorSelectClass = 'govuk-select--error' if component.errorMessage %}
 
 <div class="govuk-form-group {{questionGroupErrorClass}}">
-  <label class="govuk-label" for="{{ component.id }}">{{ component.label.text }}</label>
+  <label class="govuk-label {{ component.label.classes }}" for="{{ component.id }}">{{ component.label.text }}</label>
   {{ questionGroupErrorHtml | safe }}
   <select class="govuk-select {{questionGroupErrorSelectClass}}" id="{{ component.id }}" name="{{ component.name }}">
     <option value="">Select a question</option>

@@ -97,6 +97,7 @@ export class ItemReorder {
 
     this.initSortable()
     this.initButtonListeners()
+    this.initFocusListeners()
     this.updateVisuals()
     this.updateMoveButtons()
     this.updateHiddenItemOrderData()
@@ -127,6 +128,44 @@ export class ItemReorder {
     this.container.addEventListener('click', (event) =>
       this.handleButtonClick(event)
     )
+  }
+
+  initFocusListeners() {
+    if (!this.container) {
+      return
+    }
+
+    this.container.addEventListener('focusout', (event) =>
+      this.handleFocusOut(event)
+    )
+  }
+
+  /**
+   * Handles focusout events to remove the panel focus class when focus leaves the item.
+   * @param {FocusEvent} event
+   */
+  handleFocusOut(event) {
+    if (!this.container) {
+      return
+    }
+
+    const target = event.target
+    if (!(target instanceof HTMLElement)) {
+      return
+    }
+
+    const listItem = target.closest(this.listItemSelector)
+    if (!(listItem instanceof HTMLElement)) {
+      return
+    }
+
+    const relatedTarget = event.relatedTarget
+    const focusStillInItem =
+      relatedTarget instanceof HTMLElement && listItem.contains(relatedTarget)
+
+    if (!focusStillInItem) {
+      listItem.classList.remove(this.panelFocusClass)
+    }
   }
 
   /**

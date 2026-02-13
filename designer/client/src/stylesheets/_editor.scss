@@ -320,7 +320,7 @@ p code {
   width: 76%;
   margin: -2px -4px;
   padding: 15px 6px;
-  background-color: govuk-colour("light-grey");
+  background-color: $app-light-grey;
   color: govuk-colour("dark-grey");
 
   @at-root {

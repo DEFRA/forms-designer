@@ -174,13 +174,13 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead">
 
 
 
 
     
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -199,7 +199,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 </div>
 
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   
@@ -495,14 +495,14 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead">
 
   <form method="post" novalidate>
 
 
 
     
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -521,7 +521,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 </div>
 
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
           <div class="govuk-warning-text">
@@ -786,13 +786,13 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead">
 
 
 
 
     
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -811,7 +811,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 </div>
 
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   

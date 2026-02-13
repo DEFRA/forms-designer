@@ -42,11 +42,18 @@
                       }) }}
                     {% endif %}
 
-                    {% if params.caption %}
-                    <span class="govuk-caption-l">{{ params.caption }}</span>
+                    {% if params.caption and not params.heading %}
+                      <span class="govuk-caption-l">{{ params.caption }}</span>
                     {% endif %}
 
-                    {% if params.heading %}<h1 class="govuk-heading-l" id="page-heading">{{ params.heading }}</h1>{% endif %}
+                    {% if params.heading %}
+                      <h2 class="govuk-heading-l" id="page-heading">
+                        {% if params.caption %}
+                          <span class="govuk-caption-l">{{ params.caption }}</span>
+                        {% endif %}
+                        {{ params.heading }}
+                      </h2>
+                    {% endif %}
 
                     {% if params.notification | length %}
                       {% call govukNotificationBanner({

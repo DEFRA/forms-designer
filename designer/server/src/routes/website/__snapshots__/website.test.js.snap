@@ -162,7 +162,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
   <meta name="robots" content="noindex, nofollow">
 
 
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -181,9 +181,9 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -222,7 +222,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/library.svg" alt="Icon for Library of existing forms" role="img" />
+              <img src="/assets/images/website/svgs/library.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Library of existing forms</h3>
           </div>
@@ -237,7 +237,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/form-info.svg" alt="Icon for Form information" role="img" />
+              <img src="/assets/images/website/svgs/form-info.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Form information</h3>
           </div>
@@ -259,7 +259,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/auditing.svg" alt="Icon for Auditing" role="img" />
+              <img src="/assets/images/website/svgs/auditing.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Auditing</h3>
           </div>
@@ -283,7 +283,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/page-types.svg" alt="Icon for Page types" role="img" />
+              <img src="/assets/images/website/svgs/page-types.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Page types</h3>
           </div>
@@ -305,7 +305,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/error-messages.svg" alt="Icon for Error messages" role="img" />
+              <img src="/assets/images/website/svgs/error-messages.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Error messages</h3>
           </div>
@@ -320,7 +320,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/answer-limits.svg" alt="Icon for Answer limits" role="img" />
+              <img src="/assets/images/website/svgs/answer-limits.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Answer limits</h3>
           </div>
@@ -335,7 +335,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/form-guidance.svg" alt="Icon for Form guidance" role="img" />
+              <img src="/assets/images/website/svgs/form-guidance.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Form guidance</h3>
           </div>
@@ -350,7 +350,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/conditions.svg" alt="Icon for Conditions" role="img" />
+              <img src="/assets/images/website/svgs/conditions.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Conditions</h3>
           </div>
@@ -365,7 +365,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/form-declaration.svg" alt="Icon for Form declaration" role="img" />
+              <img src="/assets/images/website/svgs/form-declaration.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Form declaration</h3>
           </div>
@@ -380,7 +380,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/page-sections.svg" alt="Icon for Page sections" role="img" />
+              <img src="/assets/images/website/svgs/page-sections.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Page sections</h3>
           </div>
@@ -404,7 +404,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/text-numbers.svg" alt="Icon for Text &amp; Numbers" role="img" />
+              <img src="/assets/images/website/svgs/text-numbers.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Text &amp; Numbers</h3>
           </div>
@@ -428,7 +428,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/file-upload.svg" alt="Icon for File upload" role="img" />
+              <img src="/assets/images/website/svgs/file-upload.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">File upload</h3>
           </div>
@@ -452,7 +452,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/yes-no.svg" alt="Icon for Yes or no" role="img" />
+              <img src="/assets/images/website/svgs/yes-no.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Yes or no</h3>
           </div>
@@ -483,7 +483,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/address-lookup.svg" alt="Icon for Address and postcode lookup" role="img" />
+              <img src="/assets/images/website/svgs/address-lookup.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Address and postcode lookup</h3>
           </div>
@@ -498,7 +498,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/map.svg" alt="Icon for Map questions" role="img" />
+              <img src="/assets/images/website/svgs/map.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Map questions</h3>
           </div>
@@ -522,7 +522,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="Icon for Submitted forms as emails" role="img" />
+              <img src="/assets/images/website/svgs/submitted-forms.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Submitted forms as emails</h3>
           </div>
@@ -537,7 +537,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/data-output.svg" alt="Icon for Email formats" role="img" />
+              <img src="/assets/images/website/svgs/data-output.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Email formats</h3>
           </div>
@@ -556,7 +556,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/excel-download.svg" alt="Icon for Export to Excel" role="img" />
+              <img src="/assets/images/website/svgs/excel-download.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Export to Excel</h3>
           </div>
@@ -571,7 +571,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for API integration" role="img" />
+              <img src="/assets/images/website/svgs/api-integration.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">API integration</h3>
           </div>
@@ -586,7 +586,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/sharepoint.svg" alt="Icon for Sharepoint integration" role="img" />
+              <img src="/assets/images/website/svgs/sharepoint.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Sharepoint integration</h3>
           </div>
@@ -610,7 +610,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="Icon for Confirmation emails" role="img" />
+              <img src="/assets/images/website/svgs/confirmation-emails.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Confirmation emails</h3>
           </div>
@@ -632,7 +632,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/survey.svg" alt="Icon for Customer satisfaction exit survey" role="img" />
+              <img src="/assets/images/website/svgs/survey.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Customer satisfaction exit survey</h3>
           </div>
@@ -656,7 +656,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/repeating-questions.svg" alt="Icon for Repeating questions" role="img" />
+              <img src="/assets/images/website/svgs/repeating-questions.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Repeating questions</h3>
           </div>
@@ -671,7 +671,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/preview.svg" alt="Icon for Previewing a form" role="img" />
+              <img src="/assets/images/website/svgs/preview.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Previewing a form</h3>
           </div>
@@ -686,7 +686,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/save-exit.svg" alt="Icon for Save and exit" role="img" />
+              <img src="/assets/images/website/svgs/save-exit.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Save and exit</h3>
           </div>
@@ -701,7 +701,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/reference-numbers.svg" alt="Icon for Reference numbers" role="img" />
+              <img src="/assets/images/website/svgs/reference-numbers.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Reference numbers</h3>
           </div>
@@ -726,7 +726,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/payment.svg" alt="Icon for GOV.UK Pay" role="img" />
+              <img src="/assets/images/website/svgs/payment.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">GOV.UK Pay</h3>
           </div>
@@ -741,7 +741,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/map-advanced.svg" alt="Icon for Map questions" role="img" />
+              <img src="/assets/images/website/svgs/map-advanced.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Map questions</h3>
           </div>
@@ -777,7 +777,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/api-integration.svg" alt="Icon for Seamless Integration" role="img" />
+              <img src="/assets/images/website/svgs/api-integration.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Seamless Integration</h3>
           </div>
@@ -792,7 +792,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/api-first.svg" alt="Icon for API-first design" role="img" />
+              <img src="/assets/images/website/svgs/api-first.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">API-first design</h3>
           </div>
@@ -807,7 +807,7 @@ exports[`Health check route /features should shows the Defra Forms Website Featu
         <div class="govuk-card__content">
           <div class="govuk-card__header">
             <div class="feature-icon">
-              <img src="/assets/images/website/svgs/custom-styling.svg" alt="Icon for Custom styling" role="img" />
+              <img src="/assets/images/website/svgs/custom-styling.svg" alt="" role="img" />
             </div>
             <h3 class="govuk-heading-s">Custom styling</h3>
           </div>
@@ -1798,7 +1798,7 @@ exports[`Health check route /get-started should load get Get Started page 1`] = 
   <meta name="robots" content="noindex, nofollow">
 
   
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -1813,9 +1813,9 @@ exports[`Health check route /get-started should load get Get Started page 1`] = 
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
@@ -2099,7 +2099,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
   <meta name="robots" content="noindex, nofollow">
 
   
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -2114,9 +2114,9 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
@@ -2154,11 +2154,11 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
 <h2 id="checklist" class="govuk-visually-hidden">Checklist</h2>
 
-<div id="step-by-step-navigation" class="app-step-nav app-step-nav--large" aria-labelledby="checklist">
+<div id="step-by-step-navigation" class="app-step-nav app-step-nav--large" role="region" aria-labelledby="checklist">
   <ol class="app-step-nav__steps">
     <li class="app-step-nav__step" id="step-1">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2168,7 +2168,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Forms criteria</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Review the forms criteria to find out if your
@@ -2178,7 +2178,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-2">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2188,7 +2188,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Success measures</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You should agree the success measures for your
@@ -2199,7 +2199,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-3">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2209,7 +2209,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Agree timescales</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You should agree timescales with the Defra
@@ -2220,7 +2220,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-4">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2230,7 +2230,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Wireframe</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You should create a plan or wireframe version
@@ -2254,7 +2254,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-5">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2264,7 +2264,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
         <span class="js-step-title">Build your form using the Defra Form Designer</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">When the Defra Forms team has reviewed your
@@ -2281,7 +2281,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-6">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2291,7 +2291,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Review of your form by the Defra Forms team</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Once you've built your first draft, send a
@@ -2309,7 +2309,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-7">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
               <span class="app-step-nav__circle-inner">
                   <span class="app-step-nav__circle-background">
@@ -2319,7 +2319,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
               </span>
           </span>
           <span class="js-step-title">Set up a mailbox to receive form submissions</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Form submissions must be sent to a shared
@@ -2334,7 +2334,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-8">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number ">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2344,7 +2344,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Data protection impact assessment</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You must contact your local Data Protection
@@ -2367,7 +2367,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-9">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2377,7 +2377,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Privacy notice</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You must provide an online link to a relevant
@@ -2406,7 +2406,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-10">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2416,7 +2416,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">How users will find your form</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">If your form is going to be available for
@@ -2433,7 +2433,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-11">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2443,7 +2443,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Make the form live</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">When your form is ready to publish, the Defra
@@ -2456,7 +2456,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
 
     <li class="app-step-nav__step" id="step-12">
       <div class="app-step-nav__header govuk-!-padding-bottom-4 govuk-!-padding-top-2">
-        <h2 class="app-step-nav__title">
+        <h3 class="app-step-nav__title">
           <span class="app-step-nav__circle app-step-nav__circle--number">
             <span class="app-step-nav__circle-inner">
               <span class="app-step-nav__circle-background">
@@ -2466,7 +2466,7 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
             </span>
           </span>
           <span class="js-step-title">Support</span>
-        </h2>
+        </h3>
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">Once your form is live, you should continue to
@@ -2739,7 +2739,7 @@ exports[`Health check route /resources should load Does this need to be... page 
   <meta name="robots" content="noindex, nofollow">
 
   
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -2754,9 +2754,9 @@ exports[`Health check route /resources should load Does this need to be... page 
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
@@ -3068,7 +3068,7 @@ exports[`Health check route /resources/accessibility-and-inclusion should load A
   <meta name="robots" content="noindex, nofollow">
 
   
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -3083,9 +3083,9 @@ exports[`Health check route /resources/accessibility-and-inclusion should load A
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-one-quarter app-contents-list--sticky govuk-!-padding-right-0">
@@ -3493,7 +3493,7 @@ exports[`Health check route /support should shows the Defra Forms Website Suppor
   <meta name="robots" content="noindex, nofollow">
 
 
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -3511,9 +3511,9 @@ exports[`Health check route /support should shows the Defra Forms Website Suppor
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
@@ -3754,7 +3754,7 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
   <meta name="robots" content="noindex, nofollow">
 
 
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -3772,9 +3772,9 @@ exports[`Health check route /whats-new should show the What's new page 1`] = `
 </div>
 
 
-  <main class="govuk-main-wrapper" id="main-head-content">
+  <main class="govuk-main-wrapper" id="main-content">
 
-<div id="main-content">
+<div>
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">

@@ -168,13 +168,13 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
 
 
 
-  <main class="govuk-main-wrapper govuk-main-wrapper--masthead" id="main-head-content">
+  <main class="govuk-main-wrapper govuk-main-wrapper--masthead">
 
 
 
 
     
-<div class="app-masthead">
+<div id="main-content" class="app-masthead">
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
@@ -193,7 +193,7 @@ exports[`Account profile route /auth/account route displays user profile 1`] = `
 </div>
 
 
-  <div id="main-content" class="govuk-width-container app-width-container--wide">
+  <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   

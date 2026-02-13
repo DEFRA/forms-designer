@@ -1,7 +1,8 @@
 @use "../govuk-frontend" as *;
+@use "../../../../../client/src/stylesheets/variables/colours" as *;
 
 .app-form-card {
-  background-color: govuk-colour("light-grey");
+  background-color: $app-light-grey;
   padding: govuk-spacing(3);
   padding-bottom: 0;
 

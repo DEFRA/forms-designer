@@ -12,7 +12,7 @@
 <!-- Dummy hidden button to allow an 'enter' press to simulate pressing the 'Save and continue' button, -->
 <!-- as opposed to the next button in the page firing (which would be 'Add item') -->
 {% if not state.editRow.expanded and not state.isReordering %}
-  <input type="submit" class="govuk-visually-hidden" />
+  <input type="submit" class="govuk-visually-hidden hidden-submit" />
 {% endif %}
 
 <div class="govuk-form-group" id="list-items">
@@ -112,8 +112,8 @@
               {% set ariaAlert = "The list has been reordered, " + item.text + " is now option " + loop.index + " of " + itemsCount + " options." if isFocus else "" %}
               <div class="app-reorderable-list__actions">
                 <div class="govuk-button-group govuk-!-margin-bottom-0">
-                    <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none" aria-label="{{ ariaLabelUp }}">Up</a>
-                    <a href="?action=move&id={{ item.id }}&direction=down"  class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none" aria-label="{{ ariaLabelDown }}">Down</a>
+                  <a href="?action=move&id={{ item.id }}&direction=up" class="govuk-button govuk-button--secondary js-reorderable-list-up govuk-!-margin-bottom-1" style="display: none" aria-label="{{ ariaLabelUp }}">Up</a>
+                  <a href="?action=move&id={{ item.id }}&direction=down"  class="govuk-button govuk-button--secondary js-reorderable-list-down govuk-!-margin-bottom-1" style="display: none" aria-label="{{ ariaLabelDown }}">Down</a>
                 </div>
 
                 <div class="edit-item">
@@ -155,7 +155,7 @@
 {% if not state.editRow.expanded and not state.isReordering %}
 <div class="govuk-button-group">
   <button id="add-option-button" type="submit" class="govuk-button govuk-!-margin-bottom-4 govuk-!-margin-bottom-6" name="enhancedAction" value="add-item">
-    Add item
+    Add<span class="govuk-visually-hidden"> list</span> item
   </button>
 
   {% if state.listItems.length > 1 %}

@@ -121,7 +121,8 @@ describe('editor-v2 - condition-value', () => {
         classes: 'govuk-radios--small',
         fieldset: {
           legend: {
-            text: 'Select a value'
+            text: 'Select a value',
+            classes: 'govuk-fieldset__legend--s'
           }
         },
         id: 'items[2].value.itemId',
@@ -189,7 +190,8 @@ describe('editor-v2 - condition-value', () => {
       )
       expect(valueField).toEqual({
         label: {
-          text: 'Enter a value'
+          text: 'Enter a value',
+          classes: 'govuk-label--s'
         },
         id: 'items[2].value',
         name: 'items[2][value]',
@@ -237,7 +239,8 @@ describe('editor-v2 - condition-value', () => {
       expect(valueField).toEqual({
         fieldset: {
           legend: {
-            text: 'Select a value'
+            text: 'Select a value',
+            classes: 'govuk-fieldset__legend--s'
           }
         },
         id: 'items[2].value',
@@ -270,7 +273,8 @@ describe('editor-v2 - condition-value', () => {
       expect(valueField).toEqual({
         fieldset: {
           legend: {
-            text: 'Select a value'
+            text: 'Select a value',
+            classes: 'govuk-fieldset__legend--s'
           }
         },
         id: 'items[2].value',
@@ -323,7 +327,8 @@ describe('editor-v2 - condition-value', () => {
       expect(valueField).toEqual({
         fieldset: {
           legend: {
-            text: 'Select a value'
+            text: 'Select a value',
+            classes: 'govuk-fieldset__legend--s'
           }
         },
         id: 'items[2].value',
@@ -426,7 +431,8 @@ describe('editor-v2 - condition-value', () => {
       )
       expect(valueField).toEqual({
         label: {
-          text: 'Enter a value'
+          text: 'Enter a value',
+          classes: 'govuk-label--s'
         },
         id: 'items[2].value',
         name: 'items[2][value]',

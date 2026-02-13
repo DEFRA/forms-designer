@@ -1,4 +1,5 @@
 @use "../govuk-frontend" as *;
+@use "../../../../../client/src/stylesheets/variables/colours" as *;
 
 $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
 
@@ -50,6 +51,10 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
   }
 }
 
+.hidden-submit {
+  display: none;
+}
+
 .items-container.js-enabled {
   .reorder-button-no-js {
     display: none;
@@ -99,11 +104,12 @@ $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-r
 
 .items-container .app-reorderable-list__item.highlight-dragging .govuk-summary-card__title-wrapper {
   outline: 2px solid $govuk-focus-colour;
+  border-bottom: 3px solid govuk-colour("black");
 }
 
 .items-container .check-answers-item {
   border-left-color: $govuk-border-colour;
-  background-color: govuk-colour("light-grey");
+  background-color: $app-light-grey;
   cursor: default;
 }
 

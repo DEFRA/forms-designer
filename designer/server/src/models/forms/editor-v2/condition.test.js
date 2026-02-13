@@ -52,7 +52,7 @@ describe('editor-v2 - condition model', () => {
         },
         id: 'displayName',
         label: {
-          classes: 'govuk-label--m',
+          classes: 'govuk-label--s',
           text: 'Condition name'
         },
         name: 'displayName',

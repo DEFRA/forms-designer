@@ -1,4 +1,5 @@
 @use "govuk-frontend" as *;
+@use "../variables/colours" as *;
 
 $defra-brand-colour: govuk-organisation-colour(department-for-environment-food-rural-affairs);
 $page-item-spacing: govuk-spacing(2);
@@ -26,13 +27,13 @@ $page-item-spacing: govuk-spacing(2);
   outline: 1px solid govuk-colour("mid-grey");
 
   .govuk-summary-card__title-wrapper {
-    background-color: govuk-colour("light-grey");
+    background-color: $app-light-grey;
     border-bottom: 0;
     padding: govuk-spacing(3) govuk-spacing(4) govuk-spacing(1);
   }
 
   .govuk-summary-card__content {
-    background-color: govuk-colour("light-grey");
+    background-color: $app-light-grey;
     padding: govuk-spacing(1) govuk-spacing(4) govuk-spacing(4);
 
     > .govuk-hint:first-of-type {
@@ -85,13 +86,13 @@ $page-item-spacing: govuk-spacing(2);
 
 // Unassigned pages header - light-grey background
 .app-unassigned-header {
-  background-color: govuk-colour("light-grey");
+  background-color: $app-light-grey;
   padding: govuk-spacing(3) govuk-spacing(4);
 }
 
 // Unassigned pages list container
 .app-unassigned-list {
-  background-color: govuk-tint(govuk-colour("light-grey"), 50%);
+  background-color: govuk-tint($app-light-grey, 50%);
   padding: govuk-spacing(4);
 
   .app-page-item {
@@ -151,7 +152,7 @@ $page-item-spacing: govuk-spacing(2);
 .section-placeholder {
   opacity: 0.6;
   padding: govuk-spacing(3);
-  background-color: govuk-colour("light-grey");
+  background-color: $app-light-grey;
   border-left: 4px solid govuk-colour("mid-grey");
   margin-bottom: govuk-spacing(4);
 }

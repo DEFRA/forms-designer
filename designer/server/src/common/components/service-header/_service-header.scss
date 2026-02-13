@@ -1,4 +1,5 @@
 @use "../govuk-frontend" as *;
+@use "../../../../../client/src/stylesheets/variables/colours" as *;
 
 // start mixins and variables
 $govuk-header-link-underline-thickness: 3px;
@@ -376,7 +377,7 @@ $defra-link-colour-hover: govuk-shade($defra-link-colour, 50%);
 
 // start service navigation styles
 .service-header {
-  background-color: govuk-colour("light-grey");
+  background-color: $app-light-grey;
   border-bottom: 1px solid govuk-colour("mid-grey");
 }
 

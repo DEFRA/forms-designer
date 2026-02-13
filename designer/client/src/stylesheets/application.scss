@@ -4,6 +4,7 @@
   )
 );
 @use "xgovuk-frontend";
+@use "variables/colours" as *;
 
 @use "components/breadcrumbs";
 @use "components/condition-editor";
@@ -31,3 +32,8 @@
 @use "editor";
 @use "editor2";
 @use "location-fields";
+
+// Override default govuk light-grey backgrounds for better text contrast
+.govuk-summary-card__title-wrapper {
+  background-color: $app-light-grey;
+}

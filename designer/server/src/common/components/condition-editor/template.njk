@@ -53,29 +53,27 @@
           {{ conditionRowHtml | safe }}
       {% endif %}
     {% endfor %}
+
+    {% if params.allowComplexConditions %}
+    <div class="form-group">
+      {{ appIconButton({
+        label: "Add another condition",
+        icon: 'plus',
+        type: 'button',
+        name: 'action',
+        value: 'addCondition'
+      }) }}
+    </div>
+    {% endif %}
+
+    {{ govukInput(params.displayNameField) }}
+
+    <div class="govuk-button-group">
+      {{ govukButton({
+        text: 'Save condition'
+      }) }}
+
+      <a href="../../conditions" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
+    </div>
   {% endcall %}
-
-  {% if params.allowComplexConditions %}
-  <div class="form-group">
-    {{ appIconButton({
-      label: "Add another condition",
-      icon: 'plus',
-      type: 'button',
-      name: 'action',
-      value: 'addCondition'
-    }) }}
-  </div>
-  {% endif %}
-
-  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-
-  {{ govukInput(params.displayNameField) }}
-
-  <div class="govuk-button-group">
-    {{ govukButton({
-      text: 'Save condition'
-    }) }}
-
-    <a href="../../conditions" class="govuk-link govuk-link--no-visited-state" id="cancel-condition">Cancel</a>
-  </div>
 </form>
