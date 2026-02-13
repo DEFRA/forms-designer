@@ -119,7 +119,8 @@
             {
               href: "/library/" + form.slug + "/edit/contact/phone",
               text: "Change",
-              visuallyHiddenText: "contact phone"
+              visuallyHiddenText: "contact phone",
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         } if form.contact.phone
@@ -136,7 +137,8 @@
             {
               href: "/library/" + form.slug + "/edit/contact/email",
               text: "Change",
-              visuallyHiddenText: "contact email"
+              visuallyHiddenText: "contact email",
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         } if form.contact.email
@@ -153,7 +155,8 @@
             {
               href: "/library/" + form.slug + "/edit/contact/online",
               text: "Change",
-              visuallyHiddenText: "contact online"
+              visuallyHiddenText: "contact online",
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         } if form.contact.online
@@ -193,7 +196,8 @@
             {
               href: "/library/" + form.slug + "/edit/submission-guidance",
               text: "Change",
-              visuallyHiddenText: "submission guidance"
+              visuallyHiddenText: "submission guidance",
+              classes: 'govuk-link--no-visited-state'
             }
           ]
         } if form.submissionGuidance
@@ -221,16 +225,19 @@
   {% endset %}
 
   {% set privacyPreview = {
-      href: "/library/" + form.slug + "/edit/privacy-notice",
+      href: helpers.buildPrivacyPreviewUrl(form.slug),
       text: "Preview",
-      visuallyHiddenText: "privacy notice"
+      visuallyHiddenText: "privacy notice",
+      attributes: { target: '_blank' },
+      classes: 'govuk-link--no-visited-state'
     }
   %}
 
   {% set privacyChange = {
       href: "/library/" + form.slug + "/edit/privacy-notice",
       text: "Change",
-      visuallyHiddenText: "privacy notice"
+      visuallyHiddenText: "privacy notice",
+      classes: 'govuk-link--no-visited-state'
     }
   %}
 

@@ -118,7 +118,6 @@ export const privacyNoticeTypeSchema = Joi.string()
   .description('Type of privacy notice content')
 
 export const privacyNoticeTextSchema = Joi.string()
-  .max(1200)
   .trim()
   .description('URL to the privacy notice for this form')
 

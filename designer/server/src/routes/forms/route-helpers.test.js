@@ -151,7 +151,10 @@ describe('Route helpers', () => {
         method: 'post',
         url: '/library/my-form/edit/privacy-notice',
         auth: authFormCreator,
-        payload: { privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1' }
+        payload: {
+          privacyNoticeType: 'link',
+          privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1'
+        }
       }
 
       const { container } = await renderResponse(server, options)
@@ -170,7 +173,10 @@ describe('Route helpers', () => {
         method: 'post',
         url: '/library/my-form/edit/privacy-notice',
         auth: authFormCreator,
-        payload: { privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1' }
+        payload: {
+          privacyNoticeType: 'link',
+          privacyNoticeUrl: 'https://www.gov.uk/help/privacy-notice1'
+        }
       }
 
       const { response } = await renderResponse(server, options)
