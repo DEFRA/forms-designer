@@ -1,4 +1,9 @@
-import { Scopes, privacyNoticeTextSchema, privacyNoticeTypeSchema, privacyNoticeUrlSchema } from '@defra/forms-model'
+import {
+  Scopes,
+  privacyNoticeTextSchema,
+  privacyNoticeTypeSchema,
+  privacyNoticeUrlSchema
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -24,7 +29,7 @@ export const schema = Joi.object().keys({
     otherwise: Joi.string().allow('')
   }),
   privacyNoticeUrl: Joi.when('privacyNoticeType', {
-    is : 'link',
+    is: 'link',
     then: privacyNoticeUrlSchema.required().messages({
       'string.empty': 'Enter a link to a privacy notice for this form',
       'string.uri':
@@ -87,7 +92,11 @@ export default [
       const { id } = await forms.get(slug, token)
 
       // Update the metadata with the privacy notice url
-      await forms.updateMetadata(id, { privacyNoticeType, privacyNoticeText, privacyNoticeUrl }, token)
+      await forms.updateMetadata(
+        id,
+        { privacyNoticeType, privacyNoticeText, privacyNoticeUrl },
+        token
+      )
 
       yar.flash(
         sessionNames.successNotification,

@@ -32,12 +32,16 @@ export function privacyNoticyViewModel(metadata, validation) {
           {
             value: 'text',
             text: 'Directly to the form',
-            checked: (formValues?.privacyNoticeType ?? metadata.privacyNoticeType) === 'text'
+            checked:
+              (formValues?.privacyNoticeType ?? metadata.privacyNoticeType) ===
+              'text'
           },
           {
             value: 'link',
             text: 'Link to a privacy notice on GOV.UK',
-            checked: (formValues?.privacyNoticeType ?? metadata.privacyNoticeType) === 'link'
+            checked:
+              (formValues?.privacyNoticeType ?? metadata.privacyNoticeType) ===
+              'link'
           }
         ],
         ...insertValidationErrors(validation?.formErrors.privacyNoticeType)
