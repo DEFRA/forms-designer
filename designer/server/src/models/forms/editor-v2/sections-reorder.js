@@ -77,7 +77,7 @@ export function sectionsReorderViewModel(
       text: 'Use the up and down buttons or drag and drop sections to re-order them.'
     },
     pageActions,
-    sectionOrder
+    itemOrder: sectionOrder
   }
   return model
 }

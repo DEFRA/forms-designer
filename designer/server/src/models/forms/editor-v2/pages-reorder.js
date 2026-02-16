@@ -74,7 +74,7 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
       text: 'Use the up and down buttons or drag and drop pages to re-order them.'
     },
     pageActions,
-    pageOrder
+    itemOrder: pageOrder
   }
 }
 
