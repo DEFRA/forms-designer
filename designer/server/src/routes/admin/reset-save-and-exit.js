@@ -5,6 +5,7 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { resetSaveAndExitRecord } from '~/src/services/formSubmissionService.js'
 
@@ -23,7 +24,7 @@ const schema = Joi.object({
  */
 export function generateMessage(heading, type) {
   return {
-    html: `<h3 class="govuk-notification-banner__heading">${heading}</h3>`,
+    text: heading,
     type
   }
 }
@@ -115,15 +116,18 @@ export default [
             `[resetSaveAndExit] Reset save and exit ${magicLinkId} by ${auth.credentials.user?.email}`
           )
         } else {
-          yar.flash(
-            sessionNames.successNotification,
-            generateMessage(
-              'Failed to reset save and exit record - magic link not found'
-            )
-          )
-
           request.logger.info(
             `[resetSaveAndExit] Failed to reset save and exit ${magicLinkId} - record not found`
+          )
+
+          return redirectWithErrors(
+            request,
+            h,
+            createJoiError(
+              'magicLinkId',
+              'Failed to reset save and exit record - magic link not found'
+            ),
+            sessionNames.validationFailure.adminResetSaveAndExit
           )
         }
       } catch (err) {
