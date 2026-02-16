@@ -14,6 +14,7 @@ import {
   buildFormUrl,
   buildPreviewErrorsUrl,
   buildPreviewUrl,
+  buildPrivacyPreviewUrl,
   buildSectionsForPreview,
   enrichPreviewModel,
   getDeclarationInfo,
@@ -81,6 +82,13 @@ describe('preview-helpers', () => {
     it('should build error preview URL with slug', () => {
       const result = buildPreviewErrorsUrl('my-form')
       expect(result).toContain('/error-preview/draft/my-form')
+    })
+  })
+
+  describe('buildPrivacyPreviewUrl', () => {
+    it('should build privacy preview URL with slug', () => {
+      const result = buildPrivacyPreviewUrl('my-form')
+      expect(result).toContain('/help/privacy/my-form')
     })
   })
 
