@@ -1,6 +1,5 @@
 import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
-import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { reorderPages } from '~/src/lib/editor.js'
@@ -17,20 +16,12 @@ import {
 } from '~/src/models/forms/editor-v2/pages-helper.js'
 import * as viewModel from '~/src/models/forms/editor-v2/pages-reorder.js'
 import { editorv2Path } from '~/src/models/links.js'
-import { customItemOrder } from '~/src/routes/forms/editor-v2/helpers.js'
+import { itemOrderSchema } from '~/src/routes/forms/editor-v2/helpers.js'
 
 export const ROUTE_FULL_PATH_REORDER_PAGES =
   '/library/{slug}/editor-v2/pages-reorder'
 
 const reorderPagesKey = sessionNames.reorderPages
-
-export const itemOrderSchema = Joi.object()
-  .keys({
-    saveChanges: Joi.boolean().default(false).optional(),
-    movement: Joi.string().optional(),
-    itemOrder: Joi.any().custom(customItemOrder)
-  })
-  .required()
 
 export default [
   /**

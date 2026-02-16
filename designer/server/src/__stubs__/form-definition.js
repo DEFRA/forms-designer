@@ -1086,6 +1086,14 @@ export const testFormDefinitionWithPaymentQuestion = buildDefinition({
   ]
 })
 
+export const testFormDefinitionWithSections = {
+  ...testFormDefinitionWithSinglePage,
+  sections: [
+    { id: 'section1Id', name: 'section1', title: 'Section one' },
+    { id: 'section2Id', name: 'section2', title: 'Section two' },
+    { id: 'section3Id', name: 'section3', title: 'Section three' }
+  ]
+}
 /**
  * @import { DeclarationFieldComponent, FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, PaymentFieldComponent, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
  */
