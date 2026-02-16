@@ -113,6 +113,14 @@ export const submissionGuidanceSchema = Joi.string()
   .trim()
   .description('Guidance text shown to users when submitting the form')
 
+export const privacyNoticeTypeSchema = Joi.string()
+  .valid('text', 'link')
+  .description('Type of privacy notice content')
+
+export const privacyNoticeTextSchema = Joi.string()
+  .trim()
+  .description('URL to the privacy notice for this form')
+
 export const privacyNoticeUrlSchema = Joi.string()
   .uri({
     scheme: ['http', 'https']
@@ -147,7 +155,17 @@ export const formMetadataInputKeys = {
   teamEmail: teamEmailSchema,
   contact: contactSchema,
   submissionGuidance: submissionGuidanceSchema,
-  privacyNoticeUrl: privacyNoticeUrlSchema,
+  privacyNoticeType: privacyNoticeTypeSchema.default('link'),
+  privacyNoticeText: Joi.when('privacyNoticeType', {
+    is: 'text',
+    then: privacyNoticeTextSchema,
+    otherwise: privacyNoticeTextSchema.allow('')
+  }),
+  privacyNoticeUrl: Joi.when('privacyNoticeType', {
+    is: 'link',
+    then: privacyNoticeUrlSchema,
+    otherwise: privacyNoticeUrlSchema.allow('')
+  }),
   notificationEmail: notificationEmailAddressSchema
 }
 

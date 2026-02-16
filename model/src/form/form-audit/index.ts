@@ -58,6 +58,8 @@ import {
   onlineUrlSchema,
   organisationSchema,
   phoneSchema,
+  privacyNoticeTextSchema,
+  privacyNoticeTypeSchema,
   privacyNoticeUrlSchema,
   slugSchema,
   submissionGuidanceSchema,
@@ -165,7 +167,17 @@ export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
 
 export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   .keys({
-    privacyNoticeUrl: privacyNoticeUrlSchema
+    privacyNoticeType: privacyNoticeTypeSchema,
+    privacyNoticeText: Joi.when('privacyNoticeType', {
+      is: 'text',
+      then: privacyNoticeTextSchema,
+      otherwise: privacyNoticeTextSchema.allow('')
+    }),
+    privacyNoticeUrl: Joi.when('privacyNoticeType', {
+      is: 'link',
+      then: privacyNoticeUrlSchema,
+      otherwise: privacyNoticeUrlSchema.allow('')
+    })
   })
   .required()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
