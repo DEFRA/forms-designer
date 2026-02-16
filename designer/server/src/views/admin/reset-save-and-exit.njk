@@ -1,0 +1,65 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if errorList | length %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorList,
+            classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+          }) }}
+        {% endif %}
+
+        {% if notification | length %}
+          {{ govukNotificationBanner(notification) }}
+        {% endif %}
+      </div>
+    </div>
+
+    <h2 class="govuk-heading-m">Reset save and exit</h2>
+    <p class="govuk-body">Reset a save and exit magic link</p>
+
+    <form class="form" method="post">
+      {{ govukInput({
+        label: {
+          text: "Enter the magic link ID (guid)",
+          isPageHeading: false
+        },
+        classes: "govuk-input--width-20",
+        id: "magicLinkId",
+        name: "magicLinkId",
+        value: formValues["magicLinkId"],
+        errorMessage: {
+          text: formErrors["magicLinkId"].text
+        } if formErrors["magicLinkId"]
+      }) }}
+
+      {{ govukButton({
+        text: "Reset",
+        preventDoubleClick: true
+      }) }}
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

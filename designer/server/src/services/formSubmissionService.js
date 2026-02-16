@@ -37,3 +37,21 @@ export async function sendFeedbackSubmissionsFile(formId, token) {
 
   return result.body
 }
+
+/**
+ * Resets a save and exit record
+ * @param { string } magicLinkId - the magic link id
+ * @param {string} token - the user token
+ */
+export async function resetSaveAndExitRecord(magicLinkId, token) {
+  const postJsonByType =
+    /** @type {typeof postJson<{ recordFound: boolean, recordUpdated: boolean }>} */ (
+      postJson
+    )
+  const result = await postJsonByType(
+    new URL(`/save-and-exit/reset/${magicLinkId}`, submissionUrl),
+    getHeaders(token)
+  )
+
+  return result.body
+}
