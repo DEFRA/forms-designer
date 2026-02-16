@@ -167,7 +167,8 @@ export function sectionsViewModel(
     },
     previewPageUrl,
     notification,
-    editorv2Path
+    editorv2Path,
+    reorderSectionsUrl: editorv2Path(slug, 'sections-reorder')
   }
 }
 

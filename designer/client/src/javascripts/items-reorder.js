@@ -38,6 +38,10 @@ export function focusIfExists(elem) {
 }
 
 export class ItemReorder {
+  /** @type {string} */
+  itemType = 'Unknown type'
+  /** @type {string} */
+  itemTypeLower = 'unknwon type'
   /** @type {HTMLOListElement | null} */
   container = null
   /** @type {HTMLInputElement | null} */
@@ -73,6 +77,9 @@ export class ItemReorder {
       return
     }
     this.container = containerElement
+
+    this.itemType = this.container.dataset.itemtype ?? this.itemType
+    this.itemTypeLower = this.itemType.toLowerCase()
 
     this.itemOrderInput = querySelectorHelper(document, '#itemOrder')
     this.announcementRegion = querySelectorHelper(
@@ -417,11 +424,12 @@ export class ItemReorder {
 
       const numberElement = querySelectorHelper(item, '.item-number')
       if (numberElement) {
-        numberElement.textContent = `Page ${index + 1}`
+        numberElement.textContent = `${this.itemType} ${index + 1}`
       }
 
       const titleElement = querySelectorHelper(item, this.itemTitleSelector)
-      const title = titleElement?.textContent?.trim() ?? 'this page'
+      const title =
+        titleElement?.textContent?.trim() ?? `this ${this.itemTypeLower}`
       const currentPosition = index + 1 // 1-based index
 
       const upButton = querySelectorHelper(
@@ -436,13 +444,13 @@ export class ItemReorder {
       if (upButton) {
         upButton.setAttribute(
           'aria-label',
-          `Button, Move page: Up, Page ${currentPosition} of ${totalItems}: ${title}`
+          `Button, Move ${this.itemTypeLower}: Up, ${this.itemType} ${currentPosition} of ${totalItems}: ${title}`
         )
       }
       if (downButton) {
         downButton.setAttribute(
           'aria-label',
-          `Button, Move page: Down, Page ${currentPosition} of ${totalItems}: ${title}`
+          `Button, Move ${this.itemTypeLower}: Down, ${this.itemType} ${currentPosition} of ${totalItems}: ${title}`
         )
       }
     })
@@ -623,7 +631,7 @@ export class ItemReorder {
       this.listItemSelector
     ).length
 
-    const message = `List reordered, ${itemTitle} is now page ${newPosition} of ${totalItems}.`
+    const message = `List reordered, ${itemTitle} is now ${this.itemTypeLower} ${newPosition} of ${totalItems}.`
 
     clearTimeout(this.announceTimeout)
     this.announceTimeout = setTimeout(() => {

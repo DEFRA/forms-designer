@@ -42,7 +42,7 @@
 <li class="{{ params.itemClasses }} reorder-panel{{ focusClass }}" data-id="{{ params.dataId }}">
   <div class="govuk-summary-card__title-wrapper">
     <h2 class="govuk-summary-card__title item-title" style="display: inline;">
-      <span class="item-number">{{ typeName }} {{ params.itemNum }}</span>: {{ params.itemTitle }}
+      <span class="item-number">ABC {{ typeName }} {{ params.itemNum }}</span>: {{ params.itemTitle }}
     </h2>
     <div class="govuk-button-group">
       <button type="submit" name="movement" id="focus-up-{{ params.itemId }}" class="govuk-button govuk-button--secondary reorder-button{{ upHiddenClass }} reorder-button-no-js" {% if autoFocusUpButton %}autofocus{% endif %} value="up|{{ params.itemId }}" aria-label="{{ ariaLabelUp }}">Up</button>
