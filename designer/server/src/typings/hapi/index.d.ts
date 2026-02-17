@@ -179,6 +179,9 @@ declare module '@hapi/yar' {
       formValues?: any
     }
     [ConditionSessionStateKey]: ConditionSessionState
+    [sessionNames.validationFailure.adminResetSaveAndExit]: ValidationFailure<{
+      magicLinkId: string
+    }>
   }
 
   interface YarValues {
