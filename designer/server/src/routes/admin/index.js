@@ -15,6 +15,7 @@ import {
   publishFormsBackupRequestedEvent,
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
+import adminResetSaveAndExitRoutes from '~/src/routes/admin/reset-save-and-exit.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
 export const ROUTE_FULL_PATH = '/admin/index'
@@ -134,7 +135,9 @@ export default [
         }
       }
     }
-  })
+  }),
+
+  ...adminResetSaveAndExitRoutes
 ]
 
 /**
@@ -367,6 +370,6 @@ function appendFormDefinitionsToArchive(id, archive, definition) {
 }
 
 /**
- * @import { ServerRoute , Request, ResponseToolkit, ResponseObject} from '@hapi/hapi'
+ * @import { ServerRoute, Request, ResponseToolkit, ResponseObject } from '@hapi/hapi'
  * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */

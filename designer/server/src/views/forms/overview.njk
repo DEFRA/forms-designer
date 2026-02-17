@@ -241,6 +241,13 @@
     } if form.privacyNoticeUrl or form.privacyNoticeText else {}
   %}
 
+  {% set privacyActions = [] %}
+  {% if isPrivacyText %}
+    {% set privacyActions = [privacyPreview, privacyChange] %}
+  {% elif form.privacyNoticeUrl %}
+    {% set privacyActions = [privacyChange] %}
+  {% endif %}
+
   {{ govukSummaryList({
     classes: "govuk-!-margin-bottom-8",
     rows: [
@@ -253,9 +260,7 @@
           if form.privacyNoticeUrl or form.privacyNoticeText else '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/privacy-notice">Add privacy notice</a>'
         },
         actions: {
-          items:  [
-              privacyPreview, privacyChange
-            ] if isPrivacyText else [ privacyChange ]
+          items:  privacyActions
         }
       }
     ]
