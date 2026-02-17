@@ -28,6 +28,24 @@
   }) }}
 {% endset %}
 
+{% set rows = [] %}
+
+{% if supports.feedback %}
+  {% set rows = (rows.push([
+    { text: "User feedback across all forms" },
+    { text: "9 months after submission" },
+    { html: feedbackButtonHtml }
+  ]), rows) %}
+{% endif %}
+
+{% if supports.download %}
+  {% set rows = (rows.push([
+    { text: "Forms backup" },
+    { text: "On demand download" },
+    { html: downloadButtonHtml }
+  ]), rows) %}
+{% endif %}
+
 {% block content %}
   {% call appPageBody({
     heading: pageHeading,
@@ -64,26 +82,16 @@
           { text: "How long we keep it" },
           { text: "Send to your email" }
         ],
-        rows: [
-          [
-            { text: "User feedback across all forms" },
-            { text: "9 months after submission" },
-            { html: feedbackButtonHtml }
-          ],
-          [
-            { text: "Forms backup" },
-            { text: "On demand download" },
-            { html: downloadButtonHtml }
-          ]
-        ]
+        rows: rows
         })
       }}
-
     </form>
 
-    <p class="govuk-body">
-      <a href="/admin/reset-save-and-exit" class="govuk-link govuk-link--no-visited-state">Reset save and exit</a>
-    </p>
+    {% if supports.resetSaveAndExit %}
+      <p class="govuk-body">
+        <a href="/admin/reset-save-and-exit" class="govuk-link govuk-link--no-visited-state">Reset save and exit</a>
+      </p>
+    {% endif %}
   {% endcall %}
 {% endblock %}
 

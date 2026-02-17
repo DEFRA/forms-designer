@@ -59,7 +59,7 @@ export default [
     method: 'GET',
     path: ROUTE_FULL_PATH,
     handler(request, h) {
-      const { yar } = request
+      const { yar, auth } = request
 
       const navigation = buildAdminNavigation('Admin tools')
 
@@ -68,10 +68,17 @@ export default [
         yar.flash(sessionNames.successNotification).at(0)
       )
 
+      const scopes = auth.credentials.scope ?? []
+
       return h.view('admin/index', {
         ...generateTitling(),
         navigation,
-        notification
+        notification,
+        supports: {
+          feedback: scopes.includes(Scopes.FormsFeedback),
+          download: scopes.includes(Scopes.FormsBackup),
+          resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit)
+        }
       })
     },
     options: {
@@ -79,7 +86,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.UserEdit}`]
+          scope: [Scopes.FormsFeedback, Scopes.FormsBackup, Scopes.ResetSaveAndExit]
         }
       }
     }
@@ -131,7 +138,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.UserEdit}`]
+          scope: [Scopes.FormsFeedback, Scopes.FormsBackup]
         }
       }
     }
