@@ -41,7 +41,7 @@ export class ItemReorder {
   /** @type {string} */
   itemType = 'Unknown type'
   /** @type {string} */
-  itemTypeLower = 'unknwon type'
+  itemTypeLower = 'unknown type'
   /** @type {HTMLOListElement | null} */
   container = null
   /** @type {HTMLInputElement | null} */
