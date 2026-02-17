@@ -100,6 +100,31 @@ const claimsGroupsEmpty = {
  * Request auth with scopes for Hapi `server.inject()`
  * @satisfies {ServerInjectOptions['auth']}
  */
+export const authSuperAdmin = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claims),
+  credentials: credentials({
+    claims,
+    user: user(claims.token, [Roles.Superadmin]),
+    scope: [
+      Scopes.FormDelete,
+      Scopes.FormEdit,
+      Scopes.FormPublish,
+      Scopes.FormRead,
+      Scopes.UserCreate,
+      Scopes.UserDelete,
+      Scopes.UserEdit,
+      Scopes.FormsFeedback,
+      Scopes.FormsBackup,
+      Scopes.ResetSaveAndExit
+    ]
+  })
+}
+
+/**
+ * Request auth with scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
 export const auth = {
   strategy: 'azure-oidc',
   artifacts: artifacts(claims),
@@ -113,7 +138,8 @@ export const auth = {
       Scopes.FormRead,
       Scopes.UserCreate,
       Scopes.UserDelete,
-      Scopes.UserEdit
+      Scopes.UserEdit,
+      Scopes.FormsFeedback
     ]
   })
 }

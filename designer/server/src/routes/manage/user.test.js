@@ -455,7 +455,7 @@ describe('Create and edit user routes', () => {
         credentials: credentials({
           claims,
           user: user(claims.token, [Roles.FormCreator]),
-          scope: [Scopes.FormRead, Scopes.FormEdit]
+          scope: [Scopes.FormRead, Scopes.FormEdit, Scopes.FormDelete]
         })
       }
 

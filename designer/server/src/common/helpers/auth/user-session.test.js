@@ -97,7 +97,8 @@ describe('user-session', () => {
             'form-publish',
             'user-create',
             'user-delete',
-            'user-edit'
+            'user-edit',
+            'forms-feedback'
           ],
           token: "{ name: 'my-name'}",
           user: {
