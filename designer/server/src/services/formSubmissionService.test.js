@@ -1,6 +1,7 @@
 import config from '~/src/config.js'
 import { postJson } from '~/src/lib/fetch.js'
 import {
+  resetSaveAndExitRecord,
   sendFeedbackSubmissionsFile,
   sendFormSubmissionsFile
 } from '~/src/services/formSubmissionService.js'
@@ -54,6 +55,25 @@ describe('formSubmissionService', () => {
       { headers: { Authorization: `Bearer ${token}` } }
     )
     expect(result).toEqual({ fileId })
+  })
+
+  it('should make a call to the submission service - reset save and exit enpoint', async () => {
+    const magicLinkId = '303f24b1-d486-4fa0-8bd3-ece8839c45b3'
+    const token = 'my-token'
+    const response = /** @type {IncomingMessage} */ ({})
+
+    jest.mocked(postJson).mockResolvedValue({
+      response,
+      body: { recordFound: true, recordUpdated: true }
+    })
+
+    const result = await resetSaveAndExitRecord(magicLinkId, token)
+
+    expect(jest.mocked(postJson)).toHaveBeenCalledWith(
+      new URL(`/save-and-exit/reset/${magicLinkId}`, submissionUrl),
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    expect(result).toEqual({ recordFound: true, recordUpdated: true })
   })
 })
 
