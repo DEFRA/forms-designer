@@ -16,9 +16,9 @@ export interface FieldConfig {
 }
 
 /**
- * Support contact field configuration for change detection.
+ * Audit field that comprises multiple fields - configuration for change detection.
  */
-export interface SupportContactFieldConfig {
+export interface MultiAuditFieldConfig {
   label: string
   prevPath: string
   newPath: string
@@ -43,14 +43,14 @@ function createFieldConfig(
 /**
  * Creates a support contact field configuration.
  */
-function createSupportContactField(
+function createMultiField(
   label: string,
   contactPath: string
-): SupportContactFieldConfig {
+): MultiAuditFieldConfig {
   return {
     label,
-    prevPath: `changes.previous.contact.${contactPath}`,
-    newPath: `changes.new.contact.${contactPath}`
+    prevPath: `changes.previous.${contactPath}`,
+    newPath: `changes.new.${contactPath}`
   }
 }
 
@@ -84,11 +84,6 @@ export const fieldConfigs: Record<string, FieldConfig> = {
     'Updated',
     'notificationEmail'
   ),
-  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: createFieldConfig(
-    'the privacy notice link',
-    'Updated',
-    'privacyNoticeUrl'
-  ),
   [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: createFieldConfig(
     'the next steps guidance',
     'Updated',
@@ -115,12 +110,22 @@ export const fieldConfigs: Record<string, FieldConfig> = {
  * Support contact field configurations for change detection.
  * Used when checking FORM_SUPPORT_CONTACT_UPDATED events.
  */
-export const supportContactFields: SupportContactFieldConfig[] = [
-  createSupportContactField('phone number', 'phone'),
-  createSupportContactField('email address', 'email.address'),
-  createSupportContactField('email response time', 'email.responseTime'),
-  createSupportContactField('online contact link', 'online.url'),
-  createSupportContactField('online contact text', 'online.text')
+export const supportContactFields: MultiAuditFieldConfig[] = [
+  createMultiField('phone number', 'contact.phone'),
+  createMultiField('email address', 'contact.email.address'),
+  createMultiField('email response time', 'contact.email.responseTime'),
+  createMultiField('online contact link', 'contact.online.url'),
+  createMultiField('online contact text', 'contact.online.text')
+]
+
+/**
+ * Privacy notice field configurations for change detection.
+ * Used when checking FORM_PRIVACY_NOTICE_UPDATED events.
+ */
+export const privacyNoticeFields: MultiAuditFieldConfig[] = [
+  createMultiField('privacy notice type', 'privacyNoticeType'),
+  createMultiField('privacy notice text', 'privacyNoticeText'),
+  createMultiField('privacy notice url', 'privacyNoticeUrl')
 ]
 
 /**

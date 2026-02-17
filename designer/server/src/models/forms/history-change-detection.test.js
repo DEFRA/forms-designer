@@ -282,8 +282,16 @@ describe('history-change-detection', () => {
           formId: 'form-id',
           slug: 'test-form',
           changes: {
-            previous: { privacyNoticeUrl: 'http://same.url' },
-            new: { privacyNoticeUrl: 'http://same.url' }
+            previous: {
+              privacyNoticeType: 'link',
+              privacyNoticeUrl: 'http://same.url',
+              privacyNoticeText: ''
+            },
+            new: {
+              privacyNoticeType: 'link',
+              privacyNoticeUrl: 'http://same.url',
+              privacyNoticeText: ''
+            }
           }
         }
       })
