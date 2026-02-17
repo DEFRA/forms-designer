@@ -45,11 +45,14 @@ function buildSpecialFieldChangeString(fieldLabel, prevValue, newValue) {
  * Builds a description for support contact updated event
  * The contact object can contain phone, email, and online sub-objects
  * @param {MessageData} data
+ * @param {MultiAuditFieldConfig[]} fields
+ * @param {string} [groupWord] - insert in the description, if required
  * @returns {string | undefined}
  */
-function buildSupportContactDescription(data) {
+function buildMultiFieldDescription(data, fields, groupWord = '') {
+  const groupWordAndSpace = groupWord ? `${groupWord} ` : ''
   /** @type {string[]} */
-  const changes = supportContactFields
+  const changes = fields
     .map((field) =>
       buildSpecialFieldChangeString(
         field.label,
@@ -64,45 +67,13 @@ function buildSupportContactDescription(data) {
   }
 
   if (changes.length === 1) {
-    return `Updated the support ${changes[0]}.`
+    return `Updated the ${groupWordAndSpace}${changes[0]}.`
   }
 
   // Use non-mutating approach to get last item and rest
   const lastChange = changes.at(-1)
   const otherChanges = changes.slice(0, -1)
-  return `Updated the support ${otherChanges.join(', ')} and ${lastChange}.`
-}
-
-/**
- * Builds a description for privacy notice updated event
- * The privacy data comprises three fields: privacyNoticeType, privacyNoticeText and privacyNoticeUrl
- * @param {MessageData} data
- * @returns {string | undefined}
- */
-function buildPrivacyNoticeDescription(data) {
-  /** @type {string[]} */
-  const changes = privacyNoticeFields
-    .map((field) =>
-      buildSpecialFieldChangeString(
-        field.label,
-        safeGet(data, field.prevPath),
-        safeGet(data, field.newPath)
-      )
-    )
-    .filter((v) => v !== undefined)
-
-  if (changes.length === 0) {
-    return undefined
-  }
-
-  if (changes.length === 1) {
-    return `Updated the ${changes[0]}.`
-  }
-
-  // Use non-mutating approach to get last item and rest
-  const lastChange = changes.at(-1)
-  const otherChanges = changes.slice(0, -1)
-  return `Updated the ${otherChanges.join(', ')} and ${lastChange}.`
+  return `Updated the ${groupWordAndSpace}${otherChanges.join(', ')} and ${lastChange}.`
 }
 
 /**
@@ -147,10 +118,12 @@ const specialEventHandlers = {
     data ? buildFormCreatedDescription(data) : undefined,
 
   [AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED]: (data) =>
-    data ? buildSupportContactDescription(data) : undefined,
+    data
+      ? buildMultiFieldDescription(data, supportContactFields, 'support')
+      : undefined,
 
   [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: (data) =>
-    data ? buildPrivacyNoticeDescription(data) : undefined,
+    data ? buildMultiFieldDescription(data, privacyNoticeFields) : undefined,
 
   [AuditEventMessageType.FORM_JSON_UPLOADED]: (data) => {
     const filename = data ? safeGet(data, 'changes.new.value') : undefined
@@ -213,5 +186,5 @@ export function getEventDescription(record) {
 }
 
 /**
- * @import { AuditRecord, MessageData } from '@defra/forms-model'
+ * @import { AuditRecord, MessageData, MultiAuditFieldConfig } from '@defra/forms-model'
  */
