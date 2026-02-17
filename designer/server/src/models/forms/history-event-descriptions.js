@@ -2,6 +2,7 @@ import { AuditEventMessageType } from '@defra/forms-model'
 
 import {
   fieldConfigs,
+  privacyNoticeFields,
   supportContactFields
 } from '~/src/models/forms/history-field-config.js'
 import {
@@ -25,13 +26,13 @@ const staticDescriptions = {
 }
 
 /**
- * Builds a change string for a contact field
+ * Builds a change string for a special field
  * @param {string} fieldLabel - The field label (e.g., 'phone number')
  * @param {string | undefined} prevValue - Previous value
  * @param {string | undefined} newValue - New value
  * @returns {string | undefined}
  */
-function buildContactChangeString(fieldLabel, prevValue, newValue) {
+function buildSpecialFieldChangeString(fieldLabel, prevValue, newValue) {
   if (!newValue || newValue === prevValue) {
     return undefined
   }
@@ -50,7 +51,7 @@ function buildSupportContactDescription(data) {
   /** @type {string[]} */
   const changes = supportContactFields
     .map((field) =>
-      buildContactChangeString(
+      buildSpecialFieldChangeString(
         field.label,
         safeGet(data, field.prevPath),
         safeGet(data, field.newPath)
@@ -70,6 +71,38 @@ function buildSupportContactDescription(data) {
   const lastChange = changes.at(-1)
   const otherChanges = changes.slice(0, -1)
   return `Updated the support ${otherChanges.join(', ')} and ${lastChange}.`
+}
+
+/**
+ * Builds a description for privacy notice updated event
+ * The privacy data comprises three fields: privacyNoticeType, privacyNoticeText and privacyNoticeUrl
+ * @param {MessageData} data
+ * @returns {string | undefined}
+ */
+function buildPrivacyNoticeDescription(data) {
+  /** @type {string[]} */
+  const changes = privacyNoticeFields
+    .map((field) =>
+      buildSpecialFieldChangeString(
+        field.label,
+        safeGet(data, field.prevPath),
+        safeGet(data, field.newPath)
+      )
+    )
+    .filter((v) => v !== undefined)
+
+  if (changes.length === 0) {
+    return undefined
+  }
+
+  if (changes.length === 1) {
+    return `Updated the ${changes[0]}.`
+  }
+
+  // Use non-mutating approach to get last item and rest
+  const lastChange = changes.at(-1)
+  const otherChanges = changes.slice(0, -1)
+  return `Updated the ${otherChanges.join(', ')} and ${lastChange}.`
 }
 
 /**
@@ -115,6 +148,9 @@ const specialEventHandlers = {
 
   [AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED]: (data) =>
     data ? buildSupportContactDescription(data) : undefined,
+
+  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: (data) =>
+    data ? buildPrivacyNoticeDescription(data) : undefined,
 
   [AuditEventMessageType.FORM_JSON_UPLOADED]: (data) => {
     const filename = data ? safeGet(data, 'changes.new.value') : undefined

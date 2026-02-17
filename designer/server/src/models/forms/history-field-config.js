@@ -36,12 +36,6 @@ export const fieldConfigs = {
     prevPath: 'changes.previous.notificationEmail',
     newPath: 'changes.new.notificationEmail'
   },
-  [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: {
-    label: 'the privacy notice link',
-    verb: 'Updated',
-    prevPath: 'changes.previous.privacyNoticeUrl',
-    newPath: 'changes.new.privacyNoticeUrl'
-  },
   [AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED]: {
     label: 'the next steps guidance',
     verb: 'Updated',
@@ -97,6 +91,28 @@ export const supportContactFields = [
     label: 'online contact text',
     prevPath: 'changes.previous.contact.online.text',
     newPath: 'changes.new.contact.online.text'
+  }
+]
+
+/**
+ * Privacy notice field configurations for change detection
+ * @type {Array<{ label: string, prevPath: string, newPath: string }>}
+ */
+export const privacyNoticeFields = [
+  {
+    label: 'privacy notice type',
+    prevPath: 'changes.previous.privacyNoticeType',
+    newPath: 'changes.new.privacyNoticeType'
+  },
+  {
+    label: 'privacy notice text',
+    prevPath: 'changes.previous.privacyNoticeText',
+    newPath: 'changes.new.privacyNoticeText'
+  },
+  {
+    label: 'privacy notice url',
+    prevPath: 'changes.previous.privacyNoticeUrl',
+    newPath: 'changes.new.privacyNoticeUrl'
   }
 ]
 

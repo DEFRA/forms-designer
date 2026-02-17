@@ -124,13 +124,18 @@ describe('history-event-descriptions', () => {
           slug: 'test-form',
           changes: {
             previous: {},
-            new: { privacyNoticeUrl: 'http://new.url' }
+            new: {
+              privacyNoticeType: 'link',
+              privacyNoticeUrl: 'http://new.url'
+            }
           }
         }
       })
 
       const result = getEventDescription(record)
-      expect(result).toBe("Set the privacy notice link to 'http://new.url'.")
+      expect(result).toBe(
+        "Updated the privacy notice type to 'link' and privacy notice url to 'http://new.url'."
+      )
     })
 
     it('returns description for FORM_LIVE_CREATED_FROM_DRAFT event', () => {
