@@ -53,8 +53,31 @@ describe('Editor v2 rename section routes', () => {
     expect($actions[2]).toHaveTextContent('Save changes')
   })
 
+  test('GET - should error if invalid section', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSections)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/rename-section/invalid-section-Id',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $errorText = container.getByText(
+      'Sorry, there is a problem with the service'
+    )
+    expect($errorText).toBeInTheDocument()
+  })
+
   test('POST - should error if empty field', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSections)
 
     const options = {
       method: 'post',
