@@ -64,15 +64,8 @@
       <input type="hidden" name="operation" value="remove-section">
       <input type="hidden" name="sectionId" value="{{ section.id }}">
       <div class="govuk-button-group">
-        {{ govukButton({
-          text: "Rename section",
-          classes: "govuk-button--secondary",
-          href: renameSectionUrl + '/' + section.id
-        }) }}
-        {{ govukButton({
-          text: "Remove section",
-          classes: "govuk-button--warning"
-        }) }}
+        <a href="{{ renameSectionUrl + '/' + section.id }}" class="govuk-link govuk-link--no-visited-state">Rename heading</a>
+        <button type="submit" class="govuk-link govuk-link--no-visited-state">Remove</button>
       </div>
     </form>
   {% endset %}
