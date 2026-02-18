@@ -10,12 +10,16 @@ import {
   isSummaryPage
 } from '@defra/forms-model'
 
+import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
-import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
+import {
+  buildPreviewUrl,
+  getPaymentInfo
+} from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   editorv2Path,
   formOverviewBackLink,
@@ -125,17 +129,17 @@ export function mapQuestionRows(definition, page) {
 
   const isPayment = isPaymentPage(page)
   if (isPayment) {
-    const paymentComponent = components.find(
-      (comp) => comp.type === ComponentType.PaymentField
+    const paymentComponent = /** @type {PaymentFieldComponent} */ (
+      components.find((comp) => comp.type === ComponentType.PaymentField)
     )
     return [
       {
         key: { text: 'Payment for' },
-        value: { text: paymentComponent?.options.description }
+        value: { text: paymentComponent.options.description }
       },
       {
         key: { text: 'Total amount' },
-        value: { text: `£${paymentComponent?.options.amount.toFixed(2)}` }
+        value: { text: formatCurrency(paymentComponent.options.amount) }
       }
     ]
   }
@@ -440,6 +444,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
 
   const { pageHeading, pageCaption, pageTitle } = buildPageHeadings(metadata)
   const mappedData = mapPageData(metadata.slug, definition, filter)
+  const paymentInfo = getPaymentInfo(definition, metadata.slug)
 
   // @ts-expect-error - dynamic property on page
   const standardPages = mappedData.pages.filter((page) => !page.isEndPage)
@@ -458,7 +463,8 @@ export function pagesViewModel(metadata, definition, filter, notification) {
     pageActions,
     rightSideActions,
     conditions,
-    notification
+    notification,
+    paymentInfo
   }
 
   return {
@@ -468,5 +474,5 @@ export function pagesViewModel(metadata, definition, filter, notification) {
 }
 
 /**
- * @import { ComponentDef, ConditionDetails, GovukSummaryListRow, MarkdownComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
+ * @import { ComponentDef, ConditionDetails, GovukSummaryListRow, MarkdownComponent, PaymentFieldComponent, FormMetadata, FormDefinition, Page } from '@defra/forms-model'
  */

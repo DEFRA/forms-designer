@@ -8,6 +8,7 @@ import {
   hasComponentsEvenIfNoNext,
   hasRepeater,
   includesFileUploadField,
+  includesPaymentField,
   isFormType,
   randomId
 } from '@defra/forms-model'
@@ -368,8 +369,10 @@ export function getControllerTypeAndProperties(page, components, payload) {
   const isCurrentlyFileUpload = controllerType === ControllerType.FileUpload
   const isCurrentlyExitPage = controllerType === ControllerType.Terminal
 
+  const hasPayment = includesPaymentField(components)
+
   // Potentially unset/remove the controllerType if it already is set, and no longer needs a value
-  if (isCurrentlyRepeater && !repeater) {
+  if (isCurrentlyRepeater && (!repeater || hasPayment)) {
     controllerType = null
   }
   if (isCurrentlyFileUpload && !includesFileUploadField(components)) {
@@ -384,7 +387,7 @@ export function getControllerTypeAndProperties(page, components, payload) {
     controllerType = ControllerType.Terminal
   } else if (includesFileUploadField(components)) {
     controllerType = ControllerType.FileUpload
-  } else if (repeater) {
+  } else if (repeater && !hasPayment) {
     controllerType = ControllerType.Repeat
     additionalProperties = getRepeaterProperties(
       /** @type {PageRepeat} */ (page),

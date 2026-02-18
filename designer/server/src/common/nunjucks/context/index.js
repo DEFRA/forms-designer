@@ -12,7 +12,8 @@ import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.
 import config from '~/src/config.js'
 import {
   buildFormUrl,
-  buildPreviewUrl
+  buildPreviewUrl,
+  buildPrivacyPreviewUrl
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 
 const logger = createLogger()
@@ -62,7 +63,8 @@ export async function context(request) {
     isAdmin,
     helpers: {
       buildFormUrl,
-      buildPreviewUrl
+      buildPreviewUrl,
+      buildPrivacyPreviewUrl
     }
   }
 }

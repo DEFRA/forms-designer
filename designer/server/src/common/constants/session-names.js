@@ -30,6 +30,9 @@ export const sessionNames = {
     editorReferenceNumberSettings: /** @type {const} */ (
       'referenceNumberSettingsValidationFailure'
     ),
+    editorUserFeedbackSettings: /** @type {const} */ (
+      'userFeedbackSettingsValidationFailure'
+    ),
     editorGuidance: /** @type {const} */ ('guidanceValidationFailure'),
     editorPage: /** @type {const} */ ('pageValidationFailure'),
     editorQuestions: /** @type {const} */ ('questionsValidationFailure'),
@@ -43,7 +46,10 @@ export const sessionNames = {
     editorCondition: /** @type {const} */ ('conditionValidationFailure'),
     editorSections: /** @type {const} */ ('sectionsValidationFailure'),
     manageUsers: /** @type {const} */ ('manageUsersValidationFailure'),
-    upload: /** @type {const} */ ('uploadValidationFailure')
+    upload: /** @type {const} */ ('uploadValidationFailure'),
+    adminResetSaveAndExit: /** @type {const} */ (
+      'adminResetSaveAndExitValidationFailure'
+    )
   },
   successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList'),

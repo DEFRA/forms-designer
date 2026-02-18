@@ -49,13 +49,6 @@ describe('consolidation', () => {
         'changes.new.notificationEmail'
       ],
       [
-        AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED,
-        'the privacy notice link',
-        'Updated',
-        'changes.previous.privacyNoticeUrl',
-        'changes.new.privacyNoticeUrl'
-      ],
-      [
         AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED,
         'the next steps guidance',
         'Updated',
@@ -95,8 +88,8 @@ describe('consolidation', () => {
       }
     )
 
-    it('should have exactly 10 field configurations', () => {
-      expect(Object.keys(fieldConfigs)).toHaveLength(10)
+    it('should have exactly 9 field configurations', () => {
+      expect(Object.keys(fieldConfigs)).toHaveLength(9)
     })
 
     it('should return undefined for non-existent event type', () => {

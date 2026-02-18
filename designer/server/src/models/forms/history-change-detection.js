@@ -3,17 +3,19 @@ import { AuditEventMessageType } from '@defra/forms-model'
 import {
   alwaysValidEvents,
   fieldConfigs,
+  privacyNoticeFields,
   supportContactFields
 } from '~/src/models/forms/history-field-config.js'
 import { safeGet } from '~/src/models/forms/history-utils.js'
 
 /**
- * Checks if any support contact field has changed
+ * Checks if any field in a multi-field object has changed
  * @param {MessageData} data
+ * @param {MultiAuditFieldConfig[]} fields
  * @returns {boolean}
  */
-function hasSupportContactChange(data) {
-  return supportContactFields.some((field) => {
+function hasFieldInMultiFieldChanged(data, fields) {
+  return fields.some((field) => {
     const prevValue = safeGet(data, field.prevPath)
     const newValue = safeGet(data, field.newPath)
     return Boolean(newValue && newValue !== prevValue)
@@ -43,7 +45,11 @@ export function hasActualChange(record) {
   }
 
   if (type === AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED) {
-    return hasSupportContactChange(data)
+    return hasFieldInMultiFieldChanged(data, supportContactFields)
+  }
+
+  if (type === AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED) {
+    return hasFieldInMultiFieldChanged(data, privacyNoticeFields)
   }
 
   return true
@@ -59,5 +65,5 @@ export function filterNoChangeEvents(records) {
 }
 
 /**
- * @import { AuditRecord, MessageData } from '@defra/forms-model'
+ * @import { AuditRecord, MessageData, MultiAuditFieldConfig } from '@defra/forms-model'
  */

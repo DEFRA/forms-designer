@@ -68,9 +68,13 @@ export function mapBaseQuestionDetails(payload) {
   )
   const isLocationField = isLocationFieldType(questionType)
 
-  // For location fields, reset to default hint if no hint text is provided
-  // or the hint text matches one of the standard location hints (user may have switched location field types)
-  if (isLocationField && (!hintText || ALL_LOCATION_HINTS.includes(hintText))) {
+  // For location fields, reset to default the hint text matches one of
+  // the standard location hints (user may have switched location field types)
+  if (
+    isLocationField &&
+    hintText !== undefined &&
+    ALL_LOCATION_HINTS.includes(hintText)
+  ) {
     hintText = getDefaultLocationHint(
       /** @type {ComponentType} */ (questionType)
     )

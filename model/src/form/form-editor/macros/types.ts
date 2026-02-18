@@ -121,6 +121,12 @@ export interface LatLongModel extends QuestionBaseModel {
   }
 }
 
+export interface PaymentModel extends QuestionBaseModel {
+  amount?: string
+  description?: string
+  headingClasses?: string
+}
+
 export interface AppPreviewPanelMacro extends AppPreviewPanelTabsMacro {
   model: QuestionBaseModel
 }

@@ -2,13 +2,53 @@
 
 {% from "govuk/components/back-link/macro.njk" import govukBackLink %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
 
 {% block beforeContent %}
   <div class="govuk-width-container app-width-container--wide">
     {{ govukBackLink(backLink) }}
   </div>
 {% endblock %}
+
+{% set textHtml %}
+  {% set field = fields.privacyNoticeText %}
+  {{ govukTextarea({
+    label: {
+      text: field.label.text,
+      classes: "govuk-label--s",
+      isPageHeading: false
+    },
+    id: field.id,
+    name: field.name,
+    value: field.value,
+    hint: field.hint,
+    errorMessage: {
+      text: formErrors[field.name].text
+    } if formErrors[field.name]
+  }) }}
+  {% include "forms/partials/markdown-guidance.njk" %}
+{% endset %}
+
+{% set linkHtml %}
+  {% set field = fields.privacyNoticeUrl %}
+  {{ govukInput({
+    label: {
+      text: field.label.text,
+      classes: "govuk-label--s",
+      isPageHeading: false
+    },
+    id: field.id,
+    name: field.name,
+    value: field.value,
+    hint: field.hint,
+    errorMessage: {
+      text: formErrors[field.name].text
+    } if formErrors[field.name]
+  }) }}
+{% endset %}
 
 {% block content %}
   <form method="post" novalidate>
@@ -25,20 +65,11 @@
         you must provide privacy information for the people who will enter their data into your form.
       </p>
 
-      {{ govukInput({
-        label: {
-          text: field.label.text,
-          classes: "govuk-label--s",
-          isPageHeading: false
-        },
-        id: field.id,
-        name: field.name,
-        value: field.value,
-        hint: field.hint,
-        errorMessage: {
-          text: formErrors[field.name].text
-        } if formErrors[field.name]
+      {{ govukInsetText({
+        text: "A link to the privacy notice is displayed in the form footer."
       }) }}
+
+      {{ govukRadios(fields.privacyNoticeType | setConditionalAttribute("text", textHtml) | setConditionalAttribute("link", linkHtml)) }}
 
       <div class="govuk-button-group">
         {{ govukButton({

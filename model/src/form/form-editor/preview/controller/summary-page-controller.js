@@ -1,3 +1,4 @@
+import { ComponentType } from '~/src/components/enums.js'
 import { hasFormField } from '~/src/components/helpers.js'
 import { HIGHLIGHT_CLASS } from '~/src/form/form-editor/preview/constants.js'
 import { PreviewPageControllerBase } from '~/src/form/form-editor/preview/controller/page-controller-base.js'
@@ -46,6 +47,11 @@ export class SummaryPageController extends PreviewPageControllerBase {
    * @private
    */
   _unassignedPages = []
+  /**
+   * @type {PaymentPreviewInfo | undefined}
+   * @private
+   */
+  _payment
 
   /**
    * @param {SummaryPageElements} elements
@@ -67,24 +73,32 @@ export class SummaryPageController extends PreviewPageControllerBase {
       elements.isConfirmationEmailSettingsPanel
     this._sections = elements.sections ?? []
     this._unassignedPages = elements.unassignedPages ?? []
+    this._payment = elements.payment
   }
 
   /**
    * @returns {{ rows: SummaryRow[] }}
    */
   get componentRows() {
-    const rows = this._componentDefs.map((component) => {
-      const summaryRowHeading = component.shortDescription ?? ''
-      return {
-        key: { text: summaryRowHeading },
-        value: { text: EXAMPLE_TEXT },
-        actions: {
-          items: [
-            { href: '#', text: 'Change', visuallyHiddenText: summaryRowHeading }
-          ]
+    const rows = this._componentDefs
+      // Exclude payment field as displayed in a section at the bottom
+      .filter((comp) => comp.type !== ComponentType.PaymentField)
+      .map((component) => {
+        const summaryRowHeading = component.shortDescription ?? ''
+        return {
+          key: { text: summaryRowHeading },
+          value: { text: EXAMPLE_TEXT },
+          actions: {
+            items: [
+              {
+                href: '#',
+                text: 'Change',
+                visuallyHiddenText: summaryRowHeading
+              }
+            ]
+          }
         }
-      }
-    })
+      })
     return {
       rows
     }
@@ -180,6 +194,13 @@ export class SummaryPageController extends PreviewPageControllerBase {
   }
 
   /**
+   * @returns {PaymentPreviewInfo | undefined}
+   */
+  get payment() {
+    return this._payment
+  }
+
+  /**
    * @returns {Markdown[]}
    * @protected
    */
@@ -208,7 +229,7 @@ export class SummaryPageController extends PreviewPageControllerBase {
 /**
  * @import { ComponentDef, ContentComponentsDef, ListComponent, FormComponentsDef } from '~/src/components/types.js'
  * @import { FormDefinition } from '~/src/form/form-definition/types.js'
- * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements, SectionForPreview } from '~/src/form/form-editor/preview/types.js'
+ * @import { PageRenderer, PagePreviewBaseElements, SummaryPageElements, SectionForPreview, PaymentPreviewInfo } from '~/src/form/form-editor/preview/types.js'
  * @import { SummaryRowActionItem, SummaryRow } from '~/src/form/form-editor/macros/types.js'
  * @import { Markdown } from '~/src/form/form-editor/preview/markdown.js'
  */

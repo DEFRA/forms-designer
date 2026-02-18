@@ -3,9 +3,11 @@ import {
   ControllerType,
   getPageTitle,
   hasComponentsEvenIfNoNext,
+  isPaymentPage,
   isSummaryPage
 } from '@defra/forms-model'
 
+import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
 import config from '~/src/config.js'
 import { stringHasValue } from '~/src/lib/utils.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
@@ -47,6 +49,16 @@ export function buildPreviewUrl(slug, status) {
   const encodedStatus = encodeURIComponent(status)
 
   return `${config.previewUrl}/form/preview/${encodedStatus}/${encodedSlug}`
+}
+
+/**
+ * Builds a URL for previewing the user-defined privacy notice.
+ * @param {string} slug - The unique identifier for the form.
+ */
+export function buildPrivacyPreviewUrl(slug) {
+  const encodedSlug = encodeURIComponent(slug)
+
+  return `${config.previewUrl}/help/privacy/${encodedSlug}`
 }
 
 /**
@@ -95,7 +107,8 @@ export function getUnassignedPageTitlesForPreview(definition) {
         !page.section &&
         !isSummaryPage(page) &&
         page.controller !== ControllerType.Status &&
-        !isGuidancePage(page)
+        !isGuidancePage(page) &&
+        !isPaymentPage(page)
     )
     .map((page) => ({
       title: getPageTitle(page)
@@ -141,6 +154,7 @@ export function getDeclarationInfo(page) {
 export function enrichPreviewModel(basePreviewModel, definition) {
   const sections = buildSectionsForPreview(definition)
   const unassignedPages = getUnassignedPageTitlesForPreview(definition)
+  const payment = getPaymentInfo(definition)
 
   return {
     ...basePreviewModel,
@@ -149,7 +163,8 @@ export function enrichPreviewModel(basePreviewModel, definition) {
     declaration: {
       hasDeclaration: basePreviewModel.needDeclaration,
       declarationText: basePreviewModel.declarationText
-    }
+    },
+    payment
   }
 }
 
@@ -172,5 +187,59 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  */
 
 /**
- * @import { FormDefinition, FormStatus, Page, MarkdownComponent } from '@defra/forms-model'
+ * @typedef {object} PaymentInfo
+ * @property {boolean} hasPayment - Whether the form has a payment field
+ * @property {string} description - Payment description
+ * @property {string} amount - Formatted payment amount (e.g., "£300.00")
+ * @property {string} pageId - ID of the page containing the payment field
+ * @property {string} path - Path of the payment page
+ * @property {string} editUrl - URL to edit the payment page
+ */
+
+/**
+ * Get payment info from the form definition
+ * @param {FormDefinition} definition
+ * @param {string} [slug]
+ * @returns {PaymentInfo}
+ */
+export function getPaymentInfo(definition, slug) {
+  for (const page of definition.pages) {
+    if (!hasComponentsEvenIfNoNext(page)) {
+      continue
+    }
+
+    const paymentComponent = /** @type {PaymentFieldComponent | undefined} */ (
+      page.components.find((comp) => comp.type === ComponentType.PaymentField)
+    )
+
+    if (paymentComponent) {
+      const amount = paymentComponent.options.amount
+      const pageId = page.id ?? ''
+      const editUrl =
+        slug && pageId
+          ? `/library/${slug}/editor-v2/page/${pageId}/questions`
+          : ''
+      return {
+        hasPayment: true,
+        description: paymentComponent.options.description,
+        amount: formatCurrency(amount),
+        pageId,
+        path: page.path,
+        editUrl
+      }
+    }
+  }
+
+  return {
+    hasPayment: false,
+    description: '',
+    amount: '',
+    pageId: '',
+    path: '',
+    editUrl: ''
+  }
+}
+
+/**
+ * @import { FormDefinition, FormStatus, Page, MarkdownComponent, PaymentFieldComponent } from '@defra/forms-model'
  */

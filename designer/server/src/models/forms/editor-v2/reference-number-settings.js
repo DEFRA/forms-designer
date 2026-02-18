@@ -2,7 +2,6 @@ import {
   ComponentType,
   ControllerType,
   FormStatus,
-  SummaryPageController,
   hasComponentsEvenIfNoNext,
   isPaymentPage
 } from '@defra/forms-model'
@@ -13,19 +12,17 @@ import {
   insertValidationErrors,
   stringHasValue
 } from '~/src/lib/utils.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
 import {
   SAVE_AND_CONTINUE,
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import { SummaryPreviewSSR } from '~/src/models/forms/editor-v2/preview/page-preview.js'
 import {
-  DECLARATION_PREVIEW_TITLE,
   SUMMARY_CONTROLLER_TEMPLATE,
   buildPreviewUrl,
   enrichPreviewModel
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
-import { dummyRenderer } from '~/src/models/forms/editor-v2/questions.js'
 import {
   CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_REFERENCE_NUMBER,
@@ -58,57 +55,6 @@ export function settingsFields(
       ],
       ...insertValidationErrors(validation?.formErrors.enableReferenceNumber)
     }
-  }
-}
-
-/**
- * @param { Page | undefined } page
- * @param {FormDefinition} definition
- * @param {string} previewPageUrl
- * @param {string} declarationText
- * @param {boolean} needDeclaration
- * @param {boolean} showConfirmationEmail
- * @param {boolean} showReferenceNumber
- * @returns {PagePreviewPanelMacro & PreviewModelExtras}
- */
-export function getPreviewModel(
-  page,
-  definition,
-  previewPageUrl,
-  declarationText,
-  needDeclaration,
-  showConfirmationEmail,
-  showReferenceNumber
-) {
-  const elements = new SummaryPreviewSSR(
-    page,
-    declarationText,
-    needDeclaration,
-    showConfirmationEmail
-  )
-
-  const previewPageController = new SummaryPageController(
-    elements,
-    definition,
-    dummyRenderer
-  )
-
-  return {
-    previewTitle: DECLARATION_PREVIEW_TITLE,
-    pageTitle: previewPageController.pageTitle,
-    components: previewPageController.components,
-    guidance: previewPageController.guidance,
-    sectionTitle: previewPageController.sectionTitle,
-    buttonText: previewPageController.buttonText,
-    previewPageUrl,
-    questionType: ComponentType.TextField,
-    componentRows: previewPageController.componentRows,
-    hasPageSettingsTab: true,
-    showConfirmationEmail: previewPageController.showConfirmationEmail,
-    showReferenceNumber,
-    declarationText,
-    needDeclaration,
-    isConfirmationEmailSettingsPanel: true
   }
 }
 
@@ -198,7 +144,6 @@ export function referenceNumberSettingsViewModel(
 }
 
 /**
- * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent, Page, PagePreviewPanelMacro } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, FormEditor, MarkdownComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
- * @import { PreviewModelExtras } from '~/src/models/forms/editor-v2/preview-helpers.js'
  */

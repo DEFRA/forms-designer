@@ -2,6 +2,7 @@ import {
   ControllerType,
   FormStatus,
   getPageTitle,
+  isPaymentPage,
   isSummaryPage
 } from '@defra/forms-model'
 
@@ -15,7 +16,8 @@ import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
 import {
   buildPreviewUrl,
   buildSectionsForPreview,
-  getDeclarationInfo
+  getDeclarationInfo,
+  getPaymentInfo
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   CHECK_ANSWERS_CAPTION,
@@ -80,7 +82,8 @@ function getUnassignedPages(definition) {
       (page) =>
         !page.section &&
         !isSummaryPage(page) &&
-        page.controller !== ControllerType.Status
+        page.controller !== ControllerType.Status &&
+        !isPaymentPage(page)
     )
     .map((page) => ({
       id: page.id ?? '',
@@ -159,7 +162,8 @@ export function sectionsViewModel(
       sections: previewSections,
       unassignedPages: previewUnassignedPages,
       declaration: declarationInfo,
-      showConfirmationEmail
+      showConfirmationEmail,
+      payment: getPaymentInfo(definition)
     },
     previewPageUrl,
     notification,

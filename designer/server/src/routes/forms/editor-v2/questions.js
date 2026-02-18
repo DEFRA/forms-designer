@@ -3,6 +3,7 @@ import {
   MIN_NUMBER_OF_REPEAT_ITEMS,
   Scopes,
   guidanceTextSchema,
+  jsEnabledSchema,
   maxItemsSchema,
   minItemsSchema,
   pageHeadingAndGuidanceSchema,
@@ -41,6 +42,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/questions.js'
 import { editorv2Path } from '~/src/models/links.js'
 import {
   customItemOrder,
+  getForm,
   mergeMissingComponentsIntoOrder
 } from '~/src/routes/forms/editor-v2/helpers.js'
 
@@ -92,8 +94,46 @@ export const schema = Joi.object().keys({
   }),
   saveReorder: Joi.boolean().default(false).optional(),
   movement: Joi.string().optional(),
-  itemOrder: Joi.any().custom(customItemOrder)
+  itemOrder: Joi.any().custom(customItemOrder),
+  jsEnabled: jsEnabledSchema
 })
+
+/**
+ * Override checkboxes and revalidate against schema (if JS is disabled, it's possible to enter details
+ * without checking the parent checkbox)
+ * @param {FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean, jsEnabled: string }} payload
+ * @param {string} action
+ */
+export function revalidateCheckboxesWithOverride(payload, action) {
+  if (action === 'reorder' || payload.jsEnabled === 'true') {
+    return undefined
+  }
+
+  const isExpanded = isCheckboxSelected(payload.pageHeadingAndGuidance)
+  if (!isExpanded && payload.pageHeading) {
+    // Override if not 'checked' in non-JS when page heading supplied
+    payload.pageHeadingAndGuidance = 'true'
+  }
+
+  const isRepeat = isCheckboxSelected(payload.repeater)
+  if (
+    !isRepeat &&
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    (payload.minItems !== undefined ||
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      payload.maxItems !== undefined ||
+      payload.questionSetName)
+  ) {
+    // Error if not 'checked' in non-JS when repeater fields supplied
+    payload.repeater = 'true'
+  }
+
+  const { error } = schema.validate(payload, {
+    abortEarly: false
+  })
+
+  return error
+}
 
 export default [
   /**
@@ -158,7 +198,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: Pick<FormEditorInputPageSettings, 'pageHeadingAndGuidance' | 'pageHeading' | 'movement' | 'itemOrder' | 'saveReorder'> }>}
+   * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string }, Payload: FormEditorInputPageSettings & { movement: string, itemOrder: string[], saveReorder: boolean, jsEnabled: string } }>}
    */
   ({
     method: 'POST',
@@ -174,8 +214,7 @@ export default [
         )
 
       // Form metadata and page components
-      const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const { metadata, definition } = await getForm(slug, token)
       const page = getPageFromDefinition(definition, pageId)
 
       if (!page) {
@@ -236,6 +275,12 @@ export default [
             pageTitleError(),
             sessionNames.validationFailure.editorQuestions
           )
+        }
+
+        // Override checkboxes and revalidate in case JS is off
+        const checkboxError = revalidateCheckboxesWithOverride(payload, action)
+        if (checkboxError) {
+          return redirectWithErrors(request, h, checkboxError, errorKey)
         }
 
         await setPageSettings(metadata.id, token, pageId, definition, payload)

@@ -49,7 +49,7 @@ describe('check-answers-overview model', () => {
         'cya-page'
       )
 
-      expect(result.tabConfig).toHaveLength(5)
+      expect(result.tabConfig).toHaveLength(6)
       expect(result.tabConfig[0].isActive).toBe(true)
       expect(result.tabConfig[0].title).toBe(PAGE_OVERVIEW_TITLE)
     })

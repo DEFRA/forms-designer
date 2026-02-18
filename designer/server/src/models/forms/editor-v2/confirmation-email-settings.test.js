@@ -5,10 +5,8 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
-import {
-  getPreviewModel,
-  settingsFields
-} from '~/src/models/forms/editor-v2/confirmation-email-settings.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
+import { settingsFields } from '~/src/models/forms/editor-v2/confirmation-email-settings.js'
 
 describe('confirmation email settings', () => {
   describe('settingsFields', () => {
@@ -100,7 +98,8 @@ describe('confirmation email settings', () => {
         'http://preview-url',
         '',
         false,
-        true
+        true,
+        false
       )
 
       expect(previewModel.componentRows.rows).toBeInstanceOf(Array)
@@ -132,7 +131,8 @@ describe('confirmation email settings', () => {
         'http://another-url',
         '',
         false,
-        true
+        true,
+        false
       )
 
       expect(previewModel.pageTitle).toEqual({
@@ -161,6 +161,7 @@ describe('confirmation email settings', () => {
         'http://test-url',
         '',
         false,
+        false,
         false
       )
 
@@ -188,7 +189,8 @@ describe('confirmation email settings', () => {
         'http://test-url',
         declarationText,
         true,
-        true
+        true,
+        false
       )
 
       expect(previewModel.components).toHaveLength(1)

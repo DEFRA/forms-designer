@@ -100,6 +100,15 @@ export interface LocationElements extends DomElementsBase {
   readonly values: LocationSettings
 }
 
+export interface PaymentSettings extends BaseSettings {
+  paymentAmount: number
+  paymentDescription: string
+}
+
+export interface PaymentElements extends DomElementsBase {
+  readonly values: PaymentSettings
+}
+
 export interface LocationFieldModel extends QuestionBaseModel {
   userClasses: string
   fieldset: {
@@ -169,12 +178,19 @@ export interface SectionForPreview {
   pages: { title: string }[]
 }
 
+export interface PaymentPreviewInfo {
+  hasPayment: boolean
+  description: string
+  amount: string
+}
+
 export interface SummaryPageElements extends PagePreviewBaseElements {
   declaration: boolean
   showConfirmationEmail: boolean
   isConfirmationEmailSettingsPanel: boolean
   sections?: SectionForPreview[]
   unassignedPages?: { title: string }[]
+  payment?: PaymentPreviewInfo
 }
 
 export interface SummaryPageInitialState {
@@ -184,6 +200,7 @@ export interface SummaryPageInitialState {
   isConfirmationEmailSettingsPanel: boolean
   sections?: SectionForPreview[]
   unassignedPages?: { title: string }[]
+  payment?: PaymentPreviewInfo
 }
 
 export type PreviewQuestion =

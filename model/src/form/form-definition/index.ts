@@ -1062,7 +1062,8 @@ const phaseBannerSchema = Joi.object<PhaseBanner>()
   })
 
 const optionsSchema = Joi.object({
-  showReferenceNumber: Joi.boolean().default(false).required()
+  showReferenceNumber: Joi.boolean().default(false),
+  disableUserFeedback: Joi.boolean().default(false)
 }).description('Options for the form')
 
 const outputSchema = Joi.object<FormDefinition['output']>()

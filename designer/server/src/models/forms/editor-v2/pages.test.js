@@ -229,6 +229,7 @@ describe('editor-v2 - pages model', () => {
         }
       })
 
+      // Payment page with single PaymentField component - details should be populated
       expect(resPagePayment).toHaveLength(2)
       expect(resPagePayment[0]).toEqual({
         key: {
@@ -236,6 +237,14 @@ describe('editor-v2 - pages model', () => {
         },
         value: {
           text: 'Payment description'
+        }
+      })
+      expect(resPagePayment[1]).toEqual({
+        key: {
+          text: 'Total amount'
+        },
+        value: {
+          text: '£250.00'
         }
       })
 

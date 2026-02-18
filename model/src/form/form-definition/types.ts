@@ -191,7 +191,8 @@ export interface Output {
 }
 
 export interface FormOptions {
-  showReferenceNumber: boolean
+  showReferenceNumber?: boolean
+  disableUserFeedback?: boolean
 }
 
 /**
