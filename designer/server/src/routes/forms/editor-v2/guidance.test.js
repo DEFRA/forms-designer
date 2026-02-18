@@ -46,13 +46,17 @@ describe('Editor v2 guidance routes', () => {
 
     const { container, document } = await renderResponse(server, options)
 
-    const $mainHeadings = container.getAllByRole('heading', { level: 1 })
+    const [$mainHeading] = container.getAllByRole('heading', { level: 1 })
+    const $cardHeading = container.getByRole('heading', {
+      level: 2,
+      name: /Edit guidance page/
+    })
 
     const $actions = container.getAllByRole('button')
     const $previewPanel = document.getElementById('preview-panel')
 
-    expect($mainHeadings[0]).toHaveTextContent('Test form')
-    expect($mainHeadings[1]).toHaveTextContent('Edit guidance page')
+    expect($mainHeading).toHaveTextContent('Test form')
+    expect($cardHeading).toHaveTextContent('Edit guidance page')
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save')
     expect($actions[3]).toHaveTextContent('Manage conditions')
