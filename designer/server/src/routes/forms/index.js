@@ -4,6 +4,7 @@ import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
+import editorRenameSection from '~/src/routes/forms/editor-v2/check-answers-settings//rename-section.js'
 import editorCheckAnswersOverview from '~/src/routes/forms/editor-v2/check-answers-settings/check-answers-overview.js'
 import confirmationEmailSettings from '~/src/routes/forms/editor-v2/check-answers-settings/confirmation-email-settings.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
@@ -57,6 +58,7 @@ export default [
   editorCheckAnswersOverview,
   editorCheckAnswersSettings,
   editorSections,
+  editorRenameSection,
   editorConditionCheckChanges,
   editorConditionDelete,
   editorCondition,

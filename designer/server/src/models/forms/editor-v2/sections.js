@@ -167,7 +167,8 @@ export function sectionsViewModel(
     },
     previewPageUrl,
     notification,
-    editorv2Path
+    editorv2Path,
+    renameSectionUrl: editorv2Path(slug, `page/${pageId}/rename-section`)
   }
 }
 
