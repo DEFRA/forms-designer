@@ -1,4 +1,5 @@
 import { Scopes } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -91,7 +92,7 @@ export default [
 
       yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
-      return h.redirect(getReturnUrl(slug, pageId))
+      return h.redirect(getReturnUrl(slug, pageId)).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {

@@ -15,9 +15,7 @@ export function renameSectionViewModel(
   const pageTitle = 'Rename section'
   const { formValues, formErrors } = validation ?? {}
 
-  const section = definition.sections.find(
-    (section) => section.id === sectionId
-  )
+  const section = definition.sections.find((sect) => sect.id === sectionId)
   if (!section) {
     throw new Error(`Section not found with id ${sectionId}`)
   }
