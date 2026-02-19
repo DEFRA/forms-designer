@@ -11,6 +11,8 @@ const textFieldQuestions = [
   QuestionBaseSettings.ShortDescription,
   QuestionBaseSettings.PaymentAmount,
   QuestionBaseSettings.PaymentDescription,
+  QuestionBaseSettings.paymentTestApiKey,
+  QuestionBaseSettings.paymentLiveApiKey,
   QuestionAdvancedSettings.ExactFiles,
   QuestionAdvancedSettings.Min,
   QuestionAdvancedSettings.Max,

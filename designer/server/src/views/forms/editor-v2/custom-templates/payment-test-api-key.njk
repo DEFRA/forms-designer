@@ -1,0 +1,32 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+
+<h3>GOV.UK Pay API keys</h3>
+
+<p class="govuk-body">A GOV.UK Pay API key is like a password that lets your form securely connect to GOV.UK Pay, so you can take payments without directly handling card details.</p>
+<p class="govuk-body">You need one GOV.UK API key for testing (used in your draft form and for live previews) and another for your live form.</p>
+
+{{ govukWarningText({
+  text: "Do not share the API keys with anyone else.",
+  iconFallbackText: "Warning"
+}) }}
+
+{{ govukDetails({
+  summaryText: "How to get a test API key",
+  html: "<ol>" +
+    "<li>Go to <a href=\"https://www.payments.service.gov.uk/\" class=\"govuk-link govuk-link--no-visited-state\" target=\"_blank\">GOV.UK Pay</a></li>" + 
+    "<li>Create an account</li>" +
+    "<li>Go to 'Settings'</li>" +
+    "<li>Select 'Developers' from the left hand navigation</li>" +
+    "<li>Select 'API keys'</li>" +
+    "<li>Copy API test key</li>" +
+    "</ol>"
+}) }}
+
+{{ govukInput(field) }}
+
+<a href="?action=clear-test-key" class="govuk-link govuk-link--no-visited-state">Clear test API key</a>
+
+<div class="govuk-!-padding-bottom-8"></div>

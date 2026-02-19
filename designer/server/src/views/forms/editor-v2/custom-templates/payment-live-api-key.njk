@@ -1,0 +1,12 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+{{ govukDetails({
+  summaryText: "Request a live GOV.UK Pay account",
+  html: "<p>Before you can request a live account you need to test how GOV.UK Pay works using your test account.<p>" +
+  "<p>When you are ready to request a live account, go to your dashboard and select 'Setting up your live account'.<p>"
+}) }}
+
+{{ govukInput(field) }}
+
+<a href="?action=clear-live-key" class="govuk-link govuk-link--no-visited-state">Clear live API key</a>

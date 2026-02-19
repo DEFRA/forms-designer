@@ -319,6 +319,16 @@ export interface FormEditor {
    * Description of the payment (will appear in the payment provider's pages)
    */
   paymentDescription: string
+
+  /**
+   * Test API key used for test payments
+   */
+  paymentTestApiKey: string
+
+  /**
+   * Live API key used for live payments
+   */
+  paymentLiveApiKey: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -612,6 +622,8 @@ export interface FormEditorGovukField {
   declarationText?: GovukField
   paymentAmount?: GovukField
   paymentDescription?: GovukField
+  paymentTestApiKey?: GovukField
+  paymentLiveApiKey?: GovukField
   errorMessage?: { text: string }
 }
 
