@@ -1,5 +1,5 @@
 export const Roles = {
-  Superadmin: 'admin',
+  Superadmin: 'superadmin',
   Admin: 'admin',
   FormPublisher: 'form-publisher',
   FormCreator: 'form-creator'
