@@ -148,13 +148,32 @@ export const auth = {
  * Request auth with scopes for Hapi `server.inject()`
  * @satisfies {ServerInjectOptions['auth']}
  */
+export const authFormPublisher = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claims),
+  credentials: credentials({
+    claims,
+    user: user(claims.token, [Roles.FormCreator]),
+    scope: [
+      Scopes.FormEdit,
+      Scopes.FormRead,
+      Scopes.FormDelete,
+      Scopes.FormPublish
+    ]
+  })
+}
+
+/**
+ * Request auth with scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
 export const authFormCreator = {
   strategy: 'azure-oidc',
   artifacts: artifacts(claims),
   credentials: credentials({
     claims,
     user: user(claims.token, [Roles.FormCreator]),
-    scope: [Scopes.FormEdit, Scopes.FormRead]
+    scope: [Scopes.FormEdit, Scopes.FormRead, Scopes.FormDelete]
   })
 }
 
