@@ -51,8 +51,8 @@ export function createOrEditUserViewModel(
 ) {
   const { formValues, formErrors } = validation ?? {}
   const [role] = user?.roles ?? []
-  const filter = (/** @type {EntitlementRole} */ role) =>
-    hideSuperadmin ? role.code !== Roles.Superadmin.toString() : true
+  const filter = (/** @type {EntitlementRole} */ r) =>
+    hideSuperadmin ? r.code !== Roles.Superadmin.toString() : true
 
   return {
     isEditing: user !== undefined,
