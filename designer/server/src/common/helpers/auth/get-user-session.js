@@ -135,6 +135,15 @@ export function hasAdminRole(user) {
 }
 
 /**
+ * Check if user has superadmin role
+ * @param {EntitlementUser | UserCredentials | null | undefined} user
+ * @returns {boolean}
+ */
+export function hasSuperadminRole(user) {
+  return user?.roles?.includes(Roles.Superadmin) ?? false
+}
+
+/**
  * @import { AuthArtifacts, AuthCredentials, Request, UserCredentials } from '@hapi/hapi'
  * @import { AuthSignedIn, AuthWithTokens, Tokens, UserProfile } from '~/src/common/helpers/auth/types.js'
  * @import { EntitlementUser } from '@defra/forms-model'

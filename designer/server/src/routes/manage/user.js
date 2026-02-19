@@ -47,8 +47,10 @@ const userIdSchema = Joi.object({
 const MANAGE_USERS_BASE_URL = '/manage/users'
 
 export default [
-  /** @type {ServerRoute} */
-  // Add a new user
+  /**
+   * Add a new user
+   * @type {ServerRoute}
+   */
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/new`,
@@ -80,8 +82,10 @@ export default [
     }
   }),
 
-  /** @type {ServerRoute} */
-  // Edit an existing user
+  /**
+   * Edit an existing user
+   * @type {ServerRoute}
+   */
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
@@ -116,8 +120,10 @@ export default [
     }
   }),
 
-  /** @type {ServerRoute} */
-  // Delete a user
+  /**
+   * Delete a user
+   * @type {ServerRoute}
+   */
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
@@ -147,9 +153,9 @@ export default [
   }),
 
   /**
+   * Post new user details
    * @satisfies {ServerRoute<{ Payload: ManageUser }>}
    */
-  // Post new user details
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/new`,
@@ -196,9 +202,9 @@ export default [
   }),
 
   /**
+   * Post edited user details
    * @satisfies {ServerRoute}
    */
-  // Post edited user details
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
@@ -257,9 +263,9 @@ export default [
   }),
 
   /**
+   * Post operation for delete confirmation
    * @satisfies {ServerRoute}
    */
-  // Post operation for delete confirmation
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
