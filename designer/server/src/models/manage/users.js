@@ -1,3 +1,5 @@
+import { Roles } from '@defra/forms-model'
+
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 import {
@@ -38,11 +40,20 @@ export function getTabs() {
 /**
  * @param {EntitlementRole[]} allRoles
  * @param { EntitlementUser | undefined } user
+ * @param { boolean } hideSuperadmin
  * @param {ValidationFailure<ManageUser>} [validation]
  */
-export function createOrEditUserViewModel(allRoles, user, validation) {
+export function createOrEditUserViewModel(
+  allRoles,
+  user,
+  hideSuperadmin,
+  validation
+) {
   const { formValues, formErrors } = validation ?? {}
   const [role] = user?.roles ?? []
+  const filter = (/** @type {EntitlementRole} */ role) =>
+    hideSuperadmin ? role.code !== Roles.Superadmin.toString() : true
+
   return {
     isEditing: user !== undefined,
     pageTitle: MANAGE_USERS_TEXT,
@@ -81,7 +92,7 @@ export function createOrEditUserViewModel(allRoles, user, validation) {
             isPageHeading: false
           }
         },
-        items: allRoles.map((r) => ({
+        items: allRoles.filter(filter).map((r) => ({
           text: getNameForRole(r.code),
           value: r.code,
           hint: {
