@@ -41,6 +41,8 @@ import {
   type FormTeamEmailUpdatedMessageData,
   type FormTeamNameChanges,
   type FormTeamNameUpdatedMessageData,
+  type FormTermsAndConditionsAgreedMessageData,
+  type FormTermsAndConditionsChanges,
   type FormTitleChanges,
   type FormTitleUpdatedMessageData,
   type FormUpdatedMessageData,
@@ -65,6 +67,7 @@ import {
   submissionGuidanceSchema,
   teamEmailSchema,
   teamNameSchema,
+  termsAndConditionsAgreedSchema,
   titleSchema
 } from '~/src/form/form-metadata/index.js'
 
@@ -181,6 +184,14 @@ export const formPrivacyNoticeChanges = Joi.object<FormPrivacyNoticeChanges>()
   })
   .required()
   .description('Changes schema for FORM_PRIVACY_NOTICE_UPDATED event')
+
+export const formTermsAndConditionsChanges =
+  Joi.object<FormTermsAndConditionsChanges>()
+    .keys({
+      termsAndConditionsAgreed: termsAndConditionsAgreedSchema
+    })
+    .required()
+    .description('Changes schema for FORM_TERMS_AND_CONDITIONS_AGREED event')
 
 export const formNotificationEmailChanges =
   Joi.object<FormNotificationEmailChanges>()
@@ -385,6 +396,15 @@ export const messageSchema = Joi.object<AuditMessage>()
             FormPrivacyNoticeChanges,
             FormPrivacyNoticeUpdatedMessageData
           >(formPrivacyNoticeChanges)
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED),
+          then: formChangesMessageData<
+            FormTermsAndConditionsChanges,
+            FormTermsAndConditionsAgreedMessageData
+          >(formTermsAndConditionsChanges)
         },
         {
           is: Joi.string()
