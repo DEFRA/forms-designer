@@ -86,7 +86,11 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [Scopes.FormsFeedback, Scopes.FormsBackup, Scopes.ResetSaveAndExit]
+          scope: [
+            Scopes.FormsFeedback,
+            Scopes.FormsBackup,
+            Scopes.ResetSaveAndExit
+          ]
         }
       }
     }
