@@ -145,6 +145,11 @@ export interface ExcelGenerationMessageData {
   notificationEmail: string
 }
 
+export interface FormSecretSavedMessageData extends FormMessageDataBase {
+  formId: string
+  secretName: string
+}
+
 export interface FormDefinitionS3Meta {
   fileId: string
   filename: string
@@ -206,6 +211,7 @@ export type MessageData =
   | ExcelGenerationMessageData
   | FormFileDownloadedMessageData
   | FormsBackupRequestedMessageData
+  | FormSecretSavedMessage
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -431,6 +437,12 @@ export interface FormsBackupRequestedMessage extends DesignerMessageBase {
   data: FormsBackupRequestedMessageData
 }
 
+export interface FormSecretSavedMessage extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_SECRET_SAVED
+  data: FormSecretSavedMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -464,6 +476,7 @@ export type AuditMessage =
   | FormCsatExcelRequestedMessage
   | PlatformCsatExcelRequestedMessage
   | FormsBackupRequestedMessage
+  | FormSecretSavedMessage
 
 export interface AuditEvent {
   message: AuditMessage
