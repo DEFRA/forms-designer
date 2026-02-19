@@ -10,7 +10,7 @@ export function privacyNoticyViewModel(metadata, validation) {
   const pageTitle = 'Privacy notice for this form'
   const { formValues, formErrors } = validation ?? {}
 
-  // Legacy compatibility - originally only privacty notice url needed to be supplied
+  // Legacy compatibility - originally only privacy notice url needed to be supplied
   if (!validation && !metadata.privacyNoticeType && metadata.privacyNoticeUrl) {
     metadata.privacyNoticeType = 'link'
   }
