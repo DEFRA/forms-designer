@@ -129,7 +129,9 @@ export function hasUser(credentials) {
  * @returns {boolean}
  */
 export function hasAdminRole(user) {
-  return user?.roles?.includes(Roles.Admin) ?? false
+  return Array.isArray(user?.roles)
+    ? user.roles.includes(Roles.Superadmin) || user.roles.includes(Roles.Admin)
+    : false
 }
 
 /**
