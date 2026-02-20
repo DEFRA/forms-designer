@@ -322,26 +322,22 @@ export async function applyPaymentValues(questionType, formId, fields, token) {
 }
 
 /**
- * @param {FormMetadata} metadata
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @param {string} questionId
+ * @param {{ metadata: FormMetadata, definition: FormDefinition, pageId: string, questionId: string }} formCriteria
  * @param {string} stateId
  * @param {string} token
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {QuestionSessionState} [state]
  */
 export async function questionDetailsViewModel(
-  metadata,
-  definition,
-  pageId,
-  questionId,
+  formCriteria,
   stateId,
   token,
   validation,
   state
 ) {
   const questionType = state?.questionType
+  // prettier-ignore
+  const { metadata, definition, pageId, questionId } = formCriteria
   // prettier-ignore
   const details = getDetails(metadata, definition, pageId, questionId, questionType)
   const formTitle = metadata.title

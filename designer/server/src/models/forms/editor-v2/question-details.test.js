@@ -651,10 +651,12 @@ describe('editor-v2 - question details model', () => {
       })
 
       const result = await questionDetailsViewModel(
-        metadata,
-        definition,
-        pageId,
-        questionId,
+        {
+          metadata,
+          definition,
+          pageId,
+          questionId
+        },
         stateId,
         token
       )
@@ -729,10 +731,12 @@ describe('editor-v2 - question details model', () => {
       }
 
       const result = await questionDetailsViewModel(
-        metadata,
-        definition,
-        pageId,
-        questionId,
+        {
+          metadata,
+          definition,
+          pageId,
+          questionId
+        },
         stateId,
         token,
         undefined,

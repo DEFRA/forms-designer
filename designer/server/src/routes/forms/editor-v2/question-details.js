@@ -293,10 +293,12 @@ export default [
       return h.view(
         'forms/editor-v2/question-details',
         await viewModel.questionDetailsViewModel(
-          metadata,
-          definition,
-          pageId,
-          questionId,
+          {
+            metadata,
+            definition,
+            pageId,
+            questionId
+          },
           stateId,
           token,
           validation,
