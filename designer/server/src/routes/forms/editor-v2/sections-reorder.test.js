@@ -125,7 +125,7 @@ describe('Editor v2 sections reorder routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/pages-reorder',
+      url: '/library/my-form-slug/editor-v2/sections-reorder',
       auth,
       payload: { itemOrder: 'invalid-format' }
     }
@@ -136,7 +136,7 @@ describe('Editor v2 sections reorder routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/pages-reorder'
+      '/library/my-form-slug/editor-v2/sections-reorder'
     )
   })
 })
