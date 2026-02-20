@@ -101,7 +101,7 @@ export const QuestionBaseSettings = {
   PaymentAmount: 'paymentAmount',
   PaymentDescription: 'paymentDescription',
   paymentTestApiKey: 'paymentTestApiKey',
-  paymentLiveApiKey: 'paymentLiveApiKey',
+  paymentLiveApiKey: 'paymentLiveApiKey'
 }
 
 /**

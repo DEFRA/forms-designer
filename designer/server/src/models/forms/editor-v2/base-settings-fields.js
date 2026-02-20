@@ -200,7 +200,8 @@ export const baseSchema = Joi.object().keys({
     {
       is: 'PaymentField',
       then: Joi.string().required().messages({
-        'string.empty': 'Enter a test API key for the draft form and live previews'
+        'string.empty':
+          'Enter a test API key for the draft form and live previews'
       }),
       otherwise: Joi.string().optional().allow('')
     }
