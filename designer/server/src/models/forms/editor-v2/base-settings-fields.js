@@ -194,6 +194,25 @@ export const baseSchema = Joi.object().keys({
       }),
       otherwise: Joi.string().optional().allow('')
     }
+  ),
+  paymentTestApiKey: questionDetailsFullSchema.paymentApiKeySchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.string().required().messages({
+        'string.empty':
+          'Enter a test API key for the draft form and live previews'
+      }),
+      otherwise: Joi.string().optional().allow('')
+    }
+  ),
+  paymentLiveApiKey: questionDetailsFullSchema.paymentApiKeySchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.string().optional().allow(''), // TODO - what validation is required?
+      otherwise: Joi.string().optional().allow('')
+    }
   )
 })
 
@@ -391,7 +410,9 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 
 export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentAmount,
-  QuestionBaseSettings.PaymentDescription
+  QuestionBaseSettings.PaymentDescription,
+  QuestionBaseSettings.paymentTestApiKey,
+  QuestionBaseSettings.paymentLiveApiKey
 ])
 
 /**
