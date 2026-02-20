@@ -21,8 +21,10 @@
                   {%- include "../../../../views/forms/editor-v2/partials/page-navigation-tabs.njk" -%}
                 </div>
                 <div class="govuk-!-padding-top-3">
-                  <span class="govuk-caption-l">{{ cardCaption }}</span>
-                  <h1 class="govuk-heading-l" id="page-heading">{{ cardHeading }}</h1>
+                  <h2 class="govuk-heading-l" id="page-heading">
+                    <span class="govuk-caption-l">{{ cardCaption }}</span>
+                    {{ cardHeading }}
+                  </h2>
 
                   {% if errorList | length %}
                     {{ govukErrorSummary({
