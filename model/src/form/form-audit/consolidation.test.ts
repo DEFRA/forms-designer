@@ -148,15 +148,16 @@ describe('consolidation', () => {
       AuditEventMessageType.FORM_JSON_UPLOADED,
       AuditEventMessageType.FORM_JSON_DOWNLOADED,
       AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
-      AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+      AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED,
+      AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED
     ]
 
     it.each(expectedEvents)('should contain %s', (eventType) => {
       expect(alwaysValidEvents.has(eventType)).toBe(true)
     })
 
-    it('should have exactly 10 always valid events', () => {
-      expect(alwaysValidEvents.size).toBe(10)
+    it('should have exactly 11 always valid events', () => {
+      expect(alwaysValidEvents.size).toBe(11)
     })
 
     it.each([
