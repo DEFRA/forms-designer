@@ -1,0 +1,69 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container app-width-container--wide">
+    {{ govukBackLink(backLink) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+  <form method="post" novalidate>
+    {% call appPageBody({
+      heading: {
+        text: pageTitle,
+        caption: form.title,
+        size: "large"
+      },
+      errorList: errorList
+    }) %}
+      <p class="govuk-body">
+        If you collect personal information or change
+        how personal information is being processed,
+        you need to agree to the data protection terms
+        and conditions.
+      </p>
+
+      <p class="govuk-body">
+        By agreeing to the terms and conditions you
+        will need to:
+      </p>
+
+      <ul class="govuk-list govuk-list--bullet">
+        <li>complete the data protection impact assessment screening questions if your data protection team requires one (this will determine if a full data protection impact assessment is needed)</li>
+        <li>complete a full data protection impact assessment (if applicable)</li>
+        <li>update your service operations guide (SOG) if you plan to use data from Defra Forms in your service (if applicable)</li>
+      </ul>
+
+      {% set termsField = fields.termsAndConditionsAgreed %}
+      {{ govukCheckboxes({
+        name: termsField.name,
+        errorMessage: {
+          text: formErrors[termsField.name].text
+        } if formErrors[termsField.name],
+        items: [
+          {
+            value: termsField.value,
+            text: "I agree to the data protection terms and conditions",
+            checked: termsField.checked
+          }
+        ]
+      }) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: buttonText
+        }) }}
+
+        {{ govukButton({
+          text: "Cancel",
+          href: backLink.href,
+          classes: "govuk-button--secondary"
+        }) }}
+      </div>
+    </form>
+  {% endcall %}
+{% endblock %}

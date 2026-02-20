@@ -38,6 +38,7 @@ import library from '~/src/routes/forms/library.js'
 import notificationEmail from '~/src/routes/forms/notification-email.js'
 import privacyNotice from '~/src/routes/forms/privacy-notice.js'
 import submissionGuidance from '~/src/routes/forms/submission-guidance.js'
+import termsAndConditions from '~/src/routes/forms/terms-and-conditions.js'
 
 export default [
   api,
@@ -76,6 +77,7 @@ export default [
   contactOnline,
   submissionGuidance,
   privacyNotice,
+  termsAndConditions,
   notificationEmail,
   confirmationEmailSettings,
   referenceNumberSettings,
