@@ -302,12 +302,13 @@ export function getCardHeadings(details) {
  * @param { ComponentType | undefined } questionType
  * @param {string} formId
  * @param {GovukField[]} fields
+ * @param {string} token
  */
-export async function applyPaymentValues(questionType, formId, fields) {
+export async function applyPaymentValues(questionType, formId, fields, token) {
   if (questionType !== ComponentType.PaymentField) {
     return
   }
-  const secrets = await getPaymentSecretsMasked(formId)
+  const secrets = await getPaymentSecretsMasked(formId, token)
   const testField = fields.find((f) => f.id === 'paymentTestApiKey')
   const liveField = fields.find((f) => f.id === 'paymentLiveApiKey')
   if (testField && secrets.testKeyMasked) {
@@ -326,6 +327,7 @@ export async function applyPaymentValues(questionType, formId, fields) {
  * @param {string} pageId
  * @param {string} questionId
  * @param {string} stateId
+ * @param {string} token
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {QuestionSessionState} [state]
  */
@@ -335,6 +337,7 @@ export async function questionDetailsViewModel(
   pageId,
   questionId,
   stateId,
+  token,
   validation,
   state
 ) {
@@ -369,7 +372,7 @@ export async function questionDetailsViewModel(
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
-  await applyPaymentValues(questionType, metadata.id, basePageFields)
+  await applyPaymentValues(questionType, metadata.id, basePageFields, token)
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),

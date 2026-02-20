@@ -1,10 +1,18 @@
 import Boom from '@hapi/boom'
 
 import config from '~/src/config.js'
-import { delJson, patchJson, postJson, putJson } from '~/src/lib/fetch.js'
+import {
+  delJson,
+  getJson,
+  patchJson,
+  postJson,
+  putJson
+} from '~/src/lib/fetch.js'
 
 export const mockedDelJson =
   /** @type {jest.MockedFunction<typeof delJson>} */ (delJson)
+export const mockedGetJson =
+  /** @type {jest.MockedFunction<typeof getJson>} */ (getJson)
 export const mockedPostJson =
   /** @type {jest.MockedFunction<typeof postJson>} */ (postJson)
 export const mockedPatchJson =

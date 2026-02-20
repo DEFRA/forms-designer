@@ -298,6 +298,7 @@ export default [
           pageId,
           questionId,
           stateId,
+          token,
           validation,
           state
         )

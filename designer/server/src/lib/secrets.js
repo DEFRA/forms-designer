@@ -9,7 +9,7 @@ const managerBaseEndpoint = new URL(config.managerUrl)
 const PAYMENT_TEST_API_KEY = 'payment-test-api-key'
 const PAYMENT_LIVE_API_KEY = 'payment-live-api-key'
 
-const MASKED_KEY = '****************************************'
+export const MASKED_KEY = '****************************************'
 
 /**
  * @param {string} formId
@@ -27,23 +27,26 @@ export function buildRequestUrl(formId, secretName, pathSuffix) {
 /**
  * @param {string} formId
  * @param {string} secretName
+ * @param {string} token
  */
-export async function existsSecret(formId, secretName) {
+export async function existsSecret(formId, secretName, token) {
   const getJsonByType = /** @type {typeof getJson<{ exists: boolean }>} */ (
     getJson
   )
   const result = await getJsonByType(
-    buildRequestUrl(formId, secretName, 'exists')
+    buildRequestUrl(formId, secretName, 'exists'),
+    getHeaders(token)
   )
   return result.body.exists
 }
 
 /**
  * @param {string} formId
+ * @param {string} token
  */
-export async function getPaymentSecretsMasked(formId) {
-  const testKeyExists = await existsSecret(formId, PAYMENT_TEST_API_KEY)
-  const liveKeyExists = await existsSecret(formId, PAYMENT_LIVE_API_KEY)
+export async function getPaymentSecretsMasked(formId, token) {
+  const testKeyExists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
+  const liveKeyExists = await existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
   return {
     testKeyMasked: testKeyExists ? MASKED_KEY : '',
     liveKeyMasked: liveKeyExists ? MASKED_KEY : ''
@@ -56,7 +59,7 @@ export async function getPaymentSecretsMasked(formId) {
  * @param {boolean} isLive
  * @param {string} token
  */
-async function savePaymentSecret(formId, secretValue, isLive, token) {
+export async function savePaymentSecret(formId, secretValue, isLive, token) {
   const key = isLive ? PAYMENT_LIVE_API_KEY : PAYMENT_TEST_API_KEY
   const { response } = await postJson(buildRequestUrl(formId, key), {
     payload: { secretValue },
