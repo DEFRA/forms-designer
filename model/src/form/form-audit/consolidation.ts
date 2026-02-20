@@ -142,7 +142,8 @@ export const alwaysValidEvents = new Set<string>([
   AuditEventMessageType.FORM_JSON_UPLOADED,
   AuditEventMessageType.FORM_JSON_DOWNLOADED,
   AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED,
-  AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+  AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED,
+  AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED
 ])
 
 /**
