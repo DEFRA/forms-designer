@@ -1,4 +1,5 @@
 import { hasComponentsEvenIfNoNext } from '@defra/forms-model'
+import Joi from 'joi'
 
 import * as forms from '~/src/lib/forms.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
@@ -40,6 +41,14 @@ export const customItemOrder = (value) => {
 
   return []
 }
+
+export const itemOrderSchema = Joi.object()
+  .keys({
+    saveChanges: Joi.boolean().default(false).optional(),
+    movement: Joi.string().optional(),
+    itemOrder: Joi.any().custom(customItemOrder)
+  })
+  .required()
 
 /**
  * Ensure any components that are not in the
