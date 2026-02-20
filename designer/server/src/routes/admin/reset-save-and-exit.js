@@ -82,7 +82,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.UserEdit}`]
+          scope: [`+${Scopes.ResetSaveAndExit}`]
         }
       }
     }
@@ -160,7 +160,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.UserEdit}`]
+          scope: [`+${Scopes.ResetSaveAndExit}`]
         }
       }
     }

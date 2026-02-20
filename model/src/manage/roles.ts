@@ -1,5 +1,7 @@
 export enum Roles {
+  Superadmin = 'superadmin',
   Admin = 'admin',
+  FormPublisher = 'form-publisher',
   FormCreator = 'form-creator'
 }
 
@@ -10,11 +12,30 @@ export enum Scopes {
   FormPublish = 'form-publish',
   UserCreate = 'user-create',
   UserDelete = 'user-delete',
-  UserEdit = 'user-edit'
+  UserEdit = 'user-edit',
+  FormsFeedback = 'forms-feedback',
+  FormsBackup = 'forms-backup',
+  ResetSaveAndExit = 'reset-save-and-exit'
 }
 
 export const RoleScopes = {
-  [Roles.Admin]: Object.entries(Scopes).map((x) => x[1]),
+  [Roles.Superadmin]: Object.values(Scopes),
+  [Roles.Admin]: [
+    Scopes.FormDelete,
+    Scopes.FormEdit,
+    Scopes.FormRead,
+    Scopes.FormPublish,
+    Scopes.UserCreate,
+    Scopes.UserDelete,
+    Scopes.UserEdit,
+    Scopes.FormsFeedback
+  ],
+  [Roles.FormPublisher]: [
+    Scopes.FormDelete,
+    Scopes.FormEdit,
+    Scopes.FormRead,
+    Scopes.FormPublish
+  ],
   [Roles.FormCreator]: [Scopes.FormRead, Scopes.FormEdit, Scopes.FormDelete]
 }
 
