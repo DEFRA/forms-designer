@@ -858,6 +858,29 @@ export async function unassignPageFromSection(formId, token, pageId) {
 }
 
 /**
+ * Rename a section's title
+ * @param {string} formId
+ * @param {string} token
+ * @param {string} sectionId
+ * @param {string} newTitle
+ */
+export async function renameSectionTitle(formId, token, sectionId, newTitle) {
+  const definition = await forms.getDraftFormDefinition(formId, token)
+  const sections = buildSectionsWithPageIds(definition).map((section) => ({
+    ...section,
+    title: section.id === sectionId ? newTitle : section.title
+  }))
+
+  await updateSections(
+    formId,
+    token,
+    sections,
+    FormDefinitionRequestType.RENAME_SECTION
+  )
+  return forms.getDraftFormDefinition(formId, token)
+}
+
+/**
  * Update section settings
  * @param {string} formId
  * @param {string} token

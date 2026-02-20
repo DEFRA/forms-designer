@@ -2381,9 +2381,9 @@ exports[`Health check route /get-started/make-form-live-checklist should load Ma
       </div>
       <div class="app-step-nav__panel">
         <p class="app-step-nav__paragraph govuk-body">You must provide an online link to a relevant
-          privacy notice for your form – you cannot publish your form without it. You may be able
+          privacy notice for your form, or provide page content of the privacy notice – you cannot publish your form without it. You may be able
           to use an existing privacy notice on GOV.UK for a related form. If there isn't an
-          existing privacy notice, you should work with your Data Protection team to create one.
+          existing privacy notice, you should work with your Data Protection team to create the relevant page content.
         </p>
         <p class="app-step-nav__paragraph govuk-body">View the:</p>
         <ul class="govuk-list govuk-list--bullet">

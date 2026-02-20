@@ -37,6 +37,7 @@ import {
   getRepeaterProperties,
   migrateDefinitionToV2,
   removeSection,
+  renameSectionTitle,
   reorderPages,
   reorderQuestions,
   resolvePageHeading,
@@ -2883,6 +2884,59 @@ describe('editor.js', () => {
 
       expect(result.sections[0].hideTitle).toBe(false)
       expect(result.sections[1].hideTitle).toBe(true)
+    })
+  })
+
+  describe('renameSectionTitle', () => {
+    test('should update title', async () => {
+      const expectedDefinition = buildDefinition({
+        pages: [],
+        sections: [
+          {
+            id: 'my-section-id',
+            name: 'my-section',
+            title: 'My old section',
+            hideTitle: false
+          },
+          {
+            id: 'other-section-id',
+            name: 'other-section',
+            title: 'Other section',
+            hideTitle: false
+          }
+        ]
+      })
+
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(expectedDefinition)
+      mockedPutJson.mockResolvedValueOnce({
+        body: { id: formId, sections: [], status: 'updated' },
+        response: createMockResponse()
+      })
+
+      await renameSectionTitle(
+        formId,
+        token,
+        'my-section-id',
+        'My new section title'
+      )
+
+      expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(formId, token)
+      expect(mockedPutJson).toHaveBeenCalledWith(
+        expect.any(URL),
+        expect.objectContaining({
+          payload: {
+            sections: expect.arrayContaining([
+              expect.objectContaining({
+                id: 'my-section-id',
+                title: 'My new section title'
+              })
+            ]),
+            requestType: FormDefinitionRequestType.RENAME_SECTION
+          }
+        })
+      )
     })
   })
 })

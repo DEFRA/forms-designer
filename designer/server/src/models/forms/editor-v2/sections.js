@@ -168,6 +168,7 @@ export function sectionsViewModel(
     previewPageUrl,
     notification,
     editorv2Path,
+    renameSectionUrl: editorv2Path(slug, `page/${pageId}/rename-section`),
     reorderSectionsUrl: editorv2Path(slug, 'sections-reorder')
   }
 }
