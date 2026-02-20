@@ -211,10 +211,6 @@ export type FormDefinitionErrorCause =
       detail: FormDefinitionErrorCauseDetailIncompatible
     }
 
-/**
- * Interface for `formSecretSchema` Joi schema
- * @see {@link formSecretSchema}
- */
 export interface FormSecret {
   /**
    * The id of the form

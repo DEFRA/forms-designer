@@ -147,6 +147,7 @@ export interface ExcelGenerationMessageData {
 
 export interface FormSecretSavedMessageData extends FormMessageDataBase {
   formId: string
+  slug: string
   secretName: string
 }
 
@@ -211,7 +212,7 @@ export type MessageData =
   | ExcelGenerationMessageData
   | FormFileDownloadedMessageData
   | FormsBackupRequestedMessageData
-  | FormSecretSavedMessage
+  | FormSecretSavedMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion

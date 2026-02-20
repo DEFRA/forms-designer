@@ -6,6 +6,7 @@ import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { getPaymentSecretsMasked } from '~/src/lib/secrets.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -297,6 +298,29 @@ export function getCardHeadings(details) {
 }
 
 /**
+ * Populate payment API key masks - if the API keys exist in the DB
+ * @param { ComponentType | undefined } questionType
+ * @param {string} formId
+ * @param {GovukField[]} fields
+ */
+export async function applyPaymentValues(questionType, formId, fields) {
+  if (questionType !== ComponentType.PaymentField) {
+    return
+  }
+  const secrets = await getPaymentSecretsMasked(formId)
+  const testField = fields.find((f) => f.id === 'paymentTestApiKey')
+  const liveField = fields.find((f) => f.id === 'paymentLiveApiKey')
+  if (testField && secrets.testKeyMasked) {
+    testField.value = secrets.testKeyMasked
+    testField.disabled = true
+  }
+  if (liveField && secrets.liveKeyMasked) {
+    liveField.value = secrets.liveKeyMasked
+    liveField.disabled = true
+  }
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -305,7 +329,7 @@ export function getCardHeadings(details) {
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {QuestionSessionState} [state]
  */
-export function questionDetailsViewModel(
+export async function questionDetailsViewModel(
   metadata,
   definition,
   pageId,
@@ -345,6 +369,7 @@ export function questionDetailsViewModel(
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
+  await applyPaymentValues(questionType, metadata.id, basePageFields)
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),

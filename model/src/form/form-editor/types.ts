@@ -403,6 +403,8 @@ export type FormEditorInputQuestion = Pick<
   | 'instructionText'
   | 'paymentAmount'
   | 'paymentDescription'
+  | 'paymentTestApiKey'
+  | 'paymentLiveApiKey'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -441,6 +443,10 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioValue'
   | 'listItemsData'
   | 'jsEnabled'
+  | 'paymentAmount'
+  | 'paymentDescription'
+  | 'paymentTestApiKey'
+  | 'paymentLiveApiKey'
 >
 
 type ListValue = string | boolean | number
@@ -580,6 +586,7 @@ export interface GovukField {
   postContent?: {
     path?: string
   }
+  disabled?: boolean
 }
 
 export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {

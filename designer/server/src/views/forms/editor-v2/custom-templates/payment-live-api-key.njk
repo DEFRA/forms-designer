@@ -9,4 +9,8 @@
 
 {{ govukInput(field) }}
 
+{% if field.disabled %}
+  <input type="hidden" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}">
+{% endif %}
+
 <a href="?action=clear-live-key" class="govuk-link govuk-link--no-visited-state">Clear live API key</a>

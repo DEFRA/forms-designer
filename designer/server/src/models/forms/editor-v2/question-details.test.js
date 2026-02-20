@@ -602,7 +602,7 @@ describe('editor-v2 - question details model', () => {
   })
 
   describe('questionDetailsViewModel', () => {
-    test('should return view model for basic question', () => {
+    test('should return view model for basic question', async () => {
       const metadata = {
         id: '12345',
         slug: 'test-form',
@@ -645,7 +645,7 @@ describe('editor-v2 - question details model', () => {
         ]
       })
 
-      const result = questionDetailsViewModel(
+      const result = await questionDetailsViewModel(
         metadata,
         definition,
         pageId,
@@ -676,7 +676,7 @@ describe('editor-v2 - question details model', () => {
       })
     })
 
-    test('should handle state with questionType override', () => {
+    test('should handle state with questionType override', async () => {
       const metadata = {
         id: '12345',
         slug: 'test-form',
@@ -722,7 +722,7 @@ describe('editor-v2 - question details model', () => {
         questionType: ComponentType.TextField
       }
 
-      const result = questionDetailsViewModel(
+      const result = await questionDetailsViewModel(
         metadata,
         definition,
         pageId,
