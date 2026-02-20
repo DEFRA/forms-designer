@@ -128,6 +128,10 @@ export const privacyNoticeUrlSchema = Joi.string()
   .trim()
   .description('URL to the privacy notice for this form')
 
+export const termsAndConditionsAgreedSchema = Joi.boolean().description(
+  'Whether the data protection terms and conditions have been agreed to'
+)
+
 export const notificationEmailAddressSchema = Joi.string()
   .email()
   .trim()
@@ -166,6 +170,7 @@ export const formMetadataInputKeys = {
     then: privacyNoticeUrlSchema,
     otherwise: privacyNoticeUrlSchema.allow('')
   }),
+  termsAndConditionsAgreed: termsAndConditionsAgreedSchema,
   notificationEmail: notificationEmailAddressSchema
 }
 

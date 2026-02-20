@@ -165,6 +165,11 @@ export interface FormMetadata {
   privacyNoticeType?: string
 
   /**
+   * Whether the data protection terms and conditions have been agreed to
+   */
+  termsAndConditionsAgreed?: boolean
+
+  /**
    * Email address where form responses are sent
    */
   notificationEmail?: string
@@ -229,6 +234,7 @@ export type FormMetadataInput = Pick<
   | 'privacyNoticeType'
   | 'privacyNoticeText'
   | 'privacyNoticeUrl'
+  | 'termsAndConditionsAgreed'
   | 'notificationEmail'
 >
 

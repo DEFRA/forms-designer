@@ -19,27 +19,22 @@
 
     <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
-    <ol class="app-reorderable-list" id="items-container" data-module="items-reorder" data-itemtype="Page">
-      {% for page in pages %}
-        {% set isFixed = page.isCheckAnswersPage | default(false) %}
+    <ol class="app-reorderable-list" id="items-container" data-module="items-reorder" data-itemtype="Section">
+      {% for section in sections %}
         {% set itemClasses = "app-reorderable-list__item" %}
-        {% if isFixed %}
-            {% set itemClasses = itemClasses + " check-answers-item" %}
-        {% endif %}
 
         {{ appReorderPanel({
-            itemTypeName: 'Page',
+            itemTypeName: 'Section',
             itemNum: loop.index,
-            itemTitle: page.title,
-            itemId: page.id,
-            totalItems: pages.length,
-            isFixed: isFixed,
+            itemTitle: section.title,
+            itemId: section.id,
+            totalItems: sections.length,
             isFirst: loop.first,
             isLast: loop.last,
-            isFocus: page.isFocus,
-            prevFocusDirection: page.prevFocusDirection,
+            isFocus: section.isFocus,
+            prevFocusDirection: section.prevFocusDirection,
             itemClasses: itemClasses,
-            dataId: page.id
+            dataId: section.id
           })
         }}
       {% endfor %}

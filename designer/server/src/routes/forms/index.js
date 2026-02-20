@@ -30,6 +30,7 @@ import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-or-page-
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import editorResponses from '~/src/routes/forms/editor-v2/responses.js'
+import editorSectionsReorder from '~/src/routes/forms/editor-v2/sections-reorder.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
 import editorUpload from '~/src/routes/forms/editor-v2/upload.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
@@ -59,6 +60,7 @@ export default [
   editorCheckAnswersSettings,
   editorSections,
   editorRenameSection,
+  editorSectionsReorder,
   editorConditionCheckChanges,
   editorConditionDelete,
   editorCondition,

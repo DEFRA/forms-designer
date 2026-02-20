@@ -129,7 +129,18 @@ export function hasUser(credentials) {
  * @returns {boolean}
  */
 export function hasAdminRole(user) {
-  return user?.roles?.includes(Roles.Admin) ?? false
+  return Array.isArray(user?.roles)
+    ? user.roles.includes(Roles.Superadmin) || user.roles.includes(Roles.Admin)
+    : false
+}
+
+/**
+ * Check if user has superadmin role
+ * @param {EntitlementUser | UserCredentials | null | undefined} user
+ * @returns {boolean}
+ */
+export function hasSuperadminRole(user) {
+  return user?.roles?.includes(Roles.Superadmin) ?? false
 }
 
 /**

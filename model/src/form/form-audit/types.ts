@@ -65,6 +65,10 @@ export interface FormPrivacyNoticeChanges {
   privacyNoticeUrl?: string
 }
 
+export interface FormTermsAndConditionsChanges {
+  termsAndConditionsAgreed?: boolean
+}
+
 export interface FormNotificationEmailChanges {
   notificationEmail?: string
 }
@@ -119,6 +123,11 @@ export interface FormPrivacyNoticeUpdatedMessageData
   changes: ChangesMessageData<FormPrivacyNoticeChanges>
 }
 
+export interface FormTermsAndConditionsAgreedMessageData
+  extends FormMessageDataBase {
+  changes: ChangesMessageData<FormTermsAndConditionsChanges>
+}
+
 export interface FormNotificationEmailUpdatedMessageData
   extends FormMessageDataBase {
   changes: ChangesMessageData<FormNotificationEmailChanges>
@@ -145,6 +154,11 @@ export interface ExcelGenerationMessageData {
   notificationEmail: string
 }
 
+export interface FormSecretSavedMessageData extends FormMessageDataBase {
+  formId: string
+  secretName: string
+}
+
 export interface FormDefinitionS3Meta {
   fileId: string
   filename: string
@@ -166,6 +180,7 @@ export type FormMessageChangesData =
   | FormSupportEmailUpdatedMessageData
   | FormSupportOnlineUpdatedMessageData
   | FormPrivacyNoticeUpdatedMessageData
+  | FormTermsAndConditionsAgreedMessageData
   | FormNotificationEmailUpdatedMessageData
   | FormSubmissionGuidanceUpdatedMessageData
   | FormUploadedMessageData
@@ -206,6 +221,7 @@ export type MessageData =
   | ExcelGenerationMessageData
   | FormFileDownloadedMessageData
   | FormsBackupRequestedMessageData
+  | FormSecretSavedMessage
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -294,6 +310,14 @@ export interface FormPrivacyNoticeUpdatedMessage extends ManagerMessageBase {
   type: AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED
   source: AuditEventMessageSource.FORMS_MANAGER
   data: FormPrivacyNoticeUpdatedMessageData
+}
+
+export interface FormTermsAndConditionsAgreedMessage
+  extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED
+  source: AuditEventMessageSource.FORMS_MANAGER
+  data: FormTermsAndConditionsAgreedMessageData
 }
 
 export interface FormNotificationEmailUpdatedMessage
@@ -431,6 +455,12 @@ export interface FormsBackupRequestedMessage extends DesignerMessageBase {
   data: FormsBackupRequestedMessageData
 }
 
+export interface FormSecretSavedMessage extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_SECRET_SAVED
+  data: FormSecretSavedMessageData
+}
+
 export type AuditMessage =
   | FormCreatedMessage
   | FormTitleUpdatedMessage
@@ -442,6 +472,7 @@ export type AuditMessage =
   | FormSupportEmailUpdatedMessage
   | FormSupportOnlineUpdatedMessage
   | FormPrivacyNoticeUpdatedMessage
+  | FormTermsAndConditionsAgreedMessage
   | FormNotificationEmailUpdatedMessage
   | FormSubmissionGuidanceUpdatedMessage
   | FormUploadedMessage
@@ -464,6 +495,7 @@ export type AuditMessage =
   | FormCsatExcelRequestedMessage
   | PlatformCsatExcelRequestedMessage
   | FormsBackupRequestedMessage
+  | FormSecretSavedMessage
 
 export interface AuditEvent {
   message: AuditMessage

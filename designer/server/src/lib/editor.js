@@ -541,6 +541,20 @@ export async function reorderPages(formId, token, payload) {
 }
 
 /**
+ * Re-order the sections as per list of ids
+ * @param {string} formId
+ * @param {string} token
+ * @param {string[]} payload
+ */
+export async function reorderSections(formId, token, payload) {
+  // Update section ordering
+  await postJsonByPageType(buildRequestUrl(formId, `sections/order`), {
+    payload,
+    ...getHeaders(token)
+  })
+}
+
+/**
  * Re-order the questions as per list of ids
  * @param {string} formId
  * @param {string} token

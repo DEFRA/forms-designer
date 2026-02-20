@@ -2,31 +2,29 @@ import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
-import {
-  constructReorderPage,
-  excludeEndPages,
-  orderItems
-} from '~/src/models/forms/editor-v2/pages-helper.js'
+import { orderItems } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @param {FormDefinition} definition
- * @param {string} pageOrder
+ * @param {string} sectionOrder
  * @param {{ button: string | undefined, itemId: string | undefined} | undefined} focus
  */
-export function mapPageData(definition, pageOrder, focus) {
-  if (!definition.pages.length) {
+export function mapSectionData(definition, sectionOrder, focus) {
+  if (!definition.sections.length) {
     return definition
   }
 
-  const orderablePages = excludeEndPages(definition.pages)
-
-  const orderedPages = orderItems(orderablePages, pageOrder)
+  const orderedSections = orderItems(definition.sections, sectionOrder)
 
   return {
     ...definition,
-    pages: orderedPages.map((page) => {
-      return constructReorderPage(page, focus)
+    sections: orderedSections.map((section) => {
+      return {
+        ...section,
+        isFocus: focus?.itemId === section.id,
+        prevFocusDirection: focus?.button
+      }
     })
   }
 }
@@ -34,12 +32,17 @@ export function mapPageData(definition, pageOrder, focus) {
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
- * @param {string} pageOrder
+ * @param {string} sectionOrder
  * @param {{ button: string | undefined, itemId: string | undefined } | undefined } focus
  */
-export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
+export function sectionsReorderViewModel(
+  metadata,
+  definition,
+  sectionOrder,
+  focus
+) {
   const formTitle = metadata.title
-  const pageHeading = 'Re-order pages'
+  const pageHeading = 'Re-order sections'
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -58,26 +61,27 @@ export function pagesReorderViewModel(metadata, definition, pageOrder, focus) {
     }
   ]
 
-  return {
+  const model = {
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
       pageHeading
     ),
-    ...mapPageData(definition, pageOrder, focus),
+    ...mapSectionData(definition, sectionOrder, focus),
     formSlug: metadata.slug,
     navigation,
     pageCaption: {
       text: definition.name
     },
     pageDescription: {
-      text: 'Use the up and down buttons or drag and drop pages to re-order them.'
+      text: 'Use the up and down buttons or drag and drop sections to re-order them.'
     },
     pageActions,
-    itemOrder: pageOrder
+    itemOrder: sectionOrder
   }
+  return model
 }
 
 /**
- * @import { FormMetadata, FormDefinition, Page } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition } from '@defra/forms-model'
  */
