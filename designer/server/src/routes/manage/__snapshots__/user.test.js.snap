@@ -559,7 +559,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
         Superadmin
       </label>
       <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
-        Can publish and delete forms and manage users
+        Can manage forms, users and perform system administration tasks
       </div>
     </div>
     <div class="govuk-radios__item">
@@ -1528,7 +1528,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
         Superadmin
       </label>
       <div id="userRole-item-hint" class="govuk-hint govuk-radios__hint">
-        Can publish and delete forms and manage users
+        Can manage forms, users and perform system administration tasks
       </div>
     </div>
     <div class="govuk-radios__item">
