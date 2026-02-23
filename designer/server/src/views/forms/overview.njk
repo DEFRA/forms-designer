@@ -217,7 +217,7 @@
   {%- set privacyNoticeHtml %}
     {% if isPrivacyText %}
       <div class="app-prose-scope with-ellipsis">
-        {{ form.privacyNoticeText | markdown | safe }}
+        {{ form.privacyNoticeText }}
       </div>
     {% else %}
         <a class="govuk-link govuk-link--no-visited-state" target="_blank" href="{{ form.privacyNoticeUrl }}">{{ form.privacyNoticeUrl }}</a>
