@@ -59,7 +59,7 @@ export function repositionItem(itemOrder, direction, itemId) {
 
 /**
  * Orders a list of pages (or questions) based on a list of ids
- * @template {Page | ComponentDef} T
+ * @template { Page | ComponentDef | Section } T
  * @param {T[]} orderableItems
  * @param {string} itemOrder
  */
@@ -113,5 +113,5 @@ export function hasConditionSupportForPage(page) {
 }
 
 /**
- * @import { ComponentDef, Page } from '@defra/forms-model'
+ * @import { ComponentDef, Page, Section } from '@defra/forms-model'
  */

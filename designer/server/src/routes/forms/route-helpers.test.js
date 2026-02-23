@@ -1,3 +1,5 @@
+import { Roles } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { allRoles } from '~/src/lib/__stubs__/roles.js'
@@ -15,14 +17,14 @@ const userList = [
     userId: 'id1',
     displayName: 'John Smith',
     email: 'john.smith@here.com',
-    roles: ['admin'],
+    roles: [Roles.Admin],
     scopes: []
   },
   {
     userId: 'id2',
     displayName: 'Peter Jones',
     email: 'peter.jones@email.com',
-    roles: ['form-creator'],
+    roles: [Roles.FormCreator],
     scopes: []
   }
 ]
