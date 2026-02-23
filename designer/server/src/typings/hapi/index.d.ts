@@ -152,6 +152,9 @@ declare module '@hapi/yar' {
     [sessionNames.validationFailure.privacyNotice]: ValidationFailure<
       Pick<FormMetadataInput, 'privacyNoticeUrl'>
     >
+    [sessionNames.validationFailure.termsAndConditions]: ValidationFailure<{
+      termsAndConditionsAgreed: string
+    }>
     [sessionNames.validationFailure.notificationEmail]: ValidationFailure<
       Pick<FormMetadataInput, 'notificationEmail'>
     >

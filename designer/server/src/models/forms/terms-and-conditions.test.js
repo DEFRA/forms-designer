@@ -68,6 +68,9 @@ describe('edit - model - terms and conditions', () => {
           text: 'You must confirm you meet the terms and conditions to continue',
           href: '#termsAndConditionsAgreed'
         }
+      },
+      formValues: {
+        termsAndConditionsAgreed: ''
       }
     }
     const result = termsAndConditionsViewModel(formMetadata, validation)
