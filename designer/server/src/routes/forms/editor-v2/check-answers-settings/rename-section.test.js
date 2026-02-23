@@ -31,7 +31,7 @@ describe('Editor v2 rename section routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/rename-section/section2Id',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/rename-section/section2Id',
       auth
     }
 
@@ -61,7 +61,7 @@ describe('Editor v2 rename section routes', () => {
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/editor-v2/page/p1/rename-section/invalid-section-Id',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/rename-section/invalid-section-Id',
       auth
     }
 
@@ -81,7 +81,7 @@ describe('Editor v2 rename section routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p1/rename-section/section2Id',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/rename-section/section2Id',
       auth,
       payload: { sectionTitle: '' }
     }
@@ -92,7 +92,7 @@ describe('Editor v2 rename section routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/page/p1/rename-section/section2Id'
+      '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/rename-section/section2Id'
     )
     expect(addErrorsToSession).toHaveBeenCalledWith(
       expect.anything(),
@@ -109,7 +109,7 @@ describe('Editor v2 rename section routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/page/p1/rename-section/section2Id',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/rename-section/section2Id',
       auth,
       payload: {
         sectionTitle: 'My new section title'

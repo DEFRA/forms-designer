@@ -2927,12 +2927,22 @@ describe('editor.js', () => {
         expect.any(URL),
         expect.objectContaining({
           payload: {
-            sections: expect.arrayContaining([
-              expect.objectContaining({
+            sections: [
+              {
                 id: 'my-section-id',
-                title: 'My new section title'
-              })
-            ]),
+                name: 'my-section',
+                title: 'My new section title',
+                hideTitle: false,
+                pageIds: []
+              },
+              {
+                id: 'other-section-id',
+                name: 'other-section',
+                title: 'Other section',
+                hideTitle: false,
+                pageIds: []
+              }
+            ],
             requestType: FormDefinitionRequestType.RENAME_SECTION
           }
         })

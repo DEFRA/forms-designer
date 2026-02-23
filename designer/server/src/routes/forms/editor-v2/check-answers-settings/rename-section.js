@@ -13,7 +13,7 @@ import * as viewModel from '~/src/models/forms/editor-v2/rename-section.js'
 const errorKey = sessionNames.validationFailure.editorRenameSection
 
 export const ROUTE_PATH_RENAME_SECTION =
-  '/library/{slug}/editor-v2/page/{pageId}/rename-section/{sectionId}'
+  '/library/{slug}/editor-v2/page/{pageId}/check-answers-settings/rename-section/{sectionId}'
 
 export const schema = Joi.object().keys({
   sectionTitle: Joi.string()
