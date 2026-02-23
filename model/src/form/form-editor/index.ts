@@ -411,6 +411,10 @@ export const paymentAmountSchema = Joi.number()
   .max(100000)
   .description('Amount of payment in pounds')
 
+export const paymentApiKeySchema = Joi.string()
+  .trim()
+  .description('API key for payment configuration')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -583,6 +587,7 @@ export const questionDetailsFullSchema = {
   minSchema,
   nameSchema,
   paymentAmountSchema,
+  paymentApiKeySchema,
   paymentDescriptionSchema,
   precisionSchema,
   prefixSchema,

@@ -321,6 +321,16 @@ export interface FormEditor {
   paymentDescription: string
 
   /**
+   * Test API key used for test payments
+   */
+  paymentTestApiKey: string
+
+  /**
+   * Live API key used for live payments
+   */
+  paymentLiveApiKey: string
+
+  /**
    * Title that user supplies a section
    */
   sectionTitle: string
@@ -398,6 +408,8 @@ export type FormEditorInputQuestion = Pick<
   | 'instructionText'
   | 'paymentAmount'
   | 'paymentDescription'
+  | 'paymentTestApiKey'
+  | 'paymentLiveApiKey'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -436,6 +448,10 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioValue'
   | 'listItemsData'
   | 'jsEnabled'
+  | 'paymentAmount'
+  | 'paymentDescription'
+  | 'paymentTestApiKey'
+  | 'paymentLiveApiKey'
 >
 
 type ListValue = string | boolean | number
@@ -575,6 +591,7 @@ export interface GovukField {
   postContent?: {
     path?: string
   }
+  disabled?: boolean
 }
 
 export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
@@ -617,6 +634,8 @@ export interface FormEditorGovukField {
   declarationText?: GovukField
   paymentAmount?: GovukField
   paymentDescription?: GovukField
+  paymentTestApiKey?: GovukField
+  paymentLiveApiKey?: GovukField
   errorMessage?: { text: string }
 }
 

@@ -27,6 +27,7 @@ import {
   type FormOrganisationUpdatedMessageData,
   type FormPrivacyNoticeChanges,
   type FormPrivacyNoticeUpdatedMessageData,
+  type FormSecretSavedMessageData,
   type FormSubmissionGuidanceChanges,
   type FormSubmissionGuidanceUpdatedMessageData,
   type FormSupportContactChanges,
@@ -111,6 +112,14 @@ export const formsBackupRequestedMessageData =
     totalForms: Joi.number().integer().min(0).required(),
     durationMs: Joi.number().min(0).required()
   })
+
+export const formsSecretSavedMessageData =
+  Joi.object<FormSecretSavedMessageData>().keys({
+    formId: Joi.string().required(),
+    slug: Joi.string().required(),
+    secretName: Joi.string().required()
+  })
+
 export const formTitleChanges = Joi.object<FormTitleChanges>()
   .keys({
     title: titleSchema
@@ -494,6 +503,12 @@ export const messageSchema = Joi.object<AuditMessage>()
             .trim()
             .valid(AuditEventMessageType.FORMS_BACKUP_REQUESTED),
           then: formsBackupRequestedMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SECRET_SAVED),
+          then: formsSecretSavedMessageData
         }
       ],
       otherwise: Joi.forbidden()
