@@ -75,6 +75,10 @@
     "stylelint-config-gds": "^2.0.0",
     "typescript": "^5.8.2"
   },
+  "overrides": {
+    "minimatch": "^10.2.1",
+    "test-exclude": "^8.0.0"
+  },
   "engines": {
     "node": "^22.12.0",
     "npm": ">=10.9.0 <11.6.4"
