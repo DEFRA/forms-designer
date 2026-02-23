@@ -113,7 +113,8 @@ export async function conditionPostHandlerSuccessAction(request, h, options) {
   const { auth, params, payload, yar } = request
   const { slug, conditionId, stateId } = params
   const { token } = auth.credentials
-  const { items } = payload
+  // eslint-disable-next-line @typescript-eslint/no-useless-default-assignment
+  const { items = [] } = payload
 
   const metadata = await forms.get(slug, token)
 
