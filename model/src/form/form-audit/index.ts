@@ -112,12 +112,12 @@ export const formsBackupRequestedMessageData =
     totalForms: Joi.number().integer().min(0).required(),
     durationMs: Joi.number().min(0).required()
   })
+
 export const formsSecretSavedMessageData =
-  Joi.object<FormSecretSavedMessageData>().keys({
-    formId: Joi.string().required(),
-    slug: Joi.string().required(),
+  formMessageDataBase.append<FormSecretSavedMessageData>({
     secretName: Joi.string().required()
   })
+
 export const formTitleChanges = Joi.object<FormTitleChanges>()
   .keys({
     title: titleSchema
