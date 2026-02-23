@@ -301,6 +301,7 @@ export default [
           },
           stateId,
           token,
+          query,
           validation,
           state
         )

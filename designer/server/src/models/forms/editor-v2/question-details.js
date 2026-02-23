@@ -303,19 +303,26 @@ export function getCardHeadings(details) {
  * @param {string} formId
  * @param {GovukField[]} fields
  * @param {string} token
+ * @param { string | undefined } action
  */
-export async function applyPaymentValues(questionType, formId, fields, token) {
+export async function applyPaymentValues(
+  questionType,
+  formId,
+  fields,
+  token,
+  action
+) {
   if (questionType !== ComponentType.PaymentField) {
     return
   }
   const secrets = await getPaymentSecretsMasked(formId, token)
   const testField = fields.find((f) => f.id === 'paymentTestApiKey')
   const liveField = fields.find((f) => f.id === 'paymentLiveApiKey')
-  if (testField && secrets.testKeyMasked) {
+  if (testField && secrets.testKeyMasked && action !== 'clear-test-key') {
     testField.value = secrets.testKeyMasked
     testField.disabled = true
   }
-  if (liveField && secrets.liveKeyMasked) {
+  if (liveField && secrets.liveKeyMasked && action !== 'clear-live-key') {
     liveField.value = secrets.liveKeyMasked
     liveField.disabled = true
   }
@@ -325,6 +332,7 @@ export async function applyPaymentValues(questionType, formId, fields, token) {
  * @param {{ metadata: FormMetadata, definition: FormDefinition, pageId: string, questionId: string }} formCriteria
  * @param {string} stateId
  * @param {string} token
+ * @param {RequestQuery} query
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {QuestionSessionState} [state]
  */
@@ -332,6 +340,7 @@ export async function questionDetailsViewModel(
   formCriteria,
   stateId,
   token,
+  query,
   validation,
   state
 ) {
@@ -368,7 +377,13 @@ export async function questionDetailsViewModel(
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
-  await applyPaymentValues(questionType, metadata.id, basePageFields, token)
+  await applyPaymentValues(
+    questionType,
+    metadata.id,
+    basePageFields,
+    token,
+    query.action
+  )
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
@@ -412,4 +427,5 @@ export async function questionDetailsViewModel(
 /**
  * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, List, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { RequestQuery } from '@hapi/hapi'
  */
