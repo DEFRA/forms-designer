@@ -321,7 +321,6 @@ export interface FormEditor {
   paymentDescription: string
 
   /**
-<<<<<<< feat/df-820-payment-api-keys
    * Test API key used for test payments
    */
   paymentTestApiKey: string
@@ -330,11 +329,11 @@ export interface FormEditor {
    * Live API key used for live payments
    */
   paymentLiveApiKey: string
-=======
+
+  /**
    * Title that user supplies a section
    */
   sectionTitle: string
->>>>>>> main
 }
 
 export type FormEditorInputPage = Pick<
