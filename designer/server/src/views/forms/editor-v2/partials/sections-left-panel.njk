@@ -95,6 +95,7 @@
                           <dt class="govuk-summary-list__key">
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Pages assigned to sections</h2>
                           </dt>
+                          {% if sections.length > 1 %}
                           <dd class="govuk-summary-list__actions govuk-!-margin-bottom-0">
                             {{ govukButton({
                               text: "Re-order sections",
@@ -102,6 +103,7 @@
                               href: reorderSectionsUrl
                             }) }}
                           </dd>
+                          {% endif %}
                         </div>
                       </dl>
                     {% endif %}
