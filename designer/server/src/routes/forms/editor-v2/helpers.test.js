@@ -1,5 +1,8 @@
 import { testFormDefinitionWithComponentsAndLeadingGuidance } from '~/src/__stubs__/form-definition.js'
-import { mergeMissingComponentsIntoOrder } from '~/src/routes/forms/editor-v2/helpers.js'
+import {
+  itemOrderSchema,
+  mergeMissingComponentsIntoOrder
+} from '~/src/routes/forms/editor-v2/helpers.js'
 
 describe('Editor v2 helpers', () => {
   describe('mergeMissingComponentsIntoOrder', () => {
@@ -23,6 +26,26 @@ describe('Editor v2 helpers', () => {
         '43425d8e-4832-4ed1-a574-1d29fd63cf3c',
         'cda48ac2-91b1-47a8-ba14-8480b5d2c86f'
       ])
+    })
+  })
+
+  describe('itemOrderSchema', () => {
+    test('schema should return itemOrder correctly', () => {
+      expect(
+        itemOrderSchema.validate({
+          itemOrder: ''
+        }).error
+      ).toBeUndefined()
+      expect(
+        itemOrderSchema.validate({
+          itemOrder: 'abc,bce'
+        }).value
+      ).toEqual({ itemOrder: ['abc', 'bce'], saveChanges: false })
+      expect(
+        itemOrderSchema.validate({
+          itemOrder: ''
+        }).value
+      ).toEqual({ itemOrder: [], saveChanges: false })
     })
   })
 })

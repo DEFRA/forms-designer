@@ -65,7 +65,7 @@
                   {% if questionRows | length %}
                     {% if action == 'reorder' %}
                       <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
-                        <ol class="app-reorderable-list" id="items-container" data-module="items-reorder">
+                        <ol class="app-reorderable-list" id="items-container" data-module="items-reorder" data-itemtype="Question">
                           {% for question in questionRows %}
                             {{ appReorderPanel({
                                 itemTypeName: 'Question',

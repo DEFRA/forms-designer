@@ -3,7 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import { resetSaveAndExitRecord } from '~/src/services/formSubmissionService.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/error-helper.js')

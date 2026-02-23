@@ -12,7 +12,7 @@ import {
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/editor.js')
