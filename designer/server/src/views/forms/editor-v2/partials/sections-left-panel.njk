@@ -96,13 +96,13 @@
                             <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Pages assigned to sections</h2>
                           </dt>
                           {% if sections.length > 1 %}
-                          <dd class="govuk-summary-list__actions govuk-!-margin-bottom-0">
-                            {{ govukButton({
-                              text: "Re-order sections",
-                              classes: "govuk-button--secondary govuk-!-margin-bottom-0 govuk-button--inverse",
-                              href: reorderSectionsUrl
-                            }) }}
-                          </dd>
+                            <dd class="govuk-summary-list__actions govuk-!-margin-bottom-0">
+                              {{ govukButton({
+                                text: "Re-order sections",
+                                classes: "govuk-button--secondary govuk-!-margin-bottom-0 govuk-button--inverse",
+                                href: reorderSectionsUrl
+                              }) }}
+                            </dd>
                           {% endif %}
                         </div>
                       </dl>
