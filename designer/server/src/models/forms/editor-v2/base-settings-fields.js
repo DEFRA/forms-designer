@@ -455,7 +455,7 @@ export function getFieldList(
 
     if (field.items) {
       // Handle checkbox/radio selections
-      const strValue = typeof value === 'string' ? value.toString() : ''
+      const strValue = typeof value === 'string' ? value : ''
       return {
         ...field,
         items: field.items.map((cb) => ({

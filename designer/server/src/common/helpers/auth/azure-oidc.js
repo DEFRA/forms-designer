@@ -98,7 +98,7 @@ export const azureOidcNoop = {
             const credentials = dummyUsers[username]
 
             // No matching user found
-            if (!credentials || credentials.password !== password) {
+            if (credentials?.password !== password) {
               return Promise.resolve({ isValid: false })
             }
 
