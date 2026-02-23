@@ -658,7 +658,8 @@ describe('editor-v2 - question details model', () => {
           questionId
         },
         stateId,
-        token
+        token,
+        {}
       )
 
       expect(result).toBeDefined()
@@ -739,6 +740,7 @@ describe('editor-v2 - question details model', () => {
         },
         stateId,
         token,
+        {},
         undefined,
         state
       )
@@ -826,7 +828,13 @@ describe('editor-v2 - question details model', () => {
 
     test('should ignore if not a payment field', async () => {
       const fields = [buildTestField(), buildLiveField()]
-      await applyPaymentValues(ComponentType.TextField, formId, fields, token)
+      await applyPaymentValues(
+        ComponentType.TextField,
+        formId,
+        fields,
+        token,
+        undefined
+      )
       expect(fields[0].value).toBe('test-value')
       expect(fields[1].value).toBe('live-value')
     })
@@ -841,7 +849,8 @@ describe('editor-v2 - question details model', () => {
         ComponentType.PaymentField,
         formId,
         fields,
-        token
+        token,
+        undefined
       )
       expect(fields[0].value).toBe(MASKED_KEY)
       expect(fields[1].value).toBe('live-value')
@@ -857,7 +866,8 @@ describe('editor-v2 - question details model', () => {
         ComponentType.PaymentField,
         formId,
         fields,
-        token
+        token,
+        undefined
       )
       expect(fields[0].value).toBe('test-value')
       expect(fields[1].value).toBe(MASKED_KEY)
