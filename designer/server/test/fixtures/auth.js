@@ -1,9 +1,8 @@
-import { Scopes } from '@defra/forms-model'
+import { Roles, Scopes } from '@defra/forms-model'
 import { token } from '@hapi/jwt'
 import { DateTime, Duration } from 'luxon'
 
 import config from '~/src/config.js'
-import { Roles } from '~/src/models/account/role-mapper.js'
 
 const issuedAt = DateTime.now().minus({ minutes: 30 })
 const expiresAt = DateTime.now().plus({ minutes: 30 })

@@ -1,16 +1,4 @@
-export const Roles = {
-  Superadmin: 'superadmin',
-  Admin: 'admin',
-  FormPublisher: 'form-publisher',
-  FormCreator: 'form-creator'
-}
-
-export const RoleNames = {
-  [Roles.Superadmin]: 'Superadmin',
-  [Roles.Admin]: 'Admin',
-  [Roles.FormPublisher]: 'Form publisher',
-  [Roles.FormCreator]: 'Form creator'
-}
+import { RoleNames, Roles } from '@defra/forms-model'
 
 export const RoleDescriptions = {
   [Roles.Superadmin]:
@@ -21,15 +9,15 @@ export const RoleDescriptions = {
 }
 
 /**
- * @param {string} role
+ * @param {Roles} role
  */
 export function getNameForRole(role) {
-  return RoleNames[role] ?? role
+  return RoleNames[role]
 }
 
 /**
- * @param {string} role
+ * @param {Roles} role
  */
 export function getDescriptionForRole(role) {
-  return RoleDescriptions[role] ?? ''
+  return RoleDescriptions[role]
 }

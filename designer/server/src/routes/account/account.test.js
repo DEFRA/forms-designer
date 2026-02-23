@@ -1,3 +1,4 @@
+import { Roles } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
@@ -30,7 +31,7 @@ describe('Account profile route', () => {
         userId: 'my-user-id',
         email: 'my-email@mail.com',
         displayName: 'John Smith',
-        roles: ['admin'],
+        roles: [Roles.Admin],
         scopes: []
       })
     )

@@ -7,8 +7,7 @@ const logger = createLogger()
 
 /**
  * @param {string} token
- * @param {{ email: string, roles: string[] }} userDetails
- * @returns {Promise<{ emailAddress: string, userRole: string, displayName: string }>}
+ * @param {{ email: string, roles: Roles[] }} userDetails
  */
 export async function addUser(token, userDetails) {
   logger.info(`Adding new user with email: ${userDetails.email}`)
@@ -22,8 +21,8 @@ export async function addUser(token, userDetails) {
  * Updates a user and refreshes their session entitlements
  * @template {Request} T
  * @param {T} request
- * @param {{ userId: string, roles: string[] }} userDetails
- * @returns {Promise<{ updatedUser: { userId: string, userRole: string }, newScopes: string[] | undefined }>}
+ * @param {{ userId: string, roles: Roles[] }} userDetails
+ * @returns {Promise<{ updatedUser: { id: string }, newScopes: string[] | undefined }>}
  */
 export async function updateUser(request, userDetails) {
   const { auth } = request
@@ -89,4 +88,5 @@ export async function deleteUser(request, userId) {
 
 /**
  * @import { Request } from '@hapi/hapi'
+ * @import { Roles } from '@defra/forms-model'
  */

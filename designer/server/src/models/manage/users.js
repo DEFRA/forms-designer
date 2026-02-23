@@ -38,21 +38,15 @@ export function getTabs() {
 }
 
 /**
- * @param {EntitlementRole[]} allRoles
  * @param { EntitlementUser | undefined } user
  * @param { boolean } hideSuperadmin
  * @param {ValidationFailure<ManageUser>} [validation]
  */
-export function createOrEditUserViewModel(
-  allRoles,
-  user,
-  hideSuperadmin,
-  validation
-) {
+export function createOrEditUserViewModel(user, hideSuperadmin, validation) {
   const { formValues, formErrors } = validation ?? {}
   const [role] = user?.roles ?? []
-  const filter = (/** @type {EntitlementRole} */ r) =>
-    hideSuperadmin ? r.code !== Roles.Superadmin.toString() : true
+  const filter = (/** @type {Roles} */ r) =>
+    hideSuperadmin ? r !== Roles.Superadmin : true
 
   return {
     isEditing: user !== undefined,
@@ -92,13 +86,15 @@ export function createOrEditUserViewModel(
             isPageHeading: false
           }
         },
-        items: allRoles.filter(filter).map((r) => ({
-          text: getNameForRole(r.code),
-          value: r.code,
-          hint: {
-            text: getDescriptionForRole(r.code)
-          }
-        })),
+        items: Object.values(Roles)
+          .filter(filter)
+          .map((r) => ({
+            text: getNameForRole(r),
+            value: r,
+            hint: {
+              text: getDescriptionForRole(r)
+            }
+          })),
         value: formValues?.userRole ?? role,
         ...insertValidationErrors(formErrors?.userRole)
       }
@@ -216,6 +212,6 @@ export function deleteUserConfirmationPageViewModel(user) {
 }
 
 /**
- * @import { EntitlementUser, EntitlementRole, ManageUser } from '@defra/forms-model'
+ * @import { EntitlementUser, ManageUser } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
