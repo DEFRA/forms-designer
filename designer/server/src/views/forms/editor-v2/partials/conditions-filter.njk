@@ -2,6 +2,7 @@
 <div class="govuk-grid-column-one-quarter">
   <form class="form" method="post">
     <aside id="condition-filters" class="app-search__filters">
+      <h2 id="search-filters-heading" class="govuk-heading-m govuk-!-margin-bottom-4">Filter pages by condition</h2>
       {% if conditions.applied | length %}
       <div id="selected-filters" class="govuk-inset-text govuk-!-margin-top-2" style="display: block;">
         <h3 id="applied-filters-heading" class="govuk-heading-s">Applied filters:</h3>
@@ -11,7 +12,6 @@
         {% endfor %}</ul>
       </div>
       {% endif %}
-      <h2 id="search-filters-heading" class="govuk-heading-m govuk-!-margin-bottom-4">Filter pages by condition</h2>
       <div id="search-buttons--header-top" class="govuk-button-group govuk-!-margin-bottom-4">
         {{ govukButton({
           text: 'Apply filters'
@@ -24,6 +24,7 @@
       <div>
         {{ govukCheckboxes(conditions.available) }}
       </div>
+      {% if conditions.available | length > 5 %}
       <div id="search-buttons--header-bottom" class="govuk-button-group govuk-!-margin-bottom-4">
         {{ govukButton({
           text: 'Apply filters'
@@ -33,6 +34,7 @@
           Clear filters
         </a>
       </div>
+      {% endif %}
       {% if conditions.notAvailable | length %}
       <div class="govuk-!-margin-top-4">
         <h3 id="unapplied-filters-heading" class="govuk-heading-m">Conditions not applied to pages</h3>
