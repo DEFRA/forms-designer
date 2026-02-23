@@ -1094,6 +1094,7 @@ export const testFormDefinitionWithSections = {
     { id: 'section3Id', name: 'section3', title: 'Section three' }
   ]
 }
+
 /**
  * @import { DeclarationFieldComponent, FormDefinition, PageFileUpload, PageQuestion, PageRepeat, PageSummary, PaymentFieldComponent, TextFieldComponent, FileUploadFieldComponent, AutocompleteFieldComponent, List, Item, RadiosFieldComponent, CheckboxesFieldComponent, MarkdownComponent } from '@defra/forms-model'
  */

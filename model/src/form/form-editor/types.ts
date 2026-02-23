@@ -319,6 +319,11 @@ export interface FormEditor {
    * Description of the payment (will appear in the payment provider's pages)
    */
   paymentDescription: string
+
+  /**
+   * Title that user supplies a section
+   */
+  sectionTitle: string
 }
 
 export type FormEditorInputPage = Pick<

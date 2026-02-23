@@ -8,6 +8,7 @@ import editorCheckAnswersOverview from '~/src/routes/forms/editor-v2/check-answe
 import confirmationEmailSettings from '~/src/routes/forms/editor-v2/check-answers-settings/confirmation-email-settings.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
 import referenceNumberSettings from '~/src/routes/forms/editor-v2/check-answers-settings/reference-number-settings.js'
+import editorRenameSection from '~/src/routes/forms/editor-v2/check-answers-settings/rename-section.js'
 import editorSections from '~/src/routes/forms/editor-v2/check-answers-settings/sections.js'
 import userFeedbackSettings from '~/src/routes/forms/editor-v2/check-answers-settings/user-feedback-settings.js'
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
@@ -58,6 +59,7 @@ export default [
   editorCheckAnswersOverview,
   editorCheckAnswersSettings,
   editorSections,
+  editorRenameSection,
   editorSectionsReorder,
   editorConditionCheckChanges,
   editorConditionDelete,
