@@ -5,6 +5,7 @@ export const sessionNames = {
   questionType: /** @type {const} */ ('questionType'),
   reorderPages: /** @type {const} */ ('reorderPages'),
   reorderQuestions: /** @type {const} */ ('reorderQuestions'),
+  reorderSections: /** @type {const} */ ('reorderSections'),
   questionSessionState: /** @type {const} */ ('questionSessionState'),
   conditionSessionState: /** @type {const} */ ('conditionSessionState'),
   validationFailure: {
@@ -42,6 +43,9 @@ export const sessionNames = {
     ),
     editorPageCondition: /** @type {const} */ (
       'pageConditionsValidationFailure'
+    ),
+    editorRenameSection: /** @type {const} */ (
+      'renameSectionValidationFailure'
     ),
     editorCondition: /** @type {const} */ ('conditionValidationFailure'),
     editorSections: /** @type {const} */ ('sectionsValidationFailure'),

@@ -24,9 +24,21 @@ describe('Role mapper', () => {
   })
 
   describe('getDescriptionForRole', () => {
+    test('should return correct description for superadmin role', () => {
+      const result = getDescriptionForRole(Roles.Superadmin)
+      expect(result).toBe(
+        'Can manage forms, users and perform system administration tasks'
+      )
+    })
+
     test('should return correct description for admin role', () => {
       const result = getDescriptionForRole(Roles.Admin)
       expect(result).toBe('Can publish and delete forms and manage users')
+    })
+
+    test('should return correct description for form-publisher role', () => {
+      const result = getDescriptionForRole(Roles.FormPublisher)
+      expect(result).toBe('Can create, edit and publish forms')
     })
 
     test('should return correct description for form-creator role', () => {

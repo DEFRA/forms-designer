@@ -1,8 +1,8 @@
-import { Scopes } from '@defra/forms-model'
+import { Scopes, isSummaryPage } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { reorderPages } from '~/src/lib/editor.js'
+import { reorderSections } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   getFlashFromSession,
@@ -10,18 +10,17 @@ import {
 } from '~/src/lib/session-helper.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import {
-  excludeEndPages,
   getFocus,
   repositionItem
 } from '~/src/models/forms/editor-v2/pages-helper.js'
-import * as viewModel from '~/src/models/forms/editor-v2/pages-reorder.js'
+import * as viewModel from '~/src/models/forms/editor-v2/sections-reorder.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { itemOrderSchema } from '~/src/routes/forms/editor-v2/helpers.js'
 
-export const ROUTE_FULL_PATH_REORDER_PAGES =
-  '/library/{slug}/editor-v2/pages-reorder'
+export const ROUTE_FULL_PATH_REORDER_SECTIONS =
+  '/library/{slug}/editor-v2/sections-reorder'
 
-const reorderPagesKey = sessionNames.reorderPages
+const reorderSectionsKey = sessionNames.reorderSections
 
 export default [
   /**
@@ -29,7 +28,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: ROUTE_FULL_PATH_REORDER_PAGES,
+    path: ROUTE_FULL_PATH_REORDER_SECTIONS,
     async handler(request, h) {
       const { params, auth, yar, query } = request
       const { token } = auth.credentials
@@ -42,19 +41,17 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      // Page reorder
-      const pageOrder =
-        getFlashFromSession(yar, reorderPagesKey) ??
-        excludeEndPages(definition.pages)
-          .map((x) => `${x.id}`)
-          .join(',')
+      // Section reorder
+      const sectionOrder =
+        getFlashFromSession(yar, reorderSectionsKey) ??
+        definition.sections.map((x) => `${x.id}`).join(',')
 
       return h.view(
-        'forms/editor-v2/pages-reorder',
-        viewModel.pagesReorderViewModel(
+        'forms/editor-v2/sections-reorder',
+        viewModel.sectionsReorderViewModel(
           metadata,
           definition,
-          pageOrder,
+          sectionOrder,
           focusObj
         )
       )
@@ -74,7 +71,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: ROUTE_FULL_PATH_REORDER_PAGES,
+    path: ROUTE_FULL_PATH_REORDER_SECTIONS,
     async handler(request, h) {
       const { params, auth, payload, yar } = request
       const { slug } = params
@@ -86,35 +83,47 @@ export default [
       if (saveChanges) {
         const { token } = auth.credentials
         const metadata = await forms.get(slug, token)
+        const definition = await forms.getDraftFormDefinition(
+          metadata.id,
+          token
+        )
 
         if (itemOrder.length > 0) {
-          await reorderPages(metadata.id, token, itemOrder)
+          await reorderSections(metadata.id, token, itemOrder)
         }
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
-        yar.clear(reorderPagesKey)
+        yar.clear(reorderSectionsKey)
 
+        const cyaPage = definition.pages.find(isSummaryPage)
         return h
-          .redirect(editorv2Path(slug, 'pages'))
+          .redirect(
+            editorv2Path(
+              slug,
+              `page/${cyaPage?.id}/check-answers-settings/sections`
+            )
+          )
           .code(StatusCodes.SEE_OTHER)
           .takeover()
       }
 
       if (movement) {
-        const [direction, pageId] = movement.split('|')
+        const [direction, sectionId] = movement.split('|')
 
-        const newPageOrder = repositionItem(itemOrder, direction, pageId).join(
-          ','
-        )
+        const newSectionOrder = repositionItem(
+          itemOrder,
+          direction,
+          sectionId
+        ).join(',')
 
-        setFlashInSession(yar, reorderPagesKey, newPageOrder)
+        setFlashInSession(yar, reorderSectionsKey, newSectionOrder)
 
         return h
-          .redirect(editorv2Path(slug, `pages-reorder?focus=${movement}`))
+          .redirect(editorv2Path(slug, `sections-reorder?focus=${movement}`))
           .code(StatusCodes.SEE_OTHER)
       }
 
       return h
-        .redirect(editorv2Path(slug, `pages-reorder`))
+        .redirect(editorv2Path(slug, `sections-reorder`))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {

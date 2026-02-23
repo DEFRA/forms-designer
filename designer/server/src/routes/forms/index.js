@@ -8,6 +8,7 @@ import editorCheckAnswersOverview from '~/src/routes/forms/editor-v2/check-answe
 import confirmationEmailSettings from '~/src/routes/forms/editor-v2/check-answers-settings/confirmation-email-settings.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
 import referenceNumberSettings from '~/src/routes/forms/editor-v2/check-answers-settings/reference-number-settings.js'
+import editorRenameSection from '~/src/routes/forms/editor-v2/check-answers-settings/rename-section.js'
 import editorSections from '~/src/routes/forms/editor-v2/check-answers-settings/sections.js'
 import userFeedbackSettings from '~/src/routes/forms/editor-v2/check-answers-settings/user-feedback-settings.js'
 import editorConditionCheckChanges from '~/src/routes/forms/editor-v2/condition-check-changes.js'
@@ -29,6 +30,7 @@ import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-or-page-
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import editorResponses from '~/src/routes/forms/editor-v2/responses.js'
+import editorSectionsReorder from '~/src/routes/forms/editor-v2/sections-reorder.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
 import editorUpload from '~/src/routes/forms/editor-v2/upload.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
@@ -57,6 +59,8 @@ export default [
   editorCheckAnswersOverview,
   editorCheckAnswersSettings,
   editorSections,
+  editorRenameSection,
+  editorSectionsReorder,
   editorConditionCheckChanges,
   editorConditionDelete,
   editorCondition,

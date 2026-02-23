@@ -1,4 +1,5 @@
-import { Scopes } from '@defra/forms-model'
+import { Roles as ModelRoles, Scopes } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -24,7 +25,7 @@ const addUserSchema = Joi.object({
     })
     .description('Email address of user'),
   userRole: Joi.string()
-    .valid(Roles.Admin, Roles.FormCreator)
+    .valid(...Object.values(Roles))
     .required()
     .messages({
       '*': 'Select a role'
@@ -33,7 +34,7 @@ const addUserSchema = Joi.object({
 
 const amendUserSchema = Joi.object({
   userRole: Joi.string()
-    .valid(Roles.Admin, Roles.FormCreator)
+    .valid(...Object.values(Roles))
     .required()
     .messages({
       '*': 'Select a role'
@@ -46,9 +47,30 @@ const userIdSchema = Joi.object({
 
 const MANAGE_USERS_BASE_URL = '/manage/users'
 
+/**
+ * Helper to determine if the superadmin role should be available
+ * @param {AuthCredentials<UserCredentials>} auth - the currently authenticated user
+ */
+function shouldHideSuperadminRole(auth) {
+  return !auth.user?.roles?.includes(Roles.Superadmin)
+}
+
+/**
+ * Helper to assert if the superadmin role should be available
+ * @param {AuthCredentials<UserCredentials>} auth - the currently authenticated user
+ * @param {ModelRoles} userRole - the selected user role
+ */
+function assertSuperadmin(auth, userRole) {
+  if (userRole === ModelRoles.Superadmin && shouldHideSuperadminRole(auth)) {
+    throw Boom.unauthorized('Only superadmins can manage superadmin role')
+  }
+}
+
 export default [
-  /** @type {ServerRoute} */
-  // Add a new user
+  /**
+   * Add a new user
+   * @type {ServerRoute}
+   */
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/new`,
@@ -63,9 +85,16 @@ export default [
           getValidationErrorsFromSession(yar, errorKey)
         )
 
+      const hideSuperadmin = shouldHideSuperadminRole(auth.credentials)
+
       return h.view(
         'manage/user',
-        viewModel.createOrEditUserViewModel(roles, undefined, validation)
+        viewModel.createOrEditUserViewModel(
+          roles,
+          undefined,
+          hideSuperadmin,
+          validation
+        )
       )
     },
     options: {
@@ -80,8 +109,10 @@ export default [
     }
   }),
 
-  /** @type {ServerRoute} */
-  // Edit an existing user
+  /**
+   * Edit an existing user
+   * @type {ServerRoute}
+   */
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
@@ -98,10 +129,16 @@ export default [
         )
 
       const user = await getUser(token, userId)
+      const hideSuperadmin = shouldHideSuperadminRole(auth.credentials)
 
       return h.view(
         'manage/user',
-        viewModel.createOrEditUserViewModel(roles, user, validation)
+        viewModel.createOrEditUserViewModel(
+          roles,
+          user,
+          hideSuperadmin,
+          validation
+        )
       )
     },
     options: {
@@ -116,8 +153,10 @@ export default [
     }
   }),
 
-  /** @type {ServerRoute} */
-  // Delete a user
+  /**
+   * Delete a user
+   * @type {ServerRoute}
+   */
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
@@ -147,20 +186,23 @@ export default [
   }),
 
   /**
+   * Post new user details
    * @satisfies {ServerRoute<{ Payload: ManageUser }>}
    */
-  // Post new user details
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/new`,
     async handler(request, h) {
       const { payload, yar, auth } = request
       const { token } = auth.credentials
+      const { userRole } = /** @type {ManageUser} */ (payload)
 
       try {
+        assertSuperadmin(auth.credentials, /** @type {ModelRoles} */ (userRole))
+
         const newUser = await userService.addUser(token, {
           email: payload.emailAddress,
-          roles: [payload.userRole]
+          roles: [userRole]
         })
 
         yar.flash(
@@ -196,9 +238,9 @@ export default [
   }),
 
   /**
+   * Post edited user details
    * @satisfies {ServerRoute}
    */
-  // Post edited user details
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/amend`,
@@ -209,6 +251,8 @@ export default [
       const { userRole } = /** @type {ManageUser} */ (payload)
 
       try {
+        assertSuperadmin(auth.credentials, /** @type {ModelRoles} */ (userRole))
+
         const existingUser = await getUser(token, userId)
 
         await userService.updateUser(request, {
@@ -257,9 +301,9 @@ export default [
   }),
 
   /**
+   * Post operation for delete confirmation
    * @satisfies {ServerRoute}
    */
-  // Post operation for delete confirmation
   ({
     method: 'POST',
     path: `${MANAGE_USERS_BASE_URL}/{userId}/delete`,
@@ -311,6 +355,5 @@ export default [
 /**
  * @import { ManageUser } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
- * @import Boom from '@hapi/boom'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { AuthCredentials, ServerRoute, UserCredentials } from '@hapi/hapi'
  */

@@ -1,6 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 
-import { testFormDefinitionWithTwoPagesAndQuestions } from '~/src/__stubs__/form-definition.js'
+import { testFormDefinitionWithSections } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as editor from '~/src/lib/editor.js'
@@ -16,7 +16,7 @@ jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/session-helper.js')
 jest.mock('~/src/lib/editor.js')
 
-describe('Editor v2 pages reorder routes', () => {
+describe('Editor v2 sections reorder routes', () => {
   /** @type {Server} */
   let server
 
@@ -27,16 +27,16 @@ describe('Editor v2 pages reorder routes', () => {
   })
 
   describe('GET', () => {
-    test('should check correct formData is rendered in the view with multiple pages', async () => {
+    test('should check correct formData is rendered in the view with multiple sections', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest
         .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(testFormDefinitionWithTwoPagesAndQuestions)
+        .mockResolvedValueOnce(testFormDefinitionWithSections)
       jest.mocked(getFlashFromSession).mockReturnValueOnce(undefined)
 
       const options = {
         method: 'get',
-        url: '/library/my-form-slug/editor-v2/pages-reorder',
+        url: '/library/my-form-slug/editor-v2/sections-reorder',
         auth
       }
 
@@ -48,15 +48,18 @@ describe('Editor v2 pages reorder routes', () => {
 
       const $actions = container.getAllByRole('button')
 
-      expect($mainHeading).toHaveTextContent('Test form Re-order pages')
-      expect($pageTitles[0]).toHaveTextContent('Page 1: Page one')
-      expect($pageTitles[1]).toHaveTextContent('Page 2: Page two')
-      expect($actions).toHaveLength(7)
+      expect($mainHeading).toHaveTextContent('Test form Re-order sections')
+      expect($pageTitles[0]).toHaveTextContent('Section 1: Section one')
+      expect($pageTitles[1]).toHaveTextContent('Section 2: Section two')
+      expect($pageTitles[2]).toHaveTextContent('Section 3: Section three')
+      expect($actions).toHaveLength(9)
       expect($actions[2]).toHaveTextContent('Save changes')
       expect($actions[3]).toHaveTextContent('Up')
       expect($actions[4]).toHaveTextContent('Down')
       expect($actions[5]).toHaveTextContent('Up')
       expect($actions[6]).toHaveTextContent('Down')
+      expect($actions[7]).toHaveTextContent('Up')
+      expect($actions[8]).toHaveTextContent('Down')
     })
   })
 
@@ -65,14 +68,16 @@ describe('Editor v2 pages reorder routes', () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       jest
         .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(testFormDefinitionWithTwoPagesAndQuestions)
-      jest.mocked(getFlashFromSession).mockReturnValueOnce('page1|page2|page3')
+        .mockResolvedValueOnce(testFormDefinitionWithSections)
+      jest
+        .mocked(getFlashFromSession)
+        .mockReturnValueOnce('section1|section2|section3')
 
       const options = {
         method: 'post',
-        url: '/library/my-form-slug/editor-v2/pages-reorder',
+        url: '/library/my-form-slug/editor-v2/sections-reorder',
         auth,
-        payload: { movement: 'up|p2', itemOrder: 'p1,p2,p3' }
+        payload: { movement: 'up|s2', itemOrder: 's1,s2,s3' }
       }
 
       const {
@@ -81,12 +86,12 @@ describe('Editor v2 pages reorder routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe(
-        '/library/my-form-slug/editor-v2/pages-reorder?focus=up|p2'
+        '/library/my-form-slug/editor-v2/sections-reorder?focus=up|s2'
       )
       expect(setFlashInSession).toHaveBeenCalledWith(
         expect.anything(),
-        'reorderPages',
-        'p2,p1,p3'
+        'reorderSections',
+        's2,s1,s3'
       )
     })
 
@@ -94,7 +99,7 @@ describe('Editor v2 pages reorder routes', () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
       const options = {
         method: 'post',
-        url: '/library/my-form-slug/editor-v2/pages-reorder',
+        url: '/library/my-form-slug/editor-v2/sections-reorder',
         auth,
         payload: { saveChanges: 'true', itemOrder: 'abc-123,def-456,ghi-789' }
       }
@@ -104,8 +109,10 @@ describe('Editor v2 pages reorder routes', () => {
       } = await renderResponse(server, options)
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
-      expect(editor.reorderPages).toHaveBeenCalledWith(
+      expect(headers.location).toBe(
+        '/library/my-form-slug/editor-v2/page/c2/check-answers-settings/sections'
+      )
+      expect(editor.reorderSections).toHaveBeenCalledWith(
         '661e4ca5039739ef2902b214',
         expect.anything(),
         ['abc-123', 'def-456', 'ghi-789']
@@ -118,7 +125,7 @@ describe('Editor v2 pages reorder routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/editor-v2/pages-reorder',
+      url: '/library/my-form-slug/editor-v2/sections-reorder',
       auth,
       payload: { itemOrder: 'invalid-format' }
     }
@@ -129,7 +136,7 @@ describe('Editor v2 pages reorder routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe(
-      '/library/my-form-slug/editor-v2/pages-reorder'
+      '/library/my-form-slug/editor-v2/sections-reorder'
     )
   })
 })

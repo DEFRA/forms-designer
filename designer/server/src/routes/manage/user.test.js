@@ -13,6 +13,7 @@ import * as userService from '~/src/services/userService.js'
 import {
   artifacts,
   auth,
+  authSuperAdmin,
   credentials,
   profile,
   user
@@ -49,7 +50,30 @@ describe('Create and edit user routes', () => {
   })
 
   describe('GET /manage/users', () => {
-    test('should render view when creating', async () => {
+    test('should render view when creating with superadmin role', async () => {
+      const options = {
+        method: 'get',
+        url: '/manage/users/new',
+        auth: authSuperAdmin
+      }
+
+      const { container, response } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByText('Add new user')
+      const $radios = container.getAllByRole('radio')
+      const $buttons = container.getAllByRole('button', { name: 'Add user' })
+
+      expect($mastheadHeading).toBeDefined()
+      expect($radios).toHaveLength(4)
+      expect($radios[0].outerHTML).toContain('value="superadmin"')
+      expect($radios[1].outerHTML).toContain('value="admin"')
+      expect($radios[2].outerHTML).toContain('value="form-publisher"')
+      expect($radios[3].outerHTML).toContain('value="form-creator"')
+      expect($buttons).toHaveLength(1)
+      expect(response.result).toMatchSnapshot()
+    })
+
+    test('should render view when creating with admin role', async () => {
       const options = {
         method: 'get',
         url: '/manage/users/new',
@@ -63,14 +87,50 @@ describe('Create and edit user routes', () => {
       const $buttons = container.getAllByRole('button', { name: 'Add user' })
 
       expect($mastheadHeading).toBeDefined()
-      expect($radios).toHaveLength(2)
+      expect($radios).toHaveLength(3)
       expect($radios[0].outerHTML).toContain('value="admin"')
-      expect($radios[1].outerHTML).toContain('value="form-creator"')
+      expect($radios[1].outerHTML).toContain('value="form-publisher"')
+      expect($radios[2].outerHTML).toContain('value="form-creator"')
       expect($buttons).toHaveLength(1)
       expect(response.result).toMatchSnapshot()
     })
 
-    test('should render view when editing', async () => {
+    test('should render view when editing with superadmin role', async () => {
+      jest.mocked(getUser).mockResolvedValue(
+        /** @type {EntitlementUser} */ ({
+          userId: '12345',
+          roles: ['admin']
+        })
+      )
+      const options = {
+        method: 'get',
+        url: '/manage/users/12345/amend',
+        auth: authSuperAdmin
+      }
+
+      const { container, response } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByText('Manage user account')
+      const $radios = container.getAllByRole('radio')
+      const $buttonSave = container.getAllByRole('button', {
+        name: 'Save changes'
+      })
+      const $buttonRemove = container.getAllByRole('button', {
+        name: 'Remove user'
+      })
+
+      expect($mastheadHeading).toBeDefined()
+      expect($radios).toHaveLength(4)
+      expect($radios[0].outerHTML).toContain('value="superadmin"')
+      expect($radios[1].outerHTML).toContain('value="admin"')
+      expect($radios[2].outerHTML).toContain('value="form-publisher"')
+      expect($radios[3].outerHTML).toContain('value="form-creator"')
+      expect($buttonSave).toHaveLength(1)
+      expect($buttonRemove).toHaveLength(1)
+      expect(response.result).toMatchSnapshot()
+    })
+
+    test('should render view when editing with admin role', async () => {
       jest.mocked(getUser).mockResolvedValue(
         /** @type {EntitlementUser} */ ({
           userId: '12345',
@@ -95,9 +155,10 @@ describe('Create and edit user routes', () => {
       })
 
       expect($mastheadHeading).toBeDefined()
-      expect($radios).toHaveLength(2)
+      expect($radios).toHaveLength(3)
       expect($radios[0].outerHTML).toContain('value="admin"')
-      expect($radios[1].outerHTML).toContain('value="form-creator"')
+      expect($radios[1].outerHTML).toContain('value="form-publisher"')
+      expect($radios[2].outerHTML).toContain('value="form-creator"')
       expect($buttonSave).toHaveLength(1)
       expect($buttonRemove).toHaveLength(1)
       expect(response.result).toMatchSnapshot()
@@ -208,6 +269,27 @@ describe('Create and edit user routes', () => {
         url: '/manage/users/new',
         auth,
         payload: { emailAddress: 'me@here.com', userRole: 'admin' }
+      }
+
+      const {
+        response: { headers, statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/manage/users/new')
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        'manageUsersValidationFailure',
+        new Joi.ValidationError('An error occurred', [], undefined)
+      )
+    })
+
+    test('should error if creating a superadmin role if current user is not themselves a superadmin (handle Boom unuthorized error)', async () => {
+      const options = {
+        method: 'post',
+        url: '/manage/users/new',
+        auth,
+        payload: { emailAddress: 'me@here.com', userRole: 'superadmin' }
       }
 
       const {
@@ -455,7 +537,7 @@ describe('Create and edit user routes', () => {
         credentials: credentials({
           claims,
           user: user(claims.token, [Roles.FormCreator]),
-          scope: [Scopes.FormRead, Scopes.FormEdit]
+          scope: [Scopes.FormRead, Scopes.FormEdit, Scopes.FormDelete]
         })
       }
 
