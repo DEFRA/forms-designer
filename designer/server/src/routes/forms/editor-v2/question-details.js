@@ -403,7 +403,12 @@ export default [
           getListItems(fileUploadLimitsPayload, state)
         )
 
-        await savePaymentSecrets(metadata.id, payload, token)
+        await savePaymentSecrets(
+          questionDetails.type,
+          metadata.id,
+          payload,
+          token
+        )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 

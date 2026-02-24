@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
@@ -109,7 +110,12 @@ describe('secrets.js', () => {
         paymentLiveApiKey: ''
       })
 
-      await savePaymentSecrets(formId, payload, token)
+      await savePaymentSecrets(
+        ComponentType.PaymentField,
+        formId,
+        payload,
+        token
+      )
 
       expect(mockedPostJson).toHaveBeenCalledTimes(1)
       expect(mockedPostJson).toHaveBeenCalledWith(expect.anything(), {
@@ -136,7 +142,12 @@ describe('secrets.js', () => {
         paymentLiveApiKey: 'Some new live secret'
       })
 
-      await savePaymentSecrets(formId, payload, token)
+      await savePaymentSecrets(
+        ComponentType.PaymentField,
+        formId,
+        payload,
+        token
+      )
 
       expect(mockedPostJson).toHaveBeenCalledTimes(1)
       expect(mockedPostJson).toHaveBeenCalledWith(expect.anything(), {

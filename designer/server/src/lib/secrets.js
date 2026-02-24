@@ -1,3 +1,4 @@
+import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
@@ -73,23 +74,26 @@ export async function savePaymentSecret(formId, secretValue, isLive, token) {
 }
 
 /**
+ * @param { ComponentType | undefined } questionType
  * @param {string} formId
  * @param {FormEditorInputQuestionDetails} payload
  * @param {string} token
  */
-export async function savePaymentSecrets(formId, payload, token) {
-  // Only save API key if it's a non-masked version
-  if (
-    payload.paymentTestApiKey !== MASKED_KEY &&
-    payload.paymentTestApiKey.length
-  ) {
-    await savePaymentSecret(formId, payload.paymentTestApiKey, false, token)
-  }
-  if (
-    payload.paymentLiveApiKey !== MASKED_KEY &&
-    payload.paymentLiveApiKey.length
-  ) {
-    await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
+export async function savePaymentSecrets(questionType, formId, payload, token) {
+  if (questionType === ComponentType.PaymentField) {
+    // Only save API key if it's a non-masked version
+    if (
+      payload.paymentTestApiKey !== MASKED_KEY &&
+      payload.paymentTestApiKey.length
+    ) {
+      await savePaymentSecret(formId, payload.paymentTestApiKey, false, token)
+    }
+    if (
+      payload.paymentLiveApiKey !== MASKED_KEY &&
+      payload.paymentLiveApiKey.length
+    ) {
+      await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
+    }
   }
 }
 
