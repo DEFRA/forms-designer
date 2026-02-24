@@ -265,7 +265,9 @@ export interface PaymentFieldComponent extends FormFieldBase {
 
 export interface GeospatialFieldComponent extends FormFieldBase {
   type: ComponentType.GeospatialField
-  options: FormFieldBase['options']
+  options: FormFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 // Content Fields
