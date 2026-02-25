@@ -7,8 +7,8 @@ import { getHeaders } from '~/src/lib/utils.js'
 
 const managerBaseEndpoint = new URL(config.managerUrl)
 
-const PAYMENT_TEST_API_KEY = 'payment-test-api-key'
-const PAYMENT_LIVE_API_KEY = 'payment-live-api-key'
+export const PAYMENT_TEST_API_KEY = 'payment-test-api-key'
+export const PAYMENT_LIVE_API_KEY = 'payment-live-api-key'
 
 export const MASKED_KEY = '****************************************'
 
