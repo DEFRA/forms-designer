@@ -1,5 +1,6 @@
 import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
 
+import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
@@ -250,7 +251,7 @@ export const radioValueSchema = Joi.string()
   )
 
 export const shortDescriptionSchema = Joi.string()
-  .trim()
+  .custom(rtrimOnly)
   .required()
   .description('Brief description of the question for internal use')
 
