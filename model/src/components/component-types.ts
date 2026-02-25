@@ -200,5 +200,13 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
       amount: 1,
       description: 'payment desc'
     }
-  } as PaymentFieldComponent
+  } as PaymentFieldComponent,
+  {
+    name: 'GeospatialField',
+    title: 'Geospatial field',
+    type: ComponentType.GeospatialField,
+    hint: '',
+    options: {},
+    schema: {}
+  }
 ])

@@ -8,6 +8,7 @@ import {
   type EastingNorthingFieldComponent,
   type EmailAddressFieldComponent,
   type FileUploadFieldComponent,
+  type GeospatialFieldComponent,
   type HtmlComponent,
   type InsetTextComponent,
   type LatLongFieldComponent,
@@ -449,5 +450,19 @@ export function buildOsGridRefFieldComponent(
     options: {},
     ...partialComponent,
     type: ComponentType.OsGridRefField
+  }
+}
+
+export function buildGeospatialFieldComponent(
+  partialComponent: Partial<GeospatialFieldComponent> = {}
+): GeospatialFieldComponent {
+  return {
+    id: '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+    name: 'GeospatialField',
+    title: 'Geospatial features of the site',
+    hint: 'Add points, lines and polygons to describe features of the site',
+    options: {},
+    ...partialComponent,
+    type: ComponentType.GeospatialField
   }
 }
