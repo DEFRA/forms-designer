@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
 import * as forms from '~/src/lib/forms.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { termsAndConditionsViewModel } from '~/src/models/forms/terms-and-conditions.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.js'
@@ -14,10 +14,7 @@ export const ROUTE_PATH_EDIT_TERMS_AND_CONDITIONS =
 
 export const schema = Joi.object().keys({
   termsAndConditionsAgreed: Joi.string().valid('true').required().messages({
-    'any.only':
-      'You must confirm you meet the terms and conditions to continue',
-    'any.required':
-      'You must confirm you meet the terms and conditions to continue'
+    '*': 'You must confirm you meet the terms and conditions to continue'
   })
 })
 
@@ -79,26 +76,13 @@ export default [
     options: {
       validate: {
         payload: schema,
-        /**
-         * @param {Request} request
-         * @param {ResponseToolkit} h
-         * @param {Error} [error]
-         */
-        failAction: (request, h, error) => {
-          const { payload, yar, url } = request
-          const { pathname: redirectTo } = url
-
-          if (error && error instanceof Joi.ValidationError) {
-            const formErrors = buildErrorDetails(error)
-
-            yar.flash(sessionNames.validationFailure.termsAndConditions, {
-              formErrors,
-              formValues: payload
-            })
-          }
-
-          return h.redirect(redirectTo).code(StatusCodes.SEE_OTHER).takeover()
-        }
+        failAction: (request, h, error) =>
+          redirectWithErrors(
+            request,
+            h,
+            error,
+            sessionNames.validationFailure.termsAndConditions
+          )
       },
       auth: {
         mode: 'required',
@@ -113,5 +97,5 @@ export default [
 ]
 
 /**
- * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
+ * @import { ServerRoute } from '@hapi/hapi'
  */

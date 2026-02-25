@@ -1,4 +1,5 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { insertValidationErrors } from '~/src/lib/utils.js'
 import { formOverviewBackLink } from '~/src/models/links.js'
 
 /**
@@ -19,8 +20,14 @@ export function termsAndConditionsViewModel(metadata, validation) {
       termsAndConditionsAgreed: {
         id: 'termsAndConditionsAgreed',
         name: 'termsAndConditionsAgreed',
-        value: 'true',
-        checked: metadata.termsAndConditionsAgreed === true
+        items: [
+          {
+            value: 'true',
+            text: 'I agree to the data protection terms and conditions',
+            checked: metadata.termsAndConditionsAgreed === true
+          }
+        ],
+        ...insertValidationErrors(formErrors?.termsAndConditionsAgreed)
       }
     },
     buttonText: 'Save and continue'

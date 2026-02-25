@@ -38,20 +38,7 @@
         <li>update your service operations guide (SOG) if you plan to use data from Defra Forms in your service (if applicable)</li>
       </ul>
 
-      {% set termsField = fields.termsAndConditionsAgreed %}
-      {{ govukCheckboxes({
-        name: termsField.name,
-        errorMessage: {
-          text: formErrors[termsField.name].text
-        } if formErrors[termsField.name],
-        items: [
-          {
-            value: termsField.value,
-            text: "I agree to the data protection terms and conditions",
-            checked: termsField.checked
-          }
-        ]
-      }) }}
+      {{ govukCheckboxes(fields.termsAndConditionsAgreed) }}
 
       <div class="govuk-button-group">
         {{ govukButton({

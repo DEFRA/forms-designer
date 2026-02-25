@@ -38,7 +38,13 @@ describe('edit - model - terms and conditions', () => {
     expect(result.fields.termsAndConditionsAgreed.name).toBe(
       'termsAndConditionsAgreed'
     )
-    expect(result.fields.termsAndConditionsAgreed.checked).toBe(false)
+    expect(result.fields.termsAndConditionsAgreed.items).toEqual([
+      {
+        value: 'true',
+        text: 'I agree to the data protection terms and conditions',
+        checked: false
+      }
+    ])
     expect(result.backLink.href).toBe('/library/my-form-slug')
     expect(result.buttonText).toBe('Save and continue')
   })
@@ -49,7 +55,13 @@ describe('edit - model - terms and conditions', () => {
       termsAndConditionsAgreed: true
     }
     const result = termsAndConditionsViewModel(formMetadataWithAgreement)
-    expect(result.fields.termsAndConditionsAgreed.checked).toBe(true)
+    expect(result.fields.termsAndConditionsAgreed.items).toEqual([
+      {
+        value: 'true',
+        text: 'I agree to the data protection terms and conditions',
+        checked: true
+      }
+    ])
   })
 
   it('should test terms and conditions view model when termsAndConditionsAgreed is undefined', () => {
@@ -58,7 +70,13 @@ describe('edit - model - terms and conditions', () => {
       termsAndConditionsAgreed: undefined
     }
     const result = termsAndConditionsViewModel(formMetadataWithoutAgreement)
-    expect(result.fields.termsAndConditionsAgreed.checked).toBe(false)
+    expect(result.fields.termsAndConditionsAgreed.items).toEqual([
+      {
+        value: 'true',
+        text: 'I agree to the data protection terms and conditions',
+        checked: false
+      }
+    ])
   })
 
   it('should include error details when validation fails', () => {
@@ -81,12 +99,16 @@ describe('edit - model - terms and conditions', () => {
         href: '#termsAndConditionsAgreed'
       }
     ])
+    expect(result.fields.termsAndConditionsAgreed.errorMessage).toEqual({
+      text: 'You must confirm you meet the terms and conditions to continue'
+    })
   })
 
   it('should have no errors when validation is undefined', () => {
     const result = termsAndConditionsViewModel(formMetadata)
     expect(result.formErrors).toBeUndefined()
     expect(result.errorList).toEqual([])
+    expect(result.fields.termsAndConditionsAgreed.errorMessage).toBeUndefined()
   })
 })
 
