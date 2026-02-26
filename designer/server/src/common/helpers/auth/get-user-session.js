@@ -1,8 +1,8 @@
+import { Roles } from '@defra/forms-model'
 import { token } from '@hapi/jwt'
 import { isPast, parseISO, subMinutes } from 'date-fns'
 
 import { groupsToScopes } from '~/src/common/constants/scopes.js'
-import { Roles } from '~/src/models/account/role-mapper.js'
 
 /**
  * @param {Partial<Request> | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Query: { logoutHint?: string } }>} request
@@ -124,7 +124,7 @@ export function hasUser(credentials) {
 }
 
 /**
- * Check if user has admin role
+ * Check if user has any admin role
  * @param {EntitlementUser | UserCredentials | null | undefined} user
  * @returns {boolean}
  */

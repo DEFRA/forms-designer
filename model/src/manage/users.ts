@@ -1,3 +1,5 @@
+import { type Roles, type Scopes } from '~/src/manage/roles.js'
+
 export interface EntitlementUser {
   /**
    * The id of the user
@@ -17,10 +19,10 @@ export interface EntitlementUser {
   /**
    * The roles assigned to the user
    */
-  roles: string[]
+  roles: Roles[]
 
   /**
    * The scopes assigned to the user
    */
-  scopes: string[]
+  scopes: Scopes[]
 }

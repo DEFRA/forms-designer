@@ -1,22 +1,4 @@
-/**
- * Interface for `EntitlementRole`
- */
-export interface EntitlementRole {
-  /**
-   * The display name
-   */
-  name: string
-
-  /**
-   * The code value
-   */
-  code: string
-
-  /**
-   * The description
-   */
-  description: string
-}
+import { type Roles } from '~/src/manage/roles.js'
 
 /**
  * Interface for `ManageUser`
@@ -35,7 +17,7 @@ export interface ManageUser {
   /**
    * The role assigned to the user
    */
-  userRole: string
+  userRole: Roles
 
   /**
    * The full name of the user for display

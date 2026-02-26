@@ -1,4 +1,4 @@
-import { Roles as ModelRoles, Scopes } from '@defra/forms-model'
+import { Roles, Scopes } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -6,9 +6,9 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { checkBoomError } from '~/src/lib/error-boom-helper.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
-import { getRoles, getUser } from '~/src/lib/manage.js'
+import { getUser } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { Roles, getNameForRole } from '~/src/models/account/role-mapper.js'
+import { getNameForRole } from '~/src/models/account/role-mapper.js'
 import * as viewModel from '~/src/models/manage/users.js'
 import { checkUserManagementAccess } from '~/src/routes/forms/route-helpers.js'
 import * as userService from '~/src/services/userService.js'
@@ -58,10 +58,10 @@ function shouldHideSuperadminRole(auth) {
 /**
  * Helper to assert if the superadmin role should be available
  * @param {AuthCredentials<UserCredentials>} auth - the currently authenticated user
- * @param {ModelRoles} userRole - the selected user role
+ * @param {Roles} userRole - the selected user role
  */
 function assertSuperadmin(auth, userRole) {
-  if (userRole === ModelRoles.Superadmin && shouldHideSuperadminRole(auth)) {
+  if (userRole === Roles.Superadmin && shouldHideSuperadminRole(auth)) {
     throw Boom.unauthorized('Only superadmins can manage superadmin role')
   }
 }
@@ -74,11 +74,8 @@ export default [
   ({
     method: 'GET',
     path: `${MANAGE_USERS_BASE_URL}/new`,
-    async handler(request, h) {
+    handler(request, h) {
       const { auth, yar } = request
-      const { token } = auth.credentials
-
-      const roles = await getRoles(token)
 
       const validation =
         /** @type { ValidationFailure<ManageUser> | undefined } */ (
@@ -90,7 +87,6 @@ export default [
       return h.view(
         'manage/user',
         viewModel.createOrEditUserViewModel(
-          roles,
           undefined,
           hideSuperadmin,
           validation
@@ -121,8 +117,6 @@ export default [
       const { token } = auth.credentials
       const { userId } = params
 
-      const roles = await getRoles(token)
-
       const validation =
         /** @type { ValidationFailure<ManageUser> | undefined } */ (
           getValidationErrorsFromSession(yar, errorKey)
@@ -133,12 +127,7 @@ export default [
 
       return h.view(
         'manage/user',
-        viewModel.createOrEditUserViewModel(
-          roles,
-          user,
-          hideSuperadmin,
-          validation
-        )
+        viewModel.createOrEditUserViewModel(user, hideSuperadmin, validation)
       )
     },
     options: {
@@ -198,7 +187,7 @@ export default [
       const { userRole } = /** @type {ManageUser} */ (payload)
 
       try {
-        assertSuperadmin(auth.credentials, /** @type {ModelRoles} */ (userRole))
+        assertSuperadmin(auth.credentials, userRole)
 
         const newUser = await userService.addUser(token, {
           email: payload.emailAddress,
@@ -251,7 +240,7 @@ export default [
       const { userRole } = /** @type {ManageUser} */ (payload)
 
       try {
-        assertSuperadmin(auth.credentials, /** @type {ModelRoles} */ (userRole))
+        assertSuperadmin(auth.credentials, userRole)
 
         const existingUser = await getUser(token, userId)
 
