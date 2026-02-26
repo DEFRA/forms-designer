@@ -24,12 +24,7 @@ export const checkUserManagementAccess = [
  * @param {string} headingText
  * @param {string} [contentHtml]
  */
-export function createErrorPageModel(
-  slug,
-  metadata,
-  headingText,
-  contentHtml = undefined
-) {
+export function createErrorPageModel(slug, metadata, headingText, contentHtml) {
   return {
     pageHeading: {
       classes: 'govuk-heading-xl',

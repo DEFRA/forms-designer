@@ -378,7 +378,7 @@ export function getPreviewModel(
   previewErrorsUrl,
   guidance = '',
   isGuidancePage = false,
-  sectionInfo = undefined
+  sectionInfo
 ) {
   const components = hasComponents(page) ? page.components : []
 

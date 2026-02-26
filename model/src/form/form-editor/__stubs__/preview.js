@@ -281,7 +281,7 @@ export class PagePreviewElements {
   constructor(
     heading,
     guidance = '',
-    addHeading = undefined,
+    addHeading,
     repeatQuestion = '',
     hasRepeater = false
   ) {

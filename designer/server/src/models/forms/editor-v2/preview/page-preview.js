@@ -11,7 +11,7 @@ export class PagePreviewElementsSSR extends PagePreviewElements {
    * @param {string} [guidanceText]
    * @param {PageSectionInfo} [section]
    */
-  constructor(page, guidanceText = '', section = undefined) {
+  constructor(page, guidanceText = '', section) {
     super(page, section)
     this.#guidanceText = guidanceText
   }

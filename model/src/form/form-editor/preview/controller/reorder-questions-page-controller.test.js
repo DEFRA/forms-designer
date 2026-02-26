@@ -119,7 +119,7 @@ describe('reorder-questions-page-controller', () => {
       currentPage = page,
       definition = formDefinition,
       components = page.components,
-      pageElementsInput = undefined
+      pageElementsInput
     } = {}) => {
       const pageRenderMock = jest.fn()
       const renderer = new PageRendererStub(pageRenderMock)

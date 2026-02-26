@@ -98,11 +98,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>()
     email: Joi.string().required(),
     security: Joi.object({
       question: Joi.string()
-        .valid(
-          ...Object.values(SecurityQuestionsEnum).map((value) =>
-            value.toString()
-          )
-        )
+        .valid(...Object.values(SecurityQuestionsEnum))
         .required(),
       answer: Joi.string().required()
     }).label('SaveAndExitSecurity'),

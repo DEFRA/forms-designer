@@ -10,7 +10,7 @@ export const loggerOptions = {
     serialize: false,
     transmit: {
       level: logLevel,
-      async send(level, { messages }: LogEventBrowser) {
+      send(level, { messages }: LogEventBrowser) {
         const [error, ...params] = messages
 
         // Log event request body
@@ -21,8 +21,8 @@ export const loggerOptions = {
               error: stdSerializers.errWithCause(error)
             }
 
-        // Submit log event request
-        return form.log(level, body)
+        // Submit log event request (fire-and-forget)
+        form.log(level, body).catch(() => undefined)
       }
     }
   }

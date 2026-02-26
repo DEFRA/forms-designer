@@ -207,7 +207,7 @@ export function replaceCustomControllers(definition: FormDefinition) {
   const standardControllers = new Set(
     Object.values(ControllerType)
       .filter((x) => x !== ControllerType.SummaryWithConfirmationEmail)
-      .map((x) => x.toString())
+      .map((x) => x as string)
   )
 
   return {
@@ -215,7 +215,7 @@ export function replaceCustomControllers(definition: FormDefinition) {
     pages: definition.pages.map((page) => {
       if (
         !standardControllers.has(
-          (page.controller ?? ControllerType.Page).toString()
+          (page.controller ?? ControllerType.Page) as string
         )
       ) {
         return /** @type {Page} */ {
