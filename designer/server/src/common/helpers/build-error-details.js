@@ -3,7 +3,6 @@
  * @param {ValidationErrorItem} errorItem
  */
 export function buildListErrorDetail(errors, { context, message }) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const position = /** @type {string|undefined} */ (context?.pos)
   const matchString = `[${position}]`
 

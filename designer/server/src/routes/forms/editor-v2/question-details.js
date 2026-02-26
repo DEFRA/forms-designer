@@ -106,7 +106,6 @@ function redirectWithAnchorOrUrl(
  */
 export function getListItems(payload, state) {
   if (payload.listItemsData) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return /** @type {Item[]} */ (JSON.parse(payload.listItemsData))
   }
   return /** @type {Item[]} */ (
@@ -193,7 +192,7 @@ export function overrideStateIfJsEnabled(request) {
         editRow: {
           expanded: false
         },
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
         listItems:
           /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
           (JSON.parse(listItemsData ?? '[]'))
