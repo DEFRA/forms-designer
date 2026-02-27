@@ -2,6 +2,7 @@
 <div class="govuk-grid-column-one-quarter">
   <form class="form" method="post">
     <aside id="condition-filters" class="app-search__filters">
+      {% if conditions.available.items | length %}
       <h2 id="search-filters-heading" class="govuk-heading-m govuk-!-margin-bottom-4">Filter pages by condition</h2>
       {% if conditions.applied | length %}
       <div id="selected-filters" class="govuk-inset-text govuk-!-margin-top-2" style="display: block;">
@@ -24,7 +25,7 @@
       <div>
         {{ govukCheckboxes(conditions.available) }}
       </div>
-      {% if conditions.available | length > 5 %}
+      {% if conditions.available.items | length > 5 %}
       <div id="search-buttons--header-bottom" class="govuk-button-group govuk-!-margin-bottom-4">
         {{ govukButton({
           text: 'Apply filters'
@@ -35,9 +36,15 @@
         </a>
       </div>
       {% endif %}
+      {% endif %}
+
       {% if conditions.notAvailable | length %}
       <div class="govuk-!-margin-top-4">
-        <h3 id="unapplied-filters-heading" class="govuk-heading-m">Conditions not applied to pages</h3>
+        {% if conditions.available.items | length %}
+          <h3 id="unapplied-filters-heading" class="govuk-heading-m">Conditions not applied to pages</h3>
+        {% else %}
+          <h2 id="unapplied-filters-heading" class="govuk-heading-m">Conditions not applied to pages</h2>
+        {% endif %}
         <ul class="govuk-list govuk-list--bullet govuk-list--spaced">
         {% for notAvailableLabel in conditions.notAvailable %}
           <li class="govuk-hint">{{ notAvailableLabel }}</li>
