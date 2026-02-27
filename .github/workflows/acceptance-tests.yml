@@ -61,6 +61,8 @@ jobs:
         run: |
           npm ci
           cp designer/.automated-tests.env designer/.env
+          echo "=== Configuration ===" > test-logs.txt
+          cat designer/.env >> test-logs.txt
           npm run build
 
       - name: Start forms-designer
@@ -111,7 +113,7 @@ jobs:
         if: always()
         shell: bash
         run: |
-          echo "=== Test Results ===" > test-logs.txt
+          echo "=== Test Results ===" >> test-logs.txt
           echo "" >> test-logs.txt
 
           if [ -f forms-acceptance-tests/test-results/.last-run.json ]; then
@@ -129,6 +131,8 @@ jobs:
           docker ps -a >> test-logs.txt || true
           MANAGER_ID=`docker ps | grep forms-manager | awk '{print $1}'`
           docker logs $MANAGER_ID >> test-logs.txt
+          AUDIT_ID=`docker ps | grep forms-audit-api | awk '{print $1}'`
+          docker logs $AUDIT_ID >> test-logs.txt
 
       - name: Upload test report
         if: always()
