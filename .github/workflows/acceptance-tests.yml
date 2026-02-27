@@ -134,31 +134,31 @@ jobs:
           MANAGER_ID=`docker ps | grep forms-manager | awk '{print $1}'`
           docker logs $MANAGER_ID >> test-logs.txt
           echo "=== forms-manager env vars ===" >> test-logs.txt
-          docker exec $MANAGER_ID env
+          docker exec $MANAGER_ID env >> test-logs.txt
 
           echo "=== forms-submission-api logs ===" >> test-logs.txt
           SUBMISSION_ID=`docker ps | grep forms-submission-api | awk '{print $1}'`
           docker logs $SUBMISSION_ID >> test-logs.txt
           echo "=== forms-submission-api env vars ===" >> test-logs.txt
-          docker exec $SUBMISSION_ID env
+          docker exec $SUBMISSION_ID env >> test-logs.txt
 
           echo "=== forms-notify-listener logs ===" >> test-logs.txt
           NOTIFY_ID=`docker ps | grep forms-notify-listener | awk '{print $1}'`
           docker logs $NOTIFY_ID >> test-logs.txt
           echo "=== forms-notify-listener env vars ===" >> test-logs.txt
-          docker exec $NOTIFY_ID env
+          docker exec $NOTIFY_ID env >> test-logs.txt
 
           echo "=== forms-sharepoint-listener logs ===" >> test-logs.txt
           SHAREPOINT_ID=`docker ps | grep forms-sharepoint-listener | awk '{print $1}'`
           docker logs $SHAREPOINT_ID >> test-logs.txt
           echo "=== forms-sharepoint-listener env vars ===" >> test-logs.txt
-          docker exec $SHAREPOINT_ID env
+          docker exec $SHAREPOINT_ID env >> test-logs.txt
 
           echo "=== forms-audit-api logs ===" >> test-logs.txt
           AUDIT_ID=`docker ps | grep forms-audit-api | awk '{print $1}'`
           docker logs $AUDIT_ID >> test-logs.txt
           echo "=== forms-audit-api env vars ===" >> test-logs.txt
-          docker exec $AUDIT_ID env
+          docker exec $AUDIT_ID env >> test-logs.txt
 
       - name: Upload test report
         if: always()
