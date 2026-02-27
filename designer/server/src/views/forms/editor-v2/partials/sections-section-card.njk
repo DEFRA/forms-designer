@@ -64,8 +64,8 @@
       <input type="hidden" name="operation" value="remove-section">
       <input type="hidden" name="sectionId" value="{{ section.id }}">
       <div class="govuk-button-group">
-        <a href="{{ renameSectionUrl + '/' + section.id }}" class="govuk-link govuk-link--no-visited-state">Edit</a>
-        <button type="submit" class="govuk-link govuk-link--no-visited-state">Remove</button>
+        <a href="{{ renameSectionUrl + '/' + section.id }}" class="govuk-link govuk-link--no-visited-state">Edit<span class="govuk-visually-hidden"> section {{ section.number }} ({{ section.title }})</span></a>
+        <button type="submit" class="govuk-link govuk-link--no-visited-state">Remove<span class="govuk-visually-hidden"> section {{ section.number }} ({{ section.title }})</span></button>
       </div>
     </form>
   {% endset %}
