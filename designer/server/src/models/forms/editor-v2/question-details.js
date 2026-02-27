@@ -113,7 +113,6 @@ export function getErrorTemplates(questionType) {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
     component && 'getAllPossibleErrors' in component
       ? component.getAllPossibleErrors()
@@ -356,7 +355,7 @@ export function questionDetailsViewModel(
     basePageFields,
     uploadFields,
     extraFields,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     errorTemplates,
     ...getCardHeadings(details),
     navigation: details.navigation,

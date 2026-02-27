@@ -57,7 +57,6 @@ describe('Error-preview-help functions', () => {
 
   describe('lookupFileTypes', () => {
     test('should return formatted list of file types', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
       findFileTypeMappings
         // @ts-expect-error - mockReturnValueOnce is not a function
         .mockReturnValueOnce(['PDF'])
