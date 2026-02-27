@@ -159,7 +159,7 @@ export const formMetadataInputKeys = {
   teamEmail: teamEmailSchema,
   contact: contactSchema,
   submissionGuidance: submissionGuidanceSchema,
-  privacyNoticeType: privacyNoticeTypeSchema.default('link'),
+  privacyNoticeType: privacyNoticeTypeSchema,
   privacyNoticeText: Joi.when('privacyNoticeType', {
     is: 'text',
     then: privacyNoticeTextSchema,
