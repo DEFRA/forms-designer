@@ -2,6 +2,7 @@ import JoiDate from '@joi/date'
 import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
+import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { isConditionalType } from '~/src/components/helpers.js'
 import {
@@ -510,7 +511,7 @@ export const componentSchema = Joi.object<ComponentDef>()
       .required()
       .description('Component type (TextField, RadioButtons, DateField, etc.)'),
     shortDescription: Joi.string()
-      .trim()
+      .custom(rtrimOnly)
       .optional()
       .description('Brief description of the component purpose'),
     name: Joi.when('type', {
