@@ -52,7 +52,7 @@ jobs:
         shell: bash
         run: |
           cd forms-development-tools/test-harness
-          touch .env
+          echo "LOCALSTACK_HOST=localhost" > .env
           touch secrets.env
           ./run-harness.sh exclude=forms-designer
 
