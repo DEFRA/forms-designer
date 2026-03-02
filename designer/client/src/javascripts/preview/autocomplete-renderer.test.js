@@ -98,7 +98,7 @@ describe('nunjucks-renderer', () => {
       const renderer = new AutocompleteRenderer(questionElementMock)
       renderer.render(template, model)
       expect(NJK.render).toHaveBeenCalledWith(template, { model })
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+
       expect(accessibleAutocomplete.enhanceSelectElement).toHaveBeenCalledWith({
         defaultValue: '',
         selectElement: expect.any(HTMLSelectElement)

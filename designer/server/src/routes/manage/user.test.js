@@ -1,14 +1,12 @@
-import { Scopes } from '@defra/forms-model'
+import { RoleScopes, Roles, Scopes } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
-import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
-import { getRoles, getUser } from '~/src/lib/manage.js'
-import { Roles } from '~/src/models/account/role-mapper.js'
+import { getUser } from '~/src/lib/manage.js'
 import * as userService from '~/src/services/userService.js'
 import {
   artifacts,
@@ -35,13 +33,22 @@ describe('Create and edit user routes', () => {
   })
 
   beforeEach(() => {
-    jest.mocked(getRoles).mockResolvedValue(allRoles)
-    jest
-      .mocked(userService.addUser)
-      .mockResolvedValue({ emailAddress: '', userRole: '', displayName: '' })
+    const expectedUser = {
+      id: 'guid',
+      email: 'admin@example.com',
+      displayName: 'Admin User',
+      entity: {
+        userId: 'guid',
+        email: 'admin@example.com',
+        displayName: 'Admin User',
+        roles: [Roles.Admin],
+        scopes: RoleScopes[Roles.Admin]
+      }
+    }
+    jest.mocked(userService.addUser).mockResolvedValue(expectedUser)
     jest.mocked(getUser).mockResolvedValue(/** @type {EntitlementUser} */ ({}))
     jest.mocked(userService.updateUser).mockResolvedValue({
-      updatedUser: { userId: '', userRole: '' },
+      updatedUser: { id: '' },
       newScopes: []
     })
     jest.mocked(userService.deleteUser).mockResolvedValue(false)
@@ -99,7 +106,7 @@ describe('Create and edit user routes', () => {
       jest.mocked(getUser).mockResolvedValue(
         /** @type {EntitlementUser} */ ({
           userId: '12345',
-          roles: ['admin']
+          roles: [Roles.Admin]
         })
       )
       const options = {
@@ -134,7 +141,7 @@ describe('Create and edit user routes', () => {
       jest.mocked(getUser).mockResolvedValue(
         /** @type {EntitlementUser} */ ({
           userId: '12345',
-          roles: ['admin']
+          roles: [Roles.Admin]
         })
       )
       const options = {
@@ -168,7 +175,7 @@ describe('Create and edit user routes', () => {
       jest.mocked(getUser).mockResolvedValue(
         /** @type {EntitlementUser} */ ({
           userId: '12345',
-          roles: ['admin']
+          roles: [Roles.Admin]
         })
       )
       const options = {
@@ -202,7 +209,7 @@ describe('Create and edit user routes', () => {
         method: 'post',
         url: '/manage/users/new',
         auth,
-        payload: { emailAddress: 'me@here.com', userRole: 'admin' }
+        payload: { emailAddress: 'me@here.com', userRole: Roles.Admin }
       }
 
       const {
@@ -213,7 +220,7 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users')
       expect(userService.addUser).toHaveBeenCalledWith(expect.anything(), {
         email: 'me@here.com',
-        roles: ['admin']
+        roles: [Roles.Admin]
       })
     })
 
@@ -250,7 +257,7 @@ describe('Create and edit user routes', () => {
         method: 'post',
         url: '/manage/users/new',
         auth,
-        payload: { emailAddress: 'me@here.com', userRole: 'admin' }
+        payload: { emailAddress: 'me@here.com', userRole: Roles.Admin }
       }
 
       const {
@@ -268,7 +275,7 @@ describe('Create and edit user routes', () => {
         method: 'post',
         url: '/manage/users/new',
         auth,
-        payload: { emailAddress: 'me@here.com', userRole: 'admin' }
+        payload: { emailAddress: 'me@here.com', userRole: Roles.Admin }
       }
 
       const {
@@ -312,7 +319,7 @@ describe('Create and edit user routes', () => {
         method: 'post',
         url: '/manage/users/12345/amend',
         auth,
-        payload: { userRole: 'admin' }
+        payload: { userRole: Roles.Admin }
       }
 
       const {
@@ -323,7 +330,7 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users')
       expect(userService.updateUser).toHaveBeenCalledWith(expect.anything(), {
         userId: '12345',
-        roles: ['admin']
+        roles: [Roles.Admin]
       })
     })
 
@@ -356,7 +363,7 @@ describe('Create and edit user routes', () => {
         method: 'post',
         url: '/manage/users/12345/amend',
         auth,
-        payload: { userRole: 'admin' }
+        payload: { userRole: Roles.Admin }
       }
 
       const {
@@ -374,7 +381,7 @@ describe('Create and edit user routes', () => {
         method: 'post',
         url: '/manage/users/12345/amend',
         auth,
-        payload: { userRole: 'admin' }
+        payload: { userRole: Roles.Admin }
       }
 
       const {
@@ -396,7 +403,7 @@ describe('Create and edit user routes', () => {
         url: '/manage/users/12345/amend',
         auth,
         payload: {
-          userRole: 'admin'
+          userRole: Roles.Admin
         }
       }
 
@@ -408,7 +415,7 @@ describe('Create and edit user routes', () => {
       expect(headers.location).toBe('/manage/users')
       expect(userService.updateUser).toHaveBeenCalledWith(expect.anything(), {
         userId: '12345',
-        roles: ['admin']
+        roles: [Roles.Admin]
       })
     })
   })

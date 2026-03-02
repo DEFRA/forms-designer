@@ -5,6 +5,7 @@ import {
   buildDetailsComponent,
   buildEmailAddressFieldComponent,
   buildFileUploadComponent,
+  buildGeospatialFieldComponent,
   buildHtmlComponent,
   buildInsetTextComponent,
   buildList,
@@ -53,6 +54,7 @@ import {
   pageSchemaV2
 } from '~/src/form/form-definition/index.js'
 import {
+  Engine,
   type ConditionWrapperV2,
   type FormDefinition,
   type List,
@@ -376,12 +378,14 @@ describe('Form definition schema', () => {
         )
       })
     })
+
     describe('FileUploadController components', () => {
       it('should allow a FileUploadComponent', () => {
         const component = buildFileUploadComponent()
         const result = fileUploadComponentSchema.validate(component)
         expect(result.error).toBeUndefined()
       })
+
       it('should not allow a QuestionComponent', () => {
         const component = buildTextFieldComponent()
         const result = fileUploadComponentSchema.validate(component)
@@ -1285,6 +1289,104 @@ describe('Form definition schema', () => {
         )
 
         expect(result).toBe('b3a5030c-57f1-4d2e-8db9-6adeeba43c07')
+      })
+    })
+
+    describe('Geospatial field', () => {
+      it('should support Geospatial fields', () => {
+        const geospatialComponent = buildGeospatialFieldComponent({})
+
+        expect(geospatialComponent).toEqual({
+          hint: 'Add points, lines and polygons to describe features of the site',
+          id: '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+          name: 'GeospatialField',
+          options: {},
+          title: 'Geospatial features of the site',
+          type: 'GeospatialField'
+        })
+      })
+
+      it('pages should allow Geospatial fields into the component collection', () => {
+        const geospatialComponent = buildGeospatialFieldComponent({})
+
+        const page = buildQuestionPage({
+          id: 'f5e20d6c-3362-421c-b5bc-4510d47786a4',
+          path: '/geospatial-page',
+          title: 'Geospatial page',
+          components: [geospatialComponent]
+        })
+
+        const { error, value } = pageSchemaV2.validate(page)
+
+        expect(error).toBeUndefined()
+        expect(value).toEqual({
+          components: [
+            {
+              hint: 'Add points, lines and polygons to describe features of the site',
+              id: '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+              name: 'GeospatialField',
+              options: {},
+              schema: {},
+              title: 'Geospatial features of the site',
+              type: 'GeospatialField'
+            }
+          ],
+          id: 'f5e20d6c-3362-421c-b5bc-4510d47786a4',
+          next: [],
+          path: '/geospatial-page',
+          title: 'Geospatial page'
+        })
+      })
+
+      it('form definitions should allow Geospatial fields into the component collection', () => {
+        const geospatialComponent = buildGeospatialFieldComponent({})
+
+        const geospatialPage = buildQuestionPage({
+          id: 'f5e20d6c-3362-421c-b5bc-4510d47786a4',
+          path: '/geospatial-page',
+          title: 'Geospatial page',
+          components: [geospatialComponent]
+        })
+
+        const definition = buildDefinition({
+          engine: Engine.V2,
+          name: 'Geospatial definition',
+          startPage: '/geospatial-page',
+          pages: [geospatialPage],
+          conditions: [],
+          lists: []
+        })
+
+        const { error, value } = formDefinitionV2Schema.validate(definition)
+
+        expect(error).toBeUndefined()
+        expect(value).toEqual({
+          engine: 'V2',
+          name: 'Geospatial definition',
+          pages: [
+            {
+              components: [
+                {
+                  hint: 'Add points, lines and polygons to describe features of the site',
+                  id: '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+                  name: 'GeospatialField',
+                  options: {},
+                  schema: {},
+                  title: 'Geospatial features of the site',
+                  type: 'GeospatialField'
+                }
+              ],
+              id: 'f5e20d6c-3362-421c-b5bc-4510d47786a4',
+              next: [],
+              path: '/geospatial-page',
+              title: 'Geospatial page'
+            }
+          ],
+          sections: [],
+          conditions: [],
+          lists: [],
+          startPage: '/geospatial-page'
+        })
       })
     })
   })

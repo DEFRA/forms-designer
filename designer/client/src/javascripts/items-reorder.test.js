@@ -38,9 +38,7 @@ jest.mock('sortablejs', () => {
       destroy: jest.fn()
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     if (options.onEnd) {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
       mockInstance._onEndHandler = options.onEnd
     }
     return mockInstance
@@ -274,7 +272,7 @@ describe('ItemReorder Class', () => {
     // eslint-disable-next-line jest/unbound-method
     const createSpy = Sortable.create
     // @ts-expect-error TS doesn't recognise createSpy as a Jest mock here, but it is at runtime
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
     createSpy.mockClear()
 
     const originalContainer = itemReorderInstance.container
@@ -459,7 +457,7 @@ describe('ItemReorder Class', () => {
         newIndex: 0,
         oldIndex: 1
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
       const mockInstance = /** @type {any} */ (Sortable)._getMockInstance()
 
       if (!itemReorderInstance) {
@@ -492,7 +490,6 @@ describe('ItemReorder Class', () => {
       }
       mockEvt.item.setAttribute = jest.fn()
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mockInstance._onEndHandler(mockEvt)
 
       expect(updateVisualsSpy).toHaveBeenCalled()
@@ -518,7 +515,7 @@ describe('ItemReorder Class', () => {
         newIndex: undefined,
         oldIndex: 1
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
       const mockInstance = /** @type {any} */ (Sortable)._getMockInstance()
 
       if (!itemReorderInstance) {
@@ -541,7 +538,6 @@ describe('ItemReorder Class', () => {
       const setAttributeSpy = jest.spyOn(itemToInteractWith, 'setAttribute')
       const itemFocusSpy = jest.spyOn(itemToInteractWith, 'focus')
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mockInstance._onEndHandler(mockEvt)
 
       expect(updateVisualsSpy).toHaveBeenCalled()
@@ -605,7 +601,7 @@ describe('ItemReorder Class', () => {
         newIndex: 0,
         oldIndex: 1
       }
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+
       const mockSorteableInstance = /** @type {any} */ (
         Sortable
       )._getMockInstance()
@@ -616,7 +612,6 @@ describe('ItemReorder Class', () => {
         .mockImplementation(() => undefined)
       const focusIfExistsSpy = jest.spyOn(ItemReorderModule, 'focusIfExists')
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
       mockSorteableInstance._onEndHandler(mockEvt)
 
       expect(updateVisualsSpy).toHaveBeenCalled()

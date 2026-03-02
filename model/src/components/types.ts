@@ -263,6 +263,13 @@ export interface PaymentFieldComponent extends FormFieldBase {
   }
 }
 
+export interface GeospatialFieldComponent extends FormFieldBase {
+  type: ComponentType.GeospatialField
+  options: FormFieldBase['options'] & {
+    condition?: string
+  }
+}
+
 // Content Fields
 export interface DetailsComponent extends ContentFieldBase {
   type: ComponentType.Details
@@ -361,6 +368,7 @@ export type InputFieldsComponentsDef =
   | LatLongFieldComponent
   | HiddenFieldComponent
   | PaymentFieldComponent
+  | GeospatialFieldComponent
 
 // Components that render content
 export type ContentComponentsDef =

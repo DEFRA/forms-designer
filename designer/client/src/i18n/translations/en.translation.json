@@ -219,7 +219,9 @@
     "HiddenField": "Hidden field",
     "HiddenField_info": "For internal processing",
     "PaymentField": "Payment",
-    "PaymentField_info": "Allows users to make a payment"
+    "PaymentField_info": "Allows users to make a payment",
+    "GeospatialField": "Geospatial",
+    "GeospatialField_info": "Allows users to enter geospatial features"
   },
   "fileUploadFieldEditComponent": {
     "helpTextField": {

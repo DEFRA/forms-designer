@@ -295,7 +295,6 @@ export default [
           .redirect(formOverviewPath(result.slug))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         if (Boom.isBoom(err) && err.data?.error === 'FormAlreadyExistsError') {
           return redirectToTitleWithErrors(request, h, ROUTE_PATH_CREATE_TITLE)
         }
