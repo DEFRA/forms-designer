@@ -162,6 +162,12 @@ jobs:
           echo "=== forms-audit-api env vars ===" >> test-logs.txt
           docker exec $AUDIT_ID env >> test-logs.txt
 
+          echo "=== forms-runner logs ===" >> test-logs.txt
+          RUNNER_ID=`docker ps | grep forms-runner | awk '{print $1}'`
+          docker logs $RUNNER_ID >> test-logs.txt
+          echo "=== forms-runner env vars ===" >> test-logs.txt
+          docker exec $RUNNER_ID env >> test-logs.txt
+
       - name: Upload test report
         if: always()
         uses: actions/upload-artifact@v4
