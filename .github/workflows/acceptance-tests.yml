@@ -53,6 +53,8 @@ jobs:
         run: |
           cd forms-development-tools/test-harness
           echo "LOCALSTACK_HOST=localstack" > .env
+          echo "FEATURE_FLAG_PUBLISH_AUDIT_EVENTS=true" >> .env
+
           touch secrets.env
           ./run-harness.sh exclude=forms-designer
 
