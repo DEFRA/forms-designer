@@ -114,9 +114,7 @@ export const formsBackupRequestedMessageData =
   })
 
 export const formsSecretSavedMessageData =
-  Joi.object<FormSecretSavedMessageData>().keys({
-    formId: Joi.string().required(),
-    slug: Joi.string().required(),
+  formMessageDataBase.append<FormSecretSavedMessageData>({
     secretName: Joi.string().required()
   })
 

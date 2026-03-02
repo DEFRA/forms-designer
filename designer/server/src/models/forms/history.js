@@ -5,6 +5,10 @@ import {
 } from '@defra/forms-model'
 
 import {
+  PAYMENT_LIVE_API_KEY,
+  PAYMENT_TEST_API_KEY
+} from '~/src/lib/secrets.js'
+import {
   formatHistoryDate,
   formatShortDate,
   formatTime,
@@ -54,12 +58,36 @@ const eventFriendlyNames = {
 }
 
 /**
+ * Gets the friendly name for an event (based on not just the type but additional fields)
+ * @param {AuditRecord} record
+ * @returns { string | undefined }
+ */
+export function getEventDynamicName(record) {
+  if (record.type === AuditEventMessageType.FORM_SECRET_SAVED) {
+    if (
+      record.data.secretName === PAYMENT_LIVE_API_KEY ||
+      record.data.secretName === PAYMENT_TEST_API_KEY
+    ) {
+      const testOrLive =
+        record.data.secretName === PAYMENT_LIVE_API_KEY ? 'Live' : 'Test'
+      return `${testOrLive} payment API key saved`
+    }
+    return `Secret with name ${record.data.secretName} saved`
+  }
+  return undefined
+}
+
+/**
  * Gets the friendly name for an event type
- * @param {string} eventType
+ * @param {AuditRecord} record
  * @returns {string}
  */
-export function getEventFriendlyName(eventType) {
-  return eventFriendlyNames[eventType] ?? 'Unknown event'
+export function getEventFriendlyName(record) {
+  const friendlyName = eventFriendlyNames[record.type]
+  if (friendlyName) {
+    return friendlyName
+  }
+  return getEventDynamicName(record) ?? 'Unknown event'
 }
 
 /**
@@ -100,7 +128,7 @@ function buildConsolidatedTimelineItem(record) {
  * @returns {TimelineItem}
  */
 export function buildTimelineItem(record) {
-  const title = getEventFriendlyName(record.type)
+  const title = getEventFriendlyName(record)
   const user = record.createdBy.displayName
   const date = formatHistoryDate(record.createdAt)
   const description = getEventDescription(record)

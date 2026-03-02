@@ -17,6 +17,7 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { savePaymentSecrets } from '~/src/lib/secrets.js'
 import {
   buildQuestionSessionState,
   clearQuestionSessionState,
@@ -290,12 +291,16 @@ export default [
 
       return h.view(
         'forms/editor-v2/question-details',
-        viewModel.questionDetailsViewModel(
-          metadata,
-          definition,
-          pageId,
-          questionId,
+        await viewModel.questionDetailsViewModel(
+          {
+            metadata,
+            definition,
+            pageId,
+            questionId
+          },
           stateId,
+          token,
+          query,
           validation,
           state
         )
@@ -395,6 +400,13 @@ export default [
           questionId,
           questionDetails,
           getListItems(fileUploadLimitsPayload, state)
+        )
+
+        await savePaymentSecrets(
+          questionDetails.type,
+          metadata.id,
+          payload,
+          token
         )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

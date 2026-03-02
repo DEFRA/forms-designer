@@ -8,8 +8,11 @@ import {
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
+import { token } from '~/src/lib/__stubs__/editor.js'
+import { MASKED_KEY, getPaymentSecretsMasked } from '~/src/lib/secrets.js'
 import { getSelectedFileTypesFromCSVMimeTypes } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import {
+  applyPaymentValues,
   getDetails,
   getEnhancedFields,
   getErrorTemplates,
@@ -63,6 +66,8 @@ const fieldArrayWithMissingName = /** @type {GovukField[]} */ ([
     value: undefined
   }
 ])
+
+jest.mock('~/src/lib/secrets.js')
 
 describe('editor-v2 - question details model', () => {
   describe('hasDataOrErrorForDisplay', () => {
@@ -602,7 +607,7 @@ describe('editor-v2 - question details model', () => {
   })
 
   describe('questionDetailsViewModel', () => {
-    test('should return view model for basic question', () => {
+    test('should return view model for basic question', async () => {
       const metadata = {
         id: '12345',
         slug: 'test-form',
@@ -645,12 +650,16 @@ describe('editor-v2 - question details model', () => {
         ]
       })
 
-      const result = questionDetailsViewModel(
-        metadata,
-        definition,
-        pageId,
-        questionId,
-        stateId
+      const result = await questionDetailsViewModel(
+        {
+          metadata,
+          definition,
+          pageId,
+          questionId
+        },
+        stateId,
+        token,
+        {}
       )
 
       expect(result).toBeDefined()
@@ -676,7 +685,7 @@ describe('editor-v2 - question details model', () => {
       })
     })
 
-    test('should handle state with questionType override', () => {
+    test('should handle state with questionType override', async () => {
       const metadata = {
         id: '12345',
         slug: 'test-form',
@@ -722,12 +731,16 @@ describe('editor-v2 - question details model', () => {
         questionType: ComponentType.TextField
       }
 
-      const result = questionDetailsViewModel(
-        metadata,
-        definition,
-        pageId,
-        questionId,
+      const result = await questionDetailsViewModel(
+        {
+          metadata,
+          definition,
+          pageId,
+          questionId
+        },
         stateId,
+        token,
+        {},
         undefined,
         state
       )
@@ -793,6 +806,71 @@ describe('editor-v2 - question details model', () => {
           items: [{ id: 'id3', text: 'Item 3', value: 'item3' }]
         }
       ])
+    })
+  })
+
+  describe('applyPaymentValues', () => {
+    const formId = '3d583d72-4422-49e1-b308-c124fcd0707b'
+    function buildTestField() {
+      return /** @type {GovukField} */ ({
+        id: 'paymentTestApiKey',
+        name: 'paymentTestApiKey',
+        value: 'test-value'
+      })
+    }
+    function buildLiveField() {
+      return /** @type {GovukField} */ ({
+        id: 'paymentLiveApiKey',
+        name: 'paymentLiveApiKey',
+        value: 'live-value'
+      })
+    }
+
+    test('should ignore if not a payment field', async () => {
+      const fields = [buildTestField(), buildLiveField()]
+      await applyPaymentValues(
+        ComponentType.TextField,
+        formId,
+        fields,
+        token,
+        undefined
+      )
+      expect(fields[0].value).toBe('test-value')
+      expect(fields[1].value).toBe('live-value')
+    })
+
+    test('should mask test key if test key exists', async () => {
+      const fields = [buildTestField(), buildLiveField()]
+      jest.mocked(getPaymentSecretsMasked).mockResolvedValue({
+        testKeyMasked: MASKED_KEY,
+        liveKeyMasked: ''
+      })
+      await applyPaymentValues(
+        ComponentType.PaymentField,
+        formId,
+        fields,
+        token,
+        undefined
+      )
+      expect(fields[0].value).toBe(MASKED_KEY)
+      expect(fields[1].value).toBe('live-value')
+    })
+
+    test('should mask live key if live key exists', async () => {
+      const fields = [buildTestField(), buildLiveField()]
+      jest.mocked(getPaymentSecretsMasked).mockResolvedValue({
+        testKeyMasked: '',
+        liveKeyMasked: MASKED_KEY
+      })
+      await applyPaymentValues(
+        ComponentType.PaymentField,
+        formId,
+        fields,
+        token,
+        undefined
+      )
+      expect(fields[0].value).toBe('test-value')
+      expect(fields[1].value).toBe(MASKED_KEY)
     })
   })
 })
