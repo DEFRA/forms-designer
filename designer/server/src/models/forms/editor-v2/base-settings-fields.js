@@ -199,10 +199,14 @@ export const baseSchema = Joi.object().keys({
     'questionType',
     {
       is: 'PaymentField',
-      then: Joi.string().required().messages({
-        'string.empty':
-          'Enter a test API key for the draft form and live previews'
-      }),
+      then: Joi.string()
+        .pattern(/^(api_test_.+|\*{40})$/)
+        .required()
+        .messages({
+          'string.empty':
+            'Enter a test API key for the draft form and live previews',
+          'string.pattern.base': "Test API keys must start with 'api_test_'"
+        }),
       otherwise: Joi.string().optional().allow('')
     }
   ),
@@ -210,7 +214,13 @@ export const baseSchema = Joi.object().keys({
     'questionType',
     {
       is: 'PaymentField',
-      then: Joi.string().optional().allow(''), // TODO - what validation is required?
+      then: Joi.string()
+        .pattern(/^(api_live_.+|\*{40})$/)
+        .optional()
+        .allow('')
+        .messages({
+          'string.pattern.base': "Live API keys must start with 'api_live_'"
+        }),
       otherwise: Joi.string().optional().allow('')
     }
   )
@@ -476,7 +486,7 @@ export function getFieldList(
 
     if (field.items) {
       // Handle checkbox/radio selections
-      const strValue = typeof value === 'string' ? value.toString() : ''
+      const strValue = typeof value === 'string' ? value : ''
       return {
         ...field,
         items: field.items.map((cb) => ({
