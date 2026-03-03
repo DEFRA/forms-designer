@@ -27,6 +27,15 @@
 
 {{ govukInput(field) }}
 
+{% if field.customMeta.exists %}
+  {% if field.customMeta.updatedAt == field.customMeta.createdAt %}
+  <div class="govuk-hint">Created at {{ field.customMeta.createdAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+  {% endif %}
+  {% if field.customMeta.updatedAt > field.customMeta.createdAt %}
+  <div class="govuk-hint">Updated at {{ field.customMeta.updatedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+  {% endif %}
+{% endif %}
+
 {% if field.disabled %}
   <input type="hidden" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}">
 {% endif %}

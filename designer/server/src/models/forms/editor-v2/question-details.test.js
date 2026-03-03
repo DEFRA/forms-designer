@@ -842,8 +842,18 @@ describe('editor-v2 - question details model', () => {
     test('should mask test key if test key exists', async () => {
       const fields = [buildTestField(), buildLiveField()]
       jest.mocked(getPaymentSecretsMasked).mockResolvedValue({
-        testKeyMasked: MASKED_KEY,
-        liveKeyMasked: ''
+        testKey: {
+          maskedKey: MASKED_KEY,
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        },
+        liveKey: {
+          maskedKey: '',
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        }
       })
       await applyPaymentValues(
         ComponentType.PaymentField,
@@ -859,8 +869,18 @@ describe('editor-v2 - question details model', () => {
     test('should mask live key if live key exists', async () => {
       const fields = [buildTestField(), buildLiveField()]
       jest.mocked(getPaymentSecretsMasked).mockResolvedValue({
-        testKeyMasked: '',
-        liveKeyMasked: MASKED_KEY
+        testKey: {
+          maskedKey: '',
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        },
+        liveKey: {
+          maskedKey: MASKED_KEY,
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        }
       })
       await applyPaymentValues(
         ComponentType.PaymentField,

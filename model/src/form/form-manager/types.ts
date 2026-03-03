@@ -226,4 +226,14 @@ export interface FormSecret {
    * The value of the secret
    */
   secretValue: string
+
+  /**
+   * The date the secret was created
+   */
+  createdAt: Date
+
+  /**
+   * The date the secret was last updated
+   */
+  updatedAt: Date
 }

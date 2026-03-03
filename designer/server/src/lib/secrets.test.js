@@ -38,7 +38,7 @@ describe('secrets.js', () => {
       })
       const requestUrl = new URL('/exists', baseRequestUrl)
       const result = await existsSecret(formId, secretName, token)
-      expect(result).toBe(true)
+      expect(result.exists).toBe(true)
 
       expect(mockedGetJson).toHaveBeenCalledWith(requestUrl, {
         ...baseOptions
@@ -58,8 +58,10 @@ describe('secrets.js', () => {
           body: { exists: false }
         })
       const result = await getPaymentSecretsMasked(formId, token)
-      expect(result.testKeyMasked).toBe(MASKED_KEY)
-      expect(result.liveKeyMasked).toBe('')
+      expect(result.testKey.maskedKey).toBe(MASKED_KEY)
+      expect(result.testKey.exists).toBe(true)
+      expect(result.liveKey.maskedKey).toBe('')
+      expect(result.liveKey.exists).toBe(false)
     })
   })
 
@@ -114,7 +116,8 @@ describe('secrets.js', () => {
         ComponentType.PaymentField,
         formId,
         payload,
-        token
+        token,
+        false
       )
 
       expect(mockedPostJson).toHaveBeenCalledTimes(1)
@@ -146,7 +149,8 @@ describe('secrets.js', () => {
         ComponentType.PaymentField,
         formId,
         payload,
-        token
+        token,
+        false
       )
 
       expect(mockedPostJson).toHaveBeenCalledTimes(1)
