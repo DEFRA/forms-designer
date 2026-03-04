@@ -103,7 +103,7 @@ export async function validateApiKey(key, isLiveKey) {
     } else if (statusCode === StatusCodes.NOT_FOUND) {
       return true
     } else {
-      throw new Error(`Error calling GovUk Pay: ${error.message} `)
+      throw new Error(`Error calling GovUk Pay: ${error.message}`)
     }
   }
   return false
