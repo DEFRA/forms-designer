@@ -76,7 +76,7 @@ export const baseSchema = Joi.object().keys({
       otherwise: Joi.when('questionType', {
         is: 'PaymentField',
         then: Joi.string().optional().allow(''),
-        otherwise: Joi.string().trim().required().messages({
+        otherwise: Joi.string().required().messages({
           '*': 'Enter a short description'
         })
       })
