@@ -38,8 +38,7 @@
 
 {% if field.disabled %}
   <input type="hidden" name="{{ field.name }}" id="{{ field.id }}" value="{{ field.value }}">
+  <a href="?action=clear-test-key" class="govuk-link govuk-link--no-visited-state">Clear test API key</a>
 {% endif %}
-
-<a href="?action=clear-test-key" class="govuk-link govuk-link--no-visited-state">Clear test API key</a>
 
 <div class="govuk-!-padding-bottom-8"></div>
