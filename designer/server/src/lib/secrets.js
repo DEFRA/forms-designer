@@ -48,8 +48,10 @@ export async function existsSecret(formId, secretName, token) {
  * @param {string} token
  */
 export async function getPaymentSecretsMasked(formId, token) {
-  const testKeyExists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
-  const liveKeyExists = await existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
+  const [testKeyExists, liveKeyExists] = await Promise.all([
+    existsSecret(formId, PAYMENT_TEST_API_KEY, token),
+    existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
+  ])
   return {
     testKey: {
       ...testKeyExists,
@@ -124,6 +126,10 @@ export async function savePaymentSecrets(
   isFormLive
 ) {
   if (questionType === ComponentType.PaymentField) {
+    if (!payload.paymentLiveApiKey && isFormLive) {
+      const message = 'Enter a live API key since this form is already live'
+      throw Boom.badRequest(message, { message })
+    }
     // Only save API key if it's a non-masked version
     if (
       payload.paymentTestApiKey !== MASKED_KEY &&
@@ -138,10 +144,6 @@ export async function savePaymentSecrets(
     ) {
       await validateApiKey(payload.paymentLiveApiKey, true)
       await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
-    }
-    if (!payload.paymentLiveApiKey && isFormLive) {
-      const message = 'Enter a live API key since this form is already live'
-      throw Boom.badRequest(message, { message })
     }
   }
 }
