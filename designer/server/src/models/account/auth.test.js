@@ -1,3 +1,5 @@
+import { Roles } from '@defra/forms-model'
+
 import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import config from '~/src/config.js'
 import {
@@ -5,7 +7,6 @@ import {
   signInViewModel,
   signedOutViewModel
 } from '~/src/models/account/auth.js'
-import { Roles } from '~/src/models/account/role-mapper.js'
 
 jest.mock('~/src/common/helpers/auth/get-user-session.js')
 jest.mock('~/src/config.ts')

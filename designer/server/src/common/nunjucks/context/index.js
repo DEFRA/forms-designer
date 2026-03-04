@@ -30,7 +30,6 @@ export async function context(request) {
 
   if (!webpackManifest) {
     try {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- Allow JSON type 'any'
       webpackManifest = JSON.parse(readFileSync(manifestPath, 'utf-8'))
     } catch {
       logger.error(`Webpack assets ${basename(manifestPath)} file not found`)

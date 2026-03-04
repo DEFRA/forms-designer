@@ -2,9 +2,8 @@ import { Roles } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
-import { allRoles } from '~/src/lib/__stubs__/roles.js'
 import * as forms from '~/src/lib/forms.js'
-import { getRoles, getUsers } from '~/src/lib/manage.js'
+import { getUsers } from '~/src/lib/manage.js'
 import { auth, authFormCreator } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -92,7 +91,6 @@ describe('Route helpers', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.mocked(getRoles).mockResolvedValueOnce(allRoles)
     jest.mocked(getUsers).mockResolvedValueOnce(userList)
     jest.mocked(config).featureFlagUseEntitlementApi = true
   })

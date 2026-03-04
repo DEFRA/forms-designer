@@ -24,7 +24,8 @@ export enum ComponentType {
   NationalGridFieldNumberField = 'NationalGridFieldNumberField',
   LatLongField = 'LatLongField',
   HiddenField = 'HiddenField',
-  PaymentField = 'PaymentField'
+  PaymentField = 'PaymentField',
+  GeospatialField = 'GeospatialField'
 }
 
 export const PreviewTypeEnum = {

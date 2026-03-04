@@ -262,6 +262,15 @@
         actions: {
           items:  privacyActions
         }
+      },
+      {
+        key: {
+          text: "Terms and conditions"
+        },
+        value: {
+          text: "Agreed" if form.termsAndConditionsAgreed,
+          html: '<a class="govuk-link govuk-link--no-visited-state" href="/library/' + form.slug + '/edit/terms-and-conditions">Incomplete</a>' if not form.termsAndConditionsAgreed
+        }
       }
     ]
   }) }}

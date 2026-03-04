@@ -1,3 +1,5 @@
+import { RoleScopes, Roles, Scopes } from '@defra/forms-model'
+
 import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
 import * as lib from '~/src/lib/manage.js'
 import { addUser, deleteUser, updateUser } from '~/src/services/userService.js'
@@ -49,13 +51,20 @@ describe('userService', () => {
     it('should add a new user successfully', async () => {
       const userDetails = {
         email: 'newuser@example.com',
-        roles: ['form-creator']
+        roles: [Roles.FormCreator]
       }
 
       const expectedUser = {
-        emailAddress: 'newuser@example.com',
-        userRole: 'form-creator',
-        displayName: 'New User'
+        id: 'guid',
+        email: 'admin@example.com',
+        displayName: 'Admin User',
+        entity: {
+          userId: 'guid',
+          email: 'admin@example.com',
+          displayName: 'Admin User',
+          roles: [Roles.Admin],
+          scopes: RoleScopes[Roles.Admin]
+        }
       }
 
       jest.mocked(lib.addUser).mockResolvedValue(expectedUser)
@@ -69,13 +78,20 @@ describe('userService', () => {
     it('should handle admin role when adding user', async () => {
       const userDetails = {
         email: 'admin@example.com',
-        roles: ['admin']
+        roles: [Roles.Admin]
       }
 
       const expectedUser = {
-        emailAddress: 'admin@example.com',
-        userRole: 'admin',
-        displayName: 'Admin User'
+        id: 'guid',
+        email: 'admin@example.com',
+        displayName: 'Admin User',
+        entity: {
+          userId: 'guid',
+          email: 'admin@example.com',
+          displayName: 'Admin User',
+          roles: [Roles.Admin],
+          scopes: RoleScopes[Roles.Admin]
+        }
       }
 
       jest.mocked(lib.addUser).mockResolvedValue(expectedUser)
@@ -89,7 +105,7 @@ describe('userService', () => {
     it('should throw error if addUser fails', async () => {
       const userDetails = {
         email: 'test@example.com',
-        roles: ['form-creator']
+        roles: [Roles.FormCreator]
       }
 
       const error = new Error('Failed to add user')
@@ -107,12 +123,11 @@ describe('userService', () => {
     it('should update user and refresh session entitlements', async () => {
       const userDetails = {
         userId: 'user-123',
-        roles: ['admin']
+        roles: [Roles.Admin]
       }
 
       const expectedUser = {
-        userId: 'user-123',
-        userRole: 'admin'
+        id: 'user-123'
       }
 
       jest.mocked(lib.updateUser).mockResolvedValue(expectedUser)
@@ -138,15 +153,14 @@ describe('userService', () => {
     it('should handle multiple roles when updating user', async () => {
       const userDetails = {
         userId: 'user-456',
-        roles: ['form-creator', 'form-editor']
+        roles: [Roles.FormCreator, Roles.Admin]
       }
 
       const expectedUser = {
-        userId: 'user-456',
-        userRole: 'form-creator,form-editor'
+        id: 'user-456'
       }
 
-      const newScopes = ['form-read', 'form-edit']
+      const newScopes = [Scopes.FormRead, Scopes.FormEdit]
 
       jest.mocked(lib.updateUser).mockResolvedValue(expectedUser)
       jest.mocked(refreshUserSessionEntitlements).mockResolvedValue(newScopes)
@@ -171,12 +185,11 @@ describe('userService', () => {
     it('should update user even if session refresh fails', async () => {
       const userDetails = {
         userId: 'user-789',
-        roles: ['editor']
+        roles: [Roles.Admin]
       }
 
       const expectedUser = {
-        userId: 'user-789',
-        userRole: 'editor'
+        id: 'user-789'
       }
 
       jest.mocked(lib.updateUser).mockResolvedValue(expectedUser)
@@ -202,7 +215,7 @@ describe('userService', () => {
     it('should throw error if updateUser fails', async () => {
       const userDetails = {
         userId: 'user-999',
-        roles: ['admin']
+        roles: [Roles.Admin]
       }
 
       const error = new Error('Failed to update user')

@@ -36,7 +36,6 @@ export class ErrorPreviewDomElements {
      */
     this.shortDescTargets = shortDescTargetEls
 
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
     const fieldEntries = advancedFieldDefs
       ? Object.entries(advancedFieldDefs)
       : []
@@ -45,7 +44,6 @@ export class ErrorPreviewDomElements {
      * @type {{ id: string, source: HTMLInputElement, target: HTMLInputElement, placeholder: string }[] }
      */
     this.advancedFields = fieldEntries.map((field) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const fieldDetails =
         /** @type {{ fieldName: string, placeholder: string }} */ (field[1])
 

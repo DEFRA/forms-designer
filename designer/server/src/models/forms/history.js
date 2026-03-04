@@ -36,6 +36,8 @@ const eventFriendlyNames = {
   [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]:
     'Notification email updated',
   [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: 'Privacy notice updated',
+  [AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED]:
+    'Terms and conditions accepted',
   [AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED]:
     'Support contact updated',
   [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: 'Support phone updated',

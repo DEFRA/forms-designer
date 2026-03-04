@@ -72,7 +72,6 @@ export default [
  * @throws {Error} If the login hint is missing or not a string
  */
 export function getLoginHint(accessToken) {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- hapi returns any, nothing we can do
   const accessTokenDecoded = /** @type {{login_hint?: string}} */ (
     token.decode(accessToken).decoded.payload
   )

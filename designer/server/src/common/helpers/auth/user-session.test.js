@@ -1,3 +1,5 @@
+import { RoleScopes, Roles, Scopes } from '@defra/forms-model'
+
 import {
   getUserClaims,
   getUserScopes,
@@ -18,8 +20,8 @@ const mockSession = {
 
 const mockEntitlementUser = /** @type {EntitlementUser} */ ({
   userId: 'userId123',
-  roles: ['admin'],
-  scopes: ['scope1', 'scope2']
+  roles: [Roles.Admin],
+  scopes: RoleScopes[Roles.Admin]
 })
 
 // @ts-expect-error - typing not required for testing
@@ -91,14 +93,14 @@ describe('user-session', () => {
           idToken: 'id_token',
           refreshToken: 'refresh_token',
           scope: [
-            'form-delete',
-            'form-edit',
-            'form-read',
-            'form-publish',
-            'user-create',
-            'user-delete',
-            'user-edit',
-            'forms-feedback'
+            Scopes.FormDelete,
+            Scopes.FormEdit,
+            Scopes.FormRead,
+            Scopes.FormPublish,
+            Scopes.UserCreate,
+            Scopes.UserDelete,
+            Scopes.UserEdit,
+            Scopes.FormsFeedback
           ],
           token: "{ name: 'my-name'}",
           user: {
@@ -107,7 +109,7 @@ describe('user-session', () => {
             expiresAt: expect.any(String),
             id: '123-123',
             issuedAt: expect.any(String),
-            roles: ['admin']
+            roles: [Roles.Admin]
           }
         }
       )
@@ -120,7 +122,9 @@ describe('user-session', () => {
       jest.mocked(getUser).mockImplementationOnce(() => {
         throw new Error('entitlement api error')
       })
-      jest.mocked(getUserScopes).mockReturnValueOnce(['form-read', 'form-edit'])
+      jest
+        .mocked(getUserScopes)
+        .mockReturnValueOnce([Scopes.FormRead, Scopes.FormEdit])
       const res = await createUserSession(mockRequest)
       expect(res).toBe('123-123')
       expect(getUser).toHaveBeenCalled()
@@ -131,7 +135,7 @@ describe('user-session', () => {
           flowId: expect.any(String),
           idToken: 'id_token',
           refreshToken: 'refresh_token',
-          scope: ['form-read', 'form-edit'],
+          scope: [Scopes.FormRead, Scopes.FormEdit],
           token: "{ name: 'my-name'}",
           user: {
             displayName: 'John Smith',
