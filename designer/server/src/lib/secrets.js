@@ -99,10 +99,12 @@ export async function validateApiKey(key, isLiveKey) {
       )
     const statusCode = error.output?.statusCode
     if (statusCode === StatusCodes.UNAUTHORIZED) {
+      // UNAUTHORIZED - API key is invalid as key used as bearer token
       throw Boom.badRequest('Invalid API key', {
         message: `The ${isLiveKey ? 'Live' : 'Test'} API key is invalid`
       })
     } else if (statusCode === StatusCodes.NOT_FOUND) {
+      // NOT_FOUND - passed auth and therefore valid API key but payment not found (as expected since we're not passing a payment id)
       return true
     } else {
       throw new Error(`Error calling GovUk Pay: ${error.message}`)

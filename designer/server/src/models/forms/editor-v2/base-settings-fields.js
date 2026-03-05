@@ -207,7 +207,7 @@ export const baseSchema = Joi.object().keys({
             'Enter a test API key for the draft form and live previews',
           'string.pattern.base': "Test API keys must start with 'api_test_'"
         }),
-      otherwise: Joi.string().optional().allow('')
+      otherwise: Joi.forbidden()
     }
   ),
   paymentLiveApiKey: questionDetailsFullSchema.paymentApiKeySchema.when(
@@ -221,7 +221,7 @@ export const baseSchema = Joi.object().keys({
         .messages({
           'string.pattern.base': "Live API keys must start with 'api_live_'"
         }),
-      otherwise: Joi.string().optional().allow('')
+      otherwise: Joi.forbidden()
     }
   )
 })
@@ -421,8 +421,8 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentAmount,
   QuestionBaseSettings.PaymentDescription,
-  QuestionBaseSettings.paymentTestApiKey,
-  QuestionBaseSettings.paymentLiveApiKey
+  QuestionBaseSettings.PaymentTestApiKey,
+  QuestionBaseSettings.PaymentLiveApiKey
 ])
 
 /**
