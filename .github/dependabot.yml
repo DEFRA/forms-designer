@@ -26,14 +26,12 @@ updates:
           - 'react-*'
           - '*-react'
           - 'sass-embedded'
-          - 'tsc-alias'
           - 'typescript'
           - 'webpack'
           - 'webpack-*'
 
         # Exclude packages in other groups
         exclude-patterns:
-          - 'eslint-plugin-react'
           - 'eslint-plugin-react-hooks'
           - 'postcss-scss'
 
@@ -60,18 +58,50 @@ updates:
       tools:
         patterns:
           - '@testing-library/*'
-          - 'cheerio'
           - 'concurrently'
           - 'global-jsdom'
           - 'jest'
           - 'jest-*'
-          - 'jsdom'
           - 'tsx'
 
       types:
         patterns:
           - '@types/*'
           - 'oidc-client-ts'
+
+      forms:
+        patterns:
+          - '@defra/forms-model'
+          - '@defra/forms-engine-plugin'
+
+      aws:
+        patterns:
+          - '@aws-sdk/*'
+
+      hapi:
+        patterns:
+          - '@hapi/*'
+          - 'hapi-*'
+          - 'joi'
+
+      frontend:
+        patterns:
+          - '@dagrejs/dagre'
+          - 'accessible-autocomplete'
+          - 'govuk-frontend'
+          - 'nunjucks'
+          - 'prismjs'
+
+      runtime:
+        patterns:
+          - '@defra/hapi-tracing'
+          - 'ioredis'
+
+      dependencies:
+        patterns:
+          - '*'
+        update-types:
+          - patch
 
     # Schedule run every Monday, local time
     schedule:
@@ -88,6 +118,11 @@ updates:
   # Update GitHub Actions
   - package-ecosystem: github-actions
     directory: /
+
+    groups:
+      actions:
+        patterns:
+          - '*'
 
     # Schedule run every Monday, local time
     schedule:
