@@ -1,6 +1,10 @@
 import { AuditEventMessageType } from '@defra/forms-model'
 
 import {
+  PAYMENT_LIVE_API_KEY,
+  PAYMENT_TEST_API_KEY
+} from '~/src/lib/secrets.js'
+import {
   buildTimelineItem,
   buildTimelineItems,
   getEventFriendlyName,
@@ -127,64 +131,119 @@ function createMockAuditResponse(records, paginationOverrides = {}) {
 describe('history model', () => {
   describe('getEventFriendlyName', () => {
     it('returns correct friendly name for FORM_CREATED', () => {
-      const result = getEventFriendlyName(AuditEventMessageType.FORM_CREATED)
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_CREATED
+        })
+      )
       expect(result).toBe('Form created')
     })
 
     it('returns correct friendly name for FORM_UPDATED', () => {
-      const result = getEventFriendlyName(AuditEventMessageType.FORM_UPDATED)
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_UPDATED
+        })
+      )
       expect(result).toBe('Draft edited')
     })
 
     it('returns correct friendly name for FORM_LIVE_CREATED_FROM_DRAFT', () => {
       const result = getEventFriendlyName(
-        AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_LIVE_CREATED_FROM_DRAFT
+        })
       )
       expect(result).toBe('Form published')
     })
 
     it('returns correct friendly name for FORM_DRAFT_CREATED_FROM_LIVE', () => {
       const result = getEventFriendlyName(
-        AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_DRAFT_CREATED_FROM_LIVE
+        })
       )
       expect(result).toBe('Draft created from live form')
     })
 
     it('returns correct friendly name for FORM_DRAFT_DELETED', () => {
       const result = getEventFriendlyName(
-        AuditEventMessageType.FORM_DRAFT_DELETED
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_DRAFT_DELETED
+        })
       )
       expect(result).toBe('Draft form deleted')
     })
 
     it('returns correct friendly name for FORM_TITLE_UPDATED', () => {
       const result = getEventFriendlyName(
-        AuditEventMessageType.FORM_TITLE_UPDATED
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_TITLE_UPDATED
+        })
       )
       expect(result).toBe('Form name updated')
     })
 
     it('returns correct friendly name for FORM_MIGRATED', () => {
-      const result = getEventFriendlyName(AuditEventMessageType.FORM_MIGRATED)
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_MIGRATED
+        })
+      )
       expect(result).toBe('Switched to new editor')
     })
 
     it('returns correct friendly name for FORM_SUBMISSION_EXCEL_REQUESTED', () => {
       const result = getEventFriendlyName(
-        AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
+        })
       )
       expect(result).toBe('Form submissions downloaded')
     })
 
     it('returns correct friendly name for FORM_CSAT_EXCEL_REQUESTED', () => {
       const result = getEventFriendlyName(
-        AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED
+        })
       )
       expect(result).toBe('User feedback downloaded')
     })
 
+    it('returns correct friendly name for FORM_SECRET_SAVED - test api key', () => {
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_SECRET_SAVED,
+          data: { secretName: PAYMENT_TEST_API_KEY }
+        })
+      )
+      expect(result).toBe('Test payment API key saved')
+    })
+
+    it('returns correct friendly name for FORM_SECRET_SAVED - live api key', () => {
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_SECRET_SAVED,
+          data: { secretName: PAYMENT_LIVE_API_KEY }
+        })
+      )
+      expect(result).toBe('Live payment API key saved')
+    })
+
+    it('returns correct friendly name for FORM_SECRET_SAVED - other secret name', () => {
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_SECRET_SAVED,
+          data: { secretName: 'other-secret' }
+        })
+      )
+      expect(result).toBe('Secret with name other-secret saved')
+    })
+
     it('returns "Unknown event" for unrecognized event type', () => {
-      const result = getEventFriendlyName('UNKNOWN_EVENT_TYPE')
+      // @ts-expect-error - invalid type for testing
+      const result = getEventFriendlyName({ type: 'UNKNOWN_EVENT_TYPE' })
       expect(result).toBe('Unknown event')
     })
   })

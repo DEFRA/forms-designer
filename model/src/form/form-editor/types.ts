@@ -592,6 +592,7 @@ export interface GovukField {
     path?: string
   }
   disabled?: boolean
+  customMeta?: object
 }
 
 export type GovukFieldQuestionOptional = Omit<GovukField, 'name' | 'items'> & {
