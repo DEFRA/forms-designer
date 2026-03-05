@@ -14,7 +14,8 @@ import {
   existsSecret,
   getPaymentSecretsMasked,
   savePaymentSecret,
-  savePaymentSecrets
+  savePaymentSecrets,
+  validateApiKey
 } from '~/src/lib/secrets.js'
 
 jest.mock('~/src/lib/fetch.js')
@@ -38,7 +39,7 @@ describe('secrets.js', () => {
       })
       const requestUrl = new URL('/exists', baseRequestUrl)
       const result = await existsSecret(formId, secretName, token)
-      expect(result).toBe(true)
+      expect(result.exists).toBe(true)
 
       expect(mockedGetJson).toHaveBeenCalledWith(requestUrl, {
         ...baseOptions
@@ -58,8 +59,10 @@ describe('secrets.js', () => {
           body: { exists: false }
         })
       const result = await getPaymentSecretsMasked(formId, token)
-      expect(result.testKeyMasked).toBe(MASKED_KEY)
-      expect(result.liveKeyMasked).toBe('')
+      expect(result.testKey.maskedKey).toBe(MASKED_KEY)
+      expect(result.testKey.exists).toBe(true)
+      expect(result.liveKey.maskedKey).toBe('')
+      expect(result.liveKey.exists).toBe(false)
     })
   })
 
@@ -114,7 +117,8 @@ describe('secrets.js', () => {
         ComponentType.PaymentField,
         formId,
         payload,
-        token
+        token,
+        false
       )
 
       expect(mockedPostJson).toHaveBeenCalledTimes(1)
@@ -146,7 +150,8 @@ describe('secrets.js', () => {
         ComponentType.PaymentField,
         formId,
         payload,
-        token
+        token,
+        false
       )
 
       expect(mockedPostJson).toHaveBeenCalledTimes(1)
@@ -156,6 +161,46 @@ describe('secrets.js', () => {
         },
         ...baseOptions
       })
+    })
+  })
+
+  describe('validateApiKey', () => {
+    it('should return true if valid key', async () => {
+      /* eslint-disable  @typescript-eslint/only-throw-error */
+      mockedGetJson.mockImplementationOnce(() => {
+        throw { output: { statusCode: StatusCodes.NOT_FOUND } }
+      })
+      const result = await validateApiKey('key-name', false)
+      expect(result).toBe(true)
+    })
+    it('should throw if invalid key', async () => {
+      /* eslint-disable  @typescript-eslint/only-throw-error */
+      mockedGetJson.mockImplementationOnce(() => {
+        throw { output: { statusCode: StatusCodes.UNAUTHORIZED } }
+      })
+      await expect(() => validateApiKey('key-name', false)).rejects.toThrow(
+        'Invalid API key'
+      )
+    })
+    it('should throw if other error', async () => {
+      /* eslint-disable  @typescript-eslint/only-throw-error */
+      mockedGetJson.mockImplementationOnce(() => {
+        throw {
+          output: { statusCode: StatusCodes.INTERNAL_SERVER_ERROR },
+          message: 'API error'
+        }
+      })
+      await expect(() => validateApiKey('key-name', false)).rejects.toThrow(
+        'Error calling GovUk Pay: API error'
+      )
+    })
+    it('should return false if no exception - should never happen', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse({ statusCode: StatusCodes.OK }),
+        body: {}
+      })
+      const result = await validateApiKey('key-name', false)
+      expect(result).toBe(false)
     })
   })
 })

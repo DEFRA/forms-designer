@@ -406,7 +406,8 @@ export default [
           questionDetails.type,
           metadata.id,
           payload,
-          token
+          token,
+          !!metadata.live
         )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

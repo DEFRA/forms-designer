@@ -100,8 +100,8 @@ export const QuestionBaseSettings = {
   UsePostcodeLookup: 'usePostcodeLookup',
   PaymentAmount: 'paymentAmount',
   PaymentDescription: 'paymentDescription',
-  paymentTestApiKey: 'paymentTestApiKey',
-  paymentLiveApiKey: 'paymentLiveApiKey'
+  PaymentTestApiKey: 'paymentTestApiKey',
+  PaymentLiveApiKey: 'paymentLiveApiKey'
 }
 
 /**

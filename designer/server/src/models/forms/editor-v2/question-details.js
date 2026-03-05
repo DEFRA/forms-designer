@@ -317,13 +317,19 @@ export async function applyPaymentValues(
   const secrets = await getPaymentSecretsMasked(formId, token)
   const testField = fields.find((f) => f.id === 'paymentTestApiKey')
   const liveField = fields.find((f) => f.id === 'paymentLiveApiKey')
-  if (testField && secrets.testKeyMasked && action !== 'clear-test-key') {
-    testField.value = secrets.testKeyMasked
-    testField.disabled = true
+  if (testField) {
+    testField.customMeta = secrets.testKey
+    if (secrets.testKey.maskedKey && action !== 'clear-test-key') {
+      testField.value = secrets.testKey.maskedKey
+      testField.disabled = true
+    }
   }
-  if (liveField && secrets.liveKeyMasked && action !== 'clear-live-key') {
-    liveField.value = secrets.liveKeyMasked
-    liveField.disabled = true
+  if (liveField) {
+    liveField.customMeta = secrets.liveKey
+    if (secrets.liveKey.maskedKey && action !== 'clear-live-key') {
+      liveField.value = secrets.liveKey.maskedKey
+      liveField.disabled = true
+    }
   }
 }
 
