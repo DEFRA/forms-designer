@@ -170,7 +170,7 @@ export const allBaseSettingsFields = {
     name: 'paymentLiveApiKey',
     idPrefix: 'paymentLiveApiKey',
     label: {
-      text: 'Live API key',
+      text: 'Live API key (pend',
       classes: GOVUK_LABEL__M
     },
     hint: {

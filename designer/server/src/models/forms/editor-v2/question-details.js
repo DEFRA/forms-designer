@@ -6,7 +6,7 @@ import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
-import { getPaymentSecretsMasked } from '~/src/lib/secrets.js'
+import { getPaymentSecretsMasked, MASKED_KEY } from '~/src/lib/secrets.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -318,16 +318,24 @@ export async function applyPaymentValues(
   const testField = fields.find((f) => f.id === 'paymentTestApiKey')
   const liveField = fields.find((f) => f.id === 'paymentLiveApiKey')
   if (testField) {
-    testField.customMeta = secrets.testKey
+    testField.customMeta = {
+      key: secrets.testKey
+    }
     if (secrets.testKey.maskedKey && action !== 'clear-test-key') {
       testField.value = secrets.testKey.maskedKey
       testField.disabled = true
     }
   }
   if (liveField) {
-    liveField.customMeta = secrets.liveKey
-    if (secrets.liveKey.maskedKey && action !== 'clear-live-key') {
-      liveField.value = secrets.liveKey.maskedKey
+    liveField.customMeta = {
+      key: secrets.liveKey,
+      keyPending: secrets.liveKeyPending
+    }
+    if (
+      (secrets.liveKey.maskedKey || secrets.liveKeyPending.maskedKey) &&
+      action !== 'clear-live-key'
+    ) {
+      liveField.value = MASKED_KEY
       liveField.disabled = true
     }
   }
