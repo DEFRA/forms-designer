@@ -1,7 +1,6 @@
 import { AuditEventMessageType } from '@defra/forms-model'
 
 import {
-  PAYMENT_LIVE_API_KEY,
   PAYMENT_LIVE_API_KEY_PENDING,
   PAYMENT_TEST_API_KEY
 } from '~/src/lib/secrets.js'

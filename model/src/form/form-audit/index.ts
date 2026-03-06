@@ -27,7 +27,7 @@ import {
   type FormOrganisationUpdatedMessageData,
   type FormPrivacyNoticeChanges,
   type FormPrivacyNoticeUpdatedMessageData,
-  type FormSecretSavedMessageData,
+  type FormSecretBaseMessageData,
   type FormSubmissionGuidanceChanges,
   type FormSubmissionGuidanceUpdatedMessageData,
   type FormSupportContactChanges,
@@ -113,8 +113,18 @@ export const formsBackupRequestedMessageData =
     durationMs: Joi.number().min(0).required()
   })
 
+export const formsSecretDeletedMessageData =
+  formMessageDataBase.append<FormSecretBaseMessageData>({
+    secretName: Joi.string().required()
+  })
+
+export const formsSecretRenamedMessageData =
+  formMessageDataBase.append<FormSecretBaseMessageData>({
+    secretName: Joi.string().required()
+  })
+
 export const formsSecretSavedMessageData =
-  formMessageDataBase.append<FormSecretSavedMessageData>({
+  formMessageDataBase.append<FormSecretBaseMessageData>({
     secretName: Joi.string().required()
   })
 
@@ -501,6 +511,18 @@ export const messageSchema = Joi.object<AuditMessage>()
             .trim()
             .valid(AuditEventMessageType.FORMS_BACKUP_REQUESTED),
           then: formsBackupRequestedMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SECRET_DELETED),
+          then: formsSecretDeletedMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_SECRET_RENAMED),
+          then: formsSecretRenamedMessageData
         },
         {
           is: Joi.string()
