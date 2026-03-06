@@ -392,6 +392,14 @@ export default [
       }
 
       try {
+        await savePaymentSecrets(
+          questionDetails.type,
+          metadata.id,
+          payload,
+          token,
+          !!metadata.live
+        )
+
         const finalPageId = await saveQuestion(
           metadata.id,
           token,
@@ -400,14 +408,6 @@ export default [
           questionId,
           questionDetails,
           getListItems(fileUploadLimitsPayload, state)
-        )
-
-        await savePaymentSecrets(
-          questionDetails.type,
-          metadata.id,
-          payload,
-          token,
-          !!metadata.live
         )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

@@ -6,6 +6,7 @@ import {
 
 import {
   PAYMENT_LIVE_API_KEY,
+  PAYMENT_LIVE_API_KEY_PENDING,
   PAYMENT_TEST_API_KEY
 } from '~/src/lib/secrets.js'
 import {
@@ -65,11 +66,11 @@ const eventFriendlyNames = {
 export function getEventDynamicName(record) {
   if (record.type === AuditEventMessageType.FORM_SECRET_SAVED) {
     if (
-      record.data.secretName === PAYMENT_LIVE_API_KEY ||
+      record.data.secretName === PAYMENT_LIVE_API_KEY_PENDING ||
       record.data.secretName === PAYMENT_TEST_API_KEY
     ) {
       const testOrLive =
-        record.data.secretName === PAYMENT_LIVE_API_KEY ? 'Live' : 'Test'
+        record.data.secretName === PAYMENT_TEST_API_KEY ? 'Test' : 'Live'
       return `${testOrLive} payment API key saved`
     }
     return `Secret with name ${record.data.secretName} saved`

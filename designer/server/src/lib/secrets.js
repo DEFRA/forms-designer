@@ -10,6 +10,7 @@ const managerBaseEndpoint = new URL(config.managerUrl)
 
 export const PAYMENT_TEST_API_KEY = 'payment-test-api-key'
 export const PAYMENT_LIVE_API_KEY = 'payment-live-api-key'
+export const PAYMENT_LIVE_API_KEY_PENDING = 'payment-live-api-key-pending'
 
 export const MASKED_KEY = '****************************************'
 
@@ -48,14 +49,19 @@ export async function existsSecret(formId, secretName, token) {
  * @param {string} token
  */
 export async function getPaymentSecretsMasked(formId, token) {
-  const [testKeyExists, liveKeyExists] = await Promise.all([
+  const [testKeyExists, liveKeyPendingExists, liveKeyExists] = await Promise.all([
     existsSecret(formId, PAYMENT_TEST_API_KEY, token),
+    existsSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token),
     existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
   ])
   return {
     testKey: {
       ...testKeyExists,
       maskedKey: testKeyExists.exists ? MASKED_KEY : ''
+    },
+    liveKeyPending: {
+      ...liveKeyPendingExists,
+      maskedKey: liveKeyPendingExists.exists ? MASKED_KEY : ''
     },
     liveKey: {
       ...liveKeyExists,
@@ -71,7 +77,7 @@ export async function getPaymentSecretsMasked(formId, token) {
  * @param {string} token
  */
 export async function savePaymentSecret(formId, secretValue, isLive, token) {
-  const key = isLive ? PAYMENT_LIVE_API_KEY : PAYMENT_TEST_API_KEY
+  const key = isLive ? PAYMENT_LIVE_API_KEY_PENDING : PAYMENT_TEST_API_KEY
   const { response } = await postJson(buildRequestUrl(formId, key), {
     payload: { secretValue },
     ...getHeaders(token)
@@ -133,18 +139,22 @@ export async function savePaymentSecrets(
       throw Boom.badRequest(message, { message })
     }
     // Only save API key if it's a non-masked version
-    if (
-      payload.paymentTestApiKey !== MASKED_KEY &&
-      payload.paymentTestApiKey.length
-    ) {
+    const saveTestKey = payload.paymentTestApiKey !== MASKED_KEY && payload.paymentTestApiKey.length
+    const saveLiveKey = payload.paymentLiveApiKey !== MASKED_KEY && payload.paymentLiveApiKey.length
+
+    // Validate both before saving
+    if (saveTestKey) {
       await validateApiKey(payload.paymentTestApiKey, false)
+    }
+    if (saveLiveKey) {
+      await validateApiKey(payload.paymentLiveApiKey, true)
+    }
+
+    // Save
+    if (saveTestKey) {
       await savePaymentSecret(formId, payload.paymentTestApiKey, false, token)
     }
-    if (
-      payload.paymentLiveApiKey !== MASKED_KEY &&
-      payload.paymentLiveApiKey.length
-    ) {
-      await validateApiKey(payload.paymentLiveApiKey, true)
+    if (saveLiveKey) {
       await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
     }
   }

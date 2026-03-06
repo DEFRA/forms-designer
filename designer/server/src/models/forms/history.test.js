@@ -2,6 +2,7 @@ import { AuditEventMessageType } from '@defra/forms-model'
 
 import {
   PAYMENT_LIVE_API_KEY,
+  PAYMENT_LIVE_API_KEY_PENDING,
   PAYMENT_TEST_API_KEY
 } from '~/src/lib/secrets.js'
 import {
@@ -225,7 +226,7 @@ describe('history model', () => {
       const result = getEventFriendlyName(
         /** @type {AuditRecord} */ ({
           type: AuditEventMessageType.FORM_SECRET_SAVED,
-          data: { secretName: PAYMENT_LIVE_API_KEY }
+          data: { secretName: PAYMENT_LIVE_API_KEY_PENDING }
         })
       )
       expect(result).toBe('Live payment API key saved')

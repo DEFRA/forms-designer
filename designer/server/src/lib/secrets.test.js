@@ -56,11 +56,17 @@ describe('secrets.js', () => {
         })
         .mockResolvedValueOnce({
           response: createMockResponse(),
+          body: { exists: true }
+        })
+        .mockResolvedValueOnce({
+          response: createMockResponse(),
           body: { exists: false }
         })
       const result = await getPaymentSecretsMasked(formId, token)
       expect(result.testKey.maskedKey).toBe(MASKED_KEY)
       expect(result.testKey.exists).toBe(true)
+      expect(result.liveKeyPending.maskedKey).toBe(MASKED_KEY)
+      expect(result.liveKeyPending.exists).toBe(true)
       expect(result.liveKey.maskedKey).toBe('')
       expect(result.liveKey.exists).toBe(false)
     })
