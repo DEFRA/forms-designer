@@ -233,7 +233,12 @@ export interface FormSecret {
   createdAt: Date
 
   /**
+   * The date the secret was renamed
+   */
+  renamedAt?: Date
+
+  /**
    * The date the secret was last updated
    */
-  updatedAt: Date
+  updatedAt?: Date
 }

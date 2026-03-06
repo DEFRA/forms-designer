@@ -10,6 +10,7 @@ const managerBaseEndpoint = new URL(config.managerUrl)
 
 export const PAYMENT_TEST_API_KEY = 'payment-test-api-key'
 export const PAYMENT_LIVE_API_KEY = 'payment-live-api-key'
+export const PAYMENT_LIVE_API_KEY_PENDING = 'payment-live-api-key-pending'
 
 export const MASKED_KEY = '****************************************'
 
