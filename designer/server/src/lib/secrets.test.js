@@ -103,6 +103,23 @@ describe('secrets.js', () => {
   })
 
   describe('savePaymentSecrets', () => {
+    it('should throw if form is live but no live secret supplied', async () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        paymentTestApiKey: 'Some new secret',
+        paymentLiveApiKey: ''
+      })
+
+      await expect(() =>
+        savePaymentSecrets(
+          ComponentType.PaymentField,
+          formId,
+          payload,
+          token,
+          true
+        )
+      ).rejects.toThrow('Enter a live API key since this form is already live')
+    })
+
     it('should save test secret but not live secret', async () => {
       mockedPostJson
         .mockResolvedValueOnce({
