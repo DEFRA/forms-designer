@@ -44,7 +44,8 @@ export const questionTypeSchema = Joi.string()
     ComponentType.CheckboxesField,
     ComponentType.RadiosField,
     ComponentType.AutocompleteField,
-    ComponentType.PaymentField
+    ComponentType.PaymentField,
+    ComponentType.GeospatialField
   )
   .description('The high-level type of question, including grouped types')
 
@@ -70,7 +71,8 @@ export const questionTypeFullSchema = Joi.string()
     ComponentType.OsGridRefField,
     ComponentType.NationalGridFieldNumberField,
     ComponentType.LatLongField,
-    ComponentType.PaymentField
+    ComponentType.PaymentField,
+    ComponentType.GeospatialField
   )
   .description('The specific component type to use for this question')
 
@@ -106,7 +108,8 @@ export const locationSubSchema = Joi.string()
     ComponentType.EastingNorthingField,
     ComponentType.OsGridRefField,
     ComponentType.NationalGridFieldNumberField,
-    ComponentType.LatLongField
+    ComponentType.LatLongField,
+    ComponentType.GeospatialField
   )
   .description('Subtype for location-related questions')
 

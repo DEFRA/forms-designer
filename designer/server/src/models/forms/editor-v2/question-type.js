@@ -128,6 +128,10 @@ const locationSubItems = [
   {
     text: 'Latitude and longitude',
     value: ComponentType.LatLongField
+  },
+  {
+    text: 'An area or points on a map',
+    value: ComponentType.GeospatialField
   }
 ]
 
@@ -225,6 +229,8 @@ export function filterQuestionTypes(questionId, questionTypes, page, state) {
  * @param { ValidationFailure<FormEditor> | undefined } validation
  */
 function questionTypeGroupFields(formValues, validation) {
+  const allowGeospatial = config.featureFlagAllowGeospatial
+
   return {
     [QuestionTypeSubGroup.WrittenAnswerSubGroup]: {
       id: 'writtenAnswerSub',
@@ -278,7 +284,11 @@ function questionTypeGroupFields(formValues, validation) {
           isPageHeading: false
         }
       },
-      items: locationSubItems,
+      items: allowGeospatial
+        ? locationSubItems
+        : locationSubItems.filter(
+            (item) => item.value !== ComponentType.GeospatialField
+          ),
       value: formValues?.locationSub,
       ...insertValidationErrors(validation?.formErrors.locationSub)
     }
