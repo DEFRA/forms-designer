@@ -1,12 +1,16 @@
 import { ComponentType } from '@defra/forms-model'
 import {
+  buildDefinition,
   buildQuestionPage,
   buildRepeaterPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
 
 import config from '~/src/config.js'
-import { filterQuestionTypes } from '~/src/models/forms/editor-v2/question-type.js'
+import {
+  filterQuestionTypes,
+  questionTypeViewModel
+} from '~/src/models/forms/editor-v2/question-type.js'
 
 jest.mock('~/src/config.ts')
 
@@ -248,6 +252,43 @@ describe('editor-v2 - question type model', () => {
     )
     expect(res).toHaveLength(4)
     expect(res.map((x) => x.text)).not.toContain('Payment')
+  })
+
+  test('should include geospatial if feature flag set', () => {
+    jest.mocked(config).featureFlagAllowGeospatial = true
+    const metadata = /** @type {import('@defra/forms-model').FormMetadata} */ ({
+      id: 'form-id',
+      slug: 'my-form'
+    })
+    const definition = buildDefinition()
+    const res = questionTypeViewModel(
+      metadata,
+      definition,
+      'ffefd409-f3f4-49fe-882e-6e89f44631b1',
+      '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+      undefined
+    )
+
+    expect(res.fields.locationSub.items).toHaveLength(6)
+  })
+
+  test('should not include geospatial if feature flag not set', () => {
+    jest.mocked(config).featureFlagAllowGeospatial = false
+    const metadata = /** @type {import('@defra/forms-model').FormMetadata} */ ({
+      id: 'form-id',
+      slug: 'my-form'
+    })
+    const definition = buildDefinition()
+
+    const res = questionTypeViewModel(
+      metadata,
+      definition,
+      'ffefd409-f3f4-49fe-882e-6e89f44631b1',
+      '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+      undefined
+    )
+
+    expect(res.fields.locationSub.items).toHaveLength(5)
   })
 })
 
