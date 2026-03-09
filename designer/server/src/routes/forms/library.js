@@ -127,7 +127,7 @@ export default [
           titleActionItems.push({
             href: `${formOverviewPath(form.slug)}/edit/title`,
             text: 'Change',
-            visuallyHiddenText: 'title'
+            visuallyHiddenText: 'form name'
           })
         }
 
