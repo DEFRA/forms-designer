@@ -90,7 +90,13 @@ export async function savePaymentSecret(formId, secretValue, isLive, token) {
  * @param {boolean} isLiveKey
  */
 export async function validateApiKey(key, isLiveKey) {
-  const url = new URL('https://publicapi.payments.service.gov.uk/v1/payments')
+  if (config.testingBypassValidationForPaymentApiKeys) {
+    return true
+  }
+
+  const url = new URL(
+    'https://publicapi.payments.service.gov.uk/v1/payments/invalid-payment-id'
+  )
   try {
     await getJson(url, getHeaders(key))
   } catch (err) {

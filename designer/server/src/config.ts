@@ -59,6 +59,7 @@ export interface Config {
   snsTopicArn: string
   featureFlagUseEntitlementApi: boolean
   featureFlagAllowPayments: boolean
+  testingBypassValidationForPaymentApiKeys: boolean
 }
 
 // Define config schema
@@ -174,7 +175,8 @@ const schema = joi.object<Config>({
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
   featureFlagUseEntitlementApi: joi.boolean().default(false),
-  featureFlagAllowPayments: joi.boolean().default(false)
+  featureFlagAllowPayments: joi.boolean().default(false),
+  testingBypassValidationForPaymentApiKeys: joi.boolean().default(false)
 })
 
 // Validate config
@@ -225,7 +227,9 @@ const result = schema.validate(
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
     featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
-    featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS
+    featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS,
+    testingBypassValidationForPaymentApiKeys:
+      process.env.BYPASS_VALIDATION_FOR_PAYMENT_API_KEYS
   },
   { abortEarly: false }
 )
