@@ -19,10 +19,15 @@ import {
 } from '~/src/lib/secrets.js'
 
 jest.mock('~/src/lib/fetch.js')
+jest.mock('~/src/config.ts')
 
 const managerEndpoint = new URL(config.managerUrl)
 
 describe('secrets.js', () => {
+  beforeEach(() => {
+    jest.mocked(config).managerUrl = 'http://localhost:3001'
+    jest.mocked(config).testingBypassValidationForPaymentApiKeys = false
+  })
   const formId = '98dbfb6c-93b7-41dc-86e7-02c7abe4ba38'
   const secretName = 'my-new-secret'
 
@@ -165,6 +170,14 @@ describe('secrets.js', () => {
   })
 
   describe('validateApiKey', () => {
+    it('should return true if validation bypassed', async () => {
+      jest.mocked(config).testingBypassValidationForPaymentApiKeys = true
+      const result = await validateApiKey(
+        'invalid-key-but-validation-bypassed',
+        false
+      )
+      expect(result).toBe(true)
+    })
     it('should return true if valid key', async () => {
       /* eslint-disable  @typescript-eslint/only-throw-error */
       mockedGetJson.mockImplementationOnce(() => {
