@@ -374,8 +374,12 @@ export async function questionDetailsViewModel(
   )
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
-  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
-  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
+  const previewPageUrl = details.question.id
+    ? `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
+    : ''
+  const previewErrorsUrl = details.question.id
+    ? `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
+    : ''
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
