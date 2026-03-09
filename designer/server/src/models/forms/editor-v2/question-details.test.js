@@ -848,6 +848,12 @@ describe('editor-v2 - question details model', () => {
           createdAt: undefined,
           updatedAt: undefined
         },
+        liveKeyPending: {
+          maskedKey: '',
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        },
         liveKey: {
           maskedKey: '',
           exists: false,
@@ -870,6 +876,12 @@ describe('editor-v2 - question details model', () => {
       const fields = [buildTestField(), buildLiveField()]
       jest.mocked(getPaymentSecretsMasked).mockResolvedValue({
         testKey: {
+          maskedKey: '',
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        },
+        liveKeyPending: {
           maskedKey: '',
           exists: false,
           createdAt: undefined,

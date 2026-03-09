@@ -170,11 +170,11 @@ export const allBaseSettingsFields = {
     name: 'paymentLiveApiKey',
     idPrefix: 'paymentLiveApiKey',
     label: {
-      text: 'Live API key (pend',
+      text: 'Live API key',
       classes: GOVUK_LABEL__M
     },
     hint: {
-      text: 'Make sure your live API key has been tested and can take real payments'
+      html: "Make sure your live API key has been tested and can take real payments.<br>You can save a new live key but it will only get swapped in when you go through the 'make the form live' process. Until it goes live, the status below will show as 'pending'."
     },
     customTemplate: 'payment-live-api-key'
   }

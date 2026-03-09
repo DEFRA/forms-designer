@@ -49,11 +49,12 @@ export async function existsSecret(formId, secretName, token) {
  * @param {string} token
  */
 export async function getPaymentSecretsMasked(formId, token) {
-  const [testKeyExists, liveKeyPendingExists, liveKeyExists] = await Promise.all([
-    existsSecret(formId, PAYMENT_TEST_API_KEY, token),
-    existsSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token),
-    existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
-  ])
+  const [testKeyExists, liveKeyPendingExists, liveKeyExists] =
+    await Promise.all([
+      existsSecret(formId, PAYMENT_TEST_API_KEY, token),
+      existsSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token),
+      existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
+    ])
   return {
     testKey: {
       ...testKeyExists,
@@ -125,6 +126,7 @@ export async function validateApiKey(key, isLiveKey) {
  * @param {FormEditorInputQuestionDetails} payload
  * @param {string} token
  * @param {boolean} isFormLive
+ * @returns {Promise<string>} possible extra message for the notification banner
  */
 export async function savePaymentSecrets(
   questionType,
@@ -139,8 +141,12 @@ export async function savePaymentSecrets(
       throw Boom.badRequest(message, { message })
     }
     // Only save API key if it's a non-masked version
-    const saveTestKey = payload.paymentTestApiKey !== MASKED_KEY && payload.paymentTestApiKey.length
-    const saveLiveKey = payload.paymentLiveApiKey !== MASKED_KEY && payload.paymentLiveApiKey.length
+    const saveTestKey =
+      payload.paymentTestApiKey !== MASKED_KEY &&
+      payload.paymentTestApiKey.length
+    const saveLiveKey =
+      payload.paymentLiveApiKey !== MASKED_KEY &&
+      payload.paymentLiveApiKey.length
 
     // Validate both before saving
     if (saveTestKey) {
@@ -156,8 +162,10 @@ export async function savePaymentSecrets(
     }
     if (saveLiveKey) {
       await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
+      return '. The newly-entered live payment API key will not become active until the form is made live again.'
     }
   }
+  return ''
 }
 
 /**

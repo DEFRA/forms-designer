@@ -13,22 +13,25 @@
 {% if field.customMeta.keyPending.exists %}
   {% set key = field.customMeta.keyPending %}
   {% if key.updatedAt == key.createdAt %}
-  <div class="govuk-hint">Key pending go-live created at {{ key.createdAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+    {% set actionText = "created at " + key.createdAt | formatDate('d MMM yyyy h:mm aaa') %}
   {% endif %}
   {% if key.updatedAt > key.createdAt %}
-  <div class="govuk-hint">Key pending go-live updated at {{ key.updatedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+    {% set actionText = "updated at " + key.updatedAt | formatDate('d MMM yyyy h:mm aaa') %}
   {% endif %}
+  <div class="govuk-hint">
+    <span class="govuk-body govuk-!-font-weight-bold">Pending: </span>
+    Key is pending go-live and was {{ actionText }}
+  </div>
 {% endif %}
 
 <!-- Live key in use -->
 {% if field.customMeta.key.exists %}
   {% set key = field.customMeta.key %}
-  {% if key.updatedAt == key.createdAt %}
-  <div class="govuk-hint">Created at {{ key.createdAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+  {% if key.renamedAt %}
+    <div class="govuk-hint"><span class="govuk-body govuk-!-font-weight-bold">Live: </span>Live key in use went live at {{ key.renamedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
   {% endif %}
-  {% if key.updatedAt > key.createdAt %}
-  <div class="govuk-hint">Updated at {{ key.updatedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
-  {% endif %}
+{% else %}
+  <div class="govuk-hint"><span class="govuk-body govuk-!-font-weight-bold">No live key exists</span></div>
 {% endif %}
 
 {% if field.disabled %}
