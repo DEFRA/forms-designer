@@ -17,6 +17,7 @@ import {
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { savePaymentSecrets } from '~/src/lib/secrets.js'
 import {
   buildQuestionSessionState,
   clearQuestionSessionState,
@@ -106,7 +107,6 @@ function redirectWithAnchorOrUrl(
  */
 export function getListItems(payload, state) {
   if (payload.listItemsData) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return /** @type {Item[]} */ (JSON.parse(payload.listItemsData))
   }
   return /** @type {Item[]} */ (
@@ -193,7 +193,7 @@ export function overrideStateIfJsEnabled(request) {
         editRow: {
           expanded: false
         },
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
         listItems:
           /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
           (JSON.parse(listItemsData ?? '[]'))
@@ -291,12 +291,16 @@ export default [
 
       return h.view(
         'forms/editor-v2/question-details',
-        viewModel.questionDetailsViewModel(
-          metadata,
-          definition,
-          pageId,
-          questionId,
+        await viewModel.questionDetailsViewModel(
+          {
+            metadata,
+            definition,
+            pageId,
+            questionId
+          },
           stateId,
+          token,
+          query,
           validation,
           state
         )
@@ -396,6 +400,14 @@ export default [
           questionId,
           questionDetails,
           getListItems(fileUploadLimitsPayload, state)
+        )
+
+        await savePaymentSecrets(
+          questionDetails.type,
+          metadata.id,
+          payload,
+          token,
+          !!metadata.live
         )
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

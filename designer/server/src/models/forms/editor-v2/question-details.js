@@ -6,6 +6,7 @@ import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { getPaymentSecretsMasked } from '~/src/lib/secrets.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -113,7 +114,6 @@ export function getErrorTemplates(questionType) {
     }
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const errorTemplates =
     component && 'getAllPossibleErrors' in component
       ? component.getAllPossibleErrors()
@@ -297,24 +297,61 @@ export function getCardHeadings(details) {
 }
 
 /**
- * @param {FormMetadata} metadata
- * @param {FormDefinition} definition
- * @param {string} pageId
- * @param {string} questionId
+ * Populate payment API key masks - if the API keys exist in the DB
+ * @param { ComponentType | undefined } questionType
+ * @param {string} formId
+ * @param {GovukField[]} fields
+ * @param {string} token
+ * @param { string | undefined } action
+ */
+export async function applyPaymentValues(
+  questionType,
+  formId,
+  fields,
+  token,
+  action
+) {
+  if (questionType !== ComponentType.PaymentField) {
+    return
+  }
+  const secrets = await getPaymentSecretsMasked(formId, token)
+  const testField = fields.find((f) => f.id === 'paymentTestApiKey')
+  const liveField = fields.find((f) => f.id === 'paymentLiveApiKey')
+  if (testField) {
+    testField.customMeta = secrets.testKey
+    if (secrets.testKey.maskedKey && action !== 'clear-test-key') {
+      testField.value = secrets.testKey.maskedKey
+      testField.disabled = true
+    }
+  }
+  if (liveField) {
+    liveField.customMeta = secrets.liveKey
+    if (secrets.liveKey.maskedKey && action !== 'clear-live-key') {
+      liveField.value = secrets.liveKey.maskedKey
+      liveField.disabled = true
+    }
+  }
+}
+
+/**
+ * @param {{ metadata: FormMetadata, definition: FormDefinition, pageId: string, questionId: string }} formCriteria
  * @param {string} stateId
+ * @param {string} token
+ * @param {RequestQuery} query
  * @param {ValidationFailure<FormEditor>} [validation]
  * @param {QuestionSessionState} [state]
  */
-export function questionDetailsViewModel(
-  metadata,
-  definition,
-  pageId,
-  questionId,
+export async function questionDetailsViewModel(
+  formCriteria,
   stateId,
+  token,
+  query,
   validation,
   state
 ) {
   const questionType = state?.questionType
+  // prettier-ignore
+  const { metadata, definition, pageId, questionId } = formCriteria
   // prettier-ignore
   const details = getDetails(metadata, definition, pageId, questionId, questionType)
   const formTitle = metadata.title
@@ -337,14 +374,25 @@ export function questionDetailsViewModel(
   )
   const extraFieldNames = extraFields.map((field) => field.name ?? 'unknown')
   const errorList = buildErrorList(validation?.formErrors)
-  const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
-  const previewErrorsUrl = `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
+  const previewPageUrl = details.question.id
+    ? `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${details.pagePath}?force`
+    : ''
+  const previewErrorsUrl = details.question.id
+    ? `${buildPreviewErrorsUrl(metadata.slug)}${details.pagePath}/${questionFieldsOverride.id}`
+    : ''
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
   const pageHeading = details.pageTitle
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
+  await applyPaymentValues(
+    questionType,
+    metadata.id,
+    basePageFields,
+    token,
+    query.action
+  )
 
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
@@ -356,7 +404,7 @@ export function questionDetailsViewModel(
     basePageFields,
     uploadFields,
     extraFields,
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+
     errorTemplates,
     ...getCardHeadings(details),
     navigation: details.navigation,
@@ -388,4 +436,5 @@ export function questionDetailsViewModel(
 /**
  * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, List, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { RequestQuery } from '@hapi/hapi'
  */

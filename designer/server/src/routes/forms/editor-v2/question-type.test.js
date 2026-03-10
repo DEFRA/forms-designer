@@ -27,7 +27,6 @@ jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js', () => {
   const original = jest.requireActual('~/src/lib/error-helper.js')
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   return {
     ...original,
     addErrorsToSession: jest.fn()

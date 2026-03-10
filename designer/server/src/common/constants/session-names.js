@@ -12,6 +12,9 @@ export const sessionNames = {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),
     privacyNotice: /** @type {const} */ ('privacyNoticeValidationFailure'),
+    termsAndConditions: /** @type {const} */ (
+      'termsAndConditionsValidationFailure'
+    ),
     notificationEmail: /** @type {const} */ (
       'notificationEmailValidationFailure'
     ),

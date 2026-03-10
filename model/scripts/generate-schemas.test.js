@@ -9,6 +9,8 @@ import {
 } from './generate-schemas.js'
 import { schemasDir } from './schema-modules/constants.js'
 
+import parse from 'joi-to-json'
+
 jest.mock('joi-to-json', () => ({
   __esModule: true,
   default: jest.fn().mockImplementation(() => ({
@@ -17,8 +19,6 @@ jest.mock('joi-to-json', () => ({
     properties: {}
   }))
 }))
-
-import parse from 'joi-to-json'
 
 jest.mock('./schema-modules/title-processors', () => ({
   addTitles: jest.fn().mockImplementation((schema) => schema)

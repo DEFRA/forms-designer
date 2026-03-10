@@ -220,7 +220,7 @@ if (import.meta.url === `file://${process.argv[1]}`) {
     }
   })().catch((err) => {
     console.error('Unhandled error:', err)
-    // eslint-disable-next-line no-process-exit
+
     process.exit(1)
   })
 }

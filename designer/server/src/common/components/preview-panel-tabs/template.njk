@@ -19,11 +19,13 @@
 
     <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab-preview-link" tabindex="0">
       <!-- Page Preview Content -->
-      <p class="govuk-body-s">
-        <a href="{{ params.previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
-          Preview this page in a new tab
-        </a>
-      </p>
+      {% if params.previewPageUrl%}
+        <p class="govuk-body-s">
+          <a href="{{ params.previewPageUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+            Preview this page in a new tab
+          </a>
+        </p>
+      {% endif %}
 
       <!-- Question Content Here -->
       <div class="border-left-container-shorttext" id="preview-panel-content">
@@ -48,11 +50,15 @@
 
     {% if params.errorTemplates %}
       <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-errors" role="tabpanel" aria-labelledby="tab-errors-link" tabindex="0">
-      <p class="govuk-body-s">
-        <a href="{{ params.previewErrorsUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
-          Preview error messages in a new tab
-        </a>
-      </p>
+
+      {% if params.previewErrorsUrl %}
+        <p class="govuk-body-s">
+          <a href="{{ params.previewErrorsUrl }}" class="govuk-link govuk-link--no-visited-state" rel="noreferrer noopener" target="_blank">
+            Preview error messages in a new tab
+          </a>
+        </p>
+      {% endif %}
+
       <!-- Error Messages Content -->
       <div class="govuk-error-summary" data-disable-auto-focus="true">
           {% call appPreviewErrorPanel({

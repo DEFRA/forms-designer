@@ -1,10 +1,8 @@
-import { Scopes } from '@defra/forms-model'
+import { Roles, Scopes } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
-import { allRoles } from '~/src/lib/__stubs__/roles.js'
-import { getRoles, getUsers } from '~/src/lib/manage.js'
-import { Roles } from '~/src/models/account/role-mapper.js'
+import { getUsers } from '~/src/lib/manage.js'
 import {
   artifacts,
   auth,
@@ -28,7 +26,6 @@ describe('Manage users route', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.mocked(getRoles).mockResolvedValueOnce(allRoles)
     jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
@@ -37,14 +34,14 @@ describe('Manage users route', () => {
       userId: 'id1',
       displayName: 'John Smith',
       email: 'john.smith@here.com',
-      roles: ['admin'],
+      roles: [Roles.Admin],
       scopes: []
     },
     {
       userId: 'id2',
       displayName: 'Peter Jones',
       email: 'peter.jones@email.com',
-      roles: ['form-creator'],
+      roles: [Roles.FormCreator],
       scopes: []
     }
   ]

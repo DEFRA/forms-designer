@@ -1,10 +1,11 @@
+import { Roles, Scopes } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { createMockResponse } from '~/src/lib/__stubs__/editor.js'
 import { delJson, getJson, postJson, putJson } from '~/src/lib/fetch.js'
 import {
   addUser,
   deleteUser,
-  getRoles,
   getUser,
   getUsers,
   updateUser
@@ -19,24 +20,15 @@ const userList = [
     userId: 'id1',
     fullName: 'John Smith',
     emailAddress: 'john.smith@here.com',
-    roles: ['admin'],
+    roles: [Roles.Admin],
     scopes: []
   },
   {
     userId: 'id2',
     fullName: 'Peter Jones',
     emailAddress: 'peter.jones@email.com',
-    roles: ['form-creator'],
+    roles: [Roles.FormCreator],
     scopes: []
-  }
-]
-
-const rolesList = [
-  { name: 'Admin', code: 'admin', description: 'admin desc' },
-  {
-    name: 'Form creator',
-    code: 'form-creator',
-    description: 'form creator desc'
   }
 ]
 
@@ -45,8 +37,8 @@ describe('manage.js', () => {
     it('should get the user details', async () => {
       const userObj = {
         userId: '12345',
-        roles: ['admin'],
-        scopes: ['user-edit', 'form-delete']
+        roles: [Roles.Admin],
+        scopes: [Scopes.UserEdit, Scopes.FormDelete]
       }
       jest.mocked(getJson).mockResolvedValueOnce({
         response: createMockResponse(),
@@ -59,26 +51,13 @@ describe('manage.js', () => {
     })
   })
 
-  describe('getRoles', () => {
-    it('should get the list of roles', async () => {
-      jest.mocked(getJson).mockResolvedValueOnce({
-        response: createMockResponse(),
-        body: {
-          roles: rolesList
-        }
-      })
-      const result = await getRoles(token)
-      expect(result).toEqual(rolesList)
-    })
-  })
-
   describe('addUser', () => {
     it('should add the user', async () => {
       jest.mocked(postJson).mockResolvedValueOnce({
         response: createMockResponse(),
         body: {}
       })
-      const payload = { email: 'my-email', roles: ['role1'] }
+      const payload = { email: 'my-email', roles: [Roles.Admin] }
       const result = await addUser(token, payload)
       expect(result).toEqual({})
 
@@ -95,13 +74,13 @@ describe('manage.js', () => {
         response: createMockResponse(),
         body: {}
       })
-      const payload = { userId: 'my-id', roles: ['role1'] }
+      const payload = { userId: 'my-id', roles: [Roles.Admin] }
       const result = await updateUser(token, payload)
       expect(result).toEqual({})
 
       expect(putJson).toHaveBeenCalledWith(usersEndpoint, {
         payload: {
-          roles: ['role1']
+          roles: [Roles.Admin]
         },
         headers: { Authorization: `Bearer ${token}` }
       })

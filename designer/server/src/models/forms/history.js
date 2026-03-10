@@ -5,6 +5,10 @@ import {
 } from '@defra/forms-model'
 
 import {
+  PAYMENT_LIVE_API_KEY_PENDING,
+  PAYMENT_TEST_API_KEY
+} from '~/src/lib/secrets.js'
+import {
   formatHistoryDate,
   formatShortDate,
   formatTime,
@@ -36,6 +40,8 @@ const eventFriendlyNames = {
   [AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED]:
     'Notification email updated',
   [AuditEventMessageType.FORM_PRIVACY_NOTICE_UPDATED]: 'Privacy notice updated',
+  [AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED]:
+    'Terms and conditions accepted',
   [AuditEventMessageType.FORM_SUPPORT_CONTACT_UPDATED]:
     'Support contact updated',
   [AuditEventMessageType.FORM_SUPPORT_PHONE_UPDATED]: 'Support phone updated',
@@ -52,12 +58,36 @@ const eventFriendlyNames = {
 }
 
 /**
+ * Gets the friendly name for an event (based on not just the type but additional fields)
+ * @param {AuditRecord} record
+ * @returns { string | undefined }
+ */
+export function getEventDynamicName(record) {
+  if (record.type === AuditEventMessageType.FORM_SECRET_SAVED) {
+    if (
+      record.data.secretName === PAYMENT_LIVE_API_KEY_PENDING ||
+      record.data.secretName === PAYMENT_TEST_API_KEY
+    ) {
+      const testOrLive =
+        record.data.secretName === PAYMENT_TEST_API_KEY ? 'Test' : 'Live'
+      return `${testOrLive} payment API key saved`
+    }
+    return `Secret with name ${record.data.secretName} saved`
+  }
+  return undefined
+}
+
+/**
  * Gets the friendly name for an event type
- * @param {string} eventType
+ * @param {AuditRecord} record
  * @returns {string}
  */
-export function getEventFriendlyName(eventType) {
-  return eventFriendlyNames[eventType] ?? 'Unknown event'
+export function getEventFriendlyName(record) {
+  const friendlyName = eventFriendlyNames[record.type]
+  if (friendlyName) {
+    return friendlyName
+  }
+  return getEventDynamicName(record) ?? 'Unknown event'
 }
 
 /**
@@ -98,7 +128,7 @@ function buildConsolidatedTimelineItem(record) {
  * @returns {TimelineItem}
  */
 export function buildTimelineItem(record) {
-  const title = getEventFriendlyName(record.type)
+  const title = getEventFriendlyName(record)
   const user = record.createdBy.displayName
   const date = formatHistoryDate(record.createdAt)
   const description = getEventDescription(record)

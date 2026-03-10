@@ -1,5 +1,6 @@
 import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
 
+import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
@@ -253,7 +254,7 @@ export const radioValueSchema = Joi.string()
   )
 
 export const shortDescriptionSchema = Joi.string()
-  .trim()
+  .custom(rtrimOnly)
   .required()
   .description('Brief description of the question for internal use')
 
@@ -413,6 +414,10 @@ export const paymentAmountSchema = Joi.number()
   .min(0.3)
   .max(100000)
   .description('Amount of payment in pounds')
+
+export const paymentApiKeySchema = Joi.string()
+  .trim()
+  .description('API key for payment configuration')
 
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
@@ -586,6 +591,7 @@ export const questionDetailsFullSchema = {
   minSchema,
   nameSchema,
   paymentAmountSchema,
+  paymentApiKeySchema,
   paymentDescriptionSchema,
   precisionSchema,
   prefixSchema,

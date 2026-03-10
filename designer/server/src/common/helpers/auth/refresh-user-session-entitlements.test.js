@@ -1,4 +1,4 @@
-import { mapScopesToRoles } from '@defra/forms-model'
+import { Roles, Scopes, mapScopesToRoles } from '@defra/forms-model'
 
 import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
 import { getUser } from '~/src/lib/manage.js'
@@ -28,9 +28,9 @@ describe('refresh-user-session-entitlements', () => {
         credentials: {
           user: {
             id: 'user-123',
-            roles: ['form-creator']
+            roles: [Roles.FormCreator]
           },
-          scope: ['form-read', 'form-edit']
+          scope: [Scopes.FormRead, Scopes.FormEdit]
         }
       }
     })
@@ -65,9 +65,9 @@ describe('refresh-user-session-entitlements', () => {
           id: userId,
           email: 'test@example.com',
           displayName: 'Test User',
-          roles: ['form-creator']
+          roles: [Roles.FormCreator]
         },
-        scope: ['form-read', 'form-edit'],
+        scope: [Scopes.FormRead, Scopes.FormEdit],
         token: 'old-token'
       }
 
@@ -75,18 +75,18 @@ describe('refresh-user-session-entitlements', () => {
         userId,
         email: 'test@example.com',
         displayName: 'Test User',
-        roles: ['admin'],
+        roles: [Roles.Admin],
         scopes: []
       }
 
       const newScopes = [
-        'form-delete',
-        'form-edit',
-        'form-read',
-        'form-publish',
-        'user-create',
-        'user-delete',
-        'user-edit'
+        Scopes.FormDelete,
+        Scopes.FormEdit,
+        Scopes.FormRead,
+        Scopes.FormPublish,
+        Scopes.UserCreate,
+        Scopes.UserDelete,
+        Scopes.UserEdit
       ]
 
       mockSession.get.mockResolvedValue(existingSession)
@@ -101,8 +101,8 @@ describe('refresh-user-session-entitlements', () => {
 
       expect(mockSession.get).toHaveBeenCalledWith(userId)
       expect(jest.mocked(getUser)).toHaveBeenCalledWith(token, userId)
-      expect(jest.mocked(mapScopesToRoles)).toHaveBeenCalledWith(['admin'])
-      expect(existingSession.user.roles).toEqual(['admin'])
+      expect(jest.mocked(mapScopesToRoles)).toHaveBeenCalledWith([Roles.Admin])
+      expect(existingSession.user.roles).toEqual([Roles.Admin])
       expect(existingSession.scope).toEqual(newScopes)
       expect(mockSession.set).toHaveBeenCalledWith(userId, existingSession)
       expect(result).toEqual(newScopes)
@@ -114,9 +114,9 @@ describe('refresh-user-session-entitlements', () => {
           id: userId,
           email: 'test@example.com',
           displayName: 'Test User',
-          roles: ['form-creator']
+          roles: [Roles.FormCreator]
         },
-        scope: ['form-read', 'form-edit'],
+        scope: [Scopes.FormRead, Scopes.FormEdit],
         token: 'old-token'
       }
 
@@ -124,11 +124,11 @@ describe('refresh-user-session-entitlements', () => {
         userId,
         email: 'test@example.com',
         displayName: 'Test User',
-        roles: ['admin'],
+        roles: [Roles.Admin],
         scopes: []
       }
 
-      const newScopes = ['admin-scope']
+      const newScopes = [Scopes.FormEdit]
 
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
@@ -137,7 +137,7 @@ describe('refresh-user-session-entitlements', () => {
       await refreshUserSessionEntitlements(mockRequest, userId, token)
 
       expect(mockRequest.auth.credentials.scope).toEqual(newScopes)
-      expect(mockRequest.auth.credentials.user?.roles).toEqual(['admin'])
+      expect(mockRequest.auth.credentials.user?.roles).toEqual([Roles.Admin])
       expect(mockSession.set).toHaveBeenCalledWith(userId, existingSession)
     })
 
@@ -147,9 +147,9 @@ describe('refresh-user-session-entitlements', () => {
           id: userId,
           email: 'test@example.com',
           displayName: 'Test User',
-          roles: ['admin']
+          roles: [Roles.Admin]
         },
-        scope: ['form-read', 'form-edit'],
+        scope: [Scopes.FormRead, Scopes.FormEdit],
         token: 'old-token'
       }
 
@@ -173,7 +173,7 @@ describe('refresh-user-session-entitlements', () => {
 
     it('should handle session with no user object', async () => {
       const existingSession = {
-        scope: ['form-read', 'form-edit'],
+        scope: [Scopes.FormRead, Scopes.FormEdit],
         token: 'old-token'
       }
 
@@ -181,11 +181,11 @@ describe('refresh-user-session-entitlements', () => {
         userId,
         email: 'test@example.com',
         displayName: 'Test User',
-        roles: ['admin'],
+        roles: [Roles.Admin],
         scopes: []
       }
 
-      const newScopes = ['admin-scope']
+      const newScopes = [Scopes.FormEdit]
 
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
@@ -203,9 +203,9 @@ describe('refresh-user-session-entitlements', () => {
           id: userId,
           email: 'test@example.com',
           displayName: 'Test User',
-          roles: ['form-creator']
+          roles: [Roles.FormCreator]
         },
-        scope: ['form-read', 'form-edit'],
+        scope: [Scopes.FormRead, Scopes.FormEdit],
         token: 'old-token'
       }
 
@@ -237,16 +237,16 @@ describe('refresh-user-session-entitlements', () => {
       const existingSession = {
         user: {
           id: userId,
-          roles: ['form-creator']
+          roles: [Roles.FormCreator]
         },
-        scope: ['form-read']
+        scope: [Scopes.FormRead]
       }
 
       const updatedUser = {
         userId,
         email: 'test@example.com',
         displayName: 'Test User',
-        roles: ['admin'],
+        roles: [Roles.Admin],
         scopes: []
       }
 
@@ -254,7 +254,7 @@ describe('refresh-user-session-entitlements', () => {
 
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue(['admin-scope'])
+      jest.mocked(mapScopesToRoles).mockReturnValue([Scopes.FormEdit])
       mockSession.set.mockRejectedValue(sessionError)
 
       // When session.set fails, it should throw the error
@@ -268,16 +268,16 @@ describe('refresh-user-session-entitlements', () => {
       const existingSession = {
         user: {
           id: otherUserId,
-          roles: ['form-creator']
+          roles: [Roles.FormCreator]
         },
-        scope: ['form-read']
+        scope: [Scopes.FormRead]
       }
 
       const updatedUser = {
         userId: otherUserId,
         email: 'other@example.com',
         displayName: 'Other User',
-        roles: ['admin'],
+        roles: [Roles.Admin],
         scopes: []
       }
 
@@ -292,7 +292,7 @@ describe('refresh-user-session-entitlements', () => {
       mockSession.set.mockResolvedValue(undefined)
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue(['admin-scope'])
+      jest.mocked(mapScopesToRoles).mockReturnValue([Scopes.FormEdit])
 
       await refreshUserSessionEntitlements(mockRequest, otherUserId, token)
 

@@ -39,11 +39,18 @@ export const RoleScopes = {
   [Roles.FormCreator]: [Scopes.FormRead, Scopes.FormEdit, Scopes.FormDelete]
 }
 
+export const RoleNames = {
+  [Roles.Superadmin]: 'Superadmin',
+  [Roles.Admin]: 'Admin',
+  [Roles.FormPublisher]: 'Form publisher',
+  [Roles.FormCreator]: 'Form creator'
+}
+
 /**
  * Return a unique list of scopes based on the array of roles passed in
  */
 export function mapScopesToRoles(roles: Roles[]) {
-  const scopeSet = new Set<string>()
+  const scopeSet = new Set<Scopes>()
   roles.forEach((role) => {
     const scopes = RoleScopes[role]
     scopes.forEach((scope) => {

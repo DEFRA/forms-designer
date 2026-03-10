@@ -148,7 +148,7 @@ describe('render-error-template', () => {
       expect(typeof result).toBe('object')
       // Verify the source was processed with data-fixed attribute
       expect(result).toHaveProperty('source')
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-explicit-any
+
       expect(/** @type {any} */ (result).source).toContain('data-fixed="true"')
     })
   })

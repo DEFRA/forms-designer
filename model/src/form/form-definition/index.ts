@@ -2,6 +2,7 @@ import JoiDate from '@joi/date'
 import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
+import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import { ComponentType } from '~/src/components/enums.js'
 import { isConditionalType } from '~/src/components/helpers.js'
 import {
@@ -481,7 +482,6 @@ export const conditionWrapperSchemaV2 = Joi.object<ConditionWrapperV2>()
         })
       )
       .min(1)
-      .max(15)
       .description('Array of conditions or condition references')
   })
   .description('Condition schema for V2 forms')
@@ -510,7 +510,7 @@ export const componentSchema = Joi.object<ComponentDef>()
       .required()
       .description('Component type (TextField, RadioButtons, DateField, etc.)'),
     shortDescription: Joi.string()
-      .trim()
+      .custom(rtrimOnly)
       .optional()
       .description('Brief description of the component purpose'),
     name: Joi.when('type', {

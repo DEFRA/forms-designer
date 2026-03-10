@@ -22,7 +22,10 @@ const staticDescriptions = {
     'Created a draft version of the live form.',
   [AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED]:
     'Downloaded form submissions.',
-  [AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED]: 'Downloaded user feedback.'
+  [AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED]:
+    'Downloaded user feedback.',
+  [AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED]:
+    'Accepted the data protection terms and conditions.'
 }
 
 /**

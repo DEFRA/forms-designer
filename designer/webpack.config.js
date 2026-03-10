@@ -183,9 +183,10 @@ export default /** @type {Configuration} */ ({
         defaultVendors: {
           /**
            * Use npm package names
-           * @param {NormalModule} module
+           * @param {Module} module
            */
-          name({ userRequest }) {
+          name(module) {
+            const { userRequest } = /** @type {NormalModule} */ (module)
             const [[modulePath, pkgName]] = userRequest.matchAll(
               /node_modules\/([^\\/]+)/g
             )
@@ -295,5 +296,5 @@ export default /** @type {Configuration} */ ({
 })
 
 /**
- * @import { Configuration, NormalModule } from 'webpack'
+ * @import { Configuration, Module, NormalModule } from 'webpack'
  */

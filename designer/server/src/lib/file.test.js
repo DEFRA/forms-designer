@@ -25,7 +25,7 @@ function createMockResponse(props = {}) {
     statusCode: props.statusCode,
     headers: {}
   }
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+
   return response
 }
 

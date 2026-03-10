@@ -21,7 +21,7 @@
         </div>
 
         <div class="app-assign-form__controls">
-          <select class="govuk-select" name="sectionId" required {% if sections.length == 0 %}disabled{% endif %}>
+          <select class="govuk-select" name="sectionId" required {% if sections.length == 0 %}disabled{% endif %} aria-label="Page {{ page.title }} to be assigned">
             <option value="">Select section</option>
             {% for section in sections %}
             <option value="{{ section.id }}">{{ section.title }}</option>

@@ -60,6 +60,7 @@ jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/session-helper.js')
 jest.mock('~/src/lib/list.js')
+jest.mock('~/src/lib/secrets.js')
 jest.mock('~/src/routes/forms/editor-v2/question-details-helper.js', () => ({
   handleEnhancedActionOnGet: jest.fn(),
   handleEnhancedActionOnPost: jest.fn(),

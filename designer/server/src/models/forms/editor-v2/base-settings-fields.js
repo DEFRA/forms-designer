@@ -76,7 +76,7 @@ export const baseSchema = Joi.object().keys({
       otherwise: Joi.when('questionType', {
         is: 'PaymentField',
         then: Joi.string().optional().allow(''),
-        otherwise: Joi.string().trim().required().messages({
+        otherwise: Joi.string().required().messages({
           '*': 'Enter a short description'
         })
       })
@@ -193,6 +193,35 @@ export const baseSchema = Joi.object().keys({
         'string.max': 'Payment description must be 230 characters or less'
       }),
       otherwise: Joi.string().optional().allow('')
+    }
+  ),
+  paymentTestApiKey: questionDetailsFullSchema.paymentApiKeySchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.string()
+        .pattern(/^(api_test_.+|\*{40})$/)
+        .required()
+        .messages({
+          'string.empty':
+            'Enter a test API key for the draft form and live previews',
+          'string.pattern.base': "Test API keys must start with 'api_test_'"
+        }),
+      otherwise: Joi.forbidden()
+    }
+  ),
+  paymentLiveApiKey: questionDetailsFullSchema.paymentApiKeySchema.when(
+    'questionType',
+    {
+      is: 'PaymentField',
+      then: Joi.string()
+        .pattern(/^(api_live_.+|\*{40})$/)
+        .optional()
+        .allow('')
+        .messages({
+          'string.pattern.base': "Live API keys must start with 'api_live_'"
+        }),
+      otherwise: Joi.forbidden()
     }
   )
 })
@@ -391,7 +420,9 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 
 export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentAmount,
-  QuestionBaseSettings.PaymentDescription
+  QuestionBaseSettings.PaymentDescription,
+  QuestionBaseSettings.PaymentTestApiKey,
+  QuestionBaseSettings.PaymentLiveApiKey
 ])
 
 /**
@@ -455,7 +486,7 @@ export function getFieldList(
 
     if (field.items) {
       // Handle checkbox/radio selections
-      const strValue = typeof value === 'string' ? value.toString() : ''
+      const strValue = typeof value === 'string' ? value : ''
       return {
         ...field,
         items: field.items.map((cb) => ({
