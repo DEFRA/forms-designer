@@ -258,4 +258,11 @@ Helium:2
       expect(result).toBeDefined()
     })
   })
+
+  describe('GeospatialField', () => {
+    it('should create Question instance', () => {
+      const result = SetupPreview(ComponentType.GeospatialField)
+      expect(result).toBeDefined()
+    })
+  })
 })
