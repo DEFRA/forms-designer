@@ -428,13 +428,15 @@ export async function questionDetailsViewModel(
     skipLink: getSkipLink(),
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     isLocationField: isLocationFieldType(questionFieldsOverride.type),
+    isGeospatialField:
+      questionFieldsOverride.type === ComponentType.GeospatialField,
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field)
   }
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, List, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  * @import { RequestQuery } from '@hapi/hapi'
  */
