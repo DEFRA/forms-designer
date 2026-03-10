@@ -51,6 +51,7 @@ jest.mock('~/src/views/preview-components/monthyearfield.njk', () => '')
 jest.mock('~/src/views/preview-components/fileuploadfield.njk', () => '')
 jest.mock('~/src/views/preview-components/hiddenfield.njk', () => '')
 jest.mock('~/src/views/preview-components/paymentfield.njk', () => '')
+jest.mock('~/src/views/preview-components/geospatialfield.njk', () => '')
 jest.mock('~/src/views/preview-components/unsupportedquestion.njk', () => '')
 
 jest.mock('~/src/javascripts/preview/nunjucks-renderer.js')

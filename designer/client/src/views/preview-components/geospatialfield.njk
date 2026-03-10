@@ -1,0 +1,15 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+
+<div class="govuk-form-group {{ model.previewClasses }}">
+  <h1 class="govuk-label-wrapper">
+    <label class="govuk-label govuk-label--l {{ model.label.classes }}" for="osgridref">
+      {{ model.label.text }}
+    </label>
+  </h1>
+
+  <div class="govuk-hint {{ model.hint.classes }}">{{ model.hint.text }}</div>
+</div>
+
+<img src="/assets/images/map-geospatial-placeholder.jpg" class="govuk-!-margin-bottom-2"
+  alt="Illustration to show how geospatial features look using a map" style="max-width: 100%">
