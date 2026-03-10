@@ -6,7 +6,7 @@ import { RunnableSequence } from '@langchain/core/runnables'
 
 import config from '~/src/config.js'
 
-const MODEL = 'claude-3-5-haiku-20241022'
+const MODEL = 'claude-haiku-4-5-20251001'
 
 const SYSTEM_TEMPLATE = `Answer the user as if you were an expert GDS copywriter.
 Reply with a concise declarative phrase describing the form field heading they have entered.

@@ -173,14 +173,19 @@ export class EventListeners {
        */
       (target, e) => {
         e.preventDefault()
-        postShortDescription(this.baseElements.question.value).then(
+        const question = this.baseElements.question?.value ?? ''
+        postShortDescription(question).then(
           ({ shortDescription }) => {
-            this.baseElements.shortDesc.value = shortDescription
-            const event = new InputEvent('input', { bubbles: true })
-            this.baseElements.shortDesc.dispatchEvent(event)
+            const shortDesc = this.baseElements.shortDesc
+            if (shortDesc) {
+              shortDesc.value = shortDescription
+              const event = new InputEvent('input', { bubbles: true })
+              shortDesc.dispatchEvent(event)
+            }
           }
         ).catch(e => {
-          console.error('Generate short description failed' e)
+          // eslint-disable-next-line no-console -- POC
+          console.error('Generate short description failed', e)
         })
       },
       'click'
