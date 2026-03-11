@@ -203,9 +203,9 @@ export const baseSchema = Joi.object().keys({
         .pattern(/^(api_test_.+|\*{40})$/)
         .required()
         .messages({
-          'string.empty':
-            'Enter a test API key for the draft form and live previews',
-          'string.pattern.base': "Test API keys must start with 'api_test_'"
+          'string.empty': 'Enter a test API key',
+          'string.pattern.base':
+            "Enter the test API key in the correct format. It must start with 'api_test_'"
         }),
       otherwise: Joi.forbidden()
     }
@@ -219,7 +219,8 @@ export const baseSchema = Joi.object().keys({
         .optional()
         .allow('')
         .messages({
-          'string.pattern.base': "Live API keys must start with 'api_live_'"
+          'string.pattern.base':
+            "Enter the live API key in the correct format. It must start with 'api_live_'"
         }),
       otherwise: Joi.forbidden()
     }

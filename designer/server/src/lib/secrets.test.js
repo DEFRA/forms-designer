@@ -117,7 +117,9 @@ describe('secrets.js', () => {
           token,
           true
         )
-      ).rejects.toThrow('Enter a live API key since this form is already live')
+      ).rejects.toThrow(
+        'Enter a live API key. Forms live on GOV.UK must have a live API key'
+      )
     })
 
     it('should save test secret but not live secret', async () => {

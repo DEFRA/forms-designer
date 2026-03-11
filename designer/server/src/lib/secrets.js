@@ -110,7 +110,7 @@ export async function validateApiKey(key, isLiveKey) {
     if (statusCode === StatusCodes.UNAUTHORIZED) {
       // UNAUTHORIZED - API key is invalid as key used as bearer token
       throw Boom.badRequest('Invalid API key', {
-        message: `The ${isLiveKey ? 'Live' : 'Test'} API key is invalid`
+        message: `Enter a valid ${isLiveKey ? 'live' : 'test'} API key. Check the key and try again`
       })
     } else if (statusCode === StatusCodes.NOT_FOUND) {
       // NOT_FOUND - passed auth and therefore valid API key but payment not found (as expected since we're not passing a payment id)
@@ -139,7 +139,8 @@ export async function savePaymentSecrets(
 ) {
   if (questionType === ComponentType.PaymentField) {
     if (!payload.paymentLiveApiKey && isFormLive) {
-      const message = 'Enter a live API key since this form is already live'
+      const message =
+        'Enter a live API key. Forms live on GOV.UK must have a live API key'
       throw Boom.badRequest(message, { message })
     }
     // Only save API key if it's a non-masked version
@@ -164,7 +165,7 @@ export async function savePaymentSecrets(
     }
     if (saveLiveKey) {
       await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
-      return '. The newly-entered live payment API key will not become active until the form is made live again.'
+      return '. Live API keys do not update automatically. Republish the form to use the updated live API key.'
     }
   }
   return ''
