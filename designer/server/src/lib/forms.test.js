@@ -5,8 +5,11 @@ import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as fetch from '~/src/lib/fetch.js'
 import * as forms from '~/src/lib/forms.js'
+import { existsSecret } from '~/src/lib/secrets.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
+
+jest.mock('~/src/lib/secrets.js')
 
 describe('Forms library routes', () => {
   /** @type {Server} */
@@ -71,6 +74,11 @@ describe('Forms library routes', () => {
       jest.spyOn(forms, 'list')
       jest.spyOn(forms, 'get')
       jest.spyOn(forms, 'getDraftFormDefinition')
+      jest.mocked(existsSecret).mockResolvedValue({
+        exists: false,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
     })
 
     afterEach(() => {
