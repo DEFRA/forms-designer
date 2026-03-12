@@ -103,7 +103,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>()
       answer: Joi.string().required()
     }).label('SaveAndExitSecurity'),
     state: Joi.object().required(),
-    magicLinkGroupId: Joi.string().optional().allow('')
+    magicLinkGroupId: Joi.string().optional()
   })
   .label('SaveAndExitMessageData')
 
