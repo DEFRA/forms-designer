@@ -94,6 +94,7 @@ export interface SubmitResponsePayload {
 }
 
 export interface SaveAndExitMessageData {
+  magicLinkGroupId: string
   form: {
     id: string
     title: string
@@ -121,6 +122,7 @@ export interface SaveAndExitMessage {
 
 export interface SaveAndExitRecord {
   magicLinkId: string
+  magicLinkGroupId: string
   form: {
     id: string
     status: FormStatus
