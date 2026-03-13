@@ -22,14 +22,12 @@ export const marked = new Marked({
       tokenizer(src: string, tokens: Token[]) {
         // Quotes are HTML-escaped before parsing, so " becomes &quot;
         const match = /^\{:target=&quot;_blank&quot;\}/.exec(src)
-        if (match && tokens.length > 0) {
-          const last = tokens[tokens.length - 1]
-          if (last.type === 'link') {
-            ;(last as Tokens.Link & { forceNewTab: boolean }).forceNewTab = true
-            return {
-              type: 'linkAttributes',
-              raw: match[0]
-            }
+        const last = tokens.at(-1)
+        if (match && last?.type === 'link') {
+          ;(last as Tokens.Link & { forceNewTab: boolean }).forceNewTab = true
+          return {
+            type: 'linkAttributes',
+            raw: match[0]
           }
         }
       },
