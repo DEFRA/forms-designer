@@ -2,20 +2,38 @@
 {% from "govuk/components/details/macro.njk" import govukDetails %}
 
 {{ govukDetails({
-  summaryText: "Request a live GOV.UK Pay account",
-  html: "<p>Before you can request a live account you need to test how GOV.UK Pay works using your test account.</p>" +
-  "<p>When you are ready to request a live account, go to your dashboard and select 'Setting up your live account'.</p>"
+  summaryText: "Replacing live API keys",
+  html: "<p>You might need to replace the live API key every few months depending on your organisation's API policy.</p>" +
+        "<p>New API keys don’t update automatically to prevent breaking your form.</p>" +
+        "<p>After updating a live API key, republish your form. The new key will show as 'pending' until you do.</p>" +
+        "<p>Contact the Defra Forms team if you don’t have permission to publish forms.</p>"
 }) }}
 
 {{ govukInput(field) }}
 
-{% if field.customMeta.exists %}
-  {% if field.customMeta.updatedAt == field.customMeta.createdAt %}
-  <div class="govuk-hint">Created at {{ field.customMeta.createdAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+<!-- Key pending go-live -->
+{% if field.customMeta.keyPending.exists %}
+  {% set key = field.customMeta.keyPending %}
+  {% if key.updatedAt == key.createdAt %}
+    {% set actionText = "Created at " + key.createdAt | formatDate('d MMM yyyy h:mm aaa') %}
   {% endif %}
-  {% if field.customMeta.updatedAt > field.customMeta.createdAt %}
-  <div class="govuk-hint">Updated at {{ field.customMeta.updatedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+  {% if key.updatedAt > key.createdAt %}
+    {% set actionText = "Updated at " + key.updatedAt | formatDate('d MMM yyyy h:mm aaa') %}
   {% endif %}
+  <div class="govuk-hint">
+    <span class="govuk-body govuk-!-font-weight-bold">Pending API key: </span>
+    {{ actionText }}
+  </div>
+{% endif %}
+
+<!-- Live key in use -->
+{% if field.customMeta.key.exists %}
+  {% set key = field.customMeta.key %}
+  {% if key.renamedAt %}
+    <div class="govuk-hint"><span class="govuk-body govuk-!-font-weight-bold">Live API key: </span>Added on {{ key.renamedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+  {% endif %}
+{% else %}
+  <div class="govuk-hint"><span class="govuk-body govuk-!-font-weight-bold">Live API key: No key exists</span></div>
 {% endif %}
 
 {% if field.disabled %}

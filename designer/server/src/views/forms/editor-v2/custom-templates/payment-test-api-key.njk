@@ -27,12 +27,12 @@
 
 {{ govukInput(field) }}
 
-{% if field.customMeta.exists %}
-  {% if field.customMeta.updatedAt == field.customMeta.createdAt %}
-  <div class="govuk-hint">Created at {{ field.customMeta.createdAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+{% if field.customMeta.key.exists %}
+  {% if field.customMeta.key.updatedAt == field.customMeta.key.createdAt %}
+  <div class="govuk-hint">Created at {{ field.customMeta.key.createdAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
   {% endif %}
-  {% if field.customMeta.updatedAt > field.customMeta.createdAt %}
-  <div class="govuk-hint">Updated at {{ field.customMeta.updatedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
+  {% if field.customMeta.key.updatedAt > field.customMeta.key.createdAt %}
+  <div class="govuk-hint">Updated at {{ field.customMeta.key.updatedAt | formatDate('d MMM yyyy h:mm aaa') }}</div>
   {% endif %}
 {% endif %}
 

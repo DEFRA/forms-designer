@@ -9,10 +9,17 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import config from '~/src/config.js'
 import * as audit from '~/src/lib/audit.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  PAYMENT_LIVE_API_KEY_PENDING,
+  existsSecret
+} from '~/src/lib/secrets.js'
 import { getSortOptions } from '~/src/lib/sort.js'
 import { overviewHistoryViewModel } from '~/src/models/forms/history.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
+
+const PAYMENT_API_KEY_PENDING_BANNER_TEXT =
+  'Republish the form to use the updated live API key. Contact the Defra Forms team if you don’t have permission to publish forms.'
 
 export default [
   /**
@@ -122,6 +129,12 @@ export default [
           definition = await forms.getDraftFormDefinition(form.id, token)
         }
 
+        const pendingPaymentApiKey = await existsSecret(
+          form.id,
+          PAYMENT_LIVE_API_KEY_PENDING,
+          token
+        )
+
         const titleActionItems = []
         if (!form.live) {
           titleActionItems.push({
@@ -163,7 +176,14 @@ export default [
           yar.flash(sessionNames.successNotification).at(0)
         )
 
-        return h.view('forms/overview', { ...model, titleActionItems, history })
+        return h.view('forms/overview', {
+          ...model,
+          titleActionItems,
+          history,
+          globalBannerText: pendingPaymentApiKey.exists
+            ? PAYMENT_API_KEY_PENDING_BANNER_TEXT
+            : undefined
+        })
       },
       auth: {
         mode: 'required',

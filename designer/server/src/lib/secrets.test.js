@@ -56,11 +56,17 @@ describe('secrets.js', () => {
         })
         .mockResolvedValueOnce({
           response: createMockResponse(),
+          body: { exists: true }
+        })
+        .mockResolvedValueOnce({
+          response: createMockResponse(),
           body: { exists: false }
         })
       const result = await getPaymentSecretsMasked(formId, token)
       expect(result.testKey.maskedKey).toBe(MASKED_KEY)
       expect(result.testKey.exists).toBe(true)
+      expect(result.liveKeyPending.maskedKey).toBe(MASKED_KEY)
+      expect(result.liveKeyPending.exists).toBe(true)
       expect(result.liveKey.maskedKey).toBe('')
       expect(result.liveKey.exists).toBe(false)
     })
@@ -97,6 +103,25 @@ describe('secrets.js', () => {
   })
 
   describe('savePaymentSecrets', () => {
+    it('should throw if form is live but no live secret supplied', async () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        paymentTestApiKey: 'Some new secret',
+        paymentLiveApiKey: ''
+      })
+
+      await expect(() =>
+        savePaymentSecrets(
+          ComponentType.PaymentField,
+          formId,
+          payload,
+          token,
+          true
+        )
+      ).rejects.toThrow(
+        'Enter a live API key. Forms live on GOV.UK must have a live API key'
+      )
+    })
+
     it('should save test secret but not live secret', async () => {
       mockedPostJson
         .mockResolvedValueOnce({

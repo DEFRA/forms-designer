@@ -351,6 +351,13 @@
   }) }}
 {% endset %}
 
+{% set globalBanner %}
+    {{ govukNotificationBanner({
+      text: globalBannerText,
+      classes: "full-width-banner"
+    }) }}
+{% endset %}
+
 {% set formHeading %}
   {% call govukNotificationBanner({
     type: "success"
@@ -382,6 +389,9 @@
   <div class="govuk-width-container app-width-container--wide">
     {{ appGridLayout([
       [
+        {
+          html: globalBanner
+        } if globalBannerText,
         {
           html: formHeading
         } if notification | length,

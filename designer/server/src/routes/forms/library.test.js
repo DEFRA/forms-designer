@@ -9,11 +9,13 @@ import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as audit from '~/src/lib/audit.js'
 import * as forms from '~/src/lib/forms.js'
+import { existsSecret } from '~/src/lib/secrets.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/audit.js')
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/lib/secrets.js')
 
 describe('Forms library routes', () => {
   /** @type {Server} */
@@ -30,6 +32,11 @@ describe('Forms library routes', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.mocked(existsSecret).mockResolvedValue({
+      exists: false,
+      createdAt: undefined,
+      updatedAt: undefined
+    })
   })
 
   const now = new Date()
@@ -843,6 +850,34 @@ describe('Forms library routes', () => {
       })
     })
 
+    describe('Global banner', () => {
+      it('should show global banner when payment key pending', async () => {
+        jest.mocked(existsSecret).mockResolvedValue({
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+        jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $banners = document.querySelectorAll(
+          '.govuk-notification-banner__heading'
+        )
+
+        expect($banners).toHaveLength(1)
+        expect($banners[0]).toHaveTextContent(
+          'Republish the form to use the updated live API key. Contact the Defra Forms team if you don’t have permission to publish forms.'
+        )
+      })
+    })
+
     describe('History section', () => {
       it('should display history section when audit records exist', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
@@ -933,6 +968,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */

@@ -157,11 +157,11 @@ export const allBaseSettingsFields = {
     name: 'paymentTestApiKey',
     idPrefix: 'paymentTestApiKey',
     label: {
-      text: 'Test API key for the draft form and live previews',
+      text: 'Test API key',
       classes: GOVUK_LABEL__M
     },
     hint: {
-      text: 'Use a test API key from your GOV.UK Pay test account. This is used while your form is in draft or if you are previewing a live form'
+      text: 'You need a test API key to add a payment question or preview a live form'
     },
     customTemplate: 'payment-test-api-key'
   },
@@ -174,7 +174,7 @@ export const allBaseSettingsFields = {
       classes: GOVUK_LABEL__M
     },
     hint: {
-      text: 'Make sure your live API key has been tested and can take real payments'
+      html: 'Make sure the live API key works with real payments'
     },
     customTemplate: 'payment-live-api-key'
   }

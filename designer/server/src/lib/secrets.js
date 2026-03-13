@@ -49,14 +49,20 @@ export async function existsSecret(formId, secretName, token) {
  * @param {string} token
  */
 export async function getPaymentSecretsMasked(formId, token) {
-  const [testKeyExists, liveKeyExists] = await Promise.all([
-    existsSecret(formId, PAYMENT_TEST_API_KEY, token),
-    existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
-  ])
+  const [testKeyExists, liveKeyPendingExists, liveKeyExists] =
+    await Promise.all([
+      existsSecret(formId, PAYMENT_TEST_API_KEY, token),
+      existsSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token),
+      existsSecret(formId, PAYMENT_LIVE_API_KEY, token)
+    ])
   return {
     testKey: {
       ...testKeyExists,
       maskedKey: testKeyExists.exists ? MASKED_KEY : ''
+    },
+    liveKeyPending: {
+      ...liveKeyPendingExists,
+      maskedKey: liveKeyPendingExists.exists ? MASKED_KEY : ''
     },
     liveKey: {
       ...liveKeyExists,
@@ -72,7 +78,7 @@ export async function getPaymentSecretsMasked(formId, token) {
  * @param {string} token
  */
 export async function savePaymentSecret(formId, secretValue, isLive, token) {
-  const key = isLive ? PAYMENT_LIVE_API_KEY : PAYMENT_TEST_API_KEY
+  const key = isLive ? PAYMENT_LIVE_API_KEY_PENDING : PAYMENT_TEST_API_KEY
   const { response } = await postJson(buildRequestUrl(formId, key), {
     payload: { secretValue },
     ...getHeaders(token)
@@ -104,7 +110,7 @@ export async function validateApiKey(key, isLiveKey) {
     if (statusCode === StatusCodes.UNAUTHORIZED) {
       // UNAUTHORIZED - API key is invalid as key used as bearer token
       throw Boom.badRequest('Invalid API key', {
-        message: `The ${isLiveKey ? 'Live' : 'Test'} API key is invalid`
+        message: `Enter a valid ${isLiveKey ? 'live' : 'test'} API key. Check the key and try again`
       })
     } else if (statusCode === StatusCodes.NOT_FOUND) {
       // NOT_FOUND - passed auth and therefore valid API key but payment not found (as expected since we're not passing a payment id)
@@ -122,6 +128,7 @@ export async function validateApiKey(key, isLiveKey) {
  * @param {FormEditorInputQuestionDetails} payload
  * @param {string} token
  * @param {boolean} isFormLive
+ * @returns {Promise<string>} possible extra message for the notification banner
  */
 export async function savePaymentSecrets(
   questionType,
@@ -132,25 +139,36 @@ export async function savePaymentSecrets(
 ) {
   if (questionType === ComponentType.PaymentField) {
     if (!payload.paymentLiveApiKey && isFormLive) {
-      const message = 'Enter a live API key since this form is already live'
+      const message =
+        'Enter a live API key. Forms live on GOV.UK must have a live API key'
       throw Boom.badRequest(message, { message })
     }
     // Only save API key if it's a non-masked version
-    if (
+    const saveTestKey =
       payload.paymentTestApiKey !== MASKED_KEY &&
       payload.paymentTestApiKey.length
-    ) {
-      await validateApiKey(payload.paymentTestApiKey, false)
-      await savePaymentSecret(formId, payload.paymentTestApiKey, false, token)
-    }
-    if (
+    const saveLiveKey =
       payload.paymentLiveApiKey !== MASKED_KEY &&
       payload.paymentLiveApiKey.length
-    ) {
+
+    // Validate both before saving
+    if (saveTestKey) {
+      await validateApiKey(payload.paymentTestApiKey, false)
+    }
+    if (saveLiveKey) {
       await validateApiKey(payload.paymentLiveApiKey, true)
+    }
+
+    // Save
+    if (saveTestKey) {
+      await savePaymentSecret(formId, payload.paymentTestApiKey, false, token)
+    }
+    if (saveLiveKey) {
       await savePaymentSecret(formId, payload.paymentLiveApiKey, true, token)
+      return '. Live API keys do not update automatically. Republish the form to use the updated live API key.'
     }
   }
+  return ''
 }
 
 /**
