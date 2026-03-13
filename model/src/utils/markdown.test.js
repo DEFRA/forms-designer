@@ -49,6 +49,38 @@ describe('Helpers', () => {
     })
   })
 
+  describe('markdown with {:target="_blank"} attribute syntax', () => {
+    const exampleBaseUrl = 'https://defra.gov.uk'
+
+    it.each([
+      {
+        description: 'forces internal link to open in new tab',
+        markdown:
+          '[Open the service](https://defra.gov.uk/some-page){:target="_blank"}',
+        html: '<p><a class="govuk-link" href="https://defra.gov.uk/some-page" target="_blank" rel="noreferrer noopener">Open the service (opens in new tab)</a></p>\n'
+      },
+      {
+        description: 'works on external link (already opens in new tab)',
+        markdown: '[Visit example](https://example.com){:target="_blank"}',
+        html: '<p><a class="govuk-link" href="https://example.com" target="_blank" rel="noreferrer noopener">Visit example (opens in new tab)</a></p>\n'
+      },
+      {
+        description: 'does not affect link without attribute syntax',
+        markdown: '[link](https://defra.gov.uk)',
+        html: '<p><a class="govuk-link" href="https://defra.gov.uk">link</a></p>\n'
+      },
+      {
+        description:
+          'works with multiple links where only one has the attribute',
+        markdown:
+          '[first](https://defra.gov.uk) and [second](https://defra.gov.uk/other){:target="_blank"}',
+        html: '<p><a class="govuk-link" href="https://defra.gov.uk">first</a> and <a class="govuk-link" href="https://defra.gov.uk/other" target="_blank" rel="noreferrer noopener">second (opens in new tab)</a></p>\n'
+      }
+    ])('$description', ({ markdown, html }) => {
+      expect(markdownToHtml(markdown, { baseUrl: exampleBaseUrl })).toBe(html)
+    })
+  })
+
   describe('markdown without base URL should always show as internal', () => {
     it.each([
       {

@@ -1,27 +1,66 @@
-import { Marked, Renderer, type Tokens } from 'marked'
+import { Marked, Renderer, type Token, type Tokens } from 'marked'
 
 /**
  * Marked instance (avoids global option/extension scope)
  */
 export const marked = new Marked({
   breaks: true,
-  gfm: true
+  gfm: true,
+
+  /**
+   * Inline extension to support {:target="_blank"} attribute syntax on links.
+   * Allows form designers to force any link to open in a new tab, e.g.
+   * [Open the service](https://example.gov.uk){:target="_blank"}
+   */
+  extensions: [
+    {
+      name: 'linkAttributes',
+      level: 'inline',
+      start(src: string) {
+        return src.indexOf('{:')
+      },
+      tokenizer(src: string, tokens: Token[]) {
+        // Quotes are HTML-escaped before parsing, so " becomes &quot;
+        const match = /^\{:target=&quot;_blank&quot;\}/.exec(src)
+        if (match && tokens.length > 0) {
+          const last = tokens[tokens.length - 1]
+          if (last.type === 'link') {
+            ;(last as Tokens.Link & { forceNewTab: boolean }).forceNewTab = true
+            return {
+              type: 'linkAttributes',
+              raw: match[0]
+            }
+          }
+        }
+      },
+      renderer() {
+        return ''
+      }
+    }
+  ]
 })
 
-function renderLink(href: string, text: string, baseUrl?: string) {
+function renderLink(
+  href: string,
+  text: string,
+  baseUrl?: string,
+  forceNewTab = false
+) {
   let isLocalLink = true
 
   if (baseUrl) {
     isLocalLink = href.startsWith(baseUrl) || href.startsWith('mailto:')
   }
 
+  const openInNewTab = !isLocalLink || forceNewTab
+
   const attrs = [`class="govuk-link"`, `href="${href}"`]
 
-  if (!isLocalLink) {
+  if (openInNewTab) {
     attrs.push(`target="_blank" rel="noreferrer noopener"`)
   }
 
-  const label = !isLocalLink ? `${text} (opens in new tab)` : text
+  const label = openInNewTab ? `${text} (opens in new tab)` : text
 
   return `<a ${attrs.join(' ')}>${label}</a>`
 }
@@ -59,8 +98,13 @@ export function markdownToHtml(
     .replace(/'/g, '&#39;')
 
   const renderer = new Renderer()
-  renderer.link = ({ href, text }: Tokens.Link): string => {
-    return renderLink(href, text, options?.baseUrl)
+  renderer.link = (token: Tokens.Link): string => {
+    return renderLink(
+      token.href,
+      token.text,
+      options?.baseUrl,
+      (token as Tokens.Link & { forceNewTab?: boolean }).forceNewTab
+    )
   }
   if (options?.startingHeaderLevel) {
     renderer.heading = ({ text, depth }: Tokens.Heading): string => {
