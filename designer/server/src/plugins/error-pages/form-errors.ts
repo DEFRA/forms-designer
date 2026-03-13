@@ -42,7 +42,7 @@ export const formErrorsToMessages = {
   [FormDefinitionError.RefPageCondition]:
     'This page is referenced by a condition. Remove the condition before making changes to this page.',
   [FormDefinitionError.RefConditionComponentId]:
-    'A condition is using a question on this page. Remove the condition before re-attempting its removal.',
+    'Remove the condition before deleting this page',
   [FormDefinitionError.RefConditionListId]:
     'A condition is using a list in this form. Remove the condition before making changes to the list.',
   [FormDefinitionError.RefConditionItemId]:
