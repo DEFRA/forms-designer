@@ -799,7 +799,7 @@ describe('Forms library routes', () => {
 
       const $activeTab = document.querySelector('.app-page-navigation__link')
 
-      expect($activeTab?.textContent.trim()).toBe('Metadata')
+      expect($activeTab?.textContent?.trim()).toBe('Metadata')
     })
 
     it('should load the form info page successfully, showing the definition', async () => {
@@ -818,7 +818,7 @@ describe('Forms library routes', () => {
 
       const $activeTab = document.querySelector('.app-page-navigation__link')
 
-      expect($activeTab?.textContent.trim()).toBe('Definition')
+      expect($activeTab?.textContent?.trim()).toBe('Definition')
     })
   })
 
