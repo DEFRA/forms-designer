@@ -223,6 +223,37 @@ export default [
         }
       }
     }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string, activeTab?: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/info/{activeTab?}',
+    options: {
+      async handler(request, h) {
+        const { auth, params } = request
+        const { token } = auth.credentials
+        const { slug, activeTab } = params
+
+        // Retrieve form by slug
+        const form = await forms.get(slug, token)
+
+        // Retrieve definition by ID
+        const definition = await forms.getDraftFormDefinition(form.id, token)
+
+        const model = library.infoViewModel(form, definition, activeTab)
+        return h.view('forms/info', model)
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormEdit}`]
+        }
+      }
+    }
   })
 ]
 

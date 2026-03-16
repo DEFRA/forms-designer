@@ -782,6 +782,46 @@ describe('Forms library routes', () => {
     })
   })
 
+  describe('Form info page', () => {
+    it('should load the form info page successfully, defaulting to metadata', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/info',
+        auth
+      }
+
+      await renderResponse(server, options)
+
+      const $activeTab = document.querySelector('.app-page-navigation__link')
+
+      expect($activeTab?.textContent.trim()).toBe('Metadata')
+    })
+
+    it('should load the form info page successfully, showing the definition', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/info/definition',
+        auth
+      }
+
+      await renderResponse(server, options)
+
+      const $activeTab = document.querySelector('.app-page-navigation__link')
+
+      expect($activeTab?.textContent.trim()).toBe('Definition')
+    })
+  })
+
   describe('Form overview', () => {
     beforeEach(() => {
       // Default mock for audit history - returns empty records
