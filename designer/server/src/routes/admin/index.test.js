@@ -100,6 +100,13 @@ function getManifestJsonFromArchive() {
   return JSON.parse(manifestCall[0])
 }
 
+const liveState = {
+  createdAt: testFormMetadata.createdAt,
+  createdBy: testFormMetadata.createdBy,
+  updatedAt: testFormMetadata.updatedAt,
+  updatedBy: testFormMetadata.updatedBy
+}
+
 describe('System admin routes', () => {
   /** @type {Server} */
   let server
@@ -290,8 +297,8 @@ describe('System admin routes', () => {
 
       test('should download all forms successfully with both live and draft definitions', async () => {
         const mockForms = [
-          testFormMetadata,
-          { ...testFormMetadata, id: 'form-2', slug: 'form-2' }
+          { ...testFormMetadata, live: liveState },
+          { ...testFormMetadata, id: 'form-2', slug: 'form-2', live: liveState }
         ]
 
         jest.mocked(forms.listAll).mockResolvedValueOnce(mockForms)
@@ -357,24 +364,17 @@ describe('System admin routes', () => {
       })
 
       test('should handle forms with only live definition (no draft)', async () => {
+        const { draft: _draft, ...formWithoutDraftBase } = testFormMetadata
         const formWithoutDraft = {
-          ...testFormMetadata,
-          draft: undefined
+          ...formWithoutDraftBase,
+          live: liveState
         }
 
         jest.mocked(forms.listAll).mockResolvedValueOnce([formWithoutDraft])
 
-        const notFoundError = Object.assign(new Error('Not found'), {
-          data: { statusCode: StatusCodes.NOT_FOUND }
-        })
-
         jest
           .mocked(forms.getLiveFormDefinition)
           .mockResolvedValue(testFormDefinitionWithSinglePage)
-
-        jest
-          .mocked(forms.getDraftFormDefinition)
-          .mockRejectedValueOnce(notFoundError)
 
         const options = {
           method: 'post',
@@ -392,8 +392,8 @@ describe('System admin routes', () => {
 
         // Verify live definition was requested
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
-        // Draft definition is always requested and 404 is ignored
-        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
+        // Draft definition is skipped when metadata says it does not exist
+        expect(forms.getDraftFormDefinition).not.toHaveBeenCalled()
 
         // Verify audit event published
         expect(publishFormsBackupRequestedEvent).toHaveBeenCalledWith(
@@ -404,12 +404,16 @@ describe('System admin routes', () => {
       })
 
       test('should throw error if one of the api calls fails (non 404 error)', async () => {
-        const form1 = testFormMetadata
-        const form2 = {
+        const { draft: _draft, ...formWithoutDraftBase } = testFormMetadata
+        const form1 = {
           ...testFormMetadata,
+          live: liveState
+        }
+        const form2 = {
+          ...formWithoutDraftBase,
           id: 'form-2',
           slug: 'form-2',
-          draft: undefined
+          live: liveState
         }
 
         jest.mocked(forms.listAll).mockResolvedValueOnce([form1, form2])
@@ -441,11 +445,14 @@ describe('System admin routes', () => {
         // Verify definitions were requested
         expect(publishFormsBackupRequestedEvent).not.toHaveBeenCalled()
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(2)
-        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(2)
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
       })
 
-      test('should ignore 404 when fetching live definition', async () => {
-        const form1 = testFormMetadata
+      test('should ignore 404 when fetching live definition for a form marked live', async () => {
+        const form1 = {
+          ...testFormMetadata,
+          live: liveState
+        }
 
         jest.mocked(forms.listAll).mockResolvedValueOnce([form1])
 
@@ -483,8 +490,11 @@ describe('System admin routes', () => {
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
       })
 
-      test('should ignore 404 when fetching draft definition', async () => {
-        const form1 = testFormMetadata
+      test('should ignore 404 when fetching draft definition for a form marked draft', async () => {
+        const form1 = {
+          ...testFormMetadata,
+          live: liveState
+        }
 
         jest.mocked(forms.listAll).mockResolvedValueOnce([form1])
 
@@ -519,6 +529,27 @@ describe('System admin routes', () => {
           expect.any(Number)
         )
         expect(forms.getLiveFormDefinition).toHaveBeenCalledTimes(1)
+        expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
+      })
+
+      test('should skip live definition request when metadata has no live state', async () => {
+        jest.mocked(forms.listAll).mockResolvedValueOnce([testFormMetadata])
+
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+        const options = {
+          method: 'post',
+          url: '/admin/index',
+          auth,
+          payload: { action: 'download' }
+        }
+
+        const response = await server.inject(options)
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(forms.getLiveFormDefinition).not.toHaveBeenCalled()
         expect(forms.getDraftFormDefinition).toHaveBeenCalledTimes(1)
       })
 
@@ -527,7 +558,8 @@ describe('System admin routes', () => {
         const mockForms = Array.from({ length: 12 }, (_, i) => ({
           ...testFormMetadata,
           id: `form-${i}`,
-          slug: `form-${i}`
+          slug: `form-${i}`,
+          live: liveState
         }))
 
         jest.mocked(forms.listAll).mockResolvedValueOnce(mockForms)

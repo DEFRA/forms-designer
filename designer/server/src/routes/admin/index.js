@@ -164,7 +164,7 @@ async function processForm(metadata, token, archive) {
   archive.append(metadataJson, { name: metadataName })
 
   // Then append definitions under {id}/definition_*.json
-  const definition = await getFormDefinitions(metadata.id, token)
+  const definition = await getFormDefinitions(metadata, token)
   appendFormDefinitionsToArchive(metadata.id, archive, definition)
 }
 
@@ -336,14 +336,18 @@ function appendManifestToArchive(archive, totalForms, manifestEntities) {
 
 /**
  * Retrieve both live and draft form definitions
- * @param {string} id - The form metadata ID
+ * @param {FormMetadata} metadata - The form metadata
  * @param {string} token - Auth token
  * @returns {Promise<{ liveDefinition?: FormDefinition , draftDefinition?: FormDefinition }>}
  */
-async function getFormDefinitions(id, token) {
+async function getFormDefinitions(metadata, token) {
   const [liveDefinition, draftDefinition] = await Promise.all([
-    forms.getLiveFormDefinition(id, token).catch(ignore404Error),
-    forms.getDraftFormDefinition(id, token).catch(ignore404Error)
+    metadata.live
+      ? forms.getLiveFormDefinition(metadata.id, token).catch(ignore404Error)
+      : undefined,
+    metadata.draft
+      ? forms.getDraftFormDefinition(metadata.id, token).catch(ignore404Error)
+      : undefined
   ])
 
   return { liveDefinition, draftDefinition }
