@@ -17,6 +17,7 @@ import { getSortOptions } from '~/src/lib/sort.js'
 import { overviewHistoryViewModel } from '~/src/models/forms/history.js'
 import * as library from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
+import { getForm } from '~/src/routes/forms/editor-v2/helpers.js'
 
 const PAYMENT_API_KEY_PENDING_BANNER_TEXT =
   'Republish the form to use the updated live API key. Contact the Defra Forms team if you don’t have permission to publish forms.'
@@ -214,6 +215,34 @@ export default [
 
         const model = library.editorViewModel(form, definition)
         return h.view('forms/editor', model)
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormEdit}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { slug: string, activeTab?: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/info/{activeTab?}',
+    options: {
+      async handler(request, h) {
+        const { auth, params } = request
+        const { token } = auth.credentials
+        const { slug, activeTab } = params
+
+        // Retrieve form
+        const { metadata, definition } = await getForm(slug, token)
+
+        const model = library.infoViewModel(metadata, definition, activeTab)
+        return h.view('forms/info', model)
       },
       auth: {
         mode: 'required',

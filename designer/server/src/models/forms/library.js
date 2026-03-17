@@ -20,6 +20,11 @@ const SORT_FIELD_MAP = {
   title: 'title'
 }
 
+const FORM_DEFINITION_TITLE = 'Definition'
+const FORM_METADATA_TITLE = 'Metadata'
+const FORM_DEFINITION_TAB = 'definition'
+const FORM_METADATA_TAB = 'metadata'
+
 /**
  * @typedef {object} ListViewModel
  * @property {string} pageTitle - The number of items per page.
@@ -270,6 +275,53 @@ export function editorViewModel(metadata, definition) {
     form: metadata,
     formDefinition: definition,
     previewUrl: config.previewUrl
+  }
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param { string | undefined } activeTab
+ */
+export function infoViewModel(
+  metadata,
+  definition,
+  activeTab = FORM_METADATA_TAB
+) {
+  const pageTitle = metadata.title
+  const formPath = formOverviewPath(metadata.slug)
+
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+
+  const tabs = [
+    { title: FORM_METADATA_TITLE, link: FORM_METADATA_TAB },
+    { title: FORM_DEFINITION_TITLE, link: FORM_DEFINITION_TAB }
+  ]
+
+  const tabConfig = tabs.map((tab) => ({
+    title: tab.title,
+    link: `${formOverviewPath(metadata.slug)}/info/${tab.link}`,
+    isActive: tab.link === activeTab
+  }))
+
+  return {
+    backLink: formOverviewBackLink(metadata.slug),
+    navigation,
+    pageTitle,
+    pageHeading: {
+      text: pageTitle,
+      size: 'large'
+    },
+    jsonData:
+      activeTab === FORM_DEFINITION_TAB
+        ? JSON.stringify(definition, null, 2)
+        : JSON.stringify(metadata, null, 2),
+    tabConfig
   }
 }
 

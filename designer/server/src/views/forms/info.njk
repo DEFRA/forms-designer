@@ -1,0 +1,31 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "editor-card/macro.njk" import appEditorCard %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    {% call appEditorCard({
+      titles: tabConfig,
+      id: 'form-info',
+      caption: cardCaption,
+      heading: cardHeading,
+      classes: 'govuk-!-padding-top-0'
+    }) %}
+
+      <pre>
+        <code>{{ jsonData }}</code>
+      </pre>
+
+    {% endcall %}
+  {% endcall %}
+{% endblock %}
