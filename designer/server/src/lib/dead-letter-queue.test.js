@@ -39,9 +39,9 @@ describe('dead-letter queue lib functions', () => {
 
   describe('getDeadLetterQueueMessages', () => {
     it('should call endpoint', async () => {
-      // @ts-expect-error - partial mock of response
       jest
         .mocked(getJson)
+        // @ts-expect-error - partial mock of response
         .mockResolvedValueOnce({ body: { messages: ['message1'] } })
       const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
       const res = await getDeadLetterQueueMessages(dlq, 'token')
@@ -55,9 +55,9 @@ describe('dead-letter queue lib functions', () => {
 
   describe('redriveDeadLetterQueueMessages', () => {
     it('should call endpoint', async () => {
-      // @ts-expect-error - partial mock of response
       jest
         .mocked(postJson)
+        // @ts-expect-error - partial mock of response
         .mockResolvedValueOnce({ body: { message: 'success' } })
       const dlq = DeadLetterQueues.AuditApi
       await redriveDeadLetterQueueMessages(dlq, 'token')
