@@ -25,7 +25,9 @@ const reactPath = dirname(
 )
 
 const pluginPath = dirname(
-  require.resolve('@defra/forms-engine-plugin/package.json')
+  resolvePkg.sync('@defra/forms-engine-plugin/package.json', {
+    basedir: rootDir
+  })
 )
 
 export default /** @type {Configuration} */ ({
