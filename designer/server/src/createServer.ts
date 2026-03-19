@@ -212,6 +212,7 @@ export async function createServer() {
   await server.register(router)
   await server.register(
     {
+      // @ts-expect-error - plugin types
       plugin: mapPlugin,
       options: {
         ordnanceSurveyApiKey: config.ordnanceSurveyApiKey,
