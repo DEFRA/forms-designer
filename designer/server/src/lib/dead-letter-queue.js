@@ -47,7 +47,7 @@ export function getEndpoint(dlq) {
  * @param {string} token
  */
 export async function getDeadLetterQueueMessages(dlq, token) {
-  const getJsonByType = /** @type {typeof getJson<{ messages: [] }>} */ (
+  const getJsonByType = /** @type {typeof getJson<{ messages: any[] }>} */ (
     getJson
   )
 

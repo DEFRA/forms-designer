@@ -14,6 +14,8 @@ import { redriveDeadLetterQueueConfirmationViewModel } from '~/src/models/manage
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 
+const ADMIN_TOOLS = 'Admin tools'
+
 const schema = Joi.object({
   dlq: Joi.string()
     .required()
@@ -24,7 +26,7 @@ const schema = Joi.object({
 })
 
 export function generateTitling() {
-  const pageHeading = 'Admin tools'
+  const pageHeading = ADMIN_TOOLS
 
   return {
     pageTitle: `${pageHeading} - dead-letter queues`,
@@ -48,7 +50,7 @@ export default [
     handler(request, h) {
       const { yar } = request
 
-      const navigation = buildAdminNavigation('Admin tools')
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
       // Validation errors
       const validation = yar
@@ -149,7 +151,7 @@ export default [
       const { token } = auth.credentials
       const { dlq } = params
 
-      const navigation = buildAdminNavigation('Admin tools')
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
       const { messages } = await getDeadLetterQueueMessages(dlq, token)
 

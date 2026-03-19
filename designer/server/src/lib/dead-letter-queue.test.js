@@ -35,6 +35,13 @@ describe('dead-letter queue lib functions', () => {
         qualifier: '/save-and-exit'
       })
     })
+
+    it('should throw if invalid queue selection', () => {
+      // @ts-expect-error - invalid queue name, not in enum
+      expect(() => getEndpoint('invalid-queue-name')).toThrow(
+        'Invalid dead-letter queue'
+      )
+    })
   })
 
   describe('getDeadLetterQueueMessages', () => {

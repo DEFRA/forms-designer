@@ -29,7 +29,7 @@ describe('Dead-letter queues routes', () => {
     jest.clearAllMocks()
   })
 
-  describe('GET', () => {
+  describe('Journey', () => {
     test('should render form with radio options', async () => {
       const options = {
         method: 'get',
@@ -63,9 +63,7 @@ describe('Dead-letter queues routes', () => {
       )
       expect(response.result).toMatchSnapshot()
     })
-  })
 
-  describe('POST', () => {
     test('should error if invalid payload key', async () => {
       const options = {
         method: 'post',
@@ -99,7 +97,9 @@ describe('Dead-letter queues routes', () => {
     test('should redirect to next screen if valid queue selected and display queue messages', async () => {
       jest
         .mocked(getDeadLetterQueueMessages)
-        .mockResolvedValueOnce({ messages: [] })
+        .mockResolvedValueOnce({
+          messages: ['{ "message": "some message text"}']
+        })
       const options = {
         method: 'post',
         url: '/admin/dead-letter-queues',
@@ -113,6 +113,45 @@ describe('Dead-letter queues routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
+    })
+
+    test('should render form with messages and redrive button', async () => {
+      jest
+        .mocked(getDeadLetterQueueMessages)
+        .mockResolvedValueOnce({
+          messages: ['{ "message": "some message text"}']
+        })
+
+      const options = {
+        method: 'get',
+        url: '/admin/dead-letter-queues/audit-api',
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByRole('heading', { level: 1 })
+      const $links = container.getAllByRole('link')
+      const $button = container.getByRole('button', { name: 'Redrive' })
+      const $messages = container.getAllByRole('code')
+
+      expect($mastheadHeading).toHaveTextContent('Admin tools')
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      // Check tab headings and active tab
+      expect($links[4]).toHaveTextContent('My account')
+      expect($links[5]).toHaveTextContent('Manage users')
+      expect($links[6]).toHaveTextContent('Admin tools')
+      expect($links[7]).toHaveTextContent('Support')
+      expect($links[8]).toHaveTextContent('Back to admin tools home')
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(response.headers['content-type']).toContain('text/html')
+
+      expect($messages).toHaveLength(1)
+      expect($button).toBeInTheDocument()
+
+      expect(response.result).toMatchSnapshot()
     })
 
     test('should forward to confirmation screen if redrive selected', async () => {
@@ -130,6 +169,32 @@ describe('Dead-letter queues routes', () => {
       expect(headers.location).toBe(
         '/admin/dead-letter-queues/audit-api/redrive'
       )
+    })
+
+    test('should render confirmation screen', async () => {
+      const options = {
+        method: 'get',
+        url: '/admin/dead-letter-queues/audit-api/redrive',
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByRole('heading', { level: 1 })
+      const $headings2 = container.getAllByRole('heading', { level: 2 })
+      const $button = container.getByRole('button', { name: 'Redrive' })
+
+      expect($mastheadHeading).toHaveTextContent('Admin tools')
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      expect($headings2[0]).toHaveTextContent(
+        "Are you sure you want to redrive all messages from the 'audit-api' queue?"
+      )
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(response.headers['content-type']).toContain('text/html')
+
+      expect($button).toBeInTheDocument()
     })
 
     test('should redrive if redrive button pressed on confirmation screen', async () => {

@@ -11,11 +11,12 @@ export function redriveDeadLetterQueueConfirmationViewModel(dlq) {
     },
     useNewMasthead: true,
     pageHeading: {
-      text: `Are you sure you want to redrive all messages from the '${dlq}' queue?`
+      text: 'Admin tools'
     },
     pageCaption: {
       text: dlq
     },
+    bodyHeadingText: `Are you sure you want to redrive all messages from the '${dlq}' queue?`,
     buttons: [
       {
         text: 'Redrive',
