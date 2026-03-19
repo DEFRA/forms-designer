@@ -26,7 +26,7 @@ const reactPath = dirname(
 
 const pluginPath = dirname(
   resolvePkg.sync('@defra/forms-engine-plugin/package.json', {
-    basedir: rootDir
+    basedir: appDir
   })
 )
 
