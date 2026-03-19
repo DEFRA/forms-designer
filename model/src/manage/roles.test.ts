@@ -11,9 +11,9 @@ describe('Scopes', () => {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
-      'forms-backup',
-      'reset-save-and-exit',
-      'dead-letter-queues'
+      Scopes.FormsBackup,
+      Scopes.ResetSaveAndExit,
+      Scopes.DeadLetterQueues
     ])
   })
 
