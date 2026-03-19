@@ -5,28 +5,23 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
-import { getDeadLetterQueueMessages } from '~/src/lib/dead-letter-queue.js'
+import {
+  getDeadLetterQueueMessages,
+  redriveDeadLetterQueueMessages
+} from '~/src/lib/dead-letter-queue.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { redriveDeadLetterQueueConfirmationViewModel } from '~/src/models/manage/dead-letter-queue.js'
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 
 const schema = Joi.object({
-  dlq: Joi.string().required().valid(...Object.values(DeadLetterQueues)).messages({
-    '*': 'Select a dead-letter queue'
-  })
+  dlq: Joi.string()
+    .required()
+    .valid(...Object.values(DeadLetterQueues))
+    .messages({
+      '*': 'Select a dead-letter queue'
+    })
 })
-
-/**
- * @param { string } heading - the text in the heading
- * @param { 'success' } [type] - the notification type
- */
-export function generateMessage(heading, type) {
-  return {
-    text: heading,
-    type
-  }
-}
 
 export function generateTitling() {
   const pageHeading = 'Admin tools'
@@ -70,19 +65,20 @@ export default [
       const dlqOptions = {
         fieldset: {
           legend: {
-            text: "Which dead-letter queue do you wish to examine/redrive?",
-            isPageHeading: true,
-            classes: "govuk-fieldset__legend--l"
+            text: 'Which dead-letter queue do you wish to examine/redrive?',
+            isPageHeading: false,
+            classes: 'govuk-fieldset__legend--l'
           }
         },
-        id: "dlq",
-        name: "dlq",
-        items: Object.values(DeadLetterQueues).map(q => ({
+        id: 'dlq',
+        name: 'dlq',
+        items: Object.values(DeadLetterQueues).map((q) => ({
           value: q,
           text: q
         })),
         errorMessage: formErrors?.dlq
-          ? { text: formErrors.dlq.text } : undefined
+          ? { text: formErrors.dlq.text }
+          : undefined
       }
       return h.view('admin/dead-letter-queues', {
         ...generateTitling(),
@@ -185,10 +181,64 @@ export default [
       const { params } = request
       const { dlq } = params
 
+      return h.redirect(`${ROUTE_FULL_PATH}/${dlq}/redrive`)
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues } }>}
+   */
+  ({
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{dlq}/redrive`,
+    handler(request, h) {
+      const { params } = request
+      const { dlq } = params
+
       return h.view(
         'forms/confirmation-page',
         redriveDeadLetterQueueConfirmationViewModel(dlq)
       )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues } }>}
+   */
+  ({
+    method: 'POST',
+    path: `${ROUTE_FULL_PATH}/{dlq}/redrive`,
+    async handler(request, h) {
+      const { auth, params, yar } = request
+      const { token } = auth.credentials
+      const { dlq } = params
+
+      await redriveDeadLetterQueueMessages(dlq, token)
+
+      yar.flash(
+        sessionNames.successNotification,
+        `A redrive for messages in DLQ '${dlq}' has been triggered`
+      )
+
+      return h.redirect('/admin/index')
     },
     options: {
       auth: {

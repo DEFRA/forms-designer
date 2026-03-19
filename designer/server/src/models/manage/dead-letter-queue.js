@@ -3,15 +3,15 @@
  * @param {DeadLetterQueues} dlq
  */
 export function redriveDeadLetterQueueConfirmationViewModel(dlq) {
-  const backOrCancelUrl = '#' // `${editUrl}${user.userId}/amend`
+  const backOrCancelUrl = `/admin/dead-letter-queues/${dlq}`
   return {
     backLink: {
       href: backOrCancelUrl,
-      text: 'Back to view queue'
+      text: 'Back to view queue messages'
     },
     useNewMasthead: true,
     pageHeading: {
-      text: `Are you sure you want to redrive all message from the ${dlq} queue?`
+      text: `Are you sure you want to redrive all messages from the '${dlq}' queue?`
     },
     pageCaption: {
       text: dlq

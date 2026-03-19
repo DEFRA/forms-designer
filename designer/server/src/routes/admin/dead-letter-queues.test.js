@@ -1,0 +1,160 @@
+import { DeadLetterQueues } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
+
+import { createServer } from '~/src/createServer.js'
+import {
+  getDeadLetterQueueMessages,
+  redriveDeadLetterQueueMessages
+} from '~/src/lib/dead-letter-queue.js'
+import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
+import { renderResponse } from '~/test/helpers/component-helpers.js'
+
+jest.mock('~/src/lib/error-helper.js')
+jest.mock('~/src/lib/dead-letter-queue.js')
+
+describe('Dead-letter queues routes', () => {
+  /** @type {Server} */
+  let server
+
+  beforeAll(async () => {
+    server = await createServer()
+    await server.initialize()
+  })
+
+  afterAll(async () => {
+    await server.stop({ timeout: 0 })
+  })
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  describe('GET', () => {
+    test('should render form with radio options', async () => {
+      const options = {
+        method: 'get',
+        url: '/admin/dead-letter-queues',
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByRole('heading', { level: 1 })
+      const $links = container.getAllByRole('link')
+      const $radios = container.getAllByRole('radio')
+
+      expect($mastheadHeading).toHaveTextContent('Admin tools')
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      // Check tab headings and active tab
+      expect($links[4]).toHaveTextContent('My account')
+      expect($links[5]).toHaveTextContent('Manage users')
+      expect($links[6]).toHaveTextContent('Admin tools')
+      expect($links[7]).toHaveTextContent('Support')
+      expect($links[8]).toHaveTextContent('Back to admin tools home')
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(response.headers['content-type']).toContain('text/html')
+
+      expect($radios).toHaveLength(5)
+      expect($radios[0].outerHTML).toContain('value="audit-api"')
+      expect($radios[4].outerHTML).toContain(
+        'value="submissions-api (save-and-exit)"'
+      )
+      expect(response.result).toMatchSnapshot()
+    })
+  })
+
+  describe('POST', () => {
+    test('should error if invalid payload key', async () => {
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues',
+        auth,
+        payload: { invalid: 'true' }
+      }
+
+      const {
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    })
+
+    test('should error if invalid payload value', async () => {
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues',
+        auth,
+        payload: { dlq: 'invalid' }
+      }
+
+      const {
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    })
+
+    test('should redirect to next screen if valid queue selected and display queue messages', async () => {
+      jest
+        .mocked(getDeadLetterQueueMessages)
+        .mockResolvedValueOnce({ messages: [] })
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues',
+        auth,
+        payload: { dlq: DeadLetterQueues.AuditApi }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
+    })
+
+    test('should forward to confirmation screen if redrive selected', async () => {
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api',
+        auth
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(headers.location).toBe(
+        '/admin/dead-letter-queues/audit-api/redrive'
+      )
+    })
+
+    test('should redrive if redrive button pressed on confirmation screen', async () => {
+      jest.mocked(redriveDeadLetterQueueMessages).mockResolvedValue()
+
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/redrive',
+        auth
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(redriveDeadLetterQueueMessages).toHaveBeenCalledWith(
+        'audit-api',
+        expect.any(String)
+      )
+      expect(headers.location).toBe('/admin/index')
+    })
+  })
+})
+
+/**
+ * @import { Server } from '@hapi/hapi'
+ */

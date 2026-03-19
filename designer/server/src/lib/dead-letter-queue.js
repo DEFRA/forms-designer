@@ -1,16 +1,13 @@
 import { DeadLetterQueues } from '@defra/forms-model'
 
 import config from '~/src/config.js'
-import { getJson } from '~/src/lib/fetch.js'
+import { getJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 /**
  * @param {DeadLetterQueues} dlq
- * @param {string} token
  */
-export async function getDeadLetterQueueMessages(dlq, token) {
-  const getJsonByType = /** @type {typeof getJson<{ messages: [] }>} */ (getJson)
-
+export function getEndpoint(dlq) {
   let endpoint
   let qualifier = ''
   switch (dlq) {
@@ -23,11 +20,11 @@ export async function getDeadLetterQueueMessages(dlq, token) {
     case DeadLetterQueues.SharepointListener:
       endpoint = config.sharepointUrl
       break
-    case DeadLetterQueues.SubmissionApiFormSubmissions:
+    case DeadLetterQueues.SubmissionsApiFormSubmissions:
       endpoint = config.submissionUrl
       qualifier = '/form-submissions'
       break
-    case DeadLetterQueues.SubmissionApiSaveAndExit:
+    case DeadLetterQueues.SubmissionsApiSaveAndExit:
       endpoint = config.submissionUrl
       qualifier = '/save-and-exit'
       break
@@ -39,9 +36,46 @@ export async function getDeadLetterQueueMessages(dlq, token) {
     throw new Error('Invalid dead-letter queue')
   }
 
+  return {
+    endpoint,
+    qualifier
+  }
+}
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} token
+ */
+export async function getDeadLetterQueueMessages(dlq, token) {
+  const getJsonByType = /** @type {typeof getJson<{ messages: [] }>} */ (
+    getJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
   const requestUrl = new URL(`./admin/deadletter${qualifier}/view`, endpoint)
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
+}
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} token
+ */
+export async function redriveDeadLetterQueueMessages(dlq, token) {
+  const postJsonByType = /** @type {typeof getJson<{ message: string }>} */ (
+    postJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(`./admin/deadletter${qualifier}/redrive`, endpoint)
+
+  const { body } = await postJsonByType(requestUrl, getHeaders(token))
+
+  if (body.message !== 'success') {
+    throw new Error(`Error when redriving messages for ${dlq}: ${body.message}`)
+  }
 }
