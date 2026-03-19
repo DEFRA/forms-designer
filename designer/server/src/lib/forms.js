@@ -125,6 +125,21 @@ export async function getLiveFormDefinition(id, token) {
 }
 
 /**
+ * Retrieves a form definition version from the form manager for a given id
+ * @param {string} id - the id of the form
+ * @param {number} versionNumber - the version of the form
+ * @param {string} token - the token
+ */
+export async function getFormDefinitionVersion(id, versionNumber, token) {
+  const getJsonByType = /** @type {typeof getJson<FormDefinition>} */ (getJson)
+
+  const requestUrl = new URL(`./${id}/versions/${versionNumber}/definition`, formsEndpoint)
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body
+}
+
+/**
  * Update draft form definition
  * @param {string} id
  * @param {FormDefinition} definition - form definition
