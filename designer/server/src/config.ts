@@ -60,6 +60,8 @@ export interface Config {
   featureFlagUseEntitlementApi: boolean
   featureFlagAllowPayments: boolean
   featureFlagAllowGeospatial: boolean
+  ordnanceSurveyApiKey: string
+  ordnanceSurveyApiSecret: string
 }
 
 // Define config schema
@@ -176,7 +178,9 @@ const schema = joi.object<Config>({
   snsTopicArn: joi.string().required(),
   featureFlagUseEntitlementApi: joi.boolean().default(false),
   featureFlagAllowPayments: joi.boolean().default(false),
-  featureFlagAllowGeospatial: joi.boolean().default(false)
+  featureFlagAllowGeospatial: joi.boolean().default(false),
+  ordnanceSurveyApiKey: joi.string().required(),
+  ordnanceSurveyApiSecret: joi.string().required()
 })
 
 // Validate config
@@ -228,7 +232,9 @@ const result = schema.validate(
     snsTopicArn: process.env.SNS_TOPIC_ARN,
     featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
     featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS,
-    featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL
+    featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL,
+    ordnanceSurveyApiKey: process.env.ORDNANCE_SURVEY_API_KEY,
+    ordnanceSurveyApiSecret: process.env.ORDNANCE_SURVEY_API_SECRET
   },
   { abortEarly: false }
 )

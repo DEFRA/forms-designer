@@ -1,5 +1,6 @@
 import Stream from 'node:stream'
 
+import { mapPlugin } from '@defra/forms-engine-plugin/map-plugin.js'
 import { Scopes } from '@defra/forms-model'
 import { Engine as CatboxMemory } from '@hapi/catbox-memory'
 import { Engine as CatboxRedis } from '@hapi/catbox-redis'
@@ -209,6 +210,17 @@ export async function createServer() {
   await server.register(sessionCookie)
   await server.register(nunjucks.plugin)
   await server.register(router)
+  await server.register(
+    {
+      plugin: mapPlugin,
+      options: {
+        ordnanceSurveyApiKey: config.ordnanceSurveyApiKey,
+        ordnanceSurveyApiSecret: config.ordnanceSurveyApiSecret
+      }
+    },
+    { routes: { prefix: '/maps' } }
+  )
+
   await server.register(requestLogger)
   await server.register(requestTracing)
   await server.register(errorPage)
