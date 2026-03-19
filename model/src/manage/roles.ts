@@ -15,7 +15,8 @@ export enum Scopes {
   UserEdit = 'user-edit',
   FormsFeedback = 'forms-feedback',
   FormsBackup = 'forms-backup',
-  ResetSaveAndExit = 'reset-save-and-exit'
+  ResetSaveAndExit = 'reset-save-and-exit',
+  DeadLetterQueues = 'dead-letter-queues'
 }
 
 export const RoleScopes = {

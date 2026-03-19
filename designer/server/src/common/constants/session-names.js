@@ -56,6 +56,9 @@ export const sessionNames = {
     upload: /** @type {const} */ ('uploadValidationFailure'),
     adminResetSaveAndExit: /** @type {const} */ (
       'adminResetSaveAndExitValidationFailure'
+    ),
+    deadLetterQueues: /** @type {const} */ (
+      'deadLetterQueuesValidationFailure'
     )
   },
   successNotification: /** @type {const} */ ('successNotification'),

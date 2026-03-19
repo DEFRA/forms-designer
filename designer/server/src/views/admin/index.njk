@@ -92,6 +92,12 @@
         <a href="/admin/reset-save-and-exit" class="govuk-link govuk-link--no-visited-state">Reset save and exit</a>
       </p>
     {% endif %}
+
+    {% if supports.deadLetterQueues %}
+      <p class="govuk-body">
+        <a href="/admin/dead-letter-queues" class="govuk-link govuk-link--no-visited-state">Dead-letter queues</a>
+      </p>
+    {% endif %}
   {% endcall %}
 {% endblock %}
 

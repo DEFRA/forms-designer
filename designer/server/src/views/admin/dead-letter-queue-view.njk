@@ -1,0 +1,56 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if errorList | length %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorList,
+            classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+          }) }}
+        {% endif %}
+
+        {% if notification | length %}
+          {{ govukNotificationBanner(notification) }}
+        {% endif %}
+      </div>
+    </div>
+
+    <form class="form" method="post">
+
+      <h2 class="govuk-heading-m">{{ queueName }}: {{ messages.length }} message{% if messages.length != 1 %}s{% endif %}</h2>
+
+      {% for message in messages %}
+        <pre><code>{{ message | dump(2) }}</code></pre>
+      {% endfor %}
+
+      {% if messages.length %}
+        {{ govukButton({
+          text: "Redrive"
+        }) }}
+      {% endif %}
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

@@ -1,0 +1,207 @@
+import { DeadLetterQueues, Scopes } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
+
+import { sessionNames } from '~/src/common/constants/session-names.js'
+import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import { getDeadLetterQueueMessages } from '~/src/lib/dead-letter-queue.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { redriveDeadLetterQueueConfirmationViewModel } from '~/src/models/manage/dead-letter-queue.js'
+
+export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
+
+const schema = Joi.object({
+  dlq: Joi.string().required().valid(...Object.values(DeadLetterQueues)).messages({
+    '*': 'Select a dead-letter queue'
+  })
+})
+
+/**
+ * @param { string } heading - the text in the heading
+ * @param { 'success' } [type] - the notification type
+ */
+export function generateMessage(heading, type) {
+  return {
+    text: heading,
+    type
+  }
+}
+
+export function generateTitling() {
+  const pageHeading = 'Admin tools'
+
+  return {
+    pageTitle: `${pageHeading} - dead-letter queues`,
+    pageHeading: {
+      text: pageHeading
+    },
+    backLink: {
+      text: 'Back to admin tools home',
+      href: '/admin/index'
+    }
+  }
+}
+
+export default [
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_FULL_PATH,
+    handler(request, h) {
+      const { yar } = request
+
+      const navigation = buildAdminNavigation('Admin tools')
+
+      // Validation errors
+      const validation = yar
+        .flash(sessionNames.validationFailure.deadLetterQueues)
+        .at(0)
+
+      // Saved banner
+      const notification = /** @type {string[] | undefined} */ (
+        yar.flash(sessionNames.successNotification).at(0)
+      )
+
+      const { formValues, formErrors } = validation ?? {}
+
+      const dlqOptions = {
+        fieldset: {
+          legend: {
+            text: "Which dead-letter queue do you wish to examine/redrive?",
+            isPageHeading: true,
+            classes: "govuk-fieldset__legend--l"
+          }
+        },
+        id: "dlq",
+        name: "dlq",
+        items: Object.values(DeadLetterQueues).map(q => ({
+          value: q,
+          text: q
+        })),
+        errorMessage: formErrors?.dlq
+          ? { text: formErrors.dlq.text } : undefined
+      }
+      return h.view('admin/dead-letter-queues', {
+        ...generateTitling(),
+        navigation,
+        notification,
+        dlqOptions,
+        errorList: buildErrorList(formErrors, ['dlq']),
+        formErrors,
+        formValues
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: { dlq: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH,
+    handler(request, h) {
+      const { payload } = request
+      const { dlq } = payload
+
+      // Redirect to queue page
+      return h
+        .redirect(`/admin/dead-letter-queues/${dlq}`)
+        .code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        payload: schema,
+        failAction: (request, h, err) => {
+          return redirectWithErrors(
+            request,
+            h,
+            err,
+            sessionNames.validationFailure.deadLetterQueues
+          )
+        }
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues } }>}
+   */
+  ({
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{dlq}`,
+    async handler(request, h) {
+      const { auth, params } = request
+      const { token } = auth.credentials
+      const { dlq } = params
+
+      const navigation = buildAdminNavigation('Admin tools')
+
+      const { messages } = await getDeadLetterQueueMessages(dlq, token)
+
+      return h.view('admin/dead-letter-queue-view', {
+        ...generateTitling(),
+        navigation,
+        messages,
+        queueName: dlq
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues } }>}
+   */
+  ({
+    method: 'POST',
+    path: `${ROUTE_FULL_PATH}/{dlq}`,
+    handler(request, h) {
+      const { params } = request
+      const { dlq } = params
+
+      return h.view(
+        'forms/confirmation-page',
+        redriveDeadLetterQueueConfirmationViewModel(dlq)
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  })
+]
+
+/**
+ * @import { ServerRoute } from '@hapi/hapi'
+ */
