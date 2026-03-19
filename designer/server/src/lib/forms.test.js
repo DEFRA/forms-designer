@@ -687,6 +687,34 @@ describe('Forms library routes', () => {
         expect(result).toEqual(formDefinition)
       })
     })
+
+    describe('getFormDefinitionVersion', () => {
+      const token = auth.credentials.token
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+      })
+
+      it('should fetch form definition by id', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formDefinition
+        })
+
+        const result = await forms.getFormDefinitionVersion('form-id', 1, token)
+
+        expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe('/forms/form-id/versions/1/definition')
+        expect(result).toEqual(formDefinition)
+      })
+    })
   })
 
   describe('deleteDraftOnly', () => {
