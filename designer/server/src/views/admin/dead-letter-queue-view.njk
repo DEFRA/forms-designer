@@ -35,7 +35,7 @@
 
     <form class="form" method="post">
 
-      <h2 class="govuk-heading-m">{{ queueName }}: {{ messages.length }} message{% if messages.length != 1 %}s{% endif %}</h2>
+      <h2 class="govuk-heading-m">{{ queueName }}: {{ messages.length }} message{% if messages.length != 1 %}s{% endif %} {% if messages.length > 10 %}(showing first 10){% endif %}</h2>
 
       {% for message in messages %}
         <pre><code>{{ message | dump(2) }}</code></pre>

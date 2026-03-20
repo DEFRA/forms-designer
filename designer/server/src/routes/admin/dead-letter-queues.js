@@ -25,6 +25,17 @@ const schema = Joi.object({
     })
 })
 
+/**
+ * Keep specific properties
+ * @param {any[]} messages
+ */
+export function dlqMessageMapper(messages) {
+  return messages.map((m) => ({
+    MessageId: m.MessageId,
+    Body: m.Body
+  }))
+}
+
 export function generateTitling() {
   const pageHeading = ADMIN_TOOLS
 
@@ -67,7 +78,7 @@ export default [
       const dlqOptions = {
         fieldset: {
           legend: {
-            text: 'Which dead-letter queue do you wish to examine/redrive?',
+            text: 'Which dead-letter queue do you want to inspect?',
             isPageHeading: false,
             classes: 'govuk-fieldset__legend--l'
           }
@@ -155,10 +166,15 @@ export default [
 
       const { messages } = await getDeadLetterQueueMessages(dlq, token)
 
+      const mappedMessages = dlqMessageMapper(messages)
+
       return h.view('admin/dead-letter-queue-view', {
         ...generateTitling(),
         navigation,
-        messages,
+        caption: {
+          text: dlq
+        },
+        messages: mappedMessages,
         queueName: dlq
       })
     },

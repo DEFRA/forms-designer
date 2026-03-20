@@ -184,6 +184,7 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
       </div>
       <div class="govuk-grid-column-two-thirds-from-desktop">
         <h1 class="app-masthead__heading govuk-heading-xl">
+          <span class="app-masthead__caption govuk-caption-l">audit-api</span>
           Admin tools
         </h1>
         <div class="govuk-button-group"></div>
@@ -205,9 +206,9 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
 
     <form class="form" method="post">
 
-      <h2 class="govuk-heading-m">audit-api: 1 message</h2>
+      <h2 class="govuk-heading-m">audit-api: 1 message </h2>
 
-        <pre><code>&quot;{ &#92;&quot;message&#92;&quot;: &#92;&quot;some message text&#92;&quot;}&quot;</code></pre>
+        <pre><code>{}</code></pre>
 
         <button type="submit" class="govuk-button" data-module="govuk-button">
   Redrive
@@ -489,7 +490,7 @@ exports[`Dead-letter queues routes Journey should render form with radio options
       <div class="govuk-form-group">
   <fieldset class="govuk-fieldset">
   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-    Which dead-letter queue do you wish to examine/redrive?
+    Which dead-letter queue do you want to inspect?
   </legend>
   <div class="govuk-radios" data-module="govuk-radios">
     <div class="govuk-radios__item">
