@@ -1,8 +1,13 @@
 import { geospatialMap, map } from '@defra/forms-engine-plugin/shared.js'
 
 const { createMap, defaultMapConfig } = map
-const { addFeatureToMap, createFeaturesHTML, getBoundingBox, getGeoJSON } =
-  geospatialMap
+const {
+  addFeatureToMap,
+  createFeaturesHTML,
+  getBoundingBox,
+  getGeoJSON,
+  focusFeature
+} = geospatialMap
 const previews = document.querySelectorAll('.app-geospatial-field--preview')
 
 // @ts-expect-error - Defra namespace currently comes from UMD support files
@@ -45,11 +50,61 @@ previews.forEach((preview, index) => {
     }
   })
 
-  map.on('draw:ready', function () {
-    const { features } = geojson
-    features.forEach((feature) => addFeatureToMap(feature, drawPlugin, map))
-    listEl.innerHTML = createFeaturesHTML(features, mapId, true)
-  })
+  map.on(
+    'map:ready',
+    /**
+     * Callback function which fires when the map is ready
+     * @param {object} e - the event
+     * @param {any} e.map - the map provider instance
+     */
+    function onMapReady(e) {
+      const { map: mapProvider } = e
+
+      map.on(
+        'draw:ready',
+        /**
+         * Callback function which fires when the draw plugin is ready
+         */
+        function () {
+          const { features } = geojson
+
+          // Add all features to the map
+          features.forEach((feature) =>
+            addFeatureToMap(feature, drawPlugin, map)
+          )
+
+          // Create the list (in readonly mode)
+          listEl.innerHTML = createFeaturesHTML(features, mapId, true)
+
+          // Listen to anchor click events to focus features
+          listEl.addEventListener(
+            'click',
+            function (e) {
+              const target = e.target
+
+              if (!(target instanceof HTMLElement)) {
+                return
+              }
+
+              if (
+                target.tagName === 'A' &&
+                target.dataset.action &&
+                target.dataset.id
+              ) {
+                const { action, id } = target.dataset
+                const feature = geojson.features.find((f) => f.id === id)
+
+                if (action === 'focus' && feature) {
+                  focusFeature(feature, mapProvider)
+                }
+              }
+            },
+            false
+          )
+        }
+      )
+    }
+  )
 })
 
 /**

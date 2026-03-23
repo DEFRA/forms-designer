@@ -264,12 +264,14 @@ describe('Submission routes', () => {
       const { container } = await renderResponse(server, options)
 
       const $heading = container.getByRole('heading', {
-        name: 'Map review for submission 88J-TKL-AU8: Add site geospatial features',
         level: 1
       })
 
       expect($heading).toBeInTheDocument()
       expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        '\n  88J-TKL-AU8\n  Add site geospatial features\n'
+      )
     })
 
     test('should show view map page (no version)', async () => {
@@ -291,12 +293,14 @@ describe('Submission routes', () => {
       const { container } = await renderResponse(server, options)
 
       const $heading = container.getByRole('heading', {
-        name: 'Map review for submission 88J-TKL-AU8: Add site geospatial features',
         level: 1
       })
 
       expect($heading).toBeInTheDocument()
       expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        '\n  88J-TKL-AU8\n  Add site geospatial features\n'
+      )
     })
 
     test('should show view map repeater page', async () => {
@@ -314,12 +318,14 @@ describe('Submission routes', () => {
       const { container } = await renderResponse(server, options)
 
       const $heading = container.getByRole('heading', {
-        name: 'Map review for submission 88J-TKL-AU8: Add site2 geospatial features (multiple add another responses)',
         level: 1
       })
 
       expect($heading).toBeInTheDocument()
       expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        '\n  88J-TKL-AU8\n  Add site2 geospatial features (multiple responses)\n'
+      )
     })
 
     test('should fail to show view map page for an invalid component id', async () => {

@@ -53,11 +53,12 @@ export default [
         ? [record.data.main[componentName]]
         : record.data.repeaters[repeaterName].map((item) => item[componentName])
 
-      const pageHeading = `Map review for submission ${referenceNumber}`
-      const pageTitle = `${pageHeading}: ${component.title}${repeaterName ? ' (multiple add another responses)' : ''}`
+      const caption = referenceNumber
+      const pageTitle = `${component.title}${repeaterName ? ' (multiple responses)' : ''}`
 
       return h.view('submission/map', {
         pageTitle,
+        caption,
         pageHeading: pageTitle,
         referenceNumber,
         repeaterName,
