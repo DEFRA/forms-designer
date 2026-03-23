@@ -9,11 +9,26 @@ import * as edit from '~/src/models/forms/edit.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import { redirectWithErrors, schema } from '~/src/routes/forms/create.js'
 import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
+import { protectTitleEdit } from '~/src/routes/forms/route-helpers.js'
 
 export const ROUTE_PATH_EDIT_LEAD_ORGANISATION =
   '/library/{slug}/edit/lead-organisation'
 export const ROUTE_PATH_EDIT_TEAM = '/library/{slug}/edit/team'
 export const ROUTE_PATH_EDIT_TITLE = '/library/{slug}/edit/title'
+
+/**
+ * @param {string} slug
+ * @param {string} token
+ * @param {Request['yar']} yar
+ */
+async function getTitleEditModel(slug, token, yar) {
+  const { title, live } = await forms.get(slug, token)
+  const validation = yar.flash(sessionNames.validationFailure.createForm).at(0)
+
+  const metadata = { title, slug }
+
+  return edit.titleViewModel(metadata, validation, Boolean(live))
+}
 
 export default [
   /**
@@ -173,21 +188,13 @@ export default [
     async handler(request, h) {
       const { yar, params, auth } = request
       const { token } = auth.credentials
-      const { slug } = params
 
-      const { title } = await forms.get(slug, token)
-      const validation = yar
-        .flash(sessionNames.validationFailure.createForm)
-        .at(0)
+      const model = await getTitleEditModel(params.slug, token, yar)
 
-      const metadata = { title, slug }
-
-      return h.view(
-        'forms/question-input',
-        edit.titleViewModel(metadata, validation)
-      )
+      return h.view('forms/question-input', model)
     },
     options: {
+      pre: [protectTitleEdit],
       auth: {
         mode: 'required',
         access: {
@@ -244,6 +251,7 @@ export default [
         }),
         failAction: redirectWithErrors
       },
+      pre: [protectTitleEdit],
       auth: {
         mode: 'required',
         access: {
@@ -257,5 +265,5 @@ export default [
 
 /**
  * @import { FormMetadataInput } from '@defra/forms-model'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { Request, ServerRoute } from '@hapi/hapi'
  */

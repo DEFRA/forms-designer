@@ -1,4 +1,4 @@
-import { AuditEventMessageType } from '@defra/forms-model'
+import { AuditEventMessageType, FormStatus } from '@defra/forms-model'
 
 import {
   fieldConfigs,
@@ -164,6 +164,23 @@ function getSpecialEventDescription(type, data) {
 }
 
 /**
+ * @param {AuditRecord} record
+ * @returns {boolean}
+ */
+function isLiveTitleUpdate(record) {
+  if (record.type !== AuditEventMessageType.FORM_TITLE_UPDATED) {
+    return false
+  }
+
+  const titleUpdateData =
+    /** @type {import('@defra/forms-model').FormTitleUpdatedMessageData | undefined} */ (
+      record.data
+    )
+
+  return titleUpdateData?.payload?.formStatus === FormStatus.Live
+}
+
+/**
  * Gets a description for an event based on its data
  * @param {AuditRecord} record
  * @returns {string | undefined}
@@ -173,6 +190,15 @@ export function getEventDescription(record) {
 
   if (type in staticDescriptions) {
     return staticDescriptions[type]
+  }
+
+  if (isLiveTitleUpdate(record)) {
+    return buildFieldChangeDescription(
+      'Changed',
+      'the live form name',
+      data ? safeGet(data, 'changes.previous.title') : undefined,
+      data ? safeGet(data, 'changes.new.title') : undefined
+    )
   }
 
   if (type in fieldConfigs) {

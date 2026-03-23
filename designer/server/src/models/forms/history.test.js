@@ -1,4 +1,4 @@
-import { AuditEventMessageType } from '@defra/forms-model'
+import { AuditEventMessageType, FormStatus } from '@defra/forms-model'
 
 import {
   PAYMENT_LIVE_API_KEY_PENDING,
@@ -184,6 +184,20 @@ describe('history model', () => {
       expect(result).toBe('Form name updated')
     })
 
+    it('returns changed friendly name for live FORM_TITLE_UPDATED', () => {
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_TITLE_UPDATED,
+          data: {
+            payload: {
+              formStatus: FormStatus.Live
+            }
+          }
+        })
+      )
+      expect(result).toBe('Form name changed')
+    })
+
     it('returns correct friendly name for FORM_MIGRATED', () => {
       const result = getEventFriendlyName(
         /** @type {AuditRecord} */ ({
@@ -316,6 +330,30 @@ describe('history model', () => {
       expect(result[0].title).toBe('Form created')
       expect(result[1].title).toBe('Form name updated')
       expect(result[2].title).toBe('Form published')
+    })
+
+    it('shows changed title for live form title updates', () => {
+      const records = [
+        createMockAuditRecord({
+          type: AuditEventMessageType.FORM_TITLE_UPDATED,
+          data: {
+            formId: 'form-id',
+            slug: 'test-form',
+            payload: {
+              formStatus: FormStatus.Live
+            },
+            changes: {
+              previous: { title: 'Old Title' },
+              new: { title: 'New Title' }
+            }
+          }
+        })
+      ]
+
+      const result = buildTimelineItems(records)
+
+      expect(result).toHaveLength(1)
+      expect(result[0].title).toBe('Form name changed')
     })
 
     it('handles pre-consolidated records from API', () => {

@@ -1,3 +1,4 @@
+import { type FormStatus } from '~/src/common/enums.js'
 import {
   type AuditEventMessageCategory,
   type AuditEventMessageSchemaVersion,
@@ -27,6 +28,10 @@ export interface FormCreatedMessageData extends FormMessageDataBase {
 
 export interface FormTitleChanges {
   title: string
+}
+
+export interface FormTitleUpdatedPayload {
+  formStatus: FormStatus
 }
 
 export interface FormOrganisationChanges {
@@ -82,6 +87,7 @@ export interface FormUploadedChanges {
 }
 
 export interface FormTitleUpdatedMessageData extends FormMessageDataBase {
+  payload?: FormTitleUpdatedPayload
   changes: ChangesMessageData<FormTitleChanges>
 }
 

@@ -10,9 +10,12 @@ import {
 /**
  * @param {Partial<FormMetadataInput> | null} [metadata]
  * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {boolean} [isLiveForm]
  */
-export function titleViewModel(metadata, validation) {
-  const pageTitle = 'Enter a name for your form'
+export function titleViewModel(metadata, validation, isLiveForm = false) {
+  const pageTitle = isLiveForm
+    ? 'Change the name of the live form'
+    : 'Enter a name for your form'
   const { formValues, formErrors } = validation ?? {}
 
   return {
@@ -25,8 +28,13 @@ export function titleViewModel(metadata, validation) {
       id: 'title',
       name: 'title',
       label: {
-        text: 'Enter a name for your form'
+        text: pageTitle
       },
+      hint: isLiveForm
+        ? {
+            text: 'Changing the name of live form will not change its url'
+          }
+        : undefined,
       value: formValues?.title ?? metadata?.title,
       autocapitalize: true,
       spellcheck: true
