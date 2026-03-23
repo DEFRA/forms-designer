@@ -86,8 +86,7 @@ function buildMultiFieldDescription(data, fields, groupWord = '') {
  */
 function buildFormCreatedDescription(data) {
   const parts = []
-  const typedData =
-    /** @type {import('@defra/forms-model').FormCreatedMessageData} */ (data)
+  const typedData = /** @type {FormCreatedMessageData} */ (data)
 
   if (typedData.title) {
     parts.push(`Created a new form named '${typedData.title}' with:`)
@@ -173,9 +172,7 @@ function isLiveTitleUpdate(record) {
   }
 
   const titleUpdateData =
-    /** @type {import('@defra/forms-model').FormTitleUpdatedMessageData | undefined} */ (
-      record.data
-    )
+    /** @type {FormTitleUpdatedMessageData | undefined} */ (record.data)
 
   return titleUpdateData?.payload?.formStatus === FormStatus.Live
 }
@@ -215,5 +212,5 @@ export function getEventDescription(record) {
 }
 
 /**
- * @import { AuditRecord, MessageData, MultiAuditFieldConfig } from '@defra/forms-model'
+ * @import { AuditRecord, MessageData, MultiAuditFieldConfig, FormCreatedMessageData, FormTitleUpdatedMessageData } from '@defra/forms-model'
  */
