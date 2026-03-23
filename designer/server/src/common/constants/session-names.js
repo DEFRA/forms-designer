@@ -57,9 +57,7 @@ export const sessionNames = {
     adminResetSaveAndExit: /** @type {const} */ (
       'adminResetSaveAndExitValidationFailure'
     ),
-    deadLetterQueues: /** @type {const} */ (
-      'deadLetterQueuesValidationFailure'
-    )
+    deadLetterQueues: /** @type {const} */ ('deadLetterQueuesValidationFailure')
   },
   successNotification: /** @type {const} */ ('successNotification'),
   errorList: /** @type {const} */ ('errorList'),
