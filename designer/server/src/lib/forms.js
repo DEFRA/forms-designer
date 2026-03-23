@@ -133,7 +133,10 @@ export async function getLiveFormDefinition(id, token) {
 export async function getFormDefinitionVersion(id, versionNumber, token) {
   const getJsonByType = /** @type {typeof getJson<FormDefinition>} */ (getJson)
 
-  const requestUrl = new URL(`./${id}/versions/${versionNumber}/definition`, formsEndpoint)
+  const requestUrl = new URL(
+    `./${id}/versions/${versionNumber}/definition`,
+    formsEndpoint
+  )
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body

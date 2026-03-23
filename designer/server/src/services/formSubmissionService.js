@@ -62,10 +62,9 @@ export async function resetSaveAndExitRecord(magicLinkId, token) {
  * @param {string} token - the user token
  */
 export async function getSubmissionRecord(referenceNumber, token) {
-  const getJsonByType =
-    /** @type {typeof getJson<FormSubmissionDocument>} */ (
-      getJson
-    )
+  const getJsonByType = /** @type {typeof getJson<FormSubmissionDocument>} */ (
+    getJson
+  )
   const result = await getJsonByType(
     new URL(`/submission/${referenceNumber}`, submissionUrl),
     getHeaders(token)
