@@ -51,6 +51,29 @@ export function generateTitling() {
   }
 }
 
+/**
+ * Get counts from each dead-letter queue
+ * @param {string} token
+ */
+export async function getMessageCounts(token) {
+  const radioItems = []
+  for (const dlq of Object.values(DeadLetterQueues)) {
+    try {
+      const { messages } = await getDeadLetterQueueMessages(dlq, token)
+      radioItems.push({
+        value: dlq,
+        text: `${dlq} - ${messages.length} message${messages.length !== 1 ? 's' : ''}`
+      })
+    } catch {
+      radioItems.push({
+        value: dlq,
+        text: `${dlq} - error`
+      })
+    }
+  }
+  return radioItems
+}
+
 export default [
   /**
    * @satisfies {ServerRoute}
@@ -58,8 +81,9 @@ export default [
   ({
     method: 'GET',
     path: ROUTE_FULL_PATH,
-    handler(request, h) {
-      const { yar } = request
+    async handler(request, h) {
+      const { auth, yar } = request
+      const { token } = auth.credentials
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
@@ -75,6 +99,8 @@ export default [
 
       const { formValues, formErrors } = validation ?? {}
 
+      const items = await getMessageCounts(token)
+
       const dlqOptions = {
         fieldset: {
           legend: {
@@ -85,10 +111,7 @@ export default [
         },
         id: 'dlq',
         name: 'dlq',
-        items: Object.values(DeadLetterQueues).map((q) => ({
-          value: q,
-          text: q
-        })),
+        items,
         errorMessage: formErrors?.dlq
           ? { text: formErrors.dlq.text }
           : undefined
@@ -170,6 +193,10 @@ export default [
 
       return h.view('admin/dead-letter-queue-view', {
         ...generateTitling(),
+        backLink: {
+          text: 'Back to dead-letter queues',
+          href: '/admin/dead-letter-queues'
+        },
         navigation,
         caption: {
           text: dlq

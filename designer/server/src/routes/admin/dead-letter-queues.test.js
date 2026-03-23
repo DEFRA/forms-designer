@@ -30,7 +30,15 @@ describe('Dead-letter queues routes', () => {
   })
 
   describe('Journey', () => {
-    test('should render form with radio options', async () => {
+    test('should render form with radio options with counts', async () => {
+      jest
+        .mocked(getDeadLetterQueueMessages)
+        .mockResolvedValueOnce({ messages: [] })
+        // @ts-expect-error - invalid response to throw error
+        .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce({ messages: [{}, {}] })
+        .mockResolvedValueOnce({ messages: [{}, {}, {}] })
+        .mockResolvedValueOnce({ messages: [{}, {}, {}, {}] })
       const options = {
         method: 'get',
         url: '/admin/dead-letter-queues',
@@ -58,8 +66,24 @@ describe('Dead-letter queues routes', () => {
 
       expect($radios).toHaveLength(5)
       expect($radios[0].outerHTML).toContain('value="audit-api"')
+      expect($radios[0]).toHaveAccessibleName('audit-api - 0 messages')
+      expect($radios[1].outerHTML).toContain('value="notify-listener"')
+      expect($radios[1]).toHaveAccessibleName('notify-listener - error')
+      expect($radios[2].outerHTML).toContain('value="sharepoint-listener"')
+      expect($radios[2]).toHaveAccessibleName(
+        'sharepoint-listener - 2 messages'
+      )
+      expect($radios[3].outerHTML).toContain(
+        'value="submissions-api (form submissions)"'
+      )
+      expect($radios[3]).toHaveAccessibleName(
+        'submissions-api (form submissions) - 3 messages'
+      )
       expect($radios[4].outerHTML).toContain(
         'value="submissions-api (save-and-exit)"'
+      )
+      expect($radios[4]).toHaveAccessibleName(
+        'submissions-api (save-and-exit) - 4 messages'
       )
       expect(response.result).toMatchSnapshot()
     })
@@ -95,11 +119,9 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should redirect to next screen if valid queue selected and display queue messages', async () => {
-      jest
-        .mocked(getDeadLetterQueueMessages)
-        .mockResolvedValueOnce({
-          messages: ['{ "message": "some message text"}']
-        })
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValueOnce({
+        messages: ['{ "message": "some message text"}']
+      })
       const options = {
         method: 'post',
         url: '/admin/dead-letter-queues',
@@ -116,11 +138,9 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should render form with messages and redrive button', async () => {
-      jest
-        .mocked(getDeadLetterQueueMessages)
-        .mockResolvedValueOnce({
-          messages: ['{ "message": "some message text"}']
-        })
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValueOnce({
+        messages: ['{ "message": "some message text"}']
+      })
 
       const options = {
         method: 'get',
@@ -143,7 +163,7 @@ describe('Dead-letter queues routes', () => {
       expect($links[5]).toHaveTextContent('Manage users')
       expect($links[6]).toHaveTextContent('Admin tools')
       expect($links[7]).toHaveTextContent('Support')
-      expect($links[8]).toHaveTextContent('Back to admin tools home')
+      expect($links[8]).toHaveTextContent('Back to dead-letter queues')
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')

@@ -179,7 +179,7 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-      <a href="/admin/index" class="govuk-back-link govuk-back-link--inverse govuk-!-margin-bottom-0">Back to admin tools home</a>
+      <a href="/admin/dead-letter-queues" class="govuk-back-link govuk-back-link--inverse govuk-!-margin-bottom-0">Back to dead-letter queues</a>
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible back-link-hr">
       </div>
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -282,7 +282,7 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
 "
 `;
 
-exports[`Dead-letter queues routes Journey should render form with radio options 1`] = `
+exports[`Dead-letter queues routes Journey should render form with radio options with counts 1`] = `
 "<!DOCTYPE html>
 <html lang="en" class="govuk-template">
   <head>
@@ -496,31 +496,31 @@ exports[`Dead-letter queues routes Journey should render form with radio options
     <div class="govuk-radios__item">
       <input class="govuk-radios__input" id="dlq" name="dlq" type="radio" value="audit-api">
       <label class="govuk-label govuk-radios__label" for="dlq">
-        audit-api
+        audit-api - 0 messages
       </label>
     </div>
     <div class="govuk-radios__item">
       <input class="govuk-radios__input" id="dlq-2" name="dlq" type="radio" value="notify-listener">
       <label class="govuk-label govuk-radios__label" for="dlq-2">
-        notify-listener
+        notify-listener - error
       </label>
     </div>
     <div class="govuk-radios__item">
       <input class="govuk-radios__input" id="dlq-3" name="dlq" type="radio" value="sharepoint-listener">
       <label class="govuk-label govuk-radios__label" for="dlq-3">
-        sharepoint-listener
+        sharepoint-listener - 2 messages
       </label>
     </div>
     <div class="govuk-radios__item">
       <input class="govuk-radios__input" id="dlq-4" name="dlq" type="radio" value="submissions-api (form submissions)">
       <label class="govuk-label govuk-radios__label" for="dlq-4">
-        submissions-api (form submissions)
+        submissions-api (form submissions) - 3 messages
       </label>
     </div>
     <div class="govuk-radios__item">
       <input class="govuk-radios__input" id="dlq-5" name="dlq" type="radio" value="submissions-api (save-and-exit)">
       <label class="govuk-label govuk-radios__label" for="dlq-5">
-        submissions-api (save-and-exit)
+        submissions-api (save-and-exit) - 4 messages
       </label>
     </div>
   </div>
