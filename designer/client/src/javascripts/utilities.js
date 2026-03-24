@@ -21,7 +21,7 @@ export function copyToClip(linkElem) {
     ?.querySelector('[data-sourceCopyToClip]')
   if (blockForCopy) {
     const originalText = linkElem.textContent
-    navigator.clipboard.writeText(blockForCopy.textContent).then(
+    navigator.clipboard.writeText(blockForCopy.textContent ?? '').then(
       function () {
         linkElem.textContent = '--------Copied--------'
         setTimeout(() => {
