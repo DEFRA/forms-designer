@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
+import { testFormDefinitionWithPayment } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
   baseOptions,
@@ -9,6 +10,7 @@ import {
   mockedPostJson,
   token
 } from '~/src/lib/__stubs__/editor.js'
+import { getLiveFormDefinition } from '~/src/lib/forms.js'
 import {
   MASKED_KEY,
   existsSecret,
@@ -19,6 +21,7 @@ import {
 } from '~/src/lib/secrets.js'
 
 jest.mock('~/src/lib/fetch.js')
+jest.mock('~/src/lib/forms.js')
 
 const managerEndpoint = new URL(config.managerUrl)
 
@@ -103,7 +106,10 @@ describe('secrets.js', () => {
   })
 
   describe('savePaymentSecrets', () => {
-    it('should throw if form is live but no live secret supplied', async () => {
+    it('should throw if form is live (with payment question) but no live secret supplied', async () => {
+      jest
+        .mocked(getLiveFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithPayment)
       const payload = /** @type {FormEditorInputQuestionDetails} */ ({
         paymentTestApiKey: 'Some new secret',
         paymentLiveApiKey: ''
