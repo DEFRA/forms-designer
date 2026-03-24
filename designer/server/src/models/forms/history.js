@@ -1,6 +1,5 @@
 import {
   AuditEventMessageType,
-  FormStatus,
   buildPaginationPages,
   isConsolidatedRecord
 } from '@defra/forms-model'
@@ -59,21 +58,6 @@ const eventFriendlyNames = {
 }
 
 /**
- * @param {AuditRecord} record
- * @returns {boolean}
- */
-function isLiveTitleUpdate(record) {
-  if (record.type !== AuditEventMessageType.FORM_TITLE_UPDATED) {
-    return false
-  }
-
-  const titleUpdateData =
-    /** @type {FormTitleUpdatedMessageData | undefined} */ (record.data)
-
-  return titleUpdateData?.payload?.formStatus === FormStatus.Live
-}
-
-/**
  * Gets the friendly name for an event (based on not just the type but additional fields)
  * @param {AuditRecord} record
  * @returns { string | undefined }
@@ -99,10 +83,6 @@ export function getEventDynamicName(record) {
  * @returns {string}
  */
 export function getEventFriendlyName(record) {
-  if (isLiveTitleUpdate(record)) {
-    return 'Form name changed'
-  }
-
   const friendlyName = eventFriendlyNames[record.type]
   if (friendlyName) {
     return friendlyName
@@ -311,6 +291,6 @@ export function historyViewModel(metadata, formDefinition, auditResponse) {
  */
 
 /**
- * @import { AuditRecord, ConsolidatedAuditRecord, FormDefinition, FormMetadata, PaginationResultWithPages ,  FormTitleUpdatedMessageData } from '@defra/forms-model'
+ * @import { AuditRecord, ConsolidatedAuditRecord, FormDefinition, FormMetadata, PaginationResultWithPages } from '@defra/forms-model'
  * @import { AuditResponse } from '~/src/lib/audit.js'
  */

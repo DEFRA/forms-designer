@@ -1,4 +1,4 @@
-import { AuditEventMessageType, FormStatus } from '@defra/forms-model'
+import { AuditEventMessageType } from '@defra/forms-model'
 
 import { getEventDescription } from '~/src/models/forms/history-event-descriptions.js'
 
@@ -75,28 +75,6 @@ describe('history-event-descriptions', () => {
       const result = getEventDescription(record)
       expect(result).toBe(
         "Updated the form name from 'Old Title' to 'New Title'."
-      )
-    })
-
-    it('returns changed description for live FORM_TITLE_UPDATED event', () => {
-      const record = createMockAuditRecord({
-        type: AuditEventMessageType.FORM_TITLE_UPDATED,
-        data: {
-          formId: 'form-id',
-          slug: 'test-form',
-          payload: {
-            formStatus: FormStatus.Live
-          },
-          changes: {
-            previous: { title: 'Old Title' },
-            new: { title: 'New Title' }
-          }
-        }
-      })
-
-      const result = getEventDescription(record)
-      expect(result).toBe(
-        "Changed the live form name from 'Old Title' to 'New Title'."
       )
     })
 

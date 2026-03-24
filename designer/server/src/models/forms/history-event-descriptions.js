@@ -1,4 +1,4 @@
-import { AuditEventMessageType, FormStatus } from '@defra/forms-model'
+import { AuditEventMessageType } from '@defra/forms-model'
 
 import {
   fieldConfigs,
@@ -86,7 +86,8 @@ function buildMultiFieldDescription(data, fields, groupWord = '') {
  */
 function buildFormCreatedDescription(data) {
   const parts = []
-  const typedData = /** @type {FormCreatedMessageData} */ (data)
+  const typedData =
+    /** @type {import('@defra/forms-model').FormCreatedMessageData} */ (data)
 
   if (typedData.title) {
     parts.push(`Created a new form named '${typedData.title}' with:`)
@@ -163,21 +164,6 @@ function getSpecialEventDescription(type, data) {
 }
 
 /**
- * @param {AuditRecord} record
- * @returns {boolean}
- */
-function isLiveTitleUpdate(record) {
-  if (record.type !== AuditEventMessageType.FORM_TITLE_UPDATED) {
-    return false
-  }
-
-  const titleUpdateData =
-    /** @type {FormTitleUpdatedMessageData | undefined} */ (record.data)
-
-  return titleUpdateData?.payload?.formStatus === FormStatus.Live
-}
-
-/**
  * Gets a description for an event based on its data
  * @param {AuditRecord} record
  * @returns {string | undefined}
@@ -187,15 +173,6 @@ export function getEventDescription(record) {
 
   if (type in staticDescriptions) {
     return staticDescriptions[type]
-  }
-
-  if (isLiveTitleUpdate(record)) {
-    return buildFieldChangeDescription(
-      'Changed',
-      'the live form name',
-      data ? safeGet(data, 'changes.previous.title') : undefined,
-      data ? safeGet(data, 'changes.new.title') : undefined
-    )
   }
 
   if (type in fieldConfigs) {
@@ -212,5 +189,5 @@ export function getEventDescription(record) {
 }
 
 /**
- * @import { AuditRecord, MessageData, MultiAuditFieldConfig, FormCreatedMessageData, FormTitleUpdatedMessageData } from '@defra/forms-model'
+ * @import { AuditRecord, MessageData, MultiAuditFieldConfig } from '@defra/forms-model'
  */
