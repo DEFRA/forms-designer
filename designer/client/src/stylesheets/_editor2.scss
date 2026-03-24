@@ -216,3 +216,27 @@
 .full-width-banner .govuk-notification-banner__heading {
   max-width: 100%;
 }
+
+/* Dead-letter queue messages */
+.json-item {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.delete-link-top-right {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  z-index: 1;
+}
+
+/* Dead-letter queue messages - JSON block */
+.json-block {
+  margin: 0;
+  padding: 10px;
+  background-color: govuk-colour("light-grey");
+  border: 1px solid #b1b4b6;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.4;
+}

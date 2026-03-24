@@ -79,3 +79,29 @@ export async function redriveDeadLetterQueueMessages(dlq, token) {
     throw new Error(`Error when redriving messages for ${dlq}: ${body.message}`)
   }
 }
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} messageId
+ * @param {string} token
+ */
+export async function deleteDeadLetterQueueMessage(dlq, messageId, token) {
+  const postJsonByType = /** @type {typeof getJson<{ message: string }>} */ (
+    postJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(
+    `./admin/deadletter${qualifier}/deleteOne/${messageId}`,
+    endpoint
+  )
+
+  const { body } = await postJsonByType(requestUrl, getHeaders(token))
+
+  if (body.message !== 'success') {
+    throw new Error(
+      `Error when deleteing message ${messageId} for ${dlq}: ${body.message}`
+    )
+  }
+}

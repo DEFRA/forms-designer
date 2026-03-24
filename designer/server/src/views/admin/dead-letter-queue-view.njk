@@ -1,7 +1,6 @@
 {% extends "layouts/page.njk" %}
 
 {% from "page-body/macro.njk" import appPageBody %}
-{% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
@@ -37,13 +36,25 @@
 
       <h2 class="govuk-heading-m">{{ queueName }}: {{ messages.length }} message{% if messages.length != 1 %}s{% endif %} {% if messages.length > 10 %}(showing first 10){% endif %}</h2>
 
-      {% for message in messages %}
-        <pre><code>{{ message | dump(2) }}</code></pre>
-      {% endfor %}
+      <div class="govuk-form-group">
+        {% for message in messages %}
+          <div class="json-item">
+            <a class="govuk-link govuk-link--no-visited-state delete-link-top-right" href='/admin/dead-letter-queues/{{ queueName}}/delete/{{ message.MessageId }}'>Delete</a>
+            <pre class="json-block"><code>{{ message | dump(2) }}</code></pre>
+          </div>
+        {% endfor %}
+      </div>
 
       {% if messages.length %}
         {{ govukButton({
-          text: "Redrive"
+          text: "Redrive all messages",
+          name: 'action',
+          value: 'redrive'
+        }) }}
+        {{ govukButton({
+          text: "Delete all messages",
+          name: 'action',
+          value: 'delete'
         }) }}
       {% endif %}
     </form>

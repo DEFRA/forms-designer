@@ -91,7 +91,8 @@ export default [
           scope: [
             Scopes.FormsFeedback,
             Scopes.FormsBackup,
-            Scopes.ResetSaveAndExit
+            Scopes.ResetSaveAndExit,
+            Scopes.DeadLetterQueues
           ]
         }
       }
