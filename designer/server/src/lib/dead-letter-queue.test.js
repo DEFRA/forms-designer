@@ -1,11 +1,12 @@
 import { DeadLetterQueues } from '@defra/forms-model'
 
 import {
+  deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   getEndpoint,
   redriveDeadLetterQueueMessages
 } from '~/src/lib/dead-letter-queue.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
+import { delJson, getJson, postJson } from '~/src/lib/fetch.js'
 
 jest.mock('~/src/lib/fetch.js')
 
@@ -70,6 +71,26 @@ describe('dead-letter queue lib functions', () => {
       await redriveDeadLetterQueueMessages(dlq, 'token')
       expect(postJson).toHaveBeenCalledWith(
         new URL('http://localhost:3004/admin/deadletter/redrive'),
+        expect.anything()
+      )
+    })
+  })
+
+  describe('deleteDeadLetterQueueMessage', () => {
+    it('should call endpoint', async () => {
+      jest
+        .mocked(delJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'success' } })
+      const dlq = DeadLetterQueues.AuditApi
+      await deleteDeadLetterQueueMessage(
+        dlq,
+        'receipt-handle',
+        'message-id',
+        'token'
+      )
+      expect(delJson).toHaveBeenCalledWith(
+        new URL('http://localhost:3004/admin/deadletter/receipt-handle'),
         expect.anything()
       )
     })
