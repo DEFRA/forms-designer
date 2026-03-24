@@ -8,6 +8,22 @@
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
 {% block content %}
+  <script>
+  function copyToClip(blockId, link) {
+    const blockForCopy = document.querySelector(`#${blockId}`)
+    if (blockForCopy) {
+      navigator.clipboard.writeText(blockForCopy.textContent).then(function() {
+        link.textContent = '--------Copied--------'
+        setTimeout(() => { link.textContent = 'Copy to clipboard' }, 1500)
+      }, function() {
+        link.textContent = 'Error copying'
+        setTimeout(() => { link.textContent = 'Copy to clipboard' }, 1500)
+      })
+    }
+    return false
+  }
+  </script>
+
   {% call appPageBody({
     heading: pageHeading,
     caption: caption,
@@ -38,23 +54,20 @@
 
       <div class="govuk-form-group">
         {% for message in messages %}
+          {% set tileId = message.json.MessageId.replaceAll('-', '') %}
           <div class="json-item">
-            <a class="govuk-link govuk-link--no-visited-state delete-link-top-right" href='/admin/dead-letter-queues/{{ queueName}}/delete/{{ message.MessageId }}'>Delete</a>
-            <pre class="json-block"><code>{{ message | dump(2) }}</code></pre>
+            <div class="action-links-top-right">
+              <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="#" onclick="return copyToClip('json-{{ tileId }}', this)">Copy to clipboard</a>
+              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/{{ queueName}}/delete/{{ message.receiptHandle }}/{{ message.json.MessageId }}'>Delete</a>
+            </div>
+            <pre class="json-block" id="json-{{ tileId }}"><code>{{ message.json | dump(2) }}</code></pre>
           </div>
         {% endfor %}
       </div>
 
       {% if messages.length %}
         {{ govukButton({
-          text: "Redrive all messages",
-          name: 'action',
-          value: 'redrive'
-        }) }}
-        {{ govukButton({
-          text: "Delete all messages",
-          name: 'action',
-          value: 'delete'
+          text: "Redrive all messages"
         }) }}
       {% endif %}
     </form>

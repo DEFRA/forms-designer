@@ -24,6 +24,8 @@ const dlqSchema = Joi.string()
   .required()
   .valid(...Object.values(DeadLetterQueues))
 
+const receiptHandleSchema = Joi.string().required()
+
 const dlqPayloadSchema = Joi.object().keys({
   dlq: dlqSchema.messages({
     '*': 'Select a dead-letter queue'
@@ -40,9 +42,10 @@ const messageIdSchema = Joi.string().required().messages({
   '*': 'Missing message id'
 })
 
-const dlqAndIdParamSchema = Joi.object().keys({
+const dlqAndHandleParamSchema = Joi.object().keys({
   dlq: dlqSchema,
-  messageId: messageIdSchema
+  messageId: messageIdSchema,
+  receiptHandle: receiptHandleSchema
 })
 
 /**
@@ -51,8 +54,11 @@ const dlqAndIdParamSchema = Joi.object().keys({
  */
 export function dlqMessageMapper(messages) {
   return messages.map((m) => ({
-    MessageId: m.MessageId,
-    Body: JSON.parse(m.Body)
+    json: {
+      MessageId: m.MessageId,
+      Body: JSON.parse(m.Body)
+    },
+    receiptHandle: m.ReceiptHandle
   }))
 }
 
@@ -329,11 +335,11 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, receiptHandle: string, messageId: string } }>}
    */
   ({
     method: 'GET',
-    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{messageId}`,
+    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{receiptHandle}/{messageId}`,
     handler(request, h) {
       const { params } = request
       const { dlq, messageId } = params
@@ -352,23 +358,23 @@ export default [
         }
       },
       validate: {
-        params: dlqAndIdParamSchema
+        params: dlqAndHandleParamSchema
       }
     }
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues, messageId: string } }>}
+   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues, receiptHandle: string, messageId: string } }>}
    */
   ({
     method: 'POST',
-    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{messageId}`,
+    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{receiptHandle}/{messageId}`,
     async handler(request, h) {
       const { auth, params, yar } = request
       const { token } = auth.credentials
-      const { dlq, messageId } = params
+      const { dlq, messageId, receiptHandle } = params
 
-      await deleteDeadLetterQueueMessage(dlq, messageId, token)
+      await deleteDeadLetterQueueMessage(dlq, receiptHandle, messageId, token)
 
       yar.flash(
         sessionNames.successNotification,
@@ -379,7 +385,7 @@ export default [
     },
     options: {
       validate: {
-        params: dlqParamSchema
+        params: dlqAndHandleParamSchema
       },
       auth: {
         mode: 'required',
@@ -394,4 +400,5 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { Message } from '@aws-sdk/client-sqs'
  */
