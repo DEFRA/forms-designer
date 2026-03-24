@@ -119,8 +119,14 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should redirect to next screen if valid queue selected and display queue messages', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValueOnce({
-        messages: ['{ "message": "some message text"}']
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue({
+        messages: [
+          {
+            MessageId: 'message-id',
+            Body: '{ "field1": "value1" }',
+            ReceiptHandle: 'rec-handle'
+          }
+        ]
       })
       const options = {
         method: 'post',
@@ -138,8 +144,14 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should render form with messages and redrive button', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValueOnce({
-        messages: ['{ "message": "some message text"}']
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue({
+        messages: [
+          {
+            MessageId: 'message-id',
+            Body: '{ "field1": "value1" }',
+            ReceiptHandle: 'rec-handle'
+          }
+        ]
       })
 
       const options = {
@@ -152,7 +164,9 @@ describe('Dead-letter queues routes', () => {
 
       const $mastheadHeading = container.getByRole('heading', { level: 1 })
       const $links = container.getAllByRole('link')
-      const $button = container.getByRole('button', { name: 'Redrive' })
+      const $button = container.getByRole('button', {
+        name: 'Redrive all messages'
+      })
       const $messages = container.getAllByRole('code')
 
       expect($mastheadHeading).toHaveTextContent('Admin tools')
@@ -202,7 +216,9 @@ describe('Dead-letter queues routes', () => {
 
       const $mastheadHeading = container.getByRole('heading', { level: 1 })
       const $headings2 = container.getAllByRole('heading', { level: 2 })
-      const $button = container.getByRole('button', { name: 'Redrive' })
+      const $button = container.getByRole('button', {
+        name: 'Redrive all messages'
+      })
 
       expect($mastheadHeading).toHaveTextContent('Admin tools')
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
