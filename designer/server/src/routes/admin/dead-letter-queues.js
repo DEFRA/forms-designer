@@ -400,5 +400,4 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { Message } from '@aws-sdk/client-sqs'
  */
