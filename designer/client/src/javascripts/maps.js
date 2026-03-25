@@ -1,6 +1,9 @@
-import { geospatialMap, map } from '@defra/forms-engine-plugin/shared.js'
+import {
+  geospatialMap,
+  map as mapImports
+} from '@defra/forms-engine-plugin/shared.js'
 
-const { createMap, defaultMapConfig } = map
+const { createMap, defaultMapConfig } = mapImports
 const {
   addFeatureToMap,
   createFeaturesHTML,
@@ -57,9 +60,7 @@ previews.forEach((preview, index) => {
      * @param {object} e - the event
      * @param {any} e.map - the map provider instance
      */
-    function onMapReady(e) {
-      const { map: mapProvider } = e
-
+    function onMapReady({ map: mapProvider }) {
       map.on(
         'draw:ready',
         /**
