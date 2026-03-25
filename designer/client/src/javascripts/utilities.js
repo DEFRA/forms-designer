@@ -1,3 +1,5 @@
+const DISPLAY_TOGGLE_TIME_IN_MILLIS = 1500
+
 /**
  * Copies the text content of an element to the clipboard,
  * and toggles the text in the hyperlink triggering the copy.
@@ -26,13 +28,13 @@ export function copyToClip(linkElem) {
         linkElem.textContent = '--------Copied--------'
         setTimeout(() => {
           linkElem.textContent = originalText
-        }, 1500)
+        }, DISPLAY_TOGGLE_TIME_IN_MILLIS)
       },
       function () {
         linkElem.textContent = 'Error copying'
         setTimeout(() => {
           linkElem.textContent = originalText
-        }, 1500)
+        }, DISPLAY_TOGGLE_TIME_IN_MILLIS)
       }
     )
   }
