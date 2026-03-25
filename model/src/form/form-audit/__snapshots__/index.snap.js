@@ -119,6 +119,9 @@ export const FORM_TITLE_UPDATED = {
   createdAt: CREATED_AT,
   createdBy: CREATED_BY,
   data: {
+    payload: {
+      formStatus: 'draft'
+    },
     changes: {
       new: {
         title: 'My Audit Event Form'

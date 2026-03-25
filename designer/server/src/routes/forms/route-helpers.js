@@ -4,6 +4,9 @@ import Boom from '@hapi/boom'
 import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
+const GENERIC_ERROR_VIEW = 'generic-error'
+const TITLE_CHANGE_DENIED_HEADING = 'You cannot change the form name'
+
 /**
  * Pre-handler to check if user management features are available
  */
@@ -24,12 +27,7 @@ export const checkUserManagementAccess = [
  * @param {string} headingText
  * @param {string} [contentHtml]
  */
-export function createErrorPageModel(
-  slug,
-  metadata,
-  headingText,
-  contentHtml = undefined
-) {
+export function createErrorPageModel(slug, metadata, headingText, contentHtml) {
   return {
     pageHeading: {
       classes: 'govuk-heading-xl',
@@ -43,6 +41,47 @@ export function createErrorPageModel(
     }
   }
 }
+
+/**
+ *  pre handler to check if user has permission to change form title
+ */
+export const protectTitleEdit = [
+  {
+    method:
+      /**
+       * @param {Request<{ Params: { slug: string }, Payload: any }> | Request<{ Params: FormBySlugInput }>} request
+       * @param {ResponseToolkit | ResponseToolkit<{ Params: FormBySlugInput }> | ResponseToolkit<{ Params: { slug: string; }; Payload: any }>} h
+       */
+      async (request, h) => {
+        const { credentials } = request.auth
+        const { token } = request.auth.credentials
+        const slug = request.params.slug
+        const metadata = await forms.get(slug, token)
+        const isLiveForm = !!metadata.live
+        const canEditDraft = credentials.scope?.includes(Scopes.FormEdit)
+        const canEditLive = credentials.scope?.includes(Scopes.FormPublish)
+
+        if ((isLiveForm && canEditLive) || (!isLiveForm && canEditDraft)) {
+          return true
+        }
+
+        const contentHtml =
+          '<p class="govuk-body">Contact the Defra Forms team to change the name of a live form.</p>'
+
+        return h
+          .view(
+            GENERIC_ERROR_VIEW,
+            createErrorPageModel(
+              slug,
+              metadata,
+              TITLE_CHANGE_DENIED_HEADING,
+              contentHtml
+            )
+          )
+          .takeover()
+      }
+  }
+]
 
 /**
  * Pre-handler to check if user has permission to change metadata on form
@@ -69,7 +108,7 @@ export const protectMetadataEditOfLiveForm = [
           if (!request.url.pathname.endsWith('make-draft-live')) {
             return h
               .view(
-                'generic-error',
+                GENERIC_ERROR_VIEW,
                 createErrorPageModel(
                   slug,
                   metadata,
@@ -82,7 +121,7 @@ export const protectMetadataEditOfLiveForm = [
 
           return h
             .view(
-              'generic-error',
+              GENERIC_ERROR_VIEW,
               createErrorPageModel(slug, metadata, 'You cannot publish a form')
             )
             .takeover()

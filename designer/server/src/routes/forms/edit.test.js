@@ -2,7 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { auth, authFormCreator } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
@@ -10,6 +10,11 @@ jest.mock('~/src/lib/forms.js')
 describe('Forms library routes', () => {
   /** @type {Server} */
   let server
+
+  const changeFormNameDeniedHeading = 'You cannot change the form name'
+  const titleEditUrl = '/library/my-form-slug/edit/title'
+  const titleFieldLabel = 'Enter a name for your form'
+  const liveTitleFieldLabel = 'Change the name of the live form'
 
   beforeAll(async () => {
     server = await createServer()
@@ -107,28 +112,34 @@ describe('Forms library routes', () => {
   })
 
   test('GET - should check correct title is rendered in the view', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest
       .mocked(forms.getDraftFormDefinition)
       .mockResolvedValueOnce(formDefinition)
 
     const options = {
       method: 'get',
-      url: '/library/my-form-slug/edit/title',
+      url: titleEditUrl,
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
     const $title = container.getByRole('textbox', {
-      name: 'Enter a name for your form'
+      name: titleFieldLabel
     })
 
     expect($title).toHaveValue('Test form')
   })
 
   test('POST - should redirect to overview page after updating title', async () => {
-    jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(formMetadata)
+      .mockResolvedValueOnce(formMetadata)
     jest.mocked(forms.updateMetadata).mockResolvedValueOnce({
       id: formMetadata.id,
       slug: 'new-title',
@@ -137,7 +148,7 @@ describe('Forms library routes', () => {
 
     const options = {
       method: 'post',
-      url: '/library/my-form-slug/edit/title',
+      url: titleEditUrl,
       auth,
       payload: { title: 'new title' }
     }
@@ -148,6 +159,108 @@ describe('Forms library routes', () => {
 
     expect(statusCode).toBe(StatusCodes.SEE_OTHER)
     expect(headers.location).toBe('/library/new-title')
+  })
+
+  test('GET - should render the shared title edit page with the live hint when form is live', async () => {
+    const liveFormMetadata = {
+      ...formMetadata,
+      live: {
+        createdAt: now,
+        createdBy: author,
+        updatedAt: now,
+        updatedBy: author
+      }
+    }
+
+    jest
+      .mocked(forms.get)
+      .mockResolvedValueOnce(liveFormMetadata)
+      .mockResolvedValueOnce(liveFormMetadata)
+
+    const options = {
+      method: 'get',
+      url: titleEditUrl,
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $title = container.getByRole('textbox', {
+      name: liveTitleFieldLabel,
+      description: 'Changing the name of live form will not change its url'
+    })
+
+    expect($title).toHaveValue('Test form')
+    expect(
+      container.getByRole('heading', {
+        name: liveTitleFieldLabel
+      })
+    ).toBeInTheDocument()
+  })
+
+  test('GET - should show error page for live title edit when user lacks form-publish scope', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...formMetadata,
+      live: {
+        createdAt: now,
+        createdBy: author,
+        updatedAt: now,
+        updatedBy: author
+      }
+    })
+
+    const options = {
+      method: 'get',
+      url: titleEditUrl,
+      auth: authFormCreator
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    expect(
+      container.getByRole('heading', {
+        level: 1,
+        name: changeFormNameDeniedHeading
+      })
+    ).toBeInTheDocument()
+    expect(
+      container.getByText(
+        'Contact the Defra Forms team to change the name of a live form.'
+      )
+    ).toBeInTheDocument()
+  })
+
+  test('POST - should show error page for live title edit when user lacks form-publish scope', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce({
+      ...formMetadata,
+      live: {
+        createdAt: now,
+        createdBy: author,
+        updatedAt: now,
+        updatedBy: author
+      }
+    })
+
+    const options = {
+      method: 'post',
+      url: titleEditUrl,
+      auth: authFormCreator,
+      payload: { title: 'new live title' }
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    expect(
+      container.getByRole('heading', {
+        level: 1,
+        name: changeFormNameDeniedHeading
+      })
+    ).toBeInTheDocument()
+    expect(
+      container.getByText(
+        'Contact the Defra Forms team to change the name of a live form.'
+      )
+    ).toBeInTheDocument()
   })
 })
 

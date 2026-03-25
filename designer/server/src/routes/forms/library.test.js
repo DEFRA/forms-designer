@@ -888,6 +888,38 @@ describe('Forms library routes', () => {
         expect($buttons?.[0]).toHaveTextContent('Edit draft')
         expect($buttons?.[1]).toHaveTextContent('Make draft live')
       })
+
+      it('should link form name change to the shared edit title route when live exists', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce({
+          ...formMetadata,
+          live: {
+            createdAt: now,
+            createdBy: author,
+            updatedAt: now,
+            updatedBy: author
+          }
+        })
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(formDefinitionV2)
+
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
+
+        const { container } = await renderResponse(server, options)
+
+        const $changeFormNameLink = container.getByRole('link', {
+          name: 'Change form name'
+        })
+
+        expect($changeFormNameLink).toHaveAttribute(
+          'href',
+          '/library/my-form-slug/edit/title'
+        )
+      })
     })
 
     describe('Global banner', () => {
