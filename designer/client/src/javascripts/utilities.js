@@ -15,9 +15,11 @@ const DISPLAY_TOGGLE_TIME_IN_MILLIS = 1500
  *   </div>
  *   <pre class="json-block" data-sourceCopyToClip><code>{{ message.json | dump(2) }}</code></pre>
  * </div>
+ * @param {Event} event
  * @param {Element} linkElem
  */
-export function copyToClip(linkElem) {
+export function copyToClip(event, linkElem) {
+  event.preventDefault()
   const blockForCopy = linkElem
     .closest('[data-rootCopyToClip]')
     ?.querySelector('[data-sourceCopyToClip]')
@@ -45,8 +47,7 @@ export function initialiseAllCopyLinks() {
   for (const linkElem of Array.from(linkElements)) {
     if (linkElem instanceof HTMLAnchorElement) {
       linkElem.addEventListener('click', (event) => {
-        copyToClip(linkElem)
-        event.preventDefault()
+        copyToClip(event, linkElem)
       })
     }
   }
