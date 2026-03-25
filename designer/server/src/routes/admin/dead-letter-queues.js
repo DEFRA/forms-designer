@@ -86,9 +86,10 @@ export async function getMessageCounts(token) {
   for (const dlq of Object.values(DeadLetterQueues)) {
     try {
       const { messages } = await getDeadLetterQueueMessages(dlq, token)
+      const countSuffix = messages.length === 1 ? 'message' : 'messages'
       radioItems.push({
         value: dlq,
-        text: `${dlq} - ${messages.length} message${messages.length !== 1 ? 's' : ''}`
+        text: `${dlq} - ${messages.length} ${countSuffix}`
       })
     } catch {
       radioItems.push({
