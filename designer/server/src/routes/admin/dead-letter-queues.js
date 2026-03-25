@@ -391,7 +391,11 @@ export default [
       const receiptHandle = getSavedReceiptHandle(yar, messageId)
 
       if (!receiptHandle) {
-        throw new Error('ReceiptHandle not found in session')
+        yar.flash(
+          sessionNames.successNotification,
+          `Receipt handle not found in session for message '${messageId}' in queue '${dlq}'`
+        )
+        return h.redirect(`/admin/dead-letter-queues/${dlq}`)
       }
 
       await deleteDeadLetterQueueMessage(dlq, receiptHandle, messageId, token)
