@@ -3,7 +3,7 @@ import { hostname } from 'node:os'
 const { Duration } = require('luxon')
 
 process.env.APP_BASE_URL = `http://${hostname()}:3000`
-process.env.AUDIT_URL = 'http://localhost:3004'
+process.env.AUDIT_URL = 'http://localhost:3003'
 process.env.AZURE_CLIENT_ID = 'dummy'
 process.env.AZURE_CLIENT_SECRET = 'dummy'
 process.env.ENTITLEMENT_URL = 'http://localhost:3003'
@@ -29,3 +29,5 @@ process.env.SUBMISSION_URL = 'http://localhost:3002'
 process.env.SNS_ENDPOINT = 'http://localhost:4566'
 process.env.SNS_TOPIC_ARN =
   'arn:aws:sns:eu-west-2:000000000000:forms_designer_events'
+process.env.NOTIFY_URL = 'http://localhost:3004'
+process.env.SHAREPOINT_URL = 'http://localhost:3007'

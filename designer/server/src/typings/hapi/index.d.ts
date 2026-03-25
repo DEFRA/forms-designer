@@ -185,6 +185,9 @@ declare module '@hapi/yar' {
     [sessionNames.validationFailure.adminResetSaveAndExit]: ValidationFailure<{
       magicLinkId: string
     }>
+    [sessionNames.validationFailure.deadLetterQueues]: ValidationFailure<{
+      dlq: string
+    }>
   }
 
   interface YarValues {

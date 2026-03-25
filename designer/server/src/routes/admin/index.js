@@ -15,6 +15,7 @@ import {
   publishFormsBackupRequestedEvent,
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
+import adminDeadLetterQueuesRoutes from '~/src/routes/admin/dead-letter-queues.js'
 import adminResetSaveAndExitRoutes from '~/src/routes/admin/reset-save-and-exit.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
@@ -77,7 +78,8 @@ export default [
         supports: {
           feedback: scopes.includes(Scopes.FormsFeedback),
           download: scopes.includes(Scopes.FormsBackup),
-          resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit)
+          resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
+          deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues)
         }
       })
     },
@@ -89,7 +91,8 @@ export default [
           scope: [
             Scopes.FormsFeedback,
             Scopes.FormsBackup,
-            Scopes.ResetSaveAndExit
+            Scopes.ResetSaveAndExit,
+            Scopes.DeadLetterQueues
           ]
         }
       }
@@ -142,13 +145,18 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
+          // Since both these scopes are within the superadmin role, we don't need to verify further
+          // However, if these scopes got split into different roles, we should verify the exact scope necessary
+          // for the request user action
           scope: [Scopes.FormsFeedback, Scopes.FormsBackup]
         }
       }
     }
   }),
 
-  ...adminResetSaveAndExitRoutes
+  ...adminResetSaveAndExitRoutes,
+
+  ...adminDeadLetterQueuesRoutes
 ]
 
 /**
