@@ -1,0 +1,59 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "grid-layout/macro.njk" import appGridLayout %}
+{% from "page-body/macro.njk" import appPageBody %}
+
+{% set mainClasses = "govuk-main-wrapper--editor" %}
+
+{% block head %}
+  {{ super() }}
+  <link href="{{assetPath}}/interactive-map/css/index.css" rel="stylesheet" type="text/css">
+  <link href="{{assetPath}}/interactive-map/plugins/map-styles/dist/css/index.css" rel="stylesheet" type="text/css">
+  <link href="{{assetPath}}/interactive-map/plugins/search/dist/css/index.css" rel="stylesheet" type="text/css">
+  <link href="{{assetPath}}/interactive-map/plugins/scale-bar/dist/css/index.css" rel="stylesheet" type="text/css">
+  <link href="{{assetPath}}/interactive-map/plugins/interact/dist/css/index.css" rel="stylesheet" type="text/css">
+  <link href="{{assetPath}}/interactive-map/plugins/draw-ml/dist/css/index.css" rel="stylesheet" type="text/css">
+  <style type="text/css">.govuk-form-group { margin-bottom: 0 }</style>
+{% endblock %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: {
+      text: pageTitle,
+      size: "large",
+      caption: caption
+    }
+  }) %}
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {% for item in geojson %}
+          {% if repeaterName %}
+            <h2 class="govuk-heading-m">Answer {{loop.index}}</h2>
+          {% endif %}
+          <div class="app-geospatial-field--preview">
+            <div id="map_{{loop.index0}}">
+              <textarea class="govuk-textarea" id="data_{{loop.index0}}" readonly>{{ item | dump | safe }}</textarea>
+            </div>
+            <div id="list_{{loop.index0}}">
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  {% endcall %}
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/providers/maplibre/dist/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/providers/open-names/dist/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/map-styles/dist/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/search/dist/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/scale-bar/dist/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/interact/dist/umd/index.js"></script>
+  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/draw-ml/dist/umd/index.js"></script>
+  <script type="module" nonce="{{ cspNonce }}" src="{{ getAssetPath("maps.js") }}"></script>
+{% endblock %}

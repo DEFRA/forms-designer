@@ -32,7 +32,8 @@ export default {
       'nanoid', // Supports ESM only
       'slug', // Supports ESM only
       '@defra/forms-engine-plugin',
-      '@defra/forms-model'
+      '@defra/forms-model',
+      'geodesy' // Supports ESM only
     ].join('|')}/)`
   ]
 }

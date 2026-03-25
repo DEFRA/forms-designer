@@ -6,7 +6,7 @@ import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
-import { getPaymentSecretsMasked, MASKED_KEY } from '~/src/lib/secrets.js'
+import { MASKED_KEY, getPaymentSecretsMasked } from '~/src/lib/secrets.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import {
@@ -436,13 +436,15 @@ export async function questionDetailsViewModel(
     skipLink: getSkipLink(),
     isOpen: hasDataOrErrorForDisplay(extraFieldNames, errorList, extraFields),
     isLocationField: isLocationFieldType(questionFieldsOverride.type),
+    isGeospatialField:
+      questionFieldsOverride.type === ComponentType.GeospatialField,
     getFieldType: (/** @type {GovukField} */ field) =>
       getFieldComponentType(field)
   }
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, List, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  * @import { RequestQuery } from '@hapi/hapi'
  */

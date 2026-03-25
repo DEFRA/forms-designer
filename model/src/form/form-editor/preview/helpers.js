@@ -19,6 +19,7 @@ import {
   EastingNorthingQuestion
 } from '~/src/form/form-editor/preview/easting-northing.js'
 import { EmailAddressQuestion } from '~/src/form/form-editor/preview/email-address.js'
+import { GeospatialQuestion } from '~/src/form/form-editor/preview/geospatial.js'
 import { HiddenQuestion } from '~/src/form/form-editor/preview/hidden.js'
 import {
   LatLongComponentPreviewElements,
@@ -64,6 +65,7 @@ import {
 import { UnsupportedQuestion } from '~/src/form/form-editor/preview/unsupported-question.js'
 import { YesNoQuestion } from '~/src/form/form-editor/preview/yes-no.js'
 import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
+
 /**
  * @type {typeof PreviewComponent}
  */
@@ -98,7 +100,8 @@ const InputFieldComponentDictionary = {
   [ComponentType.NationalGridFieldNumberField]: NationalGridQuestion,
   [ComponentType.LatLongField]: LatLongQuestion,
   [ComponentType.HiddenField]: HiddenQuestion,
-  [ComponentType.PaymentField]: PaymentQuestion
+  [ComponentType.PaymentField]: PaymentQuestion,
+  [ComponentType.GeospatialField]: GeospatialQuestion
 }
 
 /**

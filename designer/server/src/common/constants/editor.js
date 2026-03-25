@@ -81,6 +81,10 @@ export const QuestionTypeDescriptions =
     {
       type: ComponentType.PaymentField,
       description: 'Payment'
+    },
+    {
+      type: ComponentType.GeospatialField,
+      description: 'Location: An area or points on a map'
     }
   ])
 

@@ -5,6 +5,7 @@ import {
   DeclarationQuestion,
   EastingNorthingQuestion,
   EmailAddressQuestion,
+  GeospatialQuestion,
   LatLongQuestion,
   ListSortableQuestion,
   LongAnswerQuestion,
@@ -439,6 +440,21 @@ export const SetupPreviewPartial =
       listeners.setupListeners()
 
       return paymentField
+    },
+    /**
+     * @returns {GeospatialQuestion}
+     */
+    GeospatialField: () => {
+      const questionElements = new QuestionDomElements()
+      const nunjucksRenderer = new NunjucksRenderer(questionElements)
+      const geospatial = new GeospatialQuestion(
+        questionElements,
+        nunjucksRenderer
+      )
+      const listeners = new EventListeners(geospatial, questionElements)
+      listeners.setupListeners()
+
+      return geospatial
     }
   })
 

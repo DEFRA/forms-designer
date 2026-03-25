@@ -12,6 +12,18 @@
   {% endif %}
 {% endmacro %}
 
+{% if isGeospatialField %}
+  <h3 class="govuk-heading-m">Location data</h3>
+  <p class="govuk-body">You will receive the following data for points, lines, and shapes:</p>
+  <ul class="govuk-list govuk-list--bullet">
+    <li>All coordinates</li>
+    <li>A grid reference for the first point</li>
+    <li>A grid reference for the centre point</li>
+    <li>A map showing the locations</li>
+  </ul>
+  <p class="govuk-body">The machine-readable output will include all of the above in GeoJSON format.</p>
+{% endif %}
+
 {% if isLocationField %}
   <h3 class="govuk-heading-m">Additional settings (optional)</h3>
   <p class="govuk-hint">You should choose a location format first before adding additional settings.</p>

@@ -46,7 +46,7 @@ export const projectDefaults = {
     `node_modules/(?!${[
       'nanoid', // Supports ESM only
       'slug', // Supports ESM only,
-      '@defra/hapi-tracing', // Supports ESM only|
+      '@defra/hapi-tracing', // Supports ESM only
       '@defra/forms-engine-plugin',
       '@defra/forms-model'
     ].join('|')}/)`

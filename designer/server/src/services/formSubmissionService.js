@@ -1,5 +1,5 @@
 import config from '~/src/config.js'
-import { postJson } from '~/src/lib/fetch.js'
+import { getJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 const submissionUrl = config.submissionUrl
@@ -55,3 +55,28 @@ export async function resetSaveAndExitRecord(magicLinkId, token) {
 
   return result.body
 }
+
+/**
+ * Gets a submission record
+ * @param { string } referenceNumber - the submission reference number
+ * @param {string} token - the user token
+ */
+export async function getSubmissionRecord(referenceNumber, token) {
+  const getJsonByType = /** @type {typeof getJson<FormSubmissionDocument>} */ (
+    getJson
+  )
+  const result = await getJsonByType(
+    new URL(`/submission/${referenceNumber}`, submissionUrl),
+    getHeaders(token)
+  )
+
+  return result.body
+}
+
+/**
+ * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
+ */
+
+/**
+ * @typedef {FormAdapterSubmissionMessagePayload & { recordCreatedAt: Date, expireAt: Date }} FormSubmissionDocument
+ */
