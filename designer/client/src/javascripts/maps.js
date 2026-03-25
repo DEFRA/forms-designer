@@ -13,12 +13,60 @@ const {
 } = geospatialMap
 
 /**
- * Processes all geospatial component previews on the page by rendering maps and features, and setting up event listeners
+ * Factory clousure to create the map ready callback with access to the map provider, geojson and list element
+ * @param {any} mapProvider - the map provider instance
+ * @param {GeoJSON} geojson - the geojson data
+ * @param {HTMLDivElement} listEl - the list element to render the features list into
+ * @param {any} drawPlugin - the map draw plugin instance
+ * @param {any} map - the initialised map instance
+ * @param {string} mapId - the map id string
  */
-export function processMapPreview() {
-  const previews = document.querySelectorAll('.app-geospatial-field--preview')
+function onMapReadyFactory(
+  mapProvider,
+  geojson,
+  listEl,
+  drawPlugin,
+  map,
+  mapId
+) {
+  /**
+   * Callback function which fires when the draw plugin is ready
+   */
+  return function () {
+    const { features } = geojson
 
-  previews.forEach(processPreview)
+    // Add all features to the map
+    features.forEach((feature) => addFeatureToMap(feature, drawPlugin, map))
+
+    // Create the list (in readonly mode)
+    listEl.innerHTML = createFeaturesHTML(features, mapId, true)
+
+    // Listen to anchor click events to focus features
+    listEl.addEventListener(
+      'click',
+      function (e) {
+        const target = e.target
+
+        if (!(target instanceof HTMLElement)) {
+          return
+        }
+
+        if (
+          target.tagName === 'A' &&
+          target.dataset.action &&
+          target.dataset.id
+        ) {
+          const { action, id } = target.dataset
+          const feature = geojson.features.find((f) => f.id === id)
+
+          if (action === 'focus' && feature) {
+            focusFeature(feature, mapProvider)
+          }
+        }
+      },
+      false
+    )
+  }
 }
 
 /**
@@ -66,53 +114,6 @@ function processPreview(preview, index) {
     }
   })
 
-  /**
-   * Factory clousure to create the map ready callback with access to the map provider, geojson and list element
-   * @param {any} mapProvider - the map provider instance
-   * @param {GeoJSON} geojson - the geojson data
-   * @param {HTMLDivElement} listEl - the list element to render the features list into
-   */
-  function onMapReadyFactory(mapProvider, geojson, listEl) {
-    /**
-     * Callback function which fires when the draw plugin is ready
-     */
-    return function () {
-      const { features } = geojson
-
-      // Add all features to the map
-      features.forEach((feature) => addFeatureToMap(feature, drawPlugin, map))
-
-      // Create the list (in readonly mode)
-      listEl.innerHTML = createFeaturesHTML(features, mapId, true)
-
-      // Listen to anchor click events to focus features
-      listEl.addEventListener(
-        'click',
-        function (e) {
-          const target = e.target
-
-          if (!(target instanceof HTMLElement)) {
-            return
-          }
-
-          if (
-            target.tagName === 'A' &&
-            target.dataset.action &&
-            target.dataset.id
-          ) {
-            const { action, id } = target.dataset
-            const feature = geojson.features.find((f) => f.id === id)
-
-            if (action === 'focus' && feature) {
-              focusFeature(feature, mapProvider)
-            }
-          }
-        },
-        false
-      )
-    }
-  }
-
   map.on(
     'map:ready',
     /**
@@ -121,9 +122,21 @@ function processPreview(preview, index) {
      * @param {any} e.map - the map provider instance
      */
     function onMapReady({ map: mapProvider }) {
-      map.on('draw:ready', onMapReadyFactory(mapProvider, geojson, listEl))
+      map.on(
+        'draw:ready',
+        onMapReadyFactory(mapProvider, geojson, listEl, drawPlugin, map, mapId)
+      )
     }
   )
+}
+
+/**
+ * Processes all geospatial component previews on the page by rendering maps and features, and setting up event listeners
+ */
+export function processMapPreview() {
+  const previews = document.querySelectorAll('.app-geospatial-field--preview')
+
+  previews.forEach(processPreview)
 }
 
 processMapPreview()
