@@ -1,7 +1,7 @@
 import { DeadLetterQueues } from '@defra/forms-model'
 
 import config from '~/src/config.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
+import { delJson, getJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 /**
@@ -77,5 +77,37 @@ export async function redriveDeadLetterQueueMessages(dlq, token) {
 
   if (body.message !== 'success') {
     throw new Error(`Error when redriving messages for ${dlq}: ${body.message}`)
+  }
+}
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} receiptHandle
+ * @param {string} messageId
+ * @param {string} token
+ */
+export async function deleteDeadLetterQueueMessage(
+  dlq,
+  receiptHandle,
+  messageId,
+  token
+) {
+  const delJsonByType = /** @type {typeof delJson<{ message: string }>} */ (
+    delJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(
+    `./admin/deadletter${qualifier}/${receiptHandle}`,
+    endpoint
+  )
+
+  const { body } = await delJsonByType(requestUrl, getHeaders(token))
+
+  if (body.message !== 'success') {
+    throw new Error(
+      `Error when deleteing message ${messageId} for ${dlq}: ${body.message}`
+    )
   }
 }

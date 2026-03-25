@@ -58,6 +58,9 @@ export default /** @type {Configuration} */ ({
     },
     sectionsPreview: {
       import: ['./javascripts/sections-manager.js']
+    },
+    utilities: {
+      import: ['./javascripts/utilities.js']
     }
   },
   experiments: {

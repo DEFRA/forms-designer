@@ -208,10 +208,23 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
 
       <h2 class="govuk-heading-m">audit-api: 1 message </h2>
 
-        <pre><code>{}</code></pre>
+      <div class="govuk-form-group">
+          <div class="json-item" data-rootCopyToClip>
+            <div class="action-links-top-right">
+              <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="#" data-linkCopyToClip>Copy to clipboard</a>
+              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/audit-api/delete/rec-handle/message-id'>Delete</a>
+            </div>
+            <pre class="json-block" data-sourceCopyToClip><code>{
+  &quot;MessageId&quot;: &quot;message-id&quot;,
+  &quot;Body&quot;: {
+    &quot;field1&quot;: &quot;value1&quot;
+  }
+}</code></pre>
+          </div>
+      </div>
 
         <button type="submit" class="govuk-button" data-module="govuk-button">
-  Redrive
+  Redrive all messages
 </button>
     </form>
 
@@ -222,6 +235,12 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
   </div>
 
   
+  <script type="module">
+    import { initialiseAllCopyLinks } from "/utilities.js"
+    document.addEventListener("DOMContentLoaded", (event) => {
+      initialiseAllCopyLinks()
+    })
+  </script>
   </main>
 
 

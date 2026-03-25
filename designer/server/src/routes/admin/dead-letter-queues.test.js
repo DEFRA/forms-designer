@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import {
+  deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages
 } from '~/src/lib/dead-letter-queue.js'
@@ -119,8 +120,14 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should redirect to next screen if valid queue selected and display queue messages', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValueOnce({
-        messages: ['{ "message": "some message text"}']
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue({
+        messages: [
+          {
+            MessageId: 'message-id',
+            Body: '{ "field1": "value1" }',
+            ReceiptHandle: 'rec-handle'
+          }
+        ]
       })
       const options = {
         method: 'post',
@@ -138,8 +145,14 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should render form with messages and redrive button', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValueOnce({
-        messages: ['{ "message": "some message text"}']
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue({
+        messages: [
+          {
+            MessageId: 'message-id',
+            Body: '{ "field1": "value1" }',
+            ReceiptHandle: 'rec-handle'
+          }
+        ]
       })
 
       const options = {
@@ -152,7 +165,9 @@ describe('Dead-letter queues routes', () => {
 
       const $mastheadHeading = container.getByRole('heading', { level: 1 })
       const $links = container.getAllByRole('link')
-      const $button = container.getByRole('button', { name: 'Redrive' })
+      const $button = container.getByRole('button', {
+        name: 'Redrive all messages'
+      })
       const $messages = container.getAllByRole('code')
 
       expect($mastheadHeading).toHaveTextContent('Admin tools')
@@ -202,7 +217,9 @@ describe('Dead-letter queues routes', () => {
 
       const $mastheadHeading = container.getByRole('heading', { level: 1 })
       const $headings2 = container.getAllByRole('heading', { level: 2 })
-      const $button = container.getByRole('button', { name: 'Redrive' })
+      const $button = container.getByRole('button', {
+        name: 'Redrive all messages'
+      })
 
       expect($mastheadHeading).toHaveTextContent('Admin tools')
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
@@ -236,6 +253,57 @@ describe('Dead-letter queues routes', () => {
         expect.any(String)
       )
       expect(headers.location).toBe('/admin/index')
+    })
+
+    test('should render confirmation screen for delete message', async () => {
+      const options = {
+        method: 'get',
+        url: '/admin/dead-letter-queues/audit-api/delete/receipt-handle/message-id',
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByRole('heading', { level: 1 })
+      const $headings2 = container.getAllByRole('heading', { level: 2 })
+      const $button = container.getByRole('button', {
+        name: 'Delete message'
+      })
+
+      expect($mastheadHeading).toHaveTextContent('Admin tools')
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      expect($headings2[0]).toHaveTextContent(
+        "Are you sure you want to delete message 'message-id' from the 'audit-api' queue?"
+      )
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(response.headers['content-type']).toContain('text/html')
+
+      expect($button).toBeInTheDocument()
+    })
+
+    test('should delete if delete button pressed on confirmation screen', async () => {
+      jest.mocked(deleteDeadLetterQueueMessage).mockResolvedValue()
+
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/delete/receipt-handle/message-id',
+        auth
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(deleteDeadLetterQueueMessage).toHaveBeenCalledWith(
+        'audit-api',
+        'receipt-handle',
+        'message-id',
+        expect.any(String)
+      )
+      expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
     })
   })
 })

@@ -91,7 +91,8 @@ export default [
           scope: [
             Scopes.FormsFeedback,
             Scopes.FormsBackup,
-            Scopes.ResetSaveAndExit
+            Scopes.ResetSaveAndExit,
+            Scopes.DeadLetterQueues
           ]
         }
       }
@@ -144,6 +145,9 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
+          // Since both these scopes are within the superadmin role, we don't need to verify further
+          // However, if these scopes got split into different roles, we should verify the exact scope necessary
+          // for the request user action
           scope: [Scopes.FormsFeedback, Scopes.FormsBackup]
         }
       }
