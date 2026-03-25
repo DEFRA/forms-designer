@@ -15,6 +15,7 @@ import {
   deleteDeadLetterMessageConfirmationViewModel,
   redriveDeadLetterQueueConfirmationViewModel
 } from '~/src/models/manage/dead-letter-queue.js'
+import { getSavedReceiptHandle } from '~/src/routes/admin/dead-letter-queue-helper.js'
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 
@@ -23,8 +24,6 @@ const ADMIN_TOOLS = 'Admin tools'
 const dlqSchema = Joi.string()
   .required()
   .valid(...Object.values(DeadLetterQueues))
-
-const receiptHandleSchema = Joi.string().required()
 
 const dlqPayloadSchema = Joi.object().keys({
   dlq: dlqSchema.messages({
@@ -42,10 +41,9 @@ const messageIdSchema = Joi.string().required().messages({
   '*': 'Missing message id'
 })
 
-const dlqAndHandleParamSchema = Joi.object().keys({
+const dlqAndMessageParamSchema = Joi.object().keys({
   dlq: dlqSchema,
-  messageId: messageIdSchema,
-  receiptHandle: receiptHandleSchema
+  messageId: messageIdSchema
 })
 
 /**
@@ -208,7 +206,7 @@ export default [
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{dlq}`,
     async handler(request, h) {
-      const { auth, params } = request
+      const { auth, params, yar } = request
       const { token } = auth.credentials
       const { dlq } = params
 
@@ -218,6 +216,19 @@ export default [
 
       const mappedMessages = dlqMessageMapper(messages)
 
+      const messageHandles = mappedMessages.map((m) => ({
+        messageId: m.json.MessageId,
+        receiptHandle: m.receiptHandle
+      }))
+
+      // Saved banner
+      const notification = /** @type {string[] | undefined} */ (
+        yar.flash(sessionNames.successNotification).at(0)
+      )
+
+      // Flash list of messages in order to retrieve receipt handle (a long string) if deleting a message
+      yar.flash(sessionNames.deadLetterQueueMessages, messageHandles)
+
       return h.view('admin/dead-letter-queue-view', {
         ...generateTitling(),
         backLink: {
@@ -225,6 +236,7 @@ export default [
           href: '/admin/dead-letter-queues'
         },
         navigation,
+        notification,
         caption: {
           text: dlq
         },
@@ -319,7 +331,7 @@ export default [
         `A redrive for messages in DLQ '${dlq}' has been triggered`
       )
 
-      return h.redirect('/admin/index')
+      return h.redirect('/admin/dead-letter-queues')
     },
     options: {
       validate: {
@@ -336,11 +348,11 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, receiptHandle: string, messageId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
    */
   ({
     method: 'GET',
-    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{receiptHandle}/{messageId}`,
+    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{messageId}`,
     handler(request, h) {
       const { params } = request
       const { dlq, messageId } = params
@@ -359,34 +371,41 @@ export default [
         }
       },
       validate: {
-        params: dlqAndHandleParamSchema
+        params: dlqAndMessageParamSchema
       }
     }
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues, receiptHandle: string, messageId: string } }>}
+   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues, messageId: string } }>}
    */
   ({
     method: 'POST',
-    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{receiptHandle}/{messageId}`,
+    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{messageId}`,
     async handler(request, h) {
       const { auth, params, yar } = request
       const { token } = auth.credentials
-      const { dlq, messageId, receiptHandle } = params
+      const { dlq, messageId } = params
+
+      // Retrieve appropriate receipt handle from saved list of messages
+      const receiptHandle = getSavedReceiptHandle(yar, messageId)
+
+      if (!receiptHandle) {
+        throw new Error('ReceiptHandle not found in session')
+      }
 
       await deleteDeadLetterQueueMessage(dlq, receiptHandle, messageId, token)
 
       yar.flash(
         sessionNames.successNotification,
-        `Messages '${messageId}' in DLQ '${dlq}' has been deleted`
+        `Message '${messageId}' in DLQ '${dlq}' has been deleted`
       )
 
       return h.redirect(`/admin/dead-letter-queues/${dlq}`)
     },
     options: {
       validate: {
-        params: dlqAndHandleParamSchema
+        params: dlqAndMessageParamSchema
       },
       auth: {
         mode: 'required',

@@ -143,6 +143,10 @@ declare module '@hapi/yar' {
     [sessionNames.logoutHint]: string
     [sessionNames.reorderPages]: string
     [sessionNames.errorList]: ErrorDetailsItem
+    [sessionNames.deadLetterQueueMessages]: {
+      messageId: string
+      receiptHandle: string
+    }
     [sessionNames.badRequestErrorList]: ErrorDetailsItem
     // Validation failure types using actual constants
     [sessionNames.validationFailure

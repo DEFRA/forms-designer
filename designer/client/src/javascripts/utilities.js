@@ -38,14 +38,16 @@ export function copyToClip(linkElem) {
       }
     )
   }
-  return false
 }
 
 export function initialiseAllCopyLinks() {
   const linkElements = document.querySelectorAll('a[data-linkCopyToClip]')
   for (const linkElem of Array.from(linkElements)) {
     if (linkElem instanceof HTMLAnchorElement) {
-      linkElem.addEventListener('click', () => copyToClip(linkElem))
+      linkElem.addEventListener('click', (event) => {
+        copyToClip(linkElem)
+        event.preventDefault()
+      })
     }
   }
 }

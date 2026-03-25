@@ -7,11 +7,13 @@ import {
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages
 } from '~/src/lib/dead-letter-queue.js'
+import { getSavedReceiptHandle } from '~/src/routes/admin/dead-letter-queue-helper.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/dead-letter-queue.js')
+jest.mock('~/src/routes/admin/dead-letter-queue-helper.js')
 
 describe('Dead-letter queues routes', () => {
   /** @type {Server} */
@@ -252,13 +254,13 @@ describe('Dead-letter queues routes', () => {
         'audit-api',
         expect.any(String)
       )
-      expect(headers.location).toBe('/admin/index')
+      expect(headers.location).toBe('/admin/dead-letter-queues')
     })
 
     test('should render confirmation screen for delete message', async () => {
       const options = {
         method: 'get',
-        url: '/admin/dead-letter-queues/audit-api/delete/receipt-handle/message-id',
+        url: '/admin/dead-letter-queues/audit-api/delete/message-id',
         auth
       }
 
@@ -285,10 +287,11 @@ describe('Dead-letter queues routes', () => {
 
     test('should delete if delete button pressed on confirmation screen', async () => {
       jest.mocked(deleteDeadLetterQueueMessage).mockResolvedValue()
+      jest.mocked(getSavedReceiptHandle).mockReturnValue('receipt-handle')
 
       const options = {
         method: 'post',
-        url: '/admin/dead-letter-queues/audit-api/delete/receipt-handle/message-id',
+        url: '/admin/dead-letter-queues/audit-api/delete/message-id',
         auth
       }
 

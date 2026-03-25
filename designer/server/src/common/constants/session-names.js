@@ -8,6 +8,7 @@ export const sessionNames = {
   reorderSections: /** @type {const} */ ('reorderSections'),
   questionSessionState: /** @type {const} */ ('questionSessionState'),
   conditionSessionState: /** @type {const} */ ('conditionSessionState'),
+  deadLetterQueueMessages: /** @type {const} */ ('deadletterQueueMessages'),
   validationFailure: {
     createForm: /** @type {const} */ ('createFormValidationFailure'),
     updateForm: /** @type {const} */ ('updateFormValidationFailure'),

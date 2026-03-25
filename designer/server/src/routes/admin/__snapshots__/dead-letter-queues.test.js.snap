@@ -212,7 +212,7 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
           <div class="json-item" data-rootCopyToClip>
             <div class="action-links-top-right">
               <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="#" data-linkCopyToClip>Copy to clipboard</a>
-              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/audit-api/delete/rec-handle/message-id'>Delete</a>
+              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/audit-api/delete/message-id'>Delete</a>
             </div>
             <pre class="json-block" data-sourceCopyToClip><code>{
   &quot;MessageId&quot;: &quot;message-id&quot;,
