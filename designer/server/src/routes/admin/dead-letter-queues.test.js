@@ -308,6 +308,25 @@ describe('Dead-letter queues routes', () => {
       )
       expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
     })
+
+    test('should redirect with error on delete if receipt handle not found in session', async () => {
+      jest.mocked(deleteDeadLetterQueueMessage).mockResolvedValue()
+      jest.mocked(getSavedReceiptHandle).mockReturnValue(undefined)
+
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/delete/message-id',
+        auth
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(deleteDeadLetterQueueMessage).not.toHaveBeenCalled()
+      expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
+    })
   })
 })
 
