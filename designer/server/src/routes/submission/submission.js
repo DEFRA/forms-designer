@@ -23,13 +23,13 @@ export default [
 
       const record = await getSubmissionRecord(referenceNumber, token)
       const { formId, versionMetadata } = record.meta
-      const definition = !versionMetadata
-        ? await getLiveFormDefinition(formId, token)
-        : await getFormDefinitionVersion(
+      const definition = versionMetadata
+        ? await getFormDefinitionVersion(
             formId,
             versionMetadata.versionNumber,
             token
           )
+        : await getLiveFormDefinition(formId, token)
       const page = getPageFromDefinition(definition, pageId)
       const component = getComponentFromDefinition(
         definition,
@@ -49,9 +49,9 @@ export default [
       /**
        * @type {FeatureCollection[]}
        */
-      const geojson = !repeaterName
-        ? [record.data.main[componentName]]
-        : record.data.repeaters[repeaterName].map((item) => item[componentName])
+      const geojson = repeaterName
+        ? record.data.repeaters[repeaterName].map((item) => item[componentName])
+        : [record.data.main[componentName]]
 
       const caption = referenceNumber
       const pageTitle = `${component.title}${repeaterName ? ' (multiple responses)' : ''}`
