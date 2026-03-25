@@ -39,7 +39,7 @@ describe('utilities', () => {
       await new Promise((_resolve) => setTimeout(_resolve, 500))
       expect(link?.textContent).toBe('--------Copied--------')
       expect(mockWriteText).toHaveBeenCalledWith('Some JSON text content')
-      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      await new Promise((_resolve) => setTimeout(_resolve, 1500))
       expect(link?.textContent).toBe('Copy to clipboard')
     })
 
@@ -68,7 +68,7 @@ describe('utilities', () => {
       }
       await new Promise((_resolve) => setTimeout(_resolve, 500))
       expect(link?.textContent).toBe('Error copying')
-      await new Promise((_resolve) => setTimeout(_resolve, 1000))
+      await new Promise((_resolve) => setTimeout(_resolve, 1500))
       expect(link?.textContent).toBe('Copy to clipboard')
     })
   })

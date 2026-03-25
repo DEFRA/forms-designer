@@ -27,7 +27,9 @@
         {% endif %}
 
         {% if notification | length %}
-          {{ govukNotificationBanner(notification) }}
+          {{ govukNotificationBanner({
+            html: notification
+          }) }}
         {% endif %}
       </div>
     </div>
@@ -42,7 +44,7 @@
           <div class="json-item" data-rootCopyToClip>
             <div class="action-links-top-right">
               <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="#" data-linkCopyToClip>Copy to clipboard</a>
-              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/{{ queueName}}/delete/{{ message.receiptHandle }}/{{ message.json.MessageId }}'>Delete</a>
+              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/{{ queueName}}/delete/{{ message.json.MessageId }}'>Delete</a>
             </div>
             <pre class="json-block" data-sourceCopyToClip><code>{{ message.json | dump(2) }}</code></pre>
           </div>
