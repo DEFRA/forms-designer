@@ -233,7 +233,7 @@ export default [
         ...generateTitling(),
         backLink: {
           text: 'Back to dead-letter queues',
-          href: '/admin/dead-letter-queues'
+          href: ROUTE_FULL_PATH
         },
         navigation,
         notification,
@@ -331,7 +331,7 @@ export default [
         `A redrive for messages in DLQ '${dlq}' has been triggered`
       )
 
-      return h.redirect('/admin/dead-letter-queues')
+      return h.redirect(ROUTE_FULL_PATH)
     },
     options: {
       validate: {
