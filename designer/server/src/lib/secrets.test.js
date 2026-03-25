@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
+import { testFormDefinitionWithPayment } from '~/src/__stubs__/form-definition.js'
 import config from '~/src/config.js'
 import {
   baseOptions,
@@ -9,6 +10,7 @@ import {
   mockedPostJson,
   token
 } from '~/src/lib/__stubs__/editor.js'
+import { getLiveFormDefinition } from '~/src/lib/forms.js'
 import {
   MASKED_KEY,
   existsSecret,
@@ -19,6 +21,7 @@ import {
 } from '~/src/lib/secrets.js'
 
 jest.mock('~/src/lib/fetch.js')
+jest.mock('~/src/lib/forms.js')
 
 const managerEndpoint = new URL(config.managerUrl)
 
@@ -56,11 +59,17 @@ describe('secrets.js', () => {
         })
         .mockResolvedValueOnce({
           response: createMockResponse(),
+          body: { exists: true }
+        })
+        .mockResolvedValueOnce({
+          response: createMockResponse(),
           body: { exists: false }
         })
       const result = await getPaymentSecretsMasked(formId, token)
       expect(result.testKey.maskedKey).toBe(MASKED_KEY)
       expect(result.testKey.exists).toBe(true)
+      expect(result.liveKeyPending.maskedKey).toBe(MASKED_KEY)
+      expect(result.liveKeyPending.exists).toBe(true)
       expect(result.liveKey.maskedKey).toBe('')
       expect(result.liveKey.exists).toBe(false)
     })
@@ -97,6 +106,28 @@ describe('secrets.js', () => {
   })
 
   describe('savePaymentSecrets', () => {
+    it('should throw if form is live (with payment question) but no live secret supplied', async () => {
+      jest
+        .mocked(getLiveFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithPayment)
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        paymentTestApiKey: 'Some new secret',
+        paymentLiveApiKey: ''
+      })
+
+      await expect(() =>
+        savePaymentSecrets(
+          ComponentType.PaymentField,
+          formId,
+          payload,
+          token,
+          true
+        )
+      ).rejects.toThrow(
+        'Enter a live API key. Forms live on GOV.UK must have a live API key'
+      )
+    })
+
     it('should save test secret but not live secret', async () => {
       mockedPostJson
         .mockResolvedValueOnce({

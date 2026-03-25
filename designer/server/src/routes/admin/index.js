@@ -15,6 +15,7 @@ import {
   publishFormsBackupRequestedEvent,
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
+import adminDeadLetterQueuesRoutes from '~/src/routes/admin/dead-letter-queues.js'
 import adminResetSaveAndExitRoutes from '~/src/routes/admin/reset-save-and-exit.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
@@ -77,7 +78,8 @@ export default [
         supports: {
           feedback: scopes.includes(Scopes.FormsFeedback),
           download: scopes.includes(Scopes.FormsBackup),
-          resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit)
+          resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
+          deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues)
         }
       })
     },
@@ -89,7 +91,8 @@ export default [
           scope: [
             Scopes.FormsFeedback,
             Scopes.FormsBackup,
-            Scopes.ResetSaveAndExit
+            Scopes.ResetSaveAndExit,
+            Scopes.DeadLetterQueues
           ]
         }
       }
@@ -142,13 +145,18 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
+          // Since both these scopes are within the superadmin role, we don't need to verify further
+          // However, if these scopes got split into different roles, we should verify the exact scope necessary
+          // for the request user action
           scope: [Scopes.FormsFeedback, Scopes.FormsBackup]
         }
       }
     }
   }),
 
-  ...adminResetSaveAndExitRoutes
+  ...adminResetSaveAndExitRoutes,
+
+  ...adminDeadLetterQueuesRoutes
 ]
 
 /**
@@ -164,7 +172,7 @@ async function processForm(metadata, token, archive) {
   archive.append(metadataJson, { name: metadataName })
 
   // Then append definitions under {id}/definition_*.json
-  const definition = await getFormDefinitions(metadata.id, token)
+  const definition = await getFormDefinitions(metadata, token)
   appendFormDefinitionsToArchive(metadata.id, archive, definition)
 }
 
@@ -336,14 +344,18 @@ function appendManifestToArchive(archive, totalForms, manifestEntities) {
 
 /**
  * Retrieve both live and draft form definitions
- * @param {string} id - The form metadata ID
+ * @param {FormMetadata} metadata - The form metadata
  * @param {string} token - Auth token
  * @returns {Promise<{ liveDefinition?: FormDefinition , draftDefinition?: FormDefinition }>}
  */
-async function getFormDefinitions(id, token) {
+async function getFormDefinitions(metadata, token) {
   const [liveDefinition, draftDefinition] = await Promise.all([
-    forms.getLiveFormDefinition(id, token).catch(ignore404Error),
-    forms.getDraftFormDefinition(id, token).catch(ignore404Error)
+    metadata.live
+      ? forms.getLiveFormDefinition(metadata.id, token).catch(ignore404Error)
+      : undefined,
+    metadata.draft
+      ? forms.getDraftFormDefinition(metadata.id, token).catch(ignore404Error)
+      : undefined
   ])
 
   return { liveDefinition, draftDefinition }

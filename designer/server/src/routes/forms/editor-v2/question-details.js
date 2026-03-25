@@ -392,6 +392,14 @@ export default [
       }
 
       try {
+        const extraBannerMessage = await savePaymentSecrets(
+          questionDetails.type,
+          metadata.id,
+          payload,
+          token,
+          !!metadata.live
+        )
+
         const finalPageId = await saveQuestion(
           metadata.id,
           token,
@@ -402,15 +410,10 @@ export default [
           getListItems(fileUploadLimitsPayload, state)
         )
 
-        await savePaymentSecrets(
-          questionDetails.type,
-          metadata.id,
-          payload,
-          token,
-          !!metadata.live
+        yar.flash(
+          sessionNames.successNotification,
+          `${CHANGES_SAVED_SUCCESSFULLY}${extraBannerMessage}`
         )
-
-        yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)
 
         clearQuestionSessionState(yar, stateId)
 

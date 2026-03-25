@@ -1,0 +1,70 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if errorList | length %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorList,
+            classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+          }) }}
+        {% endif %}
+
+        {% if notification | length %}
+          {{ govukNotificationBanner(notification) }}
+        {% endif %}
+      </div>
+    </div>
+
+    <form class="form" method="post">
+
+      <h2 class="govuk-heading-m">{{ queueName }}: {{ messages.length }} message{% if messages.length != 1 %}s{% endif %} {% if messages.length > 10 %}(showing first 10){% endif %}</h2>
+
+      <div class="govuk-form-group">
+        {% for message in messages %}
+          {% set tileId = message.json.MessageId.replaceAll('-', '') %}
+          <div class="json-item" data-rootCopyToClip>
+            <div class="action-links-top-right">
+              <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="#" data-linkCopyToClip>Copy to clipboard</a>
+              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/{{ queueName}}/delete/{{ message.receiptHandle }}/{{ message.json.MessageId }}'>Delete</a>
+            </div>
+            <pre class="json-block" data-sourceCopyToClip><code>{{ message.json | dump(2) }}</code></pre>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if messages.length %}
+        {{ govukButton({
+          text: "Redrive all messages"
+        }) }}
+      {% endif %}
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+  <script type="module">
+    import { initialiseAllCopyLinks } from "{{ getAssetPath("utilities.js") }}"
+    document.addEventListener("DOMContentLoaded", (event) => {
+      initialiseAllCopyLinks()
+    })
+  </script>
+{% endblock %}

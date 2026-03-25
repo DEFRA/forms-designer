@@ -103,7 +103,7 @@ export default [
           )
         ) {
           const errorList = buildSimpleErrorList([
-            'A condition is using a question on this page. Remove the condition before re-attempting its removal.'
+            'Remove the condition before deleting this page'
           ])
 
           return h.view(CONFIRMATION_PAGE_VIEW, {

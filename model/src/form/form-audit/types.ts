@@ -462,12 +462,6 @@ export interface FormSecretDeletedMessage extends ManagerMessageBase {
   data: FormSecretBaseMessageData
 }
 
-export interface FormSecretRenamedMessage extends ManagerMessageBase {
-  category: AuditEventMessageCategory.FORM
-  type: AuditEventMessageType.FORM_SECRET_RENAMED
-  data: FormSecretBaseMessageData
-}
-
 export interface FormSecretSavedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SECRET_SAVED
@@ -509,7 +503,6 @@ export type AuditMessage =
   | PlatformCsatExcelRequestedMessage
   | FormsBackupRequestedMessage
   | FormSecretDeletedMessage
-  | FormSecretRenamedMessage
   | FormSecretSavedMessage
 
 export interface AuditEvent {

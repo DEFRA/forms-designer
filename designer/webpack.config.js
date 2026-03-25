@@ -67,6 +67,9 @@ export default /** @type {Configuration} */ ({
     },
     maps: {
       import: ['./javascripts/maps.js']
+    },
+    utilities: {
+      import: ['./javascripts/utilities.js']
     }
   },
   experiments: {

@@ -118,11 +118,6 @@ export const formsSecretDeletedMessageData =
     secretName: Joi.string().required()
   })
 
-export const formsSecretRenamedMessageData =
-  formMessageDataBase.append<FormSecretBaseMessageData>({
-    secretName: Joi.string().required()
-  })
-
 export const formsSecretSavedMessageData =
   formMessageDataBase.append<FormSecretBaseMessageData>({
     secretName: Joi.string().required()
@@ -517,12 +512,6 @@ export const messageSchema = Joi.object<AuditMessage>()
             .trim()
             .valid(AuditEventMessageType.FORM_SECRET_DELETED),
           then: formsSecretDeletedMessageData
-        },
-        {
-          is: Joi.string()
-            .trim()
-            .valid(AuditEventMessageType.FORM_SECRET_RENAMED),
-          then: formsSecretRenamedMessageData
         },
         {
           is: Joi.string()

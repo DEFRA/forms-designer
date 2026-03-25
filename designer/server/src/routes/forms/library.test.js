@@ -9,11 +9,13 @@ import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as audit from '~/src/lib/audit.js'
 import * as forms from '~/src/lib/forms.js'
+import { existsSecret } from '~/src/lib/secrets.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/audit.js')
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/lib/secrets.js')
 
 describe('Forms library routes', () => {
   /** @type {Server} */
@@ -30,6 +32,11 @@ describe('Forms library routes', () => {
 
   beforeEach(() => {
     jest.resetAllMocks()
+    jest.mocked(existsSecret).mockResolvedValue({
+      exists: false,
+      createdAt: undefined,
+      updatedAt: undefined
+    })
   })
 
   const now = new Date()
@@ -775,6 +782,46 @@ describe('Forms library routes', () => {
     })
   })
 
+  describe('Form info page', () => {
+    it('should load the form info page successfully, defaulting to metadata', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/info',
+        auth
+      }
+
+      await renderResponse(server, options)
+
+      const $activeTab = document.querySelector('.app-page-navigation__link')
+
+      expect($activeTab?.textContent?.trim()).toBe('Metadata')
+    })
+
+    it('should load the form info page successfully, showing the definition', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form-slug/info/definition',
+        auth
+      }
+
+      await renderResponse(server, options)
+
+      const $activeTab = document.querySelector('.app-page-navigation__link')
+
+      expect($activeTab?.textContent?.trim()).toBe('Definition')
+    })
+  })
+
   describe('Form overview', () => {
     beforeEach(() => {
       // Default mock for audit history - returns empty records
@@ -840,6 +887,34 @@ describe('Forms library routes', () => {
         expect($buttons).toHaveLength(2)
         expect($buttons?.[0]).toHaveTextContent('Edit draft')
         expect($buttons?.[1]).toHaveTextContent('Make draft live')
+      })
+    })
+
+    describe('Global banner', () => {
+      it('should show global banner when payment key pending', async () => {
+        jest.mocked(existsSecret).mockResolvedValue({
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+        jest.mocked(forms.get).mockResolvedValueOnce(formMetadata)
+
+        const options = {
+          method: 'GET',
+          url: '/library/my-form-slug',
+          auth
+        }
+
+        await renderResponse(server, options)
+
+        const $banners = document.querySelectorAll(
+          '.govuk-notification-banner__heading'
+        )
+
+        expect($banners).toHaveLength(1)
+        expect($banners[0]).toHaveTextContent(
+          'Republish the form to use the updated live API key. Contact the Defra Forms team if you don’t have permission to publish forms.'
+        )
       })
     })
 
@@ -933,6 +1008,6 @@ describe('Forms library routes', () => {
 })
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
+ * @import { FormMetadata, FormMetadataAuthor } from '@defra/forms-model'
  * @import { Server } from '@hapi/hapi'
  */
