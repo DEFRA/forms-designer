@@ -24,7 +24,7 @@ const reactPath = dirname(
   resolvePkg.sync('react/package.json', { basedir: appDir })
 )
 
-const pluginPath = dirname(
+const interactiveMapPath = dirname(
   resolvePkg.sync('@defra/interactive-map/package.json', {
     basedir: rootDir
   })
@@ -268,60 +268,39 @@ export default /** @type {Configuration} */ ({
           to: 'assets/translations'
         },
         {
-          from: join(pluginPath, 'dist'),
+          from: join(interactiveMapPath, 'dist'),
           to: 'assets/interactive-map'
         },
         {
-          from: join(
-            pluginPath,
-            'providers/maplibre'
-          ),
+          from: join(interactiveMapPath, 'providers/maplibre'),
           to: 'assets/interactive-map/providers/maplibre'
         },
         {
-          from: join(
-            pluginPath,
-            'providers/beta/open-names'
-          ),
+          from: join(interactiveMapPath, 'providers/beta/open-names'),
           to: 'assets/interactive-map/providers/open-names'
         },
         {
-          from: join(
-            pluginPath,
-            'plugins/beta/map-styles/dist'
-          ),
+          from: join(interactiveMapPath, 'plugins/beta/map-styles/dist'),
           to: 'assets/interactive-map/plugins/map-styles/dist'
         },
         {
-          from: join(
-            pluginPath,
-            'plugins/beta/scale-bar/dist'
-          ),
+          from: join(interactiveMapPath, 'plugins/beta/scale-bar/dist'),
           to: 'assets/interactive-map/plugins/scale-bar/dist'
         },
         {
-          from: join(
-            pluginPath,
-            'plugins/interact/dist'
-          ),
+          from: join(interactiveMapPath, 'plugins/interact/dist'),
           to: 'assets/interactive-map/plugins/interact/dist'
         },
         {
-          from: join(
-            pluginPath,
-            'plugins/search/dist'
-          ),
+          from: join(interactiveMapPath, 'plugins/search/dist'),
           to: 'assets/interactive-map/plugins/search/dist'
         },
         {
-          from: join(
-            pluginPath,
-            'plugins/beta/draw-ml/dist'
-          ),
+          from: join(interactiveMapPath, 'plugins/beta/draw-ml/dist'),
           to: 'assets/interactive-map/plugins/draw-ml/dist'
         },
         {
-          from: join(pluginPath, 'assets'),
+          from: join(interactiveMapPath, 'assets'),
           to: 'assets/interactive-map/assets'
         }
       ]
