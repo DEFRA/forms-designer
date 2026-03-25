@@ -25,7 +25,7 @@ const reactPath = dirname(
 )
 
 const pluginPath = dirname(
-  resolvePkg.sync('@defra/forms-engine-plugin/package.json', {
+  resolvePkg.sync('@defra/interactive-map/package.json', {
     basedir: rootDir
   })
 )
@@ -268,60 +268,60 @@ export default /** @type {Configuration} */ ({
           to: 'assets/translations'
         },
         {
-          from: join(pluginPath, 'node_modules/@defra/interactive-map/dist'),
+          from: join(pluginPath, 'dist'),
           to: 'assets/interactive-map'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/providers/maplibre'
+            'providers/maplibre'
           ),
           to: 'assets/interactive-map/providers/maplibre'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/providers/beta/open-names'
+            'providers/beta/open-names'
           ),
           to: 'assets/interactive-map/providers/open-names'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/plugins/beta/map-styles/dist'
+            'plugins/beta/map-styles/dist'
           ),
           to: 'assets/interactive-map/plugins/map-styles/dist'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/plugins/beta/scale-bar/dist'
+            'plugins/beta/scale-bar/dist'
           ),
           to: 'assets/interactive-map/plugins/scale-bar/dist'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/plugins/interact/dist'
+            'plugins/interact/dist'
           ),
           to: 'assets/interactive-map/plugins/interact/dist'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/plugins/search/dist'
+            'plugins/search/dist'
           ),
           to: 'assets/interactive-map/plugins/search/dist'
         },
         {
           from: join(
             pluginPath,
-            'node_modules/@defra/interactive-map/plugins/beta/draw-ml/dist'
+            'plugins/beta/draw-ml/dist'
           ),
           to: 'assets/interactive-map/plugins/draw-ml/dist'
         },
         {
-          from: join(pluginPath, 'node_modules/@defra/interactive-map/assets'),
+          from: join(pluginPath, 'assets'),
           to: 'assets/interactive-map/assets'
         }
       ]
