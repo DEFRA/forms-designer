@@ -136,14 +136,13 @@ export default [
           token
         )
 
-        const titleActionItems = []
-        if (!form.live) {
-          titleActionItems.push({
+        const titleActionItems = [
+          {
             href: `${formOverviewPath(form.slug)}/edit/title`,
             text: 'Change',
             visuallyHiddenText: 'form name'
-          })
-        }
+          }
+        ]
 
         let history
         try {

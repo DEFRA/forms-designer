@@ -33,9 +33,10 @@ export function teamDetailsViewModel(metadata, validation) {
 /**
  * @param {Pick<FormMetadata, 'title' | 'slug'>} metadata
  * @param {ValidationFailure<FormMetadataInput>} [validation]
+ * @param {boolean} [isLiveForm]
  */
-export function titleViewModel(metadata, validation) {
-  const titleModel = create.titleViewModel(metadata, validation)
+export function titleViewModel(metadata, validation, isLiveForm = false) {
+  const titleModel = create.titleViewModel(metadata, validation, isLiveForm)
 
   return {
     ...titleModel,
