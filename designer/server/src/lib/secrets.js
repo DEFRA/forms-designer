@@ -1,9 +1,10 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, isPaymentPage } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
+import { getLiveFormDefinition } from '~/src/lib/forms.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
 const managerBaseEndpoint = new URL(config.managerUrl)
@@ -123,6 +124,27 @@ export async function validateApiKey(key, isLiveKey) {
 }
 
 /**
+ * @param {string} formId
+ * @param {FormEditorInputQuestionDetails} payload
+ * @param {string} token
+ * @param {boolean} isFormLive
+ */
+export async function validateIfRequiredLiveKey(
+  formId,
+  payload,
+  token,
+  isFormLive
+) {
+  if (!payload.paymentLiveApiKey && isFormLive) {
+    const liveDefinition = await getLiveFormDefinition(formId, token)
+    if (liveDefinition.pages.some((pg) => isPaymentPage(pg))) {
+      const message =
+        'Enter a live API key. Forms live on GOV.UK must have a live API key'
+      throw Boom.badRequest(message, { message })
+    }
+  }
+}
+/**
  * @param { ComponentType | undefined } questionType
  * @param {string} formId
  * @param {FormEditorInputQuestionDetails} payload
@@ -138,11 +160,7 @@ export async function savePaymentSecrets(
   isFormLive
 ) {
   if (questionType === ComponentType.PaymentField) {
-    if (!payload.paymentLiveApiKey && isFormLive) {
-      const message =
-        'Enter a live API key. Forms live on GOV.UK must have a live API key'
-      throw Boom.badRequest(message, { message })
-    }
+    await validateIfRequiredLiveKey(formId, payload, token, isFormLive)
     // Only save API key if it's a non-masked version
     const saveTestKey =
       payload.paymentTestApiKey !== MASKED_KEY &&
