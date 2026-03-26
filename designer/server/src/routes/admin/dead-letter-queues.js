@@ -15,7 +15,6 @@ import {
   deleteDeadLetterMessageConfirmationViewModel,
   redriveDeadLetterQueueConfirmationViewModel
 } from '~/src/models/manage/dead-letter-queue.js'
-import { getSavedReceiptHandle } from '~/src/routes/admin/dead-letter-queue-helper.js'
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 
@@ -41,9 +40,10 @@ const messageIdSchema = Joi.string().required().messages({
   '*': 'Missing message id'
 })
 
-const dlqAndMessageParamSchema = Joi.object().keys({
-  dlq: dlqSchema,
-  messageId: messageIdSchema
+const dlqActionPayloadSchema = Joi.object().keys({
+  action: Joi.string().valid('confirm', 'delete').required(),
+  messageId: messageIdSchema,
+  receiptHandle: Joi.string().required()
 })
 
 /**
@@ -216,18 +216,10 @@ export default [
 
       const mappedMessages = dlqMessageMapper(messages)
 
-      const messageHandles = mappedMessages.map((m) => ({
-        messageId: m.json.MessageId,
-        receiptHandle: m.receiptHandle
-      }))
-
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
         yar.flash(sessionNames.successNotification).at(0)
       )
-
-      // Flash list of messages in order to retrieve receipt handle (a long string) if deleting a message
-      yar.flash(sessionNames.deadLetterQueueMessages, messageHandles)
 
       return h.view('admin/dead-letter-queue-view', {
         ...generateTitling(),
@@ -243,32 +235,6 @@ export default [
         messages: mappedMessages,
         queueName: dlq
       })
-    },
-    options: {
-      validate: {
-        params: dlqParamSchema
-      },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${Scopes.DeadLetterQueues}`]
-        }
-      }
-    }
-  }),
-
-  /**
-   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues } }>}
-   */
-  ({
-    method: 'POST',
-    path: `${ROUTE_FULL_PATH}/{dlq}`,
-    handler(request, h) {
-      const { params } = request
-      const { dlq } = params
-
-      return h.redirect(`${ROUTE_FULL_PATH}/${dlq}/redrive`)
     },
     options: {
       validate: {
@@ -348,54 +314,26 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
-   */
-  ({
-    method: 'GET',
-    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{messageId}`,
-    handler(request, h) {
-      const { params } = request
-      const { dlq, messageId } = params
-
-      return h.view(
-        'forms/confirmation-page',
-        deleteDeadLetterMessageConfirmationViewModel(dlq, messageId)
-      )
-    },
-    options: {
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${Scopes.DeadLetterQueues}`]
-        }
-      },
-      validate: {
-        params: dlqAndMessageParamSchema
-      }
-    }
-  }),
-
-  /**
-   * @satisfies {ServerRoute<{ Payload: { dlq: DeadLetterQueues, messageId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues }, Payload: { action: string, messageId: string, receiptHandle: string } }>}
    */
   ({
     method: 'POST',
-    path: `${ROUTE_FULL_PATH}/{dlq}/delete/{messageId}`,
+    path: `${ROUTE_FULL_PATH}/{dlq}/delete`,
     async handler(request, h) {
-      const { auth, params, yar } = request
+      const { auth, params, payload, yar } = request
       const { token } = auth.credentials
-      const { dlq, messageId } = params
+      const { dlq } = params
+      const { action, messageId, receiptHandle } = payload
 
-      // Retrieve appropriate receipt handle from saved list of messages
-      const receiptHandle = getSavedReceiptHandle(yar, messageId)
-
-      if (!receiptHandle) {
-        yar.flash(
-          sessionNames.successNotification,
-          `Receipt handle not found in session for message '${messageId}' in queue '${dlq}'`
+      if (action === 'confirm') {
+        return h.view(
+          'forms/confirmation-page',
+          deleteDeadLetterMessageConfirmationViewModel(
+            dlq,
+            messageId,
+            receiptHandle
+          )
         )
-        return h.redirect(`/admin/dead-letter-queues/${dlq}`)
       }
 
       await deleteDeadLetterQueueMessage(dlq, receiptHandle, messageId, token)
@@ -409,7 +347,8 @@ export default [
     },
     options: {
       validate: {
-        params: dlqAndMessageParamSchema
+        params: dlqParamSchema,
+        payload: dlqActionPayloadSchema
       },
       auth: {
         mode: 'required',

@@ -99,15 +99,18 @@ export async function deleteDeadLetterQueueMessage(
   const { endpoint, qualifier } = getEndpoint(dlq)
 
   const requestUrl = new URL(
-    `./admin/deadletter${qualifier}/${receiptHandle}`,
+    `./admin/deadletter${qualifier}/${messageId}`,
     endpoint
   )
 
-  const { body } = await delJsonByType(requestUrl, getHeaders(token))
+  const { body } = await delJsonByType(requestUrl, {
+    payload: { receiptHandle },
+    ...getHeaders(token)
+  })
 
   if (body.message !== 'success') {
     throw new Error(
-      `Error when deleteing message ${messageId} for ${dlq}: ${body.message}`
+      `Error when deleting message ${messageId} for ${dlq}: ${body.message}`
     )
   }
 }

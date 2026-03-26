@@ -204,15 +204,18 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
       </div>
     </div>
 
-    <form class="form" method="post">
-
       <h2 class="govuk-heading-m">audit-api: 1 message </h2>
 
       <div class="govuk-form-group">
           <div class="json-item" data-rootCopyToClip>
             <div class="action-links-top-right">
-              <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="#" data-linkCopyToClip>Copy to clipboard</a>
-              <a class="govuk-link govuk-link--no-visited-state" href='/admin/dead-letter-queues/audit-api/delete/message-id'>Delete</a>
+              <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9 govuk-visually-hidden" href="#" data-linkCopyToClip>Copy to clipboard</a>
+              <form method="post" action="audit-api/delete" class="app-inline-block-form">
+                <input type="hidden" name="action" value="confirm" />
+                <input type="hidden" name="receiptHandle" value="rec-handle" />
+                <input type="hidden" name="messageId" value="message-id" />
+                <button type="submit" class="govuk-link govuk-link--no-visited-state">Delete</button>
+              </form>
             </div>
             <pre class="json-block" data-sourceCopyToClip><code>{
   &quot;MessageId&quot;: &quot;message-id&quot;,
@@ -223,10 +226,11 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
           </div>
       </div>
 
-        <button type="submit" class="govuk-button" data-module="govuk-button">
+      <form class="form" method="get" action="audit-api/redrive">
+          <button type="submit" class="govuk-button" data-module="govuk-button">
   Redrive all messages
 </button>
-    </form>
+      </form>
 
 
 </div>
