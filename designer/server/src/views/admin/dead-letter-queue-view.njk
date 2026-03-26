@@ -54,13 +54,13 @@
         {% endfor %}
       </div>
 
-      <form class="form" method="get" action="{{ queueName }}/redrive">
-        {% if messages.length %}
+      {% if messages.length %}
+        <form class="form" method="get" action="{{ queueName }}/redrive">
           {{ govukButton({
             text: "Redrive all messages"
           }) }}
-        {% endif %}
-      </form>
+        </form>
+      {% endif %}
 
   {% endcall %}
 {% endblock %}

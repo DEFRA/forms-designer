@@ -226,11 +226,11 @@ exports[`Dead-letter queues routes Journey should render form with messages and 
           </div>
       </div>
 
-      <form class="form" method="get" action="audit-api/redrive">
+        <form class="form" method="get" action="audit-api/redrive">
           <button type="submit" class="govuk-button" data-module="govuk-button">
   Redrive all messages
 </button>
-      </form>
+        </form>
 
 
 </div>
