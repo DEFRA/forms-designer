@@ -885,6 +885,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 
 
 
+
       <div class="govuk-button-group">
           <button type="submit" class="govuk-button govuk-button--warning" data-module="govuk-button">
   Remove user

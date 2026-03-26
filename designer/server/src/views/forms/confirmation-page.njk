@@ -44,6 +44,12 @@
         {{ govukWarningText(bodyWarning) }}
       {% endif %}
 
+      {% if customPayload %}
+        {% for customParam in customPayload %}
+          <input type="hidden" name="{{ customParam.key }}" value="{{ customParam.value }}" />
+        {% endfor %}
+      {% endif %}
+
       <div class="govuk-button-group">
         {% for button in buttons %}
           {{ govukButton(button) }}

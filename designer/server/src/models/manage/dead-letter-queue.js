@@ -35,8 +35,13 @@ export function redriveDeadLetterQueueConfirmationViewModel(dlq) {
  * Model to represent confirmation page dialog for deleting a message
  * @param {DeadLetterQueues} dlq
  * @param {string} messageId
+ * @param {string} receiptHandle
  */
-export function deleteDeadLetterMessageConfirmationViewModel(dlq, messageId) {
+export function deleteDeadLetterMessageConfirmationViewModel(
+  dlq,
+  messageId,
+  receiptHandle
+) {
   const backOrCancelUrl = `/admin/dead-letter-queues/${dlq}`
   return {
     backLink: {
@@ -61,6 +66,11 @@ export function deleteDeadLetterMessageConfirmationViewModel(dlq, messageId) {
         text: 'Cancel',
         classes: 'govuk-button--secondary'
       }
+    ],
+    customPayload: [
+      { key: 'action', value: 'delete' },
+      { key: 'receiptHandle', value: receiptHandle },
+      { key: 'messageId', value: messageId }
     ]
   }
 }
