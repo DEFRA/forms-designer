@@ -530,9 +530,9 @@ describe('publish', () => {
       const invalidUser = {}
 
       await expect(
-        // @ts-expect-error - invalid schema
         publishDlqActionEvent(
           DeadLetterQueues.AuditApi,
+          // @ts-expect-error - invalid value
           undefined,
           undefined,
           invalidUser
