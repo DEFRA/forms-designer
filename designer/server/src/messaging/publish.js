@@ -7,6 +7,7 @@ import {
   authenticationLogoutDifferentDevicelMapper,
   authenticationLogoutManualMapper,
   formCsatExcelRequestedMapper,
+  formDlqActionMapper,
   formDownloadedMapper,
   formFileDownloadedMapper,
   formSubmissionExcelRequestedMapper,
@@ -169,6 +170,19 @@ export async function publishFormsBackupRequestedEvent(
 }
 
 /**
- * @import { AuditMessage, AuditUser } from '@defra/forms-model'
+ * Publish dead-letter queue (DLQ) event
+ * @param {DeadLetterQueues} dlq - The queue name
+ * @param {string} action - Either 'redrive' or 'delete'
+ * @param { string | undefined } messageId - The id of the message (if applicable)
+ * @param {AuditUser} user - The user downloading the form
+ */
+export async function publishDlqActionEvent(dlq, action, messageId, user) {
+  const auditMessage = formDlqActionMapper({ dlq, action, messageId, user })
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
+ * @import { AuditMessage, AuditUser, DeadLetterQueues } from '@defra/forms-model'
  * @import { ExcelGenerationData } from '~/src/messaging/mappers/events.js'
  */

@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import {
@@ -11,6 +12,7 @@ import {
   redriveDeadLetterQueueMessages
 } from '~/src/lib/dead-letter-queue.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { publishDlqActionEvent } from '~/src/messaging/publish.js'
 import {
   deleteDeadLetterMessageConfirmationViewModel,
   redriveDeadLetterQueueConfirmationViewModel
@@ -19,6 +21,9 @@ import {
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 
 const ADMIN_TOOLS = 'Admin tools'
+const REDRIVE = 'redrive'
+const DELETE = 'delete'
+const CONFIRM = 'confirm'
 
 const dlqSchema = Joi.string()
   .required()
@@ -41,7 +46,7 @@ const messageIdSchema = Joi.string().required().messages({
 })
 
 const dlqActionPayloadSchema = Joi.object().keys({
-  action: Joi.string().valid('confirm', 'delete').required(),
+  action: Joi.string().valid(CONFIRM, DELETE).required(),
   messageId: messageIdSchema,
   receiptHandle: Joi.string().required()
 })
@@ -292,6 +297,9 @@ export default [
 
       await redriveDeadLetterQueueMessages(dlq, token)
 
+      const auditUser = mapUserForAudit(auth.credentials.user)
+      await publishDlqActionEvent(dlq, REDRIVE, undefined, auditUser)
+
       yar.flash(
         sessionNames.successNotification,
         `A redrive for messages in DLQ '${dlq}' has been triggered`
@@ -325,7 +333,7 @@ export default [
       const { dlq } = params
       const { action, messageId, receiptHandle } = payload
 
-      if (action === 'confirm') {
+      if (action === CONFIRM) {
         return h.view(
           'forms/confirmation-page',
           deleteDeadLetterMessageConfirmationViewModel(
@@ -337,6 +345,9 @@ export default [
       }
 
       await deleteDeadLetterQueueMessage(dlq, receiptHandle, messageId, token)
+
+      const auditUser = mapUserForAudit(auth.credentials.user)
+      await publishDlqActionEvent(dlq, DELETE, messageId, auditUser)
 
       yar.flash(
         sessionNames.successNotification,
