@@ -2,7 +2,8 @@ import {
   AuditEventMessageCategory,
   AuditEventMessageSchemaVersion,
   AuditEventMessageSource,
-  AuditEventMessageType
+  AuditEventMessageType,
+  DeadLetterQueues
 } from '@defra/forms-model'
 import { ValidationError } from 'joi'
 
@@ -13,6 +14,7 @@ import {
   publishAuthenticationLogoutAutoEvent,
   publishAuthenticationLogoutDifferentDeviceEvent,
   publishAuthenticationLogoutManualEvent,
+  publishDlqActionEvent,
   publishFormCsatExcelRequestedEvent,
   publishFormDownloadedEvent,
   publishFormSubmissionExcelRequestedEvent,
@@ -465,6 +467,76 @@ describe('publish', () => {
       await expect(
         // @ts-expect-error - invalid schema
         publishFormsBackupRequestedEvent(invalidUser, '12', '123')
+      ).rejects.toThrow(ValidationError)
+    })
+  })
+
+  describe('publishDlqActionEvent', () => {
+    it('should publish DLQ_ACTION redrive event', async () => {
+      await publishDlqActionEvent(
+        DeadLetterQueues.AuditApi,
+        'redrive',
+        undefined,
+        authAuditUser
+      )
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: 'audit-api',
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.OPERATIONS,
+        type: AuditEventMessageType.DLQ_ACTION,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          action: 'redrive',
+          messageId: undefined
+        }
+      })
+    })
+
+    it('should publish DLQ_ACTION delete event', async () => {
+      await publishDlqActionEvent(
+        DeadLetterQueues.AuditApi,
+        'delete',
+        'message-id',
+        authAuditUser
+      )
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: 'audit-api',
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.OPERATIONS,
+        type: AuditEventMessageType.DLQ_ACTION,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          action: 'delete',
+          messageId: 'message-id'
+        }
+      })
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      const invalidUser = {}
+
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishDlqActionEvent(
+          DeadLetterQueues.AuditApi,
+          undefined,
+          undefined,
+          invalidUser
+        )
       ).rejects.toThrow(ValidationError)
     })
   })
