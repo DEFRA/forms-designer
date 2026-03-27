@@ -37,7 +37,7 @@
     "@joi/date": "^2.1.1",
     "marked": "^15.0.12",
     "nanoid": "^5.0.7",
-    "slug": "^11.0.0",
+    "slug": "^11.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
