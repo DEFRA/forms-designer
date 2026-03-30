@@ -66,6 +66,28 @@ describe('user-session', () => {
       )
     })
 
+    test('should set no roles/scopes if error in entitlement api', async () => {
+      jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
+      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
+      jest.mocked(getUser).mockImplementationOnce(() => {
+        throw new Error('Error in API call')
+      })
+      const res = await createUserSession(mockRequest)
+      expect(res).toBe('123-123')
+      expect(getUser).toHaveBeenCalled()
+      expect(mockRequest.server.methods.session.set).toHaveBeenCalledWith(
+        '123-123',
+        {
+          expiresIn: undefined,
+          flowId: expect.any(String),
+          idToken: 'id_token',
+          refreshToken: 'refresh_token',
+          scope: [],
+          token: "{ name: 'my-name'}"
+        }
+      )
+    })
+
     test('should add roles/scopes from entitlement api', async () => {
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
       jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
