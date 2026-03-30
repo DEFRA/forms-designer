@@ -16,5 +16,8 @@ export default {
 
   // Configure Node.js environment
   setupFiles: ['<rootDir>/jest.setup.cjs'],
-  setupFilesAfterEnv: ['<rootDir>/jest.environment.js']
+  setupFilesAfterEnv: [
+    '<rootDir>/jest.setup.after-env.js',
+    '<rootDir>/jest.environment.js'
+  ]
 }
