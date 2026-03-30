@@ -54,20 +54,8 @@ jobs:
           cd forms-development-tools/test-harness
           echo "LOCALSTACK_HOST=localstack" > .env
           echo "FEATURE_FLAG_PUBLISH_AUDIT_EVENTS=true" >> .env
-          cat > secrets.env <<'EOF'
-          OIDC_JWKS_URI=http://oidc:80/.well-known/openid-configuration/jwks
-          OIDC_VERIFY_AUD=local-test-client
-          OIDC_VERIFY_ISS=http://oidc:80
-          MANAGER_OIDC_JWKS_URI=http://oidc:80/.well-known/openid-configuration/jwks
-          MANAGER_OIDC_VERIFY_AUD=local-test-client
-          MANAGER_OIDC_VERIFY_ISS=http://oidc:80
-          SUBMISSION_OIDC_JWKS_URI=http://oidc:80/.well-known/openid-configuration/jwks
-          SUBMISSION_OIDC_VERIFY_AUD=local-test-client
-          SUBMISSION_OIDC_VERIFY_ISS=http://oidc:80
-          ENTITLEMENT_OIDC_JWKS_URI=http://oidc:80/.well-known/openid-configuration/jwks
-          ENTITLEMENT_OIDC_VERIFY_AUD=local-test-client
-          ENTITLEMENT_OIDC_VERIFY_ISS=http://oidc:80
-          EOF
+
+          touch secrets.env
           ./run-harness.sh exclude=forms-designer
 
       - name: Build forms-designer
