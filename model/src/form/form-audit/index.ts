@@ -14,6 +14,7 @@ import {
   type AuditUser,
   type AuthenticationMessageData,
   type ChangesMessageData,
+  type DlqActionMessageData,
   type EntitlementMessageData,
   type ExcelGenerationMessageData,
   type FormCreatedMessageData,
@@ -122,6 +123,11 @@ export const formsSecretSavedMessageData =
   formMessageDataBase.append<FormSecretBaseMessageData>({
     secretName: Joi.string().required()
   })
+
+export const dlqActionMessageData = Joi.object<DlqActionMessageData>().keys({
+  action: Joi.string().valid('redrive', 'delete').required(),
+  messageId: Joi.string().optional()
+})
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
   .keys({
@@ -518,6 +524,10 @@ export const messageSchema = Joi.object<AuditMessage>()
             .trim()
             .valid(AuditEventMessageType.FORM_SECRET_SAVED),
           then: formsSecretSavedMessageData
+        },
+        {
+          is: Joi.string().trim().valid(AuditEventMessageType.DLQ_ACTION),
+          then: dlqActionMessageData
         }
       ],
       otherwise: Joi.forbidden()

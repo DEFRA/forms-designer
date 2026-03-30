@@ -12,6 +12,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/dead-letter-queue.js')
+jest.mock('~/src/messaging/publish.js')
 
 describe('Dead-letter queues routes', () => {
   /** @type {Server} */
