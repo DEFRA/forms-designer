@@ -36,4 +36,12 @@ if (oidcWellKnownConfigurationUrl) {
     .reply(okStatusCode, oidcConfiguration)
 
   nock(origin).persist().get(jwksPath).reply(okStatusCode, testJwks)
+
+  // Prevent unmatched network traffic
+  nock.disableNetConnect()
 }
+
+afterAll(() => {
+  nock.enableNetConnect()
+  nock.cleanAll()
+})
