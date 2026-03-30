@@ -79,7 +79,6 @@ jobs:
           echo "Waiting for forms-designer to start..."
           MAX_ATTEMPTS=30
           ATTEMPT=0
-
           while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
             if curl --output /dev/null --silent --head --fail http://localhost:3000/health; then
               echo "✅ Forms-designer is ready!"
@@ -115,6 +114,30 @@ jobs:
         if: always()
         shell: bash
         run: |
+          append_container_info() {
+            local label="$1"
+            local pattern="$2"
+            local container_id
+
+            container_id="$(docker ps -aqf "name=${pattern}" | head -n 1)"
+
+            echo "=== ${label} logs ===" >> test-logs.txt
+            if [ -n "$container_id" ]; then
+              docker logs "$container_id" >> test-logs.txt 2>&1 || true
+            else
+              echo "Container not found" >> test-logs.txt
+            fi
+
+            echo "=== ${label} env vars ===" >> test-logs.txt
+            if [ -n "$container_id" ]; then
+              docker exec "$container_id" env >> test-logs.txt 2>&1 || true
+            else
+              echo "Container not found" >> test-logs.txt
+            fi
+
+            echo "" >> test-logs.txt
+          }
+
           echo "=== Test Results ===" >> test-logs.txt
           echo "" >> test-logs.txt
 
@@ -132,47 +155,13 @@ jobs:
           echo "=== Docker Containers ===" >> test-logs.txt
           docker ps -a >> test-logs.txt || true
 
-          echo "=== forms-manager logs ===" >> test-logs.txt
-          MANAGER_ID=`docker ps -a | grep forms-manager | awk '{print $1}'`
-          docker logs $MANAGER_ID >> test-logs.txt
-          echo "=== forms-manager env vars ===" >> test-logs.txt
-          docker exec $MANAGER_ID env >> test-logs.txt
-
-          echo "=== forms-submission-api logs ===" >> test-logs.txt
-          SUBMISSION_ID=`docker ps -a | grep forms-submission-api | awk '{print $1}'`
-          docker logs $SUBMISSION_ID >> test-logs.txt
-          echo "=== forms-submission-api env vars ===" >> test-logs.txt
-          docker exec $SUBMISSION_ID env >> test-logs.txt
-
-          echo "=== forms-notify-listener logs ===" >> test-logs.txt
-          NOTIFY_ID=`docker ps -a | grep forms-notify-listener | awk '{print $1}'`
-          docker logs $NOTIFY_ID >> test-logs.txt
-          echo "=== forms-notify-listener env vars ===" >> test-logs.txt
-          docker exec $NOTIFY_ID env >> test-logs.txt
-
-          echo "=== forms-sharepoint-listener logs ===" >> test-logs.txt
-          SHAREPOINT_ID=`docker ps -a | grep forms-sharepoint-listener | awk '{print $1}'`
-          docker logs $SHAREPOINT_ID >> test-logs.txt
-          echo "=== forms-sharepoint-listener env vars ===" >> test-logs.txt
-          docker exec $SHAREPOINT_ID env >> test-logs.txt
-
-          echo "=== forms-audit-api logs ===" >> test-logs.txt
-          AUDIT_ID=`docker ps -a | grep forms-audit-api | awk '{print $1}'`
-          docker logs $AUDIT_ID >> test-logs.txt
-          echo "=== forms-audit-api env vars ===" >> test-logs.txt
-          docker exec $AUDIT_ID env >> test-logs.txt
-
-          echo "=== forms-runner logs ===" >> test-logs.txt
-          RUNNER_ID=`docker ps -a | grep forms-runner | awk '{print $1}'`
-          docker logs $RUNNER_ID >> test-logs.txt
-          echo "=== forms-runner env vars ===" >> test-logs.txt
-          docker exec $RUNNER_ID env >> test-logs.txt
-
-          echo "=== wiremock logs ===" >> test-logs.txt
-          WIREMOCK_ID=`docker ps -a | grep wiremock | awk '{print $1}'`
-          docker logs $WIREMOCK_ID >> test-logs.txt
-          echo "=== wiremock env vars ===" >> test-logs.txt
-          docker exec $WIREMOCK_ID env >> test-logs.txt
+          append_container_info "forms-manager" "forms-manager"
+          append_container_info "forms-submission-api" "forms-submission-api"
+          append_container_info "forms-notify-listener" "forms-notify-listener"
+          append_container_info "forms-sharepoint-listener" "forms-sharepoint-listener"
+          append_container_info "forms-audit-api" "forms-audit-api"
+          append_container_info "forms-runner" "forms-runner"
+          append_container_info "wiremock" "wiremock"
 
       - name: Upload test report
         if: always()
