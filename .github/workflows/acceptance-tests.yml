@@ -54,10 +54,7 @@ jobs:
           cd forms-development-tools/test-harness
           echo "LOCALSTACK_HOST=localstack" > .env
           echo "FEATURE_FLAG_PUBLISH_AUDIT_EVENTS=true" >> .env
-          export OIDC_JWKS_URI="http://oidc:80/.well-known/openid-configuration/jwks"
-          export OIDC_VERIFY_AUD="local-test-client"
-          export OIDC_VERIFY_ISS="http://oidc:80"
-
+          echo "OIDC_JWKS_URI = 'http://localhost:5556/.well-known/openid-configuration/jwks" >> .env
           touch secrets.env
           ./run-harness.sh exclude=forms-designer
 
