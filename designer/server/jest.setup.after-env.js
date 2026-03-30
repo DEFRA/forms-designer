@@ -2,6 +2,7 @@ import nock from 'nock'
 
 const oidcWellKnownConfigurationUrl =
   process.env.OIDC_WELL_KNOWN_CONFIGURATION_URL
+const auditUrl = process.env.AUDIT_URL
 const okStatusCode = 200
 
 const testJwks = {
@@ -36,6 +37,18 @@ if (oidcWellKnownConfigurationUrl) {
     .reply(okStatusCode, oidcConfiguration)
 
   nock(origin).persist().get(jwksPath).reply(okStatusCode, testJwks)
+
+  if (auditUrl) {
+    const { origin: auditOrigin } = new URL(auditUrl)
+
+    nock(auditOrigin)
+      .persist()
+      .get(/\/audit\/forms\/[^?]+(?:\?.*)?$/)
+      .reply(okStatusCode, {
+        auditRecords: [],
+        meta: {}
+      })
+  }
 
   // Prevent unmatched network traffic
   nock.disableNetConnect()
