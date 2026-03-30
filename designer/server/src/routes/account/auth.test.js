@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { getUser } from '~/src/lib/manage.js'
 import { getLoginHint } from '~/src/routes/account/auth.js'
 import {
   auth,
@@ -13,6 +14,7 @@ import { forms as formMetadataList } from '~/test/fixtures/forms.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/messaging/publish.js')
+jest.mock('~/src/lib/manage.js')
 
 describe('Authentiation', () => {
   /** @type {Server} */
@@ -40,6 +42,14 @@ describe('Authentiation', () => {
           auth: authIn
         }
 
+        const user = authIn.credentials.user
+        jest.mocked(getUser).mockResolvedValue({
+          userId: user?.id ?? '',
+          displayName: user?.displayName ?? '',
+          email: user?.email ?? '',
+          scopes: /** @type {Scopes[]} */ (authIn.credentials.scope ?? []),
+          roles: /** @type {Roles[]} */ (user?.roles)
+        })
         response = await server.inject(options)
       })
 
@@ -64,6 +74,15 @@ describe('Authentiation', () => {
     jest.mocked(forms.list).mockResolvedValueOnce({
       data: formMetadataList,
       meta: {}
+    })
+
+    const user = auth.credentials.user
+    jest.mocked(getUser).mockResolvedValue({
+      userId: user?.id ?? '',
+      displayName: user?.displayName ?? '',
+      email: user?.email ?? '',
+      scopes: /** @type {Scopes[]} */ (auth.credentials.scope ?? []),
+      roles: /** @type {Roles[]} */ (user?.roles)
     })
 
     // log in with session one
@@ -161,4 +180,5 @@ function doCallLibrary(server, cookies) {
 
 /**
  * @import { Server, ServerInjectOptions, ServerInjectResponse } from '@hapi/hapi'
+ * @import { Roles, Scopes } from '@defra/forms-model'
  */

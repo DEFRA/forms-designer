@@ -2,8 +2,6 @@ import { Roles } from '@defra/forms-model'
 import { token } from '@hapi/jwt'
 import { isPast, parseISO, subMinutes } from 'date-fns'
 
-import { groupsToScopes } from '~/src/common/constants/scopes.js'
-
 /**
  * @param {Partial<Request> | Request<{ AuthArtifactsExtra: AuthArtifacts }> | Request<{ Query: { logoutHint?: string } }>} request
  * @param {{ sessionId: string, user: UserCredentials }} [session] - Session cookie state
@@ -91,28 +89,6 @@ export function getUserClaims(credentials) {
   return /** @type {Record<keyof Tokens, UserProfile>} */ (
     Object.fromEntries(entries)
   )
-}
-
-/**
- * @param {AuthWithTokens} credentials
- * @param {ReturnType<typeof getUserClaims>} [claims]
- * @returns Array of scopes assigned to the user
- */
-export function getUserScopes(credentials, claims) {
-  const { token } = claims ?? getUserClaims(credentials)
-  const { groups } = token
-
-  // No groups assigned to the user
-  if (!groups?.length) {
-    return []
-  }
-
-  // Filter groups to assigned scopes
-  const assignedScopes = Object.entries(groupsToScopes)
-    .filter(([group]) => groups.includes(group))
-    .flatMap(([, scopes]) => scopes)
-
-  return assignedScopes
 }
 
 /**

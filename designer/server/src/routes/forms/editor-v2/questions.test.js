@@ -202,13 +202,18 @@ describe('Editor v2 questions routes', () => {
       auth
     }
 
-    const { container, document } = await renderResponse(server, options)
+    const { document } = await renderResponse(server, options)
     const $previewPanel = document.getElementById('preview-panel')
-    const [$questionList] = container.getAllByRole('list')
-    const $questionListContainer = within($questionList)
-    const $questions = $questionListContainer.getAllByRole('listitem')
+    const $questionListContainer = document.getElementById('items-container')
+    const $questions = $questionListContainer?.getElementsByTagName('li') ?? []
 
     expect($questions).toHaveLength(2)
+    expect($questions[0].textContent).toContain(
+      'Question 1: This is your first question'
+    )
+    expect($questions[1].textContent).toContain(
+      'Question 2: This is your second question'
+    )
 
     expect($previewPanel?.innerHTML).toContain(
       "setupReorderQuestionsController('p1','661e4ca5039739ef2902b214')"

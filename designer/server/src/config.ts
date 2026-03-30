@@ -52,14 +52,12 @@ export interface Config {
   redisPassword: string
   redisKeyPrefix: string
   useSingleInstanceCache: boolean
-  roleEditorGroupId: string
   tracing: {
     header: string
   }
   awsRegion: string
   snsEndpoint: string
   snsTopicArn: string
-  featureFlagUseEntitlementApi: boolean
   featureFlagAllowPayments: boolean
   featureFlagAllowGeospatial: boolean
   ordnanceSurveyApiKey: string
@@ -173,14 +171,12 @@ const schema = joi.object<Config>({
   redisPassword: joi.string().required(),
   redisKeyPrefix: joi.string().required(),
   useSingleInstanceCache: joi.boolean().default(false),
-  roleEditorGroupId: joi.string().required(),
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
   }),
   awsRegion: joi.string().default('eu-west-2'),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
-  featureFlagUseEntitlementApi: joi.boolean().default(false),
   featureFlagAllowPayments: joi.boolean().default(false),
   featureFlagAllowGeospatial: joi.boolean().default(false),
   ordnanceSurveyApiKey: joi.string().required(),
@@ -229,14 +225,12 @@ const result = schema.validate(
     useSingleInstanceCache:
       process.env.USE_SINGLE_INSTANCE_CACHE ??
       process.env.NODE_ENV !== 'production',
-    roleEditorGroupId: process.env.ROLE_EDITOR_GROUP_ID,
     tracing: {
       header: process.env.TRACING_HEADER
     },
     awsRegion: process.env.AWS_REGION,
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
-    featureFlagUseEntitlementApi: process.env.FEATURE_FLAG_USE_ENTITLEMENT_API,
     featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS,
     featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL,
     ordnanceSurveyApiKey: process.env.ORDNANCE_SURVEY_API_KEY,
