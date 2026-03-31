@@ -1,6 +1,5 @@
 import { Roles, Scopes } from '@defra/forms-model'
 
-import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { getUsers } from '~/src/lib/manage.js'
 import {
@@ -26,7 +25,6 @@ describe('Manage users route', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
   const userList = [
@@ -90,22 +88,6 @@ describe('Manage users route', () => {
     expect($rows[2].textContent).toContain('John Smith')
     expect($rows[2].textContent).toContain('Admin')
     expect($rows[2].textContent).toContain('Manage')
-  })
-
-  test('GET - should return 403 when feature flag is disabled', async () => {
-    jest.mocked(config).featureFlagUseEntitlementApi = false
-
-    const options = {
-      method: 'get',
-      url: '/manage/users',
-      auth
-    }
-
-    const response = await server.inject(options)
-
-    expect(response.statusCode).toBe(403)
-
-    expect(response.result).toContain('You do not have access to this service')
   })
 
   test('GET - should return 403 when user does not have admin role', async () => {

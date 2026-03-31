@@ -213,6 +213,11 @@ export interface FormsBackupRequestedMessageData {
   durationMs: number
 }
 
+export interface DlqActionMessageData {
+  action: string
+  messageId?: string
+}
+
 export type MessageData =
   | FormMessageChangesData
   | FormMessageActivitiesData
@@ -223,6 +228,7 @@ export type MessageData =
   | FormFileDownloadedMessageData
   | FormsBackupRequestedMessageData
   | FormSecretBaseMessageData
+  | DlqActionMessageData
 
 export interface MessageBase {
   schemaVersion: AuditEventMessageSchemaVersion
@@ -456,6 +462,12 @@ export interface FormsBackupRequestedMessage extends DesignerMessageBase {
   data: FormsBackupRequestedMessageData
 }
 
+export interface DlqActionMessage extends DesignerMessageBase {
+  category: AuditEventMessageCategory.OPERATIONS
+  type: AuditEventMessageType.DLQ_ACTION
+  data: DlqActionMessageData
+}
+
 export interface FormSecretDeletedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SECRET_DELETED
@@ -504,6 +516,7 @@ export type AuditMessage =
   | FormsBackupRequestedMessage
   | FormSecretDeletedMessage
   | FormSecretSavedMessage
+  | DlqActionMessage
 
 export interface AuditEvent {
   message: AuditMessage

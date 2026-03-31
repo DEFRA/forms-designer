@@ -239,6 +239,33 @@ export function formsBackupRequestedMapper(data, user) {
 }
 
 /**
+ * @param {DlqActionData} dlqActionData
+ * @returns {DlqActionMessage}
+ */
+export function formDlqActionMapper(dlqActionData) {
+  const { dlq, action, messageId, user } = dlqActionData
+  const now = new Date()
+
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.OPERATIONS,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type: AuditEventMessageType.DLQ_ACTION,
+    entityId: dlq,
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    data: {
+      action,
+      messageId
+    },
+    messageCreatedAt: now
+  }
+}
+
+/**
  * @typedef {object} FormDownloadData
  * @property {string} formId - The form ID
  * @property {string} slug - The form slug
@@ -253,5 +280,13 @@ export function formsBackupRequestedMapper(data, user) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage, AuditMessage } from '@defra/forms-model'
+ * @typedef {object} DlqActionData
+ * @property {DeadLetterQueues} dlq - The queue name
+ * @property {string} action - The action ('redrive' or 'delete')
+ * @property { string | undefined } messageId - The id of the message if the action is 'delete'
+ * @property {AuditUser} user - The user downloading the form
+ */
+
+/**
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, DlqActionMessage, DlqActionMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage, AuditMessage, DeadLetterQueues } from '@defra/forms-model'
  */

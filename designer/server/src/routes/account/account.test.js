@@ -1,7 +1,6 @@
 import { Roles } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
-import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { getUser } from '~/src/lib/manage.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -24,8 +23,6 @@ describe('Account profile route', () => {
   })
 
   test('/auth/account route displays user profile', async () => {
-    jest.mocked(config).featureFlagUseEntitlementApi = true
-
     jest.mocked(getUser).mockResolvedValue(
       /** @type {EntitlementUser} */ ({
         userId: 'my-user-id',
@@ -55,21 +52,6 @@ describe('Account profile route', () => {
     expect($mastheadHeading.textContent).toContain('My account')
     expect($mastheadHeading.textContent).toContain('John Smith')
     expect(response.result).toMatchSnapshot()
-  })
-
-  test('/auth/account route redirects to library when feature flag is disabled', async () => {
-    jest.mocked(config).featureFlagUseEntitlementApi = false
-
-    const options = {
-      method: 'GET',
-      url: '/auth/account',
-      auth
-    }
-
-    const response = await server.inject(options)
-
-    expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
-    expect(response.headers.location).toBe('/library')
   })
 })
 

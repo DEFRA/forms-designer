@@ -12,6 +12,7 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/dead-letter-queue.js')
+jest.mock('~/src/messaging/publish.js')
 
 describe('Dead-letter queues routes', () => {
   /** @type {Server} */
@@ -56,11 +57,11 @@ describe('Dead-letter queues routes', () => {
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
 
       // Check tab headings and active tab
-      expect($links[4]).toHaveTextContent('My account')
-      expect($links[5]).toHaveTextContent('Manage users')
-      expect($links[6]).toHaveTextContent('Admin tools')
-      expect($links[7]).toHaveTextContent('Support')
-      expect($links[8]).toHaveTextContent('Back to admin tools home')
+      expect($links[5]).toHaveTextContent('My account')
+      expect($links[6]).toHaveTextContent('Manage users')
+      expect($links[7]).toHaveTextContent('Admin tools')
+      expect($links[8]).toHaveTextContent('Support')
+      expect($links[9]).toHaveTextContent('Back to admin tools home')
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')
@@ -174,11 +175,11 @@ describe('Dead-letter queues routes', () => {
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
 
       // Check tab headings and active tab
-      expect($links[4]).toHaveTextContent('My account')
-      expect($links[5]).toHaveTextContent('Manage users')
-      expect($links[6]).toHaveTextContent('Admin tools')
-      expect($links[7]).toHaveTextContent('Support')
-      expect($links[8]).toHaveTextContent('Back to dead-letter queues')
+      expect($links[5]).toHaveTextContent('My account')
+      expect($links[6]).toHaveTextContent('Manage users')
+      expect($links[7]).toHaveTextContent('Admin tools')
+      expect($links[8]).toHaveTextContent('Support')
+      expect($links[9]).toHaveTextContent('Back to dead-letter queues')
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')

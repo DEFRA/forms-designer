@@ -3,7 +3,6 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import { getUser } from '~/src/lib/manage.js'
@@ -53,7 +52,6 @@ describe('Create and edit user routes', () => {
     })
     jest.mocked(userService.deleteUser).mockResolvedValue(false)
     jest.mocked(userService.checkCanAccessUserManagement).mockReturnValue(true)
-    jest.mocked(config).featureFlagUseEntitlementApi = true
   })
 
   describe('GET /manage/users', () => {
@@ -514,27 +512,10 @@ describe('Create and edit user routes', () => {
     })
   })
 
-  describe('checkUserManagementAccess pre-handler', () => {
-    test('should return 403 when feature flag is disabled', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = false
-
-      const options = {
-        method: 'get',
-        url: '/manage/users/new',
-        auth
-      }
-
-      const response = await server.inject(options)
-
-      expect(response.statusCode).toBe(403)
-      expect(response.result).toContain(
-        'You do not have access to this service'
-      )
-    })
-
+  describe('check admin access', () => {
     test('should return 403 when user does not have admin role', async () => {
       const claims = {
-        token: profile({ groups: ['valid-test-group'], login_hint: 'foo' }),
+        token: profile({ login_hint: 'foo' }),
         idToken: profile()
       }
 

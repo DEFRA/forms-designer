@@ -10,7 +10,6 @@ import { getUser } from '~/src/lib/manage.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { getNameForRole } from '~/src/models/account/role-mapper.js'
 import * as viewModel from '~/src/models/manage/users.js'
-import { checkUserManagementAccess } from '~/src/routes/forms/route-helpers.js'
 import * as userService from '~/src/services/userService.js'
 
 const errorKey = sessionNames.validationFailure.manageUsers
@@ -100,8 +99,7 @@ export default [
           entity: 'user',
           scope: [`+${Scopes.UserCreate}`]
         }
-      },
-      pre: checkUserManagementAccess
+      }
     }
   }),
 
@@ -137,8 +135,7 @@ export default [
           entity: 'user',
           scope: [`+${Scopes.UserEdit}`]
         }
-      },
-      pre: checkUserManagementAccess
+      }
     }
   }),
 
@@ -169,8 +166,7 @@ export default [
           entity: 'user',
           scope: [`+${Scopes.UserDelete}`]
         }
-      },
-      pre: checkUserManagementAccess
+      }
     }
   }),
 

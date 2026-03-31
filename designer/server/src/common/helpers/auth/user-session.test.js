@@ -2,11 +2,9 @@ import { RoleScopes, Roles, Scopes } from '@defra/forms-model'
 
 import {
   getUserClaims,
-  getUserScopes,
   hasAuthenticated
 } from '~/src/common/helpers/auth/get-user-session.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
-import config from '~/src/config.js'
 import { getUser } from '~/src/lib/manage.js'
 
 jest.mock('~/src/common/helpers/auth/get-user-session.js')
@@ -58,7 +56,6 @@ const mockRequest =
 describe('user-session', () => {
   beforeEach(() => {
     jest.clearAllMocks()
-    jest.mocked(config).featureFlagUseEntitlementApi = false
   })
 
   describe('createUserSession', () => {
@@ -69,16 +66,29 @@ describe('user-session', () => {
       )
     })
 
-    test('should return user id', async () => {
+    test('should set no roles/scopes if error in entitlement api', async () => {
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
       jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
+      jest.mocked(getUser).mockImplementationOnce(() => {
+        throw new Error('Error in API call')
+      })
       const res = await createUserSession(mockRequest)
       expect(res).toBe('123-123')
-      expect(getUser).not.toHaveBeenCalled()
+      expect(getUser).toHaveBeenCalled()
+      expect(mockRequest.server.methods.session.set).toHaveBeenCalledWith(
+        '123-123',
+        {
+          expiresIn: undefined,
+          flowId: expect.any(String),
+          idToken: 'id_token',
+          refreshToken: 'refresh_token',
+          scope: [],
+          token: "{ name: 'my-name'}"
+        }
+      )
     })
 
-    test('should add roles/scopes from entitlement api if enabled', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = true
+    test('should add roles/scopes from entitlement api', async () => {
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
       jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
       jest.mocked(getUser).mockResolvedValueOnce(mockEntitlementUser)
@@ -110,40 +120,6 @@ describe('user-session', () => {
             id: '123-123',
             issuedAt: expect.any(String),
             roles: [Roles.Admin]
-          }
-        }
-      )
-    })
-
-    test('should fallback if error in entitlement api', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = true
-      jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
-      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
-      jest.mocked(getUser).mockImplementationOnce(() => {
-        throw new Error('entitlement api error')
-      })
-      jest
-        .mocked(getUserScopes)
-        .mockReturnValueOnce([Scopes.FormRead, Scopes.FormEdit])
-      const res = await createUserSession(mockRequest)
-      expect(res).toBe('123-123')
-      expect(getUser).toHaveBeenCalled()
-      expect(mockRequest.server.methods.session.set).toHaveBeenCalledWith(
-        '123-123',
-        {
-          expiresIn: undefined,
-          flowId: expect.any(String),
-          idToken: 'id_token',
-          refreshToken: 'refresh_token',
-          scope: [Scopes.FormRead, Scopes.FormEdit],
-          token: "{ name: 'my-name'}",
-          user: {
-            displayName: 'John Smith',
-            email: '',
-            expiresAt: expect.any(String),
-            id: '123-123',
-            issuedAt: expect.any(String),
-            roles: []
           }
         }
       )

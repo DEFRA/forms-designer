@@ -38,10 +38,7 @@ export async function context(request) {
 
   const credentials = request ? await getUserSession(request) : undefined
 
-  let isAdmin = false
-  if (config.featureFlagUseEntitlementApi && credentials?.user) {
-    isAdmin = hasAdminRole(credentials.user)
-  }
+  const isAdmin = hasAdminRole(credentials?.user)
 
   return {
     breadcrumbs: [],
@@ -49,8 +46,7 @@ export async function context(request) {
       cdpEnvironment,
       phase,
       serviceName,
-      serviceVersion,
-      featureFlagUseEntitlementApi: config.featureFlagUseEntitlementApi
+      serviceVersion
     },
     navigation: buildNavigation(request),
     getAssetPath: (asset = '') => `/${webpackManifest?.[asset] ?? asset}`,

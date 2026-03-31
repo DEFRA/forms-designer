@@ -141,11 +141,11 @@ describe('System admin routes', () => {
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
 
       // Check tab headings and active tab
-      expect($links[4]).toHaveTextContent('My account')
-      expect($links[5]).toHaveTextContent('Manage users')
-      expect($links[6]).toHaveTextContent('Admin tools')
-      expect($links[7]).toHaveTextContent('Support')
-      expect($links[9]).toHaveTextContent('Reset save and exit')
+      expect($links[5]).toHaveTextContent('My account')
+      expect($links[6]).toHaveTextContent('Manage users')
+      expect($links[7]).toHaveTextContent('Admin tools')
+      expect($links[8]).toHaveTextContent('Support')
+      expect($links[10]).toHaveTextContent('Reset save and exit')
 
       const $feedbackLinks = container.getAllByRole('button')
       expect($feedbackLinks[2]).toHaveTextContent('Send feedback data')

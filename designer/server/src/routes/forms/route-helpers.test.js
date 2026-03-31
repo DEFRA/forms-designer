@@ -1,6 +1,5 @@
 import { Roles } from '@defra/forms-model'
 
-import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { getUsers } from '~/src/lib/manage.js'
@@ -92,29 +91,9 @@ describe('Route helpers', () => {
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(getUsers).mockResolvedValueOnce(userList)
-    jest.mocked(config).featureFlagUseEntitlementApi = true
   })
-
-  describe('checkUserManagementAccess', () => {
-    test('should throw if entitlement api not enabled', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = false
-
-      const options = {
-        method: 'get',
-        url: '/manage/users',
-        auth
-      }
-
-      const { container } = await renderResponse(server, options)
-      const $mainHeading = container.getByRole('heading', { level: 1 })
-      expect($mainHeading).toHaveTextContent(
-        'You do not have access to this service'
-      )
-    })
-
+  describe('user management', () => {
     test('should render page ok', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = true
-
       const options = {
         method: 'get',
         url: '/manage/users',
@@ -129,7 +108,6 @@ describe('Route helpers', () => {
 
   describe('protectMetadataEditOfLiveForm', () => {
     test('should throw if form live but not publish permission', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = false
       jest.mocked(forms.get).mockResolvedValueOnce(formMetadataLive)
 
       const options = {
@@ -144,7 +122,6 @@ describe('Route helpers', () => {
     })
 
     test('should throw if form live and trying to edit metadata', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = false
       jest.mocked(forms.get).mockResolvedValueOnce(formMetadataLive)
 
       const options = {
@@ -163,7 +140,6 @@ describe('Route helpers', () => {
     })
 
     test('should allow if form draft and trying to edit metadata', async () => {
-      jest.mocked(config).featureFlagUseEntitlementApi = false
       jest
         .mocked(forms.get)
         .mockResolvedValueOnce(formMetadataDraft)
