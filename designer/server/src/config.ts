@@ -167,14 +167,12 @@ const schema = joi.object<Config>({
   redisPassword: joi.string().required(),
   redisKeyPrefix: joi.string().required(),
   useSingleInstanceCache: joi.boolean().required(),
-  roleEditorGroupId: joi.string().required(),
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
   }),
   awsRegion: joi.string().required(),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
-  featureFlagUseEntitlementApi: joi.boolean().required(),
   featureFlagAllowPayments: joi.boolean().required(),
   featureFlagAllowGeospatial: joi.boolean().required(),
   ordnanceSurveyApiKey: joi.string().required(),
