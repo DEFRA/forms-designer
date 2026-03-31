@@ -1,4 +1,4 @@
-import { Roles, Scopes, mapScopesToRoles } from '@defra/forms-model'
+import { Roles, Scopes } from '@defra/forms-model'
 
 import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
 import { getUser } from '~/src/lib/manage.js'
@@ -90,8 +90,10 @@ describe('refresh-user-session-entitlements', () => {
       ]
 
       mockSession.get.mockResolvedValue(existingSession)
-      jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue(newScopes)
+      jest.mocked(getUser).mockResolvedValue({
+        ...updatedUser,
+        scopes: newScopes
+      })
 
       const result = await refreshUserSessionEntitlements(
         mockRequest,
@@ -101,7 +103,6 @@ describe('refresh-user-session-entitlements', () => {
 
       expect(mockSession.get).toHaveBeenCalledWith(userId)
       expect(jest.mocked(getUser)).toHaveBeenCalledWith(token, userId)
-      expect(jest.mocked(mapScopesToRoles)).toHaveBeenCalledWith([Roles.Admin])
       expect(existingSession.user.roles).toEqual([Roles.Admin])
       expect(existingSession.scope).toEqual(newScopes)
       expect(mockSession.set).toHaveBeenCalledWith(userId, existingSession)
@@ -131,8 +132,10 @@ describe('refresh-user-session-entitlements', () => {
       const newScopes = [Scopes.FormEdit]
 
       mockSession.get.mockResolvedValue(existingSession)
-      jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue(newScopes)
+      jest.mocked(getUser).mockResolvedValue({
+        ...updatedUser,
+        scopes: newScopes
+      })
 
       await refreshUserSessionEntitlements(mockRequest, userId, token)
 
@@ -188,8 +191,10 @@ describe('refresh-user-session-entitlements', () => {
       const newScopes = [Scopes.FormEdit]
 
       mockSession.get.mockResolvedValue(existingSession)
-      jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue(newScopes)
+      jest.mocked(getUser).mockResolvedValue({
+        ...updatedUser,
+        scopes: newScopes
+      })
 
       await refreshUserSessionEntitlements(mockRequest, userId, token)
 
@@ -254,7 +259,6 @@ describe('refresh-user-session-entitlements', () => {
 
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue([Scopes.FormEdit])
       mockSession.set.mockRejectedValue(sessionError)
 
       // When session.set fails, it should throw the error
@@ -292,7 +296,6 @@ describe('refresh-user-session-entitlements', () => {
       mockSession.set.mockResolvedValue(undefined)
       mockSession.get.mockResolvedValue(existingSession)
       jest.mocked(getUser).mockResolvedValue(updatedUser)
-      jest.mocked(mapScopesToRoles).mockReturnValue([Scopes.FormEdit])
 
       await refreshUserSessionEntitlements(mockRequest, otherUserId, token)
 

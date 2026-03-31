@@ -43,11 +43,11 @@ describe('Reset save and exit routes', () => {
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
 
       // Check tab headings and active tab
-      expect($links[4]).toHaveTextContent('My account')
-      expect($links[5]).toHaveTextContent('Manage users')
-      expect($links[6]).toHaveTextContent('Admin tools')
-      expect($links[7]).toHaveTextContent('Support')
-      expect($links[8]).toHaveTextContent('Back to admin tools home')
+      expect($links[5]).toHaveTextContent('My account')
+      expect($links[6]).toHaveTextContent('Manage users')
+      expect($links[7]).toHaveTextContent('Admin tools')
+      expect($links[8]).toHaveTextContent('Support')
+      expect($links[9]).toHaveTextContent('Back to admin tools home')
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')

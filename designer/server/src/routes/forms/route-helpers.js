@@ -1,25 +1,9 @@
 import { Scopes } from '@defra/forms-model'
-import Boom from '@hapi/boom'
 
-import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 
 const GENERIC_ERROR_VIEW = 'generic-error'
 const TITLE_CHANGE_DENIED_HEADING = 'You cannot change the form name'
-
-/**
- * Pre-handler to check if user management features are available
- */
-export const checkUserManagementAccess = [
-  {
-    method: /** @param {Request} _request */ (_request) => {
-      if (!config.featureFlagUseEntitlementApi) {
-        throw Boom.forbidden('User management is not available')
-      }
-      return true
-    }
-  }
-]
 
 /**
  * @param {string} slug

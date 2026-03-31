@@ -58,18 +58,18 @@ describe('Editor v2 responses routes', () => {
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
 
       // Check tab headings and active tab
-      expect($links[4]).toHaveTextContent('Forms library')
-      expect($links[5]).toHaveTextContent('Overview')
+      expect($links[5]).toHaveTextContent('Forms library')
+      expect($links[6]).toHaveTextContent('Overview')
 
-      const responsesTab = $links[6]
+      const responsesTab = $links[7]
       expect(responsesTab).toHaveTextContent('Responses')
       expect(responsesTab.parentElement).toHaveClass(
         'service-header__nav-list-item--active'
       )
 
-      expect($links[7]).toHaveTextContent('Form history')
-      expect($links[8]).toHaveTextContent('Editor')
-      expect($links[9]).toHaveTextContent('Support')
+      expect($links[8]).toHaveTextContent('Form history')
+      expect($links[9]).toHaveTextContent('Editor')
+      expect($links[10]).toHaveTextContent('Support')
 
       const $error = container.queryByText(
         'the form overview to send data to a shared mailbox.',

@@ -1,5 +1,3 @@
-import { mapScopesToRoles } from '@defra/forms-model'
-
 import { createLogger } from '~/src/common/helpers/logging/logger.js'
 import { getUser } from '~/src/lib/manage.js'
 
@@ -31,10 +29,7 @@ export async function refreshUserSessionEntitlements(request, userId, token) {
         existingSession.user.roles = entitlementUser.roles
       }
 
-      existingSession.scope =
-        entitlementUser.roles.length > 0
-          ? mapScopesToRoles(/** @type {Roles[]} */ (entitlementUser.roles))
-          : []
+      existingSession.scope = entitlementUser.scopes
 
       await server.methods.session.set(userId, existingSession)
 

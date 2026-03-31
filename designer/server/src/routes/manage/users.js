@@ -3,7 +3,6 @@ import { Scopes } from '@defra/forms-model'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getUsers } from '~/src/lib/manage.js'
 import * as viewModel from '~/src/models/manage/users.js'
-import { checkUserManagementAccess } from '~/src/routes/forms/route-helpers.js'
 
 const notificationKey = sessionNames.successNotification
 
@@ -35,8 +34,7 @@ export default /** @type {ServerRoute} */
         entity: 'user',
         scope: [`+${Scopes.UserEdit}`]
       }
-    },
-    pre: [checkUserManagementAccess]
+    }
   }
 })
 
