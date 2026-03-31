@@ -78,12 +78,8 @@ const schema = joi.object<Config>({
       'perf-test',
       'ext-test',
       'prod'
-    )
-    .default('local'),
-  env: joi
-    .string()
-    .valid('development', 'test', 'production')
-    .default('development'),
+    ),
+  env: joi.string().valid('development', 'test', 'production'),
   appDir: joi.string().default(import.meta.dirname),
   clientSrc: joi.string().when('env', {
     is: 'development',
@@ -154,10 +150,10 @@ const schema = joi.object<Config>({
       })
   }),
   phase: joi.string().valid('alpha', 'beta', 'live').optional(),
-  isProduction: joi.boolean().default(false),
-  isDevelopment: joi.boolean().default(true),
-  isTest: joi.boolean().default(false),
-  isSecure: joi.boolean().default(true),
+  isProduction: joi.boolean().required(),
+  isDevelopment: joi.boolean().required(),
+  isTest: joi.boolean().required(),
+  isSecure: joi.boolean().required(),
   sessionTtl: joi.number().required(),
   fileDownloadPasswordTtl: joi.number().required(),
   sessionCookieTtl: joi.number().required(),
@@ -170,15 +166,15 @@ const schema = joi.object<Config>({
   redisUsername: joi.string().required(),
   redisPassword: joi.string().required(),
   redisKeyPrefix: joi.string().required(),
-  useSingleInstanceCache: joi.boolean().default(false),
+  useSingleInstanceCache: joi.boolean().required(),
   tracing: joi.object({
     header: joi.string().default('x-cdp-request-id')
   }),
-  awsRegion: joi.string().default('eu-west-2'),
+  awsRegion: joi.string().required(),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
-  featureFlagAllowPayments: joi.boolean().default(false),
-  featureFlagAllowGeospatial: joi.boolean().default(false),
+  featureFlagAllowPayments: joi.boolean().required(),
+  featureFlagAllowGeospatial: joi.boolean().required(),
   ordnanceSurveyApiKey: joi.string().required(),
   ordnanceSurveyApiSecret: joi.string().required()
 })
