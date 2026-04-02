@@ -1,4 +1,5 @@
 import { RoleScopes, Roles, Scopes } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 
 import {
   getUserClaims,
@@ -66,11 +67,11 @@ describe('user-session', () => {
       )
     })
 
-    test('should set no roles/scopes if error in entitlement api', async () => {
+    test('should set no roles/scopes if user not found in entitlement service', async () => {
       jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
       jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
       jest.mocked(getUser).mockImplementationOnce(() => {
-        throw new Error('Error in API call')
+        throw Boom.notFound('User not found')
       })
       const res = await createUserSession(mockRequest)
       expect(res).toBe('123-123')
@@ -93,6 +94,17 @@ describe('user-session', () => {
             roles: []
           }
         }
+      )
+    })
+
+    test('should rethrow if entitlement api fails with a non-404 error', async () => {
+      jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
+      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
+      jest.mocked(getUser).mockImplementationOnce(() => {
+        throw Boom.serverUnavailable('Timeout')
+      })
+      await expect(() => createUserSession(mockRequest)).rejects.toThrow(
+        'Timeout'
       )
     })
 

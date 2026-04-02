@@ -1,6 +1,8 @@
 import { randomUUID } from 'node:crypto'
 
 import { getErrorMessage } from '@defra/forms-model'
+import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
 import { DateTime } from 'luxon'
 
 import {
@@ -75,12 +77,18 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
 
     logger.info('Successfully fetched roles from entitlement API')
   } catch (err) {
-    logger.info(
-      err,
-      `Entitlement API unavailable, user has no scopes: ${getErrorMessage(err)}`
-    )
-
-    credentials.scope = []
+    if (
+      Boom.isBoom(err) &&
+      err.output.statusCode === StatusCodes.NOT_FOUND.valueOf()
+    ) {
+      logger.info(
+        `User ${user.id} not found in entitlement service, no scopes assigned`
+      )
+      credentials.scope = []
+    } else {
+      logger.error(err, `Entitlement API failed: ${getErrorMessage(err)}`)
+      throw err
+    }
   }
 
   // Create and retrieve user session from Redis
