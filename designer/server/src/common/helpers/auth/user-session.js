@@ -65,16 +65,20 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
   const claims = getUserClaims(credentials)
   const user = createUser(credentials, claims)
 
+  credentials.user = user
+
   try {
     const entitlementUser = await getUser(credentials.token, user.id)
 
     credentials.scope = entitlementUser.scopes
     user.roles = entitlementUser.roles
-    credentials.user = user
 
     logger.info('Successfully fetched roles from entitlement API')
   } catch (err) {
-    logger.error(err, `Entitlement API failed: ${getErrorMessage(err)}`)
+    logger.info(
+      err,
+      `Entitlement API unavailable, user has no scopes: ${getErrorMessage(err)}`
+    )
 
     credentials.scope = []
   }

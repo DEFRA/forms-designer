@@ -83,7 +83,15 @@ describe('user-session', () => {
           idToken: 'id_token',
           refreshToken: 'refresh_token',
           scope: [],
-          token: "{ name: 'my-name'}"
+          token: "{ name: 'my-name'}",
+          user: {
+            displayName: 'John Smith',
+            email: '',
+            expiresAt: expect.any(String),
+            id: '123-123',
+            issuedAt: expect.any(String),
+            roles: []
+          }
         }
       )
     })
