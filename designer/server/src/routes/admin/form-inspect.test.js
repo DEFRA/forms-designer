@@ -168,6 +168,10 @@ describe('Form inspect routes', () => {
         testFormId,
         auth.credentials.token
       )
+      expect(forms.listFormVersions).toHaveBeenCalledWith(
+        testFormId,
+        auth.credentials.token
+      )
 
       const $pre = container.getByRole('code')
       expect($pre.textContent).toContain('"slug": "my-form-slug"')
