@@ -723,6 +723,71 @@ describe('Forms library routes', () => {
         expect(result).toEqual(formDefinition)
       })
     })
+
+    describe('getFormById', () => {
+      const token = auth.credentials.token
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+      })
+
+      it('should fetch form metadata by id', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formMetadata
+        })
+
+        const result = await forms.getFormById(
+          '661e4ca5039739ef2902b214',
+          token
+        )
+
+        expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe('/forms/661e4ca5039739ef2902b214')
+        expect(result).toEqual(formMetadata)
+      })
+    })
+
+    describe('listFormVersions', () => {
+      const token = auth.credentials.token
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+      })
+
+      it('should fetch versions list by form id', async () => {
+        const versions = [
+          { versionNumber: 2, createdAt: new Date() },
+          { versionNumber: 1, createdAt: new Date() }
+        ]
+
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: versions
+        })
+
+        const result = await forms.listFormVersions(
+          '661e4ca5039739ef2902b214',
+          token
+        )
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe(
+          '/forms/661e4ca5039739ef2902b214/versions'
+        )
+        expect(result).toEqual(versions)
+      })
+    })
   })
 
   describe('deleteDraftOnly', () => {
