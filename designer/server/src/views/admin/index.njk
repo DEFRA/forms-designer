@@ -98,6 +98,12 @@
         <a href="/admin/dead-letter-queues" class="govuk-link govuk-link--no-visited-state">Dead-letter queues</a>
       </p>
     {% endif %}
+
+    {% if supports.formInspect %}
+      <p class="govuk-body">
+        <a href="/admin/form-inspect" class="govuk-link govuk-link--no-visited-state">Form inspect</a>
+      </p>
+    {% endif %}
   {% endcall %}
 {% endblock %}
 
