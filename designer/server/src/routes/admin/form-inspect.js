@@ -1,8 +1,12 @@
 import { Scopes } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
+import * as forms from '~/src/lib/forms.js'
+import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 
 export const ROUTE_FULL_PATH = '/admin/form-inspect'
 
@@ -73,6 +77,66 @@ export default [
         formErrors,
         formValues
       })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Payload: { type: string, id: string, slug: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH,
+    async handler(request, h) {
+      const { auth, payload } = request
+      const { token } = auth.credentials
+      const id = payload.id.trim()
+      const slug = payload.slug.trim()
+
+      if (id) {
+        return h
+          .redirect(`${ROUTE_FULL_PATH}/${id}/metadata`)
+          .code(StatusCodes.SEE_OTHER)
+      }
+
+      if (slug) {
+        try {
+          const form = await forms.get(slug, token)
+          return h
+            .redirect(`${ROUTE_FULL_PATH}/${form.id}/metadata`)
+            .code(StatusCodes.SEE_OTHER)
+        } catch (err) {
+          if (
+            /** @type {any} */ (err).isBoom &&
+            /** @type {any} */ (err).output.statusCode === StatusCodes.NOT_FOUND
+          ) {
+            const joiError = createJoiError(
+              'slug',
+              `No form found with slug '${slug}'`
+            )
+            return redirectWithErrors(
+              request,
+              h,
+              joiError,
+              sessionNames.validationFailure.formInspect
+            )
+          }
+          throw err
+        }
+      }
+
+      const joiError = createJoiError('id', 'Enter a form ID or slug')
+      return redirectWithErrors(
+        request,
+        h,
+        joiError,
+        sessionNames.validationFailure.formInspect
+      )
     },
     options: {
       auth: {

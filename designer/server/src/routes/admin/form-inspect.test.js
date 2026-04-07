@@ -1,6 +1,7 @@
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
+import * as forms from '~/src/lib/forms.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -47,6 +48,88 @@ describe('Form inspect routes', () => {
 
       const $slugInput = container.getByRole('textbox', { name: /form slug/i })
       expect($slugInput).toBeDefined()
+    })
+  })
+
+  describe('POST /admin/form-inspect', () => {
+    test('redirects to metadata page when id is provided', async () => {
+      const response = await server.inject({
+        method: 'post',
+        url: '/admin/form-inspect',
+        auth,
+        payload: { type: 'id', id: '661e4ca5039739ef2902b214', slug: '' }
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        '/admin/form-inspect/661e4ca5039739ef2902b214/metadata'
+      )
+    })
+
+    test('resolves slug to id and redirects to metadata page', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce({
+        id: '661e4ca5039739ef2902b214',
+        slug: 'my-form-slug',
+        title: 'Test form',
+        organisation: 'Defra',
+        teamName: 'Defra Forms',
+        teamEmail: 'defraforms@defra.gov.uk',
+        createdAt: new Date(),
+        createdBy: { id: 'user-1', displayName: 'Test User' },
+        updatedAt: new Date(),
+        updatedBy: { id: 'user-1', displayName: 'Test User' }
+      })
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/admin/form-inspect',
+        auth,
+        payload: { type: 'slug', id: '', slug: 'my-form-slug' }
+      })
+
+      expect(forms.get).toHaveBeenCalledWith(
+        'my-form-slug',
+        auth.credentials.token
+      )
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        '/admin/form-inspect/661e4ca5039739ef2902b214/metadata'
+      )
+    })
+
+    test('redirects back when neither id nor slug provided', async () => {
+      const response = await server.inject({
+        method: 'post',
+        url: '/admin/form-inspect',
+        auth,
+        payload: { type: '', id: '', slug: '' }
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe('/admin/form-inspect')
+    })
+
+    test('redirects back when slug is not found', async () => {
+      jest.mocked(forms.get).mockRejectedValueOnce(
+        Object.assign(new Error('Not found'), {
+          isBoom: true,
+          output: { statusCode: 404 }
+        })
+      )
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/admin/form-inspect',
+        auth,
+        payload: { type: 'slug', id: '', slug: 'unknown-slug' }
+      })
+
+      expect(forms.get).toHaveBeenCalledWith(
+        'unknown-slug',
+        auth.credentials.token
+      )
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe('/admin/form-inspect')
     })
   })
 })
