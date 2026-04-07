@@ -152,6 +152,56 @@ export default [
         })
       }
     }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { id: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{id}/metadata`,
+    async handler(request, h) {
+      const { auth, params } = request
+      const { token } = auth.credentials
+      const { id } = params
+
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      const [metadata, versions] = await Promise.all([
+        forms.getFormById(id, token),
+        forms.listFormVersions(id, token)
+      ])
+
+      const versionNumbersInDocs = new Set(versions.map((v) => v.versionNumber))
+      const inconsistencies = (metadata.versions ?? [])
+        .filter((v) => !versionNumbersInDocs.has(v.versionNumber))
+        .map(
+          (v) =>
+            `Version ${v.versionNumber} is listed in metadata but has no matching document in the versions collection`
+        )
+
+      return h.view('admin/form-inspect-detail', {
+        pageTitle: `${ADMIN_TOOLS} - form inspect - metadata`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to form inspect',
+          href: ROUTE_FULL_PATH
+        },
+        navigation,
+        formId: id,
+        activeTab: 'metadata',
+        tabItems: buildTabItems(id, 'metadata'),
+        document: metadata,
+        inconsistencies,
+        noDocumentMessage: null
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
   })
 ]
 

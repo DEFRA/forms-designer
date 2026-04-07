@@ -1,0 +1,61 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-tabs">
+      <ul class="govuk-tabs__list">
+        {% for tab in tabItems %}
+          <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}">
+            <a class="govuk-tabs__tab" href="{{ tab.href }}">{{ tab.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="govuk-tabs__panel">
+        {% if document %}
+          <div class="json-item" data-rootCopyToClip>
+            <div class="action-links-top-right">
+              <a class="govuk-link govuk-link--no-visited-state govuk-visually-hidden" href="#" data-linkCopyToClip>Copy to clipboard</a>
+            </div>
+            <pre class="json-block" data-sourceCopyToClip><code>{{ document | dump(2) }}</code></pre>
+          </div>
+
+          {% if inconsistencies | length %}
+            {% set inconsistencyHtml %}
+              {% for issue in inconsistencies %}
+                {{ govukWarningText({ text: issue, iconFallbackText: "Warning" }) }}
+              {% endfor %}
+            {% endset %}
+            {{ govukDetails({ summaryText: "Data inconsistencies detected", html: inconsistencyHtml }) }}
+          {% endif %}
+        {% else %}
+          {{ govukInsetText({ text: noDocumentMessage }) }}
+        {% endif %}
+      </div>
+    </div>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+  <script type="module">
+    import { initialiseAllCopyLinks } from "{{ getAssetPath("utilities.js") }}"
+    document.addEventListener("DOMContentLoaded", () => {
+      initialiseAllCopyLinks()
+    })
+  </script>
+{% endblock %}

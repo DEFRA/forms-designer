@@ -132,6 +132,92 @@ describe('Form inspect routes', () => {
       expect(response.headers.location).toBe('/admin/form-inspect')
     })
   })
+
+  const testFormId = '661e4ca5039739ef2902b214'
+  const now = new Date()
+
+  const testMetadata = {
+    id: testFormId,
+    slug: 'my-form-slug',
+    title: 'Test form',
+    organisation: 'Defra',
+    teamName: 'Defra Forms',
+    teamEmail: 'defraforms@defra.gov.uk',
+    createdAt: now,
+    createdBy: { id: 'user-1', displayName: 'Test User' },
+    updatedAt: now,
+    updatedBy: { id: 'user-1', displayName: 'Test User' },
+    versions: [{ versionNumber: 1, createdAt: now }]
+  }
+
+  describe('GET /admin/form-inspect/:id/metadata', () => {
+    test('renders metadata JSON and tab navigation', async () => {
+      jest.mocked(forms.getFormById).mockResolvedValueOnce(testMetadata)
+      jest
+        .mocked(forms.listFormVersions)
+        .mockResolvedValueOnce([{ versionNumber: 1, createdAt: now }])
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/metadata`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.getFormById).toHaveBeenCalledWith(
+        testFormId,
+        auth.credentials.token
+      )
+
+      const $pre = container.getByRole('code')
+      expect($pre.textContent).toContain('"slug": "my-form-slug"')
+
+      const $tabLinks = container.getAllByRole('link', {
+        name: /metadata|versions|live|draft/i
+      })
+      expect($tabLinks.length).toBeGreaterThanOrEqual(4)
+    })
+
+    test('renders inconsistency panel when metadata.versions contains an id not in versions collection', async () => {
+      jest.mocked(forms.getFormById).mockResolvedValueOnce({
+        ...testMetadata,
+        versions: [
+          { versionNumber: 1, createdAt: now },
+          { versionNumber: 99, createdAt: now }
+        ]
+      })
+      jest
+        .mocked(forms.listFormVersions)
+        .mockResolvedValueOnce([{ versionNumber: 1, createdAt: now }])
+
+      const { container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/metadata`,
+        auth
+      })
+
+      const $details = container.getByText(/data inconsistencies detected/i)
+      expect($details).toBeDefined()
+    })
+
+    test('renders no inconsistency panel when versions match', async () => {
+      jest.mocked(forms.getFormById).mockResolvedValueOnce({
+        ...testMetadata,
+        versions: [{ versionNumber: 1, createdAt: now }]
+      })
+      jest
+        .mocked(forms.listFormVersions)
+        .mockResolvedValueOnce([{ versionNumber: 1, createdAt: now }])
+
+      const { container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/metadata`,
+        auth
+      })
+
+      expect(container.queryByText(/data inconsistencies detected/i)).toBeNull()
+    })
+  })
 })
 
 /**
