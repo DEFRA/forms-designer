@@ -14,7 +14,8 @@ describe('Scopes', () => {
       Scopes.FormsFeedbackAllForms,
       Scopes.FormsBackup,
       Scopes.ResetSaveAndExit,
-      Scopes.DeadLetterQueues
+      Scopes.DeadLetterQueues,
+      Scopes.FormsInspect
     ])
   })
 
