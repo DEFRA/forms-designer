@@ -779,6 +779,10 @@ describe('Forms library routes', () => {
           token
         )
 
+        expect(fetch.getJson).toHaveBeenCalledWith(expect.any(URL), {
+          headers: { Authorization: `Bearer ${token}` }
+        })
+
         const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
         const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
 
