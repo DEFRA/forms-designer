@@ -1,5 +1,6 @@
 import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -142,6 +143,13 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        payload: Joi.object({
+          type: Joi.string().allow('').default(''),
+          id: Joi.string().allow('').default(''),
+          slug: Joi.string().allow('').default('')
+        })
       }
     }
   })
