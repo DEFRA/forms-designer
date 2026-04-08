@@ -164,13 +164,14 @@ export async function getFormById(id, token) {
  * @returns {Promise<FormVersionMetadata[]>}
  */
 export async function listFormVersions(id, token) {
-  const getJsonByType =
-    /** @type {typeof getJson<{ versions: FormVersionMetadata[] }>} */ (getJson)
+  const getJsonByType = /** @type {typeof getJson<FormVersionMetadata[]>} */ (
+    getJson
+  )
 
   const requestUrl = new URL(`./${id}/versions`, formsEndpoint)
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
-  return body.versions
+  return body
 }
 
 /**
