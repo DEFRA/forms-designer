@@ -73,6 +73,12 @@ export default /** @type {Configuration} */ ({
     },
     'form-inspect-versions': {
       import: ['./javascripts/form-inspect-versions.js']
+    },
+    'form-inspect-version-diff': {
+      import: ['./javascripts/form-inspect-version-diff.js']
+    },
+    'form-inspect-version-diff-detail': {
+      import: ['./javascripts/form-inspect-version-diff-detail.js']
     }
   },
   experiments: {

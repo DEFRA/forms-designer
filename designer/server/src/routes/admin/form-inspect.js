@@ -50,6 +50,11 @@ export function buildTabItems(formId, activeTab) {
       label: 'Draft definition',
       href: `${ROUTE_FULL_PATH}/${formId}/definition/draft`,
       active: activeTab === 'draft'
+    },
+    {
+      label: 'Version diff',
+      href: `${ROUTE_FULL_PATH}/${formId}/version-diff`,
+      active: activeTab === 'version-diff'
     }
   ]
 }
@@ -214,6 +219,31 @@ export default [
       const { id, versionId } = params
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      if (versionId.includes('..')) {
+        const [vA, vB] = versionId.split('..')
+        const [definitionA, definitionB] = await Promise.all([
+          forms.getFormDefinitionVersion(id, Number(vA), token),
+          forms.getFormDefinitionVersion(id, Number(vB), token)
+        ])
+
+        return h.view('admin/form-inspect-version-diff-detail', {
+          pageTitle: `${ADMIN_TOOLS} - form inspect - diff v${vA} → v${vB}`,
+          pageHeading: { text: ADMIN_TOOLS },
+          backLink: {
+            text: 'Back to version diff',
+            href: `${ROUTE_FULL_PATH}/${id}/version-diff`
+          },
+          navigation,
+          formId: id,
+          versionA: vA,
+          versionB: vB,
+          tabItems: buildTabItems(id, 'version-diff'),
+          definitionA,
+          definitionB
+        })
+      }
+
       const definition = await forms.getFormDefinitionVersion(
         id,
         Number(versionId),
@@ -232,6 +262,57 @@ export default [
         versionId,
         tabItems: buildTabItems(id, 'versions'),
         definition
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
+  },
+
+  {
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{id}/version-diff`,
+    async handler(request, h) {
+      const { auth, params, query } = request
+      const { token } = auth.credentials
+      const { id } = params
+      const from = /** @type {string | undefined} */ (query.from)
+      const to = /** @type {string | undefined} */ (query.to)
+
+      if (from && to) {
+        return h
+          .redirect(`${ROUTE_FULL_PATH}/${id}/versions/${from}..${to}`)
+          .code(StatusCodes.SEE_OTHER)
+      }
+
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+      const versions = await forms.listFormVersions(id, token)
+
+      const versionItems = [
+        { value: '', text: 'Select a version' },
+        ...versions
+          .slice()
+          .sort((a, b) => b.versionNumber - a.versionNumber)
+          .map((v) => ({
+            value: String(v.versionNumber),
+            text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toISOString()}`
+          }))
+      ]
+
+      return h.view('admin/form-inspect-version-diff', {
+        pageTitle: `${ADMIN_TOOLS} - form inspect - version diff`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to form inspect',
+          href: ROUTE_FULL_PATH
+        },
+        navigation,
+        formId: id,
+        tabItems: buildTabItems(id, 'version-diff'),
+        versionItems
       })
     },
     options: {

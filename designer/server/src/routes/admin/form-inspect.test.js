@@ -252,10 +252,11 @@ describe('Form inspect routes', () => {
       )
 
       const $options = container.getAllByRole('option')
-      // sorted latest first: 3, 2, 1
-      expect($options[0].getAttribute('value')).toBe('3')
-      expect($options[1].getAttribute('value')).toBe('2')
-      expect($options[2].getAttribute('value')).toBe('1')
+      // first option is blank placeholder, then sorted latest first: 3, 2, 1
+      expect($options[0].getAttribute('value')).toBe('')
+      expect($options[1].getAttribute('value')).toBe('3')
+      expect($options[2].getAttribute('value')).toBe('2')
+      expect($options[3].getAttribute('value')).toBe('1')
     })
 
     test('redirects to version detail when versionId query param present', async () => {
@@ -397,6 +398,156 @@ describe('Form inspect routes', () => {
     })
   })
 
+  describe('GET /admin/form-inspect/:id/version-diff', () => {
+    test('renders selection page with two version selects', async () => {
+      jest.mocked(forms.listFormVersions).mockResolvedValueOnce([
+        { versionNumber: 1, createdAt: new Date('2024-01-01') },
+        { versionNumber: 4, createdAt: new Date('2024-04-01') }
+      ])
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/version-diff`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.listFormVersions).toHaveBeenCalledWith(
+        testFormId,
+        auth.credentials.token
+      )
+
+      const $selects = container.getAllByRole('combobox')
+      expect($selects).toHaveLength(2)
+    })
+
+    test('shows inset text when no versions exist', async () => {
+      jest.mocked(forms.listFormVersions).mockResolvedValueOnce([])
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/version-diff`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(container.getByText(/no versions found/i)).toBeDefined()
+    })
+
+    test('redirects to diff URL when from and to query params provided', async () => {
+      const response = await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/version-diff?from=1&to=4`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        `/admin/form-inspect/${testFormId}/versions/1..4`
+      )
+    })
+
+    test('does not redirect when only one param provided', async () => {
+      jest
+        .mocked(forms.listFormVersions)
+        .mockResolvedValueOnce([
+          { versionNumber: 1, createdAt: new Date('2024-01-01') }
+        ])
+
+      const response = await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/version-diff?from=1`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+    })
+  })
+
+  describe('GET /admin/form-inspect/:id/versions/:versionId (diff)', () => {
+    const definitionA = { name: 'My form', pages: [] }
+    const definitionB = { name: 'My form updated', pages: [] }
+
+    test('renders diff detail page for 1..4 format', async () => {
+      jest
+        .mocked(forms.getFormDefinitionVersion)
+        .mockResolvedValueOnce(definitionA)
+        .mockResolvedValueOnce(definitionB)
+
+      const { response, document } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions/1..4`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.getFormDefinitionVersion).toHaveBeenCalledWith(
+        testFormId,
+        1,
+        auth.credentials.token
+      )
+      expect(forms.getFormDefinitionVersion).toHaveBeenCalledWith(
+        testFormId,
+        4,
+        auth.credentials.token
+      )
+
+      const scriptA = document.getElementById('version-diff-a')
+      const scriptB = document.getElementById('version-diff-b')
+      expect(JSON.parse(scriptA?.textContent ?? '{}')).toMatchObject({
+        name: 'My form'
+      })
+      expect(JSON.parse(scriptB?.textContent ?? '{}')).toMatchObject({
+        name: 'My form updated'
+      })
+    })
+
+    test('fetches both versions in parallel', async () => {
+      jest
+        .mocked(forms.getFormDefinitionVersion)
+        .mockResolvedValueOnce(definitionA)
+        .mockResolvedValueOnce(definitionB)
+
+      await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions/2..5`,
+        auth
+      })
+
+      expect(forms.getFormDefinitionVersion).toHaveBeenCalledTimes(2)
+      expect(forms.getFormDefinitionVersion).toHaveBeenCalledWith(
+        testFormId,
+        2,
+        auth.credentials.token
+      )
+      expect(forms.getFormDefinitionVersion).toHaveBeenCalledWith(
+        testFormId,
+        5,
+        auth.credentials.token
+      )
+    })
+
+    test('version-diff tab is active on diff detail page', async () => {
+      jest
+        .mocked(forms.getFormDefinitionVersion)
+        .mockResolvedValueOnce(definitionA)
+        .mockResolvedValueOnce(definitionB)
+
+      const { container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions/1..4`,
+        auth
+      })
+
+      const $activeTab = container.getByRole('listitem', {
+        // The active tab list item has the --selected modifier class
+        name: (_, el) =>
+          el.classList.contains('govuk-tabs__list-item--selected')
+      })
+      expect($activeTab.textContent?.trim()).toBe('Version diff')
+    })
+  })
+
   describe('Access control', () => {
     const routes = [
       { method: 'get', url: '/admin/form-inspect' },
@@ -411,6 +562,10 @@ describe('Form inspect routes', () => {
       {
         method: 'get',
         url: `/admin/form-inspect/${testFormId}/definition/draft`
+      },
+      {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/version-diff`
       }
     ]
 

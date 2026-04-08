@@ -244,3 +244,37 @@
 .app-inline-block-form {
   display: inline-block;
 }
+
+// Version diff
+.json-diff-block {
+  margin: 0;
+  padding: 10px;
+  background-color: govuk-colour("light-grey");
+  border: 1px solid #b1b4b6;
+  overflow-x: auto;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.diff-line {
+  display: block;
+  white-space: pre;
+}
+
+.diff-line--added {
+  background-color: #cff8cf;
+  color: #00703c;
+}
+
+.diff-line--removed {
+  background-color: #ffd8d8;
+  color: #d4351c;
+}
+
+.diff-summary-added {
+  color: #00703c;
+}
+
+.diff-summary-removed {
+  color: #d4351c;
+}

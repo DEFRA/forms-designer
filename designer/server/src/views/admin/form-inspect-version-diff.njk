@@ -1,0 +1,69 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-tabs">
+      <ul class="govuk-tabs__list">
+        {% for tab in tabItems %}
+          <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}">
+            <a class="govuk-tabs__tab" href="{{ tab.href }}">{{ tab.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="govuk-tabs__panel">
+        {% if versionItems | length > 1 %}
+          <form method="get" action="/admin/form-inspect/{{ formId }}/version-diff">
+            {{ govukSelect({
+              id: "from",
+              name: "from",
+              label: {
+                text: "From version",
+                classes: "govuk-label--m"
+              },
+              attributes: { "data-module": "govuk-accessible-autocomplete", "data-autocomplete-id": "from" },
+              items: versionItems
+            }) }}
+
+            {{ govukSelect({
+              id: "to",
+              name: "to",
+              label: {
+                text: "To version",
+                classes: "govuk-label--m"
+              },
+              attributes: { "data-module": "govuk-accessible-autocomplete", "data-autocomplete-id": "to" },
+              items: versionItems
+            }) }}
+
+            {{ govukButton({ text: "Compare versions" }) }}
+          </form>
+        {% else %}
+          {{ govukInsetText({ text: "No versions found for this form." }) }}
+        {% endif %}
+      </div>
+    </div>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+  <script type="module">
+    import { enhanceDiffSelects } from "{{ getAssetPath("form-inspect-version-diff.js") }}"
+    document.addEventListener("DOMContentLoaded", enhanceDiffSelects)
+  </script>
+{% endblock %}
