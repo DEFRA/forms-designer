@@ -8,7 +8,9 @@ export function enhanceVersionSelect() {
   if (select instanceof HTMLSelectElement) {
     accessibleAutocomplete.enhanceSelectElement({
       selectElement: select,
-      defaultValue: ''
+      defaultValue: '',
+      showAllValues: true,
+      confirmOnBlur: false
     })
   }
 }

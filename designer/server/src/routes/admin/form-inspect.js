@@ -173,13 +173,16 @@ export default [
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
       const versions = await forms.listFormVersions(id, token)
 
-      const versionItems = versions
-        .slice()
-        .sort((a, b) => b.versionNumber - a.versionNumber)
-        .map((v) => ({
-          value: String(v.versionNumber),
-          text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toLocaleString('en-GB')}`
-        }))
+      const versionItems = [
+        { value: '', text: 'Select a version' },
+        ...versions
+          .slice()
+          .sort((a, b) => b.versionNumber - a.versionNumber)
+          .map((v) => ({
+            value: String(v.versionNumber),
+            text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toLocaleString('en-GB')}`
+          }))
+      ]
 
       return h.view('admin/form-inspect-versions', {
         pageTitle: `${ADMIN_TOOLS} - form inspect - versions`,
