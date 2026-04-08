@@ -180,7 +180,7 @@ export default [
           .sort((a, b) => b.versionNumber - a.versionNumber)
           .map((v) => ({
             value: String(v.versionNumber),
-            text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toLocaleString('en-GB')}`
+            text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toISOString()}`
           }))
       ]
 
