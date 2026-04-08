@@ -251,13 +251,14 @@
   padding: 10px;
   background-color: govuk-colour("light-grey");
   border: 1px solid #b1b4b6;
-  overflow-x: auto;
   font-size: 14px;
   line-height: 1.4;
 }
 
 .diff-line {
   display: block;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
 }
 
 .diff-line--added {
