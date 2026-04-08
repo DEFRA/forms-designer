@@ -70,6 +70,9 @@ export default /** @type {Configuration} */ ({
     },
     utilities: {
       import: ['./javascripts/utilities.js']
+    },
+    'form-inspect-versions': {
+      import: ['./javascripts/form-inspect-versions.js']
     }
   },
   experiments: {

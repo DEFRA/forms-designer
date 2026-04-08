@@ -2,7 +2,10 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
-import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
+import {
+  authSuperAdmin as auth,
+  auth as nonSuperAdminAuth
+} from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
@@ -221,6 +224,204 @@ describe('Form inspect routes', () => {
 
       expect(container.queryByText(/data inconsistencies detected/i)).toBeNull()
     })
+  })
+
+  describe('GET /admin/form-inspect/:id/versions', () => {
+    test('renders autocomplete select sorted latest-first', async () => {
+      jest.mocked(forms.listFormVersions).mockResolvedValueOnce([
+        { versionNumber: 1, createdAt: new Date('2024-01-01') },
+        { versionNumber: 3, createdAt: new Date('2024-03-01') },
+        { versionNumber: 2, createdAt: new Date('2024-02-01') }
+      ])
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.listFormVersions).toHaveBeenCalledWith(
+        testFormId,
+        auth.credentials.token
+      )
+
+      const $options = container.getAllByRole('option')
+      // sorted latest first: 3, 2, 1
+      expect($options[0].getAttribute('value')).toBe('3')
+      expect($options[1].getAttribute('value')).toBe('2')
+      expect($options[2].getAttribute('value')).toBe('1')
+    })
+
+    test('redirects to version detail when versionId query param present', async () => {
+      const response = await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions?versionId=3`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        `/admin/form-inspect/${testFormId}/versions/3`
+      )
+    })
+  })
+
+  describe('GET /admin/form-inspect/:id/versions/:versionId', () => {
+    test('renders version definition JSON', async () => {
+      const definition = {
+        name: 'Test form',
+        pages: [],
+        conditions: [],
+        sections: [],
+        lists: []
+      }
+      jest
+        .mocked(forms.getFormDefinitionVersion)
+        .mockResolvedValueOnce(definition)
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions/3`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.getFormDefinitionVersion).toHaveBeenCalledWith(
+        testFormId,
+        3,
+        auth.credentials.token
+      )
+
+      const $pre = container.getByRole('code')
+      expect($pre.textContent).toContain('"name": "Test form"')
+    })
+  })
+
+  describe('GET /admin/form-inspect/:id/definition/live', () => {
+    test('renders live definition JSON', async () => {
+      const definition = {
+        name: 'Test form',
+        pages: [],
+        conditions: [],
+        sections: [],
+        lists: []
+      }
+      jest.mocked(forms.getLiveFormDefinition).mockResolvedValueOnce(definition)
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/live`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.getLiveFormDefinition).toHaveBeenCalledWith(
+        testFormId,
+        auth.credentials.token
+      )
+
+      const $pre = container.getByRole('code')
+      expect($pre.textContent).toContain('"name": "Test form"')
+    })
+
+    test('renders inset message when no live definition exists (404)', async () => {
+      jest.mocked(forms.getLiveFormDefinition).mockRejectedValueOnce(
+        Object.assign(new Error('Not found'), {
+          isBoom: true,
+          output: { statusCode: 404 }
+        })
+      )
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/live`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(container.getByText(/no live definition exists/i)).toBeDefined()
+    })
+  })
+
+  describe('GET /admin/form-inspect/:id/definition/draft', () => {
+    test('renders draft definition JSON', async () => {
+      const definition = {
+        name: 'Test form',
+        pages: [],
+        conditions: [],
+        sections: [],
+        lists: []
+      }
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definition)
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/draft`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(forms.getDraftFormDefinition).toHaveBeenCalledWith(
+        testFormId,
+        auth.credentials.token
+      )
+
+      const $pre = container.getByRole('code')
+      expect($pre.textContent).toContain('"name": "Test form"')
+    })
+
+    test('renders inset message when no draft definition exists (404)', async () => {
+      jest.mocked(forms.getDraftFormDefinition).mockRejectedValueOnce(
+        Object.assign(new Error('Not found'), {
+          isBoom: true,
+          output: { statusCode: 404 }
+        })
+      )
+
+      const { response, container } = await renderResponse(server, {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/draft`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
+      expect(container.getByText(/no draft definition exists/i)).toBeDefined()
+    })
+  })
+
+  describe('Access control', () => {
+    const routes = [
+      { method: 'get', url: '/admin/form-inspect' },
+      { method: 'post', url: '/admin/form-inspect' },
+      { method: 'get', url: `/admin/form-inspect/${testFormId}/metadata` },
+      { method: 'get', url: `/admin/form-inspect/${testFormId}/versions` },
+      { method: 'get', url: `/admin/form-inspect/${testFormId}/versions/1` },
+      {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/live`
+      },
+      {
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/draft`
+      }
+    ]
+
+    test.each(routes)(
+      '$method $url returns 403 for non-superadmin',
+      async ({ method, url }) => {
+        const response = await server.inject({
+          method,
+          url,
+          auth: nonSuperAdminAuth,
+          payload: method === 'post' ? {} : undefined
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.FORBIDDEN)
+      }
+    )
   })
 })
 

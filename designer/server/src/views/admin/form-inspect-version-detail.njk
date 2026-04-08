@@ -1,0 +1,47 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-tabs">
+      <ul class="govuk-tabs__list">
+        {% for tab in tabItems %}
+          <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}">
+            <a class="govuk-tabs__tab" href="{{ tab.href }}">{{ tab.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <div class="govuk-tabs__panel">
+        <h2 class="govuk-heading-m">Version {{ versionId }}</h2>
+
+        <div class="json-item" data-rootCopyToClip>
+          <div class="action-links-top-right">
+            <a class="govuk-link govuk-link--no-visited-state govuk-visually-hidden" href="#" data-linkCopyToClip>Copy to clipboard</a>
+          </div>
+          <pre class="json-block" data-sourceCopyToClip><code>{{ definition | dump(2) }}</code></pre>
+        </div>
+      </div>
+    </div>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+  <script type="module">
+    import { initialiseAllCopyLinks } from "{{ getAssetPath("utilities.js") }}"
+    document.addEventListener("DOMContentLoaded", () => {
+      initialiseAllCopyLinks()
+    })
+  </script>
+{% endblock %}

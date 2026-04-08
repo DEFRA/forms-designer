@@ -154,6 +154,188 @@ export default [
     }
   }),
 
+  {
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{id}/versions`,
+    async handler(request, h) {
+      const { auth, params, query } = request
+      const { token } = auth.credentials
+      const { id } = params
+      const versionId = /** @type {string | undefined} */ (query.versionId)
+
+      if (versionId) {
+        return h
+          .redirect(`${ROUTE_FULL_PATH}/${id}/versions/${versionId}`)
+          .code(StatusCodes.SEE_OTHER)
+      }
+
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+      const versions = await forms.listFormVersions(id, token)
+
+      const versionItems = versions
+        .slice()
+        .sort((a, b) => b.versionNumber - a.versionNumber)
+        .map((v) => ({
+          value: String(v.versionNumber),
+          text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toLocaleString('en-GB')}`
+        }))
+
+      return h.view('admin/form-inspect-versions', {
+        pageTitle: `${ADMIN_TOOLS} - form inspect - versions`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to form inspect',
+          href: ROUTE_FULL_PATH
+        },
+        navigation,
+        formId: id,
+        tabItems: buildTabItems(id, 'versions'),
+        versionItems
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
+  },
+
+  {
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{id}/versions/{versionId}`,
+    async handler(request, h) {
+      const { auth, params } = request
+      const { token } = auth.credentials
+      const { id, versionId } = params
+
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+      const definition = await forms.getFormDefinitionVersion(
+        id,
+        Number(versionId),
+        token
+      )
+
+      return h.view('admin/form-inspect-version-detail', {
+        pageTitle: `${ADMIN_TOOLS} - form inspect - version ${versionId}`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to versions',
+          href: `${ROUTE_FULL_PATH}/${id}/versions`
+        },
+        navigation,
+        formId: id,
+        versionId,
+        tabItems: buildTabItems(id, 'versions'),
+        definition
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
+  },
+
+  {
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{id}/definition/live`,
+    async handler(request, h) {
+      const { auth, params } = request
+      const { token } = auth.credentials
+      const { id } = params
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      let definition = null
+      try {
+        definition = await forms.getLiveFormDefinition(id, token)
+      } catch (err) {
+        if (
+          !(
+            /** @type {any} */ (
+              (err).isBoom &&
+              /** @type {any} */ (err).output.statusCode ===
+                StatusCodes.NOT_FOUND
+            )
+          )
+        ) {
+          throw err
+        }
+      }
+
+      return h.view('admin/form-inspect-detail', {
+        pageTitle: `${ADMIN_TOOLS} - form inspect - live definition`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to form inspect',
+          href: ROUTE_FULL_PATH
+        },
+        navigation,
+        formId: id,
+        tabItems: buildTabItems(id, 'live'),
+        document: definition,
+        inconsistencies: [],
+        noDocumentMessage: 'No live definition exists for this form.'
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
+  },
+
+  {
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{id}/definition/draft`,
+    async handler(request, h) {
+      const { auth, params } = request
+      const { token } = auth.credentials
+      const { id } = params
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      let definition = null
+      try {
+        definition = await forms.getDraftFormDefinition(id, token)
+      } catch (err) {
+        if (
+          !(
+            /** @type {any} */ (
+              (err).isBoom &&
+              /** @type {any} */ (err).output.statusCode ===
+                StatusCodes.NOT_FOUND
+            )
+          )
+        ) {
+          throw err
+        }
+      }
+
+      return h.view('admin/form-inspect-detail', {
+        pageTitle: `${ADMIN_TOOLS} - form inspect - draft definition`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to form inspect',
+          href: ROUTE_FULL_PATH
+        },
+        navigation,
+        formId: id,
+        tabItems: buildTabItems(id, 'draft'),
+        document: definition,
+        inconsistencies: [],
+        noDocumentMessage: 'No draft definition exists for this form.'
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      }
+    }
+  },
+
   /**
    * @satisfies {ServerRoute<{ Params: { id: string } }>}
    */
