@@ -3,8 +3,8 @@ import { StatusCodes } from 'http-status-codes'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import {
-  authSuperAdmin as auth,
-  auth as nonSuperAdminAuth
+  auth as nonSuperAdminAuth,
+  authSuperAdmin as auth
 } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -83,11 +83,16 @@ describe('Form inspect routes', () => {
         updatedBy: { id: 'user-1', displayName: 'Test User' }
       })
 
+      // Both id and slug populated — type='slug' must win
       const response = await server.inject({
         method: 'post',
         url: '/admin/form-inspect',
         auth,
-        payload: { type: 'slug', id: '', slug: 'my-form-slug' }
+        payload: {
+          type: 'slug',
+          id: '661e4ca5039739ef2902b214',
+          slug: 'my-form-slug'
+        }
       })
 
       expect(forms.get).toHaveBeenCalledWith(

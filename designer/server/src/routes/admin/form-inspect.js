@@ -96,16 +96,17 @@ export default [
     async handler(request, h) {
       const { auth, payload } = request
       const { token } = auth.credentials
+      const type = payload.type
       const id = payload.id.trim()
       const slug = payload.slug.trim()
 
-      if (id) {
+      if (type === 'id' && id) {
         return h
           .redirect(`${ROUTE_FULL_PATH}/${id}/metadata`)
           .code(StatusCodes.SEE_OTHER)
       }
 
-      if (slug) {
+      if (type === 'slug' && slug) {
         try {
           const form = await forms.get(slug, token)
           return h
@@ -254,9 +255,9 @@ export default [
         if (
           !(
             /** @type {any} */ (
-              (err).isBoom &&
-              /** @type {any} */ (err).output.statusCode ===
-                StatusCodes.NOT_FOUND
+              err.isBoom &&
+                /** @type {any} */ (err).output.statusCode ===
+                  StatusCodes.NOT_FOUND
             )
           )
         ) {
@@ -303,9 +304,9 @@ export default [
         if (
           !(
             /** @type {any} */ (
-              (err).isBoom &&
-              /** @type {any} */ (err).output.statusCode ===
-                StatusCodes.NOT_FOUND
+              err.isBoom &&
+                /** @type {any} */ (err).output.statusCode ===
+                  StatusCodes.NOT_FOUND
             )
           )
         ) {
