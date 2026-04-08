@@ -87,22 +87,25 @@
       }}
     </form>
 
-    {% if supports.resetSaveAndExit %}
-      <p class="govuk-body">
-        <a href="/admin/reset-save-and-exit" class="govuk-link govuk-link--no-visited-state">Reset save and exit</a>
-      </p>
-    {% endif %}
-
-    {% if supports.deadLetterQueues %}
-      <p class="govuk-body">
-        <a href="/admin/dead-letter-queues" class="govuk-link govuk-link--no-visited-state">Dead-letter queues</a>
-      </p>
-    {% endif %}
-
-    {% if supports.formInspect %}
-      <p class="govuk-body">
-        <a href="/admin/form-inspect" class="govuk-link govuk-link--no-visited-state">Form inspect</a>
-      </p>
+    {% if supports.resetSaveAndExit or supports.deadLetterQueues or supports.formInspect %}
+      <h2 class="govuk-heading-m">Developer tools</h2>
+      <ul class="govuk-list">
+        {% if supports.resetSaveAndExit %}
+          <li>
+            <a href="/admin/reset-save-and-exit" class="govuk-link govuk-link--no-visited-state">Reset save and exit</a>
+          </li>
+        {% endif %}
+        {% if supports.deadLetterQueues %}
+          <li>
+            <a href="/admin/dead-letter-queues" class="govuk-link govuk-link--no-visited-state">Dead-letter queues</a>
+          </li>
+        {% endif %}
+        {% if supports.formInspect %}
+          <li>
+            <a href="/admin/form-inspect" class="govuk-link govuk-link--no-visited-state">Form inspect</a>
+          </li>
+        {% endif %}
+      </ul>
     {% endif %}
   {% endcall %}
 {% endblock %}
