@@ -771,7 +771,7 @@ describe('Forms library routes', () => {
         jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
           /** @type {any} */
           response: {},
-          body: versions
+          body: { versions }
         })
 
         const result = await forms.listFormVersions(
