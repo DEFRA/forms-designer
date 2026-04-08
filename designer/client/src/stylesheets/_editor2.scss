@@ -256,7 +256,18 @@
 }
 
 .diff-line {
-  display: block;
+  display: flex;
+  align-items: flex-start;
+}
+
+.diff-gutter {
+  flex-shrink: 0;
+  width: 2ch;
+  user-select: none;
+}
+
+.diff-text {
+  flex: 1;
   white-space: pre-wrap;
   overflow-wrap: break-word;
 }

@@ -183,9 +183,18 @@ export function renderVersionDiff(container, objA, objB) {
   for (const line of lines) {
     const span = document.createElement('span')
     span.className = `diff-line diff-line--${line.type}`
-    const prefix =
-      line.type === 'added' ? '+ ' : line.type === 'removed' ? '- ' : '  '
-    span.textContent = prefix + line.text
+
+    const gutter = document.createElement('span')
+    gutter.className = 'diff-gutter'
+    gutter.textContent =
+      line.type === 'added' ? '+' : line.type === 'removed' ? '-' : ' '
+
+    const text = document.createElement('span')
+    text.className = 'diff-text'
+    text.textContent = line.text
+
+    span.appendChild(gutter)
+    span.appendChild(text)
     pre.appendChild(span)
   }
 
