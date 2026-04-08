@@ -187,7 +187,6 @@ export function renderVersionDiff(container, objA, objB) {
       line.type === 'added' ? '+ ' : line.type === 'removed' ? '- ' : '  '
     span.textContent = prefix + line.text
     pre.appendChild(span)
-    pre.appendChild(document.createTextNode('\n'))
   }
 
   container.appendChild(pre)
