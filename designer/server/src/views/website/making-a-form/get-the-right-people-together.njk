@@ -1,0 +1,35 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Get the right people together"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            Before you start designing your form, contact the people who are responsible for the policy behind it and the people responsible for handling form submissions. This is so you can: 
+          </p>
+            <ul>
+              <li>understand how forms are currently processed </li>
+              <li>consider the impact of transitioning to a digital-first method </li>
+              <li>identify other people you may not have realised have important knowledge about the form </li>
+              <li>discuss options for data handling and integration with backend systems </li>
+            </ul>
+        <p>
+          Arrange a meeting to agree the purpose of your form. This will mean the design and approval of the form is easier to manage. You can use this Mural template to guide your discussion. 
+        </p>                
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}

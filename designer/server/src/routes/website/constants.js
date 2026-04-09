@@ -8,6 +8,7 @@ export const WebsiteLevel1Routes = {
   SERVICES: 'services',
   WHATS_NEW: 'whats-new',
   ABOUT: 'about',
+  MAKING_A_FORM: 'making-a-form',
   GET_STARTED: 'get-started',
   FEATURES: 'features',
   RESOURCES: 'resources',
@@ -23,6 +24,15 @@ export const Level2GetStartedMenu = {
   MAKE_FORM_LIVE: 'make-form-live-checklist',
   FORM_SUITABILITY: 'form-suitability-criteria',
   MEASURING_SUCCESS: 'measuring-suitability'
+}
+/**
+ * Enum for get started menus.
+ * @readonly
+ * @enum {string}
+ */
+export const Level2MakingAFormMenu = {
+  MAKE_SURE_YOU_NEED_A_FORM: 'make-sure-you-need-a-form',
+  WHAT_MAKES_A_GOOD_FORM: 'what-makes-a-good-form',
 }
 
 /**

@@ -1,0 +1,50 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Plan your form"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            Plan your form before you start using the Defra Form Designer.  
+          </p>
+          <p>
+            Planning helps you to:  
+          </p>
+            <ul>
+              <li>show the user's journey clearly </li>
+              <li>decide where grouping makes sense</li>
+              <li>reduce unnecessary pages </li>
+              <li>avoid redundant questions </li>
+              <li>talk through the form with SMEs and stakeholders </li>
+            </ul>
+        <p>
+          You can do this in software like Viso, Mural or using pen and paper. 
+        </p>
+        <p>
+          <a href="">See an example form plan with conditions</a>. 
+        </p>
+      <h2>Avoid duplicating questions</h2>
+        <p>
+          Reducing duplicate questions improves efficiency and the user experience. 
+        </p> 
+        <p>
+          Avoid duplication by:
+        </p>
+                       
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
