@@ -17,6 +17,13 @@ export function mapUserForAudit(user) {
 }
 
 /**
+ * @param {{ credentials?: { scope?: string[] }}} [auth]
+ */
+export function getUserScopes(auth) {
+  return auth?.credentials?.scope ?? []
+}
+
+/**
  * @import { AuditUser } from '@defra/forms-model'
  * @import { UserCredentials } from '@hapi/hapi'
  */

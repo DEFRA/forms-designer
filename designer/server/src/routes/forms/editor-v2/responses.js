@@ -3,7 +3,10 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
+import {
+  getUserScopes,
+  mapUserForAudit
+} from '~/src/common/helpers/auth/user-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import {
   publishFormCsatExcelRequestedEvent,
@@ -80,7 +83,7 @@ export default [
       const { token } = auth.credentials
       const { slug } = params
 
-      const scopes = auth.credentials.scope ?? []
+      const scopes = getUserScopes(auth)
 
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)

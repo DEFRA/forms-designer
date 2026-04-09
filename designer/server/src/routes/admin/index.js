@@ -8,7 +8,10 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
+import {
+  getUserScopes,
+  mapUserForAudit
+} from '~/src/common/helpers/auth/user-helper.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import * as forms from '~/src/lib/forms.js'
 import { getUser } from '~/src/lib/manage.js'
@@ -70,7 +73,7 @@ export default [
         yar.flash(sessionNames.successNotification).at(0)
       )
 
-      const scopes = auth.credentials.scope ?? []
+      const scopes = getUserScopes(auth)
 
       return h.view('admin/index', {
         ...generateTitling(),
@@ -111,7 +114,7 @@ export default [
       const { token } = auth.credentials
       const { action } = payload
 
-      const scopes = auth.credentials.scope ?? []
+      const scopes = getUserScopes(auth)
 
       if (action === 'download') {
         if (!scopes.includes(Scopes.FormsBackup)) {
