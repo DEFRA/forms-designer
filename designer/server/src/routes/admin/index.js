@@ -2,6 +2,7 @@ import { performance } from 'node:perf_hooks'
 import { PassThrough } from 'node:stream'
 
 import { Scopes, getErrorMessage } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import Archiver from 'archiver'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -114,14 +115,14 @@ export default [
 
       if (action === 'download') {
         if (!scopes.includes(Scopes.FormsBackup)) {
-          throw new Error('FormsBackup scope required')
+          throw Boom.forbidden('FormsBackup scope required')
         }
         return downloadAllFormsAsZip(request, h)
       }
 
       // feedback action: Request all forms by omitting the formId
       if (!scopes.includes(Scopes.FormsFeedbackAllForms)) {
-        throw new Error('FormsFeedbackAllForms scope required')
+        throw Boom.forbidden('FormsFeedbackAllForms scope required')
       }
       await sendFeedbackSubmissionsFile(undefined, token)
 

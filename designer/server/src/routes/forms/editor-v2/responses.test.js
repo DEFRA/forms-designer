@@ -12,7 +12,7 @@ import {
   sendFeedbackSubmissionsFile,
   sendFormSubmissionsFile
 } from '~/src/services/formSubmissionService.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { auth, authFormCreator, authNoFeedback } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/editor.js')
@@ -35,7 +35,7 @@ describe('Editor v2 responses routes', () => {
   })
 
   describe('GET', () => {
-    test('should render table with options', async () => {
+    test('should render table with options with no feedback scope', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce({
         ...testFormMetadata,
         notificationEmail: 'test@defra.gov.uk'
@@ -44,7 +44,7 @@ describe('Editor v2 responses routes', () => {
       const options = {
         method: 'get',
         url: '/library/my-form-slug/editor-v2/responses',
-        auth
+        auth: authNoFeedback
       }
 
       const { container } = await renderResponse(server, options)
@@ -53,29 +53,81 @@ describe('Editor v2 responses routes', () => {
         'Download responses as an Excel spreadsheet'
       )
       const $links = container.getAllByRole('link')
+      const $buttons = container.getAllByRole('button')
 
       expect($mastheadHeading).toBeInTheDocument()
       expect($mastheadHeading).toHaveClass('govuk-heading-xl')
 
       // Check tab headings and active tab
-      expect($links[5]).toHaveTextContent('Forms library')
-      expect($links[6]).toHaveTextContent('Overview')
+      expect($links[4]).toHaveTextContent('Forms library')
+      expect($links[5]).toHaveTextContent('Overview')
 
-      const responsesTab = $links[7]
+      const responsesTab = $links[6]
       expect(responsesTab).toHaveTextContent('Responses')
       expect(responsesTab.parentElement).toHaveClass(
         'service-header__nav-list-item--active'
       )
 
-      expect($links[8]).toHaveTextContent('Form history')
-      expect($links[9]).toHaveTextContent('Editor')
-      expect($links[10]).toHaveTextContent('Support')
+      expect($links[7]).toHaveTextContent('Form history')
+      expect($links[8]).toHaveTextContent('Editor')
+      expect($links[9]).toHaveTextContent('Support')
 
       const $error = container.queryByText(
         'the form overview to send data to a shared mailbox.',
         { exact: false }
       )
       expect($error).toBeNull()
+
+      expect($buttons).toHaveLength(3)
+      expect($buttons[2]).toHaveTextContent('Send submissions data')
+    })
+
+    test('should render table with options with feedback scope', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce({
+        ...testFormMetadata,
+        notificationEmail: 'test@defra.gov.uk'
+      })
+
+      const options = {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/responses',
+        auth: authFormCreator
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByText(
+        'Download responses as an Excel spreadsheet'
+      )
+      const $links = container.getAllByRole('link')
+      const $buttons = container.getAllByRole('button')
+
+      expect($mastheadHeading).toBeInTheDocument()
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      // Check tab headings and active tab
+      expect($links[4]).toHaveTextContent('Forms library')
+      expect($links[5]).toHaveTextContent('Overview')
+
+      const responsesTab = $links[6]
+      expect(responsesTab).toHaveTextContent('Responses')
+      expect(responsesTab.parentElement).toHaveClass(
+        'service-header__nav-list-item--active'
+      )
+
+      expect($links[7]).toHaveTextContent('Form history')
+      expect($links[8]).toHaveTextContent('Editor')
+      expect($links[9]).toHaveTextContent('Support')
+
+      const $error = container.queryByText(
+        'the form overview to send data to a shared mailbox.',
+        { exact: false }
+      )
+      expect($error).toBeNull()
+
+      expect($buttons).toHaveLength(4)
+      expect($buttons[2]).toHaveTextContent('Send submissions data')
+      expect($buttons[3]).toHaveTextContent('Send feedback data')
     })
 
     test('should render error summary', async () => {
