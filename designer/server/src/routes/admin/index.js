@@ -89,7 +89,7 @@ export default [
         access: {
           entity: 'user',
           scope: [
-            Scopes.FormsFeedback,
+            Scopes.FormsFeedbackAllForms,
             Scopes.FormsBackup,
             Scopes.ResetSaveAndExit,
             Scopes.DeadLetterQueues
@@ -110,11 +110,19 @@ export default [
       const { token } = auth.credentials
       const { action } = payload
 
+      const scopes = auth.credentials.scope ?? []
+
       if (action === 'download') {
+        if (!scopes.includes(Scopes.FormsBackup)) {
+          throw new Error('FormsBackup scope required')
+        }
         return downloadAllFormsAsZip(request, h)
       }
 
       // feedback action: Request all forms by omitting the formId
+      if (!scopes.includes(Scopes.FormsFeedbackAllForms)) {
+        throw new Error('FormsFeedbackAllForms scope required')
+      }
       await sendFeedbackSubmissionsFile(undefined, token)
 
       const user = mapUserForAudit(auth.credentials.user)
@@ -145,10 +153,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          // Since both these scopes are within the superadmin role, we don't need to verify further
-          // However, if these scopes got split into different roles, we should verify the exact scope necessary
-          // for the request user action
-          scope: [Scopes.FormsFeedback, Scopes.FormsBackup]
+          scope: [Scopes.FormsFeedbackAllForms, Scopes.FormsBackup]
         }
       }
     }
