@@ -76,7 +76,7 @@ export default [
         navigation,
         notification,
         supports: {
-          feedback: scopes.includes(Scopes.FormsFeedback),
+          feedback: scopes.includes(Scopes.FormsFeedbackAllForms),
           download: scopes.includes(Scopes.FormsBackup),
           resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
           deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues)

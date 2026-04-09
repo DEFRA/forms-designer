@@ -80,6 +80,8 @@ export default [
       const { token } = auth.credentials
       const { slug } = params
 
+      const scopes = auth.credentials.scope ?? []
+
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
@@ -107,7 +109,8 @@ export default [
         errorList,
         navigation,
         notification,
-        isFeedbackForm: isFeedbackForm(definition)
+        isFeedbackForm: isFeedbackForm(definition),
+        canRequestFeedback: scopes.includes(Scopes.FormsFeedback)
       })
     },
     options: {
@@ -115,7 +118,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [Scopes.FormEdit, Scopes.FormsFeedback]
         }
       }
     }
@@ -170,7 +173,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormEdit}`]
+          scope: [Scopes.FormEdit, Scopes.FormsFeedback]
         }
       }
     }
