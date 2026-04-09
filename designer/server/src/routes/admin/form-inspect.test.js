@@ -158,7 +158,7 @@ describe('Form inspect routes', () => {
     versions: [{ versionNumber: 1, createdAt: now }]
   }
 
-  describe('GET /admin/form-inspect/:id/metadata', () => {
+  describe('GET /admin/form-inspect/{id}/metadata', () => {
     test('renders metadata JSON and tab navigation', async () => {
       jest.mocked(forms.getFormById).mockResolvedValueOnce(testMetadata)
 
@@ -184,7 +184,7 @@ describe('Form inspect routes', () => {
     })
   })
 
-  describe('GET /admin/form-inspect/:id/versions', () => {
+  describe('GET /admin/form-inspect/{id}/versions', () => {
     test('renders autocomplete select sorted latest-first', async () => {
       jest.mocked(forms.listFormVersions).mockResolvedValueOnce([
         { versionNumber: 1, createdAt: new Date('2024-01-01') },
@@ -226,7 +226,7 @@ describe('Form inspect routes', () => {
     })
   })
 
-  describe('GET /admin/form-inspect/:id/versions/:versionId', () => {
+  describe('GET /admin/form-inspect/{id}/versions/{versionId}', () => {
     test('renders version definition JSON', async () => {
       const definition = {
         name: 'Test form',
@@ -257,7 +257,7 @@ describe('Form inspect routes', () => {
     })
   })
 
-  describe('GET /admin/form-inspect/:id/definition/live', () => {
+  describe('GET /admin/form-inspect/{id}/definition/live', () => {
     test('renders live definition JSON', async () => {
       const definition = {
         name: 'Test form',
@@ -303,7 +303,7 @@ describe('Form inspect routes', () => {
     })
   })
 
-  describe('GET /admin/form-inspect/:id/definition/draft', () => {
+  describe('GET /admin/form-inspect/{id}/definition/draft', () => {
     test('renders draft definition JSON', async () => {
       const definition = {
         name: 'Test form',
@@ -351,7 +351,7 @@ describe('Form inspect routes', () => {
     })
   })
 
-  describe('GET /admin/form-inspect/:id/version-diff', () => {
+  describe('GET /admin/form-inspect/{id}/version-diff', () => {
     test('renders selection page with two version selects', async () => {
       jest.mocked(forms.listFormVersions).mockResolvedValueOnce([
         { versionNumber: 1, createdAt: new Date('2024-01-01') },
@@ -417,7 +417,7 @@ describe('Form inspect routes', () => {
     })
   })
 
-  describe('GET /admin/form-inspect/:id/versions/:versionId (diff)', () => {
+  describe('GET /admin/form-inspect/{id}/versions/{versionId} (diff)', () => {
     const definitionA = { name: 'My form', pages: [] }
     const definitionB = { name: 'My form updated', pages: [] }
 
