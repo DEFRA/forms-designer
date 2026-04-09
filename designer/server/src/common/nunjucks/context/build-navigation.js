@@ -1,5 +1,6 @@
 import {
   formsAboutPath,
+  formsMakingAFormPath,
   formsFeaturesPath,
   formsGetStartedPath,
   formsLibraryPath,
@@ -53,6 +54,10 @@ export function buildNavigation(request) {
     buildEntry('About', formsAboutPath, {
       isActive: !!request?.path?.startsWith(formsAboutPath),
       isVisible: isVisible(request?.path, formsAboutPath)
+    }),
+    buildEntry('Making a form', formsMakingAFormPath, {
+      isActive: !!request?.path?.startsWith(formsMakingAFormPath),
+      isVisible: isVisible(request?.path, formsMakingAFormPath)
     }),
     buildEntry('Get started', formsGetStartedPath, {
       isActive: !!request?.path?.startsWith(formsGetStartedPath),

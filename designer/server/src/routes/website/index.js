@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
 import { websiteAboutModel } from '~/src/models/website/about.js'
+import { websiteMakingAFormModel } from '~/src/models/website/making-a-form.js'
 import { websiteFeaturesModel } from '~/src/models/website/features.js'
 import { websiteServicesModel } from '~/src/models/website/services.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
@@ -9,6 +10,7 @@ import { websiteSupportModel } from '~/src/models/website/support.js'
 import { websiteWhatsNewModel } from '~/src/models/website/whats-new.js'
 import {
   Level2GetStartedMenu,
+  Level2MakingAFormMenu,
   Level2ResourcesMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
@@ -25,6 +27,10 @@ export const pageNavigationBase = [
   {
     param: WebsiteLevel1Routes.ABOUT,
     text: 'About'
+  },
+   {
+    param: WebsiteLevel1Routes.MAKING_A_FORM,
+    text: 'Making a form'
   },
   {
     param: WebsiteLevel1Routes.GET_STARTED,
@@ -88,17 +94,45 @@ export default /** @satisfies {ServerRoute[]} */ ([
       }
     }
   },
+  
   {
     method: 'GET',
-    path: `/${WebsiteLevel1Routes.ABOUT}`,
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}`,
     handler(request, h) {
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteAboutModel(isGuest)
-      return h.view('website/about', aboutModel)
+      const makingAFormModel = websiteMakingAFormModel(isGuest)
+      return h.view('website/making-a-form', makingAFormModel)
     },
     options: {
       auth: {
         mode: 'try'
+      }
+    }
+  },
+    {
+    method: 'GET',
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu}`,
+    handler(request, h) {
+      const { params } = request
+      const { subMenu } = params
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      // const aboutModel = websiteSubmenuModel(
+      //   WebsiteLevel1Routes.MAKING_A_FORM,
+      //   subMenu,
+      //   content.makingAForm.menus,
+      //   'Getting started guide',
+      //   isGuest
+      // )
+      return h.view(`website/making-a-form/${subMenu}`)
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      },
+      validate: {
+        params: Joi.object().keys({
+          subMenu: Joi.string().valid(...Object.values(Level2MakingAFormMenu))
+        })
       }
     }
   },

@@ -1,0 +1,44 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Make sure you need a form"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            There are lots of reasons to make an online form. But make sure you’re not duplicating data by checking if:
+          </p>
+            <ul>
+              <li>an existing Defra group form (paper or online) collects the information you need</li>
+              <li>an existing form can be adapted instead of making a new form</li>
+            </ul>
+      <h2>When you might need a service assessment</h2> 
+        <p>
+          If you expect more than 10,000 submissions per year, you may need to create a service instead. A service has a dedicated team and is <a href="https://www.gov.uk/service-manual/service-assessments/check-if-need-to-meet-service-standard#what-has-to-be-assessed">subject to assessments</a>. 
+        </p>
+        <p>
+          You won’t need an assessment if you’re:
+        </p>
+        <ul>
+              <li>using an assured form building tool (like the Defra Form Designer or GOV.UK Forms) to create a form, and</li>
+              <li>expecting to get fewer than 10,000 transactions per year</li>
+            </ul>
+        <p>
+          This reflects the fact that forms created using an assured form building platform have government standards ‘built in’.
+        </p>                
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
