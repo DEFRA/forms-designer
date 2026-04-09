@@ -1,6 +1,7 @@
 {% extends "layouts/page.njk" %}
 
 {% from "page-body/macro.njk" import appPageBody %}
+{% from "admin/macros.njk" import appAdminTabs %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -12,33 +13,23 @@
     backLink: backLink
   }) %}
 
-    <div class="govuk-tabs">
-      <ul class="govuk-tabs__list">
-        {% for tab in tabItems %}
-          <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}">
-            <a class="govuk-tabs__tab" href="{{ tab.href }}">{{ tab.label }}</a>
-          </li>
-        {% endfor %}
-      </ul>
+    {% call appAdminTabs(tabItems) %}
+      <h2 class="govuk-heading-m">Version {{ versionA }} &rarr; Version {{ versionB }}</h2>
 
-      <div class="govuk-tabs__panel">
-        <h2 class="govuk-heading-m">Version {{ versionA }} &rarr; Version {{ versionB }}</h2>
+      <p class="govuk-body">
+        <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionA }}">View version {{ versionA }}</a>
+        &nbsp;&middot;&nbsp;
+        <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionB }}">View version {{ versionB }}</a>
+      </p>
 
-        <p class="govuk-body">
-          <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionA }}">View version {{ versionA }}</a>
-          &nbsp;&middot;&nbsp;
-          <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionB }}">View version {{ versionB }}</a>
-        </p>
-
-        {% if diffHtml %}
-          <div class="json-diff-block jsondiffpatch-unchanged-showing">
-            {{ diffHtml | safe }}
-          </div>
-        {% else %}
-          <p class="govuk-body">No differences between these versions.</p>
-        {% endif %}
-      </div>
-    </div>
+      {% if diffHtml %}
+        <div class="json-diff-block jsondiffpatch-unchanged-showing">
+          {{ diffHtml | safe }}
+        </div>
+      {% else %}
+        <p class="govuk-body">No differences between these versions.</p>
+      {% endif %}
+    {% endcall %}
 
   {% endcall %}
 {% endblock %}

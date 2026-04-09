@@ -1,20 +1,9 @@
 import { Scopes } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 import { create } from 'jsondiffpatch'
 import { format as formatDiffHtml } from 'jsondiffpatch/formatters/html'
-
-const jdp = create({
-  objectHash(obj) {
-    if (obj !== null && typeof obj === 'object') {
-      const o = /** @type {Record<string, unknown>} */ (obj)
-      if (o.id !== undefined) return String(o.id)
-      if (typeof o.path === 'string') return o.path
-      if (typeof o.name === 'string') return o.name
-    }
-    return JSON.stringify(obj)
-  }
-})
-import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -23,18 +12,48 @@ import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 
+// Use `id` as the primary key for object comparison where available.
+// Falls back to `path` (used on page objects) and then `name` (used on
+// components and lists). This is necessary for backwards compatibility
+// with legacy forms where `id` is optional, and because pages and
+// components share different identifying attributes.
+const jdp = create({
+  objectHash(obj) {
+    if (typeof obj === 'object') {
+      const o = /** @type {Record<string, unknown>} */ (obj)
+      if (o.id !== undefined) return JSON.stringify(o.id)
+      if (typeof o.path === 'string') return o.path
+      if (typeof o.name === 'string') return o.name
+    }
+    return JSON.stringify(obj)
+  }
+})
+
 export const ROUTE_FULL_PATH = '/admin/form-inspect'
 
 const ADMIN_TOOLS = 'Admin tools'
 
-export function generateTitling() {
+/**
+ * Build the common view model for form inspect sub-pages.
+ * Panel-specific content is passed as the second argument and merged in.
+ * @param {object} common
+ * @param {string} common.pageTitle
+ * @param {string} common.formId
+ * @param {string} common.activeTab
+ * @param {{ text: string, href: string }} common.backLink
+ * @param {Record<string, unknown>} [panelContent]
+ */
+export function getViewModel(common, panelContent = {}) {
+  const { pageTitle, formId, activeTab, backLink } = common
   return {
-    pageTitle: `${ADMIN_TOOLS} - form inspect`,
+    pageTitle,
     pageHeading: { text: ADMIN_TOOLS },
-    backLink: {
-      text: 'Back to admin tools home',
-      href: '/admin/index'
-    }
+    backLink,
+    navigation: buildAdminNavigation(ADMIN_TOOLS),
+    formId,
+    activeTab,
+    tabItems: buildTabItems(formId, activeTab),
+    ...panelContent
   }
 }
 
@@ -91,7 +110,12 @@ export default [
       const { formValues, formErrors } = validation ?? {}
 
       return h.view('admin/form-inspect', {
-        ...generateTitling(),
+        pageTitle: `${ADMIN_TOOLS} - form inspect`,
+        pageHeading: { text: ADMIN_TOOLS },
+        backLink: {
+          text: 'Back to admin tools home',
+          href: '/admin/index'
+        },
         navigation,
         errorList: buildErrorList(formErrors, ['id', 'slug']),
         formErrors,
@@ -132,10 +156,7 @@ export default [
             .redirect(`${ROUTE_FULL_PATH}/${form.id}/metadata`)
             .code(StatusCodes.SEE_OTHER)
         } catch (err) {
-          if (
-            /** @type {any} */ (err).isBoom &&
-            /** @type {any} */ (err).output.statusCode === StatusCodes.NOT_FOUND
-          ) {
+          if (Boom.isBoom(err, StatusCodes.NOT_FOUND)) {
             const joiError = createJoiError(
               'slug',
               `No form found with slug '${slug}'`
@@ -174,14 +195,17 @@ export default [
     }
   }),
 
-  {
+  /**
+   * @satisfies {ServerRoute<{ Params: { id: string }, Query: { versionId?: string } }>}
+   */
+  ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{id}/versions`,
     async handler(request, h) {
       const { auth, params, query } = request
       const { token } = auth.credentials
       const { id } = params
-      const versionId = /** @type {string | undefined} */ (query.versionId)
+      const { versionId } = query
 
       if (versionId) {
         return h
@@ -189,7 +213,6 @@ export default [
           .code(StatusCodes.SEE_OTHER)
       }
 
-      const navigation = buildAdminNavigation(ADMIN_TOOLS)
       const versions = await forms.listFormVersions(id, token)
 
       const versionItems = [
@@ -203,18 +226,21 @@ export default [
           }))
       ]
 
-      return h.view('admin/form-inspect-versions', {
-        pageTitle: `${ADMIN_TOOLS} - form inspect - versions`,
-        pageHeading: { text: ADMIN_TOOLS },
-        backLink: {
-          text: 'Back to form inspect',
-          href: ROUTE_FULL_PATH
-        },
-        navigation,
-        formId: id,
-        tabItems: buildTabItems(id, 'versions'),
-        versionItems
-      })
+      return h.view(
+        'admin/form-inspect-versions',
+        getViewModel(
+          {
+            pageTitle: `${ADMIN_TOOLS} - form inspect - versions`,
+            formId: id,
+            activeTab: 'versions',
+            backLink: {
+              text: 'Back to form inspect',
+              href: ROUTE_FULL_PATH
+            }
+          },
+          { versionItems }
+        )
+      )
     },
     options: {
       auth: {
@@ -222,9 +248,12 @@ export default [
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
       }
     }
-  },
+  }),
 
-  {
+  /**
+   * @satisfies {ServerRoute<{ Params: { id: string, versionId: string } }>}
+   */
+  ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{id}/versions/{versionId}`,
     async handler(request, h) {
@@ -232,35 +261,41 @@ export default [
       const { token } = auth.credentials
       const { id, versionId } = params
 
-      const navigation = buildAdminNavigation(ADMIN_TOOLS)
-
       if (versionId.includes('..')) {
         const [vA, vB] = versionId.split('..')
-        const [definitionA, definitionB] = await Promise.all([
-          forms.getFormDefinitionVersion(id, Number(vA), token),
-          forms.getFormDefinitionVersion(id, Number(vB), token)
-        ])
+        const definitionA = await forms.getFormDefinitionVersion(
+          id,
+          Number(vA),
+          token
+        )
+        const definitionB = await forms.getFormDefinitionVersion(
+          id,
+          Number(vB),
+          token
+        )
 
         const delta = jdp.diff(definitionA, definitionB)
+        // Strip any <script> tags injected by jsondiffpatch to prevent XSS
         const diffHtml = formatDiffHtml(delta, definitionA).replace(
           /<script[\s\S]*?<\/script>/g,
           ''
         )
 
-        return h.view('admin/form-inspect-version-diff-detail', {
-          pageTitle: `${ADMIN_TOOLS} - form inspect - diff v${vA} → v${vB}`,
-          pageHeading: { text: ADMIN_TOOLS },
-          backLink: {
-            text: 'Back to version diff',
-            href: `${ROUTE_FULL_PATH}/${id}/version-diff`
-          },
-          navigation,
-          formId: id,
-          versionA: vA,
-          versionB: vB,
-          tabItems: buildTabItems(id, 'version-diff'),
-          diffHtml
-        })
+        return h.view(
+          'admin/form-inspect-version-diff-detail',
+          getViewModel(
+            {
+              pageTitle: `${ADMIN_TOOLS} - form inspect - diff v${vA} → v${vB}`,
+              formId: id,
+              activeTab: 'version-diff',
+              backLink: {
+                text: 'Back to version diff',
+                href: `${ROUTE_FULL_PATH}/${id}/version-diff`
+              }
+            },
+            { versionA: vA, versionB: vB, diffHtml }
+          )
+        )
       }
 
       const definition = await forms.getFormDefinitionVersion(
@@ -269,19 +304,21 @@ export default [
         token
       )
 
-      return h.view('admin/form-inspect-version-detail', {
-        pageTitle: `${ADMIN_TOOLS} - form inspect - version ${versionId}`,
-        pageHeading: { text: ADMIN_TOOLS },
-        backLink: {
-          text: 'Back to versions',
-          href: `${ROUTE_FULL_PATH}/${id}/versions`
-        },
-        navigation,
-        formId: id,
-        versionId,
-        tabItems: buildTabItems(id, 'versions'),
-        definition
-      })
+      return h.view(
+        'admin/form-inspect-version-detail',
+        getViewModel(
+          {
+            pageTitle: `${ADMIN_TOOLS} - form inspect - version ${versionId}`,
+            formId: id,
+            activeTab: 'versions',
+            backLink: {
+              text: 'Back to versions',
+              href: `${ROUTE_FULL_PATH}/${id}/versions`
+            }
+          },
+          { versionId, definition }
+        )
+      )
     },
     options: {
       auth: {
@@ -289,17 +326,19 @@ export default [
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
       }
     }
-  },
+  }),
 
-  {
+  /**
+   * @satisfies {ServerRoute<{ Params: { id: string }, Query: { from?: string, to?: string } }>}
+   */
+  ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{id}/version-diff`,
     async handler(request, h) {
       const { auth, params, query } = request
       const { token } = auth.credentials
       const { id } = params
-      const from = /** @type {string | undefined} */ (query.from)
-      const to = /** @type {string | undefined} */ (query.to)
+      const { from, to } = query
 
       if (from && to) {
         return h
@@ -307,7 +346,6 @@ export default [
           .code(StatusCodes.SEE_OTHER)
       }
 
-      const navigation = buildAdminNavigation(ADMIN_TOOLS)
       const versions = await forms.listFormVersions(id, token)
 
       const versionItems = [
@@ -321,18 +359,21 @@ export default [
           }))
       ]
 
-      return h.view('admin/form-inspect-version-diff', {
-        pageTitle: `${ADMIN_TOOLS} - form inspect - version diff`,
-        pageHeading: { text: ADMIN_TOOLS },
-        backLink: {
-          text: 'Back to form inspect',
-          href: ROUTE_FULL_PATH
-        },
-        navigation,
-        formId: id,
-        tabItems: buildTabItems(id, 'version-diff'),
-        versionItems
-      })
+      return h.view(
+        'admin/form-inspect-version-diff',
+        getViewModel(
+          {
+            pageTitle: `${ADMIN_TOOLS} - form inspect - version diff`,
+            formId: id,
+            activeTab: 'version-diff',
+            backLink: {
+              text: 'Back to form inspect',
+              href: ROUTE_FULL_PATH
+            }
+          },
+          { versionItems }
+        )
+      )
     },
     options: {
       auth: {
@@ -340,48 +381,43 @@ export default [
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
       }
     }
-  },
+  }),
 
-  {
+  /**
+   * @satisfies {ServerRoute<{ Params: { id: string } }>}
+   */
+  ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{id}/definition/live`,
     async handler(request, h) {
       const { auth, params } = request
       const { token } = auth.credentials
       const { id } = params
-      const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
       let definition = null
       try {
         definition = await forms.getLiveFormDefinition(id, token)
       } catch (err) {
-        if (
-          !(
-            /** @type {any} */ (
-              err.isBoom &&
-                /** @type {any} */ (err).output.statusCode ===
-                  StatusCodes.NOT_FOUND
-            )
-          )
-        ) {
+        if (!Boom.isBoom(err, StatusCodes.NOT_FOUND)) {
           throw err
         }
       }
 
-      return h.view('admin/form-inspect-detail', {
-        pageTitle: `${ADMIN_TOOLS} - form inspect - live definition`,
-        pageHeading: { text: ADMIN_TOOLS },
-        backLink: {
-          text: 'Back to form inspect',
-          href: ROUTE_FULL_PATH
-        },
-        navigation,
-        formId: id,
-        tabItems: buildTabItems(id, 'live'),
-        document: definition,
-        inconsistencies: [],
-        noDocumentMessage: 'No live definition exists for this form.'
-      })
+      return h.view(
+        'admin/form-inspect-detail',
+        getViewModel(
+          {
+            pageTitle: `${ADMIN_TOOLS} - form inspect - live definition`,
+            formId: id,
+            activeTab: 'live',
+            backLink: {
+              text: 'Back to form inspect',
+              href: ROUTE_FULL_PATH
+            }
+          },
+          { document: definition }
+        )
+      )
     },
     options: {
       auth: {
@@ -389,48 +425,43 @@ export default [
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
       }
     }
-  },
+  }),
 
-  {
+  /**
+   * @satisfies {ServerRoute<{ Params: { id: string } }>}
+   */
+  ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{id}/definition/draft`,
     async handler(request, h) {
       const { auth, params } = request
       const { token } = auth.credentials
       const { id } = params
-      const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
       let definition = null
       try {
         definition = await forms.getDraftFormDefinition(id, token)
       } catch (err) {
-        if (
-          !(
-            /** @type {any} */ (
-              err.isBoom &&
-                /** @type {any} */ (err).output.statusCode ===
-                  StatusCodes.NOT_FOUND
-            )
-          )
-        ) {
+        if (!Boom.isBoom(err, StatusCodes.NOT_FOUND)) {
           throw err
         }
       }
 
-      return h.view('admin/form-inspect-detail', {
-        pageTitle: `${ADMIN_TOOLS} - form inspect - draft definition`,
-        pageHeading: { text: ADMIN_TOOLS },
-        backLink: {
-          text: 'Back to form inspect',
-          href: ROUTE_FULL_PATH
-        },
-        navigation,
-        formId: id,
-        tabItems: buildTabItems(id, 'draft'),
-        document: definition,
-        inconsistencies: [],
-        noDocumentMessage: 'No draft definition exists for this form.'
-      })
+      return h.view(
+        'admin/form-inspect-detail',
+        getViewModel(
+          {
+            pageTitle: `${ADMIN_TOOLS} - form inspect - draft definition`,
+            formId: id,
+            activeTab: 'draft',
+            backLink: {
+              text: 'Back to form inspect',
+              href: ROUTE_FULL_PATH
+            }
+          },
+          { document: definition }
+        )
+      )
     },
     options: {
       auth: {
@@ -438,7 +469,7 @@ export default [
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
       }
     }
-  },
+  }),
 
   /**
    * @satisfies {ServerRoute<{ Params: { id: string } }>}
@@ -451,36 +482,23 @@ export default [
       const { token } = auth.credentials
       const { id } = params
 
-      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+      const metadata = await forms.getFormById(id, token)
 
-      const [metadata, versions] = await Promise.all([
-        forms.getFormById(id, token),
-        forms.listFormVersions(id, token)
-      ])
-
-      const versionNumbersInDocs = new Set(versions.map((v) => v.versionNumber))
-      const inconsistencies = (metadata.versions ?? [])
-        .filter((v) => !versionNumbersInDocs.has(v.versionNumber))
-        .map(
-          (v) =>
-            `Version ${v.versionNumber} is listed in metadata but has no matching document in the versions collection`
+      return h.view(
+        'admin/form-inspect-detail',
+        getViewModel(
+          {
+            pageTitle: `${ADMIN_TOOLS} - form inspect - metadata`,
+            formId: id,
+            activeTab: 'metadata',
+            backLink: {
+              text: 'Back to form inspect',
+              href: ROUTE_FULL_PATH
+            }
+          },
+          { document: metadata }
         )
-
-      return h.view('admin/form-inspect-detail', {
-        pageTitle: `${ADMIN_TOOLS} - form inspect - metadata`,
-        pageHeading: { text: ADMIN_TOOLS },
-        backLink: {
-          text: 'Back to form inspect',
-          href: ROUTE_FULL_PATH
-        },
-        navigation,
-        formId: id,
-        activeTab: 'metadata',
-        tabItems: buildTabItems(id, 'metadata'),
-        document: metadata,
-        inconsistencies,
-        noDocumentMessage: null
-      })
+      )
     },
     options: {
       auth: {

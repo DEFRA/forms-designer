@@ -161,9 +161,6 @@ describe('Form inspect routes', () => {
   describe('GET /admin/form-inspect/:id/metadata', () => {
     test('renders metadata JSON and tab navigation', async () => {
       jest.mocked(forms.getFormById).mockResolvedValueOnce(testMetadata)
-      jest
-        .mocked(forms.listFormVersions)
-        .mockResolvedValueOnce([{ versionNumber: 1, createdAt: now }])
 
       const { response, container } = await renderResponse(server, {
         method: 'get',
@@ -176,10 +173,6 @@ describe('Form inspect routes', () => {
         testFormId,
         auth.credentials.token
       )
-      expect(forms.listFormVersions).toHaveBeenCalledWith(
-        testFormId,
-        auth.credentials.token
-      )
 
       const $pre = container.getByRole('code')
       expect($pre.textContent).toContain('"slug": "my-form-slug"')
@@ -188,46 +181,6 @@ describe('Form inspect routes', () => {
         name: /metadata|versions|live|draft/i
       })
       expect($tabLinks.length).toBeGreaterThanOrEqual(4)
-    })
-
-    test('renders inconsistency panel when metadata.versions contains an id not in versions collection', async () => {
-      jest.mocked(forms.getFormById).mockResolvedValueOnce({
-        ...testMetadata,
-        versions: [
-          { versionNumber: 1, createdAt: now },
-          { versionNumber: 99, createdAt: now }
-        ]
-      })
-      jest
-        .mocked(forms.listFormVersions)
-        .mockResolvedValueOnce([{ versionNumber: 1, createdAt: now }])
-
-      const { container } = await renderResponse(server, {
-        method: 'get',
-        url: `/admin/form-inspect/${testFormId}/metadata`,
-        auth
-      })
-
-      const $details = container.getByText(/data inconsistencies detected/i)
-      expect($details).toBeDefined()
-    })
-
-    test('renders no inconsistency panel when versions match', async () => {
-      jest.mocked(forms.getFormById).mockResolvedValueOnce({
-        ...testMetadata,
-        versions: [{ versionNumber: 1, createdAt: now }]
-      })
-      jest
-        .mocked(forms.listFormVersions)
-        .mockResolvedValueOnce([{ versionNumber: 1, createdAt: now }])
-
-      const { container } = await renderResponse(server, {
-        method: 'get',
-        url: `/admin/form-inspect/${testFormId}/metadata`,
-        auth
-      })
-
-      expect(container.queryByText(/data inconsistencies detected/i)).toBeNull()
     })
   })
 
@@ -474,7 +427,7 @@ describe('Form inspect routes', () => {
         .mockResolvedValueOnce(definitionA)
         .mockResolvedValueOnce(definitionB)
 
-      const { response, document } = await renderResponse(server, {
+      const { response } = await renderResponse(server, {
         method: 'get',
         url: `/admin/form-inspect/${testFormId}/versions/1..4`,
         auth
@@ -491,18 +444,9 @@ describe('Form inspect routes', () => {
         4,
         auth.credentials.token
       )
-
-      const scriptA = document.getElementById('version-diff-a')
-      const scriptB = document.getElementById('version-diff-b')
-      expect(JSON.parse(scriptA?.textContent ?? '{}')).toMatchObject({
-        name: 'My form'
-      })
-      expect(JSON.parse(scriptB?.textContent ?? '{}')).toMatchObject({
-        name: 'My form updated'
-      })
     })
 
-    test('fetches both versions in parallel', async () => {
+    test('fetches both versions for diff', async () => {
       jest
         .mocked(forms.getFormDefinitionVersion)
         .mockResolvedValueOnce(definitionA)

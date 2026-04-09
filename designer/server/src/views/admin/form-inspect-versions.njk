@@ -4,6 +4,7 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "admin/macros.njk" import appAdminTabs %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -15,36 +16,26 @@
     backLink: backLink
   }) %}
 
-    <div class="govuk-tabs">
-      <ul class="govuk-tabs__list">
-        {% for tab in tabItems %}
-          <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}">
-            <a class="govuk-tabs__tab" href="{{ tab.href }}">{{ tab.label }}</a>
-          </li>
-        {% endfor %}
-      </ul>
+    {% call appAdminTabs(tabItems) %}
+      {% if versionItems | length %}
+        <form method="get" action="/admin/form-inspect/{{ formId }}/versions">
+          {{ govukSelect({
+            id: "versionId",
+            name: "versionId",
+            label: {
+              text: "Select a version",
+              classes: "govuk-label--m"
+            },
+            attributes: { "data-module": "govuk-accessible-autocomplete" },
+            items: versionItems
+          }) }}
 
-      <div class="govuk-tabs__panel">
-        {% if versionItems | length %}
-          <form method="get" action="/admin/form-inspect/{{ formId }}/versions">
-            {{ govukSelect({
-              id: "versionId",
-              name: "versionId",
-              label: {
-                text: "Select a version",
-                classes: "govuk-label--m"
-              },
-              attributes: { "data-module": "govuk-accessible-autocomplete" },
-              items: versionItems
-            }) }}
-
-            {{ govukButton({ text: "View version" }) }}
-          </form>
-        {% else %}
-          {{ govukInsetText({ text: "No versions found for this form." }) }}
-        {% endif %}
-      </div>
-    </div>
+          {{ govukButton({ text: "View version" }) }}
+        </form>
+      {% else %}
+        {{ govukInsetText({ text: "No versions found for this form." }) }}
+      {% endif %}
+    {% endcall %}
 
   {% endcall %}
 {% endblock %}
@@ -52,7 +43,7 @@
 {% block mainEnd %}
   {{ super() }}
   <script type="module">
-    import { enhanceVersionSelect } from "{{ getAssetPath("form-inspect-versions.js") }}"
-    document.addEventListener("DOMContentLoaded", enhanceVersionSelect)
+    import { enhanceSelects } from "{{ getAssetPath("form-inspect-versions.js") }}"
+    document.addEventListener("DOMContentLoaded", enhanceSelects)
   </script>
 {% endblock %}

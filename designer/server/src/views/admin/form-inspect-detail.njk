@@ -2,8 +2,7 @@
 
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
-{% from "govuk/components/details/macro.njk" import govukDetails %}
-{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+{% from "admin/macros.njk" import appAdminTabs, appJsonDisplay %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -15,37 +14,19 @@
     backLink: backLink
   }) %}
 
-    <div class="govuk-tabs">
-      <ul class="govuk-tabs__list">
-        {% for tab in tabItems %}
-          <li class="govuk-tabs__list-item{% if tab.active %} govuk-tabs__list-item--selected{% endif %}">
-            <a class="govuk-tabs__tab" href="{{ tab.href }}">{{ tab.label }}</a>
-          </li>
-        {% endfor %}
-      </ul>
-
-      <div class="govuk-tabs__panel">
-        {% if document %}
-          <div class="json-item" data-rootCopyToClip>
-            <div class="action-links-top-right">
-              <a class="govuk-link govuk-link--no-visited-state govuk-visually-hidden" href="#" data-linkCopyToClip>Copy to clipboard</a>
-            </div>
-            <pre class="json-block" data-sourceCopyToClip><code>{{ document | dump(2) }}</code></pre>
-          </div>
-
-          {% if inconsistencies | length %}
-            {% set inconsistencyHtml %}
-              {% for issue in inconsistencies %}
-                {{ govukWarningText({ text: issue, iconFallbackText: "Warning" }) }}
-              {% endfor %}
-            {% endset %}
-            {{ govukDetails({ summaryText: "Data inconsistencies detected", html: inconsistencyHtml }) }}
-          {% endif %}
+    {% call appAdminTabs(tabItems) %}
+      {% if document %}
+        {{ appJsonDisplay(document) }}
+      {% else %}
+        {% if activeTab === 'live' %}
+          {{ govukInsetText({ text: "No live definition exists for this form." }) }}
+        {% elif activeTab === 'draft' %}
+          {{ govukInsetText({ text: "No draft definition exists for this form." }) }}
         {% else %}
-          {{ govukInsetText({ text: noDocumentMessage }) }}
+          {{ govukInsetText({ text: "No data available." }) }}
         {% endif %}
-      </div>
-    </div>
+      {% endif %}
+    {% endcall %}
 
   {% endcall %}
 {% endblock %}
