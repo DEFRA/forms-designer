@@ -72,10 +72,10 @@ export default /** @type {Configuration} */ ({
       import: ['./javascripts/utilities.js']
     },
     'form-inspect-versions': {
-      import: ['./javascripts/form-inspect-versions.js']
+      import: ['./javascripts/accessible-autocomplete-enhance.js']
     },
     'form-inspect-version-diff': {
-      import: ['./javascripts/form-inspect-version-diff.js']
+      import: ['./javascripts/accessible-autocomplete-enhance.js']
     }
   },
   experiments: {
