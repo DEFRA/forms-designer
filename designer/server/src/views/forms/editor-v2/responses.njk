@@ -54,6 +54,11 @@
 
     <form class="form" method="post">
 
+      {% set optionRows = [[{ text: "Form submissions" }, { text: "9 months after submission" }, { html: submissionsButtonHtml }]] %}
+      {% if canRequestFeedback %}
+        {% set optionRows = (optionRows.push([{ text: "User feedback" }, { text: "9 months after submission" }, { html: feedbackButtonHtml }]), optionRows) %}
+      {% endif %}
+
       {% if isFeedbackForm %}
       <p class="govuk-body">You cannot get user feedback from here.
         Go to the 'responses' tab of a specific form to download user feedback.
@@ -67,10 +72,7 @@
             { text: "How long we keep it" },
             { text: "Send to shared mailbox" }
           ],
-          rows: [
-            [{ text: "Form submissions" }, { text: "9 months after submission" }, { html: submissionsButtonHtml }],
-            [{ text: "User feedback" }, { text: "9 months after submission" }, { html: feedbackButtonHtml }]
-          ]
+          rows: optionRows
           })
         }}
       {% endif %}

@@ -110,6 +110,7 @@ export const authSuperAdmin = {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
+      Scopes.FormsFeedbackAllForms,
       Scopes.FormsBackup,
       Scopes.ResetSaveAndExit,
       Scopes.DeadLetterQueues
@@ -135,7 +136,8 @@ export const auth = {
       Scopes.UserCreate,
       Scopes.UserDelete,
       Scopes.UserEdit,
-      Scopes.FormsFeedback
+      Scopes.FormsFeedback,
+      Scopes.FormsFeedbackAllForms
     ]
   })
 }
@@ -154,7 +156,8 @@ export const authFormPublisher = {
       Scopes.FormEdit,
       Scopes.FormRead,
       Scopes.FormDelete,
-      Scopes.FormPublish
+      Scopes.FormPublish,
+      Scopes.FormsFeedback
     ]
   })
 }
@@ -169,7 +172,45 @@ export const authFormCreator = {
   credentials: credentials({
     claims,
     user: user(claims.token, [Roles.FormCreator]),
+    scope: [
+      Scopes.FormEdit,
+      Scopes.FormRead,
+      Scopes.FormDelete,
+      Scopes.FormsFeedback
+    ]
+  })
+}
+
+/**
+ * Request auth with scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authNoFeedback = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claims),
+  credentials: credentials({
+    claims,
+    user: user(claims.token, [Roles.FormCreator]),
     scope: [Scopes.FormEdit, Scopes.FormRead, Scopes.FormDelete]
+  })
+}
+
+/**
+ * Request auth with scopes for Hapi `server.inject()`
+ * @satisfies {ServerInjectOptions['auth']}
+ */
+export const authBackupNoFeedback = {
+  strategy: 'azure-oidc',
+  artifacts: artifacts(claims),
+  credentials: credentials({
+    claims,
+    user: user(claims.token, [Roles.Admin]),
+    scope: [
+      Scopes.FormEdit,
+      Scopes.FormRead,
+      Scopes.FormDelete,
+      Scopes.FormsBackup
+    ]
   })
 }
 

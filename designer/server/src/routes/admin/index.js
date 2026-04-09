@@ -2,12 +2,16 @@ import { performance } from 'node:perf_hooks'
 import { PassThrough } from 'node:stream'
 
 import { Scopes, getErrorMessage } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import Archiver from 'archiver'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
+import {
+  getUserScopes,
+  mapUserForAudit
+} from '~/src/common/helpers/auth/user-helper.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import * as forms from '~/src/lib/forms.js'
 import { getUser } from '~/src/lib/manage.js'
@@ -69,14 +73,14 @@ export default [
         yar.flash(sessionNames.successNotification).at(0)
       )
 
-      const scopes = auth.credentials.scope ?? []
+      const scopes = getUserScopes(auth)
 
       return h.view('admin/index', {
         ...generateTitling(),
         navigation,
         notification,
         supports: {
-          feedback: scopes.includes(Scopes.FormsFeedback),
+          feedback: scopes.includes(Scopes.FormsFeedbackAllForms),
           download: scopes.includes(Scopes.FormsBackup),
           resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
           deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues)
@@ -89,7 +93,7 @@ export default [
         access: {
           entity: 'user',
           scope: [
-            Scopes.FormsFeedback,
+            Scopes.FormsFeedbackAllForms,
             Scopes.FormsBackup,
             Scopes.ResetSaveAndExit,
             Scopes.DeadLetterQueues
@@ -110,11 +114,19 @@ export default [
       const { token } = auth.credentials
       const { action } = payload
 
+      const scopes = getUserScopes(auth)
+
       if (action === 'download') {
+        if (!scopes.includes(Scopes.FormsBackup)) {
+          throw Boom.forbidden('FormsBackup scope required')
+        }
         return downloadAllFormsAsZip(request, h)
       }
 
       // feedback action: Request all forms by omitting the formId
+      if (!scopes.includes(Scopes.FormsFeedbackAllForms)) {
+        throw Boom.forbidden('FormsFeedbackAllForms scope required')
+      }
       await sendFeedbackSubmissionsFile(undefined, token)
 
       const user = mapUserForAudit(auth.credentials.user)
@@ -145,10 +157,7 @@ export default [
         mode: 'required',
         access: {
           entity: 'user',
-          // Since both these scopes are within the superadmin role, we don't need to verify further
-          // However, if these scopes got split into different roles, we should verify the exact scope necessary
-          // for the request user action
-          scope: [Scopes.FormsFeedback, Scopes.FormsBackup]
+          scope: [Scopes.FormsFeedbackAllForms, Scopes.FormsBackup]
         }
       }
     }

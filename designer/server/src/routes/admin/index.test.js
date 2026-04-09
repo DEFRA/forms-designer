@@ -12,7 +12,11 @@ import {
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
-import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
+import {
+  auth,
+  authBackupNoFeedback,
+  authSuperAdmin
+} from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/editor.js')
@@ -129,7 +133,7 @@ describe('System admin routes', () => {
       const options = {
         method: 'get',
         url: '/admin/index',
-        auth
+        auth: authSuperAdmin
       }
 
       const { container } = await renderResponse(server, options)
@@ -160,7 +164,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { invalid: 'true' }
         }
 
@@ -177,7 +181,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'invalid' }
         }
 
@@ -186,6 +190,23 @@ describe('System admin routes', () => {
         } = await renderResponse(server, options)
 
         expect(statusCode).toBe(StatusCodes.BAD_REQUEST)
+      })
+
+      test('should error if invalid permission for feedback', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+        const options = {
+          method: 'post',
+          url: '/admin/index',
+          auth: authBackupNoFeedback,
+          payload: { action: 'feedback' }
+        }
+
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.FORBIDDEN)
       })
 
       test('should handle boom error if boom received from API call', async () => {
@@ -200,7 +221,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'feedback' }
         }
 
@@ -230,7 +251,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'feedback' }
         }
 
@@ -263,7 +284,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -282,7 +303,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -313,7 +334,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -379,7 +400,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -401,6 +422,23 @@ describe('System admin routes', () => {
           1,
           expect.any(Number)
         )
+      })
+
+      test('should error if invalid permission for download', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+
+        const options = {
+          method: 'post',
+          url: '/admin/index',
+          auth,
+          payload: { action: 'download' }
+        }
+
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.FORBIDDEN)
       })
 
       test('should throw error if one of the api calls fails (non 404 error)', async () => {
@@ -431,7 +469,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -471,7 +509,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -513,7 +551,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -542,7 +580,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
@@ -574,7 +612,7 @@ describe('System admin routes', () => {
         const options = {
           method: 'post',
           url: '/admin/index',
-          auth,
+          auth: authSuperAdmin,
           payload: { action: 'download' }
         }
 
