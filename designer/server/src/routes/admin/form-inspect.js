@@ -12,11 +12,13 @@ import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 
-// Use `id` as the primary key for object comparison where available.
-// Falls back to `path` (used on page objects) and then `name` (used on
-// components and lists). This is necessary for backwards compatibility
-// with legacy forms where `id` is optional, and because pages and
-// components share different identifying attributes.
+/**
+ * Use `id` as the primary key for object comparison where available.
+ * Falls back to `path` (used on page objects) and then `name` (used on
+ * components and lists). This is necessary for backwards compatibility
+ * with legacy forms where `id` is optional, and because pages and
+ * components share different identifying attributes.
+ */
 const jdp = create({
   objectHash(obj) {
     if (typeof obj === 'object') {
