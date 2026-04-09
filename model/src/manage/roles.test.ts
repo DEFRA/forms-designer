@@ -11,6 +11,7 @@ describe('Scopes', () => {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
+      Scopes.FormsFeedbackAllForms,
       Scopes.FormsBackup,
       Scopes.ResetSaveAndExit,
       Scopes.DeadLetterQueues
@@ -26,7 +27,8 @@ describe('Scopes', () => {
       Scopes.UserCreate,
       Scopes.UserDelete,
       Scopes.UserEdit,
-      Scopes.FormsFeedback
+      Scopes.FormsFeedback,
+      Scopes.FormsFeedbackAllForms
     ])
   })
 
@@ -41,7 +43,8 @@ describe('Scopes', () => {
       Scopes.UserCreate,
       Scopes.UserDelete,
       Scopes.UserEdit,
-      Scopes.FormsFeedback
+      Scopes.FormsFeedback,
+      Scopes.FormsFeedbackAllForms
     ])
   })
 
@@ -50,7 +53,8 @@ describe('Scopes', () => {
       Scopes.FormDelete,
       Scopes.FormEdit,
       Scopes.FormRead,
-      Scopes.FormPublish
+      Scopes.FormPublish,
+      Scopes.FormsFeedback
     ])
   })
 
@@ -58,7 +62,8 @@ describe('Scopes', () => {
     expect(mapScopesToRoles([Roles.FormCreator])).toEqual([
       Scopes.FormRead,
       Scopes.FormEdit,
-      Scopes.FormDelete
+      Scopes.FormDelete,
+      Scopes.FormsFeedback
     ])
   })
 })

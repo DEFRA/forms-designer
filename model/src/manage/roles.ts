@@ -14,6 +14,7 @@ export enum Scopes {
   UserDelete = 'user-delete',
   UserEdit = 'user-edit',
   FormsFeedback = 'forms-feedback',
+  FormsFeedbackAllForms = 'forms-feedback-all-forms',
   FormsBackup = 'forms-backup',
   ResetSaveAndExit = 'reset-save-and-exit',
   DeadLetterQueues = 'dead-letter-queues'
@@ -29,15 +30,22 @@ export const RoleScopes = {
     Scopes.UserCreate,
     Scopes.UserDelete,
     Scopes.UserEdit,
-    Scopes.FormsFeedback
+    Scopes.FormsFeedback,
+    Scopes.FormsFeedbackAllForms
   ],
   [Roles.FormPublisher]: [
     Scopes.FormDelete,
     Scopes.FormEdit,
     Scopes.FormRead,
-    Scopes.FormPublish
+    Scopes.FormPublish,
+    Scopes.FormsFeedback
   ],
-  [Roles.FormCreator]: [Scopes.FormRead, Scopes.FormEdit, Scopes.FormDelete]
+  [Roles.FormCreator]: [
+    Scopes.FormRead,
+    Scopes.FormEdit,
+    Scopes.FormDelete,
+    Scopes.FormsFeedback
+  ]
 }
 
 export const RoleNames = {
