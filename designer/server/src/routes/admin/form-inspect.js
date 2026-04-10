@@ -287,10 +287,12 @@ export default [
 
         const delta = jdp.diff(definitionA, definitionB)
         // Strip any <script> tags injected by jsondiffpatch to prevent XSS
-        const diffHtml = formatDiffHtml(delta, definitionA).replaceAll(
-          /<script[\s\S]*?<\/script>/g,
-          ''
-        )
+        const diffHtml = delta
+          ? (formatDiffHtml(delta, definitionA) ?? '').replaceAll(
+              /<script[\s\S]*?<\/script>/g,
+              ''
+            )
+          : ''
 
         return h.view(
           'admin/form-inspect-version-diff-detail',

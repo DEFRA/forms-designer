@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 
+import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import {
@@ -470,8 +471,8 @@ describe('Form inspect routes', () => {
   })
 
   describe('GET /admin/form-inspect/{id}/versions/{versionId} (diff)', () => {
-    const definitionA = { name: 'My form', pages: [] }
-    const definitionB = { name: 'My form updated', pages: [] }
+    const definitionA = buildDefinition({ name: 'My form' })
+    const definitionB = buildDefinition({ name: 'My form updated' })
 
     test('renders diff detail page for 1..4 format', async () => {
       jest
@@ -524,30 +525,37 @@ describe('Form inspect routes', () => {
     })
 
     test('objectHash exercises id, path and name branches', async () => {
-      const defA = {
-        name: 'My form',
-        pages: [
-          {
-            path: '/page-1',
-            components: [{ name: 'firstName', type: 'TextField' }]
-          }
-        ],
-        conditions: [{ id: 'cond-1', name: 'Is adult' }],
-        lists: [{ name: 'countries', title: 'Countries', items: [] }],
-        sections: []
-      }
-      const defB = {
-        name: 'My form',
-        pages: [
-          {
-            path: '/page-1',
-            components: [{ name: 'lastName', type: 'TextField' }]
-          }
-        ],
-        conditions: [{ id: 'cond-2', name: 'Is minor' }],
-        lists: [{ name: 'regions', title: 'Regions', items: [] }],
-        sections: []
-      }
+      // Cast to FormDefinition — these are intentionally minimal fixtures
+      // designed to exercise specific objectHash branches (id, path, name),
+      // not fully valid definitions.
+      const defA = /** @type {import('@defra/forms-model').FormDefinition} */ (
+        /** @type {unknown} */ ({
+          name: 'My form',
+          pages: [
+            {
+              path: '/page-1',
+              components: [{ name: 'firstName', type: 'TextField' }]
+            }
+          ],
+          conditions: [{ id: 'cond-1', name: 'Is adult' }],
+          lists: [{ name: 'countries', title: 'Countries', items: [] }],
+          sections: []
+        })
+      )
+      const defB = /** @type {import('@defra/forms-model').FormDefinition} */ (
+        /** @type {unknown} */ ({
+          name: 'My form',
+          pages: [
+            {
+              path: '/page-1',
+              components: [{ name: 'lastName', type: 'TextField' }]
+            }
+          ],
+          conditions: [{ id: 'cond-2', name: 'Is minor' }],
+          lists: [{ name: 'regions', title: 'Regions', items: [] }],
+          sections: []
+        })
+      )
 
       jest
         .mocked(forms.getFormDefinitionVersion)
