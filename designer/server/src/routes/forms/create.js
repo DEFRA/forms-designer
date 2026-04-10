@@ -1,5 +1,6 @@
 import {
   Scopes,
+  UNICODE_EMAIL_ERROR_MESSAGE,
   getErrorMessage,
   organisationSchema,
   slugify,
@@ -41,7 +42,8 @@ export const schema = Joi.object().keys({
   }),
   teamEmail: teamEmailSchema.messages({
     'string.empty': 'Enter a shared team email address',
-    'string.email': 'Enter a shared team email address in the correct format'
+    'string.email': 'Enter a shared team email address in the correct format',
+    'string.unicode': UNICODE_EMAIL_ERROR_MESSAGE
   })
 })
 

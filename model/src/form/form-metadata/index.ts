@@ -1,5 +1,6 @@
 import Joi from 'joi'
 
+import { emailAddressNoUnicodeSchema } from '~/src/form/form-editor/index.js'
 import {
   type FormMetadata,
   type FormMetadataAuthor,
@@ -53,7 +54,7 @@ export const teamNameSchema = Joi.string()
   .required()
   .description('Name of the team responsible for the form')
 
-export const teamEmailSchema = Joi.string()
+export const teamEmailSchema = emailAddressNoUnicodeSchema
   .email({ tlds: { allow: ['uk'] } })
   .trim()
   .required()
@@ -63,9 +64,7 @@ export const phoneSchema = Joi.string()
   .trim()
   .description('Phone number for form-related inquiries')
 
-export const emailAddressSchema = Joi.string()
-  .email()
-  .trim()
+export const emailAddressSchema = emailAddressNoUnicodeSchema
   .required()
   .description('Email address for form-related inquiries')
 
@@ -132,10 +131,10 @@ export const termsAndConditionsAgreedSchema = Joi.boolean().description(
   'Whether the data protection terms and conditions have been agreed to'
 )
 
-export const notificationEmailAddressSchema = Joi.string()
-  .email()
-  .trim()
-  .description('Email address to receive form submission notifications')
+export const notificationEmailAddressSchema =
+  emailAddressNoUnicodeSchema.description(
+    'Email address to receive form submission notifications'
+  )
 
 export const authoredAtSchema = Joi.date()
   .iso()

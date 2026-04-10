@@ -16,6 +16,16 @@ import {
   type GovukFieldUsePostcodeLookup,
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
+import { preventUnicodeInEmail } from '~/src/utils/helpers.js'
+
+export const emailAddressNoUnicodeSchema = Joi.string()
+  .trim()
+  .email()
+  .custom((value, helpers) => preventUnicodeInEmail(value, helpers))
+  .description('Email address preventing unicode characters')
+
+export const UNICODE_EMAIL_ERROR_MESSAGE =
+  'An invalid special character has been detected. Enter an email address in the correct format'
 
 export enum QuestionTypeSubGroup {
   WrittenAnswerSubGroup = 'writtenAnswerSub',

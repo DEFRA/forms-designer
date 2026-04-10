@@ -52,9 +52,9 @@ import {
   type FormUploadedMessageData,
   type FormsBackupRequestedMessageData
 } from '~/src/form/form-audit/types.js'
+import { emailAddressNoUnicodeSchema } from '~/src/form/form-editor/index.js'
 import {
   contactSchema,
-  emailAddressSchema,
   emailResponseTimeSchema,
   idSchema,
   notificationEmailAddressSchema,
@@ -181,7 +181,7 @@ export const formSupportOnlineChanges = Joi.object<FormSupportOnlineChanges>()
 
 export const formSupportEmailChanges = Joi.object<FormSupportEmailChanges>()
   .keys({
-    address: emailAddressSchema.optional(),
+    address: emailAddressNoUnicodeSchema.optional(),
     responseTime: emailResponseTimeSchema.optional()
   })
   .description('Changes schema for FORM_SUPPORT_EMAIL_UPDATED event')
@@ -238,7 +238,7 @@ export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
   {
     userId: Joi.string().required(),
     displayName: Joi.string().required(),
-    email: Joi.string().email().required(),
+    email: emailAddressNoUnicodeSchema.required(),
     roles: Joi.array().items(Joi.string())
   }
 )
@@ -260,7 +260,7 @@ export const excelGenerationMessageData =
     .keys({
       formId: Joi.string().required(),
       formName: Joi.string().required(),
-      notificationEmail: Joi.string().email().required()
+      notificationEmail: emailAddressNoUnicodeSchema.required()
     })
     .required()
     .description(

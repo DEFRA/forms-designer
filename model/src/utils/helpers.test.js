@@ -1,4 +1,8 @@
-import { getErrorMessage, slugify } from '~/src/utils/helpers.js'
+import {
+  getErrorMessage,
+  preventUnicodeInEmail,
+  slugify
+} from '~/src/utils/helpers.js'
 
 describe('Helpers', () => {
   describe('slugify', () => {
@@ -105,6 +109,37 @@ describe('Helpers', () => {
       expect(getErrorMessage(error)).toBe(
         'Error with "quotes" and \'apostrophes\' and symbols: !@#$%'
       )
+    })
+  })
+
+  describe('preventUnicodeInEmail', () => {
+    const mockHelpers = {
+      error: jest.fn()
+    }
+
+    beforeEach(() => {
+      jest.clearAllMocks()
+    })
+
+    it.each([
+      'first.last@domain.co.uk',
+      'first-last@domain.uk',
+      'only@domain.uk'
+    ])('handles a valid emails', (/** @type {string} */ email) => {
+      // @ts-expect-error - partial helper mock
+      expect(preventUnicodeInEmail(email, mockHelpers)).toBe(email)
+      expect(mockHelpers.error).not.toHaveBeenCalled()
+    })
+
+    const enDash = '\u2013'
+    const emDash = '\u2014'
+    it.each([
+      `first${enDash}last@domain.co.uk`,
+      `first${emDash}}last@domain.uk`
+    ])('handles an invalid email', (/** @type {string} */ email) => {
+      // @ts-expect-error - partial helper mock
+      preventUnicodeInEmail(email, mockHelpers)
+      expect(mockHelpers.error).toHaveBeenCalledWith('string.unicode')
     })
   })
 })

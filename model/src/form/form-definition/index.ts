@@ -47,6 +47,7 @@ import {
   type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { emailAddressNoUnicodeSchema } from '~/src/form/form-editor/index.js'
 import { checkErrors } from '~/src/form/form-manager/errors.js'
 import {
   FormDefinitionError,
@@ -1041,13 +1042,7 @@ const feedbackSchema = Joi.object<FormDefinition['feedback']>()
       .description(
         'URL to an external feedback form when not using built-in feedback'
       ),
-    emailAddress: Joi.string()
-      .trim()
-      .email({
-        tlds: {
-          allow: false
-        }
-      })
+    emailAddress: emailAddressNoUnicodeSchema
       .optional()
       .description('Email address where feedback is sent')
   })
@@ -1155,8 +1150,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .optional()
       .description('Phase banner configuration'),
     options: optionsSchema.optional().description('Options for the form'),
-    outputEmail: Joi.string()
-      .trim()
+    outputEmail: emailAddressNoUnicodeSchema
       .email({ tlds: { allow: ['uk'] } })
       .optional()
       .description('Email address where form submissions are sent'),
@@ -1165,8 +1159,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Configuration for submission output format'),
     outputs: Joi.array()
       .items({
-        emailAddress: Joi.string()
-          .trim()
+        emailAddress: emailAddressNoUnicodeSchema
           .email({ tlds: { allow: ['uk'] } })
           .description('Email address where form submissions are sent'),
         audience: Joi.string()
