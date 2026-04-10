@@ -1,0 +1,64 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Adapting a PDF or paper form to a digital form"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            Most things in a paper form are simple to adapt to be easy to fill in on a computer or smartphone, but some things need to be redesigned so that people can complete them easily. This sometimes requires thinking differently about the information you need to collect.   
+          </p>
+        <h2>Tables</h2>
+          <p>
+            Some paper forms have tables in them, for users to fill in. For example, it may have been designed for fishers to record their catches throughout the year, or a farmer to declare how many different animal species, and of what type, they keep.   
+          </p>
+          <p>
+           This makes sense when a user is looking at a paper form, but does not work when viewed on a mobile device. Tables are too wide, and the boxes too small to type into.
+          </p>
+          <p>
+          Instead, design your form to collect the same information over a number of screens in your digital form. Think of each column or row as a separate question.
+          </p>
+          <p>
+          Make a screen for each column or row, so users can still enter the information in a way that makes sense to them.
+          </p>
+          <p>
+          INSERT PIC HERE
+          </p>
+          <p>
+          This example shows how you can ask for how many tonnes of fish are caught in a year, by type of fish. 
+          </p>
+          <p>
+          INSERT PIC HERE
+          </p>
+          <p>
+          This example asks how much cod was caught in a year, with boxes for each month. 
+          </p>
+          <p>
+          Ensure that all the fields are set as optional, as users may not need to put information in every one.  
+          </p>
+        <h2>Signatures</h2>
+          <p>
+            Many paper forms ask users for a signature to confirm that what they are submitting is true, and they accept any terms stated by Defra. The most efficient equivalent of this for a digital form is a declaration box that users can click to confirm they agree with the terms Defra has stated. This is a standard developed by Government Digital Service to cover most requirements for declarations from users in digital forms. 
+          </p>
+          <p>
+            Sometimes it is thought that there is a legal or policy reason that a physical (or ‘wet’) signature is needed. This is usually not the case. Check the legislation related to the form you are creating to see if a wet signature is legally required. On the rare occasion that a wet signature is definitely needed, do not proceed with creating a digital form.  
+          </p>
+          <p>
+            INSERT PIC HERE  
+          </p>   
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
