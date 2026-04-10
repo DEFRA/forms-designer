@@ -223,7 +223,7 @@ export default [
           .slice()
           .sort((a, b) => b.versionNumber - a.versionNumber)
           .map((v) => ({
-            value: String(v.versionNumber),
+            value: v.versionNumber,
             text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toISOString()}`
           }))
       ]
@@ -356,7 +356,7 @@ export default [
           .slice()
           .sort((a, b) => b.versionNumber - a.versionNumber)
           .map((v) => ({
-            value: String(v.versionNumber),
+            value: v.versionNumber,
             text: `Version ${v.versionNumber} — ${new Date(v.createdAt).toISOString()}`
           }))
       ]
