@@ -1,0 +1,41 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Retiring a PDF or paper form"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            Many Defra teams that create a digital form with Defra Forms software are replacing a PDF or paper form that their customers either email or post to them.         
+          </p>
+          <p>
+            Once a digital form is available, the majority of users will likely switch to this method as the most convenient. However, some teams may not have evidence that all users will adopt the new method immediately, or at all. 
+          </p>
+          <p>
+            If it is expected that some forms will still receive a percentage of paper/PDF submissions, keep the existing form available on the GOV.UK guidance page where the digital form is linked. The form should not be updated to match the redesigned digital form, as questions will have been adapted for digital. Teams should wait until sufficient evidence has been collected that a PDF is still needed by some of its users.
+          </p>
+          <p>
+           Teams should monitor how many submissions are made over a fixed period (for example, 6 or 12 months). If the number of non-digital submissions is very low, then teams have evidence to remove the PDF form. If submissions remain at a level the team agrees is significant, there is evidence to maintain the PDF form for another 6-12 months. At this point it should be updated to match the data collected by the digital form.
+          </p>
+          <p>
+            It is a legal requirement to maintain an accessible, non-digital alternative to a digital form on GOV.UK. A PDF form does not qualify as a non-digital alternative as PDFs do not comply with accessibility standards and still require an internet connection to access. <a href="https://www.gov.uk/service-manual/helping-people-to-use-your-service/designing-assisted-digital">Provide an assisted digital route</a> instead. 
+          </p>
+          <p>
+            For further enquiries, contact <a href="mailto:defraforms@defra.gov.uk">defraforms@defra.gov.uk</a>
+          </p>
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Choose the right format for your questions"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <h2>Format questions in a structured way</h2>
+          <p>
+            Think about how answers will be used when designing your question. Make answers easy for people to complete and easy for teams to review. 
+          </p>
+          <p>
+            Avoid long text boxes if you can. Long text is harder to process and can lead to mistakes and spelling errors.  
+          </p>
+          <p>
+            Use clear options instead, like asking users to choose from a list. This creates structured information for Defra teams and makes it easier to automate processing.  
+          </p>
+          <p>
+           Structured answers allow you to <a href="">create conditions</a>, so users only see questions based on answers they have provided 
+          </p>
+          <h2>Questions with a fixed number of answers</h2>
+            <p>
+              If you are asking questions with a fixed number of possible answers, provide lists for people to select from. 
+            </p>
+            <ul>
+              <li>Radios let users choose one answer from a list</li>
+              <li>Checkboxes let users choose multiple answers</li>
+            </ul>
+          <h2>Questions with many possible answers</h2>
+            <p>
+              If you are asking a question where there is a very long list of possible answers (for example, which local authority a business is based in), use an autocomplete. This still provides structured information, but means the list isn’t too long for people to read.
+            </p>
+          <h2>Asking for a location</h2>
+            <p>
+            There are many ways to ask users for a location, such as OS map references, easting and northing, or drawing a place or point on a map. Choose the method that your users will know or can find out easily.
+            </p>
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}

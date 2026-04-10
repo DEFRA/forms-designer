@@ -1,0 +1,33 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Submit for publication"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            The Defra Forms team will publish your form on GOV.UK only when you have done these things.        
+          </p>
+          <ol>
+            <li>Added a privacy notice to the form or a linked to an existing one</li>
+            <li>Agreed to the data protection terms and conditions</li>
+            <li>Finalised guidance pages on GOV.UK</li>
+            <li>Created a form start page (if necessary) </li>
+            <li>Added an alternative contact method</li>
+          </ol>           
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
