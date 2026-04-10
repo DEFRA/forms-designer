@@ -1,0 +1,244 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Create conditions"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+         <h2>Why use a condition</h2>
+          <p>
+            When users fill in an online form, we can use conditions to show questions that are relevant to their specific situation. For example, if a form asks for the type of livestock a farmer keeps on a farm, and the farmer selects ‘cattle’ and ‘sheep’, we can use conditions to only show cattle and sheep related question later in the form.   
+          </p>
+          <p>
+            In a paper-based form such as a PDF or Microsoft Word document, we’d need to show all questions to all users and instruct them to skip to the sections that apply to them. For example, ‘go to section 3 if you keep cattle’.
+          </p>
+          <p>
+            Without conditions, all questions would display to all users. Your form could have 100 questions, but users may only see 20 of them based on how they answer them and the routes they take through the form. 
+          </p>
+        <h2>Defra Forms runner</h2>
+          <p>
+            The Defra Forms runner is software that operates in the background to determine which pages to display to users. It starts on page one and works its way through the pages of the form in sequential order.  
+          </p>
+          <p>
+           If a page does not have a condition applied, the forms runner will display it to all users. 
+          </p>
+          <p>
+          If a page has a condition applied, the forms runner will only display the page to users who meet the condition. 
+          </p>          
+        <h2>Example of how Defra Forms runner works </h2>
+          <p>
+            The example below shows how a basic route in a form works:  
+          </p>
+          <p>
+            If a user confirms they have a reference number on page 1, they’ll see page 2. However, if they do not have a reference number, the forms runner will skip page 2 and display page 3. 
+          </p>
+          <p>
+            <strong>Page 1:</strong> Do you have a reference number? [no condition applied – displayed to all users]   
+          </p>
+          <p>
+            <strong>Page 2:</strong> What’s your reference number? [Only displayed to users who answer ‘yes’ on page 1]    
+          </p>
+          <p>
+            <strong>Page 3:</strong> What is your name? [no condition applied – displayed to all users]    
+          </p>
+          <p>
+            INSERT PIC HERE
+          </p>
+        <h2>How to name a condition</h2>
+          <p>
+            You must give your condition a meaningful name. For example: ‘Site not located in England’ or ‘Yes, has notified EA about field silage on this site’. 
+          </p>
+          <p>
+           Do not use generic names such as ‘Condition 1’ or the number of the page you intend to apply the condition to (as page numbers can change). For example, do not use ‘Condition for page 1’.
+          </p>
+          <p>
+            Think about who will support and maintain your form in the future. You want them to understand what the condition does just by reading the name.
+          </p>
+        <h2>Simple conditions</h2>
+          <p>
+            A simple condition is the answer to one question only.
+          </p>
+        <h3>How to create a simple condition</h3>
+          <p>
+            You can create a simple condition directly within a page using the ‘Manage conditions’ button under the ‘Page conditions’ heading.
+          </p>
+          <p>
+            Creating a new simple condition is split into 3 parts:
+          </p>
+          <ol>
+           <li>Select the page and question from the list.</li>
+           <li>Select a ‘condition type’ – the list will change depending on the type of component you’ve selected. For example, if you’ve got a radio button list, you can select ‘Is’ or ‘Is not’. If you select a question that uses a date component, options include ‘Is before’, ‘Is more than, ‘Is after’.</li>
+           <li>Select what you want the answer to be (Select a value), for example ‘Yes’ or ‘No’.</li>
+          </ol>
+          <p>
+            INSERT PIC HERE
+          </p>
+        <h2>Coordinators</h2>
+          <p>
+           You can use coordinators to create advanced and joined conditions. There are 2 types of coordinator: ‘AND’, ‘OR’.
+          </p>
+        <h3>‘AND’ coordinator</h3>
+          <p>
+           All parts of an ‘AND’ condition must be true. For example, ‘Page 1: Do you live in England’ is ‘Yes’ AND ‘Page 2: Do you have a county parish holding number’ is ‘No’. 
+          </p>
+          <p>
+            In this example, only users who live in England and do not have a county parish holding number will meet the condition. 
+          </p>
+          <p>
+            INSERT PIC HERE
+          </p>
+        <h3>‘OR’ coordinator</h3>
+          <p>
+            Only one question must be true. For example, ‘Page 1: What's the legal status of your business' is 'Charitable trust' OR ‘Page 1: What's the legal status of your business' is 'Charitable incorporated organisation (CIO)'. 
+          </p>
+          <p>
+            In this example, users would see ‘Page 2: what’s your charity number?’ if they select an option from page 1 that indicates they represent a charity.  
+          </p>
+          <p>
+            INSERT PIC HERE
+          </p>
+        <h2>Advanced conditions</h2>
+          <p>
+            Advanced conditions use a coordinator to conditionally reveal pages based on: 
+          </p>
+          <ul>
+            <li>between 2 and 30 answers within a form</li>
+            <li>a user selecting more than one response to a question such as from a checkbox list</li>
+          </ul>
+          <p>
+           There are 2 types of coordinator: ‘AND’, ‘OR’ 
+          </p>
+        <h3>How to create an advanced condition</h3>
+          <p>
+            You can only create an advanced condition using the ‘Manage conditions’ button in the form editor. The Defra Forms team refer to this as the ‘conditions manager’.
+          </p>
+          <p>
+            To add a coordinator, use the ‘Add another condition’ button within the condition. 
+          </p>
+          <p>
+            INSERT PIC HERE
+          </p>
+        <h2>Joined conditions</h2>
+          <p>
+            You can join conditions together if you want to mix ‘AND’ and ‘OR’ coordinators. For example: 
+          </p>
+          <p>
+            (‘Page 1’ is ‘ABC’ AND ‘Page 2’ is ‘XYZ’) OR ‘Page 3’ is ‘123’
+          </p>
+          <p>
+           You cannot mix AND’ and ‘OR’ coordinators in an advanced condition. In most cases, an advanced condition will meet your requirements.  
+          </p>
+          <p>
+            You can join up to 15 conditions together. The Defra Forms team recommend joining 2 to 3 conditions together. If you need to join 4 or more conditions, you should contact the Defra Forms team to discuss your requirements. 
+          </p>
+        <h2>Forms with multiple routes</h2>
+          <p>
+            If you have more than one route through your form, the pages within each route must have a condition applied. Pages without conditions are displayed to all users. 
+          </p>
+          <p>
+           For example, if the question at the start of a route is ‘What’s your favourite fruit’ and you want to show a series of questions for ‘apples’, you’d need to apply a condition to all apple questions. The Defra Forms runner will only show the apple related pages to users who select apple as their favourite fruit. The Defra Forms runner will not display the apple pages to users who select other types of fruit. 
+          </p>
+          <p>
+            <a href="">View an example process map Mural board </a>
+          </p>
+        <h3>Simplify your conditions </h3>
+          <p>
+            You do not need to recreate the full journey in the condition that leads up to that point in the form. The following example shows how the process map in the Mural board works: 
+          </p>
+          <p>
+           <strong>Page 1:</strong> What's your favourite fruit? [No condition applied to this page – it’s displayed to all users]
+          </p>
+          <ul>
+            <li>Apple</li>
+            <li>Orange</li>
+            <li>Grapes</li>
+          </ul>
+          <p>
+           <strong>Page 2:</strong> Do you prefer green apples or red apples? [Condition: ‘Is apples’ applied to this page – it’s displayed to user who select ‘apples’ from page 1] 
+          </p>
+          <ul>
+            <li>Green apples</li>
+            <li>Red apples</li>
+          </ul>
+          <p>
+           <strong>Page 3:</strong> How many red apples do you eat each week? [Condition: ‘Red apples’ applied to this page – it’s displayed to user who select ‘Red apples’ from page 2] 
+          </p>
+        <h3>Simplify your conditions: example explanation</h3>
+          <p>
+           The condition to display page 3 only needs to reference page 2 is ‘Red apples’ – this is because we know page 2 is only displayed to users who select ‘Apples’ as their favourite fruit. 
+          </p>
+          <p>
+           The conditions to make these pages work look this this: 
+          </p>
+          <p>
+            <strong>Is apples:</strong> ‘What's your favourite fruit?’ is ‘Apples’
+          </p>
+          <p>
+            <strong>Red apples:</strong> ‘Do you prefer green apples or red apples?’ is ‘Red apples’ 
+          </p>
+          <p>
+            You could create a condition that contains both questions, but in this example, it’s superfluous and adds extra complexity to your form when it’s not needed. 
+          </p>
+          <p>
+            <a href="">View an example process map Mural board </a>
+        <h2>How to structure a form<h2>
+          <p>
+            You cannot return users to an earlier page in the form using conditions. For example, if a user is on page 10, you cannot return them to page 5 to answer the question for a second time. 
+          </p>
+          <p>
+            Conditions can skip users past questions they do not need to answer, but they cannot return users to an earlier part of the form based on an answer.  
+          </p>
+          <p>
+            If you need to repeat a question, select the ‘Allow multiple responses to questions on this page’ option instead. You can have more than 1 question on a repeating page (as you cannot repeat groups of pages). 
+          </p>
+        <h3>Unique questions and titles </h3>
+          <p>
+            The URL of every page within a form must be unique. You cannot have duplicate questions if there’s no guidance on the page. For example, you could not have 2 ‘What’s your address’ questions on their own pages. 
+          </p>
+          <p>
+            You can either:
+          </p>
+          <ul>
+            <li>add a unique page title with related guidance </li>
+            <li>make the question unique by adding extra descriptive text to it, for example: ‘What’s your home address?’ or ‘What’s your business address?’ </li>
+          </ul>
+          <p>
+            If you want to include a page in more than one journey, you must position the page in between both routes.  
+          </p>
+        <h3>Selecting questions to create a condition from </h3>
+          <p>
+            When you create a condition, it can only use answers from questions earlier in the form. For example, if you add a condition to page 10, you can only select answers from pages 1 to 9. 
+          </p>
+        <h3>Moving pages with conditions applied </h3>
+          <p>
+           If you move a page after you’ve added a condition to it, you should check the condition still works. It’s possible to move a page before another page that it takes an answer from. This would stop the condition from working correctly. 
+          </p>
+          <p>
+            For example, if page 10 is conditional based on an answer from page 9, and you move page 10 so it becomes page 8, the condition would no longer work. 
+          </p>
+          <p>
+            You can contact the Defra Forms team for help moving pages with conditions. 
+          </p>
+        <h2>Repeating pages</h2>
+          <p>
+            You cannot create conditions from questions located on pages that repeat. For example, if you had a repeating page containing 5 questions and one of them is ‘How many of this species did you find’ – you could not create a condition to reveal another page later in the form based on the answer to the question. 
+          </p>
+          <p>
+            You can contact the Defra Forms team to discuss alternatives to conditions on questions located on a repeating page. 
+          </p> 
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
