@@ -1,5 +1,19 @@
 import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
+import { create } from 'jsondiffpatch'
+import { format as formatDiffHtml } from 'jsondiffpatch/formatters/html'
+
+const jdp = create({
+  objectHash(obj) {
+    if (obj !== null && typeof obj === 'object') {
+      const o = /** @type {Record<string, unknown>} */ (obj)
+      if (o.id !== undefined) return String(o.id)
+      if (typeof o.path === 'string') return o.path
+      if (typeof o.name === 'string') return o.name
+    }
+    return JSON.stringify(obj)
+  }
+})
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -37,11 +51,6 @@ export function buildTabItems(formId, activeTab) {
       active: activeTab === 'metadata'
     },
     {
-      label: 'Versions',
-      href: `${ROUTE_FULL_PATH}/${formId}/versions`,
-      active: activeTab === 'versions'
-    },
-    {
       label: 'Live definition',
       href: `${ROUTE_FULL_PATH}/${formId}/definition/live`,
       active: activeTab === 'live'
@@ -50,6 +59,11 @@ export function buildTabItems(formId, activeTab) {
       label: 'Draft definition',
       href: `${ROUTE_FULL_PATH}/${formId}/definition/draft`,
       active: activeTab === 'draft'
+    },
+    {
+      label: 'Versions',
+      href: `${ROUTE_FULL_PATH}/${formId}/versions`,
+      active: activeTab === 'versions'
     },
     {
       label: 'Version diff',
@@ -227,6 +241,12 @@ export default [
           forms.getFormDefinitionVersion(id, Number(vB), token)
         ])
 
+        const delta = jdp.diff(definitionA, definitionB)
+        const diffHtml = formatDiffHtml(delta, definitionA).replace(
+          /<script[\s\S]*?<\/script>/g,
+          ''
+        )
+
         return h.view('admin/form-inspect-version-diff-detail', {
           pageTitle: `${ADMIN_TOOLS} - form inspect - diff v${vA} → v${vB}`,
           pageHeading: { text: ADMIN_TOOLS },
@@ -239,8 +259,7 @@ export default [
           versionA: vA,
           versionB: vB,
           tabItems: buildTabItems(id, 'version-diff'),
-          definitionA,
-          definitionB
+          diffHtml
         })
       }
 

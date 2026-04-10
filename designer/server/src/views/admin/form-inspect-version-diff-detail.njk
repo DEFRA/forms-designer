@@ -30,29 +30,15 @@
           <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionB }}">View version {{ versionB }}</a>
         </p>
 
-        <div id="version-diff-output" class="json-item">
-          <noscript>
-            <p class="govuk-body">JavaScript is required to render the diff.</p>
-          </noscript>
-        </div>
-
-        <script type="application/json" id="version-diff-a">{{ definitionA | dump | replace("</", "<\\/") | safe }}</script>
-        <script type="application/json" id="version-diff-b">{{ definitionB | dump | replace("</", "<\\/") | safe }}</script>
+        {% if diffHtml %}
+          <div class="json-diff-block jsondiffpatch-unchanged-showing">
+            {{ diffHtml | safe }}
+          </div>
+        {% else %}
+          <p class="govuk-body">No differences between these versions.</p>
+        {% endif %}
       </div>
     </div>
 
   {% endcall %}
-{% endblock %}
-
-{% block mainEnd %}
-  {{ super() }}
-  <script type="module">
-    import { renderVersionDiff } from "{{ getAssetPath("form-inspect-version-diff-detail.js") }}"
-    document.addEventListener("DOMContentLoaded", () => {
-      const container = document.getElementById("version-diff-output")
-      const rawA = document.getElementById("version-diff-a")?.textContent ?? "null"
-      const rawB = document.getElementById("version-diff-b")?.textContent ?? "null"
-      renderVersionDiff(container, JSON.parse(rawA), JSON.parse(rawB))
-    })
-  </script>
 {% endblock %}

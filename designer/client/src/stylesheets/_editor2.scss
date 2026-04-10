@@ -245,47 +245,152 @@
   display: inline-block;
 }
 
-// Version diff
+// Version diff (jsondiffpatch HTML formatter — GOV.UK colour overrides)
 .json-diff-block {
-  margin: 0;
   padding: 10px;
   background-color: govuk-colour("light-grey");
   border: 1px solid #b1b4b6;
-  font-size: 14px;
-  line-height: 1.4;
-}
+  overflow-x: auto;
 
-.diff-line {
-  display: flex;
-  align-items: flex-start;
-}
+  .jsondiffpatch-delta {
+    font-family: monospace;
+    font-size: 14px;
+    line-height: 1.5;
+    margin: 0;
+    padding: 0 0 0 12px;
+    display: block;
+  }
 
-.diff-gutter {
-  flex-shrink: 0;
-  width: 2ch;
-  user-select: none;
-}
+  .jsondiffpatch-delta pre {
+    font-family: inherit;
+    font-size: inherit;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
 
-.diff-text {
-  flex: 1;
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
+  ul.jsondiffpatch-delta,
+  .jsondiffpatch-delta ul {
+    list-style: none;
+    padding: 0 0 0 20px;
+    margin: 0;
+  }
 
-.diff-line--added {
-  background-color: #cff8cf;
-  color: #00703c;
-}
+  // Added
+  .jsondiffpatch-added .jsondiffpatch-property-name,
+  .jsondiffpatch-added .jsondiffpatch-value pre,
+  .jsondiffpatch-modified .jsondiffpatch-right-value pre {
+    background-color: #cff8cf;
+    color: #00703c;
+  }
 
-.diff-line--removed {
-  background-color: #ffd8d8;
-  color: #d4351c;
-}
+  // Removed / deleted
+  .jsondiffpatch-deleted .jsondiffpatch-property-name,
+  .jsondiffpatch-deleted pre,
+  .jsondiffpatch-modified .jsondiffpatch-left-value pre {
+    background-color: #ffd8d8;
+    color: #d4351c;
+    text-decoration: line-through;
+  }
 
-.diff-summary-added {
-  color: #00703c;
-}
+  // Unchanged — always visible (no client-side JS to toggle)
+  .jsondiffpatch-unchanged {
+    color: #505a5f;
+    overflow-y: visible;
+    max-height: none;
+  }
 
-.diff-summary-removed {
-  color: #d4351c;
+  .jsondiffpatch-property-name {
+    display: inline-block;
+    padding-right: 5px;
+    vertical-align: top;
+
+    &::after {
+      content: ": ";
+    }
+  }
+
+  .jsondiffpatch-child-node-type-array > .jsondiffpatch-property-name::after {
+    content: ": [";
+  }
+
+  .jsondiffpatch-child-node-type-array::after {
+    content: "],";
+  }
+
+  .jsondiffpatch-child-node-type-object > .jsondiffpatch-property-name::after {
+    content: ": {";
+  }
+
+  .jsondiffpatch-child-node-type-object::after {
+    content: "},";
+  }
+
+  .jsondiffpatch-value {
+    display: inline-block;
+  }
+
+  .jsondiffpatch-value pre::after {
+    content: ",";
+  }
+
+  li:last-child > .jsondiffpatch-value pre::after,
+  .jsondiffpatch-modified > .jsondiffpatch-left-value pre::after {
+    content: "";
+  }
+
+  .jsondiffpatch-modified .jsondiffpatch-value {
+    display: inline-block;
+  }
+
+  .jsondiffpatch-modified .jsondiffpatch-right-value {
+    margin-left: 5px;
+  }
+
+  // Moved items — source position (where the item used to be)
+  .jsondiffpatch-moved {
+    background-color: #fff7bf;
+
+    .jsondiffpatch-property-name {
+      color: #594d00;
+      text-decoration: line-through;
+      text-decoration-color: #594d00;
+    }
+
+    // Hide the empty placeholder value jsondiffpatch puts here
+    .jsondiffpatch-value {
+      display: none;
+    }
+
+    .jsondiffpatch-moved-destination {
+      color: #594d00;
+      font-style: italic;
+
+      &::before {
+        content: "moved \2192 position ";
+      }
+    }
+
+    // No JS arrows — hide the SVG entirely
+    .jsondiffpatch-arrow {
+      display: none;
+    }
+  }
+
+  // Moved items — destination position (where the item landed)
+  .jsondiffpatch-movedestination {
+    background-color: #d2e2f1;
+
+    .jsondiffpatch-property-name {
+      color: #003078;
+
+      &::after {
+        content: " (moved here)";
+        font-style: italic;
+        font-weight: normal;
+      }
+    }
+  }
 }
