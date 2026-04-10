@@ -121,6 +121,18 @@ describe('Helpers', () => {
       jest.clearAllMocks()
     })
 
+    it('should handle undefined', () => {
+      // @ts-expect-error - partial helper mock
+      preventUnicodeInEmail(undefined, mockHelpers)
+      expect(mockHelpers.error).toHaveBeenCalledWith('string.empty')
+    })
+
+    it('should handle not a string', () => {
+      // @ts-expect-error - partial helper mock
+      preventUnicodeInEmail({ abc: 123 }, mockHelpers)
+      expect(mockHelpers.error).toHaveBeenCalledWith('string.empty')
+    })
+
     it.each([
       'first.last@domain.co.uk',
       'first-last@domain.uk',

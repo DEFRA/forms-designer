@@ -1238,6 +1238,11 @@ export const formDefinitionV2Schema = formDefinitionSchema
   })
   .description('Form definition schema for V2')
 
+export {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS
+} from '~/src/form/form-definition/constants.js'
+
 // Maintain compatibility with legacy named export
 // E.g. `import { Schema } from '@defra/forms-model'`
 export const Schema = formDefinitionSchema

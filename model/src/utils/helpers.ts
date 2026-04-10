@@ -37,7 +37,7 @@ export function preventUnicodeInEmail(
   helpers: CustomHelpers<string>
 ) {
   if (!value || typeof value !== 'string') {
-    return helpers.error('any.required')
+    return helpers.error('string.empty')
   }
   const invalidCharsRegex = /[^a-zA-Z0-9.!#$%&'*+/=?^_`{|}~@-]/
   const invalid = invalidCharsRegex.exec(value)
