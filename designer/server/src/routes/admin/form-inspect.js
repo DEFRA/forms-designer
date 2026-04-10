@@ -23,9 +23,15 @@ const jdp = create({
   objectHash(obj) {
     if (typeof obj === 'object') {
       const o = /** @type {Record<string, unknown>} */ (obj)
-      if (o.id !== undefined) return JSON.stringify(o.id)
-      if (typeof o.path === 'string') return o.path
-      if (typeof o.name === 'string') return o.name
+      if (o.id !== undefined) {
+        return JSON.stringify(o.id)
+      }
+      if (typeof o.path === 'string') {
+        return o.path
+      }
+      if (typeof o.name === 'string') {
+        return o.name
+      }
     }
     return JSON.stringify(obj)
   }
@@ -34,6 +40,9 @@ const jdp = create({
 export const ROUTE_FULL_PATH = '/admin/form-inspect'
 
 const ADMIN_TOOLS = 'Admin tools'
+const BACK_TO_FORM_INSPECT = 'Back to form inspect'
+const FORM_INSPECT_DETAIL = 'admin/form-inspect-detail'
+const TAB_VERSION_DIFF = 'version-diff'
 
 /**
  * Build the common view model for form inspect sub-pages.
@@ -89,7 +98,7 @@ export function buildTabItems(formId, activeTab) {
     {
       label: 'Version diff',
       href: `${ROUTE_FULL_PATH}/${formId}/version-diff`,
-      active: activeTab === 'version-diff'
+      active: activeTab === TAB_VERSION_DIFF
     }
   ]
 }
@@ -159,14 +168,14 @@ export default [
             .code(StatusCodes.SEE_OTHER)
         } catch (err) {
           if (Boom.isBoom(err, StatusCodes.NOT_FOUND)) {
-            const joiError = createJoiError(
+            const slugError = createJoiError(
               'slug',
               `No form found with slug '${slug}'`
             )
             return redirectWithErrors(
               request,
               h,
-              joiError,
+              slugError,
               sessionNames.validationFailure.formInspect
             )
           }
@@ -236,7 +245,7 @@ export default [
             formId: id,
             activeTab: 'versions',
             backLink: {
-              text: 'Back to form inspect',
+              text: BACK_TO_FORM_INSPECT,
               href: ROUTE_FULL_PATH
             }
           },
@@ -278,7 +287,7 @@ export default [
 
         const delta = jdp.diff(definitionA, definitionB)
         // Strip any <script> tags injected by jsondiffpatch to prevent XSS
-        const diffHtml = formatDiffHtml(delta, definitionA).replace(
+        const diffHtml = formatDiffHtml(delta, definitionA).replaceAll(
           /<script[\s\S]*?<\/script>/g,
           ''
         )
@@ -289,7 +298,7 @@ export default [
             {
               pageTitle: `${ADMIN_TOOLS} - form inspect - diff v${vA} → v${vB}`,
               formId: id,
-              activeTab: 'version-diff',
+              activeTab: TAB_VERSION_DIFF,
               backLink: {
                 text: 'Back to version diff',
                 href: `${ROUTE_FULL_PATH}/${id}/version-diff`
@@ -367,9 +376,9 @@ export default [
           {
             pageTitle: `${ADMIN_TOOLS} - form inspect - version diff`,
             formId: id,
-            activeTab: 'version-diff',
+            activeTab: TAB_VERSION_DIFF,
             backLink: {
-              text: 'Back to form inspect',
+              text: BACK_TO_FORM_INSPECT,
               href: ROUTE_FULL_PATH
             }
           },
@@ -406,14 +415,14 @@ export default [
       }
 
       return h.view(
-        'admin/form-inspect-detail',
+        FORM_INSPECT_DETAIL,
         getViewModel(
           {
             pageTitle: `${ADMIN_TOOLS} - form inspect - live definition`,
             formId: id,
             activeTab: 'live',
             backLink: {
-              text: 'Back to form inspect',
+              text: BACK_TO_FORM_INSPECT,
               href: ROUTE_FULL_PATH
             }
           },
@@ -450,14 +459,14 @@ export default [
       }
 
       return h.view(
-        'admin/form-inspect-detail',
+        FORM_INSPECT_DETAIL,
         getViewModel(
           {
             pageTitle: `${ADMIN_TOOLS} - form inspect - draft definition`,
             formId: id,
             activeTab: 'draft',
             backLink: {
-              text: 'Back to form inspect',
+              text: BACK_TO_FORM_INSPECT,
               href: ROUTE_FULL_PATH
             }
           },
@@ -487,14 +496,14 @@ export default [
       const metadata = await forms.getFormById(id, token)
 
       return h.view(
-        'admin/form-inspect-detail',
+        FORM_INSPECT_DETAIL,
         getViewModel(
           {
             pageTitle: `${ADMIN_TOOLS} - form inspect - metadata`,
             formId: id,
             activeTab: 'metadata',
             backLink: {
-              text: 'Back to form inspect',
+              text: BACK_TO_FORM_INSPECT,
               href: ROUTE_FULL_PATH
             }
           },

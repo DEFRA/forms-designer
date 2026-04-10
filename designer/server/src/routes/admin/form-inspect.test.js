@@ -117,6 +117,24 @@ describe('Form inspect routes', () => {
       expect(response.headers.location).toBe('/admin/form-inspect')
     })
 
+    test('rethrows non-404 errors from slug lookup', async () => {
+      jest.mocked(forms.get).mockRejectedValueOnce(
+        Object.assign(new Error('Internal error'), {
+          isBoom: true,
+          output: { statusCode: 500 }
+        })
+      )
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/admin/form-inspect',
+        auth,
+        payload: { type: 'slug', id: '', slug: 'some-slug' }
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR)
+    })
+
     test('redirects back when slug is not found', async () => {
       jest.mocked(forms.get).mockRejectedValueOnce(
         Object.assign(new Error('Not found'), {
@@ -284,6 +302,23 @@ describe('Form inspect routes', () => {
       expect($pre.textContent).toContain('"name": "Test form"')
     })
 
+    test('rethrows non-404 errors from live definition fetch', async () => {
+      jest.mocked(forms.getLiveFormDefinition).mockRejectedValueOnce(
+        Object.assign(new Error('Service unavailable'), {
+          isBoom: true,
+          output: { statusCode: 503 }
+        })
+      )
+
+      const response = await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/live`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SERVICE_UNAVAILABLE)
+    })
+
     test('renders inset message when no live definition exists (404)', async () => {
       jest.mocked(forms.getLiveFormDefinition).mockRejectedValueOnce(
         Object.assign(new Error('Not found'), {
@@ -330,6 +365,23 @@ describe('Form inspect routes', () => {
 
       const $pre = container.getByRole('code')
       expect($pre.textContent).toContain('"name": "Test form"')
+    })
+
+    test('rethrows non-404 errors from draft definition fetch', async () => {
+      jest.mocked(forms.getDraftFormDefinition).mockRejectedValueOnce(
+        Object.assign(new Error('Service unavailable'), {
+          isBoom: true,
+          output: { statusCode: 503 }
+        })
+      )
+
+      const response = await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/definition/draft`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SERVICE_UNAVAILABLE)
     })
 
     test('renders inset message when no draft definition exists (404)', async () => {
@@ -469,6 +521,46 @@ describe('Form inspect routes', () => {
         5,
         auth.credentials.token
       )
+    })
+
+    test('objectHash exercises id, path and name branches', async () => {
+      const defA = {
+        name: 'My form',
+        pages: [
+          {
+            path: '/page-1',
+            components: [{ name: 'firstName', type: 'TextField' }]
+          }
+        ],
+        conditions: [{ id: 'cond-1', name: 'Is adult' }],
+        lists: [{ name: 'countries', title: 'Countries', items: [] }],
+        sections: []
+      }
+      const defB = {
+        name: 'My form',
+        pages: [
+          {
+            path: '/page-1',
+            components: [{ name: 'lastName', type: 'TextField' }]
+          }
+        ],
+        conditions: [{ id: 'cond-2', name: 'Is minor' }],
+        lists: [{ name: 'regions', title: 'Regions', items: [] }],
+        sections: []
+      }
+
+      jest
+        .mocked(forms.getFormDefinitionVersion)
+        .mockResolvedValueOnce(defA)
+        .mockResolvedValueOnce(defB)
+
+      const response = await server.inject({
+        method: 'get',
+        url: `/admin/form-inspect/${testFormId}/versions/1..2`,
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.OK)
     })
 
     test('version-diff tab is active on diff detail page', async () => {
