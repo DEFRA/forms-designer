@@ -71,10 +71,7 @@ export default /** @type {Configuration} */ ({
     utilities: {
       import: ['./javascripts/utilities.js']
     },
-    'form-inspect-versions': {
-      import: ['./javascripts/accessible-autocomplete-enhance.js']
-    },
-    'form-inspect-version-diff': {
+    'accessible-autocomplete-enhance': {
       import: ['./javascripts/accessible-autocomplete-enhance.js']
     }
   },

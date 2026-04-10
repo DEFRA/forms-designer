@@ -43,7 +43,7 @@
 {% block mainEnd %}
   {{ super() }}
   <script type="module">
-    import { enhanceSelects } from "{{ getAssetPath("form-inspect-versions.js") }}"
+    import { enhanceSelects } from "{{ getAssetPath("accessible-autocomplete-enhance.js") }}"
     document.addEventListener("DOMContentLoaded", enhanceSelects)
   </script>
 {% endblock %}
