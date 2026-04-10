@@ -26,7 +26,7 @@ const reactPath = dirname(
 
 const interactiveMapPath = dirname(
   resolvePkg.sync('@defra/interactive-map/package.json', {
-    basedir: rootDir
+    basedir: appDir
   })
 )
 

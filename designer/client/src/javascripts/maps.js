@@ -39,7 +39,7 @@ function onMapReadyFactory(
     features.forEach((feature) => addFeatureToMap(feature, drawPlugin, map))
 
     // Create the list (in readonly mode)
-    listEl.innerHTML = createFeaturesHTML(features, mapId, true)
+    listEl.innerHTML = createFeaturesHTML(features, mapId, false, true)
 
     // Listen to anchor click events to focus features
     listEl.addEventListener(
