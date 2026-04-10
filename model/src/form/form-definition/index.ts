@@ -26,6 +26,10 @@ import {
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
 import {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS
+} from '~/src/form/form-definition/constants.js'
+import {
   isConditionListItemRefValueData,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
@@ -348,9 +352,6 @@ const conditionSchema = Joi.object<ConditionData>()
         'Logical operator connecting this condition with others (AND, OR)'
       )
   })
-
-export const MIN_NUMBER_OF_REPEAT_ITEMS = 1
-export const MAX_NUMBER_OF_REPEAT_ITEMS = 200
 
 export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   .description('Condition definition')

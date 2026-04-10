@@ -5,7 +5,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
   MIN_NUMBER_OF_REPEAT_ITEMS
-} from '~/src/form/form-definition/index.js'
+} from '~/src/form/form-definition/constants.js'
 import {
   type FormEditorInputCheckAnswersSettings,
   type FormEditorInputPage,
