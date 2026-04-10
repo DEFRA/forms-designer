@@ -35,12 +35,12 @@ describe('Dead-letter queues routes', () => {
     test('should render form with radio options with counts', async () => {
       jest
         .mocked(getDeadLetterQueueMessages)
-        .mockResolvedValueOnce({ messages: [] })
+        .mockResolvedValueOnce([])
         // @ts-expect-error - invalid response to throw error
         .mockResolvedValueOnce(undefined)
-        .mockResolvedValueOnce({ messages: [{}, {}] })
-        .mockResolvedValueOnce({ messages: [{}, {}, {}] })
-        .mockResolvedValueOnce({ messages: [{}, {}, {}, {}] })
+        .mockResolvedValueOnce([{}, {}])
+        .mockResolvedValueOnce([{}, {}, {}])
+        .mockResolvedValueOnce([{}, {}, {}, {}])
       const options = {
         method: 'get',
         url: '/admin/dead-letter-queues',
@@ -121,15 +121,13 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should redirect to next screen if valid queue selected and display queue messages', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue({
-        messages: [
-          {
-            MessageId: 'message-id',
-            Body: '{ "field1": "value1" }',
-            ReceiptHandle: 'rec-handle'
-          }
-        ]
-      })
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([
+        {
+          MessageId: 'message-id',
+          Body: '{ "field1": "value1" }',
+          ReceiptHandle: 'rec-handle'
+        }
+      ])
       const options = {
         method: 'post',
         url: '/admin/dead-letter-queues',
@@ -146,15 +144,13 @@ describe('Dead-letter queues routes', () => {
     })
 
     test('should render form with messages and redrive button', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue({
-        messages: [
-          {
-            MessageId: 'message-id',
-            Body: '{ "field1": "value1" }',
-            ReceiptHandle: 'rec-handle'
-          }
-        ]
-      })
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([
+        {
+          MessageId: 'message-id',
+          Body: '{ "field1": "value1" }',
+          ReceiptHandle: 'rec-handle'
+        }
+      ])
 
       const options = {
         method: 'get',

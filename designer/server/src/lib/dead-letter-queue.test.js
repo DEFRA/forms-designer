@@ -57,7 +57,7 @@ describe('dead-letter queue lib functions', () => {
         new URL('http://localhost:3002/admin/deadletter/form-submissions/view'),
         expect.anything()
       )
-      expect(res.messages).toEqual(['message1'])
+      expect(res).toEqual(['message1'])
     })
   })
 

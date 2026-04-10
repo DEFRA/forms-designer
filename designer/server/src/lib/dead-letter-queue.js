@@ -57,7 +57,14 @@ export async function getDeadLetterQueueMessages(dlq, token) {
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
-  return body
+  // Dedupe in case of duplicate messages
+  // Ensure the last occurrence of the same MessageId is used as this will contain the valid ReceiptHandle
+  // (older ReceiptHandles for the same message will not be valid)
+  const uniqueMessages = new Map()
+  for (const message of body.messages) {
+    uniqueMessages.set(message.MessageId, message)
+  }
+  return uniqueMessages.values().toArray()
 }
 
 /**

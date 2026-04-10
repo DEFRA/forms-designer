@@ -88,7 +88,7 @@ export async function getMessageCounts(token) {
   const radioItems = []
   for (const dlq of Object.values(DeadLetterQueues)) {
     try {
-      const { messages } = await getDeadLetterQueueMessages(dlq, token)
+      const messages = await getDeadLetterQueueMessages(dlq, token)
       const countSuffix = messages.length === 1 ? 'message' : 'messages'
       radioItems.push({
         value: dlq,
@@ -217,7 +217,7 @@ export default [
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
-      const { messages } = await getDeadLetterQueueMessages(dlq, token)
+      const messages = await getDeadLetterQueueMessages(dlq, token)
 
       const mappedMessages = dlqMessageMapper(messages)
 
