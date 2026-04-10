@@ -25,7 +25,7 @@ export const emailAddressNoUnicodeSchema = Joi.string()
   .description('Email address preventing unicode characters')
 
 export const UNICODE_EMAIL_ERROR_MESSAGE =
-  'An invalid special character has been detected. Enter an email address in the correct format'
+  'The email address you entered includes invalid characters, for example, long dashes'
 
 export enum QuestionTypeSubGroup {
   WrittenAnswerSubGroup = 'writtenAnswerSub',
