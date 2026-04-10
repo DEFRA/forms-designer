@@ -33,6 +33,19 @@ export const Level2GetStartedMenu = {
 export const Level2MakingAFormMenu = {
   MAKE_SURE_YOU_NEED_A_FORM: 'make-sure-you-need-a-form',
   WHAT_MAKES_A_GOOD_FORM: 'what-makes-a-good-form',
+  GET_THE_RIGHT_PEOPLE_TOGETHER: 'get-the-right-people-together',
+  PLAN_TO_RECEIVE_DIGITAL_SUBMISSIONS: 'plan-to-receive-digital-submissions',
+  ONLY_ASK_FOR_INFORMATION_YOU_NEED: 'only-ask-for-information-you-need',
+  PLAN_YOUR_FORM: 'plan-your-form',
+  ADAPTING_A_PDF_OR_PAPER_FORM: 'adapting-a-pdf-or-paper-form',
+  TAKE_PAYMENTS: 'take-payments',
+  WRITE_A_PRIVACY_NOTICE: 'write-a-privacy-notice',
+  AGREE_TO_THE_DATA_PROTECTION_TERMS_AND_CONDITIONS:
+    'agree-to-the-data-protection-terms-and-conditions',
+  CREATE_GUIDANCE_PAGES_ON_GOVUK: 'create-guidance-pages-on-govuk',
+  HAVE_AN_ALTERNATIVE_CONTACT_METHOD: 'have-an-alternative-contact-method',
+  SHARE_A_DRAFT_WITH_OTHERS: 'share-a-draft-with-others',
+  GET_A_PEER_REVIEW: 'get-a-peer-review'
 }
 
 /**

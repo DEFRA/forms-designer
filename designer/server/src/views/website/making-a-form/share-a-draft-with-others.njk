@@ -1,0 +1,41 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Share a draft with others"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">  
+          <p>
+            You can share a draft form with others by sharing a preview link. Draft forms can be completed and submitted, but no data is stored. Go to the form overview page and get a preview link.      
+          </p>
+          <p>
+            If you can, share a draft with real users of the form to get feedback. You can also share with stakeholders or policy teams to get their views. 
+          </p>
+          <p>
+            We recommend checking:
+          </p>
+          <ul>
+            <li>error messages make sense in real life </li>
+            <li>submission emails go to the correct shared mailbox </li>
+            <li>contact information like phone numbers and email addresses are correct</li>
+            <li>formatting of the ‘check your answers page’</li>
+          </ul>
+          <p>
+            You will need to share a draft link with the Defra Forms team when you are ready. 
+          </p>              
+</div>
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
