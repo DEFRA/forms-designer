@@ -1,3 +1,4 @@
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
@@ -304,12 +305,9 @@ describe('Form inspect routes', () => {
     })
 
     test('rethrows non-404 errors from live definition fetch', async () => {
-      jest.mocked(forms.getLiveFormDefinition).mockRejectedValueOnce(
-        Object.assign(new Error('Service unavailable'), {
-          isBoom: true,
-          output: { statusCode: 503 }
-        })
-      )
+      jest
+        .mocked(forms.getLiveFormDefinition)
+        .mockRejectedValueOnce(Boom.serverUnavailable('Service unavailable'))
 
       const response = await server.inject({
         method: 'get',
@@ -369,12 +367,9 @@ describe('Form inspect routes', () => {
     })
 
     test('rethrows non-404 errors from draft definition fetch', async () => {
-      jest.mocked(forms.getDraftFormDefinition).mockRejectedValueOnce(
-        Object.assign(new Error('Service unavailable'), {
-          isBoom: true,
-          output: { statusCode: 503 }
-        })
-      )
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockRejectedValueOnce(Boom.serverUnavailable('Service unavailable'))
 
       const response = await server.inject({
         method: 'get',
