@@ -257,6 +257,11 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.string().required()
+        })
       }
     }
   }),
@@ -272,8 +277,9 @@ export default [
       const { token } = auth.credentials
       const { id, versionId } = params
 
-      if (versionId.includes('..')) {
-        const [vA, vB] = versionId.split('..')
+      const comparisonMatch = /^(\d+)\.\.(\d+)$/.exec(versionId)
+      if (comparisonMatch) {
+        const [, vA, vB] = comparisonMatch
         const definitionA = await forms.getFormDefinitionVersion(
           id,
           Number(vA),
@@ -337,6 +343,14 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.string().required(),
+          versionId: Joi.string()
+            .pattern(/^\d+(\.\.\d+)?$/)
+            .required()
+        })
       }
     }
   }),
@@ -392,6 +406,11 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.string().required()
+        })
       }
     }
   }),
@@ -436,6 +455,11 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.string().required()
+        })
       }
     }
   }),
@@ -480,6 +504,11 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.string().required()
+        })
       }
     }
   }),
@@ -517,6 +546,11 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] }
+      },
+      validate: {
+        params: Joi.object({
+          id: Joi.string().required()
+        })
       }
     }
   })
