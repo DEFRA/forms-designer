@@ -151,8 +151,8 @@ export default [
       const { auth, payload } = request
       const { token } = auth.credentials
       const type = payload.type
-      const id = payload.id.trim()
-      const slug = payload.slug.trim()
+      const id = payload.id
+      const slug = payload.slug
 
       if (type === 'id' && id) {
         return h
@@ -199,8 +199,8 @@ export default [
       validate: {
         payload: Joi.object({
           type: Joi.string().allow('').default(''),
-          id: Joi.string().allow('').default(''),
-          slug: Joi.string().allow('').default('')
+          id: Joi.string().trim().allow('').default(''),
+          slug: Joi.string().trim().allow('').default('')
         })
       }
     }
