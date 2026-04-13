@@ -43,6 +43,7 @@ const ADMIN_TOOLS = 'Admin tools'
 const BACK_TO_FORM_INSPECT = 'Back to form inspect'
 const FORM_INSPECT_DETAIL = 'admin/form-inspect-detail'
 const TAB_VERSION_DIFF = 'version-diff'
+const VERSION_ID_PATTERN = /^\d+(\.\.\d+)?$/
 
 /**
  * Build the common view model for form inspect sub-pages.
@@ -277,9 +278,8 @@ export default [
       const { token } = auth.credentials
       const { id, versionId } = params
 
-      const comparisonMatch = /^(\d+)\.\.(\d+)$/.exec(versionId)
-      if (comparisonMatch) {
-        const [, vA, vB] = comparisonMatch
+      if (versionId.includes('..')) {
+        const [vA, vB] = versionId.split('..')
         const definitionA = await forms.getFormDefinitionVersion(
           id,
           Number(vA),
@@ -347,9 +347,7 @@ export default [
       validate: {
         params: Joi.object({
           id: Joi.string().required(),
-          versionId: Joi.string()
-            .pattern(/^\d+(\.\.\d+)?$/)
-            .required()
+          versionId: Joi.string().pattern(VERSION_ID_PATTERN).required()
         })
       }
     }
