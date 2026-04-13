@@ -1,0 +1,42 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/inset-text/macro.njk" import govukInsetText %}
+{% from "admin/macros.njk" import appAdminTabs, appJsonDisplay %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    {% call appAdminTabs(tabItems) %}
+      {% if document %}
+        {{ appJsonDisplay(document) }}
+      {% else %}
+        {% if activeTab === 'live' %}
+          {{ govukInsetText({ text: "No live definition exists for this form." }) }}
+        {% elif activeTab === 'draft' %}
+          {{ govukInsetText({ text: "No draft definition exists for this form." }) }}
+        {% else %}
+          {{ govukInsetText({ text: "No data available." }) }}
+        {% endif %}
+      {% endif %}
+    {% endcall %}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+  <script type="module">
+    import { initialiseAllCopyLinks } from "{{ getAssetPath("utilities.js") }}"
+    document.addEventListener("DOMContentLoaded", () => {
+      initialiseAllCopyLinks()
+    })
+  </script>
+{% endblock %}

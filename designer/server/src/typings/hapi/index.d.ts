@@ -192,6 +192,11 @@ declare module '@hapi/yar' {
     [sessionNames.validationFailure.deadLetterQueues]: ValidationFailure<{
       dlq: string
     }>
+    [sessionNames.validationFailure.formInspect]: ValidationFailure<{
+      type: string
+      id: string
+      slug: string
+    }>
   }
 
   interface YarValues {

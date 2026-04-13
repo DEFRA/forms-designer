@@ -48,7 +48,8 @@ export const projectDefaults = {
       'slug', // Supports ESM only,
       '@defra/hapi-tracing', // Supports ESM only
       '@defra/forms-engine-plugin',
-      '@defra/forms-model'
+      '@defra/forms-model',
+      'jsondiffpatch' // Supports ESM only
     ].join('|')}/)`
   ]
 }

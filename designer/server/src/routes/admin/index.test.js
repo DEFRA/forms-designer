@@ -150,6 +150,8 @@ describe('System admin routes', () => {
       expect($links[7]).toHaveTextContent('Admin tools')
       expect($links[8]).toHaveTextContent('Support')
       expect($links[10]).toHaveTextContent('Reset save and exit')
+      expect($links[11]).toHaveTextContent('Dead-letter queues')
+      expect($links[12]).toHaveTextContent('Form inspect')
 
       const $feedbackLinks = container.getAllByRole('button')
       expect($feedbackLinks[2]).toHaveTextContent('Send feedback data')

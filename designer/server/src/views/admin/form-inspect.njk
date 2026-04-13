@@ -1,0 +1,85 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% set idInputHtml %}
+  {{ govukInput({
+    id: "id",
+    name: "id",
+    label: { text: "Form ID" },
+    classes: "govuk-input--width-20",
+    value: formValues.id if formValues else "",
+    errorMessage: { text: formErrors.id.text } if formErrors and formErrors.id
+  }) }}
+{% endset %}
+
+{% set slugInputHtml %}
+  {{ govukInput({
+    id: "slug",
+    name: "slug",
+    label: { text: "Form slug" },
+    classes: "govuk-input--width-20",
+    value: formValues.slug if formValues else "",
+    errorMessage: { text: formErrors.slug.text } if formErrors and formErrors.slug
+  }) }}
+{% endset %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink
+  }) %}
+
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds-from-desktop">
+        {% if errorList | length %}
+          {{ govukErrorSummary({
+            titleText: "There is a problem",
+            errorList: errorList,
+            classes: "govuk-!-margin-top-2 govuk-!-margin-bottom-4"
+          }) }}
+        {% endif %}
+      </div>
+    </div>
+
+    <form class="form" method="post" novalidate>
+      {{ govukRadios({
+        name: "type",
+        fieldset: {
+          legend: {
+            text: "How do you want to look up the form?",
+            classes: "govuk-fieldset__legend--m"
+          }
+        },
+        value: formValues.type if formValues else "",
+        items: [
+          {
+            value: "id",
+            text: "Form ID",
+            conditional: { html: idInputHtml }
+          },
+          {
+            value: "slug",
+            text: "Form slug",
+            conditional: { html: slugInputHtml }
+          }
+        ]
+      }) }}
+
+      {{ govukButton({ text: "Look up form", preventDoubleClick: true }) }}
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

@@ -1,0 +1,35 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "admin/macros.njk" import appAdminTabs %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    {% call appAdminTabs(tabItems) %}
+      <h2 class="govuk-heading-m">Version {{ versionA }} &rarr; Version {{ versionB }}</h2>
+
+      <p class="govuk-body">
+        <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionA }}">View version {{ versionA }}</a>
+        &nbsp;&middot;&nbsp;
+        <a class="govuk-link" href="/admin/form-inspect/{{ formId }}/versions/{{ versionB }}">View version {{ versionB }}</a>
+      </p>
+
+      {% if diffHtml %}
+        <div class="json-diff-block jsondiffpatch-unchanged-showing">
+          {{ diffHtml | safe }}
+        </div>
+      {% else %}
+        <p class="govuk-body">No differences between these versions.</p>
+      {% endif %}
+    {% endcall %}
+
+  {% endcall %}
+{% endblock %}

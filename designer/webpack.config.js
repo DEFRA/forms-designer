@@ -70,6 +70,9 @@ export default /** @type {Configuration} */ ({
     },
     utilities: {
       import: ['./javascripts/utilities.js']
+    },
+    'accessible-autocomplete-enhance': {
+      import: ['./javascripts/accessible-autocomplete-enhance.js']
     }
   },
   experiments: {

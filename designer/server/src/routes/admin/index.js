@@ -20,6 +20,7 @@ import {
   publishPlatformCsatExcelRequestedEvent
 } from '~/src/messaging/publish.js'
 import adminDeadLetterQueuesRoutes from '~/src/routes/admin/dead-letter-queues.js'
+import adminFormInspectRoutes from '~/src/routes/admin/form-inspect.js'
 import adminResetSaveAndExitRoutes from '~/src/routes/admin/reset-save-and-exit.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
@@ -83,7 +84,8 @@ export default [
           feedback: scopes.includes(Scopes.FormsFeedbackAllForms),
           download: scopes.includes(Scopes.FormsBackup),
           resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
-          deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues)
+          deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues),
+          formInspect: scopes.includes(Scopes.FormsInspect)
         }
       })
     },
@@ -96,7 +98,8 @@ export default [
             Scopes.FormsFeedbackAllForms,
             Scopes.FormsBackup,
             Scopes.ResetSaveAndExit,
-            Scopes.DeadLetterQueues
+            Scopes.DeadLetterQueues,
+            Scopes.FormsInspect
           ]
         }
       }
@@ -165,7 +168,9 @@ export default [
 
   ...adminResetSaveAndExitRoutes,
 
-  ...adminDeadLetterQueuesRoutes
+  ...adminDeadLetterQueuesRoutes,
+
+  ...adminFormInspectRoutes
 ]
 
 /**

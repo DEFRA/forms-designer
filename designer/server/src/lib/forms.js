@@ -143,6 +143,37 @@ export async function getFormDefinitionVersion(id, versionNumber, token) {
 }
 
 /**
+ * Get form metadata by ID
+ * @param {string} id
+ * @param {string} token
+ * @returns {Promise<FormMetadata>}
+ */
+export async function getFormById(id, token) {
+  const getJsonByType = /** @type {typeof getJson<FormMetadata>} */ (getJson)
+
+  const requestUrl = new URL(`./${id}`, formsEndpoint)
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body
+}
+
+/**
+ * List all versions for a form
+ * @param {string} id
+ * @param {string} token
+ * @returns {Promise<FormVersionMetadata[]>}
+ */
+export async function listFormVersions(id, token) {
+  const getJsonByType =
+    /** @type {typeof getJson<{ versions: FormVersionMetadata[] }>} */ (getJson)
+
+  const requestUrl = new URL(`./${id}/versions`, formsEndpoint)
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body.versions
+}
+
+/**
  * Update draft form definition
  * @param {string} id
  * @param {FormDefinition} definition - form definition
@@ -271,5 +302,5 @@ export async function listAll(token, options = {}) {
 }
 
 /**
- * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, QueryOptions, QueryResult } from '@defra/forms-model'
+ * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, FormVersionMetadata, QueryOptions, QueryResult } from '@defra/forms-model'
  */
