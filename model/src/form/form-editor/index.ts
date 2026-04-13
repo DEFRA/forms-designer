@@ -16,7 +16,7 @@ import {
   type GovukFieldUsePostcodeLookup,
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
-import { preventUnicodeInEmail } from '~/src/utils/helpers.js'
+import { preventUnicodeInEmail } from '~/src/index.js'
 
 export const emailAddressNoUnicodeSchema = Joi.string()
   .trim()
