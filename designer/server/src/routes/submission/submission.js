@@ -1,4 +1,4 @@
-import { Scopes, getPageFromDefinition, hasRepeater } from '@defra/forms-model'
+import { getPageFromDefinition, hasRepeater } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import Joi from 'joi'
 
@@ -68,10 +68,9 @@ export default [
     },
     options: {
       auth: {
-        mode: 'required',
         access: {
           entity: 'user',
-          scope: [`+${Scopes.FormRead}`]
+          scope: false
         }
       },
       validate: {

@@ -15,6 +15,16 @@
 }) %}
   <form class="form" method="post" id="question-form">
 
+  {% if questionType == 'GeospatialField' %}
+    <h3 class="govuk-heading-m">Using maps in your form</h3>
+    <p class="govuk-body">
+      We recommend using the <a class="govuk-link govuk-link--no-visited-state" target="_blank" href="https://forms.defra.gov.uk/library/geospatial-pattern">map question pattern (opens in a new tab)</a> when asking users to select or draw locations on a map.
+    </p>
+    <p class="govuk-body">
+      This pattern provides alternatives so users who cannot use maps are not excluded.
+    </p>
+  {% endif %}
+
   {%- include "../../../../views/forms/editor-v2/partials/question-details-base.njk" -%}
 
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
