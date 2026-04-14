@@ -1,15 +1,10 @@
 import Joi from 'joi'
 
 import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
-import { websiteAboutModel } from '~/src/models/website/about.js'
-import { websiteMakingAFormModel } from '~/src/models/website/making-a-form.js'
 import { websiteFeaturesModel } from '~/src/models/website/features.js'
-import { websiteServicesModel } from '~/src/models/website/services.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
-import { websiteWhatsNewModel } from '~/src/models/website/whats-new.js'
 import {
-  Level2GetStartedMenu,
   Level2MakingAFormMenu,
   Level2ResourcesMenu,
   WebsiteLevel1Routes
@@ -21,24 +16,16 @@ import content from '~/src/routes/website/content.js'
  */
 export const pageNavigationBase = [
   {
-    param: WebsiteLevel1Routes.SERVICES,
-    text: 'Services'
-  },
-  {
-    param: WebsiteLevel1Routes.ABOUT,
-    text: 'About'
-  },
-   {
-    param: WebsiteLevel1Routes.MAKING_A_FORM,
-    text: 'Making a form'
-  },
-  {
-    param: WebsiteLevel1Routes.GET_STARTED,
-    text: 'Get started'
+    param: WebsiteLevel1Routes.HOME,
+    text: 'Home'
   },
   {
     param: WebsiteLevel1Routes.FEATURES,
     text: 'Features'
+  },
+  {
+    param: WebsiteLevel1Routes.MAKING_A_FORM,
+    text: 'Making a form'
   },
   {
     param: WebsiteLevel1Routes.RESOURCES,
@@ -50,80 +37,82 @@ export const pageNavigationBase = [
   }
 ]
 
-const [_, ...pageNavigationGuestBase] = pageNavigationBase
+// const [_, ...pageNavigationGuestBase] = pageNavigationBase
 
-export const pageNavigationGuest = [
-  {
-    param: '',
-    text: 'Services'
-  },
-  ...pageNavigationGuestBase
-]
+// export const pageNavigationGuest = [
+//   {
+//     param: '',
+//     text: 'Services'
+//   },
+//   ...pageNavigationGuestBase
+// ]
+
+export const pageNavigationGuest = pageNavigationBase
 
 export default /** @satisfies {ServerRoute[]} */ ([
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.SERVICES}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
+  // {
+  //   method: 'GET',
+  //   path: `/${WebsiteLevel1Routes.SERVICES}`,
+  //   handler(request, h) {
+  //     const isGuest = !hasAuthenticated(request.auth.credentials)
 
-      if (isGuest) {
-        return h.redirect('/')
-      }
+  //     if (isGuest) {
+  //       return h.redirect('/')
+  //     }
 
-      const servicesModel = websiteServicesModel(isGuest)
-      return h.view('website/index', servicesModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
+  //     const servicesModel = websiteServicesModel(isGuest)
+  //     return h.view('website/index', servicesModel)
+  //   },
+  //   options: {
+  //     auth: {
+  //       mode: 'try'
+  //     }
+  //   }
+  // },
+  // {
+  //   method: 'GET',
+  //   path: `/${WebsiteLevel1Routes.WHATS_NEW}`,
+  //   handler(request, h) {
+  //     const isGuest = !hasAuthenticated(request.auth.credentials)
+  //     const whatsNewModel = websiteWhatsNewModel(isGuest)
+  //     return h.view('website/whats-new', whatsNewModel)
+  //   },
+  //   options: {
+  //     auth: {
+  //       mode: 'try'
+  //     }
+  //   }
+  // },
+
+  // {
+  //   method: 'GET',
+  //   path: `/${WebsiteLevel1Routes.MAKING_A_FORM}`,
+  //   handler(request, h) {
+  //     const isGuest = !hasAuthenticated(request.auth.credentials)
+  //     const makingAFormModel = websiteMakingAFormModel(isGuest)
+  //     return h.view('website/making-a-form', makingAFormModel)
+  //   },
+  //   options: {
+  //     auth: {
+  //       mode: 'try'
+  //     }
+  //   }
+  // },
   {
     method: 'GET',
-    path: `/${WebsiteLevel1Routes.WHATS_NEW}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const whatsNewModel = websiteWhatsNewModel(isGuest)
-      return h.view('website/whats-new', whatsNewModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const makingAFormModel = websiteMakingAFormModel(isGuest)
-      return h.view('website/making-a-form', makingAFormModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-    {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu}`,
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu?}`,
     handler(request, h) {
       const { params } = request
-      const { subMenu } = params
+      const { subMenu = 'index' } = params
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      // const aboutModel = websiteSubmenuModel(
-      //   WebsiteLevel1Routes.MAKING_A_FORM,
-      //   subMenu,
-      //   content.makingAForm.menus,
-      //   'Getting started guide',
-      //   isGuest
-      // )
-      return h.view(`website/making-a-form/${subMenu}`)
+      const model = websiteSubmenuModel(
+        WebsiteLevel1Routes.MAKING_A_FORM,
+        subMenu,
+        content.makingAForm.menus,
+        'Making a form',
+        isGuest
+      )
+      return h.view(`website/making-a-form/${subMenu}`, model)
     },
     options: {
       auth: {
@@ -136,53 +125,53 @@ export default /** @satisfies {ServerRoute[]} */ ([
       }
     }
   },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.GET_STARTED}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.GET_STARTED,
-        Level2GetStartedMenu.GET_ACCESS,
-        content.getStarted.menus,
-        'Getting started guide',
-        isGuest
-      )
-      return h.view('website/get-started/index', aboutModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.GET_STARTED}/{subMenu}`,
-    handler(request, h) {
-      const { params } = request
-      const { subMenu } = params
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.GET_STARTED,
-        subMenu,
-        content.getStarted.menus,
-        'Getting started guide',
-        isGuest
-      )
-      return h.view(`website/get-started/${subMenu}`, aboutModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      },
-      validate: {
-        params: Joi.object().keys({
-          subMenu: Joi.string().valid(...Object.values(Level2GetStartedMenu))
-        })
-      }
-    }
-  },
+  // {
+  //   method: 'GET',
+  //   path: `/${WebsiteLevel1Routes.GET_STARTED}`,
+  //   handler(request, h) {
+  //     const isGuest = !hasAuthenticated(request.auth.credentials)
+  //     const aboutModel = websiteSubmenuModel(
+  //       WebsiteLevel1Routes.GET_STARTED,
+  //       Level2GetStartedMenu.GET_ACCESS,
+  //       content.getStarted.menus,
+  //       'Getting started guide',
+  //       isGuest
+  //     )
+  //     return h.view('website/get-started/index', aboutModel)
+  //   },
+  //   options: {
+  //     auth: {
+  //       mode: 'try'
+  //     }
+  //   }
+  // },
+  // {
+  //   method: 'GET',
+  //   path: `/${WebsiteLevel1Routes.GET_STARTED}/{subMenu}`,
+  //   handler(request, h) {
+  //     const { params } = request
+  //     const { subMenu } = params
+  //     const isGuest = !hasAuthenticated(request.auth.credentials)
+  //     const aboutModel = websiteSubmenuModel(
+  //       WebsiteLevel1Routes.GET_STARTED,
+  //       subMenu,
+  //       content.getStarted.menus,
+  //       'Getting started guide',
+  //       isGuest
+  //     )
+  //     return h.view(`website/get-started/${subMenu}`, aboutModel)
+  //   },
+  //   options: {
+  //     auth: {
+  //       mode: 'try'
+  //     },
+  //     validate: {
+  //       params: Joi.object().keys({
+  //         subMenu: Joi.string().valid(...Object.values(Level2GetStartedMenu))
+  //       })
+  //     }
+  //   }
+  // },
   {
     method: 'GET',
     path: `/${WebsiteLevel1Routes.RESOURCES}`,
