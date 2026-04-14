@@ -5,15 +5,12 @@
  */
 export const WebsiteLevel1Routes = {
   HOME: '',
-  SERVICES: 'services',
-  WHATS_NEW: 'whats-new',
-  ABOUT: 'about',
-  MAKING_A_FORM: 'making-a-form',
-  GET_STARTED: 'get-started',
   FEATURES: 'features',
+  MAKING_A_FORM: 'making-a-form',
   RESOURCES: 'resources',
   SUPPORT: 'support'
 }
+
 /**
  * Enum for get started menus.
  * @readonly
@@ -25,6 +22,7 @@ export const Level2GetStartedMenu = {
   FORM_SUITABILITY: 'form-suitability-criteria',
   MEASURING_SUCCESS: 'measuring-suitability'
 }
+
 /**
  * Enum for get started menus.
  * @readonly

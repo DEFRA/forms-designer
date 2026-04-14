@@ -1,5 +1,6 @@
 import {
   Level2GetStartedMenu,
+  Level2MakingAFormMenu,
   Level2ResourcesMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
@@ -19,6 +20,29 @@ export default {
       },
       text: 'Confirmation emails now include customer answers and unique reference numbers.'
     }
+  },
+  makingAForm: {
+    mastHead: {
+      heading: 'Create and publish Defra forms on GOV.UK',
+      description: 'Create and publish Defra forms on GOV.UK'
+    },
+    menus: [
+      {
+        text: 'Get started',
+        param: WebsiteLevel1Routes.MAKING_A_FORM,
+        parent: true,
+        children: [
+          {
+            param: Level2MakingAFormMenu.MAKE_SURE_YOU_NEED_A_FORM,
+            text: 'Make sure you need a form'
+          },
+          {
+            param: Level2MakingAFormMenu.ADAPTING_A_PDF_OR_PAPER_FORM,
+            text: 'Adapting a PDF or paper form'
+          }
+        ]
+      }
+    ]
   },
   whatsNew: {
     mastHead: {
