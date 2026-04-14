@@ -1,0 +1,89 @@
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Making a form"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+<div>
+  <div class="govuk-width-container">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <div class="app-prose-scope">
+       <h2>Get started</h2>
+          <p>
+            <a href="/making-a-form/make-sure-you-need-a-form">Make sure you need a form</a>
+          </p>
+          <p>
+            <a href="">View the demo form</a>
+          </p>
+          <p>
+            <a href="">Watch the overview video</a>
+          </p>
+      <h2>Planning and design</h2>
+        <p>
+          <a href="">What makes a good form</a>
+        </p>
+        <p>
+          <a href="">Get the right people together</a>
+        </p>
+        <p>
+          <a href="">Plan to receive digital submissions</a>
+        </p>
+        <p>
+          <a href="">Only ask for information you need</a>
+        </p>
+        <p>
+          <a href="">Make questions easy to answer</a>
+        </p>
+        <p>
+          <a href="">Plan your form</a>
+        </p>
+        <p>
+          <a href="">Adapting a PDF or paper form</a>
+        </p>
+        <p>
+          <a href="">Take payments</a>
+        </p>
+       <h2>Mandatory tasks</h2>
+          <p>
+            <a href="">Write a privacy notice</a>
+          </p>
+          <p>
+            <a href="">Agree to the data protection terms and conditions</a>
+          </p>
+          <p>
+            <a href="">Create guidance pages on GOV.UK</a>
+          </p>
+          <p>
+            <a href="">Have an alternative contact method</a>
+          </p>
+       <h2>Build, test and publish</h2>
+          <p>
+            <a href="">How to make conditions</a>
+          </p>
+          <p>
+            <a href="">Share a draft with others</a>
+          </p>
+          <p>
+            <a href="">Get a peer review</a>
+          </p>
+          <p>
+            <a href="">Submit for publication</a>
+          </p>
+          <p>
+            <a href="">Retiring a PDF or paper form</a>
+          </p>
+</div>
+
+
+      </div>
+    </div>
+</div>
+</div>
+{% endblock %}
