@@ -26,6 +26,10 @@ import {
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
 import {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS
+} from '~/src/form/form-definition/constants.js'
+import {
   isConditionListItemRefValueData,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
@@ -47,6 +51,7 @@ import {
   type RepeatSchema,
   type Section
 } from '~/src/form/form-definition/types.js'
+import { emailAddressNoUnicodeSchema } from '~/src/form/form-editor/index.js'
 import { checkErrors } from '~/src/form/form-manager/errors.js'
 import {
   FormDefinitionError,
@@ -347,9 +352,6 @@ const conditionSchema = Joi.object<ConditionData>()
         'Logical operator connecting this condition with others (AND, OR)'
       )
   })
-
-export const MIN_NUMBER_OF_REPEAT_ITEMS = 1
-export const MAX_NUMBER_OF_REPEAT_ITEMS = 200
 
 export const conditionDataSchemaV2 = Joi.object<ConditionDataV2>()
   .description('Condition definition')
@@ -1041,13 +1043,7 @@ const feedbackSchema = Joi.object<FormDefinition['feedback']>()
       .description(
         'URL to an external feedback form when not using built-in feedback'
       ),
-    emailAddress: Joi.string()
-      .trim()
-      .email({
-        tlds: {
-          allow: false
-        }
-      })
+    emailAddress: emailAddressNoUnicodeSchema
       .optional()
       .description('Email address where feedback is sent')
   })
@@ -1155,8 +1151,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .optional()
       .description('Phase banner configuration'),
     options: optionsSchema.optional().description('Options for the form'),
-    outputEmail: Joi.string()
-      .trim()
+    outputEmail: emailAddressNoUnicodeSchema
       .email({ tlds: { allow: ['uk'] } })
       .optional()
       .description('Email address where form submissions are sent'),
@@ -1165,8 +1160,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Configuration for submission output format'),
     outputs: Joi.array()
       .items({
-        emailAddress: Joi.string()
-          .trim()
+        emailAddress: emailAddressNoUnicodeSchema
           .email({ tlds: { allow: ['uk'] } })
           .description('Email address where form submissions are sent'),
         audience: Joi.string()
@@ -1243,6 +1237,11 @@ export const formDefinitionV2Schema = formDefinitionSchema
       )
   })
   .description('Form definition schema for V2')
+
+export {
+  MAX_NUMBER_OF_REPEAT_ITEMS,
+  MIN_NUMBER_OF_REPEAT_ITEMS
+} from '~/src/form/form-definition/constants.js'
 
 // Maintain compatibility with legacy named export
 // E.g. `import { Schema } from '@defra/forms-model'`

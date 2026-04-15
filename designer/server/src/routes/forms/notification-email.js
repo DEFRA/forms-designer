@@ -1,4 +1,8 @@
-import { Scopes, notificationEmailAddressSchema } from '@defra/forms-model'
+import {
+  Scopes,
+  UNICODE_EMAIL_ERROR_MESSAGE,
+  notificationEmailAddressSchema
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -21,7 +25,8 @@ export const schema = Joi.object().keys({
   notificationEmail: notificationEmailAddressSchema.required().messages({
     'string.empty': EMPTY_MESSAGE,
     'string.email': INCORRECT_FORMAT_MESSAGE,
-    'string.pattern.base': INCORRECT_FORMAT_MESSAGE
+    'string.pattern.base': INCORRECT_FORMAT_MESSAGE,
+    'string.unicode': UNICODE_EMAIL_ERROR_MESSAGE
   })
 })
 

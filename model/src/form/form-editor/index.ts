@@ -5,7 +5,7 @@ import { ComponentType } from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
   MIN_NUMBER_OF_REPEAT_ITEMS
-} from '~/src/form/form-definition/index.js'
+} from '~/src/form/form-definition/constants.js'
 import {
   type FormEditorInputCheckAnswersSettings,
   type FormEditorInputPage,
@@ -16,6 +16,16 @@ import {
   type GovukFieldUsePostcodeLookup,
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
+import { preventUnicodeInEmail } from '~/src/form/utils/prevent-unicode.js'
+
+export const emailAddressNoUnicodeSchema = Joi.string()
+  .trim()
+  .email()
+  .custom((value, helpers) => preventUnicodeInEmail(value, helpers))
+  .description('Email address preventing unicode characters')
+
+export const UNICODE_EMAIL_ERROR_MESSAGE =
+  'The email address you entered includes invalid characters, for example, long dashes'
 
 export enum QuestionTypeSubGroup {
   WrittenAnswerSubGroup = 'writtenAnswerSub',

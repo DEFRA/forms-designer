@@ -1,4 +1,9 @@
-import { Roles, Scopes } from '@defra/forms-model'
+import {
+  Roles,
+  Scopes,
+  UNICODE_EMAIL_ERROR_MESSAGE,
+  emailAddressNoUnicodeSchema
+} from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -15,11 +20,10 @@ import * as userService from '~/src/services/userService.js'
 const errorKey = sessionNames.validationFailure.manageUsers
 
 const addUserSchema = Joi.object({
-  emailAddress: Joi.string()
-    .email()
-    .trim()
+  emailAddress: emailAddressNoUnicodeSchema
     .required()
     .messages({
+      'string.unicode': UNICODE_EMAIL_ERROR_MESSAGE,
       '*': 'Enter an email address in the correct format'
     })
     .description('Email address of user'),

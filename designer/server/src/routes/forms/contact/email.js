@@ -1,6 +1,7 @@
 import {
   Scopes,
-  emailAddressSchema,
+  UNICODE_EMAIL_ERROR_MESSAGE,
+  emailAddressNoUnicodeSchema,
   emailResponseTimeSchema
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
@@ -20,13 +21,14 @@ export const ROUTE_PATH_EDIT_EMAIL_CONTACT =
   '/library/{slug}/edit/contact/email'
 
 export const emailContactSchema = Joi.object().keys({
-  address: emailAddressSchema
+  address: emailAddressNoUnicodeSchema
     .required()
     .when('_delete', { is: true, then: Joi.allow('') })
     .messages({
       'string.empty': 'Enter an email address for dedicated support',
       'string.email':
-        'Enter an email address for dedicated support in the correct format'
+        'Enter an email address for dedicated support in the correct format',
+      'string.unicode': UNICODE_EMAIL_ERROR_MESSAGE
     }),
   responseTime: emailResponseTimeSchema
     .required()
