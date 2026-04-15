@@ -10,7 +10,6 @@ export interface FormHeadlineDetail {
 
 export interface FormHeadlineMetric {
   type: FormMetricType.HeadlineMetric
-  formId: string
   headlineCounts: Record<string, FormHeadlineDetail>
   updatedAt: Date
 }
@@ -29,7 +28,8 @@ export interface FormTimelineMetric {
   type: FormMetricType.TimelineMetric
   formId: string
   formStatus: FormStatus
-  submissionsCount: number
+  metricName: string
+  metricValue: number
   createdAt: Date
 }
 
