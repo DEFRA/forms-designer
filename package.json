@@ -43,7 +43,7 @@
     "@hapi/hoek": "^11.0.7",
     "@types/eslint-plugin-jsx-a11y": "^6.10.1",
     "@types/jest": "^29.5.14",
-    "@types/node": "^22.19.1",
+    "@types/node": "^25.6.0",
     "@types/sortablejs": "^1.15.8",
     "@typescript-eslint/eslint-plugin": "^8.34.0",
     "@typescript-eslint/parser": "^8.27.0",
