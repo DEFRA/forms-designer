@@ -198,7 +198,8 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     hint: '',
     options: {
       amount: 1,
-      description: 'payment desc'
+      description: 'payment desc',
+      conditionalAmounts: []
     }
   } as PaymentFieldComponent,
   {
