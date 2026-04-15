@@ -25,8 +25,8 @@ export interface FormOverviewMetric {
   updatedAt: Date
 }
 
-export interface FormSnapshotMetric {
-  type: FormMetricType.SnapshotMetric
+export interface FormTimelineMetric {
+  type: FormMetricType.TimelineMetric
   formId: string
   formStatus: FormStatus
   submissionsCount: number
@@ -36,4 +36,4 @@ export interface FormSnapshotMetric {
 export type FormMetric =
   | FormHeadlineMetric
   | FormOverviewMetric
-  | FormSnapshotMetric
+  | FormTimelineMetric
