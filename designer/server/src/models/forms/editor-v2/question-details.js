@@ -198,11 +198,7 @@ export function getExtraFields(question, validation) {
   const extraFieldNames = advancedSettingsPerComponentType[question.type]
 
   if (extraFieldNames?.length) {
-    return advancedSettingsFields(
-      extraFieldNames,
-      /** @type {TextFieldComponent} */ (question),
-      validation
-    )
+    return advancedSettingsFields(extraFieldNames, question, validation)
   }
   return /** @type {GovukField[]} */ ([])
 }
@@ -218,7 +214,7 @@ export function getEnhancedFields(question, validation) {
   if (extraFieldNames?.length) {
     return enhancedFields(
       extraFieldNames,
-      /** @type {TextFieldComponent} */ (question),
+      /** @type {TextFieldComponent} */(question),
       validation
     )
   }
@@ -358,16 +354,14 @@ export async function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-  // prettier-ignore
   const { metadata, definition, pageId, questionId } = formCriteria
-  // prettier-ignore
   const details = getDetails(metadata, definition, pageId, questionId, questionType)
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
   )
   const basePageFields = getFieldList(
-    /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
+    /** @type {InputFieldsComponentsDef} */(questionFieldsOverride),
     questionType,
     validation,
     handleAutocomplete(questionFieldsOverride, state, definition)

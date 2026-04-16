@@ -114,24 +114,27 @@ export const QuestionBaseSettings = {
  */
 export const QuestionAdvancedSettings =
   /** @type {Record<string, keyof FormEditorGovukField | 'name'>} */ {
-    Classes: 'classes',
-    Min: 'min',
-    Max: 'max',
-    ExactFiles: 'exactFiles',
-    MinFiles: 'minFiles',
-    MaxFiles: 'maxFiles',
-    MinLength: 'minLength',
-    MaxLength: 'maxLength',
-    MaxFuture: 'maxFuture',
-    MaxPast: 'maxPast',
-    Precision: 'precision',
-    Prefix: 'prefix',
-    Suffix: 'suffix',
-    Regex: 'regex',
-    Rows: 'rows',
-    GiveInstructions: 'giveInstructions',
-    InstructionText: 'instructionText'
-  }
+  Classes: 'classes',
+  Min: 'min',
+  Max: 'max',
+  ExactFiles: 'exactFiles',
+  MinFiles: 'minFiles',
+  MaxFiles: 'maxFiles',
+  MinLength: 'minLength',
+  MaxLength: 'maxLength',
+  MaxFuture: 'maxFuture',
+  MaxPast: 'maxPast',
+  Precision: 'precision',
+  Prefix: 'prefix',
+  Suffix: 'suffix',
+  Regex: 'regex',
+  Rows: 'rows',
+  GiveInstructions: 'giveInstructions',
+  InstructionText: 'instructionText',
+  MinChecks: 'minChecks',
+  MaxChecks: 'maxChecks',
+  ExactChecks: 'exactChecks'
+}
 
 /**
  * @readonly
@@ -139,11 +142,11 @@ export const QuestionAdvancedSettings =
  */
 export const QuestionEnhancedFields =
   /** @type {Record<string, keyof FormEditorGovukField | 'name'>} */ {
-    RadioId: 'radioId',
-    RadioText: 'radioText',
-    RadioHint: 'radioHint',
-    RadioValue: 'radioValue'
-  }
+  RadioId: 'radioId',
+  RadioText: 'radioText',
+  RadioHint: 'radioHint',
+  RadioValue: 'radioValue'
+}
 
 /**
  * @readonly

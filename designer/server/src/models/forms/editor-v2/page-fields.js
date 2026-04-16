@@ -25,7 +25,10 @@ const textFieldQuestions = [
   QuestionAdvancedSettings.Precision,
   QuestionAdvancedSettings.Prefix,
   QuestionAdvancedSettings.Rows,
-  QuestionAdvancedSettings.Suffix
+  QuestionAdvancedSettings.Suffix,
+  QuestionAdvancedSettings.MinChecks,
+  QuestionAdvancedSettings.MaxChecks,
+  QuestionAdvancedSettings.ExactChecks
 ]
 
 const multiLineTextFieldQuestions = [
@@ -47,6 +50,7 @@ const checkBoxFieldQuestions = [
 ]
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]
+
 /**
  * @param {GovukField} field
  */

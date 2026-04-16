@@ -11,6 +11,12 @@ const MIN_LENGTH_ERROR_MESSAGE =
   'Minimum length must be a positive whole number'
 const MAX_LENGTH_ERROR_MESSAGE =
   'Maximum length must be a positive whole number'
+const MIN_CHECKS_ERROR_MESSAGE =
+  'Minimum number of checkboxes must be a whole number greater than or equal to 2'
+const MAX_CHECKS_ERROR_MESSAGE =
+  'Maximum number of checkboxes must be a whole number greater than or equal to 2'
+const EXACT_CHECKS_ERROR_MESSAGE =
+  'Exact number of checkboxes must be a whole number greater than or equal to 2'
 const MAX_PRECISION = 5
 
 /**
@@ -89,6 +95,36 @@ export const allSpecificSchemas = Joi.object().keys({
   }),
   maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
     '*': MAX_LENGTH_ERROR_MESSAGE
+  }),
+  exactChecks: questionDetailsFullSchema.exactChecksSchema
+    .when('minChecks', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'any.unknown': 'Enter an exact amount or choose the minimum and maximum range allowed',
+      '*': EXACT_CHECKS_ERROR_MESSAGE
+    })
+    .when('maxChecks', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'any.unknown': 'Enter an exact amount or choose the minimum and maximum range allowed',
+      '*': EXACT_CHECKS_ERROR_MESSAGE
+    }),
+  minChecks: questionDetailsFullSchema.minChecksSchema.messages({
+    'number.max':
+      'Minimum number of checkboxes cannot be greater than the maximum',
+    '*': MIN_CHECKS_ERROR_MESSAGE
+  }).when('maxChecks', {
+    is: Joi.exist(),
+    then: Joi.number().max(Joi.ref('maxChecks'))
+  }),
+  maxChecks: questionDetailsFullSchema.maxChecksSchema.messages({
+    '*': MAX_CHECKS_ERROR_MESSAGE
   }),
   precision: questionDetailsFullSchema.precisionSchema
     .max(MAX_PRECISION)
