@@ -172,6 +172,40 @@ describe('editor-v2 - question details advanced settings model', () => {
         exactFiles: 3
       })
     })
+
+    test('should add minChecks/maxChecks if checkboxes', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.CheckboxesField,
+        name: '',
+        title: '',
+        options: {},
+        list: 'test',
+        schema: {
+          min: 2,
+          max: 4
+        }
+      })
+      expect(res).toEqual({
+        minChecks: 2,
+        maxChecks: 4
+      })
+    })
+
+    test('should add exactChecks if checkboxes', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.CheckboxesField,
+        name: '',
+        title: '',
+        options: {},
+        list: 'test',
+        schema: {
+          length: 3
+        }
+      })
+      expect(res).toEqual({
+        exactChecks: 3
+      })
+    })
   })
 
   describe('addRegexFieldProperties', () => {
