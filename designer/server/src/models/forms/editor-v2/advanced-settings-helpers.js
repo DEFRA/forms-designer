@@ -128,7 +128,11 @@ export function getAdditionalSchema(payload) {
     {
       key: 'min',
       sources: ['minLength', 'min', 'minFiles', 'minChecks'],
-      getValue: () => payload.minLength ?? payload.min ?? payload.minFiles ?? payload.minChecks,
+      getValue: () =>
+        payload.minLength ??
+        payload.min ??
+        payload.minFiles ??
+        payload.minChecks,
       shouldInclude: () =>
         payload.minLength ??
         isValueOrZero(payload.min) ??
@@ -138,9 +142,16 @@ export function getAdditionalSchema(payload) {
     {
       key: 'max',
       sources: ['maxLength', 'max', 'maxFiles', 'maxChecks'],
-      getValue: () => payload.maxLength ?? payload.max ?? payload.maxFiles ?? payload.maxChecks,
+      getValue: () =>
+        payload.maxLength ??
+        payload.max ??
+        payload.maxFiles ??
+        payload.maxChecks,
       shouldInclude: () =>
-        payload.maxLength ?? isValueOrZero(payload.max) ?? payload.maxFiles ?? isValueOrZero(payload.maxChecks)
+        payload.maxLength ??
+        isValueOrZero(payload.max) ??
+        payload.maxFiles ??
+        isValueOrZero(payload.maxChecks)
     },
     {
       key: 'length',

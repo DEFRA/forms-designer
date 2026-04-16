@@ -214,7 +214,7 @@ export function getEnhancedFields(question, validation) {
   if (extraFieldNames?.length) {
     return enhancedFields(
       extraFieldNames,
-      /** @type {TextFieldComponent} */(question),
+      /** @type {TextFieldComponent} */ (question),
       validation
     )
   }
@@ -355,13 +355,19 @@ export async function questionDetailsViewModel(
 ) {
   const questionType = state?.questionType
   const { metadata, definition, pageId, questionId } = formCriteria
-  const details = getDetails(metadata, definition, pageId, questionId, questionType)
+  const details = getDetails(
+    metadata,
+    definition,
+    pageId,
+    questionId,
+    questionType
+  )
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question
   )
   const basePageFields = getFieldList(
-    /** @type {InputFieldsComponentsDef} */(questionFieldsOverride),
+    /** @type {InputFieldsComponentsDef} */ (questionFieldsOverride),
     questionType,
     validation,
     handleAutocomplete(questionFieldsOverride, state, definition)
