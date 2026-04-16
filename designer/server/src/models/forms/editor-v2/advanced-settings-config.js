@@ -300,7 +300,7 @@ export const allAdvancedSettingsFields =
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: 'The exact number of items users must select'
+        text: 'The exact number of checkboxes a user must select'
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
@@ -312,7 +312,7 @@ export const allAdvancedSettingsFields =
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: 'The minimum number of items users must select'
+        text: 'The minimum number of checkboxes a user can select'
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
@@ -324,7 +324,7 @@ export const allAdvancedSettingsFields =
         classes: GOVUK_LABEL__M
       },
       hint: {
-        text: 'The maximum number of items users can select'
+        text: 'The maximum number of checkboxes a user can select'
       },
       classes: GOVUK_INPUT_WIDTH_3
     }
