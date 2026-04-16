@@ -17,6 +17,8 @@ const MAX_CHECKS_ERROR_MESSAGE =
   'Maximum number of checkboxes must be a whole number greater than or equal to 2'
 const EXACT_CHECKS_ERROR_MESSAGE =
   'Exact number of checkboxes must be a whole number greater than or equal to 2'
+const MINMAX_OR_EXACT_ERROR_MESSAGE =
+  'Enter an exact amount or choose the minimum and maximum range allowed'
 const MAX_PRECISION = 5
 
 /**
@@ -54,7 +56,7 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': EXACT_FILES_ERROR_MESSAGE,
       'number.min': EXACT_FILES_ERROR_MESSAGE,
       'number.max': EXACT_FILES_ERROR_MESSAGE,
-      '*': 'Enter an exact amount or choose the minimum and maximum range allowed'
+      '*': MINMAX_OR_EXACT_ERROR_MESSAGE
     })
     .when('maxFiles', {
       is: Joi.exist(),
@@ -66,7 +68,7 @@ export const allSpecificSchemas = Joi.object().keys({
       'number.integer': EXACT_FILES_ERROR_MESSAGE,
       'number.min': EXACT_FILES_ERROR_MESSAGE,
       'number.max': EXACT_FILES_ERROR_MESSAGE,
-      '*': 'Enter an exact amount or choose the minimum and maximum range allowed'
+      '*': MINMAX_OR_EXACT_ERROR_MESSAGE
     }),
   minFiles: questionDetailsFullSchema.minFilesSchema.when('maxFiles', {
     is: Joi.exist(),
@@ -103,7 +105,7 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'any.unknown': 'Enter an exact amount or choose the minimum and maximum range allowed',
+      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
       '*': EXACT_CHECKS_ERROR_MESSAGE
     })
     .when('maxChecks', {
@@ -112,17 +114,19 @@ export const allSpecificSchemas = Joi.object().keys({
       otherwise: Joi.number().empty('').integer()
     })
     .messages({
-      'any.unknown': 'Enter an exact amount or choose the minimum and maximum range allowed',
+      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
       '*': EXACT_CHECKS_ERROR_MESSAGE
     }),
-  minChecks: questionDetailsFullSchema.minChecksSchema.messages({
-    'number.max':
-      'Minimum number of checkboxes cannot be greater than the maximum',
-    '*': MIN_CHECKS_ERROR_MESSAGE
-  }).when('maxChecks', {
-    is: Joi.exist(),
-    then: Joi.number().max(Joi.ref('maxChecks'))
-  }),
+  minChecks: questionDetailsFullSchema.minChecksSchema
+    .messages({
+      'number.max':
+        'Minimum number of checkboxes cannot be greater than the maximum',
+      '*': MIN_CHECKS_ERROR_MESSAGE
+    })
+    .when('maxChecks', {
+      is: Joi.exist(),
+      then: Joi.number().max(Joi.ref('maxChecks'))
+    }),
   maxChecks: questionDetailsFullSchema.maxChecksSchema.messages({
     '*': MAX_CHECKS_ERROR_MESSAGE
   }),
