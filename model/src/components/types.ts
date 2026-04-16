@@ -260,6 +260,11 @@ export interface PaymentFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     amount: number
     description: string
+    conditionalAmounts?: {
+      condition: string
+      amount: number
+    }[]
+    emailField?: string
   }
 }
 

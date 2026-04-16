@@ -580,10 +580,10 @@ export const componentSchema = Joi.object<ComponentDef>()
       amount: Joi.when('type', {
         is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
         then: Joi.number()
-          .min(0.3)
+          .min(0)
           .max(100000)
           .required()
-          .description('Payment amount in GBP (£0.30 - £100,000)')
+          .description('Payment amount in GBP (£0 - £100,000)')
       }).description('Payment amount - for PaymentField only'),
       description: Joi.when('type', {
         is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
@@ -591,7 +591,35 @@ export const componentSchema = Joi.object<ComponentDef>()
           .max(230)
           .required()
           .description('Payment description (max 230 chars)')
-      }).description('Payment description - for PaymentField only')
+      }).description('Payment description - for PaymentField only'),
+      conditionalAmounts: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
+        then: Joi.array()
+          .items(
+            Joi.object({
+              condition: Joi.string()
+                .trim()
+                .required()
+                .description('Condition ID for this amount'),
+              amount: Joi.number()
+                .min(0.3)
+                .max(100000)
+                .required()
+                .description('Amount in GBP when condition is true (min £0.30)')
+            })
+          )
+          .optional()
+          .description('Conditional payment amounts evaluated in order')
+      }).description('Conditional amounts - for PaymentField only'),
+      emailField: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.PaymentField).required(),
+        then: Joi.string()
+          .trim()
+          .optional()
+          .description(
+            'Name of EmailAddressField to prepopulate GOV.UK Pay email'
+          )
+      }).description('Email field reference - for PaymentField only')
     })
       .default({})
       .unknown(true)
