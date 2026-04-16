@@ -3,6 +3,7 @@ import {
   QuestionTypeSubGroup,
   Scopes,
   dateSubSchema,
+  hasPaymentQuestionInForm,
   listSubSchema,
   locationSubSchema,
   questionTypeSchema,
@@ -26,7 +27,6 @@ import {
 } from '~/src/lib/session-helper.js'
 import {
   getComponentFromDefinition,
-  hasPaymentQuestionInForm,
   requiresPageTitle
 } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-type.js'

@@ -3,7 +3,6 @@ import {
   getYesNoList,
   hasComponents,
   hasListField,
-  includesPaymentField,
   isFormType
 } from '@defra/forms-model'
 import { getTraceId } from '@defra/hapi-tracing'
@@ -293,27 +292,6 @@ export function getFormComponentsCount(page) {
  */
 export function requiresPageTitle(page) {
   return !!page && getFormComponentsCount(page) > 0 && !hasPageTitle(page)
-}
-
-/**
- * Helper function to determine if a payment question already exists in the form
- * @param {FormDefinition} definition - the form definition
- * @returns {boolean}
- */
-export function hasPaymentQuestionInForm(definition) {
-  if (definition.pages.length === 0) {
-    return false
-  }
-
-  for (const page of definition.pages) {
-    const hasPayment = hasComponents(page)
-      ? includesPaymentField(page.components)
-      : false
-    if (hasPayment) {
-      return true
-    }
-  }
-  return false
 }
 
 /**

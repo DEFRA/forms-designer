@@ -135,6 +135,47 @@ export function includesPaymentField(components: ComponentDef[]): boolean {
   )
 }
 
+/**
+ * Helper function to determine if a payment question already exists in the form
+ */
+export function hasPaymentQuestionInForm(definition: FormDefinition) {
+  if (definition.pages.length === 0) {
+    return false
+  }
+
+  for (const page of definition.pages) {
+    const hasPayment = hasComponents(page)
+      ? includesPaymentField(page.components)
+      : false
+    if (hasPayment) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
+ * Helper function to determine if a specific question type exists in the form
+ */
+export function hasSpecificQuestionTypeInForm(
+  definition: FormDefinition,
+  componentType: ComponentType
+) {
+  if (definition.pages.length === 0) {
+    return false
+  }
+
+  for (const page of definition.pages) {
+    const hasPayment = hasComponents(page)
+      ? page.components.some((component) => component.type === componentType)
+      : false
+    if (hasPayment) {
+      return true
+    }
+  }
+  return false
+}
+
 const SHOW_REPEATER_CONTROLLERS = [ControllerType.Page, ControllerType.Repeat]
 
 export function showRepeaterSettings(page: Page): boolean {
@@ -207,6 +248,7 @@ export function replaceCustomControllers(definition: FormDefinition) {
   const standardControllers = new Set(
     Object.values(ControllerType)
       .filter((x) => x !== ControllerType.SummaryWithConfirmationEmail)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
       .map((x) => x.toString())
   )
 
@@ -215,6 +257,7 @@ export function replaceCustomControllers(definition: FormDefinition) {
     pages: definition.pages.map((page) => {
       if (
         !standardControllers.has(
+          // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-conversion
           (page.controller ?? ControllerType.Page).toString()
         )
       ) {
