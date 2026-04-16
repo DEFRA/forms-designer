@@ -171,6 +171,10 @@ jobs:
           append_file_contents "Forms-Designer Logs" "designer.log"
           append_command_output "Docker Containers" docker ps -a
 
+          echo "===CURL START==="
+          curl http://127.0.0.1:5000/SQS >> test-logs.txt
+          echo "===CURL END==="
+
           append_container_logs "forms-manager" "forms-manager"
           append_container_logs "forms-submission-api" "forms-submission-api"
           append_container_logs "forms-notify-listener" "forms-notify-listener"
