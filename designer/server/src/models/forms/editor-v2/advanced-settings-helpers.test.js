@@ -280,6 +280,21 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ length: '3' })
     })
 
+    it('should map minChecks to min', () => {
+      const result = getAdditionalSchema({ minChecks: '2' })
+      expect(result).toEqual({ min: '2' })
+    })
+
+    it('should map maxChecks to max', () => {
+      const result = getAdditionalSchema({ maxChecks: '5' })
+      expect(result).toEqual({ max: '5' })
+    })
+
+    it('should map exactChecks to length', () => {
+      const result = getAdditionalSchema({ exactChecks: '3' })
+      expect(result).toEqual({ length: '3' })
+    })
+
     it('should include regex when provided', () => {
       const result = getAdditionalSchema({ regex: '^[A-Z]{2}[0-9]{4}$' })
       expect(result).toEqual({ regex: '^[A-Z]{2}[0-9]{4}$' })
