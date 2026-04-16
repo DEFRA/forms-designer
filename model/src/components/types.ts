@@ -325,6 +325,11 @@ export interface CheckboxesFieldComponent extends ListFieldBase {
     bold?: boolean
     condition?: string
   }
+  schema?: {
+    max?: number
+    min?: number
+    length?: number
+  }
 }
 
 export interface RadiosFieldComponent extends ListFieldBase {

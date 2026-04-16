@@ -419,6 +419,24 @@ export const paymentApiKeySchema = Joi.string()
   .trim()
   .description('API key for payment configuration')
 
+export const exactChecksSchema = Joi.number()
+  .empty('')
+  .integer()
+  .min(2)
+  .description('Specifies the exact number of items required to be selected.')
+
+export const minChecksSchema = Joi.number()
+  .empty('')
+  .integer()
+  .min(2)
+  .description('Minimum number of items required to be selected.')
+
+export const maxChecksSchema = Joi.number()
+  .empty('')
+  .integer()
+  .min(2)
+  .description('Maximum number of items allowed to be selected.')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -607,7 +625,10 @@ export const questionDetailsFullSchema = {
   shortDescriptionSchema,
   suffixSchema,
   tabularDataTypesSchema,
-  usePostcodeLookupSchema
+  usePostcodeLookupSchema,
+  minChecksSchema,
+  maxChecksSchema,
+  exactChecksSchema
 }
 
 export const formEditorInputPageKeys = {
