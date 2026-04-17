@@ -130,7 +130,10 @@ export const QuestionAdvancedSettings =
     Regex: 'regex',
     Rows: 'rows',
     GiveInstructions: 'giveInstructions',
-    InstructionText: 'instructionText'
+    InstructionText: 'instructionText',
+    MinChecks: 'minChecks',
+    MaxChecks: 'maxChecks',
+    ExactChecks: 'exactChecks'
   }
 
 /**
@@ -179,7 +182,3 @@ export const EnhancedAction = {
   Up: 'up',
   Down: 'down'
 }
-
-/**
- * @import { FormEditorGovukField } from '@defra/forms-model'
- */

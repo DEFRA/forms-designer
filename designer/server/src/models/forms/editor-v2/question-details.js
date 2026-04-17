@@ -198,11 +198,7 @@ export function getExtraFields(question, validation) {
   const extraFieldNames = advancedSettingsPerComponentType[question.type]
 
   if (extraFieldNames?.length) {
-    return advancedSettingsFields(
-      extraFieldNames,
-      /** @type {TextFieldComponent} */ (question),
-      validation
-    )
+    return advancedSettingsFields(extraFieldNames, question, validation)
   }
   return /** @type {GovukField[]} */ ([])
 }
@@ -358,10 +354,14 @@ export async function questionDetailsViewModel(
   state
 ) {
   const questionType = state?.questionType
-  // prettier-ignore
   const { metadata, definition, pageId, questionId } = formCriteria
-  // prettier-ignore
-  const details = getDetails(metadata, definition, pageId, questionId, questionType)
+  const details = getDetails(
+    metadata,
+    definition,
+    pageId,
+    questionId,
+    questionType
+  )
   const formTitle = metadata.title
   const questionFieldsOverride = /** @type {ComponentDef} */ (
     state?.questionDetails ?? details.question

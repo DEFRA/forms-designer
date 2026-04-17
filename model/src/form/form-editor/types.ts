@@ -271,6 +271,21 @@ export interface FormEditor {
   listItemsData: string
 
   /**
+   * The exact number of items to select
+   */
+  exactChecks: string
+
+  /**
+   * The minimum number of items to select
+   */
+  minChecks: string
+
+  /**
+   * The maximum number of items to select
+   */
+  maxChecks: string
+
+  /**
    * An array of options for autocomplete
    */
   autoCompleteOptions: Item[]
@@ -402,6 +417,9 @@ export type FormEditorInputQuestion = Pick<
   | 'radioValue'
   | 'list'
   | 'listItemsData'
+  | 'exactChecks'
+  | 'minChecks'
+  | 'maxChecks'
   | 'jsEnabled'
   | 'usePostcodeLookup'
   | 'giveInstructions'

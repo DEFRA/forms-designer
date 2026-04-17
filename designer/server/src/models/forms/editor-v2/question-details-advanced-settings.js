@@ -31,7 +31,7 @@ export function addDateFieldProperties(question) {
 }
 
 /**
- * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent } question
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent | CheckboxesFieldComponent } question
  */
 export function addMinMaxFieldProperties(question) {
   if (question.type === ComponentType.FileUploadField) {
@@ -39,6 +39,13 @@ export function addMinMaxFieldProperties(question) {
       exactFiles: question.schema.length,
       minFiles: question.schema.min,
       maxFiles: question.schema.max
+    }
+  }
+  if (question.type === ComponentType.CheckboxesField) {
+    return {
+      exactChecks: question.schema?.length,
+      minChecks: question.schema?.min,
+      maxChecks: question.schema?.max
     }
   }
   return {
@@ -88,7 +95,8 @@ export function mapToQuestionOptions(question) {
     ComponentType.TextField,
     ComponentType.MultilineTextField,
     ComponentType.NumberField,
-    ComponentType.FileUploadField
+    ComponentType.FileUploadField,
+    ComponentType.CheckboxesField
   ])
   const isLocationField = isLocationFieldType(question.type)
 
@@ -236,6 +244,6 @@ export function enhancedFields(options, question, validation) {
  */
 
 /**
- * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

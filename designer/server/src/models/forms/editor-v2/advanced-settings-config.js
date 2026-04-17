@@ -33,7 +33,11 @@ export const advancedSettingsPerComponentType =
     SelectField: [],
     AutocompleteField: [],
     RadiosField: [],
-    CheckboxesField: [],
+    CheckboxesField: [
+      QuestionAdvancedSettings.MinChecks,
+      QuestionAdvancedSettings.MaxChecks,
+      QuestionAdvancedSettings.ExactChecks
+    ],
     NumberField: [
       QuestionAdvancedSettings.Min,
       QuestionAdvancedSettings.Max,
@@ -287,6 +291,42 @@ export const allAdvancedSettingsFields =
       },
       formGroup: { classes: 'govuk-!-margin-top-2' },
       rows: 8
+    },
+    [QuestionAdvancedSettings.ExactChecks]: {
+      name: 'exactChecks',
+      id: 'exactChecks',
+      label: {
+        text: 'Exact items (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The exact number of checkboxes a user must select'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.MinChecks]: {
+      name: 'minChecks',
+      id: 'minChecks',
+      label: {
+        text: 'Minimum items (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The minimum number of checkboxes a user can select'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.MaxChecks]: {
+      name: 'maxChecks',
+      id: 'maxChecks',
+      label: {
+        text: 'Maximum items (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The maximum number of checkboxes a user can select'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
     }
   })
 

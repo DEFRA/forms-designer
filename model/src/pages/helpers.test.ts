@@ -29,7 +29,9 @@ import {
   hasComponentsEvenIfNoNext,
   hasFormComponents,
   hasNext,
+  hasPaymentQuestionInForm,
   hasRepeater,
+  hasSpecificQuestionTypeInForm,
   isEndPage,
   isPaymentPage,
   isSummaryPage,
@@ -629,6 +631,90 @@ describe('helpers', () => {
         ]
       } as Page
       expect(isEndPage(page)).toBe(false)
+    })
+  })
+
+  describe('hasPaymentQuestionInForm', () => {
+    it('should return true if form contains payment question', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const paymentFieldComponent = buildPaymentComponent()
+      const page2 = buildQuestionPage({
+        components: [paymentFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(true)
+    })
+
+    it('should return false if form doesnt contain payment question', () => {
+      const textFieldComponent1 = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent1]
+      })
+      const textFieldComponent2 = buildTextFieldComponent()
+      const page2 = buildQuestionPage({
+        components: [textFieldComponent2]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(false)
+    })
+
+    it('should return false if form has no pages', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+      expect(hasPaymentQuestionInForm(definition)).toBe(false)
+    })
+  })
+
+  describe('hasSpecificQuestionTypeInForm', () => {
+    it('should return true if form contains payment question', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const paymentFieldComponent = buildPaymentComponent()
+      const page2 = buildQuestionPage({
+        components: [paymentFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(
+        hasSpecificQuestionTypeInForm(definition, ComponentType.PaymentField)
+      ).toBe(true)
+    })
+
+    it('should return false if form doesnt contain payment question', () => {
+      const textFieldComponent1 = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent1]
+      })
+      const textFieldComponent2 = buildTextFieldComponent()
+      const page2 = buildQuestionPage({
+        components: [textFieldComponent2]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(
+        hasSpecificQuestionTypeInForm(definition, ComponentType.PaymentField)
+      ).toBe(false)
+    })
+
+    it('should return false if form has no pages', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+      expect(
+        hasSpecificQuestionTypeInForm(definition, ComponentType.PaymentField)
+      ).toBe(false)
     })
   })
 })

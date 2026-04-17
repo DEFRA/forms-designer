@@ -260,6 +260,11 @@ export interface PaymentFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     amount: number
     description: string
+    conditionalAmounts?: {
+      condition: string
+      amount: number
+    }[]
+    emailField?: string
   }
 }
 
@@ -324,6 +329,11 @@ export interface CheckboxesFieldComponent extends ListFieldBase {
   options: ListFieldBase['options'] & {
     bold?: boolean
     condition?: string
+  }
+  schema?: {
+    max?: number
+    min?: number
+    length?: number
   }
 }
 
