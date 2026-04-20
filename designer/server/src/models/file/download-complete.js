@@ -1,34 +1,58 @@
 import config from '~/src/config.js'
 
-const URL_PROTOCOL = 'http://'
-const LOCALHOST = `${URL_PROTOCOL}localhost`
-const INTERNAL_DOCKER = `${URL_PROTOCOL}host.docker.internal`
-const LOCALSTACK_CONTAINER = `${URL_PROTOCOL}localstack`
+const LOOPBACK_HOSTS = new Set(['localhost', '127.0.0.1', '::1'])
+const INTERNAL_HOSTS = new Set([
+  'host.docker.internal',
+  'localstack',
+  '0.0.0.0'
+])
+
+/**
+ * @param {string} baseUrl
+ */
+function isLoopbackBaseUrl(baseUrl) {
+  try {
+    return LOOPBACK_HOSTS.has(new URL(baseUrl).hostname)
+  } catch {
+    return false
+  }
+}
+
+/**
+ * @param {string | undefined} downloadUrl
+ */
+function getBrowserSafeDownloadUrl(downloadUrl) {
+  if (!downloadUrl || !isLoopbackBaseUrl(config.appBaseUrl)) {
+    return downloadUrl
+  }
+
+  try {
+    const browserBaseUrl = new URL(config.appBaseUrl)
+    const parsedDownloadUrl = new URL(downloadUrl)
+
+    if (!INTERNAL_HOSTS.has(parsedDownloadUrl.hostname)) {
+      return downloadUrl
+    }
+
+    parsedDownloadUrl.protocol = browserBaseUrl.protocol
+    parsedDownloadUrl.hostname = browserBaseUrl.hostname
+
+    return parsedDownloadUrl.toString()
+  } catch {
+    return downloadUrl
+  }
+}
 
 /**
  * @param { string } [downloadUrl]
  */
 export function downloadCompleteModel(downloadUrl) {
   // Change host in download url if running locally.
-  // The presigned URL may embed an internal Docker hostname (host.docker.internal
-  // when using Docker Desktop, or the localstack service name when containers
-  // communicate over the Docker network in CI). Neither is resolvable by the
-  // browser, so we rewrite to localhost so the browser can fetch the file
-  // directly from LocalStack.
-  const isInternalDockerUrl =
-    downloadUrl !== undefined &&
-    (downloadUrl.startsWith(INTERNAL_DOCKER) ||
-      downloadUrl.startsWith(LOCALSTACK_CONTAINER))
-
-  const isRunningLocally =
-    config.appBaseUrl.startsWith(LOCALHOST) && isInternalDockerUrl
-
-  let effectiveDownloadUrl = downloadUrl
-  if (isRunningLocally && downloadUrl) {
-    effectiveDownloadUrl = downloadUrl
-      .replace(INTERNAL_DOCKER, LOCALHOST)
-      .replace(LOCALSTACK_CONTAINER, LOCALHOST)
-  }
+  // The presigned URL may embed an internal Docker hostname (for example
+  // host.docker.internal, localstack, or 0.0.0.0). Those hosts are valid for
+  // containers, but not for a browser running on the host in local/CI harnesses,
+  // so we rewrite them to the browser-visible host from APP_BASE_URL.
+  const effectiveDownloadUrl = getBrowserSafeDownloadUrl(downloadUrl)
 
   const pageTitle = 'Your file is downloading'
   return {
