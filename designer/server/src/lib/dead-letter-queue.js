@@ -58,8 +58,6 @@ export async function getDeadLetterQueueMessages(dlq, token) {
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   // Dedupe in case of duplicate messages
-  // Ensure the last occurrence of the same MessageId is used as this will contain the valid ReceiptHandle
-  // (older ReceiptHandles for the same message will not be valid)
   const uniqueMessages = new Map()
   for (const message of body.messages) {
     uniqueMessages.set(message.MessageId, message)
@@ -89,16 +87,10 @@ export async function redriveDeadLetterQueueMessages(dlq, token) {
 
 /**
  * @param {DeadLetterQueues} dlq
- * @param {string} receiptHandle
  * @param {string} messageId
  * @param {string} token
  */
-export async function deleteDeadLetterQueueMessage(
-  dlq,
-  receiptHandle,
-  messageId,
-  token
-) {
+export async function deleteDeadLetterQueueMessage(dlq, messageId, token) {
   const delJsonByType = /** @type {typeof delJson<{ message: string }>} */ (
     delJson
   )
@@ -110,10 +102,7 @@ export async function deleteDeadLetterQueueMessage(
     endpoint
   )
 
-  const { body } = await delJsonByType(requestUrl, {
-    payload: { receiptHandle },
-    ...getHeaders(token)
-  })
+  const { body } = await delJsonByType(requestUrl, getHeaders(token))
 
   if (body.message !== 'success') {
     throw new Error(

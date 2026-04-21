@@ -83,14 +83,9 @@ describe('dead-letter queue lib functions', () => {
         // @ts-expect-error - partial mock of response
         .mockResolvedValueOnce({ body: { message: 'success' } })
       const dlq = DeadLetterQueues.AuditApi
-      await deleteDeadLetterQueueMessage(
-        dlq,
-        'receipt-handle',
-        'message-id',
-        'token'
-      )
+      await deleteDeadLetterQueueMessage(dlq, 'message-id', 'token')
       expect(delJson).toHaveBeenCalledWith(
-        new URL('http://localhost:3004/admin/deadletter/receipt-handle'),
+        new URL('http://localhost:3004/admin/deadletter/message-id'),
         expect.anything()
       )
     })
