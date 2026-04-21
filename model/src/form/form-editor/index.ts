@@ -421,7 +421,7 @@ export const paymentDescriptionSchema = Joi.string()
 
 export const paymentAmountSchema = Joi.number()
   .empty('')
-  .min(0.3)
+  .min(0)
   .max(100000)
   .description('Amount of payment in pounds')
 
