@@ -47,8 +47,7 @@ const messageIdSchema = Joi.string().required().messages({
 
 const dlqActionPayloadSchema = Joi.object().keys({
   action: Joi.string().valid(CONFIRM, DELETE).required(),
-  messageId: messageIdSchema,
-  receiptHandle: Joi.string().required()
+  messageId: messageIdSchema
 })
 
 /**
@@ -60,8 +59,7 @@ export function dlqMessageMapper(messages) {
     json: {
       MessageId: m.MessageId,
       Body: JSON.parse(m.Body)
-    },
-    receiptHandle: m.ReceiptHandle
+    }
   }))
 }
 
@@ -322,7 +320,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues }, Payload: { action: string, messageId: string, receiptHandle: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues }, Payload: { action: string, messageId: string } }>}
    */
   ({
     method: 'POST',
@@ -331,20 +329,16 @@ export default [
       const { auth, params, payload, yar } = request
       const { token } = auth.credentials
       const { dlq } = params
-      const { action, messageId, receiptHandle } = payload
+      const { action, messageId } = payload
 
       if (action === CONFIRM) {
         return h.view(
           'forms/confirmation-page',
-          deleteDeadLetterMessageConfirmationViewModel(
-            dlq,
-            messageId,
-            receiptHandle
-          )
+          deleteDeadLetterMessageConfirmationViewModel(dlq, messageId)
         )
       }
 
-      await deleteDeadLetterQueueMessage(dlq, receiptHandle, messageId, token)
+      await deleteDeadLetterQueueMessage(dlq, messageId, token)
 
       const auditUser = mapUserForAudit(auth.credentials.user)
       await publishDlqActionEvent(dlq, DELETE, messageId, auditUser)

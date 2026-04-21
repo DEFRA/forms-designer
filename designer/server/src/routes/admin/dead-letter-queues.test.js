@@ -242,8 +242,7 @@ describe('Dead-letter queues routes', () => {
         auth,
         payload: {
           action: 'confirm',
-          messageId: 'message-id',
-          receiptHandle: 'receipt-handle'
+          messageId: 'message-id'
         }
       }
 
@@ -277,8 +276,7 @@ describe('Dead-letter queues routes', () => {
         auth,
         payload: {
           action: 'delete',
-          messageId: 'message-id',
-          receiptHandle: 'receipt-handle'
+          messageId: 'message-id'
         }
       }
 
@@ -289,7 +287,6 @@ describe('Dead-letter queues routes', () => {
       expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(deleteDeadLetterQueueMessage).toHaveBeenCalledWith(
         'audit-api',
-        'receipt-handle',
         'message-id',
         expect.any(String)
       )
