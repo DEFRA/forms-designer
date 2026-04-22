@@ -4,6 +4,24 @@ import { format, startOfDay, subDays } from 'date-fns'
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
 
 const FULL_DATE_MASK = 'd MMMM yyyy'
+const NEW_FORMS_CREATED_TITLE = 'New forms created'
+const FORMS_PUBLISHED_TITLE = 'Forms published'
+const FORM_SUBMISSIONS_TITLE = 'Form submissions'
+
+const tilePeriodNames = {
+  last7Days: {
+    ariaPeriodName: 'previous 7 days',
+    straplinePeriodName: 'last week'
+  },
+  last30Days: {
+    ariaPeriodName: 'previous 30 days',
+    straplinePeriodName: 'last month'
+  },
+  allTime: {
+    ariaPeriodName: 'previous year',
+    straplinePeriodName: 'last year'
+  }
+}
 
 /**
  * @param {string} changeSymbol - '+' or '-' or ''
@@ -17,11 +35,13 @@ export function buildAriaLabel(
   changePercentage,
   periodPhrase
 ) {
-  let directionPhrase = 'no change'
+  let directionPhrase = ''
   if (changeSymbol === '+') {
     directionPhrase = `an increase of ${formatNumber(changeValue)} (${changeSymbol}${changePercentage}%)`
   } else if (changeSymbol === '-') {
     directionPhrase = `a decrease of ${formatNumber(changeValue)} (${changePercentage}%)`
+  } else {
+    directionPhrase = 'no change'
   }
   return `There has been ${directionPhrase} compared to the ${periodPhrase}`
 }
@@ -30,28 +50,23 @@ export function buildAriaLabel(
  * @param {Record<FormMetricName, { count?: number }>} currPeriod
  * @param {Record<FormMetricName, { count?: number }>} prevPeriod
  * @param {FormMetricName} metricName
- * @param {string} ariaPeriodName
- * @param {string} straplinePeriodName
+ * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
  */
 export function collateSpecificTileCounts(
   currPeriod,
   prevPeriod,
   metricName,
-  ariaPeriodName,
-  straplinePeriodName
+  periodNames
 ) {
   const currPeriodCount =
     metricName in currPeriod ? (currPeriod[metricName].count ?? 0) : 0
   const prevPeriodCount =
     metricName in prevPeriod ? (prevPeriod[metricName].count ?? 0) : 0
+
+  const notEqualSymbol = currPeriodCount > prevPeriodCount ? '+' : '-'
   const counts = {
     count: currPeriodCount,
-    changeSymbol:
-      currPeriodCount === prevPeriodCount
-        ? ''
-        : currPeriodCount > prevPeriodCount
-          ? '+'
-          : '-',
+    changeSymbol: currPeriodCount === prevPeriodCount ? '' : notEqualSymbol,
     changeValue: currPeriodCount - prevPeriodCount,
     changePercentage: (
       ((currPeriodCount - prevPeriodCount) / prevPeriodCount) *
@@ -59,11 +74,13 @@ export function collateSpecificTileCounts(
     ).toFixed(1)
   }
 
-  let changePhrase = 'No difference in'
+  let changePhrase = ''
   if (counts.changeSymbol === '+') {
     changePhrase = `${counts.changeValue} more`
   } else if (counts.changeSymbol === '-') {
     changePhrase = `${Math.abs(counts.changeValue)} fewer`
+  } else {
+    changePhrase = 'No difference in'
   }
 
   const formPlural = counts.changeValue === 1 ? '' : 's'
@@ -74,9 +91,9 @@ export function collateSpecificTileCounts(
       counts.changeSymbol,
       counts.changeValue,
       counts.changePercentage,
-      ariaPeriodName
+      periodNames.ariaPeriodName
     ),
-    strapline: `${changePhrase} form${formPlural} created than ${straplinePeriodName}`
+    strapline: `${changePhrase} form${formPlural} created than ${periodNames.straplinePeriodName}`
   }
 }
 
@@ -85,7 +102,7 @@ export function collateSpecificTileCounts(
  */
 export function metricsViewModel(metrics) {
   // Sort forms by name
-  const overviewsSorted = metrics.overview.sort((a, b) => {
+  const overviewsSorted = metrics.overview.toSorted((a, b) => {
     const formNameA = /** @type {string} */ (a.summaryMetrics.name)
     const formNameB = /** @type {string} */ (b.summaryMetrics.name)
     return formNameA.localeCompare(formNameB)
@@ -120,6 +137,56 @@ export function mapOverviewMetrics(metrics, submissionCounts) {
 }
 
 /**
+ * @param { Date | undefined } fromDate
+ * @param { Date | undefined } toDate
+ * @param {string} title
+ * @param {Record<FormMetricName, { count?: number }>} currPeriod
+ * @param {Record<FormMetricName, { count?: number }>} prevPeriod
+ * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
+ */
+export function mapOverviewTiles(
+  fromDate,
+  toDate,
+  title,
+  currPeriod,
+  prevPeriod,
+  periodNames
+) {
+  return {
+    fromDate: fromDate ? format(fromDate, FULL_DATE_MASK) : undefined,
+    toDate: toDate ? format(toDate, FULL_DATE_MASK) : undefined,
+    title,
+    newFormsCreated: {
+      title: NEW_FORMS_CREATED_TITLE,
+      ...collateSpecificTileCounts(
+        currPeriod,
+        prevPeriod,
+        FormMetricName.NewFormsCreated,
+        periodNames
+      )
+    },
+    formsPublished: {
+      title: FORMS_PUBLISHED_TITLE,
+      ...collateSpecificTileCounts(
+        currPeriod,
+        prevPeriod,
+        FormMetricName.FormsPublished,
+        periodNames
+      )
+    },
+    formSubmissions: {
+      title: FORM_SUBMISSIONS_TITLE,
+      ...collateSpecificTileCounts(
+        currPeriod,
+        prevPeriod,
+        FormMetricName.Submissions,
+        periodNames
+      )
+    }
+  }
+}
+
+/**
  * @param {FormTotalsMetric} totals
  */
 export function mapTotalMetrics(totals) {
@@ -127,113 +194,32 @@ export function mapTotalMetrics(totals) {
   const sevenDaysAgo = subDays(reportMorning, 7)
   const thirtyDaysAgo = subDays(reportMorning, 30)
 
-  const last7Days = {
-    fromDate: format(sevenDaysAgo, FULL_DATE_MASK),
-    toDate: format(reportMorning, FULL_DATE_MASK),
-    title: 'Last 7 days',
-    newFormsCreated: {
-      title: 'New forms created',
-      ...collateSpecificTileCounts(
-        totals.last7Days,
-        totals.prev7Days,
-        FormMetricName.NewFormsCreated,
-        'previous 7 days',
-        'last week'
-      )
-    },
-    formsPublished: {
-      title: 'Forms published',
-      ...collateSpecificTileCounts(
-        totals.last7Days,
-        totals.prev7Days,
-        FormMetricName.FormsPublished,
-        'previous 7 days',
-        'last week'
-      )
-    },
-    formSubmissions: {
-      title: 'Form submissions',
-      ...collateSpecificTileCounts(
-        totals.last7Days,
-        totals.prev7Days,
-        FormMetricName.Submissions,
-        'previous 7 days',
-        'last week'
-      )
-    }
-  }
+  const last7Days = mapOverviewTiles(
+    sevenDaysAgo,
+    reportMorning,
+    'Last 7 days',
+    totals.last7Days,
+    totals.prev7Days,
+    tilePeriodNames.last7Days
+  )
 
-  const last30Days = {
-    fromDate: format(thirtyDaysAgo, FULL_DATE_MASK),
-    toDate: format(reportMorning, FULL_DATE_MASK),
-    title: 'Last 30 days',
-    newFormsCreated: {
-      title: 'New forms created',
-      ...collateSpecificTileCounts(
-        totals.last30Days,
-        totals.prev30Days,
-        FormMetricName.NewFormsCreated,
-        'previous 30 days',
-        'last month'
-      )
-    },
-    formsPublished: {
-      title: 'Forms published',
-      ...collateSpecificTileCounts(
-        totals.last7Days,
-        totals.prev7Days,
-        FormMetricName.FormsPublished,
-        'previous 30 days',
-        'last month'
-      )
-    },
-    formSubmissions: {
-      title: 'Form submissions',
-      ...collateSpecificTileCounts(
-        totals.last7Days,
-        totals.prev7Days,
-        FormMetricName.Submissions,
-        'previous 30 days',
-        'last month'
-      )
-    }
-  }
+  const last30Days = mapOverviewTiles(
+    thirtyDaysAgo,
+    reportMorning,
+    'Last 30 days',
+    totals.last30Days,
+    totals.prev30Days,
+    tilePeriodNames.last30Days
+  )
 
-  const allTime = {
-    fromDate: undefined,
-    toDate: undefined,
-    title: 'All time',
-    newFormsCreated: {
-      title: 'New forms created',
-      ...collateSpecificTileCounts(
-        totals.allTime,
-        totals.prevYear,
-        FormMetricName.NewFormsCreated,
-        'previous year',
-        'last year'
-      )
-    },
-    formsPublished: {
-      title: 'Forms published',
-      ...collateSpecificTileCounts(
-        totals.allTime,
-        totals.prevYear,
-        FormMetricName.FormsPublished,
-        'previous year',
-        'last year'
-      )
-    },
-    formSubmissions: {
-      title: 'Form submissions',
-      ...collateSpecificTileCounts(
-        totals.allTime,
-        totals.prevYear,
-        FormMetricName.Submissions,
-        'previous year',
-        'last year'
-      )
-    }
-  }
+  const allTime = mapOverviewTiles(
+    undefined,
+    undefined,
+    'All time',
+    totals.allTime,
+    totals.prevYear,
+    tilePeriodNames.allTime
+  )
 
   return {
     last7Days,

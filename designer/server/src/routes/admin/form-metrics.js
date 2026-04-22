@@ -36,7 +36,7 @@ export default [
     options: {
       auth: {
         mode: 'required',
-        access: { entity: 'user', scope: [`+${Scopes.FormsInspect}`] } // scope: [`+${Scopes.FormsReport}`] }
+        access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
       }
     }
   })
