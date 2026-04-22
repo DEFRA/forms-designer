@@ -10,14 +10,14 @@ export interface FormTotalMetric {
 
 export interface FormTotalsMetric {
   type: FormMetricType.TotalsMetric
-  last7Days: Record<FormMetricName, FormTotalMetric>
-  prev7Days: Record<FormMetricName, FormTotalMetric>
-  last30Days: Record<FormMetricName, FormTotalMetric>
-  prev30Days: Record<FormMetricName, FormTotalMetric>
-  lastYear: Record<FormMetricName, FormTotalMetric>
-  prevYear: Record<FormMetricName, FormTotalMetric>
-  allTime: Record<FormMetricName, FormTotalMetric>
-  submissions: Record<string, number>
+  last7Days?: Record<FormMetricName, FormTotalMetric>
+  prev7Days?: Record<FormMetricName, FormTotalMetric>
+  last30Days?: Record<FormMetricName, FormTotalMetric>
+  prev30Days?: Record<FormMetricName, FormTotalMetric>
+  lastYear?: Record<FormMetricName, FormTotalMetric>
+  prevYear?: Record<FormMetricName, FormTotalMetric>
+  allTime?: Record<FormMetricName, FormTotalMetric>
+  submissions?: Record<string, number>
   updatedAt: Date
 }
 

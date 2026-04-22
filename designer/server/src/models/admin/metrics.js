@@ -60,8 +60,8 @@ export function buildChangePhrase(counts) {
 }
 
 /**
- * @param {Record<FormMetricName, { count?: number }>} currPeriod
- * @param {Record<FormMetricName, { count?: number }>} prevPeriod
+ * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {FormMetricName} metricName
  * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
  */
@@ -72,9 +72,13 @@ export function collateSpecificTileCounts(
   periodNames
 ) {
   const currPeriodCount =
-    metricName in currPeriod ? (currPeriod[metricName].count ?? 0) : 0
+    currPeriod && metricName in currPeriod
+      ? (currPeriod[metricName].count ?? 0)
+      : 0
   const prevPeriodCount =
-    metricName in prevPeriod ? (prevPeriod[metricName].count ?? 0) : 0
+    prevPeriod && metricName in prevPeriod
+      ? (prevPeriod[metricName].count ?? 0)
+      : 0
 
   const notEqualSymbol = currPeriodCount > prevPeriodCount ? '+' : '-'
   const counts = {
@@ -116,7 +120,9 @@ export function metricsViewModel(metrics) {
 
   // Create a map of submission counts per form for quicker lookups
   const formSubmissionCounts = new Map()
-  for (const [formId, count] of Object.entries(metrics.totals.submissions)) {
+  for (const [formId, count] of Object.entries(
+    metrics.totals.submissions ?? {}
+  )) {
     formSubmissionCounts.set(formId, count)
   }
 
@@ -146,8 +152,8 @@ export function mapOverviewMetrics(metrics, submissionCounts) {
  * @param { Date | undefined } fromDate
  * @param { Date | undefined } toDate
  * @param {string} title
- * @param {Record<FormMetricName, { count?: number }>} currPeriod
- * @param {Record<FormMetricName, { count?: number }>} prevPeriod
+ * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
  */
 export function mapOverviewTiles(
