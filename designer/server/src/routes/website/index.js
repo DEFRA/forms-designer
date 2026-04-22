@@ -17,7 +17,7 @@ import content from '~/src/routes/website/content.js'
 export const pageNavigationBase = [
   {
     param: WebsiteLevel1Routes.HOME,
-    text: 'Home'
+    text: 'HomeY'
   },
   {
     param: WebsiteLevel1Routes.FEATURES,
@@ -37,67 +37,9 @@ export const pageNavigationBase = [
   }
 ]
 
-// const [_, ...pageNavigationGuestBase] = pageNavigationBase
-
-// export const pageNavigationGuest = [
-//   {
-//     param: '',
-//     text: 'Services'
-//   },
-//   ...pageNavigationGuestBase
-// ]
-
-export const pageNavigationGuest = pageNavigationBase
+export const pageNavigationGuest = pageNavigationBase.filter((nav) => nav.param !== WebsiteLevel1Routes.RESOURCES)
 
 export default /** @satisfies {ServerRoute[]} */ ([
-  // {
-  //   method: 'GET',
-  //   path: `/${WebsiteLevel1Routes.SERVICES}`,
-  //   handler(request, h) {
-  //     const isGuest = !hasAuthenticated(request.auth.credentials)
-
-  //     if (isGuest) {
-  //       return h.redirect('/')
-  //     }
-
-  //     const servicesModel = websiteServicesModel(isGuest)
-  //     return h.view('website/index', servicesModel)
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'try'
-  //     }
-  //   }
-  // },
-  // {
-  //   method: 'GET',
-  //   path: `/${WebsiteLevel1Routes.WHATS_NEW}`,
-  //   handler(request, h) {
-  //     const isGuest = !hasAuthenticated(request.auth.credentials)
-  //     const whatsNewModel = websiteWhatsNewModel(isGuest)
-  //     return h.view('website/whats-new', whatsNewModel)
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'try'
-  //     }
-  //   }
-  // },
-
-  // {
-  //   method: 'GET',
-  //   path: `/${WebsiteLevel1Routes.MAKING_A_FORM}`,
-  //   handler(request, h) {
-  //     const isGuest = !hasAuthenticated(request.auth.credentials)
-  //     const makingAFormModel = websiteMakingAFormModel(isGuest)
-  //     return h.view('website/making-a-form', makingAFormModel)
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'try'
-  //     }
-  //   }
-  // },
   {
     method: 'GET',
     path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu?}`,
@@ -125,53 +67,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
       }
     }
   },
-  // {
-  //   method: 'GET',
-  //   path: `/${WebsiteLevel1Routes.GET_STARTED}`,
-  //   handler(request, h) {
-  //     const isGuest = !hasAuthenticated(request.auth.credentials)
-  //     const aboutModel = websiteSubmenuModel(
-  //       WebsiteLevel1Routes.GET_STARTED,
-  //       Level2GetStartedMenu.GET_ACCESS,
-  //       content.getStarted.menus,
-  //       'Getting started guide',
-  //       isGuest
-  //     )
-  //     return h.view('website/get-started/index', aboutModel)
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'try'
-  //     }
-  //   }
-  // },
-  // {
-  //   method: 'GET',
-  //   path: `/${WebsiteLevel1Routes.GET_STARTED}/{subMenu}`,
-  //   handler(request, h) {
-  //     const { params } = request
-  //     const { subMenu } = params
-  //     const isGuest = !hasAuthenticated(request.auth.credentials)
-  //     const aboutModel = websiteSubmenuModel(
-  //       WebsiteLevel1Routes.GET_STARTED,
-  //       subMenu,
-  //       content.getStarted.menus,
-  //       'Getting started guide',
-  //       isGuest
-  //     )
-  //     return h.view(`website/get-started/${subMenu}`, aboutModel)
-  //   },
-  //   options: {
-  //     auth: {
-  //       mode: 'try'
-  //     },
-  //     validate: {
-  //       params: Joi.object().keys({
-  //         subMenu: Joi.string().valid(...Object.values(Level2GetStartedMenu))
-  //       })
-  //     }
-  //   }
-  // },
   {
     method: 'GET',
     path: `/${WebsiteLevel1Routes.RESOURCES}`,
