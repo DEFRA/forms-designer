@@ -24,7 +24,7 @@ export const Level2GetStartedMenu = {
 }
 
 /**
- * Enum for get started menus.
+ * Enum for making a form menus.
  * @readonly
  * @enum {string}
  */
