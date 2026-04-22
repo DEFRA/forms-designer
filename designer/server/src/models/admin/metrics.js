@@ -111,11 +111,13 @@ export function collateSpecificTileCounts(
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
 export function metricsViewModel(metrics) {
-  // Sort forms by name
+  // Sort forms by name then status
   const overviewsSorted = metrics.overview.toSorted((a, b) => {
     const formNameA = /** @type {string} */ (a.summaryMetrics.name)
     const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return formNameA.localeCompare(formNameB)
+    return `${formNameA}${a.formStatus}`.localeCompare(
+      `${formNameB}${b.formStatus}`
+    )
   })
 
   // Create a map of submission counts per form for quicker lookups
