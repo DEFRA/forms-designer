@@ -1,18 +1,17 @@
 @use "govuk-frontend" as *;
 
-// Metrics
-
-/* Metric tiles - consistent height and spacing */
+// Metric tiles - consistent height and spacing
 .app-dashboard-caption {
   color: #505a5f;
   margin-bottom: 24px;
 }
 
-/* Smaller unit text for big numbers, e.g. "days" */
+// Smaller unit text for big numbers, e.g. "days"
 .app-big-number-unit {
   font-size: 0.6em;
   font-weight: 400;
 }
+
 .app-metric-tile {
   background-color: #f3f2f1;
   padding: 24px;
@@ -29,7 +28,7 @@
   }
 }
 
-/* GOV.UK Publishing Components big number styles */
+// GOV.UK Publishing Components big number styles
 .gem-c-big-number {
   margin-bottom: 0;
 }
@@ -58,7 +57,7 @@
   color: #0b0c0c;
 }
 
-/* Tag styles with arrow icons */
+// Tag styles with arrow icons
 .app-tag-with-icon {
   position: relative;
   padding-left: 26px;
@@ -73,7 +72,7 @@
   transform: translateY(-50%);
   width: 12px;
   height: 12px;
-  background-color: currentColor;
+  background-color: currentcolor;
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 0l6 6H7v6H5V6H0z'/%3E%3C/svg%3E");
   mask-repeat: no-repeat;
   mask-position: center;
@@ -92,7 +91,7 @@
   transform: translateY(-50%);
   width: 12px;
   height: 12px;
-  background-color: currentColor;
+  background-color: currentcolor;
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 12L0 6h5V0h2v6h5z'/%3E%3C/svg%3E");
   mask-repeat: no-repeat;
   mask-position: center;
@@ -103,12 +102,12 @@
   -webkit-mask-size: contain;
 }
 
-/* Ensure consistent vertical alignment */
+// Ensure consistent vertical alignment
 .app-metric-tile .gem-c-big-number {
   flex: 1 0 auto;
 }
 
-/* Metric captions - short insights */
+// Metric captions - short insights
 .app-metric-caption {
   color: #505a5f;
   margin-top: 0;
