@@ -1,0 +1,23 @@
+{% if params.changeSymbol === '+' %}
+  {% set directionSymbolClasses = "govuk-tag--green app-tag-with-icon app-tag-arrow-up" %}
+  {% set changeSymbolPercent = '+' %}
+{% elif params.changeSymbol === '-' %}
+  {% set directionSymbolClasses = "govuk-tag--red app-tag-with-icon app-tag-arrow-down" %}
+  {% set changeSymbolPercent = '' %}
+{% endif %}
+<!-- Metrics tile -->
+<div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+  <div class="app-metric-tile">
+    <div class="gem-c-big-number">
+      <span class="gem-c-big-number__label">{{ params.title }}</span>
+      <span class="gem-c-big-number__value">{{ params.count | formatNumber }}</span>
+    </div>
+    <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+      <strong class="govuk-tag {{ directionSymbolClasses }}" aria-label="{{ params.ariaLabel }}">
+        {{ params.changeValue | formatNumber }} ({{ changeSymbolPercent }}{{ params.changePercentage }}%)
+      </strong>
+
+    </div>
+    <p class="govuk-body-xs app-metric-caption">{{ params.strapline }}</p>
+  </div>
+</div>

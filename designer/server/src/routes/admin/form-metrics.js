@@ -1,17 +1,13 @@
 import { Scopes } from '@defra/forms-model'
 
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import { getMetrics } from '~/src/lib/metrics.js'
+import { metricsViewModel } from '~/src/models/admin/metrics.js'
 
 export const ROUTE_FULL_PATH = '/admin/form-metrics'
 
 const ADMIN_TOOLS = 'Admin tools'
-
-/**
- * @param {any} _metrics
- */
-export function metricsViewModel(_metrics) {
-  return {}
-}
+const METRICS_TITLE = 'Defra Form Designer metrics'
 
 export default [
   /**
@@ -20,16 +16,15 @@ export default [
   ({
     method: 'GET',
     path: ROUTE_FULL_PATH,
-    handler(request, h) {
-      // const { params } = request
+    async handler(_request, h) {
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
-      const metrics = {} // await getMetrics('FormActivity')
+      const metrics = await getMetrics()
       const model = metricsViewModel(metrics)
 
       return h.view('admin/form-metrics', {
-        pageTitle: `${ADMIN_TOOLS} - Defra Form Designer metrics`,
-        pageHeading: { text: ADMIN_TOOLS },
+        pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
+        pageHeading: { text: METRICS_TITLE },
         backLink: {
           text: 'Back to admin tools',
           href: '/admin/index'
