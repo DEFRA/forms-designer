@@ -8,9 +8,6 @@ export function websiteCookiesModel(isGuest) {
   return {
     isGuest,
     displayHomeNav: true,
-    pageNavigation: getWebsitePageNavigation(
-      WebsiteLevel1Routes.SERVICES,
-      isGuest
-    )
+    pageNavigation: getWebsitePageNavigation(WebsiteLevel1Routes.HOME, isGuest)
   }
 }
