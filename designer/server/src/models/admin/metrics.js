@@ -47,6 +47,19 @@ export function buildAriaLabel(
 }
 
 /**
+ * @param {{ changeSymbol: string, changeValue: number }} counts
+ */
+export function buildChangePhrase(counts) {
+  if (counts.changeSymbol === '+') {
+    return `${counts.changeValue} more`
+  } else if (counts.changeSymbol === '-') {
+    return `${Math.abs(counts.changeValue)} fewer`
+  } else {
+    return 'No difference in'
+  }
+}
+
+/**
  * @param {Record<FormMetricName, { count?: number }>} currPeriod
  * @param {Record<FormMetricName, { count?: number }>} prevPeriod
  * @param {FormMetricName} metricName
@@ -74,14 +87,7 @@ export function collateSpecificTileCounts(
     ).toFixed(1)
   }
 
-  let changePhrase = ''
-  if (counts.changeSymbol === '+') {
-    changePhrase = `${counts.changeValue} more`
-  } else if (counts.changeSymbol === '-') {
-    changePhrase = `${Math.abs(counts.changeValue)} fewer`
-  } else {
-    changePhrase = 'No difference in'
-  }
+  const changePhrase = buildChangePhrase(counts)
 
   const formPlural = counts.changeValue === 1 ? '' : 's'
 
