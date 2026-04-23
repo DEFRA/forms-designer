@@ -174,10 +174,23 @@ export async function publishFormsBackupRequestedEvent(
  * @param {DeadLetterQueues} dlq - The queue name
  * @param {string} action - Either 'redrive' or 'delete'
  * @param { string | undefined } messageId - The id of the message (if applicable)
+ * @param { { beforeJson: string, afterJson: string } | undefined } jsonContent - JSON content (before modification, and after)
  * @param {AuditUser} user - The user downloading the form
  */
-export async function publishDlqActionEvent(dlq, action, messageId, user) {
-  const auditMessage = formDlqActionMapper({ dlq, action, messageId, user })
+export async function publishDlqActionEvent(
+  dlq,
+  action,
+  messageId,
+  jsonContent,
+  user
+) {
+  const auditMessage = formDlqActionMapper({
+    dlq,
+    action,
+    messageId,
+    jsonContent,
+    user
+  })
 
   return validateAndPublishEvent(auditMessage)
 }

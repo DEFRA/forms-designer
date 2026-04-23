@@ -125,8 +125,12 @@ export const formsSecretSavedMessageData =
   })
 
 export const dlqActionMessageData = Joi.object<DlqActionMessageData>().keys({
-  action: Joi.string().valid('redrive', 'delete').required(),
-  messageId: Joi.string().optional()
+  action: Joi.string()
+    .valid('redrive', 'delete', 'modify-and-resubmit')
+    .required(),
+  messageId: Joi.string().optional(),
+  beforeJson: Joi.string().optional(),
+  afterJson: Joi.string().optional()
 })
 
 export const formTitleChanges = Joi.object<FormTitleChanges>()
