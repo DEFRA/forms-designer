@@ -110,3 +110,44 @@ export async function deleteDeadLetterQueueMessage(dlq, messageId, token) {
     )
   }
 }
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} messageId
+ * @param { FormAdapterSubmissionMessagePayload | undefined } messageJson
+ * @param {string} token
+ */
+export async function resubmitDeadLetterQueueMessage(
+  dlq,
+  messageId,
+  messageJson,
+  token
+) {
+  const postJsonByType = /** @type {typeof delJson<{ message: string }>} */ (
+    postJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(
+    `./admin/deadletter${qualifier}/resubmit/${messageId}`,
+    endpoint
+  )
+
+  const { body } = await postJsonByType(requestUrl, {
+    payload: {
+      messageJson
+    },
+    ...getHeaders(token)
+  })
+
+  if (body.message !== 'success') {
+    throw new Error(
+      `Error when resubmitting message ${messageId} for ${dlq}: ${body.message}`
+    )
+  }
+}
+
+/**
+ * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
+ */

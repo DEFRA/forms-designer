@@ -1,3 +1,4 @@
+import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-plugin/engine/types/schema.js'
 import { DeadLetterQueues, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -9,8 +10,10 @@ import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-naviga
 import {
   deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
-  redriveDeadLetterQueueMessages
+  redriveDeadLetterQueueMessages,
+  resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { publishDlqActionEvent } from '~/src/messaging/publish.js'
 import {
@@ -21,6 +24,7 @@ import {
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 
 const ADMIN_TOOLS = 'Admin tools'
+const MODIFY_AND_RESUBMIT = 'modify-and-resubmit'
 const REDRIVE = 'redrive'
 const DELETE = 'delete'
 const CONFIRM = 'confirm'
@@ -45,10 +49,65 @@ const messageIdSchema = Joi.string().required().messages({
   '*': 'Missing message id'
 })
 
+const dlqModifyParamSchema = Joi.object().keys({
+  dlq: dlqSchema,
+  messageId: messageIdSchema
+})
+
+const dlqModifyPayloadSchema = Joi.object().keys({
+  messageJson: Joi.string().required().messages({
+    '*': 'Enter JSON content'
+  })
+})
+
 const dlqActionPayloadSchema = Joi.object().keys({
   action: Joi.string().valid(CONFIRM, DELETE).required(),
   messageId: messageIdSchema
 })
+
+/**
+ * @param {string} messageJson
+ */
+function validateMessageJson(messageJson) {
+  let json
+  try {
+    json = JSON.parse(messageJson)
+  } catch (err) {
+    const typedError = /** @type {{ message?: string }} */ (err)
+    return {
+      error: createJoiError(
+        'messageJson',
+        `Invalid JSON: ${typedError.message}`
+      )
+    }
+  }
+
+  /**
+   * @type {FormAdapterSubmissionMessagePayload}
+   */
+  const messageBody = json.Body
+
+  const { error } = formAdapterSubmissionMessagePayloadSchema.validate(
+    messageBody,
+    {
+      abortEarly: false,
+      stripUnknown: true
+    }
+  )
+  if (error) {
+    const errorText = error.details.map((d) => d.message).join(', ')
+    const joiError = createJoiError(
+      'messageJson',
+      `JSON does not match the schema: ${errorText}`
+    )
+    return {
+      error: joiError
+    }
+  }
+  return {
+    body: messageBody
+  }
+}
 
 /**
  * Keep specific properties
@@ -296,7 +355,7 @@ export default [
       await redriveDeadLetterQueueMessages(dlq, token)
 
       const auditUser = mapUserForAudit(auth.credentials.user)
-      await publishDlqActionEvent(dlq, REDRIVE, undefined, auditUser)
+      await publishDlqActionEvent(dlq, REDRIVE, undefined, undefined, auditUser)
 
       yar.flash(
         sessionNames.successNotification,
@@ -341,7 +400,7 @@ export default [
       await deleteDeadLetterQueueMessage(dlq, messageId, token)
 
       const auditUser = mapUserForAudit(auth.credentials.user)
-      await publishDlqActionEvent(dlq, DELETE, messageId, auditUser)
+      await publishDlqActionEvent(dlq, DELETE, messageId, undefined, auditUser)
 
       yar.flash(
         sessionNames.successNotification,
@@ -363,9 +422,188 @@ export default [
         }
       }
     }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues }, Payload: { action: string, messageId: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: `${ROUTE_FULL_PATH}/{dlq}/edit`,
+    async handler(request, h) {
+      const { auth, params, payload, yar } = request
+      const { token } = auth.credentials
+      const { dlq } = params
+      const { action, messageId } = payload
+
+      if (action === CONFIRM) {
+        return h.view(
+          'forms/confirmation-page',
+          deleteDeadLetterMessageConfirmationViewModel(dlq, messageId)
+        )
+      }
+
+      await deleteDeadLetterQueueMessage(dlq, messageId, token)
+
+      const auditUser = mapUserForAudit(auth.credentials.user)
+      await publishDlqActionEvent(dlq, DELETE, messageId, undefined, auditUser)
+
+      yar.flash(
+        sessionNames.successNotification,
+        `Message '${messageId}' in DLQ '${dlq}' has been deleted`
+      )
+
+      return h.redirect(`/admin/dead-letter-queues/${dlq}`)
+    },
+    options: {
+      validate: {
+        params: dlqParamSchema,
+        payload: dlqActionPayloadSchema
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: `${ROUTE_FULL_PATH}/{dlq}/modify/{messageId}`,
+    async handler(request, h) {
+      const { auth, params, yar } = request
+      const { token } = auth.credentials
+      const { dlq, messageId } = params
+
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      // Validation errors
+      const validation = yar
+        .flash(sessionNames.validationFailure.deadLetterQueues)
+        .at(0)
+
+      const messages = await getDeadLetterQueueMessages(dlq, token)
+
+      const mappedMessage = dlqMessageMapper(messages).find(
+        (m) => m.json.MessageId === messageId
+      )
+
+      const { formValues, formErrors } = validation ?? {}
+
+      const messageJson = {
+        name: 'messageJson',
+        id: 'message-json',
+        hint: {
+          text: "You can leave the 'MessageId' value unchanged - it will get a new value when you resubmit"
+        },
+        value:
+          formValues?.messageJson ??
+          JSON.stringify(mappedMessage?.json, null, 2),
+        rows: 30,
+        errorMessage: formErrors?.messageJson
+          ? { text: formErrors.messageJson.text }
+          : undefined
+      }
+
+      return h.view('admin/dead-letter-queue-modify', {
+        ...generateTitling(),
+        backLink: {
+          text: 'Back to dead-letter queues',
+          href: ROUTE_FULL_PATH
+        },
+        navigation,
+        caption: {
+          text: dlq
+        },
+        messageJson,
+        queueName: dlq
+      })
+    },
+    options: {
+      validate: {
+        params: dlqModifyParamSchema
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: `${ROUTE_FULL_PATH}/{dlq}/modify/{messageId}`,
+    async handler(request, h) {
+      const { auth, params, payload, yar } = request
+      const { token } = auth.credentials
+      const { dlq, messageId } = params
+      const { messageJson } = payload
+
+      const { error, body } = validateMessageJson(messageJson)
+      if (error) {
+        return redirectWithErrors(
+          request,
+          h,
+          error,
+          sessionNames.validationFailure.deadLetterQueues
+        )
+      }
+
+      const messages = await getDeadLetterQueueMessages(dlq, token)
+      const originalMessage = dlqMessageMapper(messages).find(
+        (m) => m.json.MessageId === messageId
+      )
+
+      await resubmitDeadLetterQueueMessage(dlq, messageId, body, token)
+
+      const auditUser = mapUserForAudit(auth.credentials.user)
+      await publishDlqActionEvent(
+        dlq,
+        MODIFY_AND_RESUBMIT,
+        messageId,
+        {
+          beforeJson: JSON.stringify(originalMessage),
+          afterJson: messageJson
+        },
+        auditUser
+      )
+
+      yar.flash(
+        sessionNames.successNotification,
+        `The modified message has been submitted and the original message removed from DLQ '${dlq}'`
+      )
+
+      return h.redirect(ROUTE_FULL_PATH)
+    },
+    options: {
+      validate: {
+        params: dlqModifyParamSchema,
+        payload: dlqModifyPayloadSchema
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
   })
 ]
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
  */
