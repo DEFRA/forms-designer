@@ -22,6 +22,7 @@ import {
 } from '~/src/models/manage/dead-letter-queue.js'
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
+const CONFIRMATION_PAGE_PATH = 'forms/confirmation-page'
 
 const ADMIN_TOOLS = 'Admin tools'
 const MODIFY_AND_RESUBMIT = 'modify-and-resubmit'
@@ -331,7 +332,7 @@ export default [
       const { dlq } = params
 
       return h.view(
-        'forms/confirmation-page',
+        CONFIRMATION_PAGE_PATH,
         redriveDeadLetterQueueConfirmationViewModel(dlq)
       )
     },
@@ -400,53 +401,7 @@ export default [
 
       if (action === CONFIRM) {
         return h.view(
-          'forms/confirmation-page',
-          deleteDeadLetterMessageConfirmationViewModel(dlq, messageId)
-        )
-      }
-
-      await deleteDeadLetterQueueMessage(dlq, messageId, token)
-
-      const auditUser = mapUserForAudit(auth.credentials.user)
-      await publishDlqActionEvent(dlq, DELETE, messageId, undefined, auditUser)
-
-      yar.flash(
-        sessionNames.successNotification,
-        `Message '${messageId}' in DLQ '${dlq}' has been deleted`
-      )
-
-      return h.redirect(`/admin/dead-letter-queues/${dlq}`)
-    },
-    options: {
-      validate: {
-        params: dlqParamSchema,
-        payload: dlqActionPayloadSchema
-      },
-      auth: {
-        mode: 'required',
-        access: {
-          entity: 'user',
-          scope: [`+${Scopes.DeadLetterQueues}`]
-        }
-      }
-    }
-  }),
-
-  /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues }, Payload: { action: string, messageId: string } }>}
-   */
-  ({
-    method: 'POST',
-    path: `${ROUTE_FULL_PATH}/{dlq}/edit`,
-    async handler(request, h) {
-      const { auth, params, payload, yar } = request
-      const { token } = auth.credentials
-      const { dlq } = params
-      const { action, messageId } = payload
-
-      if (action === CONFIRM) {
-        return h.view(
-          'forms/confirmation-page',
+          CONFIRMATION_PAGE_PATH,
           deleteDeadLetterMessageConfirmationViewModel(dlq, messageId)
         )
       }
