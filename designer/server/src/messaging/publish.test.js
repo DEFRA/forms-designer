@@ -477,6 +477,7 @@ describe('publish', () => {
         DeadLetterQueues.AuditApi,
         'redrive',
         undefined,
+        undefined,
         authAuditUser
       )
 
@@ -504,6 +505,7 @@ describe('publish', () => {
         DeadLetterQueues.AuditApi,
         'delete',
         'message-id',
+        undefined,
         authAuditUser
       )
 
@@ -533,6 +535,7 @@ describe('publish', () => {
         publishDlqActionEvent(
           DeadLetterQueues.AuditApi,
           // @ts-expect-error - invalid value
+          undefined,
           undefined,
           undefined,
           invalidUser
