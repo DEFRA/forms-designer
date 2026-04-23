@@ -68,7 +68,7 @@ const dlqActionPayloadSchema = Joi.object().keys({
 /**
  * @param {string} messageJson
  */
-function validateMessageJson(messageJson) {
+export function validateMessageJson(messageJson) {
   let json
   try {
     json = JSON.parse(messageJson)
@@ -83,9 +83,17 @@ function validateMessageJson(messageJson) {
   }
 
   /**
-   * @type {FormAdapterSubmissionMessagePayload}
+   * @type { FormAdapterSubmissionMessagePayload | undefined }
    */
   const messageBody = json.Body
+  if (!messageBody) {
+    return {
+      error: createJoiError(
+        'messageJson',
+        'Invalid JSON: Missing "Body" element'
+      )
+    }
+  }
 
   const { error } = formAdapterSubmissionMessagePayloadSchema.validate(
     messageBody,
