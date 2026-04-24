@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Get a peer review"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,16 +10,16 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            Once you've built your first draft, send a form preview link by email to the Defra Forms team for review: <a href="mailto:defraforms@defra.gov.uk">defraforms@defra.gov.uk</a>. A content designer will review your form and provide feedback about the structure, guidance and questions within the form.       
+            Once you've built your first draft, send a form preview link by email to the Defra Forms team for review: <a href="mailto:defraforms@defra.gov.uk">defraforms@defra.gov.uk</a>. A content designer will review your form and provide feedback about the structure, guidance and questions within the form.
           </p>
           <p>
-            You should make the recommended changes to the form and return the draft to the Defra Forms team for a second review.  
+            You should make the recommended changes to the form and return the draft to the Defra Forms team for a second review.
           </p>
           <p>
-            The Defra Forms team may also recommend arranging a meeting to discuss the draft in more detail. 
-          </p>             
+            The Defra Forms team may also recommend arranging a meeting to discuss the draft in more detail.
+          </p>
 </div>
       </div>
     </div>

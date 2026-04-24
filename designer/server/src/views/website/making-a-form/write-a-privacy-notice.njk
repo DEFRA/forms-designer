@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Write a privacy notice"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,20 +10,20 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            If you collect personal information or change how personal information is being processed, you need a privacy notice.  
+            If you collect personal information or change how personal information is being processed, you need a privacy notice.
           </p>
           <p>
-            Read the guidance on <a href="https://www.gov.uk/service-manual/design/collecting-personal-information-from-users">collecting personal information from users</a> and <a href="https://www.gov.uk/service-manual/service-standard/point-9-create-a-secure-service">point 9 of the Service Standard</a>.   
+            Read the guidance on <a href="https://www.gov.uk/service-manual/design/collecting-personal-information-from-users">collecting personal information from users</a> and <a href="https://www.gov.uk/service-manual/service-standard/point-9-create-a-secure-service">point 9 of the Service Standard</a>.
           </p>
           <p>
-            See an <a href="https://www.gov.uk/government/publications/rye-harbour-privacy-notice/rye-harbour-privacy-notice">example privacy notice for a form</a>.  
+            See an <a href="https://www.gov.uk/government/publications/rye-harbour-privacy-notice/rye-harbour-privacy-notice">example privacy notice for a form</a>.
           </p>
         <h2>Check if your form is covered by an existing privacy notice </h2>
           <p>
             Your form might be covered by an existing privacy notice on GOV.UK for a related form. In some instances, you can use the standard privacy notice for each organisation. The Data Protection team for each organisation can advise on which privacy notice to use.
-          </p>                
+          </p>
 </div>
       </div>
     </div>

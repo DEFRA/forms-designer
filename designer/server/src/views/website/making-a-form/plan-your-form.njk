@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Plan your form"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,12 +10,12 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            Plan your form before you start using the Defra Form Designer.  
+            Plan your form before you start using the Defra Form Designer.
           </p>
           <p>
-            Planning helps you to:  
+            Planning helps you to:
           </p>
             <ul>
               <li>show the user's journey clearly </li>
@@ -29,15 +25,15 @@
               <li>talk through the form with SMEs and stakeholders </li>
             </ul>
         <p>
-          You can do this in software like Viso, Mural or using pen and paper. 
+          You can do this in software like Viso, Mural or using pen and paper.
         </p>
         <p>
-          <a href="">See an example form plan with conditions</a>. 
+          <a href="">See an example form plan with conditions</a>.
         </p>
       <h2>Avoid duplicating questions</h2>
         <p>
-          Reducing duplicate questions improves efficiency and the user experience. 
-        </p> 
+          Reducing duplicate questions improves efficiency and the user experience.
+        </p>
         <p>
           Avoid duplication by:
         </p>
@@ -48,11 +44,11 @@
         </ul>
       <h2>Send your plan to the Defra Forms team</h2>
         <p>
-           We will review your plan to ensure the structure of your form meets the GOV.UK service standards. For example, by placing eligibility questions at the start of the form. 
+           We will review your plan to ensure the structure of your form meets the GOV.UK service standards. For example, by placing eligibility questions at the start of the form.
         </p>
         <p>
           When your plan is ready for review, send it by email to: <a href="mailto:defraforms@defra.gov.uk">defraforms@defra.gov.uk</a>
-        </p>           
+        </p>
 </div>
       </div>
     </div>

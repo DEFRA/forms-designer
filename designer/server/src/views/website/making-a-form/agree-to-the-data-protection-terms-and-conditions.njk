@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Agree to the data protection terms and conditions"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,9 +10,9 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            Along with a privacy notice, you need to agree to the data protection terms and conditions by:    
+            Along with a privacy notice, you need to agree to the data protection terms and conditions by:
           </p>
           <ul>
             <li>completing the data protection impact assessment screening questions if your data protection team requires one (this will determine if a full data protection impact assessment is needed)</li>
@@ -28,8 +24,8 @@
             Each Defra group organisation has their own screening question form. Answers to the screening questions will determine if a full data protection impact assessment is needed.
           </p>
           <p>
-            Most form requests do not need a full impact assessment. The Defra Forms team can help you to reach the right person if you are unsure about the process. 
-          </p>               
+            Most form requests do not need a full impact assessment. The Defra Forms team can help you to reach the right person if you are unsure about the process.
+          </p>
 </div>
       </div>
     </div>

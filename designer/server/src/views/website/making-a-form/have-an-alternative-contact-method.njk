@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Have an alternative contact method"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,12 +10,12 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            You cannot publish a form on GOV.UK using the Defra Form Designer without at least one alternative contact method.     
+            You cannot publish a form on GOV.UK using the Defra Form Designer without at least one alternative contact method.
           </p>
           <p>
-            Providing an alternative contact method is also known as providing ‘assisted digital support’. 
+            Providing an alternative contact method is also known as providing ‘assisted digital support’.
           </p>
           <p>
             You can provide assisted digital support:
@@ -38,7 +34,7 @@
           </ul>
           <p>
             Read more about <a href="https://www.gov.uk/service-manual/helping-people-to-use-your-service/assisted-digital-support-introduction">providing assisted digital support</a>.
-          </p>              
+          </p>
 </div>
       </div>
     </div>

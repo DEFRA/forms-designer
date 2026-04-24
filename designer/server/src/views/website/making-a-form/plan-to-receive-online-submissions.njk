@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Plan to receive online submissions"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,13 +10,13 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            Before launching a new digital form there are steps to take so form submissions can be received and processed.  
+            Before launching a new digital form there are steps to take so form submissions can be received and processed.
           </p>
         <h2>Set up a mailbox to receive form submissions</h2>
           <p>
-            Most teams will receive submissions by email. Submissions must be sent to a shared government mailbox – you cannot send submissions to an individual work email address. This ensures there isn't a single point of failure, if someone is away sick or leaves the organisation. 
+            Most teams will receive submissions by email. Submissions must be sent to a shared government mailbox – you cannot send submissions to an individual work email address. This ensures there isn't a single point of failure, if someone is away sick or leaves the organisation.
           </p>
           <p>
            Typically, you will only need to link one mailbox to a form. If you need to direct certain submissions to a different mailbox based on the answers given, speak to the Defra Forms team.
@@ -34,14 +30,14 @@
           </p>
         <h2>Think about automation opportunities</h2>
           <p>
-            Often the content for a form submission needs to be copied and pasted, or re-typed into a separate Defra system. A digital form offers the opportunity to automate tasks like this by offering machine-readable as well as human-readable outputs. 
+            Often the content for a form submission needs to be copied and pasted, or re-typed into a separate Defra system. A digital form offers the opportunity to automate tasks like this by offering machine-readable as well as human-readable outputs.
           </p>
           <p>
             Speak to the Defra Forms team about automation possibilities with Sharepoint, or APIs. This doesn’t always need to be decided before you design a form. It may be something to consider after the form has been published, and you have had time to evaluate your new workflow.
           </p>
           <p>
            Automation possibilities are dependent on the complexity, age and ownership of the systems you wish to integrate with.
-          </p>   
+          </p>
 </div>
       </div>
     </div>

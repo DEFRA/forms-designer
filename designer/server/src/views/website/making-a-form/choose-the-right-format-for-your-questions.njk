@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Choose the right format for your questions"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,23 +10,23 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <h2>Format questions in a structured way</h2>
           <p>
-            Think about how answers will be used when designing your question. Make answers easy for people to complete and easy for teams to review. 
+            Think about how answers will be used when designing your question. Make answers easy for people to complete and easy for teams to review.
           </p>
           <p>
-            Avoid long text boxes if you can. Long text is harder to process and can lead to mistakes and spelling errors.  
+            Avoid long text boxes if you can. Long text is harder to process and can lead to mistakes and spelling errors.
           </p>
           <p>
-            Use clear options instead, like asking users to choose from a list. This creates structured information for Defra teams and makes it easier to automate processing.  
+            Use clear options instead, like asking users to choose from a list. This creates structured information for Defra teams and makes it easier to automate processing.
           </p>
           <p>
-           Structured answers allow you to <a href="">create conditions</a>, so users only see questions based on answers they have provided 
+           Structured answers allow you to <a href="">create conditions</a>, so users only see questions based on answers they have provided
           </p>
           <h2>Questions with a fixed number of answers</h2>
             <p>
-              If you are asking questions with a fixed number of possible answers, provide lists for people to select from. 
+              If you are asking questions with a fixed number of possible answers, provide lists for people to select from.
             </p>
             <ul>
               <li>Radios let users choose one answer from a list</li>

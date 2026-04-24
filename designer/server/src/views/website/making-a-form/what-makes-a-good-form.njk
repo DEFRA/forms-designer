@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "What makes a good form"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -17,11 +13,11 @@
         <div class="app-prose-scope">
         <h2>Good forms have a single purpose</h2>
           <p>
-            An online form that tries to achieve multiple outcomes (for example, registering for a scheme and also claiming for a payment through that scheme) can be confusing to users and difficult for policy teams to maintain. Focus on a single outcome and design a form that is easy to complete and process. 
+            An online form that tries to achieve multiple outcomes (for example, registering for a scheme and also claiming for a payment through that scheme) can be confusing to users and difficult for policy teams to maintain. Focus on a single outcome and design a form that is easy to complete and process.
           </p>
-      <h2>Good forms are easy to complete</h2> 
+      <h2>Good forms are easy to complete</h2>
         <p>
-          Forms that ask for long written answers are not recommended as team members would still need to read and process the detail. Forms can be designed to give structured data. This means, for example, picking answers from lists rather than asking users to type the information in. This can reduce the amount of thinking the user has to do and the time that your team has to spend reading and interpreting the data. 
+          Forms that ask for long written answers are not recommended as team members would still need to read and process the detail. Forms can be designed to give structured data. This means, for example, picking answers from lists rather than asking users to type the information in. This can reduce the amount of thinking the user has to do and the time that your team has to spend reading and interpreting the data.
         </p>
         <p>
           For questions which require written descriptions or explanations, make the questions specific, so users know what information to include.
@@ -32,7 +28,7 @@
         </p>
       <h2>Good forms gather the critical information that’s needed from the user quickly</h2>
         <p>
-          If a form is part of a multi-stage process, and you may need further information from the user after the initial form has been completed and submitted, make sure your form: 
+          If a form is part of a multi-stage process, and you may need further information from the user after the initial form has been completed and submitted, make sure your form:
         </p>
           <ul>
             <li>collects enough information for a team member to process the first stage</li>
@@ -62,7 +58,7 @@
       </p>
       <h3>Assistive technology </h3>
       <p>
-       Some people might use assistive technology to complete online forms. You can: 
+       Some people might use assistive technology to complete online forms. You can:
       </p>
       <ul>
         <li><a href="https://business.scope.org.uk/assistive-technology-devices-definitions-how-disabled-people-use-the-web/">learn about assistive technology</a></li>
@@ -71,7 +67,7 @@
       </ul>
       <h3>Asking for personal information</h3>
       <p>
-       Consider the sensitivities around personal questions. 'Easy' questions might be hard for some people to answer. Don’t assume people can complete a form independently. They may need help from:  
+       Consider the sensitivities around personal questions. 'Easy' questions might be hard for some people to answer. Don’t assume people can complete a form independently. They may need help from:
       </p>
       <ul>
         <li>friends and family</li>

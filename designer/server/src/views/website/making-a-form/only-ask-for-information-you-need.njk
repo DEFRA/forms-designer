@@ -2,11 +2,7 @@
 {% from "masthead/macro.njk" import appMasthead %}
 
 {% block beforeContent %}
-{{ appMasthead({
-  heading: {
-    text: "Only ask for information you need"
-  }
-}) }}
+  {{ appMasthead(masthead) }}
 {% endblock -%}
 
 {% block content %}
@@ -14,16 +10,16 @@
   <div class="govuk-width-container">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">  
+        <div class="app-prose-scope">
           <p>
-            When designing a form, it can be tempting to ask for information ‘just in case’. But each additional question in a form increases the risk that someone will abandon the form. 
+            When designing a form, it can be tempting to ask for information ‘just in case’. But each additional question in a form increases the risk that someone will abandon the form.
           </p>
         <p>
-          The more information you ask, the more information you have to store and manage. And there could be GDPR implications depending on the information you receive. 
+          The more information you ask, the more information you have to store and manage. And there could be GDPR implications depending on the information you receive.
         </p>
         <p>
-          Question protocols help you to collect only the right information. But they take a while to do, so best used for long and complex forms. Use <a href="https://defra.sharepoint.com/:x:/r/teams/Team1466/_layouts/15/Doc.aspx?sourcedoc=%7b7CEE7470-60F1-4F69-8A74-7D1BA31A5ABB%7d&file=DefraForms_question-protocol.xls.xlsx&action=default&mobileredirect=true">this spreadsheet</a> to run a protocol session with your colleagues. 
-        </p>                
+          Question protocols help you to collect only the right information. But they take a while to do, so best used for long and complex forms. Use <a href="https://defra.sharepoint.com/:x:/r/teams/Team1466/_layouts/15/Doc.aspx?sourcedoc=%7b7CEE7470-60F1-4F69-8A74-7D1BA31A5ABB%7d&file=DefraForms_question-protocol.xls.xlsx&action=default&mobileredirect=true">this spreadsheet</a> to run a protocol session with your colleagues.
+        </p>
 </div>
       </div>
     </div>
