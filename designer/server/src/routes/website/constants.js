@@ -32,7 +32,7 @@ export const Level2MakingAFormMenu = {
   MAKE_SURE_YOU_NEED_A_FORM: 'make-sure-you-need-a-form',
   WHAT_MAKES_A_GOOD_FORM: 'what-makes-a-good-form',
   GET_THE_RIGHT_PEOPLE_TOGETHER: 'get-the-right-people-together',
-  PLAN_TO_RECEIVE_DIGITAL_SUBMISSIONS: 'plan-to-receive-digital-submissions',
+  PLAN_TO_RECEIVE_ONLINE_SUBMISSIONS: 'plan-to-receive-online-submissions',
   ONLY_ASK_FOR_INFORMATION_YOU_NEED: 'only-ask-for-information-you-need',
   PLAN_YOUR_FORM: 'plan-your-form',
   ADAPTING_A_PDF_OR_PAPER_FORM_TO_A_DIGITAL_FORM:
