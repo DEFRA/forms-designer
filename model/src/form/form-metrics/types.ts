@@ -26,7 +26,7 @@ export interface FormOverviewMetric {
   formId: string
   formStatus: FormStatus
   summaryMetrics: Record<string, number | string | string[]>
-  featureCounts: Record<string, number>
+  featureMetrics: Record<string, Map<string, number>>
   submissionsCount: number
   updatedAt: Date
 }

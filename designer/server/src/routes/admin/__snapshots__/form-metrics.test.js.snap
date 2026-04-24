@@ -207,7 +207,7 @@ exports[`Form metrics routes GET should render form 1`] = `
     <nav class="app-page-navigation" aria-label="Component usage">
       <div class="app-page-navigation__list">
         <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/">
+          <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
             Component usage
           </a>
         </div>
@@ -246,7 +246,7 @@ exports[`Form metrics routes GET should render form 1`] = `
       <div class="govuk-grid-row">
         <!-- Forms Created -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">New forms created</span>
@@ -254,7 +254,7 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
@@ -265,7 +265,7 @@ exports[`Form metrics routes GET should render form 1`] = `
     
         <!-- Forms Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-published">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Forms published</span>
@@ -273,18 +273,18 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms created than last week</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms published than last week</p>
       </div>
     </div>
     
     
         <!-- Form Submissions -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Form submissions</span>
@@ -292,11 +292,11 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms created than last week</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in submissions  than last week</p>
       </div>
     </div>
     
@@ -313,7 +313,7 @@ exports[`Form metrics routes GET should render form 1`] = `
       <div class="govuk-grid-row">
         <!-- Forms Created -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">New forms created</span>
@@ -321,7 +321,7 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
@@ -332,7 +332,7 @@ exports[`Form metrics routes GET should render form 1`] = `
     
         <!-- Forms Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-published">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Forms published</span>
@@ -340,18 +340,18 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms created than last month</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms published than last month</p>
       </div>
     </div>
     
     
         <!-- Form Submissions -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Form submissions</span>
@@ -359,11 +359,11 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms created than last month</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in submissions  than last month</p>
       </div>
     </div>
     
@@ -380,7 +380,7 @@ exports[`Form metrics routes GET should render form 1`] = `
       <div class="govuk-grid-row">
         <!-- Forms Created -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">New forms created</span>
@@ -388,7 +388,7 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
@@ -399,7 +399,7 @@ exports[`Form metrics routes GET should render form 1`] = `
     
         <!-- Forms Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-published">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Forms published</span>
@@ -407,18 +407,18 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms created than last year</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms published than last year</p>
       </div>
     </div>
     
     
         <!-- Form Submissions -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Form submissions</span>
@@ -426,11 +426,11 @@ exports[`Form metrics routes GET should render form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (NaN%)
+            0 (-%)
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms created than last year</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in submissions  than last year</p>
       </div>
     </div>
     

@@ -1,69 +1,30 @@
 import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
 import {
-  buildAriaLabel,
-  buildChangePhrase,
-  metricsViewModel
+  metricsComponentUsageViewModel,
+  metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
 
 /**
  * @param {string} title
  * @param {string} ariaPeriod
- * @param {string} straplinePeriod
+ * @param {string} strapline
  */
-function getExpectedTile(title, ariaPeriod, straplinePeriod) {
+function getExpectedTile(title, ariaPeriod, strapline) {
   return {
     ariaLabel: `There has been no change compared to the ${ariaPeriod}`,
-    changePercentage: 'NaN',
+    changePercentage: '-',
     changeSymbol: '',
     changeValue: 0,
     count: 0,
-    strapline: `No difference in forms created than ${straplinePeriod}`,
+    strapline,
     title
   }
 }
 
-describe('metrics model', () => {
-  describe('buildAriaLabel', () => {
-    it('should build label when no change from previous period', () => {
-      const label = buildAriaLabel('', 0, '0.0', 'last 7 days')
-      expect(label).toBe('There has been no change compared to the last 7 days')
-    })
-
-    it('should build label when positive change from previous period', () => {
-      const label = buildAriaLabel('+', 10, '5.1', 'last 7 days')
-      expect(label).toBe(
-        'There has been an increase of 10 (+5.1%) compared to the last 7 days'
-      )
-    })
-
-    it('should build label when negative change from previous period', () => {
-      const label = buildAriaLabel('-', 7, '-3.1', 'last 7 days')
-      expect(label).toBe(
-        'There has been a decrease of 7 (-3.1%) compared to the last 7 days'
-      )
-    })
-  })
-
-  describe('buildChangePhrase', () => {
-    it('should build label when no change from previous period', () => {
-      const phrase = buildChangePhrase({ changeSymbol: '', changeValue: 0 })
-      expect(phrase).toBe('No difference in')
-    })
-
-    it('should build label when positive change from previous period', () => {
-      const phrase = buildChangePhrase({ changeSymbol: '+', changeValue: 12 })
-      expect(phrase).toBe('12 more')
-    })
-
-    it('should build label when negative change from previous period', () => {
-      const phrase = buildChangePhrase({ changeSymbol: '-', changeValue: 3 })
-      expect(phrase).toBe('3 fewer')
-    })
-  })
-
-  describe('metricsViewModel', () => {
-    it('should populate model', () => {
+describe('metrics models', () => {
+  describe('metricsFormActivityViewModel', () => {
+    it('should populate form activity model', () => {
       const mockMetrics = {
         overview: [
           {
@@ -73,7 +34,7 @@ describe('metrics model', () => {
             summaryMetrics: {
               name: 'form1'
             },
-            featureCounts: {},
+            featureMetrics: {},
             updatedAt: new Date()
           }
         ],
@@ -95,7 +56,7 @@ describe('metrics model', () => {
       }
 
       // @ts-expect-error - partial data mocked
-      const model = metricsViewModel(mockMetrics)
+      const model = metricsFormActivityViewModel(mockMetrics)
 
       expect(model).toEqual({
         formMetricRows: [
@@ -115,17 +76,17 @@ describe('metrics model', () => {
             newFormsCreated: getExpectedTile(
               'New forms created',
               'previous 7 days',
-              'last week'
+              'No difference in forms created than last week'
             ),
             formsPublished: getExpectedTile(
               'Forms published',
               'previous 7 days',
-              'last week'
+              'No difference in forms published than last week'
             ),
             formSubmissions: getExpectedTile(
               'Form submissions',
               'previous 7 days',
-              'last week'
+              'No difference in submissions  than last week'
             )
           },
           last30Days: {
@@ -135,17 +96,17 @@ describe('metrics model', () => {
             newFormsCreated: getExpectedTile(
               'New forms created',
               'previous 30 days',
-              'last month'
+              'No difference in forms created than last month'
             ),
             formsPublished: getExpectedTile(
               'Forms published',
               'previous 30 days',
-              'last month'
+              'No difference in forms published than last month'
             ),
             formSubmissions: getExpectedTile(
               'Form submissions',
               'previous 30 days',
-              'last month'
+              'No difference in submissions  than last month'
             )
           },
           allTime: {
@@ -155,25 +116,185 @@ describe('metrics model', () => {
             newFormsCreated: getExpectedTile(
               'New forms created',
               'previous year',
-              'last year'
+              'No difference in forms created than last year'
             ),
             formsPublished: getExpectedTile(
               'Forms published',
               'previous year',
-              'last year'
+              'No difference in forms published than last year'
             ),
             formSubmissions: getExpectedTile(
               'Form submissions',
               'previous year',
-              'last year'
+              'No difference in submissions  than last year'
             )
           }
         }
       })
     })
   })
-})
 
-/**
- * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
- */
+  describe('metricsComponentUsageViewModel', () => {
+    it('should populate component usage model', () => {
+      const mockMetrics = {
+        overview: [
+          {
+            type: FormMetricType.OverviewMetric,
+            formId: 'form-id-1',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: {
+              name: 'form1'
+            },
+            featureMetrics: {
+              features: {
+                'File upload': 1,
+                'Email confirmation': 1,
+                'GOV.UK Pay': 1,
+                Declarations: 1,
+                Sections: 1
+              },
+              formStructure: {
+                conditions: 0,
+                pages: 4,
+                questionTypes: 6,
+                questions: 9,
+                sections: 1
+              },
+              questionTypes: {
+                CheckboxesField: 2,
+                DeclarationField: 1,
+                FileUploadField: 1,
+                PaymentField: 1,
+                RadiosField: 1,
+                TextField: 3
+              }
+            },
+            updatedAt: new Date()
+          },
+          {
+            type: FormMetricType.OverviewMetric,
+            formId: 'form-id-2',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: {
+              name: 'form2'
+            },
+            featureMetrics: {
+              features: {
+                'File upload': 1,
+                'Email confirmation': 1,
+                Declarations: 1,
+                Sections: 1
+              },
+              formStructure: {
+                conditions: 1,
+                pages: 7,
+                questionTypes: 8,
+                questions: 11,
+                sections: 2
+              },
+              questionTypes: {
+                CheckboxesField: 3,
+                DeclarationField: 1,
+                FileUploadField: 1,
+                RadiosField: 2,
+                TextField: 7
+              }
+            },
+            updatedAt: new Date()
+          }
+        ]
+      }
+
+      // @ts-expect-error - partial data mocked
+      const model = metricsComponentUsageViewModel(mockMetrics)
+
+      expect(model).toEqual({
+        formUsageQuestionTypes: [
+          {
+            questionTypeName: 'TextField',
+            totalUsage: 10,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          {
+            questionTypeName: 'CheckboxesField',
+            totalUsage: 5,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          {
+            questionTypeName: 'RadiosField',
+            totalUsage: 3,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          {
+            questionTypeName: 'DeclarationField',
+            totalUsage: 2,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          {
+            questionTypeName: 'FileUploadField',
+            totalUsage: 2,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          {
+            questionTypeName: 'PaymentField',
+            totalUsage: 1,
+            formsUsing: 1,
+            percentage: '50.0%'
+          }
+        ],
+        formUsageFeatures: [
+          { featureName: 'File upload', formsUsing: 2, percentage: '100.0%' },
+          {
+            featureName: 'Email confirmation',
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          {
+            featureName: 'Declarations',
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          { featureName: 'Sections', formsUsing: 2, percentage: '100.0%' },
+          { featureName: 'GOV.UK Pay', formsUsing: 1, percentage: '50.0%' }
+        ],
+        formUsageFormStructures: [
+          {
+            metricName: 'Conditions per form',
+            average: '0.5',
+            minimum: 0,
+            maximum: 1
+          },
+          {
+            metricName: 'Pages per form',
+            average: '5.5',
+            minimum: 4,
+            maximum: 7
+          },
+          {
+            metricName: 'Question types per form',
+            average: '7.0',
+            minimum: 6,
+            maximum: 8
+          },
+          {
+            metricName: 'Questions per form',
+            average: '10.0',
+            minimum: 9,
+            maximum: 11
+          },
+          {
+            metricName: 'Sections per form',
+            average: '1.5',
+            minimum: 1,
+            maximum: 2
+          }
+        ]
+      })
+    })
+  })
+})

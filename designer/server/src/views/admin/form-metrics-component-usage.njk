@@ -1,0 +1,76 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "metrics-overview/macro.njk" import appMetricsOverview %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% set questionTypesHtml %}
+  {%- include "./admin/form-metrics-component-question-types.njk" -%}
+{% endset -%}
+
+{% set featuresHtml %}
+  {%- include "./admin/form-metrics-component-features.njk" -%}
+{% endset -%}
+
+{% set formStructureHtml %}
+  {%- include "./admin/form-metrics-component-form-structure.njk" -%}
+{% endset -%}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
+    <nav class="app-page-navigation" aria-label="Form activity">
+      <div class="app-page-navigation__list">
+        <div class="app-page-navigation__item">
+          <a class="app-page-navigation__link" href="/admin/form-metrics">
+            Form activity
+          </a>
+        </div>
+      </div>
+    </nav>
+    <div class="editor-card-title">Component usage</div>
+  </div>
+
+  <p class="govuk-body govuk-!-margin-bottom-6">Breakdown of how different components are being used across all forms.</p>
+
+  {{ govukTabs({
+    items: [
+      {
+        label: "Question types",
+        id: "question-types",
+        panel: {
+          html: questionTypesHtml
+        }
+      },
+      {
+        label: "Features",
+        id: "features",
+        panel: {
+          html: featuresHtml
+        }
+      },
+      {
+        label: "Form structure",
+        id: "form-structure",
+        panel: {
+          html: formStructureHtml
+        }
+      }
+    ]
+  }) }}
+
+  {% endcall %}
+  {% endblock %}
+
+  {% block mainEnd %}
+    {{ super() }}
+  {% endblock %}

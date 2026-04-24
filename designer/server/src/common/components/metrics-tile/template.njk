@@ -5,8 +5,9 @@
   {% set directionSymbolClasses = "govuk-tag--red app-tag-with-icon app-tag-arrow-down" %}
   {% set changeSymbolPercent = '' %}
 {% endif %}
+{% set metricTestId = params.testId or ('headline-column-' + (params.title | lower | replace(' ', '-'))) %}
 <!-- Metrics tile -->
-<div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-created">
+<div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="{{ metricTestId }}">
   <div class="app-metric-tile">
     <div class="gem-c-big-number">
       <span class="gem-c-big-number__label">{{ params.title }}</span>

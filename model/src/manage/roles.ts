@@ -33,7 +33,8 @@ export const RoleScopes = {
     Scopes.UserDelete,
     Scopes.UserEdit,
     Scopes.FormsFeedback,
-    Scopes.FormsFeedbackAllForms
+    Scopes.FormsFeedbackAllForms,
+    Scopes.FormsReport
   ],
   [Roles.FormPublisher]: [
     Scopes.FormDelete,

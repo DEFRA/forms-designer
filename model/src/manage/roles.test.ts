@@ -30,7 +30,8 @@ describe('Scopes', () => {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
-      Scopes.FormsFeedbackAllForms
+      Scopes.FormsFeedbackAllForms,
+      Scopes.FormsReport
     ])
   })
 
@@ -46,7 +47,8 @@ describe('Scopes', () => {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
-      Scopes.FormsFeedbackAllForms
+      Scopes.FormsFeedbackAllForms,
+      Scopes.FormsReport
     ])
   })
 
