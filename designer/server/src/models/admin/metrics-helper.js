@@ -208,7 +208,7 @@ function calcChangePercentage(currCount, prevCount) {
     return '-'
   }
   if (prevCount === 0) {
-    return '100%'
+    return '100'
   }
   return (((currCount - prevCount) / prevCount) * 100).toFixed(1)
 }

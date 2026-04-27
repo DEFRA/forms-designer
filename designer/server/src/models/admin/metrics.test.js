@@ -29,6 +29,16 @@ describe('metrics models', () => {
         overview: [
           {
             type: FormMetricType.OverviewMetric,
+            formId: 'form-id-2',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: {
+              name: 'form2'
+            },
+            featureMetrics: {},
+            updatedAt: new Date()
+          },
+          {
+            type: FormMetricType.OverviewMetric,
             formId: 'form-id-1',
             formStatus: FormStatus.Draft,
             summaryMetrics: {
@@ -50,7 +60,10 @@ describe('metrics models', () => {
           lastYear: {},
           prevYear: {},
           allTime: {},
-          submissions: {},
+          submissions: {
+            'form-id-1': 5,
+            'form-id-2': 2
+          },
           updatedAt: new Date('2026-01-01T00:00:00.000Z')
         }
       }
@@ -65,7 +78,14 @@ describe('metrics models', () => {
             features: [],
             formName: 'form1',
             name: 'form1',
-            submissions: 0
+            submissions: 5
+          },
+          {
+            daysToPublish: '-',
+            features: [],
+            formName: 'form2',
+            name: 'form2',
+            submissions: 2
           }
         ],
         overviewMetrics: {
