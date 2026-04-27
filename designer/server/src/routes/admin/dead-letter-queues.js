@@ -14,6 +14,7 @@ import {
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
+import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { publishDlqActionEvent } from '~/src/messaging/publish.js'
 import {
@@ -134,14 +135,12 @@ export async function readDlqWithRetry(dlq, token, messageId) {
     attempts++
     const messages = await getDeadLetterQueueMessages(dlq, token)
 
-    foundMessage = messages.find((m) => m.json.MessageId === messageId)
+    foundMessage = messages.find((m) => m.MessageId === messageId)
     if (foundMessage) {
       break
     }
 
-    await new Promise((resolve) =>
-      setTimeout(resolve, WAIT_TIME_IN_MILLIS)
-    )
+    await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_IN_MILLIS))
   }
   return foundMessage
 }
@@ -158,6 +157,14 @@ export function dlqMessageMapper(message) {
       Body: JSON.parse(message.Body)
     }
   }
+}
+
+/**
+ * @param {any[]} messages
+ * @returns {{ json: { MessageId: string, Body: any }}[]}
+ */
+export function dlqMessagesMapper(messages) {
+  return messages.map(dlqMessageMapper)
 }
 
 export function generateTitling() {
@@ -312,9 +319,14 @@ export default [
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
+      // Validation errors
+      const validation = yar
+        .flash(sessionNames.validationFailure.deadLetterQueues)
+        .at(0)
+
       const messages = await getDeadLetterQueueMessages(dlq, token)
 
-      const mappedMessages = dlqMessageMapper(messages)
+      const mappedMessages = dlqMessagesMapper(messages)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
@@ -333,7 +345,8 @@ export default [
           text: dlq
         },
         messages: mappedMessages,
-        queueName: dlq
+        queueName: dlq,
+        errorList: buildErrorList(validation?.formErrors)
       })
     },
     options: {
@@ -463,7 +476,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: any }>}
    */
   ({
     method: 'GET',
@@ -483,12 +496,18 @@ export default [
       const foundMessage = await readDlqWithRetry(dlq, token, messageId)
 
       if (!foundMessage) {
-        return redirectWithErrors(
-          request,
-          h,
-          error,
-          sessionNames.validationFailure.deadLetterQueues
+        const error = createJoiError(
+          'messageJson',
+          `Unable to find message ${messageId} in dead letter queue`
         )
+        addErrorsToSession(
+          request,
+          sessionNames.validationFailure.deadLetterQueues,
+          error
+        )
+        return h
+          .redirect(`${ROUTE_FULL_PATH}/${dlq}`)
+          .code(StatusCodes.SEE_OTHER)
       }
 
       const mappedMessage = dlqMessageMapper(foundMessage)
@@ -560,11 +579,21 @@ export default [
         )
       }
 
-      const messages = await getDeadLetterQueueMessages(dlq, token)
-      const message = messages.find(
-        (m) => m.json.MessageId === messageId
-      )
-      const originalMessage = dlqMessageMapper(message)
+      const foundMessage = await readDlqWithRetry(dlq, token, messageId)
+      if (!foundMessage) {
+        const error = createJoiError(
+          'messageJson',
+          `Unable to find message ${messageId} in dead letter queue`
+        )
+        return redirectWithErrors(
+          request,
+          h,
+          error,
+          sessionNames.validationFailure.deadLetterQueues
+        )
+      }
+
+      const originalMessage = dlqMessageMapper(foundMessage)
 
       await resubmitDeadLetterQueueMessage(dlq, messageId, body, token)
 

@@ -376,6 +376,23 @@ describe('Dead-letter queues routes', () => {
       expect(response.result).toMatchSnapshot()
     })
 
+    test('should show errors when message no longer in queue', async () => {
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([])
+
+      const options = {
+        method: 'get',
+        url: '/admin/dead-letter-queues/audit-api/modify/message-id',
+        auth
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
+    }, 10000)
+
     test('should show errors if resubmit button pressed when invalid JSON', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
 
@@ -399,8 +416,10 @@ describe('Dead-letter queues routes', () => {
       )
     })
 
-    test('should resubmit if resubmit button pressed when valid JSON', async () => {
+    test('should show errors if resubmit button pressed when message no longer in queue', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
+
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([])
 
       const options = {
         method: 'post',
@@ -415,10 +434,41 @@ describe('Dead-letter queues routes', () => {
         response: { statusCode, headers }
       } = await renderResponse(server, options)
 
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(resubmitDeadLetterQueueMessage).not.toHaveBeenCalled()
+      expect(headers.location).toBe(
+        '/admin/dead-letter-queues/audit-api/modify/12345'
+      )
+    }, 10000)
+
+    test('should resubmit if resubmit button pressed when valid JSON', async () => {
+      jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
+
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([
+        {
+          MessageId: 'message-id',
+          Body: '{ "field1": "value1" }',
+          ReceiptHandle: 'rec-handle'
+        }
+      ])
+
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/modify/message-id',
+        auth,
+        payload: {
+          messageJson: JSON.stringify(validJsonMessage)
+        }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
       expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(resubmitDeadLetterQueueMessage).toHaveBeenCalledWith(
         'audit-api',
-        '12345',
+        'message-id',
         validJsonMessage.Body,
         expect.any(String)
       )
