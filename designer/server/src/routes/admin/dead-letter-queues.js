@@ -13,7 +13,6 @@ import {
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
-import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { publishDlqActionEvent } from '~/src/messaging/publish.js'
 import {
@@ -381,14 +380,46 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: any }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJsonText: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: `${ROUTE_FULL_PATH}/{dlq}/modify-redirect/{messageId}`,
+    handler(request, h) {
+      const { params, payload, yar } = request
+      const { dlq, messageId } = params
+      const { messageJsonText } = payload
+
+      yar.flash(sessionNames.validationFailure.deadLetterQueues, {
+        formValues: { messageJsonExisting: messageJsonText }
+      })
+
+      return h
+        .redirect(`${ROUTE_FULL_PATH}/${dlq}/modify/${messageId}`)
+        .code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        params: dlqModifyParamSchema
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
    */
   ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{dlq}/modify/{messageId}`,
-    async handler(request, h) {
-      const { auth, params, yar } = request
-      const { token } = auth.credentials
+    handler(request, h) {
+      const { params, yar } = request
       const { dlq, messageId } = params
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
@@ -397,25 +428,6 @@ export default [
       const validation = yar
         .flash(sessionNames.validationFailure.deadLetterQueues)
         .at(0)
-
-      const foundMessage = await readDlqWithRetry(dlq, token, messageId)
-
-      if (!foundMessage) {
-        const error = createJoiError(
-          'messageJson',
-          `Unable to find message ${messageId} in dead letter queue`
-        )
-        addErrorsToSession(
-          request,
-          sessionNames.validationFailure.deadLetterQueues,
-          error
-        )
-        return h
-          .redirect(`${ROUTE_FULL_PATH}/${dlq}`)
-          .code(StatusCodes.SEE_OTHER)
-      }
-
-      const mappedMessage = dlqMessageMapper(foundMessage)
 
       const { formValues, formErrors } = validation ?? {}
 
@@ -427,7 +439,11 @@ export default [
         },
         value:
           formValues?.messageJson ??
-          JSON.stringify(mappedMessage.json, null, 2),
+          JSON.stringify(
+            JSON.parse(formValues?.messageJsonExisting ?? '{}'),
+            null,
+            2
+          ),
         rows: 30,
         errorMessage: formErrors?.messageJson
           ? { text: formErrors.messageJson.text }
@@ -445,6 +461,7 @@ export default [
           text: dlq
         },
         messageJson,
+        messageId,
         queueName: dlq
       })
     },
@@ -501,6 +518,8 @@ export default [
       const originalMessage = dlqMessageMapper(foundMessage)
 
       await resubmitDeadLetterQueueMessage(dlq, messageId, body, token)
+
+      await deleteDeadLetterQueueMessage(dlq, messageId, token)
 
       const auditUser = mapUserForAudit(auth.credentials.user)
       await publishDlqActionEvent(

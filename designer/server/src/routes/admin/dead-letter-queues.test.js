@@ -376,23 +376,6 @@ describe('Dead-letter queues routes', () => {
       expect(response.result).toMatchSnapshot()
     })
 
-    test('should show errors when message no longer in queue', async () => {
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([])
-
-      const options = {
-        method: 'get',
-        url: '/admin/dead-letter-queues/audit-api/modify/message-id',
-        auth
-      }
-
-      const {
-        response: { statusCode, headers }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
-    }, 10000)
-
     test('should show errors if resubmit button pressed when invalid JSON', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
 
