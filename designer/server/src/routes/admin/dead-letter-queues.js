@@ -1,4 +1,3 @@
-import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-plugin/engine/types/schema.js'
 import { DeadLetterQueues, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -21,6 +20,12 @@ import {
   deleteDeadLetterMessageConfirmationViewModel,
   redriveDeadLetterQueueConfirmationViewModel
 } from '~/src/models/manage/dead-letter-queue.js'
+import {
+  dlqMessageMapper,
+  dlqMessagesMapper,
+  readDlqWithRetry,
+  validateMessageJson
+} from '~/src/routes/admin/dead-letter-queue-helper.js'
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 const CONFIRMATION_PAGE_PATH = 'forms/confirmation-page'
@@ -30,9 +35,6 @@ const MODIFY_AND_RESUBMIT = 'modify-and-resubmit'
 const REDRIVE = 'redrive'
 const DELETE = 'delete'
 const CONFIRM = 'confirm'
-
-const MAX_DLQ_READ_ATTEMPTS = 5
-const WAIT_TIME_IN_MILLIS = 1000
 
 const dlqSchema = Joi.string()
   .required()
@@ -69,103 +71,6 @@ const dlqActionPayloadSchema = Joi.object().keys({
   action: Joi.string().valid(CONFIRM, DELETE).required(),
   messageId: messageIdSchema
 })
-
-/**
- * @param {string} messageJson
- */
-export function validateMessageJson(messageJson) {
-  let json
-  try {
-    json = JSON.parse(messageJson)
-  } catch (err) {
-    const typedError = /** @type {{ message?: string }} */ (err)
-    return {
-      error: createJoiError(
-        'messageJson',
-        `Invalid JSON: ${typedError.message}`
-      )
-    }
-  }
-
-  /**
-   * @type { FormAdapterSubmissionMessagePayload | undefined }
-   */
-  const messageBody = json.Body
-  if (!messageBody) {
-    return {
-      error: createJoiError(
-        'messageJson',
-        'Invalid JSON: Missing "Body" element'
-      )
-    }
-  }
-
-  const { error } = formAdapterSubmissionMessagePayloadSchema.validate(
-    messageBody,
-    {
-      abortEarly: false,
-      stripUnknown: true
-    }
-  )
-  if (error) {
-    const errorText = error.details.map((d) => d.message).join(', ')
-    const joiError = createJoiError(
-      'messageJson',
-      `JSON does not match the schema: ${errorText}`
-    )
-    return {
-      error: joiError
-    }
-  }
-  return {
-    body: messageBody
-  }
-}
-
-/**
- * @param {DeadLetterQueues} dlq
- * @param {string} token
- * @param {string} messageId
- * @returns {Promise<any | undefined>}
- */
-export async function readDlqWithRetry(dlq, token, messageId) {
-  let attempts = 0
-  let foundMessage
-  while (attempts < MAX_DLQ_READ_ATTEMPTS) {
-    attempts++
-    const messages = await getDeadLetterQueueMessages(dlq, token)
-
-    foundMessage = messages.find((m) => m.MessageId === messageId)
-    if (foundMessage) {
-      break
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_IN_MILLIS))
-  }
-  return foundMessage
-}
-
-/**
- * Keep specific properties
- * @param {any} message
- * @returns {{ json: { MessageId: string, Body: any }}}
- */
-export function dlqMessageMapper(message) {
-  return {
-    json: {
-      MessageId: message.MessageId,
-      Body: JSON.parse(message.Body)
-    }
-  }
-}
-
-/**
- * @param {any[]} messages
- * @returns {{ json: { MessageId: string, Body: any }}[]}
- */
-export function dlqMessagesMapper(messages) {
-  return messages.map(dlqMessageMapper)
-}
 
 export function generateTitling() {
   const pageHeading = ADMIN_TOOLS
@@ -581,14 +486,14 @@ export default [
 
       const foundMessage = await readDlqWithRetry(dlq, token, messageId)
       if (!foundMessage) {
-        const error = createJoiError(
+        const notFoundError = createJoiError(
           'messageJson',
           `Unable to find message ${messageId} in dead letter queue`
         )
         return redirectWithErrors(
           request,
           h,
-          error,
+          notFoundError,
           sessionNames.validationFailure.deadLetterQueues
         )
       }
@@ -634,5 +539,4 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
  */

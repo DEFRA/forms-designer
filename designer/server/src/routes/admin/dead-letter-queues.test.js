@@ -8,7 +8,7 @@ import {
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
-import { validateMessageJson } from '~/src/routes/admin/dead-letter-queues.js'
+import { validateMessageJson } from '~/src/routes/admin/dead-letter-queue-helper.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
