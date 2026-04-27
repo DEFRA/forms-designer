@@ -116,7 +116,7 @@ export function componentUsageFeatures(metrics) {
     const typedEntries = /** @type {[string, number][]} */ (
       Object.entries(metric.featureMetrics.features)
     )
-    for (const [featureName, _count] of typedEntries) {
+    for (const [featureName] of typedEntries) {
       const currenFormsCount = formsUsing.get(featureName) ?? 0
       formsUsing.set(featureName, currenFormsCount + 1)
     }
@@ -166,8 +166,8 @@ export function componentUsageFormStructures(metrics) {
         total: 0
       }
       const newStats = {
-        min: count < statsSoFar.min ? count : statsSoFar.min,
-        max: count > statsSoFar.max ? count : statsSoFar.max,
+        min: Math.min(count, statsSoFar.min),
+        max: Math.max(count, statsSoFar.max),
         total: statsSoFar.total + count,
         avg: (statsSoFar.total + count) / totalForms
       }
