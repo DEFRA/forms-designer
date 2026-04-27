@@ -30,6 +30,9 @@ const REDRIVE = 'redrive'
 const DELETE = 'delete'
 const CONFIRM = 'confirm'
 
+const MAX_DLQ_READ_ATTEMPTS = 5
+const WAIT_TIME_IN_MILLIS = 1000
+
 const dlqSchema = Joi.string()
   .required()
   .valid(...Object.values(DeadLetterQueues))
@@ -119,16 +122,42 @@ export function validateMessageJson(messageJson) {
 }
 
 /**
- * Keep specific properties
- * @param {any[]} messages
+ * @param {DeadLetterQueues} dlq
+ * @param {string} token
+ * @param {string} messageId
+ * @returns {Promise<any | undefined>}
  */
-export function dlqMessageMapper(messages) {
-  return messages.map((m) => ({
-    json: {
-      MessageId: m.MessageId,
-      Body: JSON.parse(m.Body)
+export async function readDlqWithRetry(dlq, token, messageId) {
+  let attempts = 0
+  let foundMessage
+  while (attempts < MAX_DLQ_READ_ATTEMPTS) {
+    attempts++
+    const messages = await getDeadLetterQueueMessages(dlq, token)
+
+    foundMessage = messages.find((m) => m.json.MessageId === messageId)
+    if (foundMessage) {
+      break
     }
-  }))
+
+    await new Promise((resolve) =>
+      setTimeout(resolve, WAIT_TIME_IN_MILLIS)
+    )
+  }
+  return foundMessage
+}
+
+/**
+ * Keep specific properties
+ * @param {any} message
+ * @returns {{ json: { MessageId: string, Body: any }}}
+ */
+export function dlqMessageMapper(message) {
+  return {
+    json: {
+      MessageId: message.MessageId,
+      Body: JSON.parse(message.Body)
+    }
+  }
 }
 
 export function generateTitling() {
@@ -451,11 +480,18 @@ export default [
         .flash(sessionNames.validationFailure.deadLetterQueues)
         .at(0)
 
-      const messages = await getDeadLetterQueueMessages(dlq, token)
+      const foundMessage = await readDlqWithRetry(dlq, token, messageId)
 
-      const mappedMessage = dlqMessageMapper(messages).find(
-        (m) => m.json.MessageId === messageId
-      )
+      if (!foundMessage) {
+        return redirectWithErrors(
+          request,
+          h,
+          error,
+          sessionNames.validationFailure.deadLetterQueues
+        )
+      }
+
+      const mappedMessage = dlqMessageMapper(foundMessage)
 
       const { formValues, formErrors } = validation ?? {}
 
@@ -467,7 +503,7 @@ export default [
         },
         value:
           formValues?.messageJson ??
-          JSON.stringify(mappedMessage?.json, null, 2),
+          JSON.stringify(mappedMessage.json, null, 2),
         rows: 30,
         errorMessage: formErrors?.messageJson
           ? { text: formErrors.messageJson.text }
@@ -525,9 +561,10 @@ export default [
       }
 
       const messages = await getDeadLetterQueueMessages(dlq, token)
-      const originalMessage = dlqMessageMapper(messages).find(
+      const message = messages.find(
         (m) => m.json.MessageId === messageId
       )
+      const originalMessage = dlqMessageMapper(message)
 
       await resubmitDeadLetterQueueMessage(dlq, messageId, body, token)
 
