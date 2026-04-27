@@ -1,4 +1,4 @@
-import { FormMetricName } from '@defra/forms-model'
+import { FormMetricName, formStructureMetricNames } from '@defra/forms-model'
 import { format, startOfDay, subDays } from 'date-fns'
 
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
@@ -122,27 +122,13 @@ export function componentUsageFeatures(metrics) {
     }
   }
   // Sort results in reverse order of counts
-  const featuresSorted = new Map(
-    [...formsUsing.entries()].sort(
-      ([_aKey, aVal], [_bKey, bVal]) => bVal - aVal
-    )
-  )
-
-  return Array.from(featuresSorted).map((f) => ({
-    featureName: f[0],
-    formsUsing: f[1],
-    percentage: `${((f[1] / totalForms) * 100).toFixed(1)}%`
-  }))
-}
-
-/**
- * @param {string} metricName
- */
-function mapFormStructureName(metricName) {
-  if (metricName === 'questionTypes') {
-    return 'Question types per form'
-  }
-  return `${metricName.substring(0, 1).toUpperCase()}${metricName.substring(1)} per form`
+  return [...formsUsing.entries()]
+    .sort(([_aKey, aVal], [_bKey, bVal]) => bVal - aVal)
+    .map((f) => ({
+      featureName: f[0],
+      formsUsing: f[1],
+      percentage: `${((f[1] / totalForms) * 100).toFixed(1)}%`
+    }))
 }
 
 /**
@@ -176,7 +162,7 @@ export function componentUsageFormStructures(metrics) {
   }
 
   return Array.from(structureStats).map((f) => ({
-    metricName: mapFormStructureName(f[0]),
+    metricName: formStructureMetricNames[f[0]] ?? 'Unknown',
     average: f[1].avg.toFixed(1),
     minimum: f[1].min,
     maximum: f[1].max
