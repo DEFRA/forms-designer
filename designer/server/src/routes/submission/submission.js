@@ -46,12 +46,13 @@ export default [
       const componentName = component.name
       const repeaterName = hasRepeater(page) ? page.repeat.options.name : ''
 
-      /**
-       * @type {FeatureCollection[]}
-       */
-      const geojson = repeaterName
-        ? record.data.repeaters[repeaterName].map((item) => item[componentName])
-        : [record.data.main[componentName]]
+      const geojson = /** @type {FeatureCollection[]} */ (
+        repeaterName
+          ? record.data.repeaters[repeaterName].map(
+              (item) => item[componentName]
+            )
+          : [record.data.main[componentName]]
+      )
 
       const caption = referenceNumber
       const pageTitle = `${component.title}${repeaterName ? ' (multiple responses)' : ''}`

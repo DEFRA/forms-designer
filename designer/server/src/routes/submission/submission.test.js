@@ -1,4 +1,9 @@
-import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
+import {
+  ComponentType,
+  ControllerType,
+  Engine,
+  FormStatus
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -13,8 +18,8 @@ import { renderResponse } from '~/test/helpers/component-helpers.js'
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/services/formSubmissionService.js')
 
+/** @type {FormSubmissionDocument} */
 const submissionRecord = {
-  _id: '69b958a6888e59004e2a013a',
   meta: {
     schemaVersion: 1,
     timestamp: new Date('2026-03-17T13:35:33.712Z'),
@@ -22,7 +27,7 @@ const submissionRecord = {
     formName: 'First form',
     formId: '6996f3b9c18253384380d07a',
     formSlug: 'first-form',
-    status: 'draft',
+    status: FormStatus.Draft,
     isPreview: true,
     notificationEmail: 'enrique.chase@defra.gov.uk',
     versionMetadata: {
@@ -349,4 +354,5 @@ describe('Submission routes', () => {
 
 /**
  * @import { Server } from '@hapi/hapi'
+ * @import { FormSubmissionDocument } from '~/src/services/formSubmissionService.js'
  */
