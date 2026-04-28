@@ -477,6 +477,7 @@ describe('publish', () => {
         DeadLetterQueues.AuditApi,
         'redrive',
         undefined,
+        undefined,
         authAuditUser
       )
 
@@ -504,6 +505,7 @@ describe('publish', () => {
         DeadLetterQueues.AuditApi,
         'delete',
         'message-id',
+        undefined,
         authAuditUser
       )
 
@@ -526,6 +528,39 @@ describe('publish', () => {
       })
     })
 
+    it('should publish DLQ_ACTION resubmit event', async () => {
+      await publishDlqActionEvent(
+        DeadLetterQueues.AuditApi,
+        'modify-and-resubmit',
+        'message-id',
+        {
+          beforeJson: '{ before: 123 }',
+          afterJson: '{ after: 456 }'
+        },
+        authAuditUser
+      )
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: 'audit-api',
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.OPERATIONS,
+        type: AuditEventMessageType.DLQ_ACTION,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        },
+        data: {
+          action: 'modify-and-resubmit',
+          messageId: 'message-id',
+          beforeJson: '{ before: 123 }',
+          afterJson: '{ after: 456 }'
+        }
+      })
+    })
+
     it('should not publish the event if the schema is incorrect', async () => {
       const invalidUser = {}
 
@@ -533,6 +568,7 @@ describe('publish', () => {
         publishDlqActionEvent(
           DeadLetterQueues.AuditApi,
           // @ts-expect-error - invalid value
+          undefined,
           undefined,
           undefined,
           invalidUser

@@ -4,7 +4,8 @@ import {
   deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   getEndpoint,
-  redriveDeadLetterQueueMessages
+  redriveDeadLetterQueueMessages,
+  resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
 import { delJson, getJson, postJson } from '~/src/lib/fetch.js'
 
@@ -83,14 +84,29 @@ describe('dead-letter queue lib functions', () => {
         // @ts-expect-error - partial mock of response
         .mockResolvedValueOnce({ body: { message: 'success' } })
       const dlq = DeadLetterQueues.AuditApi
-      await deleteDeadLetterQueueMessage(
+      await deleteDeadLetterQueueMessage(dlq, 'message-id', 'token')
+      expect(delJson).toHaveBeenCalledWith(
+        new URL('http://localhost:3004/admin/deadletter/message-id'),
+        expect.anything()
+      )
+    })
+  })
+
+  describe('resubmitDeadLetterQueueMessage', () => {
+    it('should call endpoint', async () => {
+      jest
+        .mocked(postJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'success' } })
+      const dlq = DeadLetterQueues.AuditApi
+      await resubmitDeadLetterQueueMessage(
         dlq,
-        'receipt-handle',
         'message-id',
+        undefined,
         'token'
       )
-      expect(delJson).toHaveBeenCalledWith(
-        new URL('http://localhost:3004/admin/deadletter/receipt-handle'),
+      expect(postJson).toHaveBeenCalledWith(
+        new URL('http://localhost:3004/admin/deadletter/resubmit/message-id'),
         expect.anything()
       )
     })

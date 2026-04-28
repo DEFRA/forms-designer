@@ -1,4 +1,4 @@
-import { FormMetricName, formStructureMetricNames } from '@defra/forms-model'
+import { FormMetricName } from '@defra/forms-model'
 import { format, startOfDay, subDays } from 'date-fns'
 
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
@@ -7,6 +7,15 @@ const FULL_DATE_MASK = 'd MMMM yyyy'
 const NEW_FORMS_CREATED_TITLE = 'New forms created'
 const FORMS_PUBLISHED_TITLE = 'Forms published'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
+
+const formStructureMetricNames =
+  /** @type {Partial<Record<string, string>>} */ ({
+    pages: 'Pages per form',
+    questions: 'Questions per form',
+    sections: 'Sections per form',
+    conditions: 'Conditions per form',
+    questionTypes: 'Question types per form'
+  })
 
 const straplineWording = {
   [FormMetricName.NewFormsCreated]: { noun: 'form', verb: 'created' },

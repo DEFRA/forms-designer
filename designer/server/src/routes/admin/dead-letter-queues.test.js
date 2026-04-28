@@ -5,14 +5,54 @@ import { createServer } from '~/src/createServer.js'
 import {
   deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
-  redriveDeadLetterQueueMessages
+  redriveDeadLetterQueueMessages,
+  resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
+import { validateMessageJson } from '~/src/routes/admin/dead-letter-queues.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/dead-letter-queue.js')
 jest.mock('~/src/messaging/publish.js')
+
+const validJsonMessage = {
+  MessageId: 'cc9a6f39-7b9f-4a02-90c0-bb232d2a5555',
+  Body: {
+    meta: {
+      schemaVersion: 1,
+      timestamp: '2026-04-23T10:58:56.922Z',
+      referenceNumber: '8NW-H8U-B79',
+      formName: 'Test submit',
+      formId: '69b2cc419148aa6a1f983d75',
+      formSlug: 'test-submit',
+      status: 'draft',
+      isPreview: true,
+      notificationEmail: 'test@test.co.uk',
+      versionMetadata: {
+        versionNumber: 7,
+        createdAt: '2026-04-16T09:08:28.897Z'
+      },
+      custom: {
+        userConfirmationEmail: ''
+      }
+    },
+    data: {
+      main: {
+        dwueGz: 'John',
+        KvLcmD: 'Apple'
+      },
+      repeaters: {},
+      files: {}
+    },
+    result: {
+      files: {
+        main: '9c1c2458-3143-49c9-89fe-86c18d934c15',
+        repeaters: {}
+      }
+    }
+  }
+}
 
 describe('Dead-letter queues routes', () => {
   /** @type {Server} */
@@ -242,8 +282,7 @@ describe('Dead-letter queues routes', () => {
         auth,
         payload: {
           action: 'confirm',
-          messageId: 'message-id',
-          receiptHandle: 'receipt-handle'
+          messageId: 'message-id'
         }
       }
 
@@ -277,8 +316,7 @@ describe('Dead-letter queues routes', () => {
         auth,
         payload: {
           action: 'delete',
-          messageId: 'message-id',
-          receiptHandle: 'receipt-handle'
+          messageId: 'message-id'
         }
       }
 
@@ -289,11 +327,123 @@ describe('Dead-letter queues routes', () => {
       expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(deleteDeadLetterQueueMessage).toHaveBeenCalledWith(
         'audit-api',
-        'receipt-handle',
         'message-id',
         expect.any(String)
       )
       expect(headers.location).toBe('/admin/dead-letter-queues/audit-api')
+    })
+
+    test('should render modify form with message content and resubmit button', async () => {
+      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([
+        {
+          MessageId: 'message-id',
+          Body: '{ "field1": "value1" }',
+          ReceiptHandle: 'rec-handle'
+        }
+      ])
+
+      const options = {
+        method: 'get',
+        url: '/admin/dead-letter-queues/audit-api/modify/message-id',
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByRole('heading', { level: 1 })
+      const $links = container.getAllByRole('link')
+      const $button = container.getByRole('button', {
+        name: 'Resubmit'
+      })
+      const $messages = container.getAllByRole('textbox')
+
+      expect($mastheadHeading).toHaveTextContent('Admin tools')
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      // Check tab headings and active tab
+      expect($links[5]).toHaveTextContent('My account')
+      expect($links[6]).toHaveTextContent('Manage users')
+      expect($links[7]).toHaveTextContent('Admin tools')
+      expect($links[8]).toHaveTextContent('Support')
+      expect($links[9]).toHaveTextContent('Back to dead-letter queues')
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(response.headers['content-type']).toContain('text/html')
+
+      expect($messages).toHaveLength(1)
+      expect($button).toBeInTheDocument()
+
+      expect(response.result).toMatchSnapshot()
+    })
+
+    test('should show errors if resubmit button pressed when invalid JSON', async () => {
+      jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
+
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/modify/12345',
+        auth,
+        payload: {
+          messageJson: '{ abc: 123'
+        }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(resubmitDeadLetterQueueMessage).not.toHaveBeenCalled()
+      expect(headers.location).toBe(
+        '/admin/dead-letter-queues/audit-api/modify/12345'
+      )
+    })
+
+    test('should resubmit if resubmit button pressed when valid JSON', async () => {
+      jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
+
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/modify/12345',
+        auth,
+        payload: {
+          messageJson: JSON.stringify(validJsonMessage)
+        }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(resubmitDeadLetterQueueMessage).toHaveBeenCalledWith(
+        'audit-api',
+        '12345',
+        validJsonMessage.Body,
+        expect.any(String)
+      )
+      expect(headers.location).toBe('/admin/dead-letter-queues')
+    })
+  })
+
+  describe('validMessageJson', () => {
+    it('should return error when invalid JSON', () => {
+      const { error } = validateMessageJson('{ "abc": "123"')
+      expect(error?.message).toBe(
+        "Invalid JSON: Expected ',' or '}' after property value in JSON at position 14 (line 1 column 15)"
+      )
+    })
+
+    it('should return error when valid JSON but no Body element', () => {
+      const { error } = validateMessageJson('{ "abc": "123" }')
+      expect(error?.message).toBe('Invalid JSON: Missing "Body" element')
+    })
+
+    it('should return error when valid JSON but invalid Body schema', () => {
+      const { error } = validateMessageJson('{ "Body": {} }')
+      expect(error?.message).toBe(
+        'JSON does not match the schema: "meta" is required, "data" is required, "result" is required'
+      )
     })
   })
 })

@@ -243,8 +243,15 @@ export function formsBackupRequestedMapper(data, user) {
  * @returns {DlqActionMessage}
  */
 export function formDlqActionMapper(dlqActionData) {
-  const { dlq, action, messageId, user } = dlqActionData
+  const { dlq, action, messageId, jsonContent, user } = dlqActionData
   const now = new Date()
+
+  const extraData = jsonContent
+    ? {
+        beforeJson: jsonContent.beforeJson,
+        afterJson: jsonContent.afterJson
+      }
+    : {}
 
   return {
     schemaVersion: AuditEventMessageSchemaVersion.V1,
@@ -259,7 +266,8 @@ export function formDlqActionMapper(dlqActionData) {
     },
     data: {
       action,
-      messageId
+      messageId,
+      ...extraData
     },
     messageCreatedAt: now
   }
@@ -284,6 +292,7 @@ export function formDlqActionMapper(dlqActionData) {
  * @property {DeadLetterQueues} dlq - The queue name
  * @property {string} action - The action ('redrive' or 'delete')
  * @property { string | undefined } messageId - The id of the message if the action is 'delete'
+ * @property { { beforeJson: string, afterJson: string } | undefined } jsonContent - JSON content (before modification, and after)
  * @property {AuditUser} user - The user downloading the form
  */
 
