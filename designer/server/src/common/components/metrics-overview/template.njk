@@ -1,0 +1,36 @@
+{% from "metrics-tile/macro.njk" import appMetricsTile %}
+
+<!-- Form Activity Section -->
+<div class="govuk-!-margin-bottom-6">
+  {% if params.fromDate and params.toDate %}
+    <span class="govuk-caption-m">{{ params.fromDate }} to {{ params.toDate }}</span>
+  {% else %}
+    <span class="govuk-caption-m">Since launch</span>
+  {% endif %}
+  <h2 class="govuk-heading-l">{{ params.title }}</h2>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Form activity</h2>
+  <div class="govuk-grid-row">
+    <!-- Forms Created -->
+    {{ appMetricsTile(params.newFormsCreated) }}
+
+    <!-- Forms Published -->
+    {{ appMetricsTile(params.formsPublished) }}
+
+    <!-- Form Submissions -->
+    {{ appMetricsTile(params.formSubmissions) }}
+  </div>
+</div>
+
+{# <!-- Publishing Workflow Section -->
+<div class="govuk-!-margin-bottom-0">
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Publishing workflow</h2>
+  <div class="govuk-grid-row">
+
+    <!-- Forms in Draft -->
+    {{ appMetricsTile(params.formsInDraft) }}
+
+    <!-- Average Time to Publish -->
+    {{ appMetricsTile(params.timeToPublish) }}
+  </div>
+</div> #}

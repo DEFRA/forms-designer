@@ -1,0 +1,123 @@
+@use "govuk-frontend" as *;
+
+// Metric tiles - consistent height and spacing
+.app-dashboard-caption {
+  color: #505a5f;
+  margin-bottom: 24px;
+}
+
+// Smaller unit text for big numbers, e.g. "days"
+.app-big-number-unit {
+  font-size: 0.6em;
+  font-weight: 400;
+}
+
+.app-metric-tile {
+  background-color: #f3f2f1;
+  padding: 24px;
+  margin-bottom: 1rem;
+  min-height: 180px;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+@media (min-width: 40.0625em) {
+  .app-metric-tile {
+    min-height: 200px;
+  }
+}
+
+// GOV.UK Publishing Components big number styles
+.gem-c-big-number {
+  margin-bottom: 0;
+}
+
+.gem-c-big-number__value {
+  display: block;
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 0;
+  color: #0b0c0c;
+}
+
+@media (min-width: 40.0625em) {
+  .gem-c-big-number__value {
+    font-size: 3.5rem;
+  }
+}
+
+.gem-c-big-number__label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  color: #0b0c0c;
+}
+
+// Tag styles with arrow icons
+.app-tag-with-icon {
+  position: relative;
+  padding-left: 26px;
+  white-space: nowrap;
+}
+
+.app-tag-arrow-up::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: currentcolor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 0l6 6H7v6H5V6H0z'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 0l6 6H7v6H5V6H0z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+.app-tag-arrow-down::before {
+  content: "";
+  position: absolute;
+  left: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 12px;
+  height: 12px;
+  background-color: currentcolor;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 12L0 6h5V0h2v6h5z'/%3E%3C/svg%3E");
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M6 12L0 6h5V0h2v6h5z'/%3E%3C/svg%3E");
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+}
+
+// Ensure consistent vertical alignment
+.app-metric-tile .gem-c-big-number {
+  flex: 1 0 auto;
+}
+
+// Metric captions - short insights
+.app-metric-caption {
+  color: #505a5f;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.moj-filter__tag-icon {
+  margin-left: 8px;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+  color: inherit;
+}

@@ -21,6 +21,7 @@ import {
 } from '~/src/messaging/publish.js'
 import adminDeadLetterQueuesRoutes from '~/src/routes/admin/dead-letter-queues.js'
 import adminFormInspectRoutes from '~/src/routes/admin/form-inspect.js'
+import adminFormMetricsRoutes from '~/src/routes/admin/form-metrics.js'
 import adminResetSaveAndExitRoutes from '~/src/routes/admin/reset-save-and-exit.js'
 import { sendFeedbackSubmissionsFile } from '~/src/services/formSubmissionService.js'
 
@@ -85,7 +86,8 @@ export default [
           download: scopes.includes(Scopes.FormsBackup),
           resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
           deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues),
-          formInspect: scopes.includes(Scopes.FormsInspect)
+          formInspect: scopes.includes(Scopes.FormsInspect),
+          formMetrics: scopes.includes(Scopes.FormsInspect) // Scopes.FormsReport
         }
       })
     },
@@ -170,7 +172,9 @@ export default [
 
   ...adminDeadLetterQueuesRoutes,
 
-  ...adminFormInspectRoutes
+  ...adminFormInspectRoutes,
+
+  ...adminFormMetricsRoutes
 ]
 
 /**

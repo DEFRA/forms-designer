@@ -1,0 +1,20 @@
+<table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Question type</th>
+        <th scope="col" class="govuk-table__header">Total usage</th>
+        <th scope="col" class="govuk-table__header">Forms using</th>
+        <th scope="col" class="govuk-table__header">Percentage</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for row in model.formUsageQuestionTypes %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">{{ row.questionTypeName }}</td>
+        <td class="govuk-table__cell">{{ row.totalUsage | formatNumber }}</td>
+        <td class="govuk-table__cell">{{ row.formsUsing | formatNumber }}</td>
+        <td class="govuk-table__cell">{{ row.percentage }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
