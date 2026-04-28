@@ -1,6 +1,7 @@
 import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
 import {
+  combineModel,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
@@ -393,4 +394,79 @@ describe('metrics models', () => {
       })
     })
   })
+
+  describe('combineModel', () => {
+    it('should add live metrics alongside existing draft ones', () => {
+      const combinedElement = [
+        {
+          questionTypeName: 'TextField',
+          draft: {
+            questionTypeName: 'TextField',
+            totalUsage: 10,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          live: {}
+        }
+      ]
+      const liveElement = [
+        {
+          questionTypeName: 'TextField',
+          totalUsage: 6,
+          formsUsing: 1,
+          percentage: '30.0%'
+        }
+      ]
+      combineModel(combinedElement, liveElement, 'questionTypeName')
+
+      expect(combinedElement).toEqual([
+        {
+          questionTypeName: 'TextField',
+          draft: {
+            questionTypeName: 'TextField',
+            totalUsage: 10,
+            formsUsing: 2,
+            percentage: '100.0%'
+          },
+          live: {
+            questionTypeName: 'TextField',
+            totalUsage: 6,
+            formsUsing: 1,
+            percentage: '30.0%'
+          }
+        }
+      ])
+    })
+
+    it('should add live metrics alongside missing draft ones', () => {
+      /** @type {FormTimelineMetric[]} */
+      const combinedElement = []
+      const liveElement = [
+        {
+          questionTypeName: 'TextField',
+          totalUsage: 6,
+          formsUsing: 1,
+          percentage: '30.0%'
+        }
+      ]
+      combineModel(combinedElement, liveElement, 'questionTypeName')
+
+      expect(combinedElement).toEqual([
+        {
+          questionTypeName: 'TextField',
+          draft: {},
+          live: {
+            questionTypeName: 'TextField',
+            totalUsage: 6,
+            formsUsing: 1,
+            percentage: '30.0%'
+          }
+        }
+      ])
+    })
+  })
 })
+
+/**
+ * @import { FormTimelineMetric } from '@defra/forms-model'
+ */

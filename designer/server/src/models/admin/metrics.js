@@ -122,7 +122,7 @@ export function metricsComponentUsageViewModel(metrics) {
  * @param {any[]} liveElement
  * @param {string} typeKeyName
  */
-function combineModel(combinedElement, liveElement, typeKeyName) {
+export function combineModel(combinedElement, liveElement, typeKeyName) {
   liveElement.forEach((le) => {
     const found = combinedElement.find(
       (x) => x.draft[typeKeyName] === le[typeKeyName]
