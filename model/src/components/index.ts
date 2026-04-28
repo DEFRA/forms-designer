@@ -1,5 +1,9 @@
 export { ComponentTypes } from '~/src/components/component-types.js'
-export { ComponentType, PreviewTypeEnum } from '~/src/components/enums.js'
+export {
+  ComponentType,
+  GeospatialFieldOptionsCountryEnum,
+  PreviewTypeEnum
+} from '~/src/components/enums.js'
 export {
   allDocumentTypes,
   allImageTypes,

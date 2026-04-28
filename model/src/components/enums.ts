@@ -28,6 +28,13 @@ export enum ComponentType {
   GeospatialField = 'GeospatialField'
 }
 
+export enum GeospatialFieldOptionsCountryEnum {
+  England = 'england',
+  NorthernIreland = 'northern-ireland',
+  Scotland = 'scotland',
+  Wales = 'wales'
+}
+
 export const PreviewTypeEnum = {
   ...ComponentType,
   Question: 'Question',
