@@ -1,3 +1,5 @@
+import { FormStatus } from '@defra/forms-model'
+
 import {
   componentUsageFeatures,
   componentUsageFormStructures,
@@ -52,11 +54,89 @@ export function metricsFormActivityViewModel(metrics) {
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
 export function metricsComponentUsageViewModel(metrics) {
-  return {
-    formUsageQuestionTypes: componentUsageQuestionTypes(metrics),
-    formUsageFeatures: componentUsageFeatures(metrics),
-    formUsageFormStructures: componentUsageFormStructures(metrics)
+  const draftModel = {
+    formUsageQuestionTypes: componentUsageQuestionTypes(
+      metrics,
+      FormStatus.Draft
+    ),
+    formUsageFeatures: componentUsageFeatures(metrics, FormStatus.Draft),
+    formUsageFormStructures: componentUsageFormStructures(
+      metrics,
+      FormStatus.Draft
+    )
   }
+  const liveModel = {
+    formUsageQuestionTypes: componentUsageQuestionTypes(
+      metrics,
+      FormStatus.Live
+    ),
+    formUsageFeatures: componentUsageFeatures(metrics, FormStatus.Live),
+    formUsageFormStructures: componentUsageFormStructures(
+      metrics,
+      FormStatus.Live
+    )
+  }
+
+  // Combine models into a single structure that includes both draft and live metrics
+  const combinedModel = {
+    formUsageQuestionTypes: draftModel.formUsageQuestionTypes.map((qt) => ({
+      questionTypeName: qt.questionTypeName,
+      draft: qt,
+      live: {}
+    })),
+    formUsageFeatures: draftModel.formUsageFeatures.map((f) => ({
+      featureName: f.featureName,
+      draft: f,
+      live: {}
+    })),
+    formUsageFormStructures: draftModel.formUsageFormStructures.map((s) => ({
+      metricName: s.metricName,
+      draft: s,
+      live: {}
+    }))
+  }
+
+  combineModel(
+    combinedModel.formUsageQuestionTypes,
+    liveModel.formUsageQuestionTypes,
+    'questionTypeName'
+  )
+
+  combineModel(
+    combinedModel.formUsageFeatures,
+    liveModel.formUsageFeatures,
+    'featureName'
+  )
+
+  combineModel(
+    combinedModel.formUsageFormStructures,
+    liveModel.formUsageFormStructures,
+    'metricName'
+  )
+
+  return combinedModel
+}
+
+/**
+ * @param {any[]} combinedElement
+ * @param {any[]} liveElement
+ * @param {string} typeKeyName
+ */
+function combineModel(combinedElement, liveElement, typeKeyName) {
+  liveElement.forEach((le) => {
+    const found = combinedElement.find(
+      (x) => x.draft[typeKeyName] === le[typeKeyName]
+    )
+    if (found) {
+      found.live = le
+    } else {
+      combinedElement.push({
+        [typeKeyName]: le[typeKeyName],
+        draft: {},
+        live: le
+      })
+    }
+  })
 }
 
 /**

@@ -2,16 +2,20 @@
     <thead class="govuk-table__head">
       <tr class="govuk-table__row">
         <th scope="col" class="govuk-table__header">Feature</th>
-        <th scope="col" class="govuk-table__header">Forms using</th>
-        <th scope="col" class="govuk-table__header">Percentage</th>
+        <th scope="col" class="govuk-table__header">Forms using (draft)</th>
+        <th scope="col" class="govuk-table__header">Percentage (draft)</th>
+        <th scope="col" class="govuk-table__header">Forms using (live)</th>
+        <th scope="col" class="govuk-table__header">Percentage (live)</th>
       </tr>
     </thead>
     <tbody class="govuk-table__body">
       {% for row in model.formUsageFeatures %}
       <tr class="govuk-table__row">
         <td class="govuk-table__cell">{{ row.featureName }}</td>
-        <td class="govuk-table__cell">{{ row.formsUsing | formatNumber }}</td>
-        <td class="govuk-table__cell">{{ row.percentage }}</td>
+        <td class="govuk-table__cell">{{ displayMetricValue(row.draft.formsUsing) }}</td>
+        <td class="govuk-table__cell">{{ row.draft.percentage }}</td>
+        <td class="govuk-table__cell">{{ displayMetricValue(row.live.formsUsing) }}</td>
+        <td class="govuk-table__cell">{{ row.live.percentage }}</td>
       </tr>
       {% endfor %}
     </tbody>

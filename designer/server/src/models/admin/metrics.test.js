@@ -232,86 +232,162 @@ describe('metrics models', () => {
         formUsageQuestionTypes: [
           {
             questionTypeName: 'TextField',
-            totalUsage: 10,
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              questionTypeName: 'TextField',
+              totalUsage: 10,
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
           {
             questionTypeName: 'CheckboxesField',
-            totalUsage: 5,
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              questionTypeName: 'CheckboxesField',
+              totalUsage: 5,
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
           {
             questionTypeName: 'RadiosField',
-            totalUsage: 3,
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              questionTypeName: 'RadiosField',
+              totalUsage: 3,
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
           {
             questionTypeName: 'DeclarationField',
-            totalUsage: 2,
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              questionTypeName: 'DeclarationField',
+              totalUsage: 2,
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
           {
             questionTypeName: 'FileUploadField',
-            totalUsage: 2,
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              questionTypeName: 'FileUploadField',
+              totalUsage: 2,
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
           {
             questionTypeName: 'PaymentField',
-            totalUsage: 1,
-            formsUsing: 1,
-            percentage: '50.0%'
+            draft: {
+              questionTypeName: 'PaymentField',
+              totalUsage: 1,
+              formsUsing: 1,
+              percentage: '50.0%'
+            },
+            live: {}
           }
         ],
         formUsageFeatures: [
-          { featureName: 'File upload', formsUsing: 2, percentage: '100.0%' },
+          {
+            featureName: 'File upload',
+            draft: {
+              featureName: 'File upload',
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
+          },
           {
             featureName: 'Email confirmation',
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              featureName: 'Email confirmation',
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
           {
             featureName: 'Declarations',
-            formsUsing: 2,
-            percentage: '100.0%'
+            draft: {
+              featureName: 'Declarations',
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
           },
-          { featureName: 'Sections', formsUsing: 2, percentage: '100.0%' },
-          { featureName: 'GOV.UK Pay', formsUsing: 1, percentage: '50.0%' }
+          {
+            featureName: 'Sections',
+            draft: {
+              featureName: 'Sections',
+              formsUsing: 2,
+              percentage: '100.0%'
+            },
+            live: {}
+          },
+          {
+            featureName: 'GOV.UK Pay',
+            draft: {
+              featureName: 'GOV.UK Pay',
+              formsUsing: 1,
+              percentage: '50.0%'
+            },
+            live: {}
+          }
         ],
         formUsageFormStructures: [
           {
             metricName: 'Conditions per form',
-            average: '0.5',
-            minimum: 0,
-            maximum: 1
+            draft: {
+              metricName: 'Conditions per form',
+              average: '0.5',
+              minimum: 0,
+              maximum: 1
+            },
+            live: {}
           },
           {
             metricName: 'Pages per form',
-            average: '5.5',
-            minimum: 4,
-            maximum: 7
+            draft: {
+              metricName: 'Pages per form',
+              average: '5.5',
+              minimum: 4,
+              maximum: 7
+            },
+            live: {}
           },
           {
             metricName: 'Question types per form',
-            average: '7.0',
-            minimum: 6,
-            maximum: 8
+            draft: {
+              metricName: 'Question types per form',
+              average: '7.0',
+              minimum: 6,
+              maximum: 8
+            },
+            live: {}
           },
           {
             metricName: 'Questions per form',
-            average: '10.0',
-            minimum: 9,
-            maximum: 11
+            draft: {
+              metricName: 'Questions per form',
+              average: '10.0',
+              minimum: 9,
+              maximum: 11
+            },
+            live: {}
           },
           {
             metricName: 'Sections per form',
-            average: '1.5',
-            minimum: 1,
-            maximum: 2
+            draft: {
+              metricName: 'Sections per form',
+              average: '1.5',
+              minimum: 1,
+              maximum: 2
+            },
+            live: {}
           }
         ]
       })

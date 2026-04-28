@@ -74,13 +74,15 @@ export function mapQuestionTypes(questionTypes, forms, totalForms) {
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FormStatus} formStatus
  */
-export function componentUsageQuestionTypes(metrics) {
+export function componentUsageQuestionTypes(metrics, formStatus) {
   // Compute counts of each question type
-  const totalForms = metrics.overview.length
+  const filtered = metrics.overview.filter((ov) => ov.formStatus === formStatus)
+  const totalForms = filtered.length
   const questionTypes = /** @type {Map<string, number>} */ (new Map())
   const formsUsing = /** @type {Map<string, number>} */ (new Map())
-  for (const metric of metrics.overview) {
+  for (const metric of filtered) {
     const typedEntries = /** @type {[string, number][]} */ (
       Object.entries(metric.featureMetrics.questionTypes)
     )
@@ -107,12 +109,14 @@ export function componentUsageQuestionTypes(metrics) {
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FormStatus} formStatus
  */
-export function componentUsageFeatures(metrics) {
+export function componentUsageFeatures(metrics, formStatus) {
   // Compute counts of each feature type
-  const totalForms = metrics.overview.length
+  const filtered = metrics.overview.filter((ov) => ov.formStatus === formStatus)
+  const totalForms = filtered.length
   const formsUsing = /** @type {Map<string, number>} */ (new Map())
-  for (const metric of metrics.overview) {
+  for (const metric of filtered) {
     const typedEntries = /** @type {[string, number][]} */ (
       Object.entries(metric.featureMetrics.features)
     )
@@ -133,15 +137,17 @@ export function componentUsageFeatures(metrics) {
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FormStatus} formStatus
  */
-export function componentUsageFormStructures(metrics) {
+export function componentUsageFormStructures(metrics, formStatus) {
   // Compute min/max/avg of each feature type
-  const totalForms = metrics.overview.length
+  const filtered = metrics.overview.filter((ov) => ov.formStatus === formStatus)
+  const totalForms = filtered.length
   const structureStats =
     /** @type {Map<string, { min: number, max: number, total: number, avg: number }>} */ (
       new Map()
     )
-  for (const metric of metrics.overview) {
+  for (const metric of filtered) {
     const typedEntries = /** @type {[string, number][]} */ (
       Object.entries(metric.featureMetrics.formStructure)
     )
@@ -340,5 +346,5 @@ export function mapTotalMetrics(totals, tilePeriodNames) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormStatus, FormTotalsMetric } from '@defra/forms-model'
  */
