@@ -1,10 +1,6 @@
 import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-plugin/engine/types/schema.js'
 
-import { getDeadLetterQueueMessages } from '~/src/lib/dead-letter-queue.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
-
-const MAX_DLQ_READ_ATTEMPTS = 5
-const WAIT_TIME_IN_MILLIS = 1000
 
 /**
  * @param {string} messageJson
@@ -59,29 +55,6 @@ export function validateMessageJson(messageJson) {
 }
 
 /**
- * @param {DeadLetterQueues} dlq
- * @param {string} token
- * @param {string} messageId
- * @returns {Promise<any | undefined>}
- */
-export async function readDlqWithRetry(dlq, token, messageId) {
-  let attempts = 0
-  let foundMessage
-  while (attempts < MAX_DLQ_READ_ATTEMPTS) {
-    attempts++
-    const messages = await getDeadLetterQueueMessages(dlq, token)
-
-    foundMessage = messages.find((m) => m.MessageId === messageId)
-    if (foundMessage) {
-      break
-    }
-
-    await new Promise((resolve) => setTimeout(resolve, WAIT_TIME_IN_MILLIS))
-  }
-  return foundMessage
-}
-
-/**
  * Keep specific properties
  * @param {any} message
  * @returns {{ json: { MessageId: string, Body: any }}}
@@ -104,6 +77,5 @@ export function dlqMessagesMapper(messages) {
 }
 
 /**
- * @import { DeadLetterQueues } from '@defra/forms-model'
  * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
  */

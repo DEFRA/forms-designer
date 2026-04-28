@@ -12,7 +12,6 @@ import {
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
-import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { publishDlqActionEvent } from '~/src/messaging/publish.js'
 import {
@@ -20,9 +19,7 @@ import {
   redriveDeadLetterQueueConfirmationViewModel
 } from '~/src/models/manage/dead-letter-queue.js'
 import {
-  dlqMessageMapper,
   dlqMessagesMapper,
-  readDlqWithRetry,
   validateMessageJson
 } from '~/src/routes/admin/dead-letter-queue-helper.js'
 
@@ -462,7 +459,8 @@ export default [
         },
         messageJson,
         messageId,
-        queueName: dlq
+        queueName: dlq,
+        messageJsonExisting: formValues?.messageJsonExisting
       })
     },
     options: {
@@ -480,7 +478,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string, origMessageJson: string  } }>}
    */
   ({
     method: 'POST',
@@ -489,7 +487,7 @@ export default [
       const { auth, params, payload, yar } = request
       const { token } = auth.credentials
       const { dlq, messageId } = params
-      const { messageJson } = payload
+      const { messageJson, origMessageJson } = payload
 
       const { error, body } = validateMessageJson(messageJson)
       if (error) {
@@ -501,22 +499,6 @@ export default [
         )
       }
 
-      const foundMessage = await readDlqWithRetry(dlq, token, messageId)
-      if (!foundMessage) {
-        const notFoundError = createJoiError(
-          'messageJson',
-          `Unable to find message ${messageId} in dead letter queue`
-        )
-        return redirectWithErrors(
-          request,
-          h,
-          notFoundError,
-          sessionNames.validationFailure.deadLetterQueues
-        )
-      }
-
-      const originalMessage = dlqMessageMapper(foundMessage)
-
       await resubmitDeadLetterQueueMessage(dlq, messageId, body, token)
 
       await deleteDeadLetterQueueMessage(dlq, messageId, token)
@@ -527,7 +509,7 @@ export default [
         MODIFY_AND_RESUBMIT,
         messageId,
         {
-          beforeJson: JSON.stringify(originalMessage),
+          beforeJson: origMessageJson,
           afterJson: messageJson
         },
         auditUser

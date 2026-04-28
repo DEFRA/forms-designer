@@ -858,6 +858,8 @@ exports[`Dead-letter queues routes Journey should render modify form with messag
 </div>
 
 
+        <input type="hidden" name="messageJsonExisting" value="" />
+
         <button type="submit" class="govuk-button" data-module="govuk-button">
   Resubmit
 </button>

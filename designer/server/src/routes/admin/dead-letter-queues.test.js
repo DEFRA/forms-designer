@@ -399,31 +399,6 @@ describe('Dead-letter queues routes', () => {
       )
     })
 
-    test('should show errors if resubmit button pressed when message no longer in queue', async () => {
-      jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
-
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([])
-
-      const options = {
-        method: 'post',
-        url: '/admin/dead-letter-queues/audit-api/modify/12345',
-        auth,
-        payload: {
-          messageJson: JSON.stringify(validJsonMessage)
-        }
-      }
-
-      const {
-        response: { statusCode, headers }
-      } = await renderResponse(server, options)
-
-      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(resubmitDeadLetterQueueMessage).not.toHaveBeenCalled()
-      expect(headers.location).toBe(
-        '/admin/dead-letter-queues/audit-api/modify/12345'
-      )
-    }, 10000)
-
     test('should resubmit if resubmit button pressed when valid JSON', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
 
