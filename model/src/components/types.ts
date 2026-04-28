@@ -277,6 +277,7 @@ export type GeospatialFieldOptionsCountry =
 export interface GeospatialFieldComponent extends FormFieldBase {
   type: ComponentType.GeospatialField
   options: FormFieldBase['options'] & {
+    condition?: string
     country?: GeospatialFieldOptionsCountry
   }
 }
