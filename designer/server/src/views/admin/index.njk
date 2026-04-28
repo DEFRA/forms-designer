@@ -105,6 +105,11 @@
             <a href="/admin/form-inspect" class="govuk-link govuk-link--no-visited-state">Form inspect</a>
           </li>
         {% endif %}
+        {% if supports.formMetrics %}
+          <li>
+            <a href="/admin/form-metrics" class="govuk-link govuk-link--no-visited-state">Form metrics</a>
+          </li>
+        {% endif %}
       </ul>
     {% endif %}
   {% endcall %}

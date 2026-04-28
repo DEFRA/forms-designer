@@ -216,6 +216,8 @@ export interface FormsBackupRequestedMessageData {
 export interface DlqActionMessageData {
   action: string
   messageId?: string
+  beforeJson?: string
+  afterJson?: string
 }
 
 export type MessageData =

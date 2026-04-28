@@ -1,0 +1,115 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "metrics-overview/macro.njk" import appMetricsOverview %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% set last7DaysHtml %}
+  {{ appMetricsOverview(model.overviewMetrics.last7Days) }}
+{% endset -%}
+
+{% set last30DaysHtml %}
+  {{ appMetricsOverview(model.overviewMetrics.last30Days) }}
+{% endset -%}
+
+{% set allTimeHtml %}
+  {{ appMetricsOverview(model.overviewMetrics.allTime) }}
+{% endset -%}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
+    <div class="editor-card-title">Form activity</div>
+    <nav class="app-page-navigation" aria-label="Component usage">
+      <div class="app-page-navigation__list">
+        <div class="app-page-navigation__item">
+          <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
+            Component usage
+          </a>
+        </div>
+      </div>
+    </nav>
+  </div>
+
+  {{ govukTabs({
+    items: [
+      {
+        label: "Last 7 days",
+        id: "last-7-days",
+        panel: {
+          html: last7DaysHtml
+        }
+      },
+      {
+        label: "Last 30 days",
+        id: "last-30-days",
+        panel: {
+          html: last30DaysHtml
+        }
+      },
+      {
+        label: "All time",
+        id: "all-time",
+        panel: {
+          html: allTimeHtml
+        }
+      }
+    ]
+  }) }}
+
+  <table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Form name</th>
+        <th scope="col" class="govuk-table__header">Organisation</th>
+        <th scope="col" class="govuk-table__header">Status</th>
+        <th scope="col" class="govuk-table__header">Pages</th>
+        <th scope="col" class="govuk-table__header">Question types</th>
+        <th scope="col" class="govuk-table__header">Conditions</th>
+        <th scope="col" class="govuk-table__header">Sections</th>
+        <th scope="col" class="govuk-table__header">Days to publish</th>
+        <th scope="col" class="govuk-table__header">Features</th>
+        <th scope="col" class="govuk-table__header">Submissions</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for row in model.formMetricRows %}
+      <tr class="govuk-table__row" style="display: table-row;">
+        <th scope="row" class="govuk-table__header">
+          <a href="/library/{{ row.slug }}" class="govuk-link govuk-link--no-visited-state">{{ row.formName }}</a>
+        </th>
+        <td class="govuk-table__cell">{{ row.organisation }}</td>
+        <td class="govuk-table__cell">
+          {% if row.status === 'live' %}
+            <strong class="govuk-tag govuk-tag--green">Live</strong>
+          {% else %}
+            <strong class="govuk-tag govuk-tag--yellow">Draft</strong>
+          {% endif %}
+        </td>
+        <td class="govuk-table__cell">{{ row.pages }}</td>
+        <td class="govuk-table__cell">{{ row.questionTypes }}</td>
+        <td class="govuk-table__cell">{{ row.conditions }}</td>
+        <td class="govuk-table__cell">{{ row.sections }}</td>
+        <td class="govuk-table__cell">{{ row.daysToPublish }}</td>
+        <td class="govuk-table__cell">{{ row.features }}</td>
+        <td class="govuk-table__cell">{{ row.submissions }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% endcall %}
+  {% endblock %}
+
+  {% block mainEnd %}
+    {{ super() }}
+  {% endblock %}

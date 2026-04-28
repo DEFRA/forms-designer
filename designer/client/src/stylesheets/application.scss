@@ -32,6 +32,7 @@
 @use "editor";
 @use "editor2";
 @use "location-fields";
+@use "metrics";
 
 // Override default govuk light-grey backgrounds for better text contrast
 .govuk-summary-card__title-wrapper {
