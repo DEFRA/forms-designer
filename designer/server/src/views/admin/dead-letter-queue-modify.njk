@@ -40,8 +40,6 @@
       <form method="post" action="/admin/dead-letter-queues/{{ queueName }}/modify/{{ messageId }}">
         {{ govukTextarea(messageJson) }}
 
-        <input type="hidden" name="messageJsonExisting" value="{{ messageJsonExisting }}" />
-
         {{ govukButton({
           text: "Resubmit"
         }) }}

@@ -4,6 +4,7 @@ import { StatusCodes } from 'http-status-codes'
 import { createServer } from '~/src/createServer.js'
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
@@ -402,13 +403,11 @@ describe('Dead-letter queues routes', () => {
     test('should resubmit if resubmit button pressed when valid JSON', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
 
-      jest.mocked(getDeadLetterQueueMessages).mockResolvedValue([
-        {
-          MessageId: 'message-id',
-          Body: '{ "field1": "value1" }',
-          ReceiptHandle: 'rec-handle'
-        }
-      ])
+      jest.mocked(getDeadLetterQueueMessage).mockResolvedValue({
+        MessageId: 'message-id',
+        Body: '{ "field1": "value1" }',
+        ReceiptHandle: 'rec-handle'
+      })
 
       const options = {
         method: 'post',
@@ -423,7 +422,7 @@ describe('Dead-letter queues routes', () => {
         response: { statusCode, headers }
       } = await renderResponse(server, options)
 
-      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(resubmitDeadLetterQueueMessage).toHaveBeenCalledWith(
         'audit-api',
         'message-id',

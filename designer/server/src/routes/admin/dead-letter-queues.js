@@ -8,10 +8,12 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { publishDlqActionEvent } from '~/src/messaging/publish.js'
 import {
@@ -67,6 +69,17 @@ const dlqActionPayloadSchema = Joi.object().keys({
   action: Joi.string().valid(CONFIRM, DELETE).required(),
   messageId: messageIdSchema
 })
+
+/**
+ * @param {any} json
+ */
+function formatJsonForAudit(json) {
+  const jsonOut = {
+    MessageId: json.MessageId,
+    Body: JSON.parse(json.Body)
+  }
+  return JSON.stringify(jsonOut, null, 2)
+}
 
 export function generateTitling() {
   const pageHeading = ADMIN_TOOLS
@@ -478,7 +491,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string, origMessageJson: string  } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string  } }>}
    */
   ({
     method: 'POST',
@@ -487,7 +500,7 @@ export default [
       const { auth, params, payload, yar } = request
       const { token } = auth.credentials
       const { dlq, messageId } = params
-      const { messageJson, origMessageJson } = payload
+      const { messageJson } = payload
 
       const { error, body } = validateMessageJson(messageJson)
       if (error) {
@@ -495,6 +508,24 @@ export default [
           request,
           h,
           error,
+          sessionNames.validationFailure.deadLetterQueues
+        )
+      }
+
+      const origMessageJson = await getDeadLetterQueueMessage(
+        dlq,
+        messageId,
+        token
+      )
+      if (!origMessageJson) {
+        const joiError = createJoiError(
+          'messageJson',
+          `Unable to find message id ${messageId} in ${dlq}`
+        )
+        return redirectWithErrors(
+          request,
+          h,
+          joiError,
           sessionNames.validationFailure.deadLetterQueues
         )
       }
@@ -509,7 +540,7 @@ export default [
         MODIFY_AND_RESUBMIT,
         messageId,
         {
-          beforeJson: origMessageJson,
+          beforeJson: formatJsonForAudit(origMessageJson),
           afterJson: messageJson
         },
         auditUser
@@ -520,12 +551,20 @@ export default [
         `The modified message has been submitted and the original message removed from DLQ '${dlq}'`
       )
 
-      return h.redirect(ROUTE_FULL_PATH)
+      return h.redirect(ROUTE_FULL_PATH).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
         params: dlqModifyParamSchema,
-        payload: dlqModifyPayloadSchema
+        payload: dlqModifyPayloadSchema,
+        failAction: (request, h, err) => {
+          return redirectWithErrors(
+            request,
+            h,
+            err,
+            sessionNames.validationFailure.deadLetterQueues
+          )
+        }
       },
       auth: {
         mode: 'required',

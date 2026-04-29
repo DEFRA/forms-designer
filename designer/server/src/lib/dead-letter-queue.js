@@ -80,6 +80,44 @@ export async function getDeadLetterQueueMessages(dlq, token, options) {
 
 /**
  * @param {DeadLetterQueues} dlq
+ * @param {string} messageId
+ * @param {string} token
+ * @param {{ visibilityTimeout: number | undefined, waitTimeSeconds: number | undefined}} [options]
+ * @returns {Promise<any | undefined>}
+ */
+export async function getDeadLetterQueueMessage(
+  dlq,
+  messageId,
+  token,
+  options
+) {
+  const getJsonByType = /** @type {typeof getJson<{ message: any }>} */ (
+    getJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const queryParams = []
+  if (options?.visibilityTimeout) {
+    queryParams.push(`visibilityTimeout=${options.visibilityTimeout}`)
+  }
+  if (options?.waitTimeSeconds) {
+    queryParams.push(`waitTimeSeconds=${options.waitTimeSeconds}`)
+  }
+  const queryParamStr = queryParams.length ? `?${queryParams.join('&')}` : ''
+
+  const requestUrl = new URL(
+    `./admin/deadletter${qualifier}/view/${messageId}${queryParamStr}`,
+    endpoint
+  )
+
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body.message ?? undefined
+}
+
+/**
+ * @param {DeadLetterQueues} dlq
  * @param {string} token
  */
 export async function redriveDeadLetterQueueMessages(dlq, token) {
