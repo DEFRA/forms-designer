@@ -7,7 +7,7 @@ import {
   getUserSession,
   hasAdminRole
 } from '~/src/common/helpers/auth/get-user-session.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
 import {
@@ -16,7 +16,6 @@ import {
   buildPrivacyPreviewUrl
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 
-const logger = createLogger()
 const { cdpEnvironment, phase, serviceName, serviceVersion } = config
 
 /** @type {Record<string, string> | undefined} */

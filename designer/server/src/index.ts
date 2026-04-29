@@ -2,9 +2,7 @@ import { chdir } from 'node:process'
 
 import { getErrorMessage } from '@defra/forms-model'
 
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
-
-const logger = createLogger()
+import { logger } from '~/src/common/helpers/logging/logger.js'
 
 // Move working directory to build output
 chdir(import.meta.dirname)

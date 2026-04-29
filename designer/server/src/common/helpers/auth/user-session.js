@@ -9,10 +9,8 @@ import {
   getUserClaims,
   hasAuthenticated
 } from '~/src/common/helpers/auth/get-user-session.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { getUser } from '~/src/lib/manage.js'
-
-const logger = createLogger()
 
 /**
  * @param {AuthWithTokens} credentials

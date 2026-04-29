@@ -8,10 +8,8 @@ import {
 } from '~/src/common/helpers/auth/get-user-session.js'
 import { refreshAccessToken } from '~/src/common/helpers/auth/refresh-token.js'
 import { createUserSession } from '~/src/common/helpers/auth/user-session.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
-
-const logger = createLogger()
 
 /**
  * @type {ServerRegisterPluginObject<void>}

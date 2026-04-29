@@ -14,13 +14,11 @@ import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildErrorDetails } from '~/src/common/helpers/build-error-details.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
 import * as create from '~/src/models/forms/create.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import { redirectToTitleWithErrors } from '~/src/routes/forms/helpers.js'
-
-const logger = createLogger()
 
 export const ROUTE_PATH_CREATE = '/create'
 export const ROUTE_PATH_CREATE_TITLE = '/create/title'

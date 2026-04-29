@@ -19,7 +19,7 @@ import {
   azureOidcNoop
 } from '~/src/common/helpers/auth/azure-oidc.js'
 import { sessionCookie } from '~/src/common/helpers/auth/session-cookie.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { requestLogger } from '~/src/common/helpers/logging/request-logger.js'
 import { buildRedisClient } from '~/src/common/helpers/redis-client.js'
 import { requestTracing } from '~/src/common/helpers/request-tracing.js'
@@ -28,8 +28,6 @@ import * as nunjucks from '~/src/common/nunjucks/index.js'
 import config from '~/src/config.js'
 import errorPage from '~/src/plugins/error-pages/index.js'
 import router from '~/src/plugins/router.js'
-
-const logger = createLogger()
 
 const proxyAgent = new ProxyAgent()
 

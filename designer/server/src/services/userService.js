@@ -1,9 +1,7 @@
 import { hasAdminRole } from '~/src/common/helpers/auth/get-user-session.js'
 import { refreshUserSessionEntitlements } from '~/src/common/helpers/auth/refresh-user-session-entitlements.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import * as lib from '~/src/lib/manage.js'
-
-const logger = createLogger()
 
 /**
  * @param {string} token
