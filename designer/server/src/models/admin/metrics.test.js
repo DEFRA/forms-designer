@@ -61,9 +61,12 @@ describe('metrics models', () => {
           lastYear: {},
           prevYear: {},
           allTime: {},
-          submissions: {
+          draftSubmissions: {
             'form-id-1': 5,
             'form-id-2': 2
+          },
+          liveSubmissions: {
+            'form-id-1': 3
           },
           updatedAt: new Date('2026-01-01T00:00:00.000Z')
         }
