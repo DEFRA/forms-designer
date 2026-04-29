@@ -1,4 +1,4 @@
-import { FormMetricName } from '@defra/forms-model'
+import { FormMetricName, FormStatus } from '@defra/forms-model'
 import { format, startOfDay, subDays } from 'date-fns'
 
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
@@ -186,16 +186,24 @@ export function componentUsageFormStructures(metrics, formStatus) {
 
 /**
  * @param {FormOverviewMetric[]} metrics
- * @param {Map<string, number>} submissionCounts
+ * @param {Map<string, number>} submissionCountsDraft
+ * @param {Map<string, number>} submissionCountsLive
  */
-export function mapOverviewMetrics(metrics, submissionCounts) {
+export function mapOverviewMetrics(
+  metrics,
+  submissionCountsDraft,
+  submissionCountsLive
+) {
   return metrics.map((metric) => ({
     ...metric.summaryMetrics,
     formName: metric.summaryMetrics.name,
     features: Array.isArray(metric.summaryMetrics.features)
       ? metric.summaryMetrics.features.join(', ')
       : [],
-    submissions: submissionCounts.get(metric.formId) ?? 0,
+    submissions:
+      (metric.formStatus === FormStatus.Live
+        ? submissionCountsLive.get(metric.formId)
+        : submissionCountsDraft.get(metric.formId)) ?? 0,
     daysToPublish: '-'
   }))
 }
@@ -355,5 +363,5 @@ export function mapTotalMetrics(totals, tilePeriodNames) {
 }
 
 /**
- * @import { FormOverviewMetric, FormStatus, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  */
