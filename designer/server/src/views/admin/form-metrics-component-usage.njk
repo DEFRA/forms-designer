@@ -6,6 +6,12 @@
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
+{% macro displayMetricValue(value) %}
+{% if value %}
+{{ value | formatNumber }}
+{% endif %}
+{% endmacro %}
+
 {% set questionTypesHtml %}
   {%- include "./admin/form-metrics-component-question-types.njk" -%}
 {% endset -%}

@@ -17,7 +17,8 @@ export interface FormTotalsMetric {
   lastYear?: Record<FormMetricName, FormTotalMetric>
   prevYear?: Record<FormMetricName, FormTotalMetric>
   allTime?: Record<FormMetricName, FormTotalMetric>
-  submissions?: Record<string, number>
+  liveSubmissions?: Record<string, number>
+  draftSubmissions?: Record<string, number>
   updatedAt: Date
 }
 
