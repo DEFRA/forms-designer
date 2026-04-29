@@ -10,11 +10,9 @@ const snsTopicArn = 'arn:aws:sns:eu-west-2:000000000000:forms_designer_events'
 jest.mock('~/src/config.ts')
 
 jest.mock('~/src/common/helpers/logging/logger.js', () => ({
-  createLogger: jest.fn().mockImplementation(() => {
-    return {
-      info: jest.fn()
-    }
-  })
+  logger: {
+    info: jest.fn()
+  }
 }))
 
 describe('publish-base', () => {
