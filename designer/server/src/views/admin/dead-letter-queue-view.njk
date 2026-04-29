@@ -42,7 +42,11 @@
           <div class="json-item" data-rootCopyToClip>
             <div class="action-links-top-right">
               <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9 govuk-visually-hidden" href="#" data-linkCopyToClip>Copy to clipboard</a>
-              <a class="govuk-link govuk-link--no-visited-state govuk-!-margin-right-9" href="{{ queueName }}/modify/{{ message.json.MessageId }}">Modify and resubmit</a>
+              <form method="post" action="{{ queueName }}/modify-redirect/{{ message.json.MessageId }}" class="app-inline-block-form govuk-!-margin-right-9">
+                <input type="hidden" name="action" value="modify" />
+                <input type="hidden" name="messageJsonText" value="{{ message.json | dump }}" />
+                <button type="submit" class="govuk-link govuk-link--no-visited-state">Modify and resubmit</button>
+              </form>
               <form method="post" action="{{ queueName }}/delete" class="app-inline-block-form">
                 <input type="hidden" name="action" value="confirm" />
                 <input type="hidden" name="messageId" value="{{ message.json.MessageId }}" />

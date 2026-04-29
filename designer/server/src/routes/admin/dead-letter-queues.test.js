@@ -4,11 +4,12 @@ import { StatusCodes } from 'http-status-codes'
 import { createServer } from '~/src/createServer.js'
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
-import { validateMessageJson } from '~/src/routes/admin/dead-letter-queues.js'
+import { validateMessageJson } from '~/src/routes/admin/dead-letter-queue-helper.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -402,9 +403,15 @@ describe('Dead-letter queues routes', () => {
     test('should resubmit if resubmit button pressed when valid JSON', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
 
+      jest.mocked(getDeadLetterQueueMessage).mockResolvedValue({
+        MessageId: 'message-id',
+        Body: '{ "field1": "value1" }',
+        ReceiptHandle: 'rec-handle'
+      })
+
       const options = {
         method: 'post',
-        url: '/admin/dead-letter-queues/audit-api/modify/12345',
+        url: '/admin/dead-letter-queues/audit-api/modify/message-id',
         auth,
         payload: {
           messageJson: JSON.stringify(validJsonMessage)
@@ -415,10 +422,10 @@ describe('Dead-letter queues routes', () => {
         response: { statusCode, headers }
       } = await renderResponse(server, options)
 
-      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(resubmitDeadLetterQueueMessage).toHaveBeenCalledWith(
         'audit-api',
-        '12345',
+        'message-id',
         validJsonMessage.Body,
         expect.any(String)
       )
