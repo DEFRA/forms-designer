@@ -97,10 +97,7 @@ export function buildComponentDef(questionType) {
 
 /**
  * @param { ComponentType | undefined } questionType
- * @returns {{
- *   baseErrors: Array<{type: string; template: string;}>;
- *   advancedSettingsErrors: []
- * }}
+ * @returns {ErrorMessageTemplateList}
  */
 export function getErrorTemplates(questionType) {
   let component
@@ -108,7 +105,10 @@ export function getErrorTemplates(questionType) {
     component = YesNoField
   } else {
     try {
-      component = createComponent(buildComponentDef(questionType), {})
+      component = createComponent(
+        buildComponentDef(questionType),
+        /** @type {ConstructorParameters<typeof ComponentBase>[1]} */ ({})
+      )
     } catch {
       logger.warn(`Invalid component type of '${questionType}' detected`)
     }
@@ -447,4 +447,6 @@ export async function questionDetailsViewModel(
  * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  * @import { RequestQuery } from '@hapi/hapi'
+ * @import { ComponentBase } from '@defra/forms-engine-plugin/engine/components/ComponentBase.js'
+ * @import { ErrorMessageTemplateList } from '@defra/forms-engine-plugin/engine/types.js'
  */

@@ -114,7 +114,8 @@ export const authSuperAdmin = {
       Scopes.FormsBackup,
       Scopes.ResetSaveAndExit,
       Scopes.DeadLetterQueues,
-      Scopes.FormsInspect
+      Scopes.FormsInspect,
+      Scopes.FormsReport
     ]
   })
 }
@@ -138,7 +139,8 @@ export const auth = {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
-      Scopes.FormsFeedbackAllForms
+      Scopes.FormsFeedbackAllForms,
+      Scopes.FormsReport
     ]
   })
 }
