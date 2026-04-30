@@ -8,7 +8,8 @@ import {
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
 
-export const ROUTE_FULL_PATH = '/admin/form-metrics/{tab?}'
+const ROUTE_FULL_PATH = '/admin/form-metrics/{tab?}'
+const ROUTE_ADMIN_INDEX = '/admin/index'
 
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
@@ -41,7 +42,7 @@ export default [
         pageHeading: { text: METRICS_TITLE },
         backLink: {
           text: 'Back to admin tools',
-          href: '/admin/index'
+          href: ROUTE_ADMIN_INDEX
         },
         navigation,
         model
@@ -69,7 +70,7 @@ export default [
         pageHeading: { text: METRICS_TITLE },
         backLink: {
           text: 'Back to admin tools',
-          href: '/admin/index'
+          href: ROUTE_ADMIN_INDEX
         },
         navigation
       })
@@ -92,7 +93,7 @@ export default [
       const { auth } = request
       const { token } = auth.credentials
       await regenerateMetrics(token)
-      return h.redirect('/admin/index').code(StatusCodes.SEE_OTHER)
+      return h.redirect(ROUTE_ADMIN_INDEX).code(StatusCodes.SEE_OTHER)
     },
     options: {
       auth: {
