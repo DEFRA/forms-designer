@@ -24,8 +24,8 @@ describe('Form metrics routes', () => {
     jest.clearAllMocks()
   })
 
-  describe('GET', () => {
-    test('should render form', async () => {
+  describe('form-metrics', () => {
+    test('should render report form', async () => {
       const mockMetrics = {
         overview: [],
         totals: /** @type {FormTotalsMetric} */ ({
@@ -63,6 +63,30 @@ describe('Form metrics routes', () => {
       expect($links[7]).toHaveTextContent('Admin tools')
       expect($links[8]).toHaveTextContent('Support')
       expect($links[9]).toHaveTextContent('Back to admin tools')
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+      expect(response.headers['content-type']).toContain('text/html')
+      expect(response.result).toMatchSnapshot()
+    })
+
+    test('should render regenerate form', async () => {
+      const options = {
+        method: 'get',
+        url: '/admin/form-metrics-regenerate',
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $mastheadHeading = container.getByRole('heading', { level: 1 })
+
+      expect($mastheadHeading).toHaveTextContent('Defra Form Designer metrics')
+      expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+
+      const $headings2 = container.getAllByRole('heading', { level: 2 })
+
+      expect($headings2[0]).toHaveTextContent('Regenerating metrics')
+      expect($headings2[0]).toHaveClass('govuk-heading-l')
 
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')

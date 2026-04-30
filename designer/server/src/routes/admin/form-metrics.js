@@ -1,7 +1,7 @@
 import { Scopes } from '@defra/forms-model'
 
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
-import { getMetrics } from '~/src/lib/metrics.js'
+import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
 import {
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
@@ -45,6 +45,53 @@ export default [
         navigation,
         model
       })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/admin/form-metrics-regenerate',
+    handler(_request, h) {
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      return h.view('admin/form-metrics-regenerate', {
+        pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
+        pageHeading: { text: METRICS_TITLE },
+        backLink: {
+          text: 'Back to admin tools',
+          href: '/admin/index'
+        },
+        navigation
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.RegenerateMetrics}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'POST',
+    path: '/admin/form-metrics-regenerate',
+    async handler(request, h) {
+      const { auth } = request
+      const { token } = auth.credentials
+      await regenerateMetrics(token)
+      return h.redirect('/admin/index')
     },
     options: {
       auth: {

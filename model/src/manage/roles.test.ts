@@ -16,7 +16,8 @@ describe('Scopes', () => {
       Scopes.ResetSaveAndExit,
       Scopes.DeadLetterQueues,
       Scopes.FormsInspect,
-      Scopes.FormsReport
+      Scopes.FormsReport,
+      Scopes.RegenerateMetrics
     ])
   })
 
