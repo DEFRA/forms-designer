@@ -52,6 +52,12 @@ describe('editor-v2 - advanced settings fields model', () => {
         ComponentType.TextField
       )
     })
+
+    test('should return RadiosField for country', () => {
+      expect(getFieldComponentType({ name: 'country' })).toBe(
+        ComponentType.RadiosField
+      )
+    })
   })
 
   describe('mapQuestionDetails', () => {

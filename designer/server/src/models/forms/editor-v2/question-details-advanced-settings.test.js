@@ -342,6 +342,20 @@ describe('editor-v2 - question details advanced settings model', () => {
         classes: 'month-class'
       })
     })
+
+    test('should map a geospatial field with country', () => {
+      const res = mapToQuestionOptions({
+        type: ComponentType.GeospatialField,
+        name: 'features',
+        title: 'features title',
+        options: {
+          country: 'wales'
+        }
+      })
+      expect(res).toEqual({
+        country: 'wales'
+      })
+    })
   })
 
   describe('advancedSettingsFields', () => {

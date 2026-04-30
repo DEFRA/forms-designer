@@ -92,6 +92,12 @@ export function getAdditionalOptions(payload) {
       key: 'description',
       getValue: () => payload.paymentDescription,
       shouldInclude: () => payload.paymentDescription !== undefined
+    },
+    {
+      key: 'country',
+      getValue: () => payload.country,
+      shouldInclude: () =>
+        payload.country !== undefined && payload.country !== 'any'
     }
   ]
 

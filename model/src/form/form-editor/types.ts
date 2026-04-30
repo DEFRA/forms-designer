@@ -365,6 +365,11 @@ export interface FormEditor {
    * Title that user supplies a section
    */
   sectionTitle: string
+
+  /**
+   * The country restriction for geospatial questions
+   */
+  country?: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -446,6 +451,7 @@ export type FormEditorInputQuestion = Pick<
   | 'paymentLiveApiKey'
   | 'conditionalAmount'
   | 'conditionalAmountCondition'
+  | 'country'
 >
 
 export type FormEditorInputPageSettings = Pick<

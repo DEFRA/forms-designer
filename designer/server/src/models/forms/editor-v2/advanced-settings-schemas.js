@@ -150,5 +150,6 @@ export const allSpecificSchemas = Joi.object().keys({
       '*': 'Enter instructions to help users answer this question'
     }),
     otherwise: Joi.string().optional().allow('')
-  })
+  }),
+  country: questionDetailsFullSchema.countrySchema.valid('any')
 })
