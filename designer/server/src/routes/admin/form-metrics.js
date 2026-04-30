@@ -1,4 +1,5 @@
 import { Scopes } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
@@ -91,7 +92,7 @@ export default [
       const { auth } = request
       const { token } = auth.credentials
       await regenerateMetrics(token)
-      return h.redirect('/admin/index')
+      return h.redirect('/admin/index').code(StatusCodes.SEE_OTHER)
     },
     options: {
       auth: {

@@ -92,6 +92,21 @@ describe('Form metrics routes', () => {
       expect(response.headers['content-type']).toContain('text/html')
       expect(response.result).toMatchSnapshot()
     })
+
+    test('should post and redirect', async () => {
+      const options = {
+        method: 'post',
+        url: '/admin/form-metrics-regenerate',
+        auth
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(headers.location).toBe('/admin/index')
+    })
   })
 })
 
