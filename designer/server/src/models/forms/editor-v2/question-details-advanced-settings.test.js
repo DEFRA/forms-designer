@@ -349,11 +349,11 @@ describe('editor-v2 - question details advanced settings model', () => {
         name: 'features',
         title: 'features title',
         options: {
-          country: 'wales'
+          countries: ['wales']
         }
       })
       expect(res).toEqual({
-        country: 'wales'
+        countries: ['wales']
       })
     })
   })

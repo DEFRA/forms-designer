@@ -135,7 +135,7 @@ export const QuestionAdvancedSettings =
     MinChecks: 'minChecks',
     MaxChecks: 'maxChecks',
     ExactChecks: 'exactChecks',
-    Country: 'country'
+    Countries: 'countries'
   }
 
 /**

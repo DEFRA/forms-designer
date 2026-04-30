@@ -34,9 +34,9 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ suffix: ' per item' })
     })
 
-    it('should include country when provided', () => {
-      const result = getAdditionalOptions({ country: 'scotland' })
-      expect(result).toEqual({ country: 'scotland' })
+    it('should include countries when provided', () => {
+      const result = getAdditionalOptions({ countries: ['scotland'] })
+      expect(result).toEqual({ countries: ['scotland'] })
     })
 
     it('should map maxFuture to maxDaysInFuture', () => {

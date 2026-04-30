@@ -450,8 +450,14 @@ export const maxChecksSchema = Joi.number()
   .min(2)
   .description('Maximum number of items allowed to be selected.')
 
-export const countrySchema = Joi.string()
-  .valid(...Object.values(GeospatialFieldOptionsCountryEnum))
+export const countriesSchema = Joi.array()
+  .items(
+    Joi.string().valid(
+      ...Object.values(GeospatialFieldOptionsCountryEnum),
+      'any'
+    )
+  )
+  .single()
   .description('The country to be included in a geospatial field')
 
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
@@ -646,7 +652,7 @@ export const questionDetailsFullSchema = {
   minChecksSchema,
   maxChecksSchema,
   exactChecksSchema,
-  countrySchema
+  countriesSchema
 }
 
 export const formEditorInputPageKeys = {

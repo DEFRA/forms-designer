@@ -81,7 +81,7 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Classes
     ],
     HiddenField: [],
-    GeospatialField: [QuestionAdvancedSettings.Country]
+    GeospatialField: [QuestionAdvancedSettings.Countries]
   })
 
 /**
@@ -329,9 +329,9 @@ export const allAdvancedSettingsFields =
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
-    [QuestionAdvancedSettings.Country]: {
-      name: 'country',
-      id: 'country',
+    [QuestionAdvancedSettings.Countries]: {
+      name: 'countries',
+      id: 'countries',
       classes: 'govuk-radios--small',
       fieldset: {
         legend: {

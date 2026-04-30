@@ -51,7 +51,7 @@ const checkBoxFieldQuestions = [
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]
 
-const radiosFieldQuestions = [QuestionAdvancedSettings.Country]
+const radiosFieldQuestions = [QuestionAdvancedSettings.Countries]
 
 /**
  * @param {GovukField} field

@@ -147,9 +147,8 @@ export function mapToQuestionOptions(question) {
   const geospatialExtras =
     question.type === ComponentType.GeospatialField
       ? {
-          country:
-            /** @type {GeospatialFieldComponent} */ (question).options
-              .country ?? 'any'
+          countries: /** @type {GeospatialFieldComponent} */ (question).options
+            .countries ?? ['any']
         }
       : {}
 

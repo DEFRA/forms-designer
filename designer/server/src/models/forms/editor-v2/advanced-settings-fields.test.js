@@ -53,8 +53,8 @@ describe('editor-v2 - advanced settings fields model', () => {
       )
     })
 
-    test('should return RadiosField for country', () => {
-      expect(getFieldComponentType({ name: 'country' })).toBe(
+    test('should return RadiosField for countries', () => {
+      expect(getFieldComponentType({ name: 'countries' })).toBe(
         ComponentType.RadiosField
       )
     })

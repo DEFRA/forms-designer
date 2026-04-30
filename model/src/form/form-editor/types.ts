@@ -1,5 +1,8 @@
 import { type ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import {
+  type ComponentDef,
+  type GeospatialFieldOptionsCountry
+} from '~/src/components/types.js'
 import { type DateDirections, type DateUnits } from '~/src/conditions/enums.js'
 import {
   type ConditionWrapperV2,
@@ -369,7 +372,7 @@ export interface FormEditor {
   /**
    * The country restriction for geospatial questions
    */
-  country?: string
+  countries?: (GeospatialFieldOptionsCountry | 'any')[]
 }
 
 export type FormEditorInputPage = Pick<
@@ -451,7 +454,7 @@ export type FormEditorInputQuestion = Pick<
   | 'paymentLiveApiKey'
   | 'conditionalAmount'
   | 'conditionalAmountCondition'
-  | 'country'
+  | 'countries'
 >
 
 export type FormEditorInputPageSettings = Pick<
