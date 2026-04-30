@@ -54,19 +54,21 @@ export async function getDeadLetterQueueMessages(dlq, token, options) {
 
   const { endpoint, qualifier } = getEndpoint(dlq)
 
-  const queryParams = []
-  if (options?.visibilityTimeout) {
-    queryParams.push(`visibilityTimeout=${options.visibilityTimeout}`)
-  }
-  if (options?.waitTimeSeconds) {
-    queryParams.push(`waitTimeSeconds=${options.waitTimeSeconds}`)
-  }
-  const queryParamStr = queryParams.length ? `?${queryParams.join('&')}` : ''
+  const requestUrl = new URL(`./admin/deadletter${qualifier}/view`, endpoint)
 
-  const requestUrl = new URL(
-    `./admin/deadletter${qualifier}/view${queryParamStr}`,
-    endpoint
-  )
+  if (options?.visibilityTimeout) {
+    requestUrl.searchParams.set(
+      'visibilityTimeout',
+      options.visibilityTimeout.toString()
+    )
+  }
+
+  if (options?.waitTimeSeconds) {
+    requestUrl.searchParams.set(
+      'waitTimeSeconds',
+      options.waitTimeSeconds.toString()
+    )
+  }
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
@@ -97,19 +99,24 @@ export async function getDeadLetterQueueMessage(
 
   const { endpoint, qualifier } = getEndpoint(dlq)
 
-  const queryParams = []
-  if (options?.visibilityTimeout) {
-    queryParams.push(`visibilityTimeout=${options.visibilityTimeout}`)
-  }
-  if (options?.waitTimeSeconds) {
-    queryParams.push(`waitTimeSeconds=${options.waitTimeSeconds}`)
-  }
-  const queryParamStr = queryParams.length ? `?${queryParams.join('&')}` : ''
-
   const requestUrl = new URL(
-    `./admin/deadletter${qualifier}/view/${messageId}${queryParamStr}`,
+    `./admin/deadletter${qualifier}/view/${messageId}`,
     endpoint
   )
+
+  if (options?.visibilityTimeout) {
+    requestUrl.searchParams.set(
+      'visibilityTimeout',
+      options.visibilityTimeout.toString()
+    )
+  }
+
+  if (options?.waitTimeSeconds) {
+    requestUrl.searchParams.set(
+      'waitTimeSeconds',
+      options.waitTimeSeconds.toString()
+    )
+  }
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 

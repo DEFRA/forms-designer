@@ -1,6 +1,7 @@
 import { DeadLetterQueues } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createServer } from '~/src/createServer.js'
 import {
   deleteDeadLetterQueueMessage,
@@ -450,6 +451,37 @@ describe('Dead-letter queues routes', () => {
       const { error } = validateMessageJson('{ "Body": {} }')
       expect(error?.message).toBe(
         'JSON does not match the schema: "meta" is required, "data" is required, "result" is required'
+      )
+    })
+  })
+
+  describe('modify-redirect', () => {
+    test('should redirect and flash json payload', async () => {
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/modify-redirect/message-id',
+        auth,
+        payload: {
+          messageJsonText: '{ "text": "some json content" }'
+        }
+      }
+
+      const {
+        response: { statusCode, headers, request }
+      } = await renderResponse(server, options)
+
+      const jsonResult = request.yar.flash(
+        sessionNames.validationFailure.deadLetterQueues
+      )
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(jsonResult).toEqual([
+        {
+          formValues: { messageJsonExisting: '{ "text": "some json content" }' }
+        }
+      ])
+      expect(headers.location).toBe(
+        '/admin/dead-letter-queues/audit-api/modify/message-id'
       )
     })
   })
