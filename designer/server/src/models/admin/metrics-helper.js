@@ -17,11 +17,12 @@ const formStructureMetricNames =
     questionTypes: 'Question types per form'
   })
 
-const straplineWording = {
-  [FormMetricName.NewFormsCreated]: { noun: 'form', verb: 'created' },
-  [FormMetricName.FormsPublished]: { noun: 'form', verb: 'published' },
-  [FormMetricName.Submissions]: { noun: 'submission', verb: '' }
-}
+const straplineWording =
+  /** @type {Record<FormMetricName, { noun: string, verb: string}>} */ ({
+    [FormMetricName.NewFormsCreated]: { noun: 'form', verb: 'created' },
+    [FormMetricName.FormsPublished]: { noun: 'form', verb: 'published' },
+    [FormMetricName.Submissions]: { noun: 'submission', verb: '' }
+  })
 /**
  * @typedef PeriodName
  * @property {string} ariaPeriodName - period name within aria label
