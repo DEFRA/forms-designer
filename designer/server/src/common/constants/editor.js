@@ -180,5 +180,8 @@ export const EnhancedAction = {
   DoneReordering: 'done-reordering',
   SaveItem: 'save-item',
   Up: 'up',
-  Down: 'down'
+  Down: 'down',
+  AddConditionalAmount: 'add-conditional-amount',
+  SaveConditionalAmount: 'save-conditional-amount',
+  CancelConditionalAmount: 'cancel-conditional-amount'
 }
