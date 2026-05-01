@@ -140,6 +140,11 @@ export const allBaseSettingsFields = {
     },
     classes: 'govuk-input--width-5'
   },
+  paymentConditionalAmounts: {
+    id: 'paymentConditionalAmounts',
+    name: 'paymentConditionalAmounts',
+    customTemplate: 'payment-conditional-amounts'
+  },
   paymentDescription: {
     id: 'paymentDescription',
     name: 'paymentDescription',

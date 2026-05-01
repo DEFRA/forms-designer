@@ -455,6 +455,7 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 
 export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentAmount,
+  QuestionBaseSettings.PaymentConditionalAmounts,
   QuestionBaseSettings.PaymentDescription,
   QuestionBaseSettings.PaymentTestApiKey,
   QuestionBaseSettings.PaymentLiveApiKey

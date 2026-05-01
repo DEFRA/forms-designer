@@ -103,6 +103,7 @@ export const QuestionBaseSettings = {
   AutoCompleteOptions: 'autoCompleteOptions',
   UsePostcodeLookup: 'usePostcodeLookup',
   PaymentAmount: 'paymentAmount',
+  PaymentConditionalAmounts: 'paymentConditionalAmounts',
   PaymentDescription: 'paymentDescription',
   PaymentTestApiKey: 'paymentTestApiKey',
   PaymentLiveApiKey: 'paymentLiveApiKey'
