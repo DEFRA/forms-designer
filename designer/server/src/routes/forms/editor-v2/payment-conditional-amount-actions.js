@@ -47,9 +47,14 @@ export function handleSaveConditionalAmount(request, stateId) {
     condition: ''
   }
   const items = state.conditionalAmounts ?? []
-  const labelIndex = editRow.id
-    ? Math.max(items.findIndex((i) => i.id === editRow.id) + 1, 1)
-    : items.length + 1
+  // If editRow.id exists but the item was removed by another tab/session,
+  // treat this as adding a new tile rather than a phantom update.
+  const matchedIndex =
+    typeof editRow.id === 'string' && editRow.id !== ''
+      ? items.findIndex((i) => i.id === editRow.id)
+      : -1
+  const treatAsNew = matchedIndex === -1
+  const labelIndex = treatAsNew ? items.length + 1 : matchedIndex + 1
 
   const candidate = {
     amount: payload.conditionalAmount,
@@ -77,10 +82,7 @@ export function handleSaveConditionalAmount(request, stateId) {
     return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
   }
 
-  const id =
-    typeof editRow.id === 'string' && editRow.id !== ''
-      ? editRow.id
-      : randomUUID()
+  const id = treatAsNew ? randomUUID() : /** @type {string} */ (editRow.id)
   const next = upsertConditionalAmount(items, {
     id,
     amount: value.amount,

@@ -177,6 +177,29 @@ describe('handleSaveConditionalAmount', () => {
     )
   })
 
+  it('treats an edit with a stale (no-longer-present) id as a new insert', () => {
+    const { yar, request } = setup({
+      questionType: 'PaymentField',
+      conditionalAmounts: [{ id: 'a-current', amount: 1, condition: 'c1' }],
+      conditionalAmountEditRow: {
+        expanded: true,
+        id: 'a-deleted-elsewhere',
+        amount: '5',
+        condition: 'c2'
+      }
+    })
+    request.payload = {
+      conditionalAmount: '5',
+      conditionalAmountCondition: 'c2'
+    }
+
+    handleSaveConditionalAmount(/** @type {any} */ (request), STATE_ID)
+    const stored = sessionState(yar).conditionalAmounts
+    expect(stored).toHaveLength(2)
+    expect(stored[1]).toMatchObject({ amount: 5, condition: 'c2' })
+    expect(stored[1].id).not.toBe('a-deleted-elsewhere')
+  })
+
   it('uses the editRow position for the dynamic label when editing the second tile', () => {
     const { yar, request } = setup({
       questionType: 'PaymentField',
