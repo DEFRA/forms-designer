@@ -1080,6 +1080,10 @@ describe('PaymentField required fields gated on enhancedAction', () => {
     'paymentTestApiKey'
   ]
 
+  /**
+   * @param {{ error?: import('joi').ValidationError }} validation
+   * @returns {string[]}
+   */
   const errorPaths = (validation) =>
     (validation.error?.details ?? []).map((d) => String(d.path[0]))
 

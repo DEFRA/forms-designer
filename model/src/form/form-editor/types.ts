@@ -331,6 +331,12 @@ export interface FormEditor {
   paymentAmount: string
 
   /**
+   * Virtual marker for the conditional payment amounts editor section.
+   * Carries no own value; rendered via a custom template.
+   */
+  paymentConditionalAmounts: string
+
+  /**
    * Description of the payment (will appear in the payment provider's pages)
    */
   paymentDescription: string
@@ -667,6 +673,7 @@ export interface FormEditorGovukField {
   usePostcodeLookup?: GovukField
   declarationText?: GovukField
   paymentAmount?: GovukField
+  paymentConditionalAmounts?: GovukField
   paymentDescription?: GovukField
   paymentTestApiKey?: GovukField
   paymentLiveApiKey?: GovukField
