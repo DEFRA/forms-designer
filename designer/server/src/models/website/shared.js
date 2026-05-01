@@ -33,7 +33,7 @@ export function websiteSubmenuModel(
       description: ''
     },
     masthead: {
-      heading: { text: `${titleText}` },
+      heading: { text: titleText },
       caption: { text: caption }
     },
     subNavigation: {
