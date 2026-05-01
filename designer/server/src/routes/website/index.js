@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
 import { websiteFeaturesModel } from '~/src/models/website/features.js'
+import { websiteMakingAFormModel } from '~/src/models/website/making-a-form.js'
 import { websiteResourcesModel } from '~/src/models/website/resources.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
@@ -49,13 +50,16 @@ export default /** @satisfies {ServerRoute[]} */ ([
       const { params } = request
       const { subMenu = 'index' } = params
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const model = websiteSubmenuModel(
-        WebsiteLevel1Routes.MAKING_A_FORM,
-        subMenu,
-        content.makingAForm.menus,
-        'Making a form',
-        isGuest
-      )
+      const model =
+        subMenu === 'index'
+          ? websiteMakingAFormModel(isGuest)
+          : websiteSubmenuModel(
+              WebsiteLevel1Routes.MAKING_A_FORM,
+              subMenu,
+              content.makingAForm.menus,
+              'Making a form',
+              isGuest
+            )
       return h.view(`website/making-a-form/${subMenu}`, model)
     },
     options: {
