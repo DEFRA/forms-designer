@@ -39,6 +39,8 @@ const DOCUMENTS = 'documents'
 const IMAGES = 'images'
 const ANY = 'any'
 const PAYMENT_RANGE_ERROR_MESSAGE =
+  'Enter a valid payment amount between £0.00 and £100,000'
+const CONDITIONAL_PAYMENT_RANGE_ERROR_MESSAGE =
   'Enter a valid payment amount between £0.30 and £100,000'
 
 export const baseSchema = Joi.object().keys({
@@ -251,8 +253,8 @@ export const paymentConditionalAmountSchema = Joi.object({
     .messages({
       'any.required': 'Enter payment amount',
       'number.base': 'Enter payment amount',
-      'number.min': PAYMENT_RANGE_ERROR_MESSAGE,
-      'number.max': PAYMENT_RANGE_ERROR_MESSAGE,
+      'number.min': CONDITIONAL_PAYMENT_RANGE_ERROR_MESSAGE,
+      'number.max': CONDITIONAL_PAYMENT_RANGE_ERROR_MESSAGE,
       'number.precision': 'Enter an amount with no more than 2 decimal places'
     }),
   condition: Joi.string().trim().required().messages({
