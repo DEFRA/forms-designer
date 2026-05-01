@@ -318,13 +318,25 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     throw new Error('Invalid session contents')
   }
 
-  if (enhancedAction === EnhancedAction.AddConditionalAmount) {
-    return handleAddConditionalAmount(yar, stateId)
-  }
-  if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
-    return handleSaveConditionalAmount(request, stateId)
-  }
-  if (enhancedAction === EnhancedAction.CancelConditionalAmount) {
+  if (
+    enhancedAction === EnhancedAction.AddConditionalAmount ||
+    enhancedAction === EnhancedAction.SaveConditionalAmount ||
+    enhancedAction === EnhancedAction.CancelConditionalAmount
+  ) {
+    // Stage in-flight base-field edits (paymentAmount, paymentDescription, API
+    // keys) into the session so they survive the redirect that conditional-amount
+    // actions trigger. Without this, anything the user typed but hadn't saved
+    // disappears on the redirect.
+    setQuestionSessionState(yar, stateId, {
+      ...preState,
+      questionDetails
+    })
+    if (enhancedAction === EnhancedAction.AddConditionalAmount) {
+      return handleAddConditionalAmount(yar, stateId)
+    }
+    if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
+      return handleSaveConditionalAmount(request, stateId)
+    }
     return handleCancelConditionalAmount(yar, stateId)
   }
 

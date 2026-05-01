@@ -16,7 +16,10 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { mergeConditionalAmountsIntoOptions } from '~/src/lib/payment-conditional-amount-helpers.js'
+import {
+  hydrateConditionalAmountsFromComponent,
+  mergeConditionalAmountsIntoOptions
+} from '~/src/lib/payment-conditional-amount-helpers.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { savePaymentSecrets } from '~/src/lib/secrets.js'
 import {
@@ -26,7 +29,10 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { requiresPageTitle } from '~/src/lib/utils.js'
+import {
+  getComponentFromDefinition,
+  requiresPageTitle
+} from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -392,9 +398,21 @@ export default [
         }
       }
 
+      // If session was evicted between GET and POST (Redis TTL, server restart),
+      // hydrate state.conditionalAmounts from the persisted component so the merge
+      // preserves on-disk conditional amounts. The hydrate is idempotent — does
+      // nothing when state already knows about conditionalAmounts.
+      const hydratedState =
+        questionDetails.type === ComponentType.PaymentField
+          ? hydrateConditionalAmountsFromComponent(
+              getComponentFromDefinition(definition, pageId, questionId),
+              state
+            )
+          : state
+
       const questionDetailsToSave = mergeConditionalAmountsIntoOptions(
         questionDetails,
-        state
+        hydratedState
       )
 
       try {
