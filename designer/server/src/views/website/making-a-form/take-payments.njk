@@ -6,91 +6,119 @@
 {% endblock -%}
 
 {% block content %}
-<div>
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {%- include "website/sub-navigation.njk" -%}
-      </div>
-      <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">
-          <p>
-            Defra Forms lets you take payments from your respondents via credit or debit cards. It uses <a href="https://www.payments.service.gov.uk/">GOV.UK Pay</a> and is simple to set up.
-          </p>
-          <p>
-            If you are already taking payments by other methods, such as cheque or bank transfer, you can continue to do this by including the payment details at the end of your form. Adding GOV.UK Pay gives your users more choice in how they pay.
-          </p>
-          <p>
-            Defra Forms does not support Direct Debit.
-          </p>
-        <h2>Merchant accounts</h2>
-          <p>
-            Some paper forms have tables in them, for users to fill in. For example, it may have been designed for fishers to record their catches throughout the year, or a farmer to declare how many different animal species, and of what type, they keep.
-          </p>
-          <p>
-           Before you can take payments, your service team needs a merchant bank account. If you are already taking card payments over the phone or by post, you will already have one. If you need to request a merchant account, speak with your Defra organisation’s payments or finance team. Requesting a new account takes around 4 weeks.
-          </p>
-        <h2>Set up with GOV.UK Pay</h2>
-          <p>
-            When you have a merchant account you can <a href="https://www.payments.service.gov.uk/getstarted/">set up with GOV.UK Pay</a>. Speak to your organisation’s payments or finance team to find out if they can do this on your behalf.
-          </p>
-        <h2>Add a payment question to your form </h2>
-          <p>
-            Select the payment option from the list of information types. You can add one payment option per form. Payment questions cannot be added to pages with existing questions.
-          </p>
-        <h2>Content restrictions</h2>
-          <p>
-            Content for the payment question is set by GOV.UK Pay. But you can change the:
-          </p>
-          <ul>
-            <li>payment description</li>
-            <li>payment amount</li>
-          </ul>
-          <p>
-            You can add a page heading and supporting guidance to payment questions.
-          </p>
-        <h2>API keys</h2>
-          <p>
-            An API key is like a password that lets your form securely connect to GOV.UK Pay, so you can take payments without directly handling card details.
-          </p>
-          <p>
-            You need a GOV.UK API key for testing your draft form and another for your live form.
-          </p>
-          <h3>Test API keys</h3>
+  <div>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {%- include "website/sub-navigation.njk" -%}
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <div class="app-prose-scope">
             <p>
-              You need a test API key to add a payment question to your form or to preview a live form. A test API key lets you use the payment journey as a user would but without entering real data.
+              Defra Forms lets you take payments from your respondents via credit
+              or debit cards. It uses
+              <a href="https://www.payments.service.gov.uk/">GOV.UK Pay</a> and is
+              simple to set up.
             </p>
             <p>
-             You can update the test API key at any time.
+              If you are already taking payments by other methods, such as cheque
+              or bank transfer, you can continue to do this by including the
+              payment details at the end of your form. Adding GOV.UK Pay gives
+              your users more choice in how they pay.
             </p>
-          <h3>Live API keys</h3>
+            <p>Defra Forms does not support Direct Debit.</p>
+            <h2>Merchant accounts</h2>
             <p>
-              You need a live API key to publish your form and take real payments from users. Always test that your live API key can take real payments first.
-            </p>
-          <h3>Replacing live API keys</h3>
-            <p>
-              You might need to replace the live API key every few months depending on your organisation's API policy. New API keys don’t update automatically to prevent breaking your form.
-            </p>
-            <p>
-              After updating a live API key, you need to republish your form. The new key will show as 'pending' until you do.
+              Some paper forms have tables in them, for users to fill in. For
+              example, it may have been designed for fishers to record their
+              catches throughout the year, or a farmer to declare how many
+              different animal species, and of what type, they keep.
             </p>
             <p>
-              Contact the Defra Forms team If you don’t have permission to publish forms.
+              Before you can take payments, your service team needs a merchant
+              bank account. If you are already taking card payments over the phone
+              or by post, you will already have one. If you need to request a
+              merchant account, speak with your Defra organisation’s payments or
+              finance team. Requesting a new account takes around 4 weeks.
             </p>
-        <h2>Conditional payment amounts</h2>
-          <p>
-            You can use conditions to show different payment amounts to users.
-          </p>
-          <ol>
-            <li>Set up one payment question with a default payment amount</li>
-            <li>Click ‘add payment amount’</li>
-            <li>Select the question you want apply the payment condition to</li>
-            <li>Choose the type of condition</li>
-            <li>Give the condition a name</li>
-          </ol>
-</div>
+            <h2>Set up with GOV.UK Pay</h2>
+            <p>
+              When you have a merchant account you can
+              <a href="https://www.payments.service.gov.uk/getstarted/"
+                >set up with GOV.UK Pay</a
+              >. Speak to your organisation’s payments or finance team to find out
+              if they can do this on your behalf.
+            </p>
+            <h2>Add a payment question to your form</h2>
+            <p>
+              Select the payment option from the list of information types. You
+              can add one payment option per form. Payment questions cannot be
+              added to pages with existing questions.
+            </p>
+            <h2>Content restrictions</h2>
+            <p>
+              Content for the payment question is set by GOV.UK Pay. But you can
+              change the:
+            </p>
+            <ul>
+              <li>payment description</li>
+              <li>payment amount</li>
+            </ul>
+            <p>
+              You can add a page heading and supporting guidance to payment
+              questions.
+            </p>
+            <h2>API keys</h2>
+            <p>
+              An API key is like a password that lets your form securely connect
+              to GOV.UK Pay, so you can take payments without directly handling
+              card details.
+            </p>
+            <p>
+              You need a GOV.UK API key for testing your draft form and another
+              for your live form.
+            </p>
+            <h3>Test API keys</h3>
+            <p>
+              You need a test API key to add a payment question to your form or to
+              preview a live form. A test API key lets you use the payment journey
+              as a user would but without entering real data.
+            </p>
+            <p>You can update the test API key at any time.</p>
+            <h3>Live API keys</h3>
+            <p>
+              You need a live API key to publish your form and take real payments
+              from users. Always test that your live API key can take real
+              payments first.
+            </p>
+            <h3>Replacing live API keys</h3>
+            <p>
+              You might need to replace the live API key every few months
+              depending on your organisation's API policy. New API keys don’t
+              update automatically to prevent breaking your form.
+            </p>
+            <p>
+              After updating a live API key, you need to republish your form. The
+              new key will show as 'pending' until you do.
+            </p>
+            <p>
+              Contact the Defra Forms team If you don’t have permission to publish
+              forms.
+            </p>
+            <h2>Conditional payment amounts</h2>
+            <p>
+              You can use conditions to show different payment amounts to users.
+            </p>
+            <ol>
+              <li>Set up one payment question with a default payment amount</li>
+              <li>Click ‘add payment amount’</li>
+              <li>Select the question you want apply the payment condition to</li>
+              <li>Choose the type of condition</li>
+              <li>Give the condition a name</li>
+            </ol>
+          </div>
+        </div>
       </div>
     </div>
-</div>
-</div>
+  </div>
 {% endblock %}

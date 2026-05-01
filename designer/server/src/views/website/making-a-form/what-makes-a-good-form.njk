@@ -6,87 +6,160 @@
 {% endblock -%}
 
 {% block content %}
-<div>
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {%- include "website/sub-navigation.njk" -%}
-      </div>
-      <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">
-        <h2>Good forms have a single purpose</h2>
-          <p>
-            An online form that tries to achieve multiple outcomes (for example, registering for a scheme and also claiming for a payment through that scheme) can be confusing to users and difficult for policy teams to maintain. Focus on a single outcome and design a form that is easy to complete and process.
-          </p>
-      <h2>Good forms are easy to complete</h2>
-        <p>
-          Forms that ask for long written answers are not recommended as team members would still need to read and process the detail. Forms can be designed to give structured data. This means, for example, picking answers from lists rather than asking users to type the information in. This can reduce the amount of thinking the user has to do and the time that your team has to spend reading and interpreting the data.
-        </p>
-        <p>
-          For questions which require written descriptions or explanations, make the questions specific, so users know what information to include.
-        </p>
-      <h2>Good forms are simple</h2>
-        <p>
-          You can make both simple and more complex forms using the Defra Form Designer. However, the Defra Forms team recommends including as few conditional questions as possible, as changing them can become difficult (for example, if part of a policy changes). So, do not make a form more complicated than it needs to be to meet the users’ needs.
-        </p>
-      <h2>Good forms gather the critical information that’s needed from the user quickly</h2>
-        <p>
-          If a form is part of a multi-stage process, and you may need further information from the user after the initial form has been completed and submitted, make sure your form:
-        </p>
-          <ul>
-            <li>collects enough information for a team member to process the first stage</li>
-            <li>includes a question in the form that asks the user for their contact details</li>
-          </ul>
-      <h2>Common mistakes in forms</h2>
-      <p>
-        Avoid these errors.
-      </p>
-      <ul>
-        <li>Asking for multiple types of contact information when you only need one</li>
-        <li>Asking for contact information, like a phone number, with no way to call</li>
-        <li>Asking for a title alongside name when it is not needed. Only ask for someone's title if it is needed for legal reasons </li>
-        <li>Using the word please in hint text, or overly long hint text</li>
-        <li>Replicating phone call scripts and PDF forms without reviewing form structure and questions </li>
-      </ul>
-        <div>
-          <img src="/assets/images/website/guidance_images/structured_question_example.png"  class="govuk-!-width-full" alt="Two different ways of asking the question ‘Type of organisation’. The first, a long written answer, shows a large text box with the hint text ‘Briefly explain the type of organisation’. The second way shows 4 options in a radio button list – Limited company, Charity, Trust and Social enterprise. The hint text says ‘Select one option’.">
+  <div>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {%- include "website/sub-navigation.njk" -%}
         </div>
-    <h2>Making inclusive forms</h2>
-      <p>
-        Since 23 September 2018 all public sector websites and apps need to meet accessibility standards and publish an <a href="https://www.gov.uk/guidance/make-your-website-or-app-accessible-and-publish-an-accessibility-statement">accessibility statement</a>. Online forms also need to comply with the standards.
-      </p>
-      <h3>Accessibility statement for forms</h3>
-      <p>
-       If you use a government form building tool like the Defra Form Designer or GOV.UK Forms, your form is usually covered by the tool’s accessibility statement.
-      </p>
-      <h3>Assistive technology </h3>
-      <p>
-       Some people might use assistive technology to complete online forms. You can:
-      </p>
-      <ul>
-        <li><a href="https://business.scope.org.uk/assistive-technology-devices-definitions-how-disabled-people-use-the-web/">learn about assistive technology</a></li>
-        <li><a href="https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities">research your form with disabled people and assistive technology users</a></li>
-        <li>ask the Defra Forms team to assess your form for any accessibility issues</li>
-      </ul>
-      <h3>Asking for personal information</h3>
-      <p>
-       Consider the sensitivities around personal questions. 'Easy' questions might be hard for some people to answer. Don’t assume people can complete a form independently. They may need help from:
-      </p>
-      <ul>
-        <li>friends and family</li>
-        <li>charities and citizens advice </li>
-        <li>farm management companies</li>
-        <li>accountants </li>
-      </ul>
-      <p>
-      If asking for personal data is a legal requirement, ask only for what the law requires.
-      </p>
-      <p>
-      Learn more about <a href="https://www.gov.uk/government/publications/working-definition-of-trauma-informed-practice/working-definition-of-trauma-informed-practice">trauma informed practice</a>.
-      </p>
-</div>
+        <div class="govuk-grid-column-two-thirds">
+          <div class="app-prose-scope">
+            <h2>Good forms have a single purpose</h2>
+            <p>
+              An online form that tries to achieve multiple outcomes (for example,
+              registering for a scheme and also claiming for a payment through
+              that scheme) can be confusing to users and difficult for policy
+              teams to maintain. Focus on a single outcome and design a form that
+              is easy to complete and process.
+            </p>
+            <h2>Good forms are easy to complete</h2>
+            <p>
+              Forms that ask for long written answers are not recommended as team
+              members would still need to read and process the detail. Forms can
+              be designed to give structured data. This means, for example,
+              picking answers from lists rather than asking users to type the
+              information in. This can reduce the amount of thinking the user has
+              to do and the time that your team has to spend reading and
+              interpreting the data.
+            </p>
+            <p>
+              For questions which require written descriptions or explanations,
+              make the questions specific, so users know what information to
+              include.
+            </p>
+            <h2>Good forms are simple</h2>
+            <p>
+              You can make both simple and more complex forms using the Defra Form
+              Designer. However, the Defra Forms team recommends including as few
+              conditional questions as possible, as changing them can become
+              difficult (for example, if part of a policy changes). So, do not
+              make a form more complicated than it needs to be to meet the users’
+              needs.
+            </p>
+            <h2>
+              Good forms gather the critical information that’s needed from the
+              user quickly
+            </h2>
+            <p>
+              If a form is part of a multi-stage process, and you may need further
+              information from the user after the initial form has been completed
+              and submitted, make sure your form:
+            </p>
+            <ul>
+              <li>
+                collects enough information for a team member to process the first
+                stage
+              </li>
+              <li>
+                includes a question in the form that asks the user for their
+                contact details
+              </li>
+            </ul>
+            <h2>Common mistakes in forms</h2>
+            <p>Avoid these errors.</p>
+            <ul>
+              <li>
+                Asking for multiple types of contact information when you only
+                need one
+              </li>
+              <li>
+                Asking for contact information, like a phone number, with no way
+                to call
+              </li>
+              <li>
+                Asking for a title alongside name when it is not needed. Only ask
+                for someone's title if it is needed for legal reasons
+              </li>
+              <li>
+                Using the word please in hint text, or overly long hint text
+              </li>
+              <li>
+                Replicating phone call scripts and PDF forms without reviewing
+                form structure and questions
+              </li>
+            </ul>
+            <div>
+              <img
+                src="/assets/images/website/guidance_images/structured_question_example.png"
+                class="govuk-!-width-full"
+                alt="Two different ways of asking the question ‘Type of organisation’. The first, a long written answer, shows a large text box with the hint text ‘Briefly explain the type of organisation’. The second way shows 4 options in a radio button list – Limited company, Charity, Trust and Social enterprise. The hint text says ‘Select one option’."
+              />
+            </div>
+            <h2>Making inclusive forms</h2>
+            <p>
+              Since 23 September 2018 all public sector websites and apps need to
+              meet accessibility standards and publish an
+              <a
+                href="https://www.gov.uk/guidance/make-your-website-or-app-accessible-and-publish-an-accessibility-statement"
+                >accessibility statement</a
+              >. Online forms also need to comply with the standards.
+            </p>
+            <h3>Accessibility statement for forms</h3>
+            <p>
+              If you use a government form building tool like the Defra Form
+              Designer or GOV.UK Forms, your form is usually covered by the tool’s
+              accessibility statement.
+            </p>
+            <h3>Assistive technology</h3>
+            <p>
+              Some people might use assistive technology to complete online forms.
+              You can:
+            </p>
+            <ul>
+              <li>
+                <a
+                  href="https://business.scope.org.uk/assistive-technology-devices-definitions-how-disabled-people-use-the-web/"
+                  >learn about assistive technology</a
+                >
+              </li>
+              <li>
+                <a
+                  href="https://www.gov.uk/service-manual/user-research/running-research-sessions-with-people-with-disabilities"
+                  >research your form with disabled people and assistive
+                  technology users</a
+                >
+              </li>
+              <li>
+                ask the Defra Forms team to assess your form for any accessibility
+                issues
+              </li>
+            </ul>
+            <h3>Asking for personal information</h3>
+            <p>
+              Consider the sensitivities around personal questions. 'Easy'
+              questions might be hard for some people to answer. Don’t assume
+              people can complete a form independently. They may need help from:
+            </p>
+            <ul>
+              <li>friends and family</li>
+              <li>charities and citizens advice</li>
+              <li>farm management companies</li>
+              <li>accountants</li>
+            </ul>
+            <p>
+              If asking for personal data is a legal requirement, ask only for
+              what the law requires.
+            </p>
+            <p>
+              Learn more about
+              <a
+                href="https://www.gov.uk/government/publications/working-definition-of-trauma-informed-practice/working-definition-of-trauma-informed-practice"
+                >trauma informed practice</a
+              >.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-</div>
-</div>
+  </div>
 {% endblock %}

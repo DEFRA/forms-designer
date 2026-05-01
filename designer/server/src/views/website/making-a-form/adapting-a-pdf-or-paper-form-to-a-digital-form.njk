@@ -6,64 +6,96 @@
 {% endblock -%}
 
 {% block content %}
-<div>
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {%- include "website/sub-navigation.njk" -%}
-      </div>
-      <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">
-          <p>
-            Most things in a paper form are simple to adapt to be easy to fill in on a computer or smartphone, but some things need to be redesigned so that people can complete them easily. This sometimes requires thinking differently about the information you need to collect.
-          </p>
-          <h2>Tables</h2>
-          <p>
-            Some paper forms have tables in them, for users to fill in. For example, it may have been designed for fishers to record their catches throughout the year, or a farmer to declare how many different animal species, and of what type, they keep.
-          </p>
-          <p>
-           This makes sense when a user is looking at a paper form, but does not work when viewed on a mobile device. Tables are too wide, and the boxes too small to type into.
-          </p>
-          <p>
-          Instead, design your form to collect the same information over a number of screens in your digital form. Think of each column or row as a separate question.
-          </p>
-          <p>
-          Make a screen for each column or row, so users can still enter the information in a way that makes sense to them.
-          </p>
-          <p>
-          <div>
-            <img src="/assets/images/website/guidance_images/table_alternative_01.png"  class="govuk-!-width-full" alt="Form component entitled ‘What were your fish catches this year?’. The hint text says ‘Enter how many tonnes of each type of fish you caught this year.’ Below this there are three text boxes for cod, haddock and Mackerel. A green ‘Continue’ button and a grey ‘Save and exit’ button are below.">
+  <div>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {%- include "website/sub-navigation.njk" -%}
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <div class="app-prose-scope">
+            <p>
+              Most things in a paper form are simple to adapt to be easy to fill
+              in on a computer or smartphone, but some things need to be
+              redesigned so that people can complete them easily. This sometimes
+              requires thinking differently about the information you need to
+              collect.
+            </p>
+            <h2>Tables</h2>
+            <p>
+              Some paper forms have tables in them, for users to fill in. For
+              example, it may have been designed for fishers to record their
+              catches throughout the year, or a farmer to declare how many
+              different animal species, and of what type, they keep.
+            </p>
+            <p>
+              This makes sense when a user is looking at a paper form, but does
+              not work when viewed on a mobile device. Tables are too wide, and
+              the boxes too small to type into.
+            </p>
+            <p>
+              Instead, design your form to collect the same information over a
+              number of screens in your digital form. Think of each column or row
+              as a separate question.
+            </p>
+            <p>
+              Make a screen for each column or row, so users can still enter the
+              information in a way that makes sense to them.
+            </p>
+            <p>
+              <img
+                src="/assets/images/website/guidance_images/table_alternative_01.png"
+                class="govuk-!-width-full"
+                alt="Form component entitled ‘What were your fish catches this year?’. The hint text says ‘Enter how many tonnes of each type of fish you caught this year.’ Below this there are three text boxes for cod, haddock and Mackerel. A green ‘Continue’ button and a grey ‘Save and exit’ button are below."
+              />
+            </p>
+            <p>
+              This example shows how you can ask for how many tonnes of fish are
+              caught in a year, by type of fish.
+            </p>
+            <p>
+              <img
+                src="/assets/images/website/guidance_images/table_alternative_02.png"
+                class="govuk-!-width-full"
+                alt="Form component entitled ‘How much cod did you catch this year?’. The hint text says ‘Enter your answers in tonnes.’ Below are text boxes for each month of the year."
+              />
+            </p>
+            <p>
+              This example asks how much cod was caught in a year, with boxes for
+              each month.
+            </p>
+            <p>
+              Ensure that all the fields are set as optional, as users may not
+              need to put information in every one.
+            </p>
+            <h2>Signatures</h2>
+            <p>
+              Many paper forms ask users for a signature to confirm that what they
+              are submitting is true, and they accept any terms stated by Defra.
+              The most efficient equivalent of this for a digital form is a
+              declaration box that users can click to confirm they agree with the
+              terms Defra has stated. This is a standard developed by Government
+              Digital Service to cover most requirements for declarations from
+              users in digital forms.
+            </p>
+            <p>
+              Sometimes it is thought that there is a legal or policy reason that
+              a physical (or ‘wet’) signature is needed. This is usually not the
+              case. Check the legislation related to the form you are creating to
+              see if a wet signature is legally required. On the rare occasion
+              that a wet signature is definitely needed, do not proceed with
+              creating a digital form.
+            </p>
+            <p>
+              <img
+                src="/assets/images/website/guidance_images/declaration.png"
+                class="govuk-!-width-full"
+                alt="A Defra Forms declaration component, showing what a user will see when they have to make a declaration in a form. The title is ‘Make a declaration’, and the explanatory text says, ‘By submitting this form you agree that to the best of your knowledge all the information you provide is true.’ There is a checkbox labelled ‘I understand and agree’, followed by a green ‘Continue’ button and a grey ‘Save and exit’ button."
+              />
+            </p>
           </div>
-          </p>
-          <p>
-          This example shows how you can ask for how many tonnes of fish are caught in a year, by type of fish.
-          </p>
-          <p>
-          <div>
-            <img src="/assets/images/website/guidance_images/table_alternative_02.png"  class="govuk-!-width-full" alt="Form component entitled ‘How much cod did you catch this year?’. The hint text says ‘Enter your answers in tonnes.’ Below are text boxes for each month of the year.">
-          </div>
-          </p>
-          <p>
-          This example asks how much cod was caught in a year, with boxes for each month.
-          </p>
-          <p>
-          Ensure that all the fields are set as optional, as users may not need to put information in every one.
-          </p>
-        <h2>Signatures</h2>
-          <p>
-            Many paper forms ask users for a signature to confirm that what they are submitting is true, and they accept any terms stated by Defra. The most efficient equivalent of this for a digital form is a declaration box that users can click to confirm they agree with the terms Defra has stated. This is a standard developed by Government Digital Service to cover most requirements for declarations from users in digital forms.
-          </p>
-          <p>
-            Sometimes it is thought that there is a legal or policy reason that a physical (or ‘wet’) signature is needed. This is usually not the case. Check the legislation related to the form you are creating to see if a wet signature is legally required. On the rare occasion that a wet signature is definitely needed, do not proceed with creating a digital form.
-          </p>
-          <p>
-            <div>
-              <img src="/assets/images/website/guidance_images/declaration.png"  class="govuk-!-width-full" alt="A Defra Forms declaration component, showing what a user will see when they have to make a declaration in a form. The title is ‘Make a declaration’, and the explanatory text says, ‘By submitting this form you agree that to the best of your knowledge all the information you provide is true.’ There is a checkbox labelled ‘I understand and agree’, followed by a green ‘Continue’ button and a grey ‘Save and exit’ button.">
-            </div>
-          </p>
-</div>
+        </div>
       </div>
     </div>
-</div>
-</div>
+  </div>
 {% endblock %}

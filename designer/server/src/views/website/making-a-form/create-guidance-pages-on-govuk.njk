@@ -6,88 +6,120 @@
 {% endblock -%}
 
 {% block content %}
-<div>
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-one-quarter">
-        {%- include "website/sub-navigation.njk" -%}
-      </div>
-      <div class="govuk-grid-column-two-thirds">
-        <div class="app-prose-scope">
-          <p>
-            Most forms published on GOV.UK need a guidance page that links to the form. This is so people can find the form by searching or browsing. Speak to the Defra Forms team to discuss creating a guidance page. They will be able to create a page for you, or direct you to the team who handles the content for your particular area.
-          </p>
-        <h2>Designing a start page for your form </h2>
-          <p>
-            The following information is for content designers with access to Whitehall publisher.
-          </p>
-          <p>
-           Use a detailed guide template not a form page in Whitehall.
-          </p>
-          <p>
-            Form pages add attachments to the top of the page. But ideally, the paper form should go underneath the ‘Start Now’ button.
-          </p>
-          <p>
-            If there's an existing form template page for a paper-based form, we recommend unpublishing it and redirecting it to a new detailed guide template.
-          </p>
-          <p>
-           Here is an <a href="https://www.gov.uk/guidance/apply-for-a-rye-harbour-annual-mooring-licence">example start page</a> for a form using the detailed guide template.
-          </p>
-        <h2>Including a start page button on an existing guidance page</h2>
-          <p>
-            You can add a ‘Start now’ button to an existing guidance page on GOV.UK for the form you’re working on.
-          </p>
-          <p>
-            Start page buttons should only appear once and be used at the start of your form.
-          </p>
-          <p>
-            <a href="https://govspeak-preview.publishing.service.gov.uk/guide">Use Govspeak</a> (a simplified version of Markdown) to format the button.
-          </p>
-          <p>
-            Consider the position of the ‘Start now’ button and how it might change if the content is amended. Get your start page approved by the right people as early as you can. It can hold the process up if you leave it until the end.
-          </p>
-          <p>
-            Where appropriate, speak to other content designers who may have recently updated the content, to find out about upcoming amends or improvements.
-          </p>
-        <h2>Start page layout</h2>
-          <p>
-            We recommend using a clear structure for your form start page. Say who should use the form in the page summary. Here’s an example from a live form.
-          </p>
-          <p>
-            “Fire and rescue services in England can use this service to request a pump service or environmental protection equipment from the Environment Agency.”
-          </p>
-          <p>
-            The form start page should also include:
-          </p>
-          <ul>
-            <li>a form introduction including links to any related guidance </li>
-            <li>a before you start section that lists anything users will need like a reference number or documents before they start</li>
-            <li>an 'Other ways to apply' section if there's a paper form</li>
-            <li>a ‘Get help’ section where we add the support details</li>
-            <li>terms and conditions section if needed</li>
-          </ul>
-          <p>
-            Use this template if you’re sending a form by email instead of hosting on a GOV.UK start page.
-          </p>
-        <h2>What form guidance should go on a GOV.UK page </h2>
-          <p>
-            Guidance for filling in the form should be with the form, not separate to the form. Do not have a separate ‘how to fill in this form guide’ document. It’s hard for users to refer back and forward between tabs or documents.
-          </p>
-          <p>
-            Guidance to be read before completing the form must be listed in a before you start section. Avoid referring people out of the form.
-          </p>
-          <p>
-            Guidance for each section must be in that section.
-          </p>
-          <p>
-            Do not link to guidance that could be added to the form - for example a couple of sentences within a guide on GOV.UK. Instead, extract the text and add it to the form.
-          </p>
-          <p>
-            Do not put guidance text next to a question that is not related to the actual question.
-          </p>
-</div>
+  <div>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-one-quarter">
+          {%- include "website/sub-navigation.njk" -%}
+        </div>
+        <div class="govuk-grid-column-two-thirds">
+          <div class="app-prose-scope">
+            <p>
+              Most forms published on GOV.UK need a guidance page that links to
+              the form. This is so people can find the form by searching or
+              browsing. Speak to the Defra Forms team to discuss creating a
+              guidance page. They will be able to create a page for you, or direct
+              you to the team who handles the content for your particular area.
+            </p>
+            <h2>Designing a start page for your form</h2>
+            <p>
+              The following information is for content designers with access to
+              Whitehall publisher.
+            </p>
+            <p>Use a detailed guide template not a form page in Whitehall.</p>
+            <p>
+              Form pages add attachments to the top of the page. But ideally, the
+              paper form should go underneath the ‘Start Now’ button.
+            </p>
+            <p>
+              If there's an existing form template page for a paper-based form, we
+              recommend unpublishing it and redirecting it to a new detailed guide
+              template.
+            </p>
+            <p>
+              Here is an
+              <a
+                href="https://www.gov.uk/guidance/apply-for-a-rye-harbour-annual-mooring-licence"
+                >example start page</a
+              >
+              for a form using the detailed guide template.
+            </p>
+            <h2>Including a start page button on an existing guidance page</h2>
+            <p>
+              You can add a ‘Start now’ button to an existing guidance page on
+              GOV.UK for the form you’re working on.
+            </p>
+            <p>
+              Start page buttons should only appear once and be used at the start
+              of your form.
+            </p>
+            <p>
+              <a href="https://govspeak-preview.publishing.service.gov.uk/guide"
+                >Use Govspeak</a
+              >
+              (a simplified version of Markdown) to format the button.
+            </p>
+            <p>
+              Consider the position of the ‘Start now’ button and how it might
+              change if the content is amended. Get your start page approved by
+              the right people as early as you can. It can hold the process up if
+              you leave it until the end.
+            </p>
+            <p>
+              Where appropriate, speak to other content designers who may have
+              recently updated the content, to find out about upcoming amends or
+              improvements.
+            </p>
+            <h2>Start page layout</h2>
+            <p>
+              We recommend using a clear structure for your form start page. Say
+              who should use the form in the page summary. Here’s an example from
+              a live form.
+            </p>
+            <p>
+              “Fire and rescue services in England can use this service to request
+              a pump service or environmental protection equipment from the
+              Environment Agency.”
+            </p>
+            <p>The form start page should also include:</p>
+            <ul>
+              <li>a form introduction including links to any related guidance</li>
+              <li>
+                a before you start section that lists anything users will need
+                like a reference number or documents before they start
+              </li>
+              <li>an 'Other ways to apply' section if there's a paper form</li>
+              <li>a ‘Get help’ section where we add the support details</li>
+              <li>terms and conditions section if needed</li>
+            </ul>
+            <p>
+              Use this template if you’re sending a form by email instead of
+              hosting on a GOV.UK start page.
+            </p>
+            <h2>What form guidance should go on a GOV.UK page</h2>
+            <p>
+              Guidance for filling in the form should be with the form, not
+              separate to the form. Do not have a separate ‘how to fill in this
+              form guide’ document. It’s hard for users to refer back and forward
+              between tabs or documents.
+            </p>
+            <p>
+              Guidance to be read before completing the form must be listed in a
+              before you start section. Avoid referring people out of the form.
+            </p>
+            <p>Guidance for each section must be in that section.</p>
+            <p>
+              Do not link to guidance that could be added to the form - for
+              example a couple of sentences within a guide on GOV.UK. Instead,
+              extract the text and add it to the form.
+            </p>
+            <p>
+              Do not put guidance text next to a question that is not related to
+              the actual question.
+            </p>
+          </div>
+        </div>
       </div>
     </div>
-</div>
-</div>
+  </div>
 {% endblock %}
