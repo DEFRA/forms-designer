@@ -82,38 +82,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
         isGuest
       )
       return h.view('website/resources/index', resourceModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.RESOURCES}/{subMenu}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const { params } = request
-      const { subMenu } = params
-      const aboutModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.RESOURCES,
-        subMenu,
-        content.resources.menus,
-        'Good form design guide',
-        isGuest
-      )
-      return h.view(`website/resources/${subMenu}`, aboutModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      },
-      validate: {
-        params: Joi.object().keys({
-          subMenu: Joi.string().valid(...Object.values(Level2ResourcesMenu))
-        })
-      }
     }
   },
   {
