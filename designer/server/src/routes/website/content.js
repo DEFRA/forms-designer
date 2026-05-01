@@ -1,5 +1,4 @@
 import {
-  Level2GetStartedMenu,
   Level2MakingAFormMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
@@ -27,14 +26,27 @@ export default {
     },
     menus: [
       {
-        text: 'Making a form',
-        param: WebsiteLevel1Routes.MAKING_A_FORM,
+        text: 'Get started',
         parent: true,
         children: [
           {
             param: Level2MakingAFormMenu.MAKE_SURE_YOU_NEED_A_FORM,
             text: 'Make sure you need a form'
           },
+          {
+            param: Level2MakingAFormMenu.VIEW_THE_DEMO_FORM,
+            text: 'View the demo form'
+          },
+          {
+            param: Level2MakingAFormMenu.WATCH_THE_OVERVIEW_VIDEO,
+            text: 'Watch the overview video'
+          }
+        ]
+      },
+      {
+        text: 'Planning and design',
+        parent: true,
+        children: [
           {
             param: Level2MakingAFormMenu.WHAT_MAKES_A_GOOD_FORM,
             text: 'What makes a good form'
@@ -56,21 +68,25 @@ export default {
             text: 'Plan your form'
           },
           {
-            param:
-              Level2MakingAFormMenu.ADAPTING_A_PDF_OR_PAPER_FORM_TO_A_DIGITAL_FORM,
+            param: Level2MakingAFormMenu.ADAPTING_A_PDF_OR_PAPER_FORM_TO_A_DIGITAL_FORM,
             text: 'Adapting a PDF or paper form to a digital form'
           },
           {
             param: Level2MakingAFormMenu.TAKE_PAYMENTS,
             text: 'Take payments'
-          },
+          }
+        ]
+      },
+      {
+        text: 'Mandatory tasks',
+        parent: true,
+        children: [
           {
             param: Level2MakingAFormMenu.WRITE_A_PRIVACY_NOTICE,
             text: 'Write a privacy notice'
           },
           {
-            param:
-              Level2MakingAFormMenu.AGREE_TO_THE_DATA_PROTECTION_TERMS_AND_CONDITIONS,
+            param: Level2MakingAFormMenu.AGREE_TO_THE_DATA_PROTECTION_TERMS_AND_CONDITIONS,
             text: 'Agree to the data protection terms and conditions'
           },
           {
@@ -80,10 +96,15 @@ export default {
           {
             param: Level2MakingAFormMenu.HAVE_AN_ALTERNATIVE_CONTACT_METHOD,
             text: 'Have an alternative contact method'
-          },
+          }
+        ]
+      },
+      {
+        text: 'Build, test and publish',
+        parent: true,
+        children: [
           {
-            param:
-              Level2MakingAFormMenu.CHOOSE_THE_RIGHT_FORMAT_FOR_YOUR_QUESTIONS,
+            param: Level2MakingAFormMenu.CHOOSE_THE_RIGHT_FORMAT_FOR_YOUR_QUESTIONS,
             text: 'Choose the right format for your questions'
           },
           {
@@ -117,33 +138,6 @@ export default {
       description: 'Updates to the Defra Form Designer and Developer Plugin.'
     },
     latest: whatsNewLatest
-  },
-  getStarted: {
-    menus: [
-      {
-        text: 'Get started',
-        param: WebsiteLevel1Routes.GET_STARTED,
-        parent: true,
-        children: [
-          {
-            param: Level2GetStartedMenu.GET_ACCESS,
-            text: 'Get access to the Defra Form Designer'
-          },
-          {
-            param: Level2GetStartedMenu.MAKE_FORM_LIVE,
-            text: 'Make a form live checklist'
-          },
-          {
-            param: Level2GetStartedMenu.FORM_SUITABILITY,
-            text: 'Form suitability criteria'
-          },
-          {
-            param: Level2GetStartedMenu.MEASURING_SUCCESS,
-            text: 'Measuring the success of your form'
-          }
-        ]
-      }
-    ]
   },
   resources: {},
   features

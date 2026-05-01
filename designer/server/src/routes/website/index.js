@@ -45,21 +45,35 @@ export const pageNavigationGuest = pageNavigationBase.filter(
 export default /** @satisfies {ServerRoute[]} */ ([
   {
     method: 'GET',
-    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu?}`,
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}`,
+    handler(request, h) {
+      const isGuest = !hasAuthenticated(request.auth.credentials)
+      const model = websiteMakingAFormModel(isGuest)
+      return h.view(`website/making-a-form/index`, model)
+    },
+    options: {
+      auth: {
+        mode: 'try'
+      }
+    }
+  },
+  {
+    method: 'GET',
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu}`,
     handler(request, h) {
       const { params } = request
-      const { subMenu = 'index' } = params
+      const { subMenu } = params
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const model =
-        subMenu === 'index'
-          ? websiteMakingAFormModel(isGuest)
-          : websiteSubmenuModel(
-              WebsiteLevel1Routes.MAKING_A_FORM,
-              subMenu,
-              content.makingAForm.menus,
-              'Making a form',
-              isGuest
-            )
+      const contentMenus = /** @type {XGovContentSubNavigationItemWithChildren} */
+        (content.makingAForm.menus.find(menu => menu.children.find((c) => c.param === subMenu)))
+
+      const model = websiteSubmenuModel(
+        WebsiteLevel1Routes.MAKING_A_FORM,
+        subMenu,
+        contentMenus,
+        'Making a form',
+        isGuest
+      )
       return h.view(`website/making-a-form/${subMenu}`, model)
     },
     options: {
@@ -113,5 +127,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
 ])
 
 /**
- * @import { ServerRoute, AuthArtifacts, ResponseToolkit, Request } from '@hapi/hapi'
+ * @import { ServerRoute } from '@hapi/hapi'
+ * @import { XGovContentSubNavigationItemWithChildren } from '~/src/models/website/helpers.js'
  */
