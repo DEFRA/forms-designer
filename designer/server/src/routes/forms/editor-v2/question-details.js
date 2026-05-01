@@ -49,7 +49,8 @@ import {
 } from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
 import {
   buildInlineConditionalAmountError,
-  handleSaveConditionalAmount
+  handleSaveConditionalAmount,
+  persistInlineConditionalAmountDraft
 } from '~/src/routes/forms/editor-v2/payment-conditional-amount-actions.js'
 import {
   enforceFileUploadFieldExclusivity,
@@ -200,8 +201,15 @@ export function overrideStateIfJsEnabled(request) {
 
     if (jsEnabled) {
       const existing = getQuestionSessionState(request.yar, stateId) ?? {}
+      // If the user switched question type within the session, drop type-specific
+      // session keys so e.g. PaymentField's conditionalAmounts don't bleed into
+      // a now-RadiosField question.
+      const carryOver =
+        existing.questionType && existing.questionType !== questionType
+          ? {}
+          : existing
       const overridenState = /** @type {QuestionSessionState} */ ({
-        ...existing,
+        ...carryOver,
         questionType,
         editRow: {
           expanded: false
@@ -492,13 +500,15 @@ export default [
           overrideStateIfJsEnabled(request)
           const stateId = /** @type {{ stateId?: string }} */ (request.params)
             .stateId
+          const typedRequest =
+            /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ (
+              /** @type {unknown} */ (request)
+            )
+          if (stateId) {
+            persistInlineConditionalAmountDraft(typedRequest, stateId)
+          }
           const inlineError = stateId
-            ? buildInlineConditionalAmountError(
-                /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ (
-                  /** @type {unknown} */ (request)
-                ),
-                stateId
-              )
+            ? buildInlineConditionalAmountError(typedRequest, stateId)
             : null
           if (inlineError && error instanceof Joi.ValidationError) {
             const merged = new Joi.ValidationError(

@@ -150,6 +150,31 @@ export function handleRemoveConditionalAmount(yar, stateId, id) {
 }
 
 /**
+ * If the inline conditional-amount edit row is open, copy the user-typed values
+ * from the request payload into `state.conditionalAmountEditRow`. Used in the
+ * route's failAction so that base-field validation errors don't wipe what the
+ * user typed in the inline form before re-render.
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ */
+export function persistInlineConditionalAmountDraft(request, stateId) {
+  const { yar, payload } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  const editRow = state.conditionalAmountEditRow
+  if (!editRow?.expanded) {
+    return
+  }
+  setQuestionSessionState(yar, stateId, {
+    ...state,
+    conditionalAmountEditRow: {
+      ...editRow,
+      amount: payload.conditionalAmount,
+      condition: payload.conditionalAmountCondition
+    }
+  })
+}
+
+/**
  * Validate the in-flight inline conditional-amount fields against the current
  * payload, ONLY when the inline edit row is expanded. Returns a Joi.ValidationError
  * with errors remapped to the UI field ids, or `null` if the row isn't expanded
