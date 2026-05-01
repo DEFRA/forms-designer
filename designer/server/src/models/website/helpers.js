@@ -16,13 +16,17 @@ import {
 
 /**
  * @typedef {{
- *  param: string;
+ *  param?: string;
  *  text: string;
  *  parent?: boolean;
  *  current?: boolean;
  *  classes?: string;
  *  children?: XGovContentSubNavigationItem[]
  * }} XGovContentSubNavigationItem
+ */
+
+/**
+ * @typedef {Omit<XGovContentSubNavigationItem, 'children'> & { children: XGovContentSubNavigationItem[] }} XGovContentSubNavigationItemWithChildren
  */
 
 /**
@@ -52,29 +56,25 @@ export function getWebsitePageNavigation(route, isGuest) {
 
 /**
  * @param { WebsiteLevel1Routes } parent
- * @param { Level2GetStartedMenu | Level2MakingAFormMenu } activeMenu
+ * @param { Level2MakingAFormMenu } activeMenu
  */
 export function getSubnavigation(parent, activeMenu) {
   /**
-    @param { Omit<XGovContentSubNavigationItem, 'children'> & { children: XGovContentSubNavigationItem[] } } menu
+    @param { XGovContentSubNavigationItemWithChildren } menu
    */
-  return function ({ param: parentParam, ...menu }) {
-    return {
-      ...menu,
-      href: `/${parentParam}`,
-      children: menu.children.map(({ param, ...subMenu }) => {
-        const href = `/${parent}/${param}`
+  return function (menu) {
+    const { param, ...subMenu } = menu
+    const href = `/${parent}/${param}`
 
-        if (param === activeMenu) {
-          return {
-            ...subMenu,
-            href,
-            current: true
-          }
-        }
-        return { ...subMenu, href }
-      })
+    if (param === activeMenu) {
+      return {
+        ...subMenu,
+        href,
+        current: true
+      }
     }
+
+    return { ...subMenu, href }
   }
 }
 
@@ -126,5 +126,5 @@ export function getSubmenuPaginatorMap(currentMenu) {
   )
 }
 /**
- * @import { WebsiteLevel1Routes, Level2GetStartedMenu, Level2MakingAFormMenu } from '~/src/routes/website/constants.js'
+ * @import { WebsiteLevel1Routes, Level2MakingAFormMenu } from '~/src/routes/website/constants.js'
  */

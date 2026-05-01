@@ -7,8 +7,8 @@ import {
 /**
  *
  * @param { WebsiteLevel1Routes } level1Menu
- * @param { Level2GetStartedMenu | Level2MakingAFormMenu } level2Menu
- * @param { (Omit<XGovContentSubNavigationItem, 'children'> & { children: XGovContentSubNavigationItem[] })[] } contentMenus
+ * @param { Level2MakingAFormMenu } level2Menu
+ * @param { XGovContentSubNavigationItemWithChildren } contentMenus
  * @param { string } caption
  * @param {boolean} isGuest
  */
@@ -19,9 +19,8 @@ export function websiteSubmenuModel(
   caption,
   isGuest
 ) {
-  const [subMenuParent] = contentMenus
   const { text: titleText } =
-    subMenuParent.children.find(({ param }) => param === level2Menu) ?? {}
+    contentMenus.children.find(({ param }) => param === level2Menu) ?? {}
 
   return {
     isGuest,
@@ -37,13 +36,13 @@ export function websiteSubmenuModel(
       caption: { text: caption }
     },
     subNavigation: {
-      items: contentMenus.map(getSubnavigation(level1Menu, level2Menu))
+      items: contentMenus.children.map(getSubnavigation(level1Menu, level2Menu))
     },
-    pagination: getSubmenuPaginatorMap(subMenuParent).get(level2Menu)
+    pagination: getSubmenuPaginatorMap(contentMenus).get(level2Menu)
   }
 }
 
 /**
- * @import { WebsiteLevel1Routes, Level2MakingAFormMenu, Level2GetStartedMenu } from '~/src/routes/website/constants.js'
- * @import { XGovContentSubNavigationItem } from '~/src/models/website/helpers.js'
+ * @import { WebsiteLevel1Routes, Level2MakingAFormMenu } from '~/src/routes/website/constants.js'
+ * @import { XGovContentSubNavigationItemWithChildren } from '~/src/models/website/helpers.js'
  */

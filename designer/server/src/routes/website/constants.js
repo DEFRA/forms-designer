@@ -12,24 +12,14 @@ export const WebsiteLevel1Routes = {
 }
 
 /**
- * Enum for get started menus.
- * @readonly
- * @enum {string}
- */
-export const Level2GetStartedMenu = {
-  GET_ACCESS: 'get-access',
-  MAKE_FORM_LIVE: 'make-form-live-checklist',
-  FORM_SUITABILITY: 'form-suitability-criteria',
-  MEASURING_SUCCESS: 'measuring-suitability'
-}
-
-/**
  * Enum for making a form menus.
  * @readonly
  * @enum {string}
  */
 export const Level2MakingAFormMenu = {
   MAKE_SURE_YOU_NEED_A_FORM: 'make-sure-you-need-a-form',
+  VIEW_THE_DEMO_FORM: 'view-the-demo-form',
+  WATCH_THE_OVERVIEW_VIDEO: 'watch-the-overview-video',
   WHAT_MAKES_A_GOOD_FORM: 'what-makes-a-good-form',
   GET_THE_RIGHT_PEOPLE_TOGETHER: 'get-the-right-people-together',
   PLAN_TO_RECEIVE_ONLINE_SUBMISSIONS: 'plan-to-receive-online-submissions',
