@@ -17,7 +17,7 @@ import content from '~/src/routes/website/content.js'
 export const pageNavigationBase = [
   {
     param: WebsiteLevel1Routes.HOME,
-    text: 'HomeY'
+    text: 'Home'
   },
   {
     param: WebsiteLevel1Routes.FEATURES,
@@ -37,7 +37,9 @@ export const pageNavigationBase = [
   }
 ]
 
-export const pageNavigationGuest = pageNavigationBase.filter((nav) => nav.param !== WebsiteLevel1Routes.RESOURCES)
+export const pageNavigationGuest = pageNavigationBase.filter(
+  (nav) => nav.param !== WebsiteLevel1Routes.RESOURCES
+)
 
 export default /** @satisfies {ServerRoute[]} */ ([
   {

@@ -39,7 +39,7 @@ export function buildEntry(text, url, options) {
  */
 export function buildNavigation(request) {
   return [
-    buildEntry('HomeX', formsLibraryPath, {
+    buildEntry('Home', formsLibraryPath, {
       isActive: !!request?.path?.startsWith(formsLibraryPath)
     }),
     buildEntry('Features', formsFeaturesPath, {
