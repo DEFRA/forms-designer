@@ -7,6 +7,8 @@ const FULL_DATE_MASK = 'd MMMM yyyy'
 const NEW_FORMS_CREATED_TITLE = 'New forms created'
 const FORMS_PUBLISHED_TITLE = 'Forms published'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
+const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
+const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
 
 const formStructureMetricNames =
   /** @type {Partial<Record<string, string>>} */ ({
@@ -21,8 +23,11 @@ const straplineWording =
   /** @type {Record<FormMetricName, { noun: string, verb: string}>} */ ({
     [FormMetricName.NewFormsCreated]: { noun: 'form', verb: 'created' },
     [FormMetricName.FormsPublished]: { noun: 'form', verb: 'published' },
-    [FormMetricName.Submissions]: { noun: 'submission', verb: '' }
+    [FormMetricName.Submissions]: { noun: 'submission', verb: '' },
+    [FormMetricName.FormsInDraft]: { noun: 'form', verb: '' },
+    [FormMetricName.TimeToPublish]: { noun: 'day', verb: '' }
   })
+
 /**
  * @typedef PeriodName
  * @property {string} ariaPeriodName - period name within aria label
@@ -189,11 +194,15 @@ export function componentUsageFormStructures(metrics, formStatus) {
  * @param {FormOverviewMetric[]} metrics
  * @param {Map<string, number>} submissionCountsDraft
  * @param {Map<string, number>} submissionCountsLive
+ * @param {Map<string, number>} formDaysToPublish
+ * @param {Map<string, number>} formRepublished
  */
 export function mapOverviewMetrics(
   metrics,
   submissionCountsDraft,
-  submissionCountsLive
+  submissionCountsLive,
+  formDaysToPublish,
+  formRepublished
 ) {
   return metrics.map((metric) => ({
     ...metric.summaryMetrics,
@@ -205,7 +214,8 @@ export function mapOverviewMetrics(
       (metric.formStatus === FormStatus.Live
         ? submissionCountsLive.get(metric.formId)
         : submissionCountsDraft.get(metric.formId)) ?? 0,
-    daysToPublish: '-'
+    daysToPublish: formDaysToPublish.get(metric.formId) ?? 0,
+    republished: formRepublished.get(metric.formId) ?? 0
   }))
 }
 
@@ -228,12 +238,14 @@ function calcChangePercentage(currCount, prevCount) {
  * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {FormMetricName} metricName
  * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
+ * @param {string} [units]
  */
 export function collateSpecificTileCounts(
   currPeriod,
   prevPeriod,
   metricName,
-  periodNames
+  periodNames,
+  units
 ) {
   const currPeriodCount =
     currPeriod && metricName in currPeriod
@@ -249,7 +261,8 @@ export function collateSpecificTileCounts(
     count: currPeriodCount,
     changeSymbol: currPeriodCount === prevPeriodCount ? '' : notEqualSymbol,
     changeValue: currPeriodCount - prevPeriodCount,
-    changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount)
+    changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount),
+    units: units ?? ''
   }
 
   const changePhrase = buildChangePhrase(counts)
@@ -315,6 +328,25 @@ export function mapOverviewTiles(
         prevPeriod,
         FormMetricName.Submissions,
         periodNames
+      )
+    },
+    formsInDraft: {
+      title: FORMS_IN_DRAFT_TITLE,
+      ...collateSpecificTileCounts(
+        currPeriod,
+        prevPeriod,
+        FormMetricName.FormsInDraft,
+        periodNames
+      )
+    },
+    timeToPublish: {
+      title: TIME_TO_PUBLISH_TITLE,
+      ...collateSpecificTileCounts(
+        currPeriod,
+        prevPeriod,
+        FormMetricName.TimeToPublish,
+        periodNames,
+        'days'
       )
     }
   }

@@ -11,7 +11,11 @@
   <div class="app-metric-tile">
     <div class="gem-c-big-number">
       <span class="gem-c-big-number__label">{{ params.title }}</span>
-      <span class="gem-c-big-number__value">{{ params.count | formatNumber }}</span>
+      <span class="gem-c-big-number__value">{{ params.count | formatNumber }}
+      {% if params.units %}
+      <span class="app-big-number-unit">{{ params.units }}</span>
+      {% endif %}
+      </span>
     </div>
     <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
       <strong class="govuk-tag {{ directionSymbolClasses }}" aria-label="{{ params.ariaLabel }}">
