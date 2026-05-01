@@ -24,6 +24,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
+import { getPaymentConditionalAmountsViewModel } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
 import {
   buildPreviewErrorsUrl,
   buildPreviewUrl
@@ -400,10 +401,16 @@ export async function questionDetailsViewModel(
     query.action
   )
 
+  const paymentConditionalAmounts =
+    questionType === ComponentType.PaymentField
+      ? getPaymentConditionalAmountsViewModel({ definition, state })
+      : undefined
+
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
     enhancedFields: enhancedFieldList,
+    paymentConditionalAmounts,
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     name: details.question.name || randomId(),
     questionId,

@@ -1,0 +1,39 @@
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set conditionItems = [{ value: "", text: "Select an existing condition" }] %}
+{% for option in paymentConditionalAmounts.conditionsForDropdown %}
+  {% set conditionItems = (conditionItems.push({ value: option.value, text: option.text, selected: option.value == paymentConditionalAmounts.editRow.condition }), conditionItems) %}
+{% endfor %}
+
+<h3 class="govuk-heading-s govuk-!-margin-bottom-2">Payment amount {{ paymentConditionalAmounts.editRowIndex }}</h3>
+
+{{ govukInput({
+  id: "conditionalAmount",
+  name: "conditionalAmount",
+  prefix: { text: "£" },
+  classes: "govuk-input--width-10",
+  value: paymentConditionalAmounts.editRow.amount,
+  errorMessage: errorList | selectattr("href", "equalto", "#conditionalAmount") | first
+}) }}
+
+<p class="govuk-heading-s govuk-!-margin-bottom-1">Charge this amount if</p>
+<p class="govuk-hint">Use conditions to show different payment amounts depending on how someone answers earlier questions.</p>
+
+{{ govukSelect({
+  id: "conditionalAmountCondition",
+  name: "conditionalAmountCondition",
+  label: { text: "Select an existing condition" },
+  items: conditionItems,
+  errorMessage: errorList | selectattr("href", "equalto", "#conditionalAmountCondition") | first
+}) }}
+
+<div class="govuk-button-group">
+  {{ govukButton({
+    text: "Save payment amount",
+    name: "enhancedAction",
+    value: "save-conditional-amount"
+  }) }}
+  <a class="govuk-link" href="?action=cancel-conditional-amount">Cancel</a>
+</div>

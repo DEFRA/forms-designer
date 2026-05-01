@@ -47,7 +47,7 @@ export function setConditionalAmountEditState(item, expanded) {
 
 /**
  * @param {string} conditionId
- * @param {Array<{ id: string, displayName: string, toExpression?: () => string }>} conditions
+ * @param {Array<{ id: string, displayName: string, expression?: string }>} conditions
  * @returns {{ displayName: string, expression: string }}
  */
 export function formatConditionForTile(conditionId, conditions) {
@@ -57,8 +57,7 @@ export function formatConditionForTile(conditionId, conditions) {
   }
   return {
     displayName: match.displayName,
-    expression:
-      typeof match.toExpression === 'function' ? match.toExpression() : ''
+    expression: match.expression ?? ''
   }
 }
 

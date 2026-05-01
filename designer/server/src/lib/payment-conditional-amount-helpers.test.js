@@ -116,7 +116,7 @@ describe('formatConditionForTile', () => {
       {
         id: 'c1',
         displayName: 'IsFarmer',
-        toExpression: () => "'Are you a farmer?' is 'yes'"
+        expression: "'Are you a farmer?' is 'yes'"
       }
     ]
     expect(formatConditionForTile('c1', conditions)).toEqual({
@@ -132,7 +132,7 @@ describe('formatConditionForTile', () => {
     })
   })
 
-  it('handles a condition without toExpression (defensive)', () => {
+  it('handles a condition without an expression (defensive)', () => {
     const conditions = [{ id: 'c1', displayName: 'IsFarmer' }]
     expect(formatConditionForTile('c1', conditions)).toEqual({
       displayName: 'IsFarmer',
