@@ -212,6 +212,12 @@ export function mapPageData(slug, definition, filterOptions) {
           filterOptions.includes(p.condition ?? 'unknown') ||
           isAnEndPage(p)
       )
+      .map((page, originalIndex) => ({ page, originalIndex }))
+      .sort((a, b) => {
+        const rankDiff = pageDisplayRank(a.page) - pageDisplayRank(b.page)
+        return rankDiff !== 0 ? rankDiff : a.originalIndex - b.originalIndex
+      })
+      .map(({ page }) => page)
       .map((page) => {
         const isEndPage = isAnEndPage(page)
         const isSummary = isSummaryPage(page)
@@ -231,6 +237,20 @@ export function mapPageData(slug, definition, filterOptions) {
         }
       })
   }
+}
+
+/**
+ * Display-order rank for the form overview listing. Mirrors the runtime flow:
+ * question pages → Check your answers (Summary) → Payment → other end pages.
+ * `pageNum` continues to come from the original definition.pages index so labels
+ * are stable regardless of display order.
+ * @param {Page} page
+ */
+function pageDisplayRank(page) {
+  if (isPaymentPage(page)) return 2
+  if (isSummaryPage(page)) return 1
+  if (isAnEndPage(page)) return 3
+  return 0
 }
 
 /**
