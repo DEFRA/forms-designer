@@ -21,6 +21,7 @@ import {
   testFormDefinitionWithSinglePage
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createServer } from '~/src/createServer.js'
 import {
   buildBoom409,
@@ -51,7 +52,10 @@ import {
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
-import { getListItems } from '~/src/routes/forms/editor-v2/question-details.js'
+import {
+  getListItems,
+  overrideStateIfJsEnabled
+} from '~/src/routes/forms/editor-v2/question-details.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -1387,6 +1391,110 @@ describe('Editor v2 question details routes', () => {
           { text: 'German', value: 'de-De' }
         ]
       })
+    })
+  })
+
+  describe('overrideStateIfJsEnabled (DF-832 carry-over rule)', () => {
+    const STATE_ID = 's1'
+    const SESSION_KEY = `${sessionNames.questionSessionState}-${STATE_ID}`
+
+    /** @param {Record<string, any>} initialState */
+    const buildYar = (initialState) => {
+      /** @type {Record<string, any>} */
+      const store = { [SESSION_KEY]: initialState }
+      return /** @type {any} */ ({
+        get: (/** @type {string} */ key) => store[key],
+        set: (/** @type {string} */ key, /** @type {any} */ value) => {
+          store[key] = value
+        },
+        flash: jest.fn(),
+        __store: store
+      })
+    }
+
+    beforeEach(() => {
+      // The test file globally mocks session-helper. Use the real read/write
+      // implementations here so they talk to the mock yar's __store.
+      const actual =
+        /** @type {typeof import('~/src/lib/session-helper.js')} */ (
+          jest.requireActual('~/src/lib/session-helper.js')
+        )
+      jest
+        .mocked(getQuestionSessionState)
+        .mockImplementation(actual.getQuestionSessionState)
+      jest
+        .mocked(setQuestionSessionState)
+        .mockImplementation(actual.setQuestionSessionState)
+    })
+
+    it('preserves conditionalAmounts when same questionType and jsEnabled=true', () => {
+      const yar = buildYar({
+        questionType: 'PaymentField',
+        conditionalAmounts: [{ id: 'a1', amount: 5, condition: 'c1' }],
+        conditionalAmountEditRow: { expanded: true, id: 'a1' }
+      })
+      const request = /** @type {any} */ ({
+        yar,
+        params: { stateId: STATE_ID },
+        payload: {
+          jsEnabled: 'true',
+          questionType: 'PaymentField',
+          listItemsData: '[]'
+        }
+      })
+      overrideStateIfJsEnabled(request)
+      const after = yar.__store[SESSION_KEY]
+      expect(after.questionType).toBe('PaymentField')
+      expect(after.editRow).toEqual({ expanded: false })
+      expect(after.conditionalAmounts).toEqual([
+        { id: 'a1', amount: 5, condition: 'c1' }
+      ])
+      expect(after.conditionalAmountEditRow).toEqual({
+        expanded: true,
+        id: 'a1'
+      })
+    })
+
+    it('drops conditionalAmounts when questionType changed mid-session', () => {
+      const yar = buildYar({
+        questionType: 'PaymentField',
+        conditionalAmounts: [{ id: 'a1', amount: 5, condition: 'c1' }],
+        conditionalAmountEditRow: { expanded: true, id: 'a1' }
+      })
+      const request = /** @type {any} */ ({
+        yar,
+        params: { stateId: STATE_ID },
+        payload: {
+          jsEnabled: 'true',
+          questionType: 'RadiosField',
+          listItemsData: '[]'
+        }
+      })
+      overrideStateIfJsEnabled(request)
+      const after = yar.__store[SESSION_KEY]
+      expect(after.questionType).toBe('RadiosField')
+      expect(after.conditionalAmounts).toBeUndefined()
+      expect(after.conditionalAmountEditRow).toBeUndefined()
+    })
+
+    it('does not override state when jsEnabled is not "true"', () => {
+      const yar = buildYar({
+        questionType: 'PaymentField',
+        conditionalAmounts: [{ id: 'a1', amount: 5, condition: 'c1' }]
+      })
+      const request = /** @type {any} */ ({
+        yar,
+        params: { stateId: STATE_ID },
+        payload: {
+          jsEnabled: 'false',
+          questionType: 'PaymentField'
+        }
+      })
+      overrideStateIfJsEnabled(request)
+      const after = yar.__store[SESSION_KEY]
+      expect(after.conditionalAmounts).toEqual([
+        { id: 'a1', amount: 5, condition: 'c1' }
+      ])
     })
   })
 })

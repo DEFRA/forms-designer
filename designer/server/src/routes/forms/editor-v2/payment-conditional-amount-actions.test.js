@@ -1,10 +1,14 @@
+import Joi from 'joi'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import {
+  buildInlineConditionalAmountError,
   handleAddConditionalAmount,
   handleCancelConditionalAmount,
   handleEditConditionalAmount,
   handleRemoveConditionalAmount,
-  handleSaveConditionalAmount
+  handleSaveConditionalAmount,
+  persistInlineConditionalAmountDraft
 } from '~/src/routes/forms/editor-v2/payment-conditional-amount-actions.js'
 
 const STATE_ID = 's1'
@@ -292,5 +296,164 @@ describe('handleRemoveConditionalAmount', () => {
       { id: 'a1', amount: 1, condition: 'c1' },
       { id: 'a3', amount: 3, condition: 'c3' }
     ])
+  })
+
+  it('is a no-op when id is undefined', () => {
+    const initial = [{ id: 'a1', amount: 1, condition: 'c1' }]
+    const yar = buildYar({
+      questionType: 'PaymentField',
+      conditionalAmounts: initial
+    })
+    handleRemoveConditionalAmount(yar, STATE_ID, undefined)
+    expect(sessionState(yar).conditionalAmounts).toEqual(initial)
+  })
+
+  it('is a no-op when id does not match any tile', () => {
+    const initial = [{ id: 'a1', amount: 1, condition: 'c1' }]
+    const yar = buildYar({
+      questionType: 'PaymentField',
+      conditionalAmounts: initial
+    })
+    handleRemoveConditionalAmount(yar, STATE_ID, 'missing')
+    expect(sessionState(yar).conditionalAmounts).toEqual(initial)
+  })
+})
+
+describe('buildInlineConditionalAmountError', () => {
+  /**
+   * @param {Record<string, any>} state
+   * @param {Record<string, any>} payload
+   */
+  const setup = (state, payload) => {
+    const yar = buildYar(state)
+    return /** @type {any} */ ({ yar, payload })
+  }
+
+  it('returns null when the inline edit row is not expanded', () => {
+    const request = setup(
+      {
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: { expanded: false }
+      },
+      { conditionalAmount: '5', conditionalAmountCondition: 'c1' }
+    )
+    expect(buildInlineConditionalAmountError(request, STATE_ID)).toBeNull()
+  })
+
+  it('returns null when state.conditionalAmountEditRow is undefined', () => {
+    const request = setup(
+      {
+        questionType: 'PaymentField',
+        conditionalAmounts: []
+      },
+      { conditionalAmount: '5', conditionalAmountCondition: 'c1' }
+    )
+    expect(buildInlineConditionalAmountError(request, STATE_ID)).toBeNull()
+  })
+
+  it('returns null when expanded and the payload validates', () => {
+    const request = setup(
+      {
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: { expanded: true, id: '' }
+      },
+      { conditionalAmount: '5', conditionalAmountCondition: 'c1' }
+    )
+    expect(buildInlineConditionalAmountError(request, STATE_ID)).toBeNull()
+  })
+
+  it('returns a remapped Joi error when amount is below £0.30', () => {
+    const request = setup(
+      {
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: { expanded: true, id: '' }
+      },
+      { conditionalAmount: '0.10', conditionalAmountCondition: 'c1' }
+    )
+    const err = buildInlineConditionalAmountError(request, STATE_ID)
+    expect(err).toBeInstanceOf(Joi.ValidationError)
+    expect(
+      err?.details.find((d) => d.path[0] === 'conditionalAmount')
+    ).toBeDefined()
+  })
+
+  it('uses items.length+1 for the dynamic label when editRow.id is stale', () => {
+    const request = setup(
+      {
+        questionType: 'PaymentField',
+        conditionalAmounts: [{ id: 'a-current', amount: 1, condition: 'c1' }],
+        conditionalAmountEditRow: { expanded: true, id: 'a-deleted-elsewhere' }
+      },
+      { conditionalAmount: '', conditionalAmountCondition: '' }
+    )
+    const err = buildInlineConditionalAmountError(request, STATE_ID)
+    expect(
+      err?.details.find((d) => d.path[0] === 'conditionalAmount')?.message
+    ).toContain('Enter payment amount 2')
+  })
+})
+
+describe('persistInlineConditionalAmountDraft', () => {
+  it('writes payload values to editRow when the row is expanded', () => {
+    const yar = buildYar({
+      questionType: 'PaymentField',
+      conditionalAmounts: [],
+      conditionalAmountEditRow: {
+        expanded: true,
+        id: '',
+        amount: '',
+        condition: ''
+      }
+    })
+    const request = /** @type {any} */ ({
+      yar,
+      payload: { conditionalAmount: '12.50', conditionalAmountCondition: 'c1' }
+    })
+    persistInlineConditionalAmountDraft(request, STATE_ID)
+    expect(sessionState(yar).conditionalAmountEditRow).toEqual({
+      expanded: true,
+      id: '',
+      amount: '12.50',
+      condition: 'c1'
+    })
+  })
+
+  it('is a no-op when the row is not expanded', () => {
+    const yar = buildYar({
+      questionType: 'PaymentField',
+      conditionalAmountEditRow: {
+        expanded: false,
+        id: '',
+        amount: '',
+        condition: ''
+      }
+    })
+    const request = /** @type {any} */ ({
+      yar,
+      payload: { conditionalAmount: '99', conditionalAmountCondition: 'cX' }
+    })
+    persistInlineConditionalAmountDraft(request, STATE_ID)
+    expect(sessionState(yar).conditionalAmountEditRow).toEqual({
+      expanded: false,
+      id: '',
+      amount: '',
+      condition: ''
+    })
+  })
+
+  it('is a no-op when state has no editRow at all', () => {
+    const yar = buildYar({
+      questionType: 'PaymentField',
+      conditionalAmounts: []
+    })
+    const request = /** @type {any} */ ({
+      yar,
+      payload: { conditionalAmount: '99', conditionalAmountCondition: 'cX' }
+    })
+    persistInlineConditionalAmountDraft(request, STATE_ID)
+    expect(sessionState(yar).conditionalAmountEditRow).toBeUndefined()
   })
 })

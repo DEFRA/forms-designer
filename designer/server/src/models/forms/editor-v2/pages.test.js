@@ -137,6 +137,33 @@ describe('editor-v2 - pages model', () => {
     })
   })
 
+  describe('mapPageData display order (DF-832)', () => {
+    test('renders Summary before Payment in the listing, regardless of array order', () => {
+      const res = mapPageData('slug', testFormDefinitionWithPayment, undefined)
+      const titles = res.pages.map((p) => p.title)
+      const summaryIdx = titles.findIndex((t) => t === 'Check your answers')
+      const paymentIdx = titles.findIndex((t) => t === 'Payment')
+      expect(summaryIdx).toBeGreaterThanOrEqual(0)
+      expect(paymentIdx).toBeGreaterThanOrEqual(0)
+      expect(summaryIdx).toBeLessThan(paymentIdx)
+    })
+
+    test('preserves original definition.pages index in pageNum despite sorted display order', () => {
+      // testFormDefinitionWithPayment authors order: [PaymentPage(p1), SummaryPage(p2)]
+      // Display order: SummaryPage, PaymentPage
+      // pageNum still reflects the authored order: Payment is page 1, Summary is page 2.
+      const res = mapPageData('slug', testFormDefinitionWithPayment, undefined)
+      const summary = /** @type {*} */ (
+        res.pages.find((p) => p.title === 'Check your answers')
+      )
+      const payment = /** @type {*} */ (
+        res.pages.find((p) => p.title === 'Payment')
+      )
+      expect(payment.pageNum).toBe(1)
+      expect(summary.pageNum).toBe(2)
+    })
+  })
+
   describe('mapQuestionRows', () => {
     test('should map question rows', () => {
       const resPageOneQuestions = mapQuestionRows(
