@@ -1,7 +1,6 @@
 import {
   Level2GetStartedMenu,
   Level2MakingAFormMenu,
-  Level2ResourcesMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
 import features from '~/src/routes/website/content/features.js'
@@ -146,48 +145,6 @@ export default {
       }
     ]
   },
-  resources: {
-    menus: [
-      {
-        text: 'Good form design guide',
-        param: WebsiteLevel1Routes.RESOURCES,
-        parent: true,
-        children: [
-          {
-            param: Level2ResourcesMenu.DOES_IT_NEED,
-            text: 'Does this need to be a form?'
-          },
-          {
-            param: Level2ResourcesMenu.ACCESSIBILITY,
-            text: 'Accessibility and inclusion'
-          },
-          {
-            param: Level2ResourcesMenu.SMES,
-            text: 'Working with subject matter experts (SMEs)'
-          },
-          {
-            param: Level2ResourcesMenu.QUESTION_PROTOCOLS,
-            text: 'Question protocols'
-          },
-          {
-            param: Level2ResourcesMenu.PROTOTYPING,
-            text: 'Prototyping a form'
-          },
-          {
-            param: Level2ResourcesMenu.FORM_PAGES_GOVUK,
-            text: 'Form pages on GOV.UK'
-          },
-          {
-            param: Level2ResourcesMenu.PEER_REVIEWING,
-            text: 'Peer reviewing forms'
-          },
-          {
-            param: Level2ResourcesMenu.PRIVACY_NOTICES,
-            text: 'Privacy notices'
-          }
-        ]
-      }
-    ]
-  },
+  resources: {},
   features
 }

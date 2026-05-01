@@ -7,7 +7,7 @@ import {
 /**
  *
  * @param { WebsiteLevel1Routes } level1Menu
- * @param { Level2GetStartedMenu | Level2ResourcesMenu } level2Menu
+ * @param { Level2GetStartedMenu | Level2MakingAFormMenu } level2Menu
  * @param { (Omit<XGovContentSubNavigationItem, 'children'> & { children: XGovContentSubNavigationItem[] })[] } contentMenus
  * @param { string } caption
  * @param {boolean} isGuest
@@ -44,6 +44,6 @@ export function websiteSubmenuModel(
 }
 
 /**
- * @import { WebsiteLevel1Routes, Level2ResourcesMenu, Level2GetStartedMenu } from '~/src/routes/website/constants.js'
+ * @import { WebsiteLevel1Routes, Level2MakingAFormMenu, Level2GetStartedMenu } from '~/src/routes/website/constants.js'
  * @import { XGovContentSubNavigationItem } from '~/src/models/website/helpers.js'
  */
