@@ -544,6 +544,21 @@ export interface QuestionSessionState {
   lastMovedId?: string
   lastMoveDirection?: string
   listConflicts?: ListConflict[]
+  conditionalAmounts?: ConditionalAmountState[]
+  conditionalAmountEditRow?: ConditionalAmountEditRow
+}
+
+export interface ConditionalAmountState {
+  id: string
+  amount: number
+  condition: string
+}
+
+export interface ConditionalAmountEditRow {
+  expanded: boolean
+  id?: string
+  amount?: number | string
+  condition?: string
 }
 
 export interface ConditionSessionState {
