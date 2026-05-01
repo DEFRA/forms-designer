@@ -1,6 +1,8 @@
 import {
   findConditionalAmountById,
   formatConditionForTile,
+  hydrateConditionalAmountsFromComponent,
+  mergeConditionalAmountsIntoOptions,
   removeConditionalAmountById,
   setConditionalAmountEditState,
   upsertConditionalAmount
@@ -107,6 +109,138 @@ describe('setConditionalAmountEditState', () => {
       amount: '',
       condition: ''
     })
+  })
+})
+
+describe('mergeConditionalAmountsIntoOptions', () => {
+  /** @type {any} */
+  const paymentDetails = (extra = {}) => ({
+    type: 'PaymentField',
+    options: { amount: 0, description: 'Fee' },
+    ...extra
+  })
+
+  it('writes state.conditionalAmounts onto options for PaymentField, stripping ids', () => {
+    const result = mergeConditionalAmountsIntoOptions(paymentDetails(), {
+      conditionalAmounts: [
+        { id: 'a1', amount: 300, condition: 'c1' },
+        { id: 'a2', amount: 500, condition: 'c2' }
+      ]
+    })
+    expect(result.options.conditionalAmounts).toEqual([
+      { amount: 300, condition: 'c1' },
+      { amount: 500, condition: 'c2' }
+    ])
+    expect(result.options.amount).toBe(0)
+    expect(result.options.description).toBe('Fee')
+  })
+
+  it('omits conditionalAmounts when state has none', () => {
+    const result = mergeConditionalAmountsIntoOptions(paymentDetails(), {
+      conditionalAmounts: []
+    })
+    expect(result.options.conditionalAmounts).toBeUndefined()
+  })
+
+  it('omits conditionalAmounts when state is undefined', () => {
+    const result = mergeConditionalAmountsIntoOptions(
+      paymentDetails(),
+      undefined
+    )
+    expect(result.options.conditionalAmounts).toBeUndefined()
+  })
+
+  it('is a no-op for non-PaymentField components', () => {
+    const questionDetails = /** @type {any} */ ({
+      type: 'TextField',
+      options: { required: true }
+    })
+    const result = mergeConditionalAmountsIntoOptions(questionDetails, {
+      conditionalAmounts: [{ id: 'a1', amount: 1, condition: 'c1' }]
+    })
+    expect(result).toBe(questionDetails)
+  })
+
+  it('preserves an existing options object when no merge is needed', () => {
+    const questionDetails = paymentDetails({ options: { amount: 5 } })
+    const result = mergeConditionalAmountsIntoOptions(questionDetails, {
+      conditionalAmounts: []
+    })
+    expect(result).toBe(questionDetails)
+  })
+})
+
+describe('hydrateConditionalAmountsFromComponent', () => {
+  /**
+   * @param {Array<{ amount: number, condition: string }>} entries
+   * @returns {any}
+   */
+  const paymentComponent = (entries) => ({
+    type: 'PaymentField',
+    options: {
+      conditionalAmounts: entries
+    }
+  })
+
+  it('seeds state.conditionalAmounts with stable ids when state has none', () => {
+    const result = hydrateConditionalAmountsFromComponent(
+      paymentComponent([
+        { amount: 300, condition: 'c1' },
+        { amount: 500, condition: 'c2' }
+      ]),
+      {}
+    )
+    expect(result.conditionalAmounts).toHaveLength(2)
+    expect(result.conditionalAmounts?.[0]).toMatchObject({
+      amount: 300,
+      condition: 'c1'
+    })
+    expect(result.conditionalAmounts?.[0].id).toEqual(expect.any(String))
+    expect((result.conditionalAmounts?.[0].id ?? '').length).toBeGreaterThan(0)
+    expect(result.conditionalAmounts?.[1].id).not.toBe(
+      result.conditionalAmounts?.[0].id
+    )
+  })
+
+  it('does NOT re-hydrate if state.conditionalAmounts is already set (idempotent)', () => {
+    const existing = [{ id: 'stable-1', amount: 999, condition: 'c-other' }]
+    const result = hydrateConditionalAmountsFromComponent(
+      paymentComponent([{ amount: 300, condition: 'c1' }]),
+      { conditionalAmounts: existing }
+    )
+    expect(result.conditionalAmounts).toBe(existing)
+  })
+
+  it('does NOT re-hydrate if state.conditionalAmounts is an empty array (user emptied)', () => {
+    const result = hydrateConditionalAmountsFromComponent(
+      paymentComponent([{ amount: 5, condition: 'c1' }]),
+      { conditionalAmounts: [] }
+    )
+    expect(result.conditionalAmounts).toEqual([])
+  })
+
+  it('seeds an empty array when component has no conditionalAmounts', () => {
+    const result = hydrateConditionalAmountsFromComponent(
+      /** @type {any} */ ({
+        type: 'PaymentField',
+        options: { amount: 5 }
+      }),
+      {}
+    )
+    expect(result.conditionalAmounts).toEqual([])
+  })
+
+  it('is a no-op for non-PaymentField components', () => {
+    const result = hydrateConditionalAmountsFromComponent(
+      /** @type {any} */ ({ type: 'TextField', options: {} }),
+      {}
+    )
+    expect(result.conditionalAmounts).toBeUndefined()
+  })
+
+  it('handles undefined component (no component yet — questionId === "new")', () => {
+    const result = hydrateConditionalAmountsFromComponent(undefined, {})
+    expect(result.conditionalAmounts).toBeUndefined()
   })
 })
 

@@ -16,6 +16,7 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
+import { mergeConditionalAmountsIntoOptions } from '~/src/lib/payment-conditional-amount-helpers.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { savePaymentSecrets } from '~/src/lib/secrets.js'
 import {
@@ -391,9 +392,14 @@ export default [
         }
       }
 
+      const questionDetailsToSave = mergeConditionalAmountsIntoOptions(
+        questionDetails,
+        state
+      )
+
       try {
         const extraBannerMessage = await savePaymentSecrets(
-          questionDetails.type,
+          questionDetailsToSave.type,
           metadata.id,
           payload,
           token,
@@ -406,7 +412,7 @@ export default [
           definition,
           pageId,
           questionId,
-          questionDetails,
+          questionDetailsToSave,
           getListItems(fileUploadLimitsPayload, state)
         )
 
