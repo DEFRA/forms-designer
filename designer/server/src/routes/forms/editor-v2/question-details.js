@@ -48,6 +48,10 @@ import {
   saveQuestion
 } from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
 import {
+  buildInlineConditionalAmountError,
+  handleSaveConditionalAmount
+} from '~/src/routes/forms/editor-v2/payment-conditional-amount-actions.js'
+import {
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost
@@ -195,7 +199,9 @@ export function overrideStateIfJsEnabled(request) {
       'stateId' in params ? /** @type {string} */ (params.stateId) : 'unknown'
 
     if (jsEnabled) {
+      const existing = getQuestionSessionState(request.yar, stateId) ?? {}
       const overridenState = /** @type {QuestionSessionState} */ ({
+        ...existing,
         questionType,
         editRow: {
           expanded: false
@@ -379,7 +385,27 @@ export default [
         )
       }
 
-      const state = getQuestionSessionState(yar, stateId) ?? {}
+      let state = getQuestionSessionState(yar, stateId) ?? {}
+
+      // If the inline conditional-amount form is still open on Save and continue,
+      // validate-and-save it as a tile first. If validation fails, errors are
+      // flashed by handleSaveConditionalAmount and we redirect back to the editor
+      // with both the inline form open and its errors visible.
+      if (state.conditionalAmountEditRow?.expanded) {
+        handleSaveConditionalAmount(request, stateId)
+        const stateAfter = getQuestionSessionState(yar, stateId) ?? {}
+        if (stateAfter.conditionalAmountEditRow?.expanded) {
+          return redirectWithAnchorOrUrl(
+            h,
+            slug,
+            pageId,
+            questionId,
+            stateId,
+            '#payment-conditional-amounts'
+          )
+        }
+        state = stateAfter
+      }
 
       if (isExistingAutocomplete(questionId, questionDetails.type)) {
         state.questionDetails = questionDetails
@@ -464,6 +490,24 @@ export default [
         payload: schema,
         failAction: (request, h, error) => {
           overrideStateIfJsEnabled(request)
+          const stateId = /** @type {{ stateId?: string }} */ (request.params)
+            .stateId
+          const inlineError = stateId
+            ? buildInlineConditionalAmountError(
+                /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ (
+                  /** @type {unknown} */ (request)
+                ),
+                stateId
+              )
+            : null
+          if (inlineError && error instanceof Joi.ValidationError) {
+            const merged = new Joi.ValidationError(
+              error.message,
+              [...error.details, ...inlineError.details],
+              error._original
+            )
+            return redirectWithErrors(request, h, merged, errorKey, '#')
+          }
           return redirectWithErrors(request, h, error, errorKey, '#')
         }
       },

@@ -150,6 +150,44 @@ export function handleRemoveConditionalAmount(yar, stateId, id) {
 }
 
 /**
+ * Validate the in-flight inline conditional-amount fields against the current
+ * payload, ONLY when the inline edit row is expanded. Returns a Joi.ValidationError
+ * with errors remapped to the UI field ids, or `null` if the row isn't expanded
+ * or validation passes.
+ *
+ * Used by the route handler so that Save and continue while the inline form is
+ * open surfaces conditional-amount errors alongside any other validation errors.
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @returns {Joi.ValidationError | null}
+ */
+export function buildInlineConditionalAmountError(request, stateId) {
+  const { yar, payload } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  if (!state.conditionalAmountEditRow?.expanded) {
+    return null
+  }
+  const items = state.conditionalAmounts ?? []
+  const editRow = state.conditionalAmountEditRow
+  const matchedIndex =
+    typeof editRow.id === 'string' && editRow.id !== ''
+      ? items.findIndex((i) => i.id === editRow.id)
+      : -1
+  const labelIndex = matchedIndex === -1 ? items.length + 1 : matchedIndex + 1
+  const candidate = {
+    amount: payload.conditionalAmount,
+    condition: payload.conditionalAmountCondition
+  }
+  const { error } = paymentConditionalAmountSchema.validate(candidate, {
+    abortEarly: false
+  })
+  if (!error) {
+    return null
+  }
+  return remapConditionalAmountErrors(error, labelIndex)
+}
+
+/**
  * Remap Joi error details so they land on the editor's UI input ids
  * (#conditionalAmount / #conditionalAmountCondition) and so the amount
  * 'required' message carries the dynamic tile index.
