@@ -15,7 +15,9 @@ describe('Scopes', () => {
       Scopes.FormsBackup,
       Scopes.ResetSaveAndExit,
       Scopes.DeadLetterQueues,
-      Scopes.FormsInspect
+      Scopes.FormsInspect,
+      Scopes.FormsReport,
+      Scopes.RegenerateMetrics
     ])
   })
 
@@ -29,7 +31,8 @@ describe('Scopes', () => {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
-      Scopes.FormsFeedbackAllForms
+      Scopes.FormsFeedbackAllForms,
+      Scopes.FormsReport
     ])
   })
 
@@ -45,7 +48,8 @@ describe('Scopes', () => {
       Scopes.UserDelete,
       Scopes.UserEdit,
       Scopes.FormsFeedback,
-      Scopes.FormsFeedbackAllForms
+      Scopes.FormsFeedbackAllForms,
+      Scopes.FormsReport
     ])
   })
 

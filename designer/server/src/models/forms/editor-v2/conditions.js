@@ -1,13 +1,13 @@
 import { FormStatus, isConditionWrapperV2 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { findConditionReferences } from '~/src/lib/condition-references.js'
 import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { toPresentationHtmlV2 } from '~/src/models/forms/editor-v2/condition-helpers.js'
 import { isJoinedCondition } from '~/src/models/forms/editor-v2/conditions-join-helper.js'
-import { withPageNumbers } from '~/src/models/forms/editor-v2/pages-helper.js'
 import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
@@ -16,7 +16,7 @@ import { formOverviewPath } from '~/src/models/links.js'
  * @param {FormDefinition} definition
  */
 export function buildConditionsTable(slug, definition) {
-  const { pages, conditions } = definition
+  const { conditions } = definition
   const editBaseUrl = `/library/${slug}/editor-v2/condition/`
   const editJoinBaseUrl = `/library/${slug}/editor-v2/conditions-join/`
 
@@ -30,10 +30,14 @@ export function buildConditionsTable(slug, definition) {
     classes: 'app-conditions-table',
     head: [{ text: 'Condition' }, { text: 'Used in' }, { text: 'Actions' }],
     rows: v2Conditions.map((condition) => {
-      const usedIn = pages
-        .map(withPageNumbers)
-        .filter(({ page }) => page.condition === condition.id)
-        .map(({ number }) => `Page ${number}`)
+      const refs = findConditionReferences(definition, condition.id)
+      const seen = new Set()
+      for (const ref of [...refs.pages, ...refs.paymentFields]) {
+        seen.add(ref.pageNumber)
+      }
+      const usedIn = Array.from(seen)
+        .sort((a, b) => a - b)
+        .map((number) => `Page ${number}`)
         .join(', ')
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'

@@ -2,9 +2,11 @@ import { DeadLetterQueues } from '@defra/forms-model'
 
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   getEndpoint,
-  redriveDeadLetterQueueMessages
+  redriveDeadLetterQueueMessages,
+  resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
 import { delJson, getJson, postJson } from '~/src/lib/fetch.js'
 
@@ -59,6 +61,62 @@ describe('dead-letter queue lib functions', () => {
       )
       expect(res).toEqual(['message1'])
     })
+
+    it('should call endpoint with extra query params', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { messages: ['message1'] } })
+      const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
+      const res = await getDeadLetterQueueMessages(dlq, 'token', {
+        visibilityTimeout: 5,
+        waitTimeSeconds: 10
+      })
+      expect(getJson).toHaveBeenCalledWith(
+        new URL(
+          'http://localhost:3002/admin/deadletter/form-submissions/view?visibilityTimeout=5&waitTimeSeconds=10'
+        ),
+        expect.anything()
+      )
+      expect(res).toEqual(['message1'])
+    })
+  })
+
+  describe('getDeadLetterQueueMessage', () => {
+    it('should call endpoint', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'message1' } })
+      const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
+      const res = await getDeadLetterQueueMessage(dlq, 'message-id', 'token')
+      expect(getJson).toHaveBeenCalledWith(
+        new URL(
+          'http://localhost:3002/admin/deadletter/form-submissions/view/message-id'
+        ),
+        expect.anything()
+      )
+      expect(res).toBe('message1')
+    })
+
+    it('should call endpoint with extra query params', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'message1' } })
+      const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
+      const res = await getDeadLetterQueueMessage(dlq, 'message-id', 'token', {
+        visibilityTimeout: 5,
+        waitTimeSeconds: 10
+      })
+      expect(getJson).toHaveBeenCalledWith(
+        new URL(
+          'http://localhost:3002/admin/deadletter/form-submissions/view/message-id?visibilityTimeout=5&waitTimeSeconds=10'
+        ),
+        expect.anything()
+      )
+      expect(res).toBe('message1')
+    })
   })
 
   describe('redriveDeadLetterQueueMessages', () => {
@@ -86,6 +144,26 @@ describe('dead-letter queue lib functions', () => {
       await deleteDeadLetterQueueMessage(dlq, 'message-id', 'token')
       expect(delJson).toHaveBeenCalledWith(
         new URL('http://localhost:3004/admin/deadletter/message-id'),
+        expect.anything()
+      )
+    })
+  })
+
+  describe('resubmitDeadLetterQueueMessage', () => {
+    it('should call endpoint', async () => {
+      jest
+        .mocked(postJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'success' } })
+      const dlq = DeadLetterQueues.AuditApi
+      await resubmitDeadLetterQueueMessage(
+        dlq,
+        'message-id',
+        undefined,
+        'token'
+      )
+      expect(postJson).toHaveBeenCalledWith(
+        new URL('http://localhost:3004/admin/deadletter/resubmit/message-id'),
         expect.anything()
       )
     })

@@ -170,5 +170,65 @@ describe('payment', () => {
       // @ts-expect-error - amount exists on PaymentModel
       expect(question.renderInput.amount).toBe('£0.00')
     })
+
+    it('renders the first conditional amount when default is zero', () => {
+      const elements = new PaymentPreviewElements({
+        ...baseElements,
+        paymentAmount: 0,
+        paymentDescription: 'Fee',
+        paymentConditionalAmounts: [
+          { amount: 5, condition: 'c1' },
+          { amount: 9, condition: 'c2' }
+        ]
+      })
+      const question = new PaymentQuestion(elements, renderer)
+      // @ts-expect-error - amount exists on PaymentModel
+      expect(question.renderInput.amount).toBe('£5.00')
+    })
+
+    it('renders the default amount when default is non-zero, ignoring conditionals', () => {
+      const elements = new PaymentPreviewElements({
+        ...baseElements,
+        paymentAmount: 12,
+        paymentDescription: 'Fee',
+        paymentConditionalAmounts: [{ amount: 5, condition: 'c1' }]
+      })
+      const question = new PaymentQuestion(elements, renderer)
+      // @ts-expect-error - amount exists on PaymentModel
+      expect(question.renderInput.amount).toBe('£12.00')
+    })
+
+    it('renders £0.00 when default is zero and no conditional amounts', () => {
+      const elements = new PaymentPreviewElements({
+        ...baseElements,
+        paymentAmount: 0,
+        paymentDescription: 'Fee',
+        paymentConditionalAmounts: []
+      })
+      const question = new PaymentQuestion(elements, renderer)
+      // @ts-expect-error - amount exists on PaymentModel
+      expect(question.renderInput.amount).toBe('£0.00')
+    })
+
+    it('updates the rendered amount when conditional amounts setter fires', () => {
+      const mockRender = jest.fn()
+      const testRenderer = new QuestionRendererStub(mockRender)
+      const elements = new PaymentPreviewElements({
+        ...baseElements,
+        paymentAmount: 0,
+        paymentDescription: 'Fee',
+        paymentConditionalAmounts: []
+      })
+      const question = new PaymentQuestion(elements, testRenderer)
+
+      question.paymentConditionalAmounts = [{ amount: 7, condition: 'c1' }]
+
+      expect(question.paymentConditionalAmounts).toEqual([
+        { amount: 7, condition: 'c1' }
+      ])
+      expect(mockRender).toHaveBeenCalled()
+      // @ts-expect-error - amount exists on PaymentModel
+      expect(question.renderInput.amount).toBe('£7.00')
+    })
   })
 })

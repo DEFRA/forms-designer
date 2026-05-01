@@ -7,7 +7,8 @@ import {
   getFieldList,
   getFieldValue,
   getFileUploadFields,
-  getQuestionFieldList
+  getQuestionFieldList,
+  paymentConditionalAmountSchema
 } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
@@ -974,6 +975,158 @@ describe('editor-v2 - advanced settings fields model', () => {
         text: 'Error on file types'
       })
     })
+  })
+})
+
+describe('PaymentField field list', () => {
+  it('places paymentConditionalAmounts between paymentAmount and paymentDescription', () => {
+    const fields = getFieldList(
+      undefined,
+      ComponentType.PaymentField,
+      undefined,
+      buildDefinition()
+    )
+    const names = fields.map((f) => f.name)
+    const amountIdx = names.indexOf('paymentAmount')
+    const conditionalIdx = names.indexOf('paymentConditionalAmounts')
+    const descriptionIdx = names.indexOf('paymentDescription')
+    expect(conditionalIdx).toBe(amountIdx + 1)
+    expect(descriptionIdx).toBe(conditionalIdx + 1)
+  })
+
+  it('paymentConditionalAmounts field uses the custom template', () => {
+    const fields = getFieldList(
+      undefined,
+      ComponentType.PaymentField,
+      undefined,
+      buildDefinition()
+    )
+    const conditional = fields.find(
+      (f) => f.name === 'paymentConditionalAmounts'
+    )
+    expect(conditional?.customTemplate).toBe('payment-conditional-amounts')
+  })
+})
+
+describe('paymentConditionalAmountSchema', () => {
+  it('rejects missing amount', () => {
+    const { error } = paymentConditionalAmountSchema.validate(
+      { amount: '', condition: 'c1' },
+      { abortEarly: false }
+    )
+    expect(error?.details.find((d) => d.path[0] === 'amount')?.message).toBe(
+      'Enter payment amount'
+    )
+  })
+
+  it('rejects amount below £0.30', () => {
+    const { error } = paymentConditionalAmountSchema.validate(
+      { amount: 0.29, condition: 'c1' },
+      { abortEarly: false }
+    )
+    expect(error?.details.find((d) => d.path[0] === 'amount')?.message).toBe(
+      'Enter a valid payment amount between £0.30 and £100,000'
+    )
+  })
+
+  it('rejects amount above £100,000', () => {
+    const { error } = paymentConditionalAmountSchema.validate(
+      { amount: 100001, condition: 'c1' },
+      { abortEarly: false }
+    )
+    expect(error?.details.find((d) => d.path[0] === 'amount')?.message).toBe(
+      'Enter a valid payment amount between £0.30 and £100,000'
+    )
+  })
+
+  it('rejects amount with more than 2 decimal places', () => {
+    const { error } = paymentConditionalAmountSchema.validate(
+      { amount: 1.234, condition: 'c1' },
+      { abortEarly: false }
+    )
+    expect(error?.details.find((d) => d.path[0] === 'amount')?.message).toBe(
+      'Enter an amount with no more than 2 decimal places'
+    )
+  })
+
+  it('rejects missing condition', () => {
+    const { error } = paymentConditionalAmountSchema.validate(
+      { amount: 1, condition: '' },
+      { abortEarly: false }
+    )
+    expect(error?.details.find((d) => d.path[0] === 'condition')?.message).toBe(
+      'Select an existing condition'
+    )
+  })
+
+  it('accepts valid payload', () => {
+    const { error } = paymentConditionalAmountSchema.validate({
+      amount: 1,
+      condition: 'c1'
+    })
+    expect(error).toBeUndefined()
+  })
+})
+
+describe('PaymentField required fields gated on enhancedAction', () => {
+  const paymentPayloadBase = {
+    questionType: 'PaymentField',
+    question: 'Pay',
+    name: 'XyZpQr'
+  }
+  const paymentBaseFieldPaths = [
+    'paymentAmount',
+    'paymentDescription',
+    'paymentTestApiKey'
+  ]
+
+  /**
+   * @param {{ error?: import('joi').ValidationError }} validation
+   * @returns {string[]}
+   */
+  const errorPaths = (validation) =>
+    (validation.error?.details ?? []).map((d) => String(d.path[0]))
+
+  it('Save and continue (no enhancedAction) raises errors for missing PaymentField base fields', () => {
+    const result = baseSchema.validate(paymentPayloadBase, {
+      abortEarly: false
+    })
+    expect(errorPaths(result)).toEqual(
+      expect.arrayContaining(paymentBaseFieldPaths)
+    )
+  })
+
+  it.each([
+    'add-conditional-amount',
+    'save-conditional-amount',
+    'cancel-conditional-amount'
+  ])('enhancedAction=%s bypasses base required-field errors', (action) => {
+    const result = baseSchema.validate(
+      { ...paymentPayloadBase, enhancedAction: action },
+      { abortEarly: false }
+    )
+    expect(errorPaths(result)).not.toEqual(
+      expect.arrayContaining(paymentBaseFieldPaths)
+    )
+  })
+
+  it('enhancedAction=save-conditional-amount accepts conditionalAmount + conditionalAmountCondition payload fields', () => {
+    const result = baseSchema.validate(
+      {
+        ...paymentPayloadBase,
+        enhancedAction: 'save-conditional-amount',
+        conditionalAmount: '5',
+        conditionalAmountCondition: 'c1'
+      },
+      { abortEarly: false }
+    )
+    expect(errorPaths(result)).not.toEqual(
+      expect.arrayContaining([
+        'conditionalAmount',
+        'conditionalAmountCondition',
+        ...paymentBaseFieldPaths
+      ])
+    )
   })
 })
 

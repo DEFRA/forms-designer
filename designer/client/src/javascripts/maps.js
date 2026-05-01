@@ -3,7 +3,7 @@ import {
   map as mapImports
 } from '@defra/forms-engine-plugin/shared.js'
 
-const { createMap, defaultMapConfig } = mapImports
+const { createMap, defaultConfig: defaultMapConfig } = mapImports
 const {
   addFeatureToMap,
   createFeaturesHTML,

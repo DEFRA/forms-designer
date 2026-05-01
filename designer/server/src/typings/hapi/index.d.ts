@@ -191,6 +191,8 @@ declare module '@hapi/yar' {
     }>
     [sessionNames.validationFailure.deadLetterQueues]: ValidationFailure<{
       dlq: string
+      messageJson?: string
+      messageJsonExisting?: string
     }>
     [sessionNames.validationFailure.formInspect]: ValidationFailure<{
       type: string

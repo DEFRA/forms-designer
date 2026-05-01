@@ -5,7 +5,7 @@ import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { MASKED_KEY, getPaymentSecretsMasked } from '~/src/lib/secrets.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
 import { advancedSettingsPerComponentType } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
@@ -24,6 +24,7 @@ import {
 } from '~/src/models/forms/editor-v2/common.js'
 import { enhancedFieldsPerComponentType } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
+import { getPaymentConditionalAmountsViewModel } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
 import {
   buildPreviewErrorsUrl,
   buildPreviewUrl
@@ -43,8 +44,6 @@ const zeroIsValidForFields = [
   'min',
   'max'
 ]
-
-const logger = createLogger()
 
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
@@ -97,10 +96,7 @@ export function buildComponentDef(questionType) {
 
 /**
  * @param { ComponentType | undefined } questionType
- * @returns {{
- *   baseErrors: Array<{type: string; template: string;}>;
- *   advancedSettingsErrors: []
- * }}
+ * @returns {ErrorMessageTemplateList}
  */
 export function getErrorTemplates(questionType) {
   let component
@@ -108,7 +104,10 @@ export function getErrorTemplates(questionType) {
     component = YesNoField
   } else {
     try {
-      component = createComponent(buildComponentDef(questionType), {})
+      component = createComponent(
+        buildComponentDef(questionType),
+        /** @type {ConstructorParameters<typeof ComponentBase>[1]} */ ({})
+      )
     } catch {
       logger.warn(`Invalid component type of '${questionType}' detected`)
     }
@@ -402,10 +401,16 @@ export async function questionDetailsViewModel(
     query.action
   )
 
+  const paymentConditionalAmounts =
+    questionType === ComponentType.PaymentField
+      ? getPaymentConditionalAmountsViewModel({ definition, state })
+      : undefined
+
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
     enhancedFields: enhancedFieldList,
+    paymentConditionalAmounts,
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     name: details.question.name || randomId(),
     questionId,
@@ -447,4 +452,6 @@ export async function questionDetailsViewModel(
  * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  * @import { RequestQuery } from '@hapi/hapi'
+ * @import { ComponentBase } from '@defra/forms-engine-plugin/engine/components/ComponentBase.js'
+ * @import { ErrorMessageTemplateList } from '@defra/forms-engine-plugin/engine/types.js'
  */

@@ -1,5 +1,13 @@
 export enum FormMetricType {
-  HeadlineMetric = 'headline-metric',
+  TotalsMetric = 'totals-metric',
   OverviewMetric = 'overview-metric',
   TimelineMetric = 'timeline-metric'
+}
+
+export enum FormMetricName {
+  NewFormsCreated = 'NewFormsCreated',
+  FormsPublished = 'FormsPublished',
+  Submissions = 'Submissions',
+  FormsInDraft = 'FormsInDraft',
+  TimeToPublish = 'TimeToPublish'
 }

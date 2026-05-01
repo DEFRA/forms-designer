@@ -1,0 +1,31 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    <form method="post">
+      <h2 class="govuk-heading-l">Regenerating metrics</h2>
+      <p class="govuk-body">This will clear out the 'metrics' collection in the 'forms-audit-api' database, and regenerate a full history of metrics.</p>
+
+      {{ govukButton({
+        text: 'Regenerate metrics'
+      }) }}
+    </form>
+
+  {% endcall %}
+  {% endblock %}
+
+  {% block mainEnd %}
+    {{ super() }}
+  {% endblock %}

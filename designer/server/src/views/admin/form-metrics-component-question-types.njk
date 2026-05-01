@@ -1,0 +1,26 @@
+<table class="govuk-table">
+    <thead class="govuk-table__head">
+      <tr class="govuk-table__row">
+        <th scope="col" class="govuk-table__header">Question type</th>
+        <th scope="col" class="govuk-table__header">Total usage (draft)</th>
+        <th scope="col" class="govuk-table__header">Forms using (draft)</th>
+        <th scope="col" class="govuk-table__header">Percentage (draft)</th>
+        <th scope="col" class="govuk-table__header">Total usage (live)</th>
+        <th scope="col" class="govuk-table__header">Forms using (live)</th>
+        <th scope="col" class="govuk-table__header">Percentage (live)</th>
+      </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+      {% for row in model.formUsageQuestionTypes %}
+      <tr class="govuk-table__row">
+        <td class="govuk-table__cell">{{ row.questionTypeName }}</td>
+        <td class="govuk-table__cell">{{ displayMetricValue(row.draft.totalUsage) }}</td>
+        <td class="govuk-table__cell">{{ displayMetricValue(row.draft.formsUsing) }}</td>
+        <td class="govuk-table__cell">{{ row.draft.percentage }}</td>
+        <td class="govuk-table__cell">{{ displayMetricValue(row.live.totalUsage) }}</td>
+        <td class="govuk-table__cell">{{ displayMetricValue(row.live.formsUsing) }}</td>
+        <td class="govuk-table__cell">{{ row.live.percentage }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>

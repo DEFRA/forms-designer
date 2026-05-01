@@ -1,7 +1,5 @@
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { getUser } from '~/src/lib/manage.js'
-
-const logger = createLogger()
 
 /**
  * Refreshes user session entitlements and patches the current request if it's the same user

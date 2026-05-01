@@ -268,10 +268,17 @@ export interface PaymentFieldComponent extends FormFieldBase {
   }
 }
 
+export type GeospatialFieldOptionsCountry =
+  | 'england'
+  | 'wales'
+  | 'northern-ireland'
+  | 'scotland'
+
 export interface GeospatialFieldComponent extends FormFieldBase {
   type: ComponentType.GeospatialField
   options: FormFieldBase['options'] & {
     condition?: string
+    countries?: GeospatialFieldOptionsCountry[]
   }
 }
 

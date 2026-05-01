@@ -18,7 +18,9 @@ export enum Scopes {
   FormsBackup = 'forms-backup',
   ResetSaveAndExit = 'reset-save-and-exit',
   DeadLetterQueues = 'dead-letter-queues',
-  FormsInspect = 'forms-inspect'
+  FormsInspect = 'forms-inspect',
+  FormsReport = 'forms-report',
+  RegenerateMetrics = 'regenerate-metrics'
 }
 
 export const RoleScopes = {
@@ -32,7 +34,8 @@ export const RoleScopes = {
     Scopes.UserDelete,
     Scopes.UserEdit,
     Scopes.FormsFeedback,
-    Scopes.FormsFeedbackAllForms
+    Scopes.FormsFeedbackAllForms,
+    Scopes.FormsReport
   ],
   [Roles.FormPublisher]: [
     Scopes.FormDelete,

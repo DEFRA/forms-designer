@@ -15,6 +15,13 @@ import {
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 import { stringHasValue } from '~/src/lib/utils.js'
+import {
+  handleAddConditionalAmount,
+  handleCancelConditionalAmount,
+  handleEditConditionalAmount,
+  handleRemoveConditionalAmount,
+  handleSaveConditionalAmount
+} from '~/src/routes/forms/editor-v2/payment-conditional-amount-actions.js'
 
 const radiosSectionListItemsAnchor = '#list-items'
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
@@ -213,7 +220,13 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
     [ListAction.Move]: () =>
       handleMoveAction(state, yar, stateId, id, direction),
     [ListAction.DoneReordering]: () =>
-      handleDoneReorderingAction(state, yar, stateId)
+      handleDoneReorderingAction(state, yar, stateId),
+    'edit-conditional-amount': () =>
+      handleEditConditionalAmount(yar, stateId, id),
+    'cancel-conditional-amount': () =>
+      handleCancelConditionalAmount(yar, stateId),
+    'remove-conditional-amount': () =>
+      handleRemoveConditionalAmount(yar, stateId, id)
   }
 
   const handler = actionHandlers[action]
@@ -303,6 +316,16 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
   const preState = getQuestionSessionState(yar, stateId)
   if (!preState?.questionType) {
     throw new Error('Invalid session contents')
+  }
+
+  if (enhancedAction === EnhancedAction.AddConditionalAmount) {
+    return handleAddConditionalAmount(yar, stateId)
+  }
+  if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
+    return handleSaveConditionalAmount(request, stateId)
+  }
+  if (enhancedAction === EnhancedAction.CancelConditionalAmount) {
+    return handleCancelConditionalAmount(yar, stateId)
   }
 
   const state = /** @type {QuestionSessionState} */ ({

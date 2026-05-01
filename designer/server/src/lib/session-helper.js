@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import { ComponentType, randomId } from '@defra/forms-model'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { hydrateConditionalAmountsFromComponent } from '~/src/lib/payment-conditional-amount-helpers.js'
 import { getComponentFromDefinition } from '~/src/lib/utils.js'
 
 /**
@@ -138,25 +139,26 @@ export function buildQuestionSessionState(
   questionId
 ) {
   const state = getQuestionSessionState(yar, stateId)
+  const component = getComponentFromDefinition(definition, pageId, questionId)
+
   if (
     state?.questionType &&
     !componentsSavingLists.includes(state.questionType)
   ) {
-    return state
+    return hydratePaymentFieldConditionalAmounts(yar, stateId, component, state)
   }
 
   if (state?.questionType && state.listItems) {
-    return state
+    return hydratePaymentFieldConditionalAmounts(yar, stateId, component, state)
   }
 
-  const component = getComponentFromDefinition(definition, pageId, questionId)
   const listId = /** @type { ListComponentsDef | undefined } */ (component)
     ?.list
   const items = listId
     ? (definition.lists.find((x) => x.id === listId)?.items ?? [])
     : []
 
-  const newState = /** @type { QuestionSessionState} */ ({
+  const baseState = /** @type { QuestionSessionState} */ ({
     questionType: state?.questionType ?? component?.type,
     editRow: state?.editRow ?? {},
     listItems: items.map((item) => ({
@@ -167,11 +169,27 @@ export function buildQuestionSessionState(
     })),
     questionDetails: state?.questionDetails
   })
-  setQuestionSessionState(yar, stateId, newState)
-  return newState
+  const hydrated = hydrateConditionalAmountsFromComponent(component, baseState)
+  setQuestionSessionState(yar, stateId, hydrated)
+  return hydrated
 }
 
 /**
- * @import { ConditionSessionState, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
+ * @param {Yar} yar
+ * @param {string} stateId
+ * @param {Partial<ComponentDef> | undefined} component
+ * @param {QuestionSessionState} state
+ * @returns {QuestionSessionState}
+ */
+function hydratePaymentFieldConditionalAmounts(yar, stateId, component, state) {
+  const hydrated = hydrateConditionalAmountsFromComponent(component, state)
+  if (hydrated !== state) {
+    setQuestionSessionState(yar, stateId, hydrated)
+  }
+  return hydrated
+}
+
+/**
+ * @import { ComponentDef, ConditionSessionState, QuestionSessionState, FormDefinition, ListComponentsDef } from '@defra/forms-model'
  * @import { ConditionSessionStateKey, QuestionSessionStateKey, Yar } from '@hapi/yar'
  */

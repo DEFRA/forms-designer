@@ -292,7 +292,8 @@ describe('preview', () => {
         suffix: 'suf',
         instructionText: '',
         paymentAmount: 0,
-        paymentDescription: ''
+        paymentDescription: '',
+        paymentConditionalAmounts: []
       })
     })
 
@@ -312,8 +313,22 @@ describe('preview', () => {
         suffix: '',
         instructionText: '',
         paymentAmount: 0,
-        paymentDescription: ''
+        paymentDescription: '',
+        paymentConditionalAmounts: []
       })
+    })
+
+    it('seeds paymentConditionalAmounts from session state', () => {
+      const previewElements = new QuestionPreviewElements([], {
+        conditionalAmounts: [
+          { id: 'a1', amount: 5, condition: 'c1' },
+          { id: 'a2', amount: 9, condition: 'c2' }
+        ]
+      })
+      expect(previewElements.values.paymentConditionalAmounts).toEqual([
+        { amount: 5, condition: 'c1' },
+        { amount: 9, condition: 'c2' }
+      ])
     })
 
     it('should do nothing when setPreviewHTML is called', () => {

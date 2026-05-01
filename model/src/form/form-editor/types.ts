@@ -331,6 +331,12 @@ export interface FormEditor {
   paymentAmount: string
 
   /**
+   * Virtual marker for the conditional payment amounts editor section.
+   * Carries no own value; rendered via a custom template.
+   */
+  paymentConditionalAmounts: string
+
+  /**
    * Description of the payment (will appear in the payment provider's pages)
    */
   paymentDescription: string
@@ -344,6 +350,16 @@ export interface FormEditor {
    * Live API key used for live payments
    */
   paymentLiveApiKey: string
+
+  /**
+   * Inline conditional-amount editor: amount input value
+   */
+  conditionalAmount: string
+
+  /**
+   * Inline conditional-amount editor: selected condition id
+   */
+  conditionalAmountCondition: string
 
   /**
    * Title that user supplies a section
@@ -428,6 +444,8 @@ export type FormEditorInputQuestion = Pick<
   | 'paymentDescription'
   | 'paymentTestApiKey'
   | 'paymentLiveApiKey'
+  | 'conditionalAmount'
+  | 'conditionalAmountCondition'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -470,6 +488,8 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'paymentDescription'
   | 'paymentTestApiKey'
   | 'paymentLiveApiKey'
+  | 'conditionalAmount'
+  | 'conditionalAmountCondition'
 >
 
 type ListValue = string | boolean | number
@@ -544,6 +564,21 @@ export interface QuestionSessionState {
   lastMovedId?: string
   lastMoveDirection?: string
   listConflicts?: ListConflict[]
+  conditionalAmounts?: ConditionalAmountState[]
+  conditionalAmountEditRow?: ConditionalAmountEditRow
+}
+
+export interface ConditionalAmountState {
+  id: string
+  amount: number
+  condition: string
+}
+
+export interface ConditionalAmountEditRow {
+  expanded: boolean
+  id?: string
+  amount?: number | string
+  condition?: string
 }
 
 export interface ConditionSessionState {
@@ -652,6 +687,7 @@ export interface FormEditorGovukField {
   usePostcodeLookup?: GovukField
   declarationText?: GovukField
   paymentAmount?: GovukField
+  paymentConditionalAmounts?: GovukField
   paymentDescription?: GovukField
   paymentTestApiKey?: GovukField
   paymentLiveApiKey?: GovukField

@@ -1,7 +1,7 @@
 import { getErrorMessage } from '@defra/forms-model'
 import { Cluster, Redis } from 'ioredis'
 
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 
 /**
@@ -11,8 +11,6 @@ import config from '~/src/config.js'
  * Out in the wild - Elasticache / Redis Cluster with username and password
  */
 function buildRedisClient() {
-  const logger = createLogger()
-
   const port = 6379
   const db = 0
   let redisClient

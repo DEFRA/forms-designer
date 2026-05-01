@@ -45,8 +45,9 @@ export function getEndpoint(dlq) {
 /**
  * @param {DeadLetterQueues} dlq
  * @param {string} token
+ * @param {{ visibilityTimeout: number | undefined, waitTimeSeconds: number | undefined}} [options]
  */
-export async function getDeadLetterQueueMessages(dlq, token) {
+export async function getDeadLetterQueueMessages(dlq, token, options) {
   const getJsonByType = /** @type {typeof getJson<{ messages: any[] }>} */ (
     getJson
   )
@@ -54,6 +55,20 @@ export async function getDeadLetterQueueMessages(dlq, token) {
   const { endpoint, qualifier } = getEndpoint(dlq)
 
   const requestUrl = new URL(`./admin/deadletter${qualifier}/view`, endpoint)
+
+  if (options?.visibilityTimeout) {
+    requestUrl.searchParams.set(
+      'visibilityTimeout',
+      options.visibilityTimeout.toString()
+    )
+  }
+
+  if (options?.waitTimeSeconds) {
+    requestUrl.searchParams.set(
+      'waitTimeSeconds',
+      options.waitTimeSeconds.toString()
+    )
+  }
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
@@ -63,6 +78,49 @@ export async function getDeadLetterQueueMessages(dlq, token) {
     uniqueMessages.set(message.MessageId, message)
   }
   return uniqueMessages.values().toArray()
+}
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} messageId
+ * @param {string} token
+ * @param {{ visibilityTimeout: number | undefined, waitTimeSeconds: number | undefined}} [options]
+ * @returns {Promise<any | undefined>}
+ */
+export async function getDeadLetterQueueMessage(
+  dlq,
+  messageId,
+  token,
+  options
+) {
+  const getJsonByType = /** @type {typeof getJson<{ message: any }>} */ (
+    getJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(
+    `./admin/deadletter${qualifier}/view/${messageId}`,
+    endpoint
+  )
+
+  if (options?.visibilityTimeout) {
+    requestUrl.searchParams.set(
+      'visibilityTimeout',
+      options.visibilityTimeout.toString()
+    )
+  }
+
+  if (options?.waitTimeSeconds) {
+    requestUrl.searchParams.set(
+      'waitTimeSeconds',
+      options.waitTimeSeconds.toString()
+    )
+  }
+
+  const { body } = await getJsonByType(requestUrl, getHeaders(token))
+
+  return body.message ?? undefined
 }
 
 /**
@@ -110,3 +168,44 @@ export async function deleteDeadLetterQueueMessage(dlq, messageId, token) {
     )
   }
 }
+
+/**
+ * @param {DeadLetterQueues} dlq
+ * @param {string} messageId
+ * @param { FormAdapterSubmissionMessagePayload | undefined } messageJson
+ * @param {string} token
+ */
+export async function resubmitDeadLetterQueueMessage(
+  dlq,
+  messageId,
+  messageJson,
+  token
+) {
+  const postJsonByType = /** @type {typeof delJson<{ message: string }>} */ (
+    postJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(
+    `./admin/deadletter${qualifier}/resubmit/${messageId}`,
+    endpoint
+  )
+
+  const { body } = await postJsonByType(requestUrl, {
+    payload: {
+      messageJson
+    },
+    ...getHeaders(token)
+  })
+
+  if (body.message !== 'success') {
+    throw new Error(
+      `Error when resubmitting message ${messageId} for ${dlq}: ${body.message}`
+    )
+  }
+}
+
+/**
+ * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
+ */

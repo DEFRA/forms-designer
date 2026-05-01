@@ -5,7 +5,7 @@ import Joi from 'joi'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import * as userSession from '~/src/common/helpers/auth/get-user-session.js'
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
 import {
@@ -20,7 +20,6 @@ import { redirectWithErrors } from '~/src/routes/forms/create.js'
 export const emailSchema = Joi.string().trim().required().messages({
   'string.empty': 'Enter an email address'
 })
-const logger = createLogger()
 
 export default [
   /**

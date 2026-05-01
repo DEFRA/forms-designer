@@ -1,0 +1,81 @@
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+<div class="govuk-form-group" id="payment-conditional-amounts">
+  <h2 class="govuk-heading-m" tabindex="-1">
+    <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="12" cy="12" r="11" fill="currentColor"></circle>
+      <path d="M6 12h12M12 6v12" stroke="white" stroke-width="2" stroke-linecap="round"></path>
+    </svg>
+    Conditional payment amounts (optional)
+  </h2>
+  <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible" style="border-color:black; border-width: 3px;">
+
+  {% if paymentConditionalAmounts %}
+    {% set tiles = paymentConditionalAmounts.tiles %}
+    {% set editRow = paymentConditionalAmounts.editRow %}
+    {% set editRowIndex = paymentConditionalAmounts.editRowIndex %}
+
+    {% if tiles.length or editRow.expanded %}
+      <ol class="app-reorderable-list" id="conditional-amounts-container">
+        {% for tile in tiles %}
+          <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ tile.id }}">
+            <div class="app-reorderable-list__wrapper list-item">
+              {% if loop.index == editRowIndex and editRow.expanded %}
+                <div class="app-reorderable-list__content">
+                  {%- include "./payment-conditional-amount-edit.njk" -%}
+                </div>
+              {% else %}
+                <div class="app-reorderable-list__content">
+                  <p class="govuk-body fauxlabel govuk-!-margin-bottom-1">Payment amount {{ loop.index }}</p>
+                  <p class="govuk-body govuk-!-margin-bottom-1">
+                    <strong>{{ tile.amountFormatted }}</strong>
+                  </p>
+                  <p class="govuk-body-s govuk-!-margin-bottom-1">
+                    Shown if &middot; <strong>{{ tile.conditionDisplayName }}</strong>
+                    {% if tile.conditionExpression %}
+                      <span class="govuk-hint govuk-!-margin-bottom-0"> {{ tile.conditionExpression }}</span>
+                    {% endif %}
+                  </p>
+                </div>
+                <div class="app-reorderable-list__actions">
+                  <ul class="govuk-summary-list__actions-list govuk-!-margin-bottom-0">
+                    <li class="govuk-summary-list__actions-list-item">
+                      <a class="govuk-link govuk-link--no-visited-state" href="?action=edit-conditional-amount&amp;id={{ tile.id }}">
+                        Edit<span class="govuk-visually-hidden"> payment amount {{ loop.index }}</span>
+                      </a>
+                    </li>
+                    <li class="govuk-summary-list__actions-list-item">
+                      <a class="govuk-link govuk-link--no-visited-state govuk-link--destructive" href="?action=remove-conditional-amount&amp;id={{ tile.id }}">
+                        Remove<span class="govuk-visually-hidden"> payment amount {{ loop.index }}</span>
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              {% endif %}
+            </div>
+          </li>
+        {% endfor %}
+
+        {% if editRow.expanded and editRowIndex > tiles.length %}
+          <li class="app-reorderable-list__item" data-index="{{ editRowIndex }}">
+            <div class="app-reorderable-list__wrapper list-item">
+              <div class="app-reorderable-list__content">
+                {%- include "./payment-conditional-amount-edit.njk" -%}
+              </div>
+            </div>
+          </li>
+        {% endif %}
+      </ol>
+    {% endif %}
+
+    {% if not editRow.expanded %}
+      {{ govukButton({
+        text: "Add payment amount",
+        classes: "govuk-button--secondary govuk-!-margin-bottom-4",
+        attributes: { id: "add-conditional-amount-button" },
+        name: "enhancedAction",
+        value: "add-conditional-amount"
+      }) }}
+    {% endif %}
+  {% endif %}
+</div>

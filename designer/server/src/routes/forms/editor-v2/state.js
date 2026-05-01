@@ -2,15 +2,13 @@ import { Scopes, getErrorMessage } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
-import { createLogger } from '~/src/common/helpers/logging/logger.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
 
 export const ROUTE_FULL_PATH = `/library/{slug}/editor-v2/state/{stateId}`
-
-const logger = createLogger()
 
 export const schema = Joi.object().keys({
   listItems: Joi.array()
