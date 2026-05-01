@@ -24,7 +24,7 @@
 {{ govukSelect({
   id: "conditionalAmountCondition",
   name: "conditionalAmountCondition",
-  label: { text: "Select an existing condition" },
+  label: { text: "Select an existing condition", classes: "govuk-visually-hidden" },
   items: conditionItems,
   errorMessage: errorList | selectattr("href", "equalto", "#conditionalAmountCondition") | first
 }) }}

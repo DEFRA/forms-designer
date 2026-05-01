@@ -340,6 +340,9 @@ describe('utils', () => {
     it('should return error if 3 decimal places', () => {
       expect(handlePrecision(123.567, mockHelpers, 2)).toBe('number.precision')
     })
+    it('should accept zero (DF-832: base payment amount allows £0)', () => {
+      expect(handlePrecision(0, mockHelpers, 2)).toBe(0)
+    })
   })
 })
 
