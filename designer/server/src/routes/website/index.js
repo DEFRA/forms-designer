@@ -2,11 +2,11 @@ import Joi from 'joi'
 
 import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
 import { websiteFeaturesModel } from '~/src/models/website/features.js'
+import { websiteResourcesModel } from '~/src/models/website/resources.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
 import {
   Level2MakingAFormMenu,
-  Level2ResourcesMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
 import content from '~/src/routes/website/content.js'
@@ -74,13 +74,7 @@ export default /** @satisfies {ServerRoute[]} */ ([
     path: `/${WebsiteLevel1Routes.RESOURCES}`,
     handler(request, h) {
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const resourceModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.RESOURCES,
-        Level2ResourcesMenu.DOES_IT_NEED,
-        content.resources.menus,
-        'Good form design guide',
-        isGuest
-      )
+      const resourceModel = websiteResourcesModel(isGuest)
       return h.view('website/resources/index', resourceModel)
     }
   },

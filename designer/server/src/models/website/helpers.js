@@ -52,7 +52,7 @@ export function getWebsitePageNavigation(route, isGuest) {
 
 /**
  * @param { WebsiteLevel1Routes } parent
- * @param { Level2GetStartedMenu | Level2ResourcesMenu } activeMenu
+ * @param { Level2GetStartedMenu | Level2MakingAFormMenu } activeMenu
  */
 export function getSubnavigation(parent, activeMenu) {
   /**
@@ -126,5 +126,5 @@ export function getSubmenuPaginatorMap(currentMenu) {
   )
 }
 /**
- * @import { WebsiteLevel1Routes, Level2GetStartedMenu, Level2ResourcesMenu } from '~/src/routes/website/constants.js'
+ * @import { WebsiteLevel1Routes, Level2GetStartedMenu, Level2MakingAFormMenu } from '~/src/routes/website/constants.js'
  */
