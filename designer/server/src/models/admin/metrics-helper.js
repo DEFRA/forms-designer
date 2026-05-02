@@ -214,8 +214,14 @@ export function mapOverviewMetrics(
       (metric.formStatus === FormStatus.Live
         ? submissionCountsLive.get(metric.formId)
         : submissionCountsDraft.get(metric.formId)) ?? 0,
-    daysToPublish: formDaysToPublish.get(metric.formId) ?? 0,
-    republished: formRepublished.get(metric.formId) ?? 0
+    daysToPublish:
+      metric.formStatus === FormStatus.Live
+        ? (formDaysToPublish.get(metric.formId) ?? 0)
+        : '-',
+    republished:
+      metric.formStatus === FormStatus.Live
+        ? (formRepublished.get(metric.formId) ?? 0)
+        : '-'
   }))
 }
 
@@ -238,7 +244,7 @@ function calcChangePercentage(currCount, prevCount) {
  * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {FormMetricName} metricName
  * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
- * @param {string} [units]
+ * @param { string | undefined } [units]
  */
 export function collateSpecificTileCounts(
   currPeriod,
@@ -257,12 +263,15 @@ export function collateSpecificTileCounts(
       : 0
 
   const notEqualSymbol = currPeriodCount > prevPeriodCount ? '+' : '-'
-  const counts = {
-    count: currPeriodCount,
-    changeSymbol: currPeriodCount === prevPeriodCount ? '' : notEqualSymbol,
-    changeValue: currPeriodCount - prevPeriodCount,
-    changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount),
-    units: units ?? ''
+  const counts =
+    /** @type {{ count: number, changeSymbol: string, changeValue: number, changePercentage: string, units?: string }} */ ({
+      count: currPeriodCount,
+      changeSymbol: currPeriodCount === prevPeriodCount ? '' : notEqualSymbol,
+      changeValue: currPeriodCount - prevPeriodCount,
+      changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount)
+    })
+  if (units) {
+    counts.units = units
   }
 
   const changePhrase = buildChangePhrase(counts)
@@ -284,6 +293,25 @@ export function collateSpecificTileCounts(
 }
 
 /**
+ * @param {string} title
+ * @param {FormMetricName} metricName
+ * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: { ariaPeriodName: string, straplinePeriodName: string } }} commonParams
+ * @param {string} [units]
+ */
+function createTile(title, metricName, commonParams, units) {
+  return {
+    title,
+    ...collateSpecificTileCounts(
+      commonParams.currPeriod,
+      commonParams.prevPeriod,
+      metricName,
+      commonParams.periodNames,
+      units
+    )
+  }
+}
+
+/**
  * @param { Date | undefined } fromDate
  * @param { Date | undefined } toDate
  * @param {string} title
@@ -299,56 +327,41 @@ export function mapOverviewTiles(
   prevPeriod,
   periodNames
 ) {
+  const commonParams = {
+    currPeriod,
+    prevPeriod,
+    periodNames
+  }
   return {
     fromDate: fromDate ? format(fromDate, FULL_DATE_MASK) : undefined,
     toDate: toDate ? format(toDate, FULL_DATE_MASK) : undefined,
     title,
-    newFormsCreated: {
-      title: NEW_FORMS_CREATED_TITLE,
-      ...collateSpecificTileCounts(
-        currPeriod,
-        prevPeriod,
-        FormMetricName.NewFormsCreated,
-        periodNames
-      )
-    },
-    formsPublished: {
-      title: FORMS_PUBLISHED_TITLE,
-      ...collateSpecificTileCounts(
-        currPeriod,
-        prevPeriod,
-        FormMetricName.FormsPublished,
-        periodNames
-      )
-    },
-    formSubmissions: {
-      title: FORM_SUBMISSIONS_TITLE,
-      ...collateSpecificTileCounts(
-        currPeriod,
-        prevPeriod,
-        FormMetricName.Submissions,
-        periodNames
-      )
-    },
-    formsInDraft: {
-      title: FORMS_IN_DRAFT_TITLE,
-      ...collateSpecificTileCounts(
-        currPeriod,
-        prevPeriod,
-        FormMetricName.FormsInDraft,
-        periodNames
-      )
-    },
-    timeToPublish: {
-      title: TIME_TO_PUBLISH_TITLE,
-      ...collateSpecificTileCounts(
-        currPeriod,
-        prevPeriod,
-        FormMetricName.TimeToPublish,
-        periodNames,
-        'days'
-      )
-    }
+    newFormsCreated: createTile(
+      NEW_FORMS_CREATED_TITLE,
+      FormMetricName.NewFormsCreated,
+      commonParams
+    ),
+    formsPublished: createTile(
+      FORMS_PUBLISHED_TITLE,
+      FormMetricName.FormsPublished,
+      commonParams
+    ),
+    formSubmissions: createTile(
+      FORM_SUBMISSIONS_TITLE,
+      FormMetricName.Submissions,
+      commonParams
+    ),
+    formsInDraft: createTile(
+      FORMS_IN_DRAFT_TITLE,
+      FormMetricName.FormsInDraft,
+      commonParams
+    ),
+    timeToPublish: createTile(
+      TIME_TO_PUBLISH_TITLE,
+      FormMetricName.TimeToPublish,
+      commonParams,
+      'days'
+    )
   }
 }
 

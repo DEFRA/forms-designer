@@ -82,14 +82,16 @@ describe('metrics models', () => {
             features: [],
             formName: 'form1',
             name: 'form1',
-            submissions: 5
+            submissions: 5,
+            republished: '-'
           },
           {
             daysToPublish: '-',
             features: [],
             formName: 'form2',
             name: 'form2',
-            submissions: 2
+            submissions: 2,
+            republished: '-'
           }
         ],
         overviewMetrics: {
@@ -111,7 +113,20 @@ describe('metrics models', () => {
               'Form submissions',
               'previous 7 days',
               'No difference in submissions  than last week'
-            )
+            ),
+            formsInDraft: getExpectedTile(
+              'Forms in draft',
+              'previous 7 days',
+              'No difference in forms  than last week'
+            ),
+            timeToPublish: {
+              ...getExpectedTile(
+                'Average time to publish',
+                'previous 7 days',
+                'No difference in days  than last week'
+              ),
+              units: 'days'
+            }
           },
           last30Days: {
             fromDate: '2 December 2025',
@@ -131,7 +146,20 @@ describe('metrics models', () => {
               'Form submissions',
               'previous 30 days',
               'No difference in submissions  than last month'
-            )
+            ),
+            formsInDraft: getExpectedTile(
+              'Forms in draft',
+              'previous 30 days',
+              'No difference in forms  than last month'
+            ),
+            timeToPublish: {
+              ...getExpectedTile(
+                'Average time to publish',
+                'previous 30 days',
+                'No difference in days  than last month'
+              ),
+              units: 'days'
+            }
           },
           allTime: {
             fromDate: undefined,
@@ -151,7 +179,20 @@ describe('metrics models', () => {
               'Form submissions',
               'previous year',
               'No difference in submissions  than last year'
-            )
+            ),
+            formsInDraft: getExpectedTile(
+              'Forms in draft',
+              'previous year',
+              'No difference in forms  than last year'
+            ),
+            timeToPublish: {
+              ...getExpectedTile(
+                'Average time to publish',
+                'previous year',
+                'No difference in days  than last year'
+              ),
+              units: 'days'
+            }
           }
         }
       })

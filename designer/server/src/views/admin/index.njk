@@ -110,6 +110,11 @@
             <a href="/admin/form-metrics" class="govuk-link govuk-link--no-visited-state">Form metrics</a>
           </li>
         {% endif %}
+        {% if supports.formMetricsRegen %}
+          <li>
+            <a href="/admin/form-metrics-regenerate" class="govuk-link govuk-link--no-visited-state">Regenerate all form metrics</a>
+          </li>
+        {% endif %}
       </ul>
     {% endif %}
   {% endcall %}
