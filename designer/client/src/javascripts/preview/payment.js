@@ -55,7 +55,12 @@ export class PaymentDomElements extends QuestionDomElements {
     return {
       ...this.constructValues(),
       paymentAmount: this._paymentAmount,
-      paymentDescription: this._paymentDescription
+      paymentDescription: this._paymentDescription,
+      // Conditional amounts are managed via session state on the server, not
+      // editable as DOM inputs here. The list is rendered statically on each
+      // server response; the client preview just needs a non-undefined value
+      // to satisfy the PaymentElements type contract.
+      paymentConditionalAmounts: []
     }
   }
 
