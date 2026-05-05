@@ -131,10 +131,11 @@ export function pageConditionsViewModel(
 
   const cardTitle = `Page ${pageNum}`
   const title = getPageTitle(/** @type {Page} */ (page))
-  const cardCaption =
-    title && title !== '' ? `Page ${pageNum}: ${title}` : cardTitle
+  const cardCaption = title && title !== '' ? title : cardTitle
+  const mainTitle = `Edit page ${pageNum}, conditions`
   const formTitle = metadata.title
-  const pageTitle = `${cardTitle} - ${formTitle}`
+  const pageTitle =
+    title && title !== '' ? `Page ${pageNum}: ${title}` : cardTitle
 
   const pageSpecificHeading = cardCaption
 
@@ -157,7 +158,7 @@ export function pageConditionsViewModel(
   )
 
   return {
-    ...baseModelFields(metadata.slug, pageTitle, formTitle),
+    ...baseModelFields(metadata.slug, pageTitle, mainTitle, formTitle),
     formSlug: metadata.slug,
     pageId,
     cardTitle,
@@ -166,7 +167,7 @@ export function pageConditionsViewModel(
     navigation,
     backLink,
     currentTab: 'conditions',
-    pageTitle: cardCaption,
+    pageTitle,
     baseUrl: pageUrl,
     notification,
     errorList,

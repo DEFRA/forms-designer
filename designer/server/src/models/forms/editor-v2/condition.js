@@ -20,10 +20,17 @@ export function conditionViewModel(
   notification,
   validation
 ) {
+  const conditionEditorModel = buildConditionEditor(
+    definition,
+    validation,
+    state
+  )
   const formSlug = metadata.slug
   const formPath = formOverviewPath(formSlug)
   const navigation = getFormSpecificNavigation(formPath, metadata, definition)
-  const pageHeading = 'Manage conditions'
+  const pageHeading = conditionEditorModel.originalCondition.name
+    ? `Edit condition "${conditionEditorModel.originalCondition.name}"`
+    : 'Create new condition'
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const { formErrors } = validation ?? {}
@@ -49,7 +56,7 @@ export function conditionViewModel(
     formValues: validation?.formValues,
     notification,
     conditionEditor: {
-      ...buildConditionEditor(definition, validation, state),
+      ...conditionEditorModel,
       allowComplexConditions: true
     }
   }

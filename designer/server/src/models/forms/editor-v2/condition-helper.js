@@ -318,7 +318,7 @@ export function getComponentsPerPageNumber(definition) {
  */
 export function buildConditionEditor(definition, validation, state) {
   const componentsPerPageNumber = getComponentsPerPageNumber(definition)
-  const legendText = state.id !== 'new' ? '' : 'Create new condition'
+  const legendText = 'Condition settings'
   const { conditionWrapper } = state
 
   const conditionFieldsList = (

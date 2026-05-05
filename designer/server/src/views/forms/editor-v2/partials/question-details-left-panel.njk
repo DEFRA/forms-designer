@@ -16,7 +16,7 @@
   <form class="form" method="post" id="question-form">
 
   {% if questionType == 'GeospatialField' %}
-    <h3 class="govuk-heading-m">Using maps in your form</h3>
+    <h2 class="govuk-heading-m">Using maps in your form</h2>
     <p class="govuk-body">
       We recommend using the <a class="govuk-link govuk-link--no-visited-state" target="_blank" href="https://forms.defra.gov.uk/library/geospatial-pattern">map question pattern (opens in a new tab)</a> when asking users to select or draw locations on a map.
     </p>
@@ -28,7 +28,7 @@
   {%- include "../../../../views/forms/editor-v2/partials/question-details-base.njk" -%}
 
   <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
-  <h3 class="govuk-heading-m">Question settings</h3>
+  <h2 class="govuk-heading-m">Question settings</h2>
 
   {{ govukSummaryList({
     rows: [

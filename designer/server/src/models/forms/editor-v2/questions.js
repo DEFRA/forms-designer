@@ -378,7 +378,7 @@ export function getPreviewModel(
   previewErrorsUrl,
   guidance = '',
   isGuidancePage = false,
-  sectionInfo = undefined
+  sectionInfo
 ) {
   const components = hasComponents(page) ? page.components : []
 
@@ -469,7 +469,12 @@ export function questionsViewModel(
   const sectionInfo = getSectionForPage(definition, page, metadata.slug)
 
   return {
-    ...baseModelFields(metadata.slug, `${cardTitle} - ${formTitle}`, formTitle),
+    ...baseModelFields(
+      metadata.slug,
+      `${cardTitle} - ${formTitle}`,
+      `Edit ${pageHeading.toLowerCase()}`,
+      formTitle
+    ),
     fields,
     // prettier-ignore
     previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value, false, sectionInfo),
@@ -478,7 +483,7 @@ export function questionsViewModel(
       definitionId: metadata.id
     },
     cardTitle,
-    cardCaption: pageHeading,
+    cardCaption: 'Content',
     navigation,
     baseUrl,
     currentTab: 'overview',
