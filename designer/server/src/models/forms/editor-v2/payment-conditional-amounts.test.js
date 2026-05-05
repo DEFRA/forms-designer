@@ -1,5 +1,8 @@
 import { ConditionType, OperatorName } from '@defra/forms-model'
-import { buildQuestionPage, buildTextFieldComponent  } from '@defra/forms-model/stubs'
+import {
+  buildQuestionPage,
+  buildTextFieldComponent
+} from '@defra/forms-model/stubs'
 
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import { getPaymentConditionalAmountsViewModel } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
