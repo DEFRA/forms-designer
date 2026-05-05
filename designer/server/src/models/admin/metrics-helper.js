@@ -229,7 +229,7 @@ export function mapOverviewMetrics(
  * @param {number} currCount
  * @param {number} prevCount
  */
-function calcChangePercentage(currCount, prevCount) {
+export function calcChangePercentage(currCount, prevCount) {
   if (currCount === 0 && prevCount === 0) {
     return '-'
   }

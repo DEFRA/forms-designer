@@ -1,6 +1,7 @@
 import {
   buildAriaLabel,
-  buildChangePhrase
+  buildChangePhrase,
+  calcChangePercentage
 } from '~/src/models/admin/metrics-helper.js'
 
 describe('metrics model', () => {
@@ -39,6 +40,18 @@ describe('metrics model', () => {
     it('should build label when negative change from previous period', () => {
       const phrase = buildChangePhrase({ changeSymbol: '-', changeValue: 3 })
       expect(phrase).toBe('3 fewer')
+    })
+  })
+
+  describe('calcChangePercentage', () => {
+    it('should handle zero for current and previous', () => {
+      expect(calcChangePercentage(0, 0)).toBe('-')
+    })
+    it('should handle zero for previous', () => {
+      expect(calcChangePercentage(1, 0)).toBe('100')
+    })
+    it('should handle normal percentage', () => {
+      expect(calcChangePercentage(1, 2)).toBe('-50.0')
     })
   })
 })
