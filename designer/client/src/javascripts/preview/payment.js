@@ -55,7 +55,8 @@ export class PaymentDomElements extends QuestionDomElements {
     return {
       ...this.constructValues(),
       paymentAmount: this._paymentAmount,
-      paymentDescription: this._paymentDescription
+      paymentDescription: this._paymentDescription,
+      paymentConditionalAmounts: []
     }
   }
 
