@@ -1,11 +1,34 @@
 import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-plugin/engine/types/schema.js'
+import {
+  DeadLetterQueues,
+  messageSchema,
+  submissionMessageSchema
+} from '@defra/forms-model'
 
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 
 /**
+ * Choose correct schema for the queue type
+ * @param {string} dlq
+ */
+export function getCorrectMessageSchema(dlq) {
+  if (dlq === DeadLetterQueues.AuditApi.toString()) {
+    return messageSchema
+  }
+  if (
+    dlq === DeadLetterQueues.SubmissionsApiSaveAndExit.toString() ||
+    dlq === DeadLetterQueues.SubmissionsApiFormSubmissions.toString()
+  ) {
+    return submissionMessageSchema
+  }
+  return formAdapterSubmissionMessagePayloadSchema
+}
+
+/**
+ * @param {string} dlq - dead letter queue
  * @param {string} messageJson
  */
-export function validateMessageJson(messageJson) {
+export function validateMessageJson(dlq, messageJson) {
   let json
   try {
     json = JSON.parse(messageJson)
@@ -32,13 +55,10 @@ export function validateMessageJson(messageJson) {
     }
   }
 
-  const { error } = formAdapterSubmissionMessagePayloadSchema.validate(
-    messageBody,
-    {
-      abortEarly: false,
-      stripUnknown: true
-    }
-  )
+  const { error } = getCorrectMessageSchema(dlq).validate(messageBody, {
+    abortEarly: false,
+    stripUnknown: true
+  })
   if (error) {
     const errorText = error.details.map((d) => d.message).join(', ')
     const joiError = createJoiError(
