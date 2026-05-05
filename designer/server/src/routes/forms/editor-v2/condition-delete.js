@@ -3,7 +3,11 @@ import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
-import { deleteCondition } from '~/src/lib/editor.js'
+import { findConditionReferences } from '~/src/lib/condition-references.js'
+import {
+  deleteCondition,
+  removePaymentConditionalAmountReference
+} from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
@@ -63,6 +67,23 @@ export default [
       const formId = metadata.id
 
       try {
+        const definition = await forms.getDraftFormDefinition(formId, token)
+        const { paymentFields } = findConditionReferences(
+          definition,
+          conditionId
+        )
+
+        for (const ref of paymentFields) {
+          await removePaymentConditionalAmountReference(
+            formId,
+            token,
+            definition,
+            ref.pageId,
+            ref.componentId,
+            conditionId
+          )
+        }
+
         await deleteCondition(formId, token, conditionId)
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

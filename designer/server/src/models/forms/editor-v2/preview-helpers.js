@@ -213,7 +213,14 @@ export function getPaymentInfo(definition, slug) {
     )
 
     if (paymentComponent) {
-      const amount = paymentComponent.options.amount
+      const baseAmount = paymentComponent.options.amount
+      const conditional = paymentComponent.options.conditionalAmounts ?? []
+      const displayAmount =
+        baseAmount > 0
+          ? baseAmount
+          : conditional.length > 0
+            ? conditional[0].amount
+            : 0
       const pageId = page.id ?? ''
       const editUrl =
         slug && pageId
@@ -222,7 +229,7 @@ export function getPaymentInfo(definition, slug) {
       return {
         hasPayment: true,
         description: paymentComponent.options.description,
-        amount: formatCurrency(amount),
+        amount: formatCurrency(displayAmount),
         pageId,
         path: page.path,
         editUrl

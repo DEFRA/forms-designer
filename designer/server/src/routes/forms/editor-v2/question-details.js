@@ -48,6 +48,7 @@ import {
   saveQuestion
 } from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
 import {
+  PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR,
   buildInlineConditionalAmountError,
   handleSaveConditionalAmount,
   persistInlineConditionalAmountDraft
@@ -360,11 +361,17 @@ export default [
         id: questionId !== 'new' ? questionId : undefined
       }
 
-      // Intercept operations if say a radio or checkbox
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        pageId,
+        token
+      )
+
       const redirectAnchorOrUrl = handleEnhancedActionOnPost(
         request,
         stateId,
-        questionDetails
+        questionDetails,
+        definition
       )
       if (redirectAnchorOrUrl) {
         return redirectWithAnchorOrUrl(
@@ -377,13 +384,6 @@ export default [
         )
       }
 
-      // Save page and first question
-      const { page, metadata, definition } = await getFormPage(
-        slug,
-        pageId,
-        token
-      )
-
       // Ensure there's a page title when adding multiple questions
       if (missingPageTitleForMultipleQuestions(questionId, page)) {
         return dispatchToPageTitle(
@@ -395,21 +395,31 @@ export default [
 
       let state = getQuestionSessionState(yar, stateId) ?? {}
 
-      // If the inline conditional-amount form is still open on Save and continue,
-      // validate-and-save it as a tile first. If validation fails, errors are
-      // flashed by handleSaveConditionalAmount and we redirect back to the editor
-      // with both the inline form open and its errors visible.
       if (state.conditionalAmountEditRow?.expanded) {
+        if (questionDetails.type === ComponentType.PaymentField) {
+          const hydrated = hydrateConditionalAmountsFromComponent(
+            getComponentFromDefinition(definition, pageId, questionId),
+            state
+          )
+          if (hydrated !== state) {
+            setQuestionSessionState(yar, stateId, hydrated)
+            state = hydrated
+          }
+        }
         handleSaveConditionalAmount(request, stateId)
         const stateAfter = getQuestionSessionState(yar, stateId) ?? {}
         if (stateAfter.conditionalAmountEditRow?.expanded) {
+          setQuestionSessionState(yar, stateId, {
+            ...stateAfter,
+            questionDetails
+          })
           return redirectWithAnchorOrUrl(
             h,
             slug,
             pageId,
             questionId,
             stateId,
-            '#payment-conditional-amounts'
+            PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
           )
         }
         state = stateAfter

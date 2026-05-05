@@ -303,9 +303,15 @@ export function handleSaveItem(request, state, stateId) {
  * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {string} stateId
  * @param {Partial<ComponentDef>} questionDetails
+ * @param {FormDefinition} [definition]
  * @returns { string | undefined }
  */
-export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
+export function handleEnhancedActionOnPost(
+  request,
+  stateId,
+  questionDetails,
+  definition
+) {
   const { yar, payload } = request
   const { enhancedAction } = payload
 
@@ -323,10 +329,6 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     enhancedAction === EnhancedAction.SaveConditionalAmount ||
     enhancedAction === EnhancedAction.CancelConditionalAmount
   ) {
-    // Stage in-flight base-field edits (paymentAmount, paymentDescription, API
-    // keys) into the session so they survive the redirect that conditional-amount
-    // actions trigger. Without this, anything the user typed but hadn't saved
-    // disappears on the redirect.
     setQuestionSessionState(yar, stateId, {
       ...preState,
       questionDetails
@@ -335,7 +337,7 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
       return handleAddConditionalAmount(yar, stateId)
     }
     if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
-      return handleSaveConditionalAmount(request, stateId)
+      return handleSaveConditionalAmount(request, stateId, definition)
     }
     return handleCancelConditionalAmount(yar, stateId)
   }
@@ -398,7 +400,7 @@ export function enforceFileUploadFieldExclusivity(payload) {
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, FormEditorInputQuestion,  QuestionSessionState, ListItem } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, FormEditorInputQuestion, QuestionSessionState, ListItem } from '@defra/forms-model'
  * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

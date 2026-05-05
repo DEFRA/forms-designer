@@ -125,6 +125,9 @@ describe('Editor v2 condition delete routes', () => {
   describe('POST /condition/{conditionId}/delete', () => {
     test('should delete condition and redirect to conditions list', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testDefinition)
       jest.mocked(editor.deleteCondition).mockResolvedValueOnce()
 
       const options = {
@@ -170,6 +173,7 @@ describe('Editor v2 condition delete routes', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(testDefinition)
+        .mockResolvedValueOnce(testDefinition)
 
       const options = {
         method: 'post',
@@ -190,6 +194,9 @@ describe('Editor v2 condition delete routes', () => {
       const genericError = Boom.badRequest('Generic error')
 
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testDefinition)
       jest.mocked(editor.deleteCondition).mockRejectedValueOnce(genericError)
 
       const options = {

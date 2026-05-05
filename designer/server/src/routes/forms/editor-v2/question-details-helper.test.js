@@ -369,6 +369,40 @@ describe('Editor v2 question-details route helper', () => {
         '#list-items'
       )
     })
+
+    test.each([
+      'add-conditional-amount',
+      'save-conditional-amount',
+      'cancel-conditional-amount'
+    ])(
+      '%s stages questionDetails into session before delegating',
+      (enhancedAction) => {
+        mockGet.mockReturnValue({
+          questionType: 'PaymentField',
+          conditionalAmounts: []
+        })
+
+        const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+          enhancedAction,
+          conditionalAmount: '5',
+          conditionalAmountCondition: 'cond1'
+        })
+        const questionDetails = /** @type {any} */ ({
+          type: 'PaymentField',
+          options: { amount: 12.5, description: 'Application fee' }
+        })
+
+        const { mockRequest } = buildMockRequest(payload)
+
+        handleEnhancedActionOnPost(mockRequest, '123', questionDetails)
+
+        expect(mockSet).toHaveBeenCalledWith('questionSessionState-123', {
+          questionType: 'PaymentField',
+          conditionalAmounts: [],
+          questionDetails
+        })
+      }
+    )
   })
 
   describe('save-item', () => {

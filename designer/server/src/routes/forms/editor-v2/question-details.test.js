@@ -1497,6 +1497,205 @@ describe('Editor v2 question details routes', () => {
       ])
     })
   })
+
+  describe('POST PaymentField conditional-amount integration', () => {
+    const paymentDefinition = buildDefinition({
+      pages: [
+        buildQuestionPage({
+          id: 'p1',
+          components: [
+            {
+              id: 'c1',
+              name: 'amount',
+              title: 'Application fee',
+              type: ComponentType.PaymentField,
+              hint: '',
+              options: {
+                amount: 25,
+                description: 'Application fee',
+                conditionalAmounts: [{ amount: 50, condition: 'cond-disk' }]
+              }
+            }
+          ],
+          next: [{ path: '/summary' }]
+        })
+      ],
+      conditions: [
+        {
+          id: 'cond-disk',
+          displayName: 'Disk condition',
+          items: []
+        },
+        {
+          id: 'cond-new',
+          displayName: 'New condition',
+          items: []
+        }
+      ]
+    })
+
+    const baseValidPaymentPayload = {
+      name: 'paymentField',
+      question: 'Pay your application fee',
+      shortDescription: 'Application fee',
+      questionType: ComponentType.PaymentField,
+      paymentAmount: '25',
+      paymentDescription: 'Application fee',
+      paymentTestApiKey: 'api_test_abcd1234',
+      paymentLiveApiKey: ''
+    }
+
+    /** @param {Record<string, any>} state */
+    const setupSession = (state) => {
+      jest.mocked(forms.get).mockResolvedValue(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValue(paymentDefinition)
+      jest
+        .mocked(updateQuestion)
+        .mockResolvedValue(/** @type {any} */ (undefined))
+      jest
+        .mocked(addQuestion)
+        .mockResolvedValue(/** @type {any} */ ({ id: 'p1' }))
+
+      /** @type {Record<string, any>} */
+      const sessionStore = { sId: structuredClone(state) }
+      jest
+        .mocked(getQuestionSessionState)
+        .mockImplementation((_yar, id) => sessionStore[id])
+      jest
+        .mocked(setQuestionSessionState)
+        .mockImplementation((_yar, id, value) => {
+          sessionStore[id] = value
+        })
+      return { stateId: 'sId', state, sessionStore }
+    }
+
+    test('Save and continue with inline form expanded saves the tile and proceeds', async () => {
+      const { stateId } = setupSession({
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: {
+          expanded: true,
+          id: '',
+          amount: '',
+          condition: ''
+        }
+      })
+
+      const options = {
+        method: 'post',
+        url: `/library/my-form-slug/editor-v2/page/p1/question/c1/details/${stateId}`,
+        auth,
+        payload: {
+          ...baseValidPaymentPayload,
+          conditionalAmount: '50',
+          conditionalAmountCondition: 'cond-new'
+        }
+      }
+
+      await renderResponse(server, options)
+
+      expect(updateQuestion).toHaveBeenCalled()
+      const savedDetails = jest.mocked(updateQuestion).mock.calls[0][5]
+      const savedAmounts =
+        /** @type {{ options?: { conditionalAmounts?: Array<{ amount: number, condition: string }> } }} */ (
+          savedDetails
+        ).options?.conditionalAmounts ?? []
+      expect(savedAmounts).toEqual([{ amount: 50, condition: 'cond-new' }])
+    })
+
+    test('Save and continue with invalid inline values redirects back with anchor', async () => {
+      const { stateId } = setupSession({
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: {
+          expanded: true,
+          id: '',
+          amount: '',
+          condition: ''
+        }
+      })
+
+      const options = {
+        method: 'post',
+        url: `/library/my-form-slug/editor-v2/page/p1/question/c1/details/${stateId}`,
+        auth,
+        payload: {
+          ...baseValidPaymentPayload,
+          conditionalAmount: '',
+          conditionalAmountCondition: ''
+        }
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toContain(
+        '#payment-conditional-amounts'
+      )
+      expect(updateQuestion).not.toHaveBeenCalled()
+    })
+
+    test('failAction merges base-schema and inline conditional errors', async () => {
+      setupSession({
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: {
+          expanded: true,
+          id: '',
+          amount: '',
+          condition: ''
+        }
+      })
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/page/p1/question/c1/details/sId',
+        auth,
+        payload: {
+          questionType: ComponentType.PaymentField,
+          paymentAmount: '25',
+          paymentDescription: 'Application fee',
+          conditionalAmount: '0.10',
+          conditionalAmountCondition: ''
+        }
+      }
+
+      await renderResponse(server, options)
+
+      expect(addErrorsToSession).toHaveBeenCalled()
+      const passedError = jest.mocked(addErrorsToSession).mock.calls[0][2]
+      const details = /** @type {Joi.ValidationError} */ (passedError).details
+      expect(details.some((d) => d.path[0] === 'conditionalAmount')).toBe(true)
+      expect(
+        details.some((d) => d.path[0] === 'conditionalAmountCondition')
+      ).toBe(true)
+    })
+
+    test('hydrates conditionalAmounts from on-disk component when session lost them', async () => {
+      const { stateId } = setupSession({
+        questionType: 'PaymentField'
+      })
+
+      const options = {
+        method: 'post',
+        url: `/library/my-form-slug/editor-v2/page/p1/question/c1/details/${stateId}`,
+        auth,
+        payload: baseValidPaymentPayload
+      }
+
+      await renderResponse(server, options)
+
+      expect(updateQuestion).toHaveBeenCalled()
+      const savedDetails = jest.mocked(updateQuestion).mock.calls[0][5]
+      const savedAmounts =
+        /** @type {{ options?: { conditionalAmounts?: Array<{ amount: number, condition: string }> } }} */ (
+          savedDetails
+        ).options?.conditionalAmounts ?? []
+      expect(savedAmounts).toEqual([{ amount: 50, condition: 'cond-disk' }])
+    })
+  })
 })
 
 /**

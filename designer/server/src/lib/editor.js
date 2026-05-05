@@ -712,6 +712,52 @@ export async function deleteCondition(formId, token, conditionId) {
 }
 
 /**
+ * @param {string} formId
+ * @param {string} token
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} componentId
+ * @param {string} conditionId
+ */
+export async function removePaymentConditionalAmountReference(
+  formId,
+  token,
+  definition,
+  pageId,
+  componentId,
+  conditionId
+) {
+  const page = getPageFromDefinition(definition, pageId)
+  const components = hasComponents(page) ? page.components : []
+  const component =
+    /** @type {Partial<ComponentDef> & { options?: { conditionalAmounts?: Array<{ amount: number, condition: string }> } } | undefined} */ (
+      components.find((c) => c.id === componentId)
+    )
+  if (!component) {
+    return
+  }
+  const existing = component.options?.conditionalAmounts ?? []
+  const filtered = existing.filter((entry) => entry.condition !== conditionId)
+  if (filtered.length === existing.length) {
+    return
+  }
+  const updated = {
+    ...component,
+    options: {
+      ...(component.options ?? {}),
+      conditionalAmounts: filtered
+    }
+  }
+  await putJson(
+    buildRequestUrl(formId, `pages/${pageId}/components/${componentId}`),
+    {
+      payload: updated,
+      ...getHeaders(token)
+    }
+  )
+}
+
+/**
  * @typedef {object} UpdateSectionsResponse
  * @property {string} id - Form ID
  * @property {Section[]} sections - Updated sections with IDs

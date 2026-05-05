@@ -116,6 +116,22 @@ export function mapMarkdown(component, isSummary) {
 }
 
 /**
+ * @param {PaymentFieldComponent} component
+ * @returns {string}
+ */
+function formatPaymentTotal(component) {
+  const amount = component.options.amount
+  if (amount > 0) {
+    return formatCurrency(amount)
+  }
+  const conditional = component.options.conditionalAmounts ?? []
+  if (conditional.length > 0) {
+    return formatCurrency(conditional[0].amount)
+  }
+  return formatCurrency(0)
+}
+
+/**
  * @param {FormDefinition} definition
  * @param {Page} page
  */
@@ -139,7 +155,7 @@ export function mapQuestionRows(definition, page) {
       },
       {
         key: { text: 'Total amount' },
-        value: { text: formatCurrency(paymentComponent.options.amount) }
+        value: { text: formatPaymentTotal(paymentComponent) }
       }
     ]
   }
