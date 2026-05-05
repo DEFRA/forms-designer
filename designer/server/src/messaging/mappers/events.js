@@ -140,8 +140,8 @@ export function formFileDownloadedMapper(data, isSuccess) {
  * Base mapper for Excel generation events
  * @param {ExcelGenerationData} data
  * @param {AuditUser} user
- * @param {AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED | AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED} type
- * @returns {FormSubmissionExcelRequestedMessage | FormCsatExcelRequestedMessage | PlatformCsatExcelRequestedMessage}
+ * @param {AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED | AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED} type
+ * @returns {FormSubmissionExcelRequestedMessage | FormCsatExcelRequestedMessage | PlatformCsatExcelRequestedMessage | PlatformMetricsDownloadRequestedMessage}
  */
 function excelGenerationBaseMapper(data, user, type) {
   const now = new Date()
@@ -168,6 +168,30 @@ function excelGenerationBaseMapper(data, user, type) {
 }
 
 /**
+ * Base mapper for Excel generation events
+ * @param {AuditUser} user
+ * @param {AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED} type
+ * @returns {PlatformMetricsDownloadRequestedMessage}
+ */
+function directDownloadBaseMapper(user, type) {
+  const now = new Date()
+
+  return {
+    schemaVersion: AuditEventMessageSchemaVersion.V1,
+    category: AuditEventMessageCategory.FORM,
+    source: AuditEventMessageSource.FORMS_DESIGNER,
+    type,
+    entityId: 'platform',
+    createdAt: now,
+    createdBy: {
+      id: user.id,
+      displayName: user.displayName
+    },
+    messageCreatedAt: now
+  }
+}
+
+/**
  * Mapper for form submission Excel requested event
  * @param {ExcelGenerationData} data
  * @param {AuditUser} user
@@ -179,6 +203,20 @@ export function formSubmissionExcelRequestedMapper(data, user) {
       data,
       user,
       AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
+    )
+  )
+}
+
+/**
+ * Mapper for form submission Excel requested event
+ * @param {AuditUser} user
+ * @returns {PlatformMetricsDownloadRequestedMessage}
+ */
+export function platformMetricsDownloadRequestedMapper(user) {
+  return /** @type {PlatformMetricsDownloadRequestedMessage} */ (
+    directDownloadBaseMapper(
+      user,
+      AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED
     )
   )
 }
@@ -297,5 +335,5 @@ export function formDlqActionMapper(dlqActionData) {
  */
 
 /**
- * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, DlqActionMessage, DlqActionMessageData, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage, AuditMessage, DeadLetterQueues } from '@defra/forms-model'
+ * @import { AuditUser, AuthenticationLoginMessage, AuthenticationLogoutAutoMessage, AuthenticationLogoutDifferentDeviceMessage, AuthenticationLogoutManualMessage, AuthenticationMessageData, DlqActionMessage, PlatformMetricsDownloadRequestedMessage, FormDownloadedMessage, FormFileDownloadFailureMessage, FormFileDownloadSuccessMessage, FormSubmissionExcelRequestedMessage, FormCsatExcelRequestedMessage, PlatformCsatExcelRequestedMessage, AuditMessage, DeadLetterQueues } from '@defra/forms-model'
  */
