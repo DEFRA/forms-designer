@@ -303,6 +303,34 @@ export function handleSaveItem(request, state, stateId) {
  * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {string} stateId
  * @param {Partial<ComponentDef>} questionDetails
+ * @param {QuestionSessionState} preState
+ * @param {string} enhancedAction
+ * @param {FormDefinition} [definition]
+ * @returns {string | undefined}
+ */
+function dispatchConditionalAmountAction(
+  request,
+  stateId,
+  questionDetails,
+  preState,
+  enhancedAction,
+  definition
+) {
+  const { yar } = request
+  setQuestionSessionState(yar, stateId, { ...preState, questionDetails })
+  if (enhancedAction === EnhancedAction.AddConditionalAmount) {
+    return handleAddConditionalAmount(yar, stateId)
+  }
+  if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
+    return handleSaveConditionalAmount(request, stateId, definition)
+  }
+  return handleCancelConditionalAmount(yar, stateId)
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {Partial<ComponentDef>} questionDetails
  * @param {FormDefinition} [definition]
  * @returns { string | undefined }
  */
@@ -329,17 +357,14 @@ export function handleEnhancedActionOnPost(
     enhancedAction === EnhancedAction.SaveConditionalAmount ||
     enhancedAction === EnhancedAction.CancelConditionalAmount
   ) {
-    setQuestionSessionState(yar, stateId, {
-      ...preState,
-      questionDetails
-    })
-    if (enhancedAction === EnhancedAction.AddConditionalAmount) {
-      return handleAddConditionalAmount(yar, stateId)
-    }
-    if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
-      return handleSaveConditionalAmount(request, stateId, definition)
-    }
-    return handleCancelConditionalAmount(yar, stateId)
+    return dispatchConditionalAmountAction(
+      request,
+      stateId,
+      questionDetails,
+      preState,
+      enhancedAction,
+      definition
+    )
   }
 
   const state = /** @type {QuestionSessionState} */ ({

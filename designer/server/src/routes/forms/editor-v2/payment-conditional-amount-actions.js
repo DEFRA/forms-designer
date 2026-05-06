@@ -34,14 +34,9 @@ export function handleAddConditionalAmount(yar, stateId) {
 }
 
 /**
- * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
- * @param {string} stateId
- * @param {FormDefinition} [definition]
- * @returns {string}
+ * @param {QuestionSessionState} state
  */
-export function handleSaveConditionalAmount(request, stateId, definition) {
-  const { yar, payload } = request
-  const state = getQuestionSessionState(yar, stateId) ?? {}
+function getEditRowContext(state) {
   const editRow = state.conditionalAmountEditRow ?? {
     expanded: true,
     id: '',
@@ -55,6 +50,19 @@ export function handleSaveConditionalAmount(request, stateId, definition) {
       : -1
   const treatAsNew = matchedIndex === -1
   const labelIndex = treatAsNew ? items.length + 1 : matchedIndex + 1
+  return { editRow, items, matchedIndex, treatAsNew, labelIndex }
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {FormDefinition} [definition]
+ * @returns {string}
+ */
+export function handleSaveConditionalAmount(request, stateId, definition) {
+  const { yar, payload } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  const { editRow, items, treatAsNew, labelIndex } = getEditRowContext(state)
 
   const candidate = {
     amount: payload.conditionalAmount,
@@ -249,13 +257,7 @@ export function buildInlineConditionalAmountError(
   if (!state.conditionalAmountEditRow?.expanded) {
     return null
   }
-  const items = state.conditionalAmounts ?? []
-  const editRow = state.conditionalAmountEditRow
-  const matchedIndex =
-    typeof editRow.id === 'string' && editRow.id !== ''
-      ? items.findIndex((i) => i.id === editRow.id)
-      : -1
-  const labelIndex = matchedIndex === -1 ? items.length + 1 : matchedIndex + 1
+  const { editRow, items, labelIndex } = getEditRowContext(state)
   const candidate = {
     amount: payload.conditionalAmount,
     condition: payload.conditionalAmountCondition
@@ -315,7 +317,7 @@ function remapConditionalAmountErrors(error, labelIndex) {
 }
 
 /**
- * @import { ConditionalAmountEditRow, ConditionalAmountState, FormDefinition, FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { ConditionalAmountEditRow, ConditionalAmountState, FormDefinition, FormEditorInputQuestionDetails, QuestionSessionState } from '@defra/forms-model'
  * @import { Request } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

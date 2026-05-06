@@ -44,15 +44,15 @@ import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
 import {
-  handleListConflict,
-  saveQuestion
-} from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
-import {
   PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR,
   buildInlineConditionalAmountError,
   handleSaveConditionalAmount,
   persistInlineConditionalAmountDraft
 } from '~/src/routes/forms/editor-v2/payment-conditional-amount-actions.js'
+import {
+  handleListConflict,
+  saveQuestion
+} from '~/src/routes/forms/editor-v2/question-details-helper-ext.js'
 import {
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
@@ -183,6 +183,33 @@ export function missingPageTitleForMultipleQuestions(questionId, page) {
 }
 
 /**
+ * @param {QuestionSessionState} existing
+ * @param {string | undefined} questionType
+ * @param {string | undefined} listItemsData
+ * @returns {QuestionSessionState}
+ */
+function buildOverridenState(existing, questionType, listItemsData) {
+  // If the user switched question type within the session, drop type-specific
+  // session keys so e.g. PaymentField's conditionalAmounts don't bleed into
+  // a now-RadiosField question.
+  const carryOver =
+    existing.questionType && existing.questionType !== questionType
+      ? {}
+      : existing
+  return /** @type {QuestionSessionState} */ ({
+    ...carryOver,
+    questionType,
+    editRow: {
+      expanded: false
+    },
+
+    listItems:
+      /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
+      (JSON.parse(listItemsData ?? '[]'))
+  })
+}
+
+/**
  * @param { Request | Request<{ Payload: FormEditorInputQuestionDetails } > } request
  */
 export function overrideStateIfJsEnabled(request) {
@@ -202,28 +229,61 @@ export function overrideStateIfJsEnabled(request) {
 
     if (jsEnabled) {
       const existing = getQuestionSessionState(request.yar, stateId) ?? {}
-      // If the user switched question type within the session, drop type-specific
-      // session keys so e.g. PaymentField's conditionalAmounts don't bleed into
-      // a now-RadiosField question.
-      const carryOver =
-        existing.questionType && existing.questionType !== questionType
-          ? {}
-          : existing
-      const overridenState = /** @type {QuestionSessionState} */ ({
-        ...carryOver,
+      const overridenState = buildOverridenState(
+        existing,
         questionType,
-        editRow: {
-          expanded: false
-        },
-
-        listItems:
-          /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
-          (JSON.parse(listItemsData ?? '[]'))
-      })
+        listItemsData
+      )
       setQuestionSessionState(request.yar, stateId, overridenState)
     }
   }
   return undefined
+}
+
+/**
+ * Returns an anchor when the inline conditional-amount save needs to
+ * round-trip back to the editor. Returns null when the caller should
+ * continue with the normal save flow. Mutates session state.
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ * @param {ReturnType<typeof mapQuestionDetails> & { id?: string }} questionDetails
+ * @returns {string | null}
+ */
+function processInlineConditionalAmountSave(
+  request,
+  stateId,
+  definition,
+  pageId,
+  questionId,
+  questionDetails
+) {
+  const { yar } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  if (!state.conditionalAmountEditRow?.expanded) {
+    return null
+  }
+  if (questionDetails.type === ComponentType.PaymentField) {
+    const hydrated = hydrateConditionalAmountsFromComponent(
+      getComponentFromDefinition(definition, pageId, questionId),
+      state
+    )
+    if (hydrated !== state) {
+      setQuestionSessionState(yar, stateId, hydrated)
+    }
+  }
+  handleSaveConditionalAmount(request, stateId)
+  const stateAfter = getQuestionSessionState(yar, stateId) ?? {}
+  if (stateAfter.conditionalAmountEditRow?.expanded) {
+    setQuestionSessionState(yar, stateId, {
+      ...stateAfter,
+      questionDetails
+    })
+    return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
+  }
+  return null
 }
 
 /**
@@ -393,37 +453,25 @@ export default [
         )
       }
 
-      let state = getQuestionSessionState(yar, stateId) ?? {}
-
-      if (state.conditionalAmountEditRow?.expanded) {
-        if (questionDetails.type === ComponentType.PaymentField) {
-          const hydrated = hydrateConditionalAmountsFromComponent(
-            getComponentFromDefinition(definition, pageId, questionId),
-            state
-          )
-          if (hydrated !== state) {
-            setQuestionSessionState(yar, stateId, hydrated)
-            state = hydrated
-          }
-        }
-        handleSaveConditionalAmount(request, stateId)
-        const stateAfter = getQuestionSessionState(yar, stateId) ?? {}
-        if (stateAfter.conditionalAmountEditRow?.expanded) {
-          setQuestionSessionState(yar, stateId, {
-            ...stateAfter,
-            questionDetails
-          })
-          return redirectWithAnchorOrUrl(
-            h,
-            slug,
-            pageId,
-            questionId,
-            stateId,
-            PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
-          )
-        }
-        state = stateAfter
+      const inlineRedirect = processInlineConditionalAmountSave(
+        request,
+        stateId,
+        definition,
+        pageId,
+        questionId,
+        questionDetails
+      )
+      if (inlineRedirect) {
+        return redirectWithAnchorOrUrl(
+          h,
+          slug,
+          pageId,
+          questionId,
+          stateId,
+          inlineRedirect
+        )
       }
+      const state = getQuestionSessionState(yar, stateId) ?? {}
 
       if (isExistingAutocomplete(questionId, questionDetails.type)) {
         state.questionDetails = questionDetails
@@ -543,7 +591,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestionDetails, Item, ListItem, Page, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, Page, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

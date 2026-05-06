@@ -268,9 +268,15 @@ const DISPLAY_RANK_TERMINAL = 3
  * @param {Page} page
  */
 function pageDisplayRank(page) {
-  if (isSummaryPage(page)) return DISPLAY_RANK_SUMMARY
-  if (isPaymentPage(page)) return DISPLAY_RANK_PAYMENT
-  if (page.controller === ControllerType.Terminal) return DISPLAY_RANK_TERMINAL
+  if (isSummaryPage(page)) {
+    return DISPLAY_RANK_SUMMARY
+  }
+  if (isPaymentPage(page)) {
+    return DISPLAY_RANK_PAYMENT
+  }
+  if (page.controller === ControllerType.Terminal) {
+    return DISPLAY_RANK_TERMINAL
+  }
   return DISPLAY_RANK_QUESTION
 }
 
