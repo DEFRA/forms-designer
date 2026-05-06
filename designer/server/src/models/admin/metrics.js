@@ -158,12 +158,22 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @param {{ overview: FormOverviewMetric[]}} metrics
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
 export function getLiveMetricsAsCsv(metrics) {
   const liveOnly = metrics.overview.filter(
     (ov) => ov.formStatus === FormStatus.Live
   )
+
+  // Add submission counts
+  liveOnly.forEach((form) => {
+    const count = metrics.totals.liveSubmissions
+      ? /** @type {number | undefined} */ (
+          metrics.totals.liveSubmissions[form.formId]
+        )
+      : 0
+    form.submissionsCount = count ?? 0
+  })
 
   // Sort forms by name then status
   const formsSorted = liveOnly.toSorted((a, b) => {
