@@ -140,7 +140,7 @@ export function formFileDownloadedMapper(data, isSuccess) {
  * Base mapper for Excel generation events
  * @param {ExcelGenerationData} data
  * @param {AuditUser} user
- * @param {AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED | AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED} type
+ * @param {AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED | AuditEventMessageType.FORM_CSAT_EXCEL_REQUESTED | AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED} type
  * @returns {FormSubmissionExcelRequestedMessage | FormCsatExcelRequestedMessage | PlatformCsatExcelRequestedMessage | PlatformMetricsDownloadRequestedMessage}
  */
 function excelGenerationBaseMapper(data, user, type) {
@@ -168,7 +168,7 @@ function excelGenerationBaseMapper(data, user, type) {
 }
 
 /**
- * Base mapper for Excel generation events
+ * Base mapper for direct downloads
  * @param {AuditUser} user
  * @param {AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED} type
  * @returns {PlatformMetricsDownloadRequestedMessage}

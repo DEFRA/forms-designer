@@ -111,7 +111,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { fileId: string }, Payload: { email: string } }>}
+   * @satisfies {ServerRoute}
    */
   ({
     method: 'GET',
@@ -139,12 +139,12 @@ export default [
 
         return h
           .response(streamData)
-          .header('Content-Type', 'text/csv')
+          .header('Content-Type', 'text/csv; charset=utf-8')
           .header('Content-Disposition', `attachment; filename="${filename}"`)
       } catch (err) {
         logger.error(
           err,
-          `[metrics] Error downloading all metrics - ${getErrorMessage(err)}`
+          `[metrics] Error downloading live metrics - ${getErrorMessage(err)}`
         )
         throw err
       }

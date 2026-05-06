@@ -191,8 +191,11 @@ export function getLiveMetricsAsCsv(metrics) {
     const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
       ov.summaryMetrics
     )
+    const escapedFormName = summaryMetrics.name
+      .replaceAll('"', '')
+      .replaceAll('=', '')
     contentOutput.push(
-      `"${summaryMetrics.name}","${config.appBaseUrl}/library/${summaryMetrics.slug}","${ov.submissionsCount}"`
+      `"${escapedFormName}","${config.appBaseUrl}/library/${summaryMetrics.slug}","${ov.submissionsCount}"`
     )
   })
   return contentOutput
