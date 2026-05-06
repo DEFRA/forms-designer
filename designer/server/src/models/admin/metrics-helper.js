@@ -10,6 +10,15 @@ const FORM_SUBMISSIONS_TITLE = 'Form submissions'
 const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
 const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
 
+/**
+ * @typedef {object} FilterCriteria
+ * @property {string} [sortCol]
+ * @property {string} [sortDir]
+ * @property {string} [searchText]
+ * @property {string[]} [statuses]
+ * @property {string[]} [orgs]
+ */
+
 const formStructureMetricNames =
   /** @type {Partial<Record<string, string>>} */ ({
     pages: 'Pages per form',

@@ -25,16 +25,15 @@ const tilePeriodNames = {
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FilterCriteria} filter
  */
-export function metricsFormActivityViewModel(metrics) {
-  // Sort forms by name then status
-  const overviewsSorted = metrics.overview.toSorted((a, b) => {
-    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
-    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return `${formNameA}${a.formStatus}`.localeCompare(
-      `${formNameB}${b.formStatus}`
-    )
-  })
+export function metricsFormActivityViewModel(metrics, filter) {
+  console.log('filter', filter)
+  // Apply filtering and sorting
+  const filtered = filterMetrics(metrics, filter)
+
+  const overviewsSorted = sortOverviews(filtered, filter)
+
 
   // Create a map of certain counts per form for quicker lookups
   const formSubmissionCountsLive = createFormMap(metrics.totals.liveSubmissions)
@@ -157,5 +156,39 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FilterCriteria} filter
+ */
+export function filterMetrics(metrics, filter) {
+  const searchText = filter.searchText?.toLowerCase()
+  const statuses = filter.statuses
+  const orgs = filter.orgs
+
+  return metrics.overview.filter(form => {
+    const formName = /** @type {string} */ (form.summaryMetrics.name).toLowerCase()
+    const org = /** @type {string} */ (form.summaryMetrics.organisation)
+    return ((!searchText || formName.includes(searchText)) &&
+      (!statuses || statuses.includes(form.formStatus)) &&
+      (!orgs || orgs.includes(org)))
+  })
+}
+
+/**
+ * @param {FormOverviewMetric[]} overviews
+ * @param {FilterCriteria} filter
+ */
+export function sortOverviews(overviews, filter) {
+  // Sort forms by name then status
+  return overviews.toSorted((a, b) => {
+    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
+    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
+    return `${formNameA}${a.formStatus}`.localeCompare(
+      `${formNameB}${b.formStatus}`
+    )
+  })
+}
+
+/**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
  */

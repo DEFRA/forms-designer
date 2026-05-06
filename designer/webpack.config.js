@@ -20,6 +20,10 @@ const govukFrontendLegacyPath = dirname(
   resolvePkg.sync('govuk-frontend/package.json', { basedir: rootDir })
 )
 
+const mojFrontendPath = dirname(
+  resolvePkg.sync('@ministryofjustice/frontend/package.json', { basedir: appDir })
+)
+
 const reactPath = dirname(
   resolvePkg.sync('react/package.json', { basedir: appDir })
 )
@@ -257,6 +261,10 @@ export default /** @type {Configuration} */ ({
           from: join(govukFrontendLegacyPath, 'govuk/assets'),
           to: 'assets',
           priority: 1
+        },
+        {
+          from: join(mojFrontendPath, 'moj/assets'),
+          to: 'assets'
         },
         {
           from: join(import.meta.dirname, 'client/src/assets'),

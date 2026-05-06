@@ -1,5 +1,6 @@
 import { Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
 
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
@@ -14,15 +15,25 @@ const ROUTE_ADMIN_INDEX = '/admin/index'
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
 
+const filterAndSortSchema = Joi.object({
+  // Sorting
+  sortCol: Joi.string().optional(),
+  sortDir: Joi.string().valid('asc', 'desc').optional(),
+  // Filtering
+  searchText: Joi.string().optional(),
+  statuses: Joi.array().items(Joi.string().valid('draft', 'live')).single().optional(),
+  orgs: Joi.array().items(Joi.string()).single().optional()
+})
+
 export default [
   /**
-   * @satisfies {ServerRoute}
+   * @satisfies {ServerRoute< { Params: { tab?: string }, Query: FilterCriteria } >}
    */
   ({
     method: 'GET',
     path: ROUTE_FULL_PATH,
     async handler(request, h) {
-      const { params } = request
+      const { params, query } = request
       const { tab } = params
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
@@ -31,7 +42,7 @@ export default [
       const metrics = await getMetrics()
       const model = isComponentUsage
         ? metricsComponentUsageViewModel(metrics)
-        : metricsFormActivityViewModel(metrics)
+        : metricsFormActivityViewModel(metrics, query)
 
       const viewName = isComponentUsage
         ? 'admin/form-metrics-component-usage'
@@ -52,6 +63,9 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
+      },
+      validate: {
+        query: filterAndSortSchema
       }
     }
   }),
@@ -106,4 +120,5 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
  */
