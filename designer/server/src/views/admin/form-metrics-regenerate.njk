@@ -2,6 +2,7 @@
 
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -18,8 +19,14 @@
       <h2 class="govuk-heading-l">Regenerating metrics</h2>
       <p class="govuk-body">This will clear out the 'metrics' collection in the 'forms-audit-api' database, and regenerate a full history of metrics.</p>
 
+      {{ govukWarningText({
+        text: "This operation will remove existing metrics.",
+        iconFallbackText: "Warning"
+      }) }}
+
       {{ govukButton({
-        text: 'Regenerate metrics'
+        text: 'Regenerate metrics',
+        classes: 'govuk-button--warning'
       }) }}
     </form>
 

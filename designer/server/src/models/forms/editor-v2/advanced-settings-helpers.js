@@ -92,6 +92,14 @@ export function getAdditionalOptions(payload) {
       key: 'description',
       getValue: () => payload.paymentDescription,
       shouldInclude: () => payload.paymentDescription !== undefined
+    },
+    {
+      key: 'countries',
+      getValue: () => payload.countries,
+      shouldInclude: () =>
+        Array.isArray(payload.countries) &&
+        payload.countries.length === 1 &&
+        payload.countries[0] !== 'any'
     }
   ]
 

@@ -134,7 +134,8 @@ export const QuestionAdvancedSettings =
     InstructionText: 'instructionText',
     MinChecks: 'minChecks',
     MaxChecks: 'maxChecks',
-    ExactChecks: 'exactChecks'
+    ExactChecks: 'exactChecks',
+    Countries: 'countries'
   }
 
 /**
