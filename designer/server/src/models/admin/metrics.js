@@ -1,5 +1,6 @@
 import { FormStatus } from '@defra/forms-model'
 
+import config from '~/src/config.js'
 import {
   componentUsageFeatures,
   componentUsageFormStructures,
@@ -154,6 +155,37 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
       })
     }
   })
+}
+
+/**
+ * @param {{ overview: FormOverviewMetric[]}} metrics
+ */
+export function getLiveMetricsAsCsv(metrics) {
+  const liveOnly = metrics.overview.filter(
+    (ov) => ov.formStatus === FormStatus.Live
+  )
+
+  // Sort forms by name then status
+  const formsSorted = liveOnly.toSorted((a, b) => {
+    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
+    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
+    return `${formNameA}${a.formStatus}`.localeCompare(
+      `${formNameB}${b.formStatus}`
+    )
+  })
+
+  const contentOutput = /** @type {string[]} */ ([
+    '"Form name","Form URL","Live submissions"'
+  ])
+  formsSorted.forEach((ov) => {
+    const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
+      ov.summaryMetrics
+    )
+    contentOutput.push(
+      `"${summaryMetrics.name}","${config.appBaseUrl}/library/${summaryMetrics.slug}","${ov.submissionsCount}"`
+    )
+  })
+  return contentOutput
 }
 
 /**

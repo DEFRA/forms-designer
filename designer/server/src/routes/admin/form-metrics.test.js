@@ -1,3 +1,5 @@
+import { FormStatus } from '@defra/forms-model'
+import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
@@ -6,6 +8,7 @@ import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/metrics.js')
+jest.mock('~/src/messaging/publish.js')
 
 describe('Form metrics routes', () => {
   /** @type {Server} */
@@ -107,10 +110,46 @@ describe('Form metrics routes', () => {
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/admin/index')
     })
+
+    test('should download metrics file', async () => {
+      const mockMetrics = {
+        overview: [
+          {
+            formStatus: FormStatus.Live,
+            summaryMetrics: { name: 'Form 1', slug: 'form-1' },
+            submissionsCount: 5
+          }
+        ],
+        totals: {}
+      }
+      // @ts-expect-error - partial mock of data
+      jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+
+      const options = {
+        method: 'get',
+        url: '/admin/form-metrics-download',
+        auth
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toEqual(StatusCodes.OK)
+
+      const today = format(new Date(), 'yyyy-MM-dd')
+
+      // Verify headers
+      expect(response.headers['content-type']).toBe('text/csv; charset=utf-8')
+      expect(response.headers['content-disposition']).toBe(
+        `attachment; filename="live-metrics-${today}.csv"`
+      )
+      const csvContent = response.payload
+      expect(csvContent).toBe(`"Form name","Form URL","Live submissions"
+"Form 1","http://Jezs-MacBook-Air:3000/library/form-1","5"`)
+    })
   })
 })
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  */

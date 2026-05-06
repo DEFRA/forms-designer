@@ -1,16 +1,16 @@
 import { Readable } from 'node:stream'
 
-import { FormStatus, Scopes, getErrorMessage } from '@defra/forms-model'
+import { Scopes, getErrorMessage } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
-import config from '~/src/config.js'
 import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import {
+  getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
@@ -20,37 +20,6 @@ const ROUTE_ADMIN_INDEX = '/admin/index'
 
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
-
-/**
- * @param {{ overview: FormOverviewMetric[]}} metrics
- */
-export function getLiveMetricsCsv(metrics) {
-  const liveOnly = metrics.overview.filter(
-    (ov) => ov.formStatus === FormStatus.Live
-  )
-
-  // Sort forms by name then status
-  const formsSorted = liveOnly.toSorted((a, b) => {
-    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
-    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return `${formNameA}${a.formStatus}`.localeCompare(
-      `${formNameB}${b.formStatus}`
-    )
-  })
-
-  const contentOutput = /** @type {string[]} */ ([
-    '"Form name","Form URL","Live submissions"'
-  ])
-  formsSorted.forEach((ov) => {
-    const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
-      ov.summaryMetrics
-    )
-    contentOutput.push(
-      `"${summaryMetrics.name}","${config.appBaseUrl}/library/${summaryMetrics.slug}","${ov.submissionsCount}"`
-    )
-  })
-  return contentOutput
-}
 
 export default [
   /**
@@ -153,7 +122,7 @@ export default [
       try {
         // Live metrics only
         const metrics = await getMetrics()
-        const lines = getLiveMetricsCsv(metrics)
+        const lines = getLiveMetricsAsCsv(metrics)
 
         const streamData = new Readable({
           read() {
@@ -163,7 +132,7 @@ export default [
         })
 
         const now = new Date()
-        const filename = `live-submission-metrics-${format(now, 'yyyy-MM-dd')}.csv`
+        const filename = `live-metrics-${format(now, 'yyyy-MM-dd')}.csv`
 
         const auditUser = mapUserForAudit(auth.credentials.user)
         await publishPlatformMetricsDownloadRequestedEvent(auditUser)
@@ -171,7 +140,7 @@ export default [
         return h
           .response(streamData)
           .header('Content-Type', 'text/csv')
-          .header('Content-Disposition', 'attachment; filename= ' + filename)
+          .header('Content-Disposition', `attachment; filename="${filename}"`)
       } catch (err) {
         logger.error(
           err,
@@ -191,5 +160,4 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { FormOverviewMetric } from '@defra/forms-model'
  */
