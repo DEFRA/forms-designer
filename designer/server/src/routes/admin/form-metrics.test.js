@@ -118,6 +118,11 @@ describe('Form metrics routes', () => {
             formStatus: FormStatus.Live,
             summaryMetrics: { name: 'Form 1', slug: 'form-1' },
             submissionsCount: 5
+          },
+          {
+            formStatus: FormStatus.Draft,
+            summaryMetrics: { name: 'Form 2', slug: 'form-2' },
+            submissionsCount: 2
           }
         ],
         totals: {}
