@@ -1,7 +1,10 @@
 import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
 
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
-import { ComponentType } from '~/src/components/enums.js'
+import {
+  ComponentType,
+  GeospatialFieldOptionsCountryEnum
+} from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
   MIN_NUMBER_OF_REPEAT_ITEMS
@@ -447,6 +450,16 @@ export const maxChecksSchema = Joi.number()
   .min(2)
   .description('Maximum number of items allowed to be selected.')
 
+export const countriesSchema = Joi.array()
+  .items(
+    Joi.string().valid(
+      ...Object.values(GeospatialFieldOptionsCountryEnum),
+      'any'
+    )
+  )
+  .single()
+  .description('The country to be included in a geospatial field')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -638,7 +651,8 @@ export const questionDetailsFullSchema = {
   usePostcodeLookupSchema,
   minChecksSchema,
   maxChecksSchema,
-  exactChecksSchema
+  exactChecksSchema,
+  countriesSchema
 }
 
 export const formEditorInputPageKeys = {

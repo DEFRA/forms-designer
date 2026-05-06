@@ -144,6 +144,13 @@ export function mapToQuestionOptions(question) {
           .options.instructionText
       }
     : {}
+  const geospatialExtras =
+    question.type === ComponentType.GeospatialField
+      ? {
+          countries: /** @type {GeospatialFieldComponent} */ (question).options
+            .countries ?? ['any']
+        }
+      : {}
 
   return {
     classes: /** @type {FormComponentsDef} */ (question).options.classes,
@@ -152,7 +159,8 @@ export function mapToQuestionOptions(question) {
     ...minMaxExtras,
     ...multilineExtras,
     ...regexExtras,
-    ...locationExtras
+    ...locationExtras,
+    ...geospatialExtras
   }
 }
 
@@ -244,6 +252,6 @@ export function enhancedFields(options, question, validation) {
  */
 
 /**
- * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent, GeospatialFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
