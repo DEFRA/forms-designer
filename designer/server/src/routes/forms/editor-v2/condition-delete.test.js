@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   Engine,
   FormDefinitionError,
   FormDefinitionErrorType
@@ -146,6 +147,69 @@ describe('Editor v2 condition delete routes', () => {
         testFormMetadata.id,
         auth.credentials.token,
         'cond2'
+      )
+    })
+
+    test('cascade-cleans PaymentField references before deleting the condition', async () => {
+      const definitionWithPaymentRef = buildDefinition({
+        engine: Engine.V2,
+        pages: [
+          {
+            id: 'p1',
+            title: 'Pay',
+            path: '/pay',
+            next: [],
+            components: [
+              {
+                id: 'c1',
+                name: 'pay',
+                title: 'Pay',
+                type: ComponentType.PaymentField,
+                hint: '',
+                options: {
+                  amount: 25,
+                  description: 'Fee',
+                  conditionalAmounts: [{ amount: 50, condition: 'cond1' }]
+                }
+              }
+            ]
+          }
+        ],
+        conditions: [{ id: 'cond1', displayName: 'Cond 1', items: [] }]
+      })
+
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWithPaymentRef)
+      jest
+        .mocked(editor.removePaymentConditionalAmountReference)
+        .mockResolvedValueOnce()
+      jest.mocked(editor.deleteCondition).mockResolvedValueOnce()
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/condition/cond1/delete',
+        auth
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(
+        editor.removePaymentConditionalAmountReference
+      ).toHaveBeenCalledWith(
+        testFormMetadata.id,
+        auth.credentials.token,
+        definitionWithPaymentRef,
+        'p1',
+        'c1',
+        'cond1'
+      )
+      expect(editor.deleteCondition).toHaveBeenCalledWith(
+        testFormMetadata.id,
+        auth.credentials.token,
+        'cond1'
       )
     })
 

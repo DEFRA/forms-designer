@@ -36,6 +36,7 @@ import {
   getControllerTypeAndProperties,
   getRepeaterProperties,
   migrateDefinitionToV2,
+  removePaymentConditionalAmountReference,
   removeSection,
   renameSectionTitle,
   reorderPages,
@@ -1785,6 +1786,123 @@ describe('editor.js', () => {
           testError
         )
       })
+    })
+  })
+
+  describe('removePaymentConditionalAmountReference', () => {
+    const pageId = 'p1'
+    const componentId = 'c1'
+    const conditionId = 'cond-stale'
+
+    /**
+     * @param {Array<{ amount: number, condition: string }>} conditionalAmounts
+     */
+    const buildPaymentDef = (conditionalAmounts) =>
+      buildDefinition({
+        pages: [
+          {
+            id: pageId,
+            path: '/p',
+            title: 'Pay',
+            next: [],
+            components: [
+              {
+                id: componentId,
+                name: 'pay',
+                title: 'Pay',
+                type: ComponentType.PaymentField,
+                hint: '',
+                options: { amount: 25, description: 'Fee', conditionalAmounts }
+              }
+            ]
+          }
+        ]
+      })
+
+    test('PUTs the component without the deleted condition reference', async () => {
+      const definition = buildPaymentDef([
+        { amount: 50, condition: 'cond-stale' },
+        { amount: 75, condition: 'cond-keep' }
+      ])
+      mockedPutJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+
+      await removePaymentConditionalAmountReference(
+        formId,
+        token,
+        definition,
+        pageId,
+        componentId,
+        conditionId
+      )
+
+      expect(mockedPutJson).toHaveBeenCalledTimes(1)
+      const call = /** @type {any} */ (mockedPutJson.mock.calls[0])
+      expect(call[1].payload.options.conditionalAmounts).toEqual([
+        { amount: 75, condition: 'cond-keep' }
+      ])
+    })
+
+    test('is a no-op when the component cannot be found on the page', async () => {
+      const definition = buildPaymentDef([{ amount: 50, condition: 'x' }])
+      await removePaymentConditionalAmountReference(
+        formId,
+        token,
+        definition,
+        pageId,
+        'unknown-component',
+        conditionId
+      )
+      expect(mockedPutJson).not.toHaveBeenCalled()
+    })
+
+    test('is a no-op when the component has no matching conditional amount', async () => {
+      const definition = buildPaymentDef([
+        { amount: 75, condition: 'cond-keep' }
+      ])
+      await removePaymentConditionalAmountReference(
+        formId,
+        token,
+        definition,
+        pageId,
+        componentId,
+        conditionId
+      )
+      expect(mockedPutJson).not.toHaveBeenCalled()
+    })
+
+    test('handles a component with no conditionalAmounts at all', async () => {
+      const definition = buildDefinition({
+        pages: [
+          {
+            id: pageId,
+            path: '/p',
+            title: 'Pay',
+            next: [],
+            components: [
+              {
+                id: componentId,
+                name: 'pay',
+                title: 'Pay',
+                type: ComponentType.PaymentField,
+                hint: '',
+                options: { amount: 25, description: 'Fee' }
+              }
+            ]
+          }
+        ]
+      })
+      await removePaymentConditionalAmountReference(
+        formId,
+        token,
+        definition,
+        pageId,
+        componentId,
+        conditionId
+      )
+      expect(mockedPutJson).not.toHaveBeenCalled()
     })
   })
 

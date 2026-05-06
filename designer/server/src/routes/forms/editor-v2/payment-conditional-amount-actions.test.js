@@ -227,6 +227,108 @@ describe('handleSaveConditionalAmount', () => {
     const labels = yar.flash.mock.calls[0][1].formErrors
     expect(labels.conditionalAmount.text).toContain('Enter payment amount 2')
   })
+
+  describe('semantic validation (definition-aware)', () => {
+    /**
+     * @param {string[]} conditionIds
+     */
+    const buildDefinition = (conditionIds) =>
+      /** @type {any} */ ({
+        conditions: conditionIds.map((id) => ({
+          id,
+          displayName: id,
+          items: []
+        }))
+      })
+
+    it('rejects unknown condition with "Select an existing condition"', () => {
+      const { yar, request } = setup({
+        questionType: 'PaymentField',
+        conditionalAmounts: [],
+        conditionalAmountEditRow: {
+          expanded: true,
+          id: '',
+          amount: '',
+          condition: ''
+        }
+      })
+      request.payload = {
+        conditionalAmount: '50',
+        conditionalAmountCondition: 'cond-not-in-form'
+      }
+
+      handleSaveConditionalAmount(
+        /** @type {any} */ (request),
+        STATE_ID,
+        buildDefinition(['cond-real'])
+      )
+
+      expect(sessionState(yar).conditionalAmounts).toEqual([])
+      const formErrors = yar.flash.mock.calls[0][1].formErrors
+      expect(formErrors.conditionalAmountCondition.text).toBe(
+        'Select an existing condition'
+      )
+    })
+
+    it('rejects a duplicate condition reference on a different tile', () => {
+      const { yar, request } = setup({
+        questionType: 'PaymentField',
+        conditionalAmounts: [{ id: 'a1', amount: 1, condition: 'c-shared' }],
+        conditionalAmountEditRow: {
+          expanded: true,
+          id: '',
+          amount: '',
+          condition: ''
+        }
+      })
+      request.payload = {
+        conditionalAmount: '99',
+        conditionalAmountCondition: 'c-shared'
+      }
+
+      handleSaveConditionalAmount(
+        /** @type {any} */ (request),
+        STATE_ID,
+        buildDefinition(['c-shared'])
+      )
+
+      expect(sessionState(yar).conditionalAmounts).toEqual([
+        { id: 'a1', amount: 1, condition: 'c-shared' }
+      ])
+      const formErrors = yar.flash.mock.calls[0][1].formErrors
+      expect(formErrors.conditionalAmountCondition.text).toBe(
+        'You already have a payment amount for this condition'
+      )
+    })
+
+    it('allows the same tile to keep its own condition on edit', () => {
+      const existing = { id: 'a1', amount: 1, condition: 'c1' }
+      const { yar, request } = setup({
+        questionType: 'PaymentField',
+        conditionalAmounts: [existing],
+        conditionalAmountEditRow: {
+          expanded: true,
+          id: 'a1',
+          amount: 1,
+          condition: 'c1'
+        }
+      })
+      request.payload = {
+        conditionalAmount: '50',
+        conditionalAmountCondition: 'c1'
+      }
+
+      handleSaveConditionalAmount(
+        /** @type {any} */ (request),
+        STATE_ID,
+        buildDefinition(['c1'])
+      )
+
+      expect(sessionState(yar).conditionalAmounts).toEqual([
+        { id: 'a1', amount: 50, condition: 'c1' }
+      ])
+    })
+  })
 })
 
 describe('handleEditConditionalAmount', () => {
