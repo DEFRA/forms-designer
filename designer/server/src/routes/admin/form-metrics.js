@@ -1,6 +1,7 @@
 import { Readable } from 'node:stream'
 
 import { FormStatus, Scopes, getErrorMessage } from '@defra/forms-model'
+import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
@@ -160,7 +161,9 @@ export default [
             this.push(null)
           }
         })
-        const filename = 'metrics.csv'
+
+        const now = new Date()
+        const filename = `live-submission-metrics-${format(now, 'yyyy-MM-dd')}.csv`
 
         const auditUser = mapUserForAudit(auth.credentials.user)
         await publishPlatformMetricsDownloadRequestedEvent(auditUser)
