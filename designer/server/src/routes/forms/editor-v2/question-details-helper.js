@@ -383,6 +383,19 @@ export function handleEnhancedActionOnPost(
     listItems: preState.listItems ?? []
   })
 
+  return dispatchRadiosListAction(request, state, stateId, enhancedAction)
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {QuestionSessionState} state
+ * @param {string} stateId
+ * @param {string} enhancedAction
+ * @returns { string | undefined }
+ */
+function dispatchRadiosListAction(request, state, stateId, enhancedAction) {
+  const { yar } = request
+
   if (enhancedAction === EnhancedAction.AddItem) {
     setQuestionSessionState(yar, stateId, state)
     return '#add-option-form'

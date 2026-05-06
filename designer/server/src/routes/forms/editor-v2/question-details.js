@@ -307,6 +307,24 @@ export function chooseResolutionRoute(request, h, stateId) {
   return h.redirect(`${pathname}/resolve`).code(StatusCodes.SEE_OTHER)
 }
 
+/**
+ * @param {unknown} err
+ * @param {FormDefinition} definition
+ * @param {Request<any>} request
+ * @param {ResponseToolkit<any>} h
+ */
+function handleSaveQuestionError(err, definition, request, h) {
+  const joiErr = handleInvalidFormErrors(err, definition)
+  if (joiErr) {
+    return redirectWithErrors(request, h, joiErr, errorKey, '#')
+  }
+  const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+  if (error) {
+    return redirectWithErrors(request, h, error, errorKey, '#')
+  }
+  throw err
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageId: string, questionId: string, stateId?: string } }>}
@@ -538,16 +556,7 @@ export default [
           .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        const joiErr = handleInvalidFormErrors(err, definition)
-        if (joiErr) {
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
-        }
-
-        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
-        if (error) {
-          return redirectWithErrors(request, h, error, errorKey, '#')
-        }
-        throw err
+        return handleSaveQuestionError(err, definition, request, h)
       }
     },
     options: {
