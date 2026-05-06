@@ -436,21 +436,30 @@ describe('Dead-letter queues routes', () => {
 
   describe('validMessageJson', () => {
     it('should return error when invalid JSON', () => {
-      const { error } = validateMessageJson('save-and-exit', '{ "abc": "123"')
+      const { error } = validateMessageJson(
+        DeadLetterQueues.SubmissionsApiSaveAndExit,
+        '{ "abc": "123"'
+      )
       expect(error?.message).toBe(
         "Invalid JSON: Expected ',' or '}' after property value in JSON at position 14 (line 1 column 15)"
       )
     })
 
     it('should return error when valid JSON but no Body element', () => {
-      const { error } = validateMessageJson('save-and-exit', '{ "abc": "123" }')
+      const { error } = validateMessageJson(
+        DeadLetterQueues.SubmissionsApiSaveAndExit,
+        '{ "abc": "123" }'
+      )
       expect(error?.message).toBe('Invalid JSON: Missing "Body" element')
     })
 
     it('should return error when valid JSON but invalid Body schema', () => {
-      const { error } = validateMessageJson('save-and-exit', '{ "Body": {} }')
+      const { error } = validateMessageJson(
+        DeadLetterQueues.SubmissionsApiSaveAndExit,
+        '{ "Body": {} }'
+      )
       expect(error?.message).toBe(
-        'JSON does not match the schema: "meta" is required, "data" is required, "result" is required'
+        'JSON does not match the schema: "schemaVersion" is required, "category" is required, "source" is required, "createdAt" is required, "messageCreatedAt" is required'
       )
     })
   })
