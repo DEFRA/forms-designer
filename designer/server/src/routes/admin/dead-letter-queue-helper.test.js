@@ -30,5 +30,11 @@ describe('dead-letter-queue-helper', () => {
         getCorrectMessageSchema(DeadLetterQueues.NotifyListener.toString())
       ).toEqual(formAdapterSubmissionMessagePayloadSchema)
     })
+
+    it('should throw if schema not known', () => {
+      expect(() => getCorrectMessageSchema('bad-queue-name')).toThrow(
+        'Unknown dead-letter queue: "bad-queue-name"'
+      )
+    })
   })
 })

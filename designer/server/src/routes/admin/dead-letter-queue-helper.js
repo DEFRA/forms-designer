@@ -7,21 +7,28 @@ import {
 
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 
+const queueToSchema =
+  /** @type {Partial<Record<DeadLetterQueues, Joi.ObjectSchema>>} */ ({
+    [DeadLetterQueues.SubmissionsApiSaveAndExit]: submissionMessageSchema,
+    [DeadLetterQueues.SubmissionsApiFormSubmissions]: submissionMessageSchema,
+    [DeadLetterQueues.AuditApi]: messageSchema,
+    [DeadLetterQueues.NotifyListener]:
+      formAdapterSubmissionMessagePayloadSchema,
+    [DeadLetterQueues.SharepointListener]:
+      formAdapterSubmissionMessagePayloadSchema
+  })
+
 /**
  * Choose correct schema for the queue type
  * @param {string} dlq
  */
 export function getCorrectMessageSchema(dlq) {
-  if (dlq === DeadLetterQueues.AuditApi.toString()) {
-    return messageSchema
+  const schema = queueToSchema[/** @type {DeadLetterQueues} */ (dlq)]
+
+  if (!schema) {
+    throw new Error(`Unknown dead-letter queue: "${dlq}"`)
   }
-  if (
-    dlq === DeadLetterQueues.SubmissionsApiSaveAndExit.toString() ||
-    dlq === DeadLetterQueues.SubmissionsApiFormSubmissions.toString()
-  ) {
-    return submissionMessageSchema
-  }
-  return formAdapterSubmissionMessagePayloadSchema
+  return schema
 }
 
 /**
@@ -97,5 +104,6 @@ export function dlqMessagesMapper(messages) {
 }
 
 /**
+ * @import Joi from 'joi'
  * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
  */
