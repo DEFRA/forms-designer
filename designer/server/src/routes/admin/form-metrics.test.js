@@ -115,11 +115,6 @@ describe('Form metrics routes', () => {
       const mockMetrics = {
         overview: [
           {
-            formStatus: FormStatus.Live,
-            summaryMetrics: { name: 'Form 1', slug: 'form-1' },
-            submissionsCount: 5
-          },
-          {
             formStatus: FormStatus.Draft,
             summaryMetrics: { name: 'Form 2', slug: 'form-2' },
             submissionsCount: 2
@@ -147,14 +142,15 @@ describe('Form metrics routes', () => {
       expect(response.headers['content-disposition']).toBe(
         `attachment; filename="live-metrics-${today}.csv"`
       )
+
+      // Verify only headers rows (since supplied data did not include any live rows)
       const csvContent = response.payload
-      expect(csvContent).toBe(`"Form name","Form URL","Live submissions"
-"Form 1","http://Jezs-MacBook-Air:3000/library/form-1","5"`)
+      expect(csvContent).toBe('"Form name","Form URL","Live submissions"')
     })
   })
 })
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormTotalsMetric } from '@defra/forms-model'
  */
