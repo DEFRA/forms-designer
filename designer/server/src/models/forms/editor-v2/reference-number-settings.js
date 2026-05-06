@@ -24,7 +24,6 @@ import {
   enrichPreviewModel
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
-  CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_REFERENCE_NUMBER,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
@@ -117,11 +116,11 @@ export function referenceNumberSettingsViewModel(
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
+      `Check your answers, ${pageHeading.toLowerCase()}`,
       formTitle
     ),
     fields,
     cardTitle: pageHeading,
-    cardCaption: CHECK_ANSWERS_CAPTION,
     cardHeading: pageHeading,
     tabConfig: getCheckAnswersTabConfig(
       metadata.slug,

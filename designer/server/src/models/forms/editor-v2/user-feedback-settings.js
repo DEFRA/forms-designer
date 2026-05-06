@@ -7,7 +7,6 @@ import {
   enrichPreviewModel
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
-  CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_USER_FEEDBACK,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
@@ -68,7 +67,6 @@ export function userFeedbackSettingsViewModel(
   return {
     ...model,
     fields,
-    cardCaption: CHECK_ANSWERS_CAPTION,
     tabConfig: getCheckAnswersTabConfig(
       metadata.slug,
       pageId,
