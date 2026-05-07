@@ -74,19 +74,7 @@ describe('metrics model', () => {
           updatedAt: new Date('2026-01-01')
         }
       ])
-      const submissionCountsDraft = new Map()
-      const submissionCountsLive = new Map()
-      const formDaysToPublish = new Map()
-      const formRepublished = new Map()
-      expect(
-        mapOverviewMetrics(
-          metrics,
-          submissionCountsDraft,
-          submissionCountsLive,
-          formDaysToPublish,
-          formRepublished
-        )
-      ).toEqual([
+      expect(mapOverviewMetrics(metrics)).toEqual([
         {
           daysToPublish: '-',
           features: '',
@@ -106,31 +94,22 @@ describe('metrics model', () => {
           formId: 'form-id',
           summaryMetrics: {
             name: 'form-name',
-            features: ['Email', 'File upload']
+            features: ['Email', 'File upload'],
+            republished: 2,
+            daysToPublish: 17
           },
           featureMetrics: {},
-          submissionsCount: 0,
+          submissionsCount: 4,
+
           updatedAt: new Date('2026-01-01')
         }
       ])
-      const submissionCountsDraft = new Map([['form-id', 3]])
-      const submissionCountsLive = new Map([['form-id', 7]])
-      const formDaysToPublish = new Map([['form-id', 17]])
-      const formRepublished = new Map([['form-id', 2]])
-      expect(
-        mapOverviewMetrics(
-          metrics,
-          submissionCountsDraft,
-          submissionCountsLive,
-          formDaysToPublish,
-          formRepublished
-        )
-      ).toEqual([
+      expect(mapOverviewMetrics(metrics)).toEqual([
         {
           features: 'Email, File upload',
           name: 'form-name',
           formName: 'form-name',
-          submissions: 7,
+          submissions: 4,
           daysToPublish: 17,
           republished: 2
         }

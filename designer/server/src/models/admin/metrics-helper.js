@@ -12,11 +12,19 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
 
 /**
  * @typedef {object} FilterCriteria
- * @property {string} [sortCol]
- * @property {string} [sortDir]
- * @property {string} [searchText]
- * @property {string[]} [statuses]
- * @property {string[]} [orgs]
+ * @property {string} [searchText] - text to look for
+ * @property {string[]} [status] - allowable statuses
+ * @property {string[]} [org] - list of organisations
+ */
+
+/**
+ * @typedef {object} SortCriteria
+ * @property {string} [sortCol] - column name to sort
+ * @property {string} [sortDir] - direction of sort (asc/desc)
+ */
+
+/**
+ * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string }} FilterAndSortCriteria
  */
 
 const formStructureMetricNames =
@@ -201,35 +209,22 @@ export function componentUsageFormStructures(metrics, formStatus) {
 
 /**
  * @param {FormOverviewMetric[]} metrics
- * @param {Map<string, number>} submissionCountsDraft
- * @param {Map<string, number>} submissionCountsLive
- * @param {Map<string, number>} formDaysToPublish
- * @param {Map<string, number>} formRepublished
  */
-export function mapOverviewMetrics(
-  metrics,
-  submissionCountsDraft,
-  submissionCountsLive,
-  formDaysToPublish,
-  formRepublished
-) {
+export function mapOverviewMetrics(metrics) {
   return metrics.map((metric) => ({
     ...metric.summaryMetrics,
     formName: metric.summaryMetrics.name,
     features: Array.isArray(metric.summaryMetrics.features)
       ? metric.summaryMetrics.features.join(', ')
       : [],
-    submissions:
-      (metric.formStatus === FormStatus.Live
-        ? submissionCountsLive.get(metric.formId)
-        : submissionCountsDraft.get(metric.formId)) ?? 0,
+    submissions: metric.submissionsCount,
     daysToPublish:
       metric.formStatus === FormStatus.Live
-        ? (formDaysToPublish.get(metric.formId) ?? 0)
+        ? metric.summaryMetrics.daysToPublish
         : '-',
     republished:
       metric.formStatus === FormStatus.Live
-        ? (formRepublished.get(metric.formId) ?? 0)
+        ? metric.summaryMetrics.republished
         : '-'
   }))
 }

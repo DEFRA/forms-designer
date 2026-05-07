@@ -70,14 +70,16 @@
   }) }}
 
 {%- set filterOptionsHtml %}
+  <button type="submit" name="action" value="clear" class="govuk-link govuk-link--no-visited-state pull-right govuk-!-padding-top-2">Clear filters</button>
 
   {{ govukInput({
-    id: "searchtext",
-    name: "searchtext",
+    id: "searchText",
+    name: "searchText",
     label: {
       text: "Search for a form",
       classes: "govuk-label--m"
-    }
+    },
+    value: model.filter.searchText
   }) }}
 
   {{ govukCheckboxes({
@@ -90,23 +92,12 @@
         classes: "govuk-fieldset__legend--m"
       }
     },
-    items: [
-      {
-        value: "1",
-        text: "Live (16)",
-        checked: true
-      },
-      {
-        value: "2",
-        text: "Draft (55)",
-        checked: true
-      }
-    ]
+    items: model.filter.statusList
   }) }}
 
   {{ govukCheckboxes({
-    idPrefix: "organisation",
-    name: "organisation",
+    idPrefix: "org",
+    name: "org",
     classes: "govuk-checkboxes--small",
     fieldset: {
       legend: {
@@ -114,127 +105,85 @@
         classes: "govuk-fieldset__legend--m"
       }
     },
-    items: [
-      {
-        value: "defra",
-        text: "Defra (12)",
-        checked: true
-      },
-      {
-        value: "environment-agency",
-        text: "Environment Agency (5)"
-      },
-      {
-        value: "rural-payments-agency",
-        text: "Rural Payments Agency (3)",
-        checked: false
-      }
-    ]
+    items: model.filter.organisationList
   }) }}
 {% endset -%}
 
-  <div class="moj-filter-layout">
-    <div class="moj-filter-layout__filter" style="display: block;">
+{% set showFilter = model.filter.showFilter !== 'N' %}
 
-      {{ mojFilter({
-        heading: {
-          text: "Filter"
-        },
+  <form method="post">
+    <div class="moj-filter-layout">
+      <div class="moj-filter-layout__filter" style="display: {{ 'block' if showFilter else 'none' }}">
 
-        submit: {
-          attributes: {
-              "data-test-id": "submit-button"
-          }
-        },
-
-        selectedFilters: {
-
+        {{ mojFilter({
           heading: {
-            text: "Selected filters"
+            text: "Filter"
           },
 
-          clearLink: {
-            text: "Clear filters"
-          },
-
-          categories: [
-            {
-              heading: {
-                text: "Status"
-              },
-              items: [{
-                href: "/path/to/remove/this",
-                text: "Live"
-              }]
-            },
-            {
-              heading: {
-                text: "Organisation"
-              },
-              items: [{
-                href: "/path/to/remove/this",
-                text: "Defra"
-              }]
+          submit: {
+            attributes: {
+                "data-test-id": "submit-button"
             }
-          ]
-        },
-        optionsHtml: filterOptionsHtml
-      }) }}
+          },
 
-    </div>
-    <div class="moj-filter-layout__content">
+          optionsHtml: filterOptionsHtml
+        }) }}
 
-      <div class="moj-action-bar">
-        <div class="moj-action-bar__filter">
-          <button type="submit" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="true" data-govuk-button-init="">Hide filter</button>
-        </div>
       </div>
 
-      <table class="govuk-table moj-scrollable-pane">
-        <thead class="govuk-table__head">
-          <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Form name</th>
-            <th scope="col" class="govuk-table__header">Organisation</th>
-            <th scope="col" class="govuk-table__header">Status</th>
-            <th scope="col" class="govuk-table__header">Pages</th>
-            <th scope="col" class="govuk-table__header">Question types</th>
-            <th scope="col" class="govuk-table__header">Conditions</th>
-            <th scope="col" class="govuk-table__header">Sections</th>
-            <th scope="col" class="govuk-table__header">Re-published</th>
-            <th scope="col" class="govuk-table__header">Days to publish</th>
-            <th scope="col" class="govuk-table__header">Features</th>
-            <th scope="col" class="govuk-table__header">Submissions</th>
-          </tr>
-        </thead>
-        <tbody class="govuk-table__body">
-          {% for row in model.formMetricRows %}
-          <tr class="govuk-table__row" style="display: table-row;">
-            <th scope="row" class="govuk-table__header">
-              <a href="/library/{{ row.slug }}" class="govuk-link govuk-link--no-visited-state">{{ row.formName }}</a>
-            </th>
-            <td class="govuk-table__cell">{{ row.organisation }}</td>
-            <td class="govuk-table__cell">
-              {% if row.status === 'live' %}
-                <strong class="govuk-tag govuk-tag--green">Live</strong>
-              {% else %}
-                <strong class="govuk-tag govuk-tag--yellow">Draft</strong>
-              {% endif %}
-            </td>
-            <td class="govuk-table__cell">{{ row.pages }}</td>
-            <td class="govuk-table__cell">{{ row.questionTypes }}</td>
-            <td class="govuk-table__cell">{{ row.conditions }}</td>
-            <td class="govuk-table__cell">{{ row.sections }}</td>
-            <td class="govuk-table__cell">{{ row.republished }}</td>
-            <td class="govuk-table__cell">{{ row.daysToPublish }}</td>
-            <td class="govuk-table__cell">{{ row.features }}</td>
-            <td class="govuk-table__cell">{{ row.submissions }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
-  </div>
+      <div class="moj-filter-layout__content">
 
+        <div class="moj-action-bar">
+          <div class="moj-action-bar__filter">
+            <button type="submit" name="showFilter" value="{{ 'N' if showFilter else 'Y' }}" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="{{ 'true' if showFilter else 'false' }}" data-govuk-button-init="">{{ 'Hide' if showFilter else 'Show' }} filter</button>
+          </div>
+        </div>
+
+        <table class="govuk-table moj-scrollable-pane" data-module="moj-sortable-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header" aria-sort="ascending">Form name</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Organisation</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Pages</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Question types</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Conditions</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Sections</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Re-published</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Days to publish</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Features</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Submissions</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+            {% for row in model.formMetricRows %}
+            <tr class="govuk-table__row" style="display: table-row;">
+              <th scope="row" class="govuk-table__header">
+                <a href="/library/{{ row.slug }}" class="govuk-link govuk-link--no-visited-state">{{ row.formName }}</a>
+              </th>
+              <td class="govuk-table__cell">{{ row.organisation }}</td>
+              <td class="govuk-table__cell">
+                {% if row.status === 'live' %}
+                  <strong class="govuk-tag govuk-tag--green">Live</strong>
+                {% else %}
+                  <strong class="govuk-tag govuk-tag--yellow">Draft</strong>
+                {% endif %}
+              </td>
+              <td class="govuk-table__cell">{{ row.pages }}</td>
+              <td class="govuk-table__cell">{{ row.questionTypes }}</td>
+              <td class="govuk-table__cell">{{ row.conditions }}</td>
+              <td class="govuk-table__cell">{{ row.sections }}</td>
+              <td class="govuk-table__cell">{{ row.republished }}</td>
+              <td class="govuk-table__cell">{{ row.daysToPublish }}</td>
+              <td class="govuk-table__cell">{{ row.features }}</td>
+              <td class="govuk-table__cell">{{ row.submissions }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
 
   {% endcall %}
   {% endblock %}
