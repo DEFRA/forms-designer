@@ -29,6 +29,10 @@ describe('Editor v2 guidance routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   const testForm = buildDefinition({
     ...testFormDefinitionWithAGuidancePage,
     engine: Engine.V2

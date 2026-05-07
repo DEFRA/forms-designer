@@ -23,6 +23,10 @@ describe('Editor v2 rename section routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should render single textbox in view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

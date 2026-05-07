@@ -22,6 +22,10 @@ describe('File routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   describe('GET', () => {
     test('should show file download page with email (from cache) when file status response is 200', async () => {
       jest.mocked(file.checkFileStatus).mockResolvedValueOnce({

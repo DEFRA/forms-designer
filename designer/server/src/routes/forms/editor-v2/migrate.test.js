@@ -20,6 +20,10 @@ describe('Editor v2 migrate routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should render correct content in the confirmation view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
