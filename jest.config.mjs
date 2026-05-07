@@ -6,6 +6,7 @@ const { CI } = process.env
  */
 export const defaults = {
   maxWorkers: '50%',
+  workerIdleMemoryLimit: '512MB',
   reporters: CI
     ? [['github-actions', { silent: false }], 'summary']
     : ['default', 'summary'],
