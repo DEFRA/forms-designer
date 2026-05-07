@@ -21,7 +21,9 @@ const govukFrontendLegacyPath = dirname(
 )
 
 const mojFrontendPath = dirname(
-  resolvePkg.sync('@ministryofjustice/frontend/package.json', { basedir: appDir })
+  resolvePkg.sync('@ministryofjustice/frontend/package.json', {
+    basedir: appDir
+  })
 )
 
 const reactPath = dirname(

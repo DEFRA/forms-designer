@@ -109,6 +109,45 @@ describe('Form metrics routes', () => {
       )
     })
 
+    test('should clear filtering', async () => {
+      const mockMetrics = {
+        overview: [],
+        totals: /** @type {FormTotalsMetric} */ ({
+          last7Days: {},
+          prev7Days: {},
+          last30Days: {},
+          prev30Days: {},
+          lastYear: {},
+          prevYear: {},
+          allTime: {},
+          draftSubmissions: {},
+          liveSubmissions: {},
+          updatedAt: new Date('2026-01-01T00:00:00.000Z')
+        })
+      }
+      jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+
+      const options = {
+        method: 'post',
+        url: '/admin/form-metrics?showFilter=N&searchText=some%2520text&status=live&status=draft&org=Org1&org=Org2',
+        auth,
+        payload: {
+          showFilter: 'N',
+          searchText: 'some text',
+          status: ['live', 'draft'],
+          org: ['Org1', 'Org2'],
+          action: 'clear'
+        }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(headers.location).toBe('/admin/form-metrics')
+    })
+
     test('should render regenerate form', async () => {
       const options = {
         method: 'get',
