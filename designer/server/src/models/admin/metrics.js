@@ -166,28 +166,6 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
- * @param {FilterCriteria} filter
- */
-export function filterMetrics(metrics, filter) {
-  const searchText = filter.searchText?.toLowerCase()
-  const statuses = filter.status
-  const orgs = filter.org
-
-  return metrics.overview.filter((form) => {
-    const formName = /** @type {string} */ (
-      form.summaryMetrics.name
-    ).toLowerCase()
-    const org = /** @type {string} */ (form.summaryMetrics.organisation)
-    return (
-      (!searchText || formName.includes(searchText)) &&
-      (!statuses || statuses.includes(form.formStatus)) &&
-      (!orgs || orgs.includes(org))
-    )
-  })
-}
-
-/**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { FilterAndSortCriteria, FilterCriteria, SortCriteria } from '~/src/models/admin/metrics-helper.js'
+ * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
  */
