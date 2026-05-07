@@ -1,10 +1,14 @@
 import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
+import config from '~/src/config.js'
 import {
   combineModel,
+  getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
+
+jest.mock('~/src/config.ts')
 
 /**
  * @param {string} title
@@ -507,6 +511,46 @@ describe('metrics models', () => {
           }
         }
       ])
+    })
+  })
+
+  describe('getLiveMetricsAsCsv', () => {
+    it('should generate live CSV', () => {
+      jest.mocked(config).appBaseUrl = 'http://app-base-url:3000'
+      const metrics = {
+        totals: {
+          liveSubmissions: {
+            'form-id-1': 5
+          }
+        },
+        overview: [
+          {
+            formId: 'form-id-1',
+            formStatus: FormStatus.Live,
+            summaryMetrics: { name: 'Form 1', slug: 'form-1' }
+          },
+          {
+            formId: 'form-id-2',
+            formStatus: FormStatus.Live,
+            summaryMetrics: { name: 'Form 2', slug: 'form-2' }
+          },
+          {
+            formId: 'form-id-3',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: { name: 'Form 3', slug: 'form-3' }
+          }
+        ]
+      }
+      // @ts-expect-error - partial mock of data
+      const csvOut = getLiveMetricsAsCsv(metrics)
+      expect(csvOut).toHaveLength(3)
+      expect(csvOut[0]).toBe('"Form name","Form URL","Live submissions"')
+      expect(csvOut[1]).toBe(
+        '"Form 1","http://app-base-url:3000/library/form-1","5"'
+      )
+      expect(csvOut[2]).toBe(
+        '"Form 2","http://app-base-url:3000/library/form-2","0"'
+      )
     })
   })
 })

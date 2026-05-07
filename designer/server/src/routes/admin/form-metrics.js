@@ -1,9 +1,16 @@
-import { Scopes } from '@defra/forms-model'
+import { Readable } from 'node:stream'
+
+import { Scopes, getErrorMessage } from '@defra/forms-model'
+import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
+import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import {
+  getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
@@ -99,6 +106,53 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.RegenerateMetrics}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/admin/form-metrics-download',
+    async handler(request, h) {
+      const { auth } = request
+
+      try {
+        // Live metrics only
+        const metrics = await getMetrics()
+        const lines = getLiveMetricsAsCsv(metrics)
+
+        const streamData = new Readable({
+          read() {
+            this.push(lines.join('\n'))
+            this.push(null)
+          }
+        })
+
+        const now = new Date()
+        const filename = `live-metrics-${format(now, 'yyyy-MM-dd')}.csv`
+
+        const auditUser = mapUserForAudit(auth.credentials.user)
+        await publishPlatformMetricsDownloadRequestedEvent(auditUser)
+
+        return h
+          .response(streamData)
+          .header('Content-Type', 'text/csv; charset=utf-8')
+          .header('Content-Disposition', `attachment; filename="${filename}"`)
+      } catch (err) {
+        logger.error(
+          err,
+          `[metrics] Error downloading live metrics - ${getErrorMessage(err)}`
+        )
+        throw err
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
       }
     }
   })
