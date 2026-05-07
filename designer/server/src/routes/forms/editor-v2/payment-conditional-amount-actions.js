@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
+import { isConditionWrapperV2 } from '@defra/forms-model'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -15,7 +16,7 @@ import {
 } from '~/src/lib/session-helper.js'
 import { paymentConditionalAmountSchema } from '~/src/models/forms/editor-v2/base-settings-fields.js'
 
-const PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR = '#payment-conditional-amounts'
+export const PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR = '#payment-conditional-amounts'
 const errorKey = sessionNames.validationFailure.editorQuestionDetails
 
 /**
@@ -33,13 +34,9 @@ export function handleAddConditionalAmount(yar, stateId) {
 }
 
 /**
- * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
- * @param {string} stateId
- * @returns {string}
+ * @param {QuestionSessionState} state
  */
-export function handleSaveConditionalAmount(request, stateId) {
-  const { yar, payload } = request
-  const state = getQuestionSessionState(yar, stateId) ?? {}
+function getEditRowContext(state) {
   const editRow = state.conditionalAmountEditRow ?? {
     expanded: true,
     id: '',
@@ -47,9 +44,25 @@ export function handleSaveConditionalAmount(request, stateId) {
     condition: ''
   }
   const items = state.conditionalAmounts ?? []
-  const labelIndex = editRow.id
-    ? Math.max(items.findIndex((i) => i.id === editRow.id) + 1, 1)
-    : items.length + 1
+  const matchedIndex =
+    typeof editRow.id === 'string' && editRow.id !== ''
+      ? items.findIndex((i) => i.id === editRow.id)
+      : -1
+  const treatAsNew = matchedIndex === -1
+  const labelIndex = treatAsNew ? items.length + 1 : matchedIndex + 1
+  return { editRow, items, matchedIndex, treatAsNew, labelIndex }
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {FormDefinition} [definition]
+ * @returns {string}
+ */
+export function handleSaveConditionalAmount(request, stateId, definition) {
+  const { yar, payload } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  const { editRow, items, treatAsNew, labelIndex } = getEditRowContext(state)
 
   const candidate = {
     amount: payload.conditionalAmount,
@@ -60,7 +73,13 @@ export function handleSaveConditionalAmount(request, stateId) {
     abortEarly: false
   })
 
-  if (error) {
+  const semanticError = error
+    ? null
+    : buildSemanticConditionError(value, items, editRow, definition)
+
+  const finalError = error ?? semanticError
+
+  if (finalError) {
     setQuestionSessionState(yar, stateId, {
       ...state,
       conditionalAmountEditRow: {
@@ -72,15 +91,12 @@ export function handleSaveConditionalAmount(request, stateId) {
     addErrorsToSession(
       request,
       errorKey,
-      remapConditionalAmountErrors(error, labelIndex)
+      remapConditionalAmountErrors(finalError, labelIndex)
     )
     return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
   }
 
-  const id =
-    typeof editRow.id === 'string' && editRow.id !== ''
-      ? editRow.id
-      : randomUUID()
+  const id = treatAsNew ? randomUUID() : /** @type {string} */ (editRow.id)
   const next = upsertConditionalAmount(items, {
     id,
     amount: value.amount,
@@ -93,6 +109,56 @@ export function handleSaveConditionalAmount(request, stateId) {
     conditionalAmountEditRow: setConditionalAmountEditState(undefined, false)
   })
   return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
+}
+
+/**
+ * @param {{ amount: number, condition: string }} value
+ * @param {ConditionalAmountState[]} items
+ * @param {ConditionalAmountEditRow} editRow
+ * @param {FormDefinition | undefined} definition
+ * @returns {Joi.ValidationError | null}
+ */
+function buildSemanticConditionError(value, items, editRow, definition) {
+  if (!definition) {
+    return null
+  }
+  const validIds = new Set(
+    definition.conditions
+      .filter(isConditionWrapperV2)
+      .map((c) => /** @type {string} */ (c.id))
+  )
+  if (!validIds.has(value.condition)) {
+    return buildConditionError('Select an existing condition')
+  }
+  const editingId = typeof editRow.id === 'string' ? editRow.id : ''
+  const duplicate = items.some(
+    (item) => item.id !== editingId && item.condition === value.condition
+  )
+  if (duplicate) {
+    return buildConditionError(
+      'You already have a payment amount for this condition'
+    )
+  }
+  return null
+}
+
+/**
+ * @param {string} message
+ * @returns {Joi.ValidationError}
+ */
+function buildConditionError(message) {
+  return new Joi.ValidationError(
+    message,
+    [
+      {
+        message,
+        path: ['condition'],
+        type: 'any.invalid',
+        context: { key: 'condition', label: 'condition' }
+      }
+    ],
+    null
+  )
 }
 
 /**
@@ -135,9 +201,12 @@ export function handleCancelConditionalAmount(yar, stateId) {
  * @returns {string}
  */
 export function handleRemoveConditionalAmount(yar, stateId, id) {
+  if (!id) {
+    return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
+  }
   const state = getQuestionSessionState(yar, stateId) ?? {}
   const items = state.conditionalAmounts ?? []
-  if (!id) {
+  if (!items.some((item) => item.id === id)) {
     return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
   }
   setQuestionSessionState(yar, stateId, {
@@ -145,6 +214,65 @@ export function handleRemoveConditionalAmount(yar, stateId, id) {
     conditionalAmounts: removeConditionalAmountById(items, id)
   })
   return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
+}
+
+/**
+ * If the inline conditional-amount edit row is open, copy the user-typed values
+ * from the request payload into `state.conditionalAmountEditRow`. Used in the
+ * route's failAction so that base-field validation errors don't wipe what the
+ * user typed in the inline form before re-render.
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ */
+export function persistInlineConditionalAmountDraft(request, stateId) {
+  const { yar, payload } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  const editRow = state.conditionalAmountEditRow
+  if (!editRow?.expanded) {
+    return
+  }
+  setQuestionSessionState(yar, stateId, {
+    ...state,
+    conditionalAmountEditRow: {
+      ...editRow,
+      amount: payload.conditionalAmount,
+      condition: payload.conditionalAmountCondition
+    }
+  })
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {FormDefinition} [definition]
+ * @returns {Joi.ValidationError | null}
+ */
+export function buildInlineConditionalAmountError(
+  request,
+  stateId,
+  definition
+) {
+  const { yar, payload } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  if (!state.conditionalAmountEditRow?.expanded) {
+    return null
+  }
+  const { editRow, items, labelIndex } = getEditRowContext(state)
+  const candidate = {
+    amount: payload.conditionalAmount,
+    condition: payload.conditionalAmountCondition
+  }
+  const { error, value } = paymentConditionalAmountSchema.validate(candidate, {
+    abortEarly: false
+  })
+  const semanticError = error
+    ? null
+    : buildSemanticConditionError(value, items, editRow, definition)
+  const finalError = error ?? semanticError
+  if (!finalError) {
+    return null
+  }
+  return remapConditionalAmountErrors(finalError, labelIndex)
 }
 
 /**
@@ -189,7 +317,7 @@ function remapConditionalAmountErrors(error, labelIndex) {
 }
 
 /**
- * @import { FormEditorInputQuestionDetails } from '@defra/forms-model'
+ * @import { ConditionalAmountEditRow, ConditionalAmountState, FormDefinition, FormEditorInputQuestionDetails, QuestionSessionState } from '@defra/forms-model'
  * @import { Request } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

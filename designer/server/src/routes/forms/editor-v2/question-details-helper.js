@@ -303,9 +303,43 @@ export function handleSaveItem(request, state, stateId) {
  * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {string} stateId
  * @param {Partial<ComponentDef>} questionDetails
+ * @param {QuestionSessionState} preState
+ * @param {string} enhancedAction
+ * @param {FormDefinition} [definition]
+ * @returns {string | undefined}
+ */
+function dispatchConditionalAmountAction(
+  request,
+  stateId,
+  questionDetails,
+  preState,
+  enhancedAction,
+  definition
+) {
+  const { yar } = request
+  setQuestionSessionState(yar, stateId, { ...preState, questionDetails })
+  if (enhancedAction === EnhancedAction.AddConditionalAmount) {
+    return handleAddConditionalAmount(yar, stateId)
+  }
+  if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
+    return handleSaveConditionalAmount(request, stateId, definition)
+  }
+  return handleCancelConditionalAmount(yar, stateId)
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {Partial<ComponentDef>} questionDetails
+ * @param {FormDefinition} [definition]
  * @returns { string | undefined }
  */
-export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
+export function handleEnhancedActionOnPost(
+  request,
+  stateId,
+  questionDetails,
+  definition
+) {
   const { yar, payload } = request
   const { enhancedAction } = payload
 
@@ -318,14 +352,19 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     throw new Error('Invalid session contents')
   }
 
-  if (enhancedAction === EnhancedAction.AddConditionalAmount) {
-    return handleAddConditionalAmount(yar, stateId)
-  }
-  if (enhancedAction === EnhancedAction.SaveConditionalAmount) {
-    return handleSaveConditionalAmount(request, stateId)
-  }
-  if (enhancedAction === EnhancedAction.CancelConditionalAmount) {
-    return handleCancelConditionalAmount(yar, stateId)
+  if (
+    enhancedAction === EnhancedAction.AddConditionalAmount ||
+    enhancedAction === EnhancedAction.SaveConditionalAmount ||
+    enhancedAction === EnhancedAction.CancelConditionalAmount
+  ) {
+    return dispatchConditionalAmountAction(
+      request,
+      stateId,
+      questionDetails,
+      preState,
+      enhancedAction,
+      definition
+    )
   }
 
   const state = /** @type {QuestionSessionState} */ ({
@@ -343,6 +382,19 @@ export function handleEnhancedActionOnPost(request, stateId, questionDetails) {
     lastMoveDirection: preState.lastMoveDirection,
     listItems: preState.listItems ?? []
   })
+
+  return dispatchRadiosListAction(request, state, stateId, enhancedAction)
+}
+
+/**
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {QuestionSessionState} state
+ * @param {string} stateId
+ * @param {string} enhancedAction
+ * @returns { string | undefined }
+ */
+function dispatchRadiosListAction(request, state, stateId, enhancedAction) {
+  const { yar } = request
 
   if (enhancedAction === EnhancedAction.AddItem) {
     setQuestionSessionState(yar, stateId, state)
@@ -386,7 +438,7 @@ export function enforceFileUploadFieldExclusivity(payload) {
 }
 
 /**
- * @import { ComponentDef,  FormEditorInputQuestionDetails, FormEditorInputQuestion,  QuestionSessionState, ListItem } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, FormEditorInputQuestion, QuestionSessionState, ListItem } from '@defra/forms-model'
  * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

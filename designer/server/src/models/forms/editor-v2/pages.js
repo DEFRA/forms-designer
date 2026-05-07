@@ -116,6 +116,22 @@ export function mapMarkdown(component, isSummary) {
 }
 
 /**
+ * @param {PaymentFieldComponent} component
+ * @returns {string}
+ */
+function formatPaymentTotal(component) {
+  const amount = component.options.amount
+  if (amount > 0) {
+    return formatCurrency(amount)
+  }
+  const conditional = component.options.conditionalAmounts ?? []
+  if (conditional.length > 0) {
+    return formatCurrency(conditional[0].amount)
+  }
+  return formatCurrency(0)
+}
+
+/**
  * @param {FormDefinition} definition
  * @param {Page} page
  */
@@ -139,7 +155,7 @@ export function mapQuestionRows(definition, page) {
       },
       {
         key: { text: 'Total amount' },
-        value: { text: formatCurrency(paymentComponent.options.amount) }
+        value: { text: formatPaymentTotal(paymentComponent) }
       }
     ]
   }
@@ -212,6 +228,12 @@ export function mapPageData(slug, definition, filterOptions) {
           filterOptions.includes(p.condition ?? 'unknown') ||
           isAnEndPage(p)
       )
+      .map((page, originalIndex) => ({ page, originalIndex }))
+      .sort((a, b) => {
+        const rankDiff = pageDisplayRank(a.page) - pageDisplayRank(b.page)
+        return rankDiff !== 0 ? rankDiff : a.originalIndex - b.originalIndex
+      })
+      .map(({ page }) => page)
       .map((page) => {
         const isEndPage = isAnEndPage(page)
         const isSummary = isSummaryPage(page)
@@ -231,6 +253,31 @@ export function mapPageData(slug, definition, filterOptions) {
         }
       })
   }
+}
+
+const DISPLAY_RANK_QUESTION = 0
+const DISPLAY_RANK_SUMMARY = 1
+const DISPLAY_RANK_PAYMENT = 2
+const DISPLAY_RANK_TERMINAL = 3
+
+/**
+ * Display-order rank for the form overview listing. Mirrors the runtime flow:
+ * question pages → Check your answers (Summary) → Payment → terminal/exit pages.
+ * `pageNum` continues to come from the original definition.pages index so labels
+ * are stable regardless of display order.
+ * @param {Page} page
+ */
+function pageDisplayRank(page) {
+  if (isSummaryPage(page)) {
+    return DISPLAY_RANK_SUMMARY
+  }
+  if (isPaymentPage(page)) {
+    return DISPLAY_RANK_PAYMENT
+  }
+  if (page.controller === ControllerType.Terminal) {
+    return DISPLAY_RANK_TERMINAL
+  }
+  return DISPLAY_RANK_QUESTION
 }
 
 /**

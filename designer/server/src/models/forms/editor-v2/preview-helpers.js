@@ -197,6 +197,19 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  */
 
 /**
+ * @param {PaymentFieldComponent} component
+ * @returns {number}
+ */
+function getDisplayAmount(component) {
+  const baseAmount = component.options.amount
+  if (baseAmount > 0) {
+    return baseAmount
+  }
+  const conditional = component.options.conditionalAmounts ?? []
+  return conditional.length > 0 ? conditional[0].amount : 0
+}
+
+/**
  * Get payment info from the form definition
  * @param {FormDefinition} definition
  * @param {string} [slug]
@@ -213,7 +226,7 @@ export function getPaymentInfo(definition, slug) {
     )
 
     if (paymentComponent) {
-      const amount = paymentComponent.options.amount
+      const displayAmount = getDisplayAmount(paymentComponent)
       const pageId = page.id ?? ''
       const editUrl =
         slug && pageId
@@ -222,7 +235,7 @@ export function getPaymentInfo(definition, slug) {
       return {
         hasPayment: true,
         description: paymentComponent.options.description,
-        amount: formatCurrency(amount),
+        amount: formatCurrency(displayAmount),
         pageId,
         path: page.path,
         editUrl

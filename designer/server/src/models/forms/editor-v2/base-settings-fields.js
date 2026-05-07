@@ -138,13 +138,9 @@ export const baseSchema = Joi.object().keys({
   enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
   radioId: questionDetailsFullSchema.radioIdSchema,
   radioText: questionDetailsFullSchema.radioTextSchema.when('enhancedAction', {
-    is: Joi.exist(),
-    then: Joi.string().when('enhancedAction', {
-      is: Joi.string().valid('add-item', 're-order'),
-      then: Joi.string().optional().allow(''),
-      otherwise: Joi.string().trim().required().messages({
-        '*': 'Enter item text'
-      })
+    is: 'save-item',
+    then: Joi.string().trim().required().messages({
+      '*': 'Enter item text'
     }),
     otherwise: Joi.string().optional().allow('')
   }),
@@ -346,9 +342,11 @@ function getPaymentAmount(questionFields) {
   const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
     questionFields
   )
-  return paymentField?.options.amount
-    ? paymentField.options.amount.toFixed(2)
-    : undefined
+  const amount = paymentField?.options.amount
+  if (typeof amount !== 'number') {
+    return '0'
+  }
+  return amount === 0 ? '0' : amount.toFixed(2)
 }
 
 /**

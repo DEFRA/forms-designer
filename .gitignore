@@ -16,3 +16,4 @@ coverage
 
 */.pnp.*
 *.tsbuildinfo
+.gstack/

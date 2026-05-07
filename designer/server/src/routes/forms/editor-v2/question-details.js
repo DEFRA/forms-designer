@@ -16,7 +16,10 @@ import {
   dispatchToPageTitle,
   getValidationErrorsFromSession
 } from '~/src/lib/error-helper.js'
-import { mergeConditionalAmountsIntoOptions } from '~/src/lib/payment-conditional-amount-helpers.js'
+import {
+  hydrateConditionalAmountsFromComponent,
+  mergeConditionalAmountsIntoOptions
+} from '~/src/lib/payment-conditional-amount-helpers.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { savePaymentSecrets } from '~/src/lib/secrets.js'
 import {
@@ -26,7 +29,10 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
-import { requiresPageTitle } from '~/src/lib/utils.js'
+import {
+  getComponentFromDefinition,
+  requiresPageTitle
+} from '~/src/lib/utils.js'
 import {
   allSpecificSchemas,
   mapQuestionDetails
@@ -37,6 +43,12 @@ import { cannotResolveAllItems } from '~/src/models/forms/editor-v2/edit-list-re
 import * as viewModel from '~/src/models/forms/editor-v2/question-details.js'
 import { editorv2Path } from '~/src/models/links.js'
 import { getFormPage } from '~/src/routes/forms/editor-v2/helpers.js'
+import {
+  PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR,
+  buildInlineConditionalAmountError,
+  handleSaveConditionalAmount,
+  persistInlineConditionalAmountDraft
+} from '~/src/routes/forms/editor-v2/payment-conditional-amount-actions.js'
 import {
   handleListConflict,
   saveQuestion
@@ -171,6 +183,33 @@ export function missingPageTitleForMultipleQuestions(questionId, page) {
 }
 
 /**
+ * @param {QuestionSessionState} existing
+ * @param {string | undefined} questionType
+ * @param {string | undefined} listItemsData
+ * @returns {QuestionSessionState}
+ */
+function buildOverridenState(existing, questionType, listItemsData) {
+  // If the user switched question type within the session, drop type-specific
+  // session keys so e.g. PaymentField's conditionalAmounts don't bleed into
+  // a now-RadiosField question.
+  const carryOver =
+    existing.questionType && existing.questionType !== questionType
+      ? {}
+      : existing
+  return /** @type {QuestionSessionState} */ ({
+    ...carryOver,
+    questionType,
+    editRow: {
+      expanded: false
+    },
+
+    listItems:
+      /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
+      (JSON.parse(listItemsData ?? '[]'))
+  })
+}
+
+/**
  * @param { Request | Request<{ Payload: FormEditorInputQuestionDetails } > } request
  */
 export function overrideStateIfJsEnabled(request) {
@@ -189,20 +228,62 @@ export function overrideStateIfJsEnabled(request) {
       'stateId' in params ? /** @type {string} */ (params.stateId) : 'unknown'
 
     if (jsEnabled) {
-      const overridenState = /** @type {QuestionSessionState} */ ({
+      const existing = getQuestionSessionState(request.yar, stateId) ?? {}
+      const overridenState = buildOverridenState(
+        existing,
         questionType,
-        editRow: {
-          expanded: false
-        },
-
-        listItems:
-          /** @type { { text?: string, hint?: { id?: string; text: string }, value?: string, id?: string }[]} */
-          (JSON.parse(listItemsData ?? '[]'))
-      })
+        listItemsData
+      )
       setQuestionSessionState(request.yar, stateId, overridenState)
     }
   }
   return undefined
+}
+
+/**
+ * Returns an anchor when the inline conditional-amount save needs to
+ * round-trip back to the editor. Returns null when the caller should
+ * continue with the normal save flow. Mutates session state.
+ * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
+ * @param {string} stateId
+ * @param {FormDefinition} definition
+ * @param {string} pageId
+ * @param {string} questionId
+ * @param {ReturnType<typeof mapQuestionDetails> & { id?: string }} questionDetails
+ * @returns {string | null}
+ */
+function processInlineConditionalAmountSave(
+  request,
+  stateId,
+  definition,
+  pageId,
+  questionId,
+  questionDetails
+) {
+  const { yar } = request
+  const state = getQuestionSessionState(yar, stateId) ?? {}
+  if (!state.conditionalAmountEditRow?.expanded) {
+    return null
+  }
+  if (questionDetails.type === ComponentType.PaymentField) {
+    const hydrated = hydrateConditionalAmountsFromComponent(
+      getComponentFromDefinition(definition, pageId, questionId),
+      state
+    )
+    if (hydrated !== state) {
+      setQuestionSessionState(yar, stateId, hydrated)
+    }
+  }
+  handleSaveConditionalAmount(request, stateId)
+  const stateAfter = getQuestionSessionState(yar, stateId) ?? {}
+  if (stateAfter.conditionalAmountEditRow?.expanded) {
+    setQuestionSessionState(yar, stateId, {
+      ...stateAfter,
+      questionDetails
+    })
+    return PAYMENT_CONDITIONAL_AMOUNTS_ANCHOR
+  }
+  return null
 }
 
 /**
@@ -224,6 +305,24 @@ export function chooseResolutionRoute(request, h, stateId) {
 
   const { pathname } = request.url
   return h.redirect(`${pathname}/resolve`).code(StatusCodes.SEE_OTHER)
+}
+
+/**
+ * @param {unknown} err
+ * @param {FormDefinition} definition
+ * @param {Request<any>} request
+ * @param {ResponseToolkit<any>} h
+ */
+function handleSaveQuestionError(err, definition, request, h) {
+  const joiErr = handleInvalidFormErrors(err, definition)
+  if (joiErr) {
+    return redirectWithErrors(request, h, joiErr, errorKey, '#')
+  }
+  const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
+  if (error) {
+    return redirectWithErrors(request, h, error, errorKey, '#')
+  }
+  throw err
 }
 
 export default [
@@ -340,11 +439,17 @@ export default [
         id: questionId !== 'new' ? questionId : undefined
       }
 
-      // Intercept operations if say a radio or checkbox
+      const { page, metadata, definition } = await getFormPage(
+        slug,
+        pageId,
+        token
+      )
+
       const redirectAnchorOrUrl = handleEnhancedActionOnPost(
         request,
         stateId,
-        questionDetails
+        questionDetails,
+        definition
       )
       if (redirectAnchorOrUrl) {
         return redirectWithAnchorOrUrl(
@@ -357,13 +462,6 @@ export default [
         )
       }
 
-      // Save page and first question
-      const { page, metadata, definition } = await getFormPage(
-        slug,
-        pageId,
-        token
-      )
-
       // Ensure there's a page title when adding multiple questions
       if (missingPageTitleForMultipleQuestions(questionId, page)) {
         return dispatchToPageTitle(
@@ -373,6 +471,24 @@ export default [
         )
       }
 
+      const inlineRedirect = processInlineConditionalAmountSave(
+        request,
+        stateId,
+        definition,
+        pageId,
+        questionId,
+        questionDetails
+      )
+      if (inlineRedirect) {
+        return redirectWithAnchorOrUrl(
+          h,
+          slug,
+          pageId,
+          questionId,
+          stateId,
+          inlineRedirect
+        )
+      }
       const state = getQuestionSessionState(yar, stateId) ?? {}
 
       if (isExistingAutocomplete(questionId, questionDetails.type)) {
@@ -392,9 +508,21 @@ export default [
         }
       }
 
+      // If session was evicted between GET and POST (Redis TTL, server restart),
+      // hydrate state.conditionalAmounts from the persisted component so the merge
+      // preserves on-disk conditional amounts. The hydrate is idempotent — does
+      // nothing when state already knows about conditionalAmounts.
+      const hydratedState =
+        questionDetails.type === ComponentType.PaymentField
+          ? hydrateConditionalAmountsFromComponent(
+              getComponentFromDefinition(definition, pageId, questionId),
+              state
+            )
+          : state
+
       const questionDetailsToSave = mergeConditionalAmountsIntoOptions(
         questionDetails,
-        state
+        hydratedState
       )
 
       try {
@@ -428,16 +556,7 @@ export default [
           .redirect(editorv2Path(slug, `page/${finalPageId}/questions`))
           .code(StatusCodes.SEE_OTHER)
       } catch (err) {
-        const joiErr = handleInvalidFormErrors(err, definition)
-        if (joiErr) {
-          return redirectWithErrors(request, h, joiErr, errorKey, '#')
-        }
-
-        const error = checkBoomError(/** @type {Boom.Boom} */ (err), errorKey)
-        if (error) {
-          return redirectWithErrors(request, h, error, errorKey, '#')
-        }
-        throw err
+        return handleSaveQuestionError(err, definition, request, h)
       }
     },
     options: {
@@ -446,6 +565,26 @@ export default [
         payload: schema,
         failAction: (request, h, error) => {
           overrideStateIfJsEnabled(request)
+          const stateId = /** @type {{ stateId?: string }} */ (request.params)
+            .stateId
+          const typedRequest =
+            /** @type {Request<{ Payload: FormEditorInputQuestionDetails }>} */ (
+              /** @type {unknown} */ (request)
+            )
+          if (stateId) {
+            persistInlineConditionalAmountDraft(typedRequest, stateId)
+          }
+          const inlineError = stateId
+            ? buildInlineConditionalAmountError(typedRequest, stateId)
+            : null
+          if (inlineError && error instanceof Joi.ValidationError) {
+            const merged = new Joi.ValidationError(
+              error.message,
+              [...error.details, ...inlineError.details],
+              error._original
+            )
+            return redirectWithErrors(request, h, merged, errorKey, '#')
+          }
           return redirectWithErrors(request, h, error, errorKey, '#')
         }
       },
@@ -461,7 +600,7 @@ export default [
 ]
 
 /**
- * @import { FormEditorInputQuestionDetails, Item, ListItem, Page, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { FormDefinition, FormEditorInputQuestionDetails, Item, ListItem, Page, QuestionSessionState, FormEditorInputQuestion } from '@defra/forms-model'
  * @import Boom from '@hapi/boom'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

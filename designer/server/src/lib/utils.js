@@ -302,7 +302,7 @@ export function requiresPageTitle(page) {
  * @param {number} precision - number of decimal places allowed
  */
 export function handlePrecision(value, helpers, precision) {
-  if (!value || typeof value !== 'number') {
+  if (typeof value !== 'number') {
     return helpers.error('any.required')
   }
 
