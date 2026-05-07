@@ -116,12 +116,10 @@ export function referenceNumberSettingsViewModel(
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
-      `Check your answers, ${pageHeading.toLowerCase()}`,
+      `Edit settings, ${pageHeading.toLowerCase()}`,
       formTitle
     ),
     fields,
-    cardTitle: pageHeading,
-    cardHeading: pageHeading,
     tabConfig: getCheckAnswersTabConfig(
       metadata.slug,
       pageId,

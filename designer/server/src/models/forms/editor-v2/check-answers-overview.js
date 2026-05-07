@@ -162,11 +162,9 @@ export function checkAnswersSettingsBaseViewModel(
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
-      `Check your answers, ${pageHeading.toLowerCase()}`,
+      `Edit settings, ${pageHeading.toLowerCase()}`,
       formTitle
     ),
-    cardTitle: pageHeading,
-    cardHeading: pageHeading,
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
@@ -193,7 +191,7 @@ export function checkAnswersSettingsBaseViewModel(
 export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   const { title: formTitle, slug } = metadata
   const pageTitle = 'Check answers page overview'
-  const mastheadHeading = 'Check your answers, page overview'
+  const mastheadHeading = 'Edit settings, page overview'
   const formPath = formOverviewPath(slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -227,7 +225,6 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
     slug,
     pageTitle,
     cardTitle: PAGE_OVERVIEW_TITLE,
-    cardHeading: 'Page overview settings',
     tabConfig: getCheckAnswersTabConfig(
       slug,
       pageId,

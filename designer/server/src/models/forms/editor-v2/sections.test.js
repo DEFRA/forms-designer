@@ -36,7 +36,6 @@ describe('sections model', () => {
       )
 
       expect(result.pageTitle).toBe('Add and organise sections')
-      expect(result.cardTitle).toBe('Sections')
       expect(result.sections).toEqual([])
       expect(result.unassignedPages).toHaveLength(1)
       expect(result.unassignedPages[0].id).toBe('p1')

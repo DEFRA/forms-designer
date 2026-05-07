@@ -21,7 +21,6 @@ import {
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   CHECK_ANSWERS_TAB_SECTIONS,
-  TAB_TITLE_SECTIONS,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
@@ -143,13 +142,12 @@ export function sectionsViewModel(
     ...baseModelFields(
       slug,
       `${pageTitle} - ${formTitle}`,
-      `Check your answers, ${TAB_TITLE_SECTIONS.toLowerCase()}`,
+      `Edit settings, sections`,
       formTitle
     ),
     pageId,
     slug,
     pageTitle,
-    cardTitle: TAB_TITLE_SECTIONS,
     tabConfig: getCheckAnswersTabConfig(
       slug,
       pageId,

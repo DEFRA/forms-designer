@@ -37,15 +37,11 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const { container, document } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText(
-      'Check your answers, page overview'
-    )
+    const $mastheadHeading = container.getByText('Edit settings, page overview')
     const $mastheadCaption = container.getByText('Test form')
     const $pageOverviewLinks = container.getAllByText('Page overview')
 
-    expect($mastheadHeading).toHaveTextContent(
-      'Check your answers, page overview'
-    )
+    expect($mastheadHeading).toHaveTextContent('Edit settings, page overview')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($mastheadCaption).toHaveClass('app-masthead__caption')
     expect($pageOverviewLinks.length).toBeGreaterThan(0)
