@@ -48,6 +48,10 @@ describe('Editor v2 question routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
     // Ensure mergeQuestionSessionState is properly mocked

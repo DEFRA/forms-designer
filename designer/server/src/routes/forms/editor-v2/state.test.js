@@ -23,6 +23,10 @@ describe('Editor v2 state route', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('POST - should error if missing fields', async () => {
     jest
       .mocked(getQuestionSessionState)

@@ -31,6 +31,10 @@ describe('Editor v2 pages routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   const testForm = buildDefinition({
     ...testFormDefinitionWithSummaryOnly,
     schema: SchemaVersion.V2,

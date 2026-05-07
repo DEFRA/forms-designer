@@ -31,6 +31,10 @@ describe('Create and edit user routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     const expectedUser = {
       id: 'guid',
