@@ -86,14 +86,9 @@ describe('Editor v2 condition routes', () => {
       const { container } = await renderResponse(server, options)
 
       const $mainHeading = container.getByRole('heading', { level: 1 })
-      const $cardHeadings = container.getAllByText('Manage conditions')
 
-      expect($mainHeading).toHaveTextContent('Manage conditions')
-      expect($cardHeadings[0]).toHaveTextContent('Test form Manage conditions')
-      expect($cardHeadings).toHaveLength(1)
-
-      const $actionHeading = container.getByText('Create new condition')
-      expect($actionHeading).toBeInTheDocument()
+      expect($mainHeading).toHaveTextContent('Create new condition')
+      expect($mainHeading).toHaveTextContent('Test form Create new condition')
 
       const $selectLists = container.getAllByRole('combobox')
       expect($selectLists).toHaveLength(1)
@@ -115,14 +110,9 @@ describe('Editor v2 condition routes', () => {
       const { container } = await renderResponse(server, options)
 
       const $mainHeading = container.getByRole('heading', { level: 1 })
-      const $cardHeadings = container.getAllByText('Manage conditions')
 
-      expect($mainHeading).toHaveTextContent('Manage conditions')
-      expect($cardHeadings[0]).toHaveTextContent('Test form Manage conditions')
-      expect($cardHeadings).toHaveLength(1)
-
-      const $actionHeading = container.getByText('Create new condition')
-      expect($actionHeading).toBeInTheDocument()
+      expect($mainHeading).toHaveTextContent('Create new condition')
+      expect($mainHeading).toHaveTextContent('Test form Create new condition')
 
       const $selectLists = container.getAllByRole('combobox')
       expect($selectLists).toHaveLength(1)

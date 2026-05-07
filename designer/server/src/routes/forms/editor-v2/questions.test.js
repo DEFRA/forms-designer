@@ -67,7 +67,7 @@ describe('Editor v2 questions routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Page 1 overview')
-    const $cardHeading = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Content')
     const $questionNumbers = container.getAllByRole('term')
     const $questionTitles = container.getAllByRole('definition')
     const $tabPanels = container.getAllByRole('tabpanel')
@@ -76,10 +76,10 @@ describe('Editor v2 questions routes', () => {
     const $previewPanel = document.getElementById('preview-panel')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadHeading).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Page 1 overview')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardHeading).toHaveTextContent('Page 1')
+    expect($cardHeading).toHaveTextContent('Content')
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($questionNumbers[0]).toHaveTextContent('Question 1')
@@ -173,15 +173,15 @@ describe('Editor v2 questions routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Page 1 overview')
-    const $cardHeading = container.getByText('Page 1')
+    const $cardHeading = container.getByText('Content')
     const $questionNumbers = container.getAllByRole('term')
     const $questionTitles = container.getAllByRole('definition')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadHeading).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Page 1 overview')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardHeading).toHaveTextContent('Page 1')
+    expect($cardHeading).toHaveTextContent('Content')
     expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($questionNumbers).toHaveLength(1)

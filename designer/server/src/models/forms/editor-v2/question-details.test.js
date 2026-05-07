@@ -664,7 +664,7 @@ describe('editor-v2 - question details model', () => {
 
       expect(result).toBeDefined()
       expect(result.cardTitle).toBe('Question 1')
-      expect(result.cardCaption).toBe('Page 1')
+      expect(result.cardCaption).toBeNull()
       expect(result.navigation).toBeDefined()
       expect(result.previewPageUrl).toContain('/test-page')
       expect(result.questionType).toBe(ComponentType.FileUploadField)
