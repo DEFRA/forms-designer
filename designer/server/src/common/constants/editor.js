@@ -103,6 +103,7 @@ export const QuestionBaseSettings = {
   AutoCompleteOptions: 'autoCompleteOptions',
   UsePostcodeLookup: 'usePostcodeLookup',
   PaymentAmount: 'paymentAmount',
+  PaymentConditionalAmounts: 'paymentConditionalAmounts',
   PaymentDescription: 'paymentDescription',
   PaymentTestApiKey: 'paymentTestApiKey',
   PaymentLiveApiKey: 'paymentLiveApiKey'
@@ -133,7 +134,8 @@ export const QuestionAdvancedSettings =
     InstructionText: 'instructionText',
     MinChecks: 'minChecks',
     MaxChecks: 'maxChecks',
-    ExactChecks: 'exactChecks'
+    ExactChecks: 'exactChecks',
+    Countries: 'countries'
   }
 
 /**
@@ -180,5 +182,8 @@ export const EnhancedAction = {
   DoneReordering: 'done-reordering',
   SaveItem: 'save-item',
   Up: 'up',
-  Down: 'down'
+  Down: 'down',
+  AddConditionalAmount: 'add-conditional-amount',
+  SaveConditionalAmount: 'save-conditional-amount',
+  CancelConditionalAmount: 'cancel-conditional-amount'
 }

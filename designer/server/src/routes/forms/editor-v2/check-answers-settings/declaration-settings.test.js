@@ -26,6 +26,10 @@ describe('Editor v2 check-answers-settings routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should render radio group in the view when no declaration', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

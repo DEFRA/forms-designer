@@ -23,6 +23,10 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should render checkbox in the view when confirmation email is enabled', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

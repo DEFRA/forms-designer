@@ -26,6 +26,10 @@ describe('Editor v2 reference-number-settings routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should render checkbox in the view when reference number is enabled', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest

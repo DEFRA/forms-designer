@@ -147,6 +147,11 @@ export class QuestionPreviewElements {
    * @protected
    */
   _paymentDescription = ''
+  /**
+   * @type {Array<{ amount: number, condition: string }>}
+   * @protected
+   */
+  _paymentConditionalAmounts = []
 
   afterInputsHTML = '<div class="govuk-inset-text">No items added yet.</div>'
 
@@ -197,6 +202,10 @@ export class QuestionPreviewElements {
     },
     paymentDescription: (field, instance) => {
       instance._paymentDescription = getValueAsString(field)
+    },
+    paymentConditionalAmounts: (_field, _instance) => {
+      // No-op here: conditionalAmounts live in session state, not on the
+      // GovukField. They're seeded from state in the constructor below.
     }
   }
 
@@ -212,6 +221,9 @@ export class QuestionPreviewElements {
       }
     })
     this._items = getListFromState(state)
+    this._paymentConditionalAmounts = (state?.conditionalAmounts ?? []).map(
+      ({ amount, condition }) => ({ amount, condition })
+    )
   }
 
   get values() {
@@ -230,7 +242,8 @@ export class QuestionPreviewElements {
       // Only include instructionText if giveInstructions is checked
       instructionText: this._giveInstructions ? this._instructionText : '',
       paymentAmount: this._paymentAmount,
-      paymentDescription: this._paymentDescription
+      paymentDescription: this._paymentDescription,
+      paymentConditionalAmounts: this._paymentConditionalAmounts
     }
   }
 

@@ -103,6 +103,7 @@ export interface LocationElements extends DomElementsBase {
 export interface PaymentSettings extends BaseSettings {
   paymentAmount: number
   paymentDescription: string
+  paymentConditionalAmounts: { amount: number; condition: string }[]
 }
 
 export interface PaymentElements extends DomElementsBase {

@@ -31,6 +31,10 @@ describe('Editor v2 list item delete routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should render correct content in the view when deleting a list item', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest.mocked(getQuestionSessionState).mockReturnValueOnce(mockState)

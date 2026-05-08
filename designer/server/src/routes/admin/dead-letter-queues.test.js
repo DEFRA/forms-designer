@@ -1,14 +1,16 @@
 import { DeadLetterQueues } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
+import { sessionNames } from '~/src/common/constants/session-names.js'
 import { createServer } from '~/src/createServer.js'
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
 } from '~/src/lib/dead-letter-queue.js'
-import { validateMessageJson } from '~/src/routes/admin/dead-letter-queues.js'
+import { validateMessageJson } from '~/src/routes/admin/dead-letter-queue-helper.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -402,9 +404,15 @@ describe('Dead-letter queues routes', () => {
     test('should resubmit if resubmit button pressed when valid JSON', async () => {
       jest.mocked(resubmitDeadLetterQueueMessage).mockResolvedValue()
 
+      jest.mocked(getDeadLetterQueueMessage).mockResolvedValue({
+        MessageId: 'message-id',
+        Body: '{ "field1": "value1" }',
+        ReceiptHandle: 'rec-handle'
+      })
+
       const options = {
         method: 'post',
-        url: '/admin/dead-letter-queues/audit-api/modify/12345',
+        url: '/admin/dead-letter-queues/notify-listener/modify/message-id',
         auth,
         payload: {
           messageJson: JSON.stringify(validJsonMessage)
@@ -415,10 +423,10 @@ describe('Dead-letter queues routes', () => {
         response: { statusCode, headers }
       } = await renderResponse(server, options)
 
-      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(resubmitDeadLetterQueueMessage).toHaveBeenCalledWith(
-        'audit-api',
-        '12345',
+        'notify-listener',
+        'message-id',
         validJsonMessage.Body,
         expect.any(String)
       )
@@ -428,21 +436,61 @@ describe('Dead-letter queues routes', () => {
 
   describe('validMessageJson', () => {
     it('should return error when invalid JSON', () => {
-      const { error } = validateMessageJson('{ "abc": "123"')
+      const { error } = validateMessageJson(
+        DeadLetterQueues.SubmissionsApiSaveAndExit,
+        '{ "abc": "123"'
+      )
       expect(error?.message).toBe(
         "Invalid JSON: Expected ',' or '}' after property value in JSON at position 14 (line 1 column 15)"
       )
     })
 
     it('should return error when valid JSON but no Body element', () => {
-      const { error } = validateMessageJson('{ "abc": "123" }')
+      const { error } = validateMessageJson(
+        DeadLetterQueues.SubmissionsApiSaveAndExit,
+        '{ "abc": "123" }'
+      )
       expect(error?.message).toBe('Invalid JSON: Missing "Body" element')
     })
 
     it('should return error when valid JSON but invalid Body schema', () => {
-      const { error } = validateMessageJson('{ "Body": {} }')
+      const { error } = validateMessageJson(
+        DeadLetterQueues.SubmissionsApiSaveAndExit,
+        '{ "Body": {} }'
+      )
       expect(error?.message).toBe(
-        'JSON does not match the schema: "meta" is required, "data" is required, "result" is required'
+        'JSON does not match the schema: "schemaVersion" is required, "category" is required, "source" is required, "createdAt" is required, "messageCreatedAt" is required'
+      )
+    })
+  })
+
+  describe('modify-redirect', () => {
+    test('should redirect and flash json payload', async () => {
+      const options = {
+        method: 'post',
+        url: '/admin/dead-letter-queues/audit-api/modify-redirect/message-id',
+        auth,
+        payload: {
+          messageJsonText: '{ "text": "some json content" }'
+        }
+      }
+
+      const {
+        response: { statusCode, headers, request }
+      } = await renderResponse(server, options)
+
+      const jsonResult = request.yar.flash(
+        sessionNames.validationFailure.deadLetterQueues
+      )
+
+      expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(jsonResult).toEqual([
+        {
+          formValues: { messageJsonExisting: '{ "text": "some json content" }' }
+        }
+      ])
+      expect(headers.location).toBe(
+        '/admin/dead-letter-queues/audit-api/modify/message-id'
       )
     })
   })

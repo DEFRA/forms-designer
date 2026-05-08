@@ -2,6 +2,7 @@ import { DeadLetterQueues } from '@defra/forms-model'
 
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   getEndpoint,
   redriveDeadLetterQueueMessages,
@@ -59,6 +60,62 @@ describe('dead-letter queue lib functions', () => {
         expect.anything()
       )
       expect(res).toEqual(['message1'])
+    })
+
+    it('should call endpoint with extra query params', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { messages: ['message1'] } })
+      const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
+      const res = await getDeadLetterQueueMessages(dlq, 'token', {
+        visibilityTimeout: 5,
+        waitTimeSeconds: 10
+      })
+      expect(getJson).toHaveBeenCalledWith(
+        new URL(
+          'http://localhost:3002/admin/deadletter/form-submissions/view?visibilityTimeout=5&waitTimeSeconds=10'
+        ),
+        expect.anything()
+      )
+      expect(res).toEqual(['message1'])
+    })
+  })
+
+  describe('getDeadLetterQueueMessage', () => {
+    it('should call endpoint', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'message1' } })
+      const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
+      const res = await getDeadLetterQueueMessage(dlq, 'message-id', 'token')
+      expect(getJson).toHaveBeenCalledWith(
+        new URL(
+          'http://localhost:3002/admin/deadletter/form-submissions/view/message-id'
+        ),
+        expect.anything()
+      )
+      expect(res).toBe('message1')
+    })
+
+    it('should call endpoint with extra query params', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { message: 'message1' } })
+      const dlq = DeadLetterQueues.SubmissionsApiFormSubmissions
+      const res = await getDeadLetterQueueMessage(dlq, 'message-id', 'token', {
+        visibilityTimeout: 5,
+        waitTimeSeconds: 10
+      })
+      expect(getJson).toHaveBeenCalledWith(
+        new URL(
+          'http://localhost:3002/admin/deadletter/form-submissions/view/message-id?visibilityTimeout=5&waitTimeSeconds=10'
+        ),
+        expect.anything()
+      )
+      expect(res).toBe('message1')
     })
   })
 

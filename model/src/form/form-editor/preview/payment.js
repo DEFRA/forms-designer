@@ -38,12 +38,19 @@ export class PaymentComponentPreviewElements extends QuestionComponentElements {
   _paymentDescription = ''
 
   /**
+   * @type {Array<{ amount: number, condition: string }>}
+   * @protected
+   */
+  _paymentConditionalAmounts = []
+
+  /**
    * @param {PaymentFieldComponent} component
    */
   constructor(component) {
     super(component)
     this._paymentAmount = component.options.amount
     this._paymentDescription = component.options.description
+    this._paymentConditionalAmounts = component.options.conditionalAmounts ?? []
   }
 
   /**
@@ -53,7 +60,8 @@ export class PaymentComponentPreviewElements extends QuestionComponentElements {
     return {
       ...super.values,
       paymentAmount: this._paymentAmount,
-      paymentDescription: this._paymentDescription
+      paymentDescription: this._paymentDescription,
+      paymentConditionalAmounts: this._paymentConditionalAmounts
     }
   }
 }
@@ -83,6 +91,12 @@ export class PaymentQuestion extends Question {
   _paymentDescription = ''
 
   /**
+   * @type {Array<{ amount: number, condition: string }>}
+   * @protected
+   */
+  _paymentConditionalAmounts = []
+
+  /**
    * @param {PaymentElements} htmlElements
    * @param {QuestionRenderer} questionRenderer
    */
@@ -90,6 +104,8 @@ export class PaymentQuestion extends Question {
     super(htmlElements, questionRenderer)
     this._paymentAmount = htmlElements.values.paymentAmount
     this._paymentDescription = htmlElements.values.paymentDescription
+    this._paymentConditionalAmounts =
+      htmlElements.values.paymentConditionalAmounts
   }
 
   get paymentAmount() {
@@ -116,19 +132,39 @@ export class PaymentQuestion extends Question {
     this.render()
   }
 
+  get paymentConditionalAmounts() {
+    return this._paymentConditionalAmounts
+  }
+
+  /**
+   * @param {Array<{ amount: number, condition: string }>} val
+   */
+  set paymentConditionalAmounts(val) {
+    this._paymentConditionalAmounts = val
+    this.render()
+  }
+
+  /**
+   * Returns the amount the preview should display: the default amount when it
+   * is non-zero, otherwise the first conditional amount, otherwise zero.
+   * @protected
+   * @returns {number}
+   */
+  _displayAmount() {
+    if (typeof this._paymentAmount === 'number' && this._paymentAmount > 0) {
+      return this._paymentAmount
+    }
+    return this._paymentConditionalAmounts[0]?.amount ?? 0
+  }
+
   /**
    * @protected
    * @returns {PaymentModel}
    */
   _renderInput() {
-    const amount =
-      typeof this._paymentAmount === 'number'
-        ? formatCurrency(this._paymentAmount)
-        : '£0.00'
-
     return {
       ...super._renderInput(),
-      amount,
+      amount: formatCurrency(this._displayAmount()),
       description: this._paymentDescription || 'Payment description',
       headingClasses: 'govuk-heading-m'
     }

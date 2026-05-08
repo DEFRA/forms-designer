@@ -19,6 +19,8 @@ export interface FormTotalsMetric {
   allTime?: Record<FormMetricName, FormTotalMetric>
   liveSubmissions?: Record<string, number>
   draftSubmissions?: Record<string, number>
+  daysToPublish?: Record<string, number>
+  republished?: Record<string, number>
   updatedAt: Date
 }
 

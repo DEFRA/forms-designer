@@ -80,7 +80,8 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.InstructionText,
       QuestionAdvancedSettings.Classes
     ],
-    HiddenField: []
+    HiddenField: [],
+    GeospatialField: [QuestionAdvancedSettings.Countries]
   })
 
 /**
@@ -327,6 +328,44 @@ export const allAdvancedSettingsFields =
         text: 'The maximum number of checkboxes a user can select'
       },
       classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.Countries]: {
+      name: 'countries',
+      id: 'countries',
+      classes: 'govuk-radios--small',
+      fieldset: {
+        legend: {
+          text: 'Which country must the features be in?',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      formGroup: { classes: 'app-settings-radios' },
+      items: [
+        {
+          value: 'england',
+          text: 'England'
+        },
+        {
+          value: 'wales',
+          text: 'Wales'
+        },
+        {
+          value: 'northern-ireland',
+          text: 'Northern Ireland'
+        },
+        {
+          value: 'scotland',
+          text: 'Scotland'
+        },
+        {
+          divider: 'or'
+        },
+        {
+          value: 'any',
+          text: 'Any'
+        }
+      ]
     }
   })
 

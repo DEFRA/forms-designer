@@ -1,5 +1,6 @@
 import config from '~/src/config.js'
-import { getJson } from '~/src/lib/fetch.js'
+import { getJson, postJson } from '~/src/lib/fetch.js'
+import { getHeaders } from '~/src/lib/utils.js'
 
 const metricsEndpoint = new URL('/report/', config.auditUrl)
 
@@ -16,6 +17,17 @@ export async function getMetrics() {
   const { body } = await getJsonByType(requestUrl)
 
   return body
+}
+
+/**
+ * Regenerate the full set of metrics afresh (clears the 'mertics' DB and repopulates)
+ * @param {string} token
+ */
+export async function regenerateMetrics(token) {
+  const requestUrl = new URL('regenerate', metricsEndpoint)
+  await postJson(requestUrl, {
+    ...getHeaders(token)
+  })
 }
 
 /**

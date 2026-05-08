@@ -7,5 +7,7 @@ export enum FormMetricType {
 export enum FormMetricName {
   NewFormsCreated = 'NewFormsCreated',
   FormsPublished = 'FormsPublished',
-  Submissions = 'Submissions'
+  Submissions = 'Submissions',
+  FormsInDraft = 'FormsInDraft',
+  TimeToPublish = 'TimeToPublish'
 }

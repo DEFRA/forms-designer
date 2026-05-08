@@ -36,29 +36,35 @@ export function metricsFormActivityViewModel(metrics) {
     )
   })
 
-  // Create a map of submission counts per form for quicker lookups
-  // (one for draft and one for live)
-  const formSubmissionCountsLive = new Map()
-  for (const [formId, count] of Object.entries(
-    metrics.totals.liveSubmissions ?? {}
-  )) {
-    formSubmissionCountsLive.set(formId, count)
-  }
-  const formSubmissionCountsDraft = new Map()
-  for (const [formId, count] of Object.entries(
-    metrics.totals.draftSubmissions ?? {}
-  )) {
-    formSubmissionCountsDraft.set(formId, count)
-  }
+  // Create a map of certain counts per form for quicker lookups
+  const formSubmissionCountsLive = createFormMap(metrics.totals.liveSubmissions)
+  const formSubmissionCountsDraft = createFormMap(
+    metrics.totals.draftSubmissions
+  )
+  const formDaysToPublish = createFormMap(metrics.totals.daysToPublish)
+  const formRepublished = createFormMap(metrics.totals.republished)
 
   return {
     overviewMetrics: mapTotalMetrics(metrics.totals, tilePeriodNames),
     formMetricRows: mapOverviewMetrics(
       overviewsSorted,
       formSubmissionCountsDraft,
-      formSubmissionCountsLive
+      formSubmissionCountsLive,
+      formDaysToPublish,
+      formRepublished
     )
   }
+}
+
+/**
+ * @param {Record<string, number> | undefined} metricValues
+ */
+function createFormMap(metricValues) {
+  const formMap = new Map()
+  for (const [formId, count] of Object.entries(metricValues ?? {})) {
+    formMap.set(formId, count)
+  }
+  return formMap
 }
 
 /**

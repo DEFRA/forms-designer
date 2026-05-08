@@ -1,4 +1,3 @@
-import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-plugin/engine/types/schema.js'
 import { DeadLetterQueues, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -9,6 +8,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import {
   deleteDeadLetterQueueMessage,
+  getDeadLetterQueueMessage,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
@@ -20,6 +20,10 @@ import {
   deleteDeadLetterMessageConfirmationViewModel,
   redriveDeadLetterQueueConfirmationViewModel
 } from '~/src/models/manage/dead-letter-queue.js'
+import {
+  dlqMessagesMapper,
+  validateMessageJson
+} from '~/src/routes/admin/dead-letter-queue-helper.js'
 
 export const ROUTE_FULL_PATH = '/admin/dead-letter-queues'
 const CONFIRMATION_PAGE_PATH = 'forms/confirmation-page'
@@ -67,68 +71,14 @@ const dlqActionPayloadSchema = Joi.object().keys({
 })
 
 /**
- * @param {string} messageJson
+ * @param {any} json
  */
-export function validateMessageJson(messageJson) {
-  let json
-  try {
-    json = JSON.parse(messageJson)
-  } catch (err) {
-    const typedError = /** @type {{ message?: string }} */ (err)
-    return {
-      error: createJoiError(
-        'messageJson',
-        `Invalid JSON: ${typedError.message}`
-      )
-    }
+function formatJsonForAudit(json) {
+  const jsonOut = {
+    MessageId: json.MessageId,
+    Body: JSON.parse(json.Body)
   }
-
-  /**
-   * @type { FormAdapterSubmissionMessagePayload | undefined }
-   */
-  const messageBody = json.Body
-  if (!messageBody) {
-    return {
-      error: createJoiError(
-        'messageJson',
-        'Invalid JSON: Missing "Body" element'
-      )
-    }
-  }
-
-  const { error } = formAdapterSubmissionMessagePayloadSchema.validate(
-    messageBody,
-    {
-      abortEarly: false,
-      stripUnknown: true
-    }
-  )
-  if (error) {
-    const errorText = error.details.map((d) => d.message).join(', ')
-    const joiError = createJoiError(
-      'messageJson',
-      `JSON does not match the schema: ${errorText}`
-    )
-    return {
-      error: joiError
-    }
-  }
-  return {
-    body: messageBody
-  }
-}
-
-/**
- * Keep specific properties
- * @param {any[]} messages
- */
-export function dlqMessageMapper(messages) {
-  return messages.map((m) => ({
-    json: {
-      MessageId: m.MessageId,
-      Body: JSON.parse(m.Body)
-    }
-  }))
+  return JSON.stringify(jsonOut, null, 2)
 }
 
 export function generateTitling() {
@@ -154,7 +104,10 @@ export async function getMessageCounts(token) {
   const radioItems = []
   for (const dlq of Object.values(DeadLetterQueues)) {
     try {
-      const messages = await getDeadLetterQueueMessages(dlq, token)
+      const messages = await getDeadLetterQueueMessages(dlq, token, {
+        visibilityTimeout: 0,
+        waitTimeSeconds: 0
+      })
       const countSuffix = messages.length === 1 ? 'message' : 'messages'
       radioItems.push({
         value: dlq,
@@ -283,9 +236,14 @@ export default [
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
+      // Validation errors
+      const validation = yar
+        .flash(sessionNames.validationFailure.deadLetterQueues)
+        .at(0)
+
       const messages = await getDeadLetterQueueMessages(dlq, token)
 
-      const mappedMessages = dlqMessageMapper(messages)
+      const mappedMessages = dlqMessagesMapper(messages)
 
       // Saved banner
       const notification = /** @type {string[] | undefined} */ (
@@ -304,7 +262,8 @@ export default [
           text: dlq
         },
         messages: mappedMessages,
-        queueName: dlq
+        queueName: dlq,
+        errorList: buildErrorList(validation?.formErrors)
       })
     },
     options: {
@@ -434,14 +393,46 @@ export default [
   }),
 
   /**
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJsonText: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: `${ROUTE_FULL_PATH}/{dlq}/modify-redirect/{messageId}`,
+    handler(request, h) {
+      const { params, payload, yar } = request
+      const { dlq, messageId } = params
+      const { messageJsonText } = payload
+
+      yar.flash(sessionNames.validationFailure.deadLetterQueues, {
+        formValues: { messageJsonExisting: messageJsonText }
+      })
+
+      return h
+        .redirect(`${ROUTE_FULL_PATH}/${dlq}/modify/${messageId}`)
+        .code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      validate: {
+        params: dlqModifyParamSchema
+      },
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.DeadLetterQueues}`]
+        }
+      }
+    }
+  }),
+
+  /**
    * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string } }>}
    */
   ({
     method: 'GET',
     path: `${ROUTE_FULL_PATH}/{dlq}/modify/{messageId}`,
-    async handler(request, h) {
-      const { auth, params, yar } = request
-      const { token } = auth.credentials
+    handler(request, h) {
+      const { params, yar } = request
       const { dlq, messageId } = params
 
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
@@ -450,12 +441,6 @@ export default [
       const validation = yar
         .flash(sessionNames.validationFailure.deadLetterQueues)
         .at(0)
-
-      const messages = await getDeadLetterQueueMessages(dlq, token)
-
-      const mappedMessage = dlqMessageMapper(messages).find(
-        (m) => m.json.MessageId === messageId
-      )
 
       const { formValues, formErrors } = validation ?? {}
 
@@ -467,7 +452,11 @@ export default [
         },
         value:
           formValues?.messageJson ??
-          JSON.stringify(mappedMessage?.json, null, 2),
+          JSON.stringify(
+            JSON.parse(formValues?.messageJsonExisting ?? '{}'),
+            null,
+            2
+          ),
         rows: 30,
         errorMessage: formErrors?.messageJson
           ? { text: formErrors.messageJson.text }
@@ -485,7 +474,9 @@ export default [
           text: dlq
         },
         messageJson,
-        queueName: dlq
+        messageId,
+        queueName: dlq,
+        messageJsonExisting: formValues?.messageJsonExisting
       })
     },
     options: {
@@ -503,7 +494,7 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string } }>}
+   * @satisfies {ServerRoute<{ Params: { dlq: DeadLetterQueues, messageId: string }, Payload: { messageJson: string  } }>}
    */
   ({
     method: 'POST',
@@ -514,7 +505,7 @@ export default [
       const { dlq, messageId } = params
       const { messageJson } = payload
 
-      const { error, body } = validateMessageJson(messageJson)
+      const { error, body } = validateMessageJson(dlq, messageJson)
       if (error) {
         return redirectWithErrors(
           request,
@@ -524,12 +515,27 @@ export default [
         )
       }
 
-      const messages = await getDeadLetterQueueMessages(dlq, token)
-      const originalMessage = dlqMessageMapper(messages).find(
-        (m) => m.json.MessageId === messageId
+      const origMessageJson = await getDeadLetterQueueMessage(
+        dlq,
+        messageId,
+        token
       )
+      if (!origMessageJson) {
+        const joiError = createJoiError(
+          'messageJson',
+          `Unable to find message id ${messageId} in ${dlq}`
+        )
+        return redirectWithErrors(
+          request,
+          h,
+          joiError,
+          sessionNames.validationFailure.deadLetterQueues
+        )
+      }
 
       await resubmitDeadLetterQueueMessage(dlq, messageId, body, token)
+
+      await deleteDeadLetterQueueMessage(dlq, messageId, token)
 
       const auditUser = mapUserForAudit(auth.credentials.user)
       await publishDlqActionEvent(
@@ -537,7 +543,7 @@ export default [
         MODIFY_AND_RESUBMIT,
         messageId,
         {
-          beforeJson: JSON.stringify(originalMessage),
+          beforeJson: formatJsonForAudit(origMessageJson),
           afterJson: messageJson
         },
         auditUser
@@ -548,12 +554,20 @@ export default [
         `The modified message has been submitted and the original message removed from DLQ '${dlq}'`
       )
 
-      return h.redirect(ROUTE_FULL_PATH)
+      return h.redirect(ROUTE_FULL_PATH).code(StatusCodes.SEE_OTHER)
     },
     options: {
       validate: {
         params: dlqModifyParamSchema,
-        payload: dlqModifyPayloadSchema
+        payload: dlqModifyPayloadSchema,
+        failAction: (request, h, err) => {
+          return redirectWithErrors(
+            request,
+            h,
+            err,
+            sessionNames.validationFailure.deadLetterQueues
+          )
+        }
       },
       auth: {
         mode: 'required',
@@ -568,5 +582,4 @@ export default [
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
- * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
  */

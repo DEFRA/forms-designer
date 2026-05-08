@@ -21,6 +21,10 @@ describe('Editor v2 page routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should check correct radio is rendered in the view', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 

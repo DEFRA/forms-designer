@@ -1,6 +1,7 @@
 import { ConditionType, OperatorName } from '@defra/forms-model'
 import {
   buildDefinition,
+  buildPaymentComponent,
   buildQuestionPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
@@ -385,6 +386,110 @@ describe('condition-references', () => {
 
       expect(result.pages).toHaveLength(0)
       expect(result.conditions).toHaveLength(0)
+    })
+
+    describe('PaymentField conditional amounts', () => {
+      it('returns the page+component when a PaymentField uses the condition in conditionalAmounts', () => {
+        const paymentComponent = buildPaymentComponent({
+          id: 'pf-1',
+          options: {
+            amount: 0,
+            description: 'Fee',
+            conditionalAmounts: [
+              { amount: 5, condition: conditionId },
+              { amount: 9, condition: 'other-condition' }
+            ]
+          }
+        })
+        const definition = buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: 'page1',
+              title: 'Pay',
+              components: [paymentComponent]
+            })
+          ],
+          conditions: [baseCondition]
+        })
+
+        const result = findConditionReferences(definition, conditionId)
+
+        expect(result.paymentFields).toEqual([
+          {
+            pageId: 'page1',
+            pageNumber: 1,
+            pageTitle: 'Pay',
+            componentId: 'pf-1'
+          }
+        ])
+      })
+
+      it('returns an empty paymentFields array when no PaymentField uses the condition', () => {
+        const definition = buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: 'page1',
+              components: [testComponent]
+            })
+          ],
+          conditions: [baseCondition]
+        })
+
+        const result = findConditionReferences(definition, conditionId)
+        expect(result.paymentFields).toEqual([])
+      })
+
+      it('handles a PaymentField with no conditionalAmounts (undefined options)', () => {
+        const paymentComponent = buildPaymentComponent({
+          id: 'pf-1',
+          options: { amount: 5, description: 'Fee' }
+        })
+        const definition = buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: 'page1',
+              components: [paymentComponent]
+            })
+          ],
+          conditions: [baseCondition]
+        })
+
+        const result = findConditionReferences(definition, conditionId)
+        expect(result.paymentFields).toEqual([])
+      })
+
+      it('finds the same condition referenced by both a page and a PaymentField', () => {
+        const paymentComponent = buildPaymentComponent({
+          id: 'pf-1',
+          options: {
+            amount: 0,
+            description: 'Fee',
+            conditionalAmounts: [{ amount: 5, condition: conditionId }]
+          }
+        })
+        const definition = buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: 'page1',
+              title: 'Question',
+              components: [testComponent],
+              condition: conditionId
+            }),
+            buildQuestionPage({
+              id: 'page2',
+              title: 'Pay',
+              components: [paymentComponent]
+            })
+          ],
+          conditions: [baseCondition]
+        })
+
+        const result = findConditionReferences(definition, conditionId)
+        expect(result.pages).toHaveLength(1)
+        expect(result.pages[0].pageId).toBe('page1')
+        expect(result.paymentFields).toHaveLength(1)
+        expect(result.paymentFields[0].pageId).toBe('page2')
+      })
     })
   })
 })

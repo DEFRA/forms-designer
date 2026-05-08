@@ -87,7 +87,8 @@ export default [
           resetSaveAndExit: scopes.includes(Scopes.ResetSaveAndExit),
           deadLetterQueues: scopes.includes(Scopes.DeadLetterQueues),
           formInspect: scopes.includes(Scopes.FormsInspect),
-          formMetrics: scopes.includes(Scopes.FormsInspect) // Scopes.FormsReport
+          formMetrics: scopes.includes(Scopes.FormsReport),
+          formMetricsRegen: scopes.includes(Scopes.RegenerateMetrics)
         }
       })
     },

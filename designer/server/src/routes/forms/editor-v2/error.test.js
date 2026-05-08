@@ -14,6 +14,10 @@ describe('Editor v2 error route', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should display error page', async () => {
     const options = {
       method: 'get',

@@ -2,6 +2,7 @@ import { ConditionType, OperatorName } from '@defra/forms-model'
 import {
   buildDefinition,
   buildMetaData,
+  buildPaymentComponent,
   buildQuestionPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
@@ -128,6 +129,75 @@ describe('editor-v2 - condition-delete model', () => {
       )
 
       expect(result.bodyWarning).not.toBeNull()
+      expect(result.bodyWarning?.html).toContain('<li>Page 1</li>')
+      expect(result.bodyWarning?.html).toContain('<li>Page 2</li>')
+    })
+
+    it('shows the "affects payments" warning when only PaymentField references the condition', () => {
+      const paymentComponent = buildPaymentComponent({
+        id: 'pf-1',
+        options: {
+          amount: 0,
+          description: 'Fee',
+          conditionalAmounts: [{ amount: 5, condition: conditionId }]
+        }
+      })
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            components: [paymentComponent]
+          })
+        ],
+        conditions: [mockConditionV2]
+      })
+
+      const result = deleteConditionConfirmationPageViewModel(
+        metadata,
+        definition,
+        conditionId
+      )
+
+      expect(result.bodyWarning).not.toBeNull()
+      expect(result.bodyWarning?.html).toContain(
+        'Deleting this condition will affect payments and the following pages:'
+      )
+      expect(result.bodyWarning?.html).toContain('<li>Page 1</li>')
+    })
+
+    it('merges page and PaymentField references and dedupes by page number', () => {
+      const paymentComponent = buildPaymentComponent({
+        id: 'pf-1',
+        options: {
+          amount: 0,
+          description: 'Fee',
+          conditionalAmounts: [{ amount: 5, condition: conditionId }]
+        }
+      })
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'page1',
+            components: [testComponent],
+            condition: conditionId
+          }),
+          buildQuestionPage({
+            id: 'page2',
+            components: [paymentComponent]
+          })
+        ],
+        conditions: [mockConditionV2]
+      })
+
+      const result = deleteConditionConfirmationPageViewModel(
+        metadata,
+        definition,
+        conditionId
+      )
+
+      expect(result.bodyWarning?.html).toContain(
+        'Deleting this condition will affect payments and the following pages:'
+      )
       expect(result.bodyWarning?.html).toContain('<li>Page 1</li>')
       expect(result.bodyWarning?.html).toContain('<li>Page 2</li>')
     })

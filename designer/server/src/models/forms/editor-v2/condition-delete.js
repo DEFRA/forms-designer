@@ -28,12 +28,34 @@ export function deleteConditionConfirmationPageViewModel(
   )
 
   const condition = getConditionV2(definition, conditionId)
-  const { pages, conditions } = findConditionReferences(definition, conditionId)
+  const { pages, conditions, paymentFields } = findConditionReferences(
+    definition,
+    conditionId
+  )
 
-  const hasReferences = pages.length > 0 || conditions.length > 0
+  const hasPaymentReferences = paymentFields.length > 0
+  const hasReferences =
+    pages.length > 0 || conditions.length > 0 || hasPaymentReferences
   const pageHeading = formTitle
   const bodyHeadingText = 'Are you sure you want to delete this condition?'
   const pageTitle = `${pageHeading} - ${formTitle}`
+
+  const affectedPages = (() => {
+    const seen = new Set()
+    /** @type {Array<{ pageId: string, pageNumber: number, pageTitle: string }>} */
+    const merged = []
+    for (const ref of [...pages, ...paymentFields]) {
+      if (!seen.has(ref.pageNumber)) {
+        seen.add(ref.pageNumber)
+        merged.push(ref)
+      }
+    }
+    return merged.sort((a, b) => a.pageNumber - b.pageNumber)
+  })()
+
+  const introText = hasPaymentReferences
+    ? 'Deleting this condition will affect payments and the following pages:'
+    : 'Deleting this condition will affect the following pages:'
 
   return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
@@ -42,8 +64,8 @@ export function deleteConditionConfirmationPageViewModel(
     bodyHeadingText,
     bodyWarning: hasReferences
       ? {
-          html: `Deleting this condition will affect the following pages:<ul class="govuk-list govuk-list--bullet">
-        ${pages.map((page) => `<li>Page ${page.pageNumber}</li>`).join('')}
+          html: `${introText}<ul class="govuk-list govuk-list--bullet">
+        ${affectedPages.map((page) => `<li>Page ${page.pageNumber}</li>`).join('')}
       </ul>`
         }
       : null,

@@ -19,7 +19,8 @@ export enum Scopes {
   ResetSaveAndExit = 'reset-save-and-exit',
   DeadLetterQueues = 'dead-letter-queues',
   FormsInspect = 'forms-inspect',
-  FormsReport = 'forms-report'
+  FormsReport = 'forms-report',
+  RegenerateMetrics = 'regenerate-metrics'
 }
 
 export const RoleScopes = {

@@ -241,12 +241,18 @@ export class LocationPreviewElements extends QuestionPreviewElements {
  */
 export class PaymentPreviewElements extends QuestionPreviewElements {
   /**
-   * @param {BaseSettings & {paymentAmount: number, paymentDescription: string}} elements
+   * @param {BaseSettings & {paymentAmount: number, paymentDescription: string, paymentConditionalAmounts?: Array<{ amount: number, condition: string }>}} elements
    */
-  constructor({ paymentAmount, paymentDescription, ...elements }) {
+  constructor({
+    paymentAmount,
+    paymentDescription,
+    paymentConditionalAmounts,
+    ...elements
+  }) {
     super(elements)
     this._paymentAmount = paymentAmount
     this._paymentDescription = paymentDescription
+    this._paymentConditionalAmounts = paymentConditionalAmounts ?? []
   }
 
   /**
@@ -256,7 +262,8 @@ export class PaymentPreviewElements extends QuestionPreviewElements {
     return {
       ...super.values,
       paymentAmount: this._paymentAmount,
-      paymentDescription: this._paymentDescription
+      paymentDescription: this._paymentDescription,
+      paymentConditionalAmounts: this._paymentConditionalAmounts
     }
   }
 }
@@ -281,7 +288,7 @@ export class PagePreviewElements {
   constructor(
     heading,
     guidance = '',
-    addHeading = undefined,
+    addHeading,
     repeatQuestion = '',
     hasRepeater = false
   ) {

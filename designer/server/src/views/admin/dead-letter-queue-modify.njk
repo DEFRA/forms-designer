@@ -37,7 +37,7 @@
 
       <h2 class="govuk-heading-m">{{ queueName }}: Modifying message</h2>
 
-      <form method="post">
+      <form method="post" action="/admin/dead-letter-queues/{{ queueName }}/modify/{{ messageId }}">
         {{ govukTextarea(messageJson) }}
 
         {{ govukButton({

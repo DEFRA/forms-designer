@@ -1,10 +1,10 @@
-import { isConditionWrapperV2 } from '@defra/forms-model'
+import { ComponentType, isConditionWrapperV2 } from '@defra/forms-model'
 
 /**
  * Find all pages that reference a condition
  * @param {FormDefinition} definition
  * @param {string} conditionId
- * @returns {{ pages: Array<{ pageId: string, pageNumber: number, pageTitle: string }>, conditions: Array<{ conditionId: string, conditionName: string }> }}
+ * @returns {{ pages: Array<{ pageId: string, pageNumber: number, pageTitle: string }>, conditions: Array<{ conditionId: string, conditionName: string }>, paymentFields: Array<{ pageId: string, pageNumber: number, pageTitle: string, componentId: string }> }}
  */
 export function findConditionReferences(definition, conditionId) {
   const { pages, conditions } = definition
@@ -35,9 +35,30 @@ export function findConditionReferences(definition, conditionId) {
       conditionName: condition.displayName
     }))
 
+  const paymentFields = pages.flatMap((page, index) => {
+    const components =
+      /** @type {Array<{ id?: string, type?: string, options?: { conditionalAmounts?: Array<{ condition: string }> } }>} */ (
+        'components' in page ? (page.components ?? []) : []
+      )
+    return components
+      .filter((c) => c.type === ComponentType.PaymentField)
+      .filter((c) =>
+        (c.options?.conditionalAmounts ?? []).some(
+          (entry) => entry.condition === conditionId
+        )
+      )
+      .map((c) => ({
+        pageId: page.id ?? '',
+        pageNumber: index + 1,
+        pageTitle: page.title || `Page ${index + 1}`,
+        componentId: c.id ?? ''
+      }))
+  })
+
   return {
     pages: pagesUsingCondition,
-    conditions: conditionsReferencingThis
+    conditions: conditionsReferencingThis,
+    paymentFields
   }
 }
 
