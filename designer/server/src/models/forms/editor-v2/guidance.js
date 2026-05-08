@@ -151,7 +151,7 @@ export function guidanceViewModel(
 ) {
   const pageNum = getPageNum(definition, pageId)
   const formCaptionTitle = metadata.title
-  const formTitle = `Edit page ${pageNum}, guidance`
+  const formTitle = `Edit page ${pageNum}: guidance`
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,

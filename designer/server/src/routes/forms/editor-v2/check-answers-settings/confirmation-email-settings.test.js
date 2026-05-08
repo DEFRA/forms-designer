@@ -38,7 +38,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     const { container, document } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText(
-      'Edit settings, confirmation email'
+      'Edit settings: confirmation email'
     )
     const $mastheadCaption = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Confirmation email')
@@ -48,7 +48,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     const $previewPanel = document.getElementById('preview-panel')
 
     expect($mastheadHeading).toHaveTextContent(
-      'Edit settings, confirmation email'
+      'Edit settings: confirmation email'
     )
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($mastheadCaption).toHaveClass('app-masthead__caption')
@@ -83,7 +83,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     const { container } = await renderResponse(server, options)
 
     const $mastheadHeading = container.getByText(
-      'Edit settings, confirmation email'
+      'Edit settings: confirmation email'
     )
     const $mastheadCaption = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Confirmation email')
@@ -92,7 +92,7 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent(
-      'Edit settings, confirmation email'
+      'Edit settings: confirmation email'
     )
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($mastheadCaption).toHaveClass('app-masthead__caption')

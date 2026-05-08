@@ -132,7 +132,7 @@ export function pageConditionsViewModel(
   const cardTitle = `Page ${pageNum}`
   const title = getPageTitle(/** @type {Page} */ (page))
   const cardCaption = title && title !== '' ? title : cardTitle
-  const mainTitle = `Edit page ${pageNum}, conditions`
+  const mainTitle = `Edit page ${pageNum}: conditions`
   const formTitle = metadata.title
   const pageTitle =
     title && title !== '' ? `Page ${pageNum}: ${title}` : cardTitle

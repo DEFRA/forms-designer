@@ -55,7 +55,7 @@ describe('Editor v2 guidance routes', () => {
     const $actions = container.getAllByRole('button')
     const $previewPanel = document.getElementById('preview-panel')
 
-    expect($mainHeading).toHaveTextContent('Edit page 1, guidance')
+    expect($mainHeading).toHaveTextContent('Edit page 1: guidance')
     expect($cardHeading).toHaveTextContent('Content')
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save')

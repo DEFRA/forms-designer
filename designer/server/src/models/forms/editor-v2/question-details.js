@@ -389,7 +389,7 @@ export async function questionDetailsViewModel(
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
-  const pageHeading = `Edit page ${details.pageNum}, question ${details.questionNum}`
+  const pageHeading = `Edit page ${details.pageNum}: question ${details.questionNum}`
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
   await applyPaymentValues(

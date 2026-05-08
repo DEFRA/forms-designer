@@ -116,7 +116,7 @@ export function referenceNumberSettingsViewModel(
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
-      `Edit settings, ${pageHeading.toLowerCase()}`,
+      `Edit settings: ${pageHeading.toLowerCase()}`,
       formTitle
     ),
     fields,

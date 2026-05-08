@@ -162,7 +162,7 @@ export function checkAnswersSettingsBaseViewModel(
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
-      `Edit settings, ${pageHeading.toLowerCase()}`,
+      `Edit settings: ${pageHeading.toLowerCase()}`,
       formTitle
     ),
     navigation,
@@ -191,7 +191,7 @@ export function checkAnswersSettingsBaseViewModel(
 export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   const { title: formTitle, slug } = metadata
   const pageTitle = 'Check answers page overview'
-  const mastheadHeading = 'Edit settings, page overview'
+  const mastheadHeading = 'Edit settings: page overview'
   const formPath = formOverviewPath(slug)
   const navigation = getFormSpecificNavigation(
     formPath,

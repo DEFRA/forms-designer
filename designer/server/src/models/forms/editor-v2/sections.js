@@ -142,7 +142,7 @@ export function sectionsViewModel(
     ...baseModelFields(
       slug,
       `${pageTitle} - ${formTitle}`,
-      `Edit settings, sections`,
+      `Edit settings: sections`,
       formTitle
     ),
     pageId,

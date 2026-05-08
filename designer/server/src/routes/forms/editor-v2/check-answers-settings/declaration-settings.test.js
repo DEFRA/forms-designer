@@ -40,7 +40,7 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const { container, document } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Edit settings, declaration')
+    const $mastheadHeading = container.getByText('Edit settings: declaration')
     const $mastheadCaption = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Declaration')
     const $radios = container.getAllByRole('radio')
@@ -48,7 +48,7 @@ describe('Editor v2 check-answers-settings routes', () => {
     const $actions = container.getAllByRole('button')
     const $previewPanel = document.getElementById('preview-panel')
 
-    expect($mastheadHeading).toHaveTextContent('Edit settings, declaration')
+    expect($mastheadHeading).toHaveTextContent('Edit settings: declaration')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($mastheadCaption).toHaveClass('app-masthead__caption')
     expect($cardHeadings[0]).toHaveTextContent('Declaration')
@@ -82,14 +82,14 @@ describe('Editor v2 check-answers-settings routes', () => {
 
     const { container } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Edit settings, declaration')
+    const $mastheadHeading = container.getByText('Edit settings: declaration')
     const $mastheadCaption = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Declaration')
     const $radios = container.getAllByRole('radio')
 
     const $actions = container.getAllByRole('button')
 
-    expect($mastheadHeading).toHaveTextContent('Edit settings, declaration')
+    expect($mastheadHeading).toHaveTextContent('Edit settings: declaration')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
     expect($mastheadCaption).toHaveClass('app-masthead__caption')
     expect($cardHeadings[0]).toHaveTextContent('Declaration')
