@@ -90,7 +90,7 @@ export function updateFileTypes() {
 export function setupFileTypeListeners() {
   document.addEventListener('change', function (e) {
     const target = /** @type {HTMLInputElement | null} */ (e.target)
-    if (target && target.type === 'checkbox') {
+    if (target?.type === 'checkbox') {
       setTimeout(updateFileTypes, 10)
     }
   })

@@ -1,5 +1,7 @@
 import { randomUUID } from 'node:crypto'
 
+import { ComponentType } from '@defra/forms-model'
+
 /**
  * @param {ConditionalAmountState[] | undefined} items
  * @param {string} id
@@ -74,7 +76,7 @@ export function formatConditionForTile(conditionId, conditions) {
  * @returns {T}
  */
 export function mergeConditionalAmountsIntoOptions(questionDetails, state) {
-  if (questionDetails.type !== 'PaymentField') {
+  if (questionDetails.type !== ComponentType.PaymentField) {
     return questionDetails
   }
   const items = state?.conditionalAmounts ?? []
@@ -104,7 +106,7 @@ export function mergeConditionalAmountsIntoOptions(questionDetails, state) {
  * @returns {QuestionSessionState}
  */
 export function hydrateConditionalAmountsFromComponent(component, state) {
-  if (!component || component.type !== 'PaymentField') {
+  if (component?.type !== ComponentType.PaymentField) {
     return state
   }
   if (state.conditionalAmounts !== undefined) {

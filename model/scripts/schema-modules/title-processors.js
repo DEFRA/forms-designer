@@ -8,7 +8,9 @@ import { formatPropertyName } from './utils.js'
 export function setSchemaTitle(schema, parentName) {
   if (schema.title) {
     return
-  } else if (schema.description && typeof schema.description === 'string') {
+  }
+
+  if (schema.description && typeof schema.description === 'string') {
     schema.title = schema.description.split('.')[0].trim()
   } else if (parentName) {
     schema.title = formatPropertyName(parentName)

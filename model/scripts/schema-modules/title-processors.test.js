@@ -258,8 +258,8 @@ describe('Title Processors', () => {
       expect(addTitles('string value')).toBe('string value')
       expect(addTitles(42)).toBe(42)
       expect(addTitles(true)).toBe(true)
-      expect(addTitles(null)).toBe(null)
-      expect(addTitles(undefined)).toBe(undefined)
+      expect(addTitles(null)).toBeNull()
+      expect(addTitles(undefined)).toBeUndefined()
     })
 
     it('should enhance object schemas with titles', () => {

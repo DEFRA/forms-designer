@@ -289,10 +289,7 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
       if (this.announcementRegion) {
         this.announcementRegion.textContent = message
         setTimeout(() => {
-          if (
-            this.announcementRegion &&
-            this.announcementRegion.textContent === message
-          ) {
+          if (this.announcementRegion?.textContent === message) {
             this.announcementRegion.textContent = ''
           }
         }, this.announceClearTimeMs)
