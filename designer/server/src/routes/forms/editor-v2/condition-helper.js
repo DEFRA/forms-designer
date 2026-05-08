@@ -113,6 +113,7 @@ export async function conditionPostHandlerSuccessAction(request, h, options) {
   const { auth, params, payload, yar } = request
   const { slug, conditionId, stateId } = params
   const { token } = auth.credentials
+  // eslint-disable-next-line -- Joi schema does not guarantee that items will be supplied
   const { items = [] } = payload
 
   const metadata = await forms.get(slug, token)

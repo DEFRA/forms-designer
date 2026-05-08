@@ -23,11 +23,11 @@ export async function save(id, definition) {
  * @param {string} level
  * @param {object} payload
  */
-export async function log(level, payload) {
-  await request('/api/log', {
-    method: 'POST',
-    body: { level, ...payload }
+export function log(level, payload) {
+  const blob = new Blob([JSON.stringify({ level, ...payload })], {
+    type: 'application/json'
   })
+  navigator.sendBeacon('/api/log', blob)
 }
 
 /**

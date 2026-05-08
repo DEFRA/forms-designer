@@ -10,7 +10,7 @@ export const loggerOptions = {
     serialize: false,
     transmit: {
       level: logLevel,
-      async send(level, { messages }: LogEventBrowser) {
+      send(level, { messages }: LogEventBrowser) {
         const [error, ...params] = messages
 
         // Log event request body
@@ -22,7 +22,7 @@ export const loggerOptions = {
             }
 
         // Submit log event request
-        return form.log(level, body)
+        form.log(level, body)
       }
     }
   }
