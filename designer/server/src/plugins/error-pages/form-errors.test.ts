@@ -23,7 +23,7 @@ describe('handleBadRequest', () => {
     } as unknown as ResponseToolkit
     mockResponse = {
       data: undefined
-    } as unknown as Boom
+    } as Boom
   })
 
   it('should set error details and redirect if response is a Boom with form definition errors and referer header exists', async () => {
