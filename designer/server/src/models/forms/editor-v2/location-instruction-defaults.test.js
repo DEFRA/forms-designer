@@ -7,40 +7,27 @@ import {
 
 describe('location-instruction-defaults', () => {
   describe('locationInstructionDefaults', () => {
-    it('should have instruction defaults for EastingNorthingField', () => {
-      expect(locationInstructionDefaults.EastingNorthingField).toContain(
-        'Use the [MAGIC map tool](https://magic.defra.gov.uk/)'
-      )
-      expect(locationInstructionDefaults.EastingNorthingField).toContain(
-        'Easting and Northing'
-      )
-    })
+    const expectedSteps = [
+      '1. Search for a place or postcode.',
+      '2. Use the + and - icons to zoom in and out.',
+      '3. Use a mouse or keyboard to centre the point at the location.',
+      '4. Click to add the location to the map.'
+    ]
 
-    it('should have instruction defaults for OsGridRefField', () => {
-      expect(locationInstructionDefaults.OsGridRefField).toContain(
-        'Use the [Ordnance Survey](https://explore.osmaps.com/)'
-      )
-      expect(locationInstructionDefaults.OsGridRefField).toContain(
-        'OS grid reference'
-      )
-    })
+    it.each([
+      ['EastingNorthingField'],
+      ['OsGridRefField'],
+      ['NationalGridFieldNumberField'],
+      ['LatLongField']
+    ])('should have the 4-step map instructions for %s', (fieldType) => {
+      const instructions =
+        locationInstructionDefaults[
+          /** @type {keyof typeof locationInstructionDefaults} */ (fieldType)
+        ]
 
-    it('should have instruction defaults for NationalGridFieldNumberField', () => {
-      expect(
-        locationInstructionDefaults.NationalGridFieldNumberField
-      ).toContain('Use the [MAGIC map tool](https://magic.defra.gov.uk/)')
-      expect(
-        locationInstructionDefaults.NationalGridFieldNumberField
-      ).toContain('National Grid field number')
-    })
-
-    it('should have instruction defaults for LatLongField', () => {
-      expect(locationInstructionDefaults.LatLongField).toContain(
-        'Use the [MAGIC map tool](https://magic.defra.gov.uk/)'
-      )
-      expect(locationInstructionDefaults.LatLongField).toContain(
-        'latitude and longitude'
-      )
+      for (const step of expectedSteps) {
+        expect(instructions).toContain(step)
+      }
     })
   })
 
