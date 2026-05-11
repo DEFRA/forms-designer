@@ -136,6 +136,10 @@ export const notificationEmailAddressSchema =
     'Email address to receive form submission notifications'
   )
 
+export const offlineSchema = Joi.boolean().description(
+  'Whether the form has been taken offline; runtime renders an unavailable page when true'
+)
+
 export const authoredAtSchema = Joi.date()
   .iso()
   .required()
@@ -170,7 +174,8 @@ export const formMetadataInputKeys = {
     otherwise: privacyNoticeUrlSchema.allow('')
   }),
   termsAndConditionsAgreed: termsAndConditionsAgreedSchema,
-  notificationEmail: notificationEmailAddressSchema
+  notificationEmail: notificationEmailAddressSchema,
+  offline: offlineSchema
 }
 
 /**
