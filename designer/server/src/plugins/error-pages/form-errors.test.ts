@@ -1,13 +1,13 @@
+import { type Boom } from '@hapi/boom'
+import { type Request, type ResponseToolkit } from '@hapi/hapi'
+
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { handleBadRequest } from '~/src/plugins/error-pages/form-errors.js'
 
 describe('handleBadRequest', () => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockRequest: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockH: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let mockResponse: any
+  let mockRequest: Request
+  let mockH: ResponseToolkit
+  let mockResponse: Boom
 
   beforeEach(() => {
     mockRequest = {
@@ -17,13 +17,13 @@ describe('handleBadRequest', () => {
         clear: jest.fn(),
         commit: jest.fn().mockResolvedValue(undefined)
       }
-    }
+    } as unknown as Request
     mockH = {
       redirect: jest.fn().mockReturnValue(null)
-    }
+    } as unknown as ResponseToolkit
     mockResponse = {
       data: undefined
-    }
+    } as unknown as Boom
   })
 
   it('should set error details and redirect if response is a Boom with form definition errors and referer header exists', async () => {

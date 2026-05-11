@@ -1,26 +1,25 @@
 import { log } from '~/src/lib/form.js'
 
 describe('log', () => {
+  /** @type {jest.MockedFunction<typeof navigator.sendBeacon>} */
+  let sendBeacon
+
   beforeEach(() => {
-    navigator.sendBeacon = jest.fn()
+    sendBeacon = jest.fn()
+    navigator.sendBeacon = sendBeacon
   })
 
   it('sends a beacon to /api/log', () => {
     log('info', { message: 'test' })
-    expect(navigator.sendBeacon).toHaveBeenCalledWith(
-      '/api/log',
-      expect.any(Blob)
-    )
+    expect(sendBeacon).toHaveBeenCalledWith('/api/log', expect.any(Blob))
   })
 
   it('encodes level and payload as JSON in the blob', async () => {
     log('warn', { message: 'something went wrong', code: 42 })
 
-    const [, blob] = /** @type {[string, Blob]} */ (
-      navigator.sendBeacon.mock.calls[0]
-    )
+    const [, blob] = sendBeacon.mock.calls[0]
 
-    const text = await blob.text()
+    const text = await /** @type {Blob} */ (blob).text()
     expect(JSON.parse(text)).toEqual({
       level: 'warn',
       message: 'something went wrong',
@@ -31,21 +30,17 @@ describe('log', () => {
   it('sets the blob content type to application/json', () => {
     log('error', { message: 'oops' })
 
-    const [, blob] = /** @type {[string, Blob]} */ (
-      navigator.sendBeacon.mock.calls[0]
-    )
+    const [, blob] = sendBeacon.mock.calls[0]
 
-    expect(blob.type).toBe('application/json')
+    expect(/** @type {Blob} */ (blob).type).toBe('application/json')
   })
 
   it('handles an empty payload', async () => {
     log('debug', {})
 
-    const [, blob] = /** @type {[string, Blob]} */ (
-      navigator.sendBeacon.mock.calls[0]
-    )
+    const [, blob] = sendBeacon.mock.calls[0]
 
-    const text = await blob.text()
+    const text = await /** @type {Blob} */ (blob).text()
     expect(JSON.parse(text)).toEqual({ level: 'debug' })
   })
 })
