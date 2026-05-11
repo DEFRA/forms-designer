@@ -133,6 +133,19 @@ export function hydrateConditionalAmountsFromComponent(component, state) {
 }
 
 /**
- * @import { ComponentDef } from '@defra/forms-model'
+ * @param {PaymentFieldComponent} component
+ * @returns {number}
+ */
+export function getPaymentDisplayAmount(component) {
+  const amount = component.options.amount
+  if (amount > 0) {
+    return amount
+  }
+  const conditional = component.options.conditionalAmounts ?? []
+  return conditional.length > 0 ? conditional[0].amount : 0
+}
+
+/**
+ * @import { ComponentDef, PaymentFieldComponent } from '@defra/forms-model'
  * @import { ConditionalAmountEditRow, ConditionalAmountState, QuestionSessionState } from '@defra/forms-model'
  */

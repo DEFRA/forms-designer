@@ -188,7 +188,7 @@ export function missingPageTitleForMultipleQuestions(questionId, page) {
  * @param {string | undefined} listItemsData
  * @returns {QuestionSessionState}
  */
-function buildOverridenState(existing, questionType, listItemsData) {
+function buildOverriddenState(existing, questionType, listItemsData) {
   // If the user switched question type within the session, drop type-specific
   // session keys so e.g. PaymentField's conditionalAmounts don't bleed into
   // a now-RadiosField question.
@@ -229,12 +229,12 @@ export function overrideStateIfJsEnabled(request) {
 
     if (jsEnabled) {
       const existing = getQuestionSessionState(request.yar, stateId) ?? {}
-      const overridenState = buildOverridenState(
+      const overriddenState = buildOverriddenState(
         existing,
         questionType,
         listItemsData
       )
-      setQuestionSessionState(request.yar, stateId, overridenState)
+      setQuestionSessionState(request.yar, stateId, overriddenState)
     }
   }
   return undefined

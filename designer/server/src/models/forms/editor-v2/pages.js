@@ -11,6 +11,7 @@ import {
 } from '@defra/forms-model'
 
 import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
+import { getPaymentDisplayAmount } from '~/src/lib/payment-conditional-amount-helpers.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
@@ -120,15 +121,7 @@ export function mapMarkdown(component, isSummary) {
  * @returns {string}
  */
 function formatPaymentTotal(component) {
-  const amount = component.options.amount
-  if (amount > 0) {
-    return formatCurrency(amount)
-  }
-  const conditional = component.options.conditionalAmounts ?? []
-  if (conditional.length > 0) {
-    return formatCurrency(conditional[0].amount)
-  }
-  return formatCurrency(0)
+  return formatCurrency(getPaymentDisplayAmount(component))
 }
 
 /**

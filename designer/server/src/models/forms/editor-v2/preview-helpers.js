@@ -9,6 +9,7 @@ import {
 
 import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
 import config from '~/src/config.js'
+import { getPaymentDisplayAmount } from '~/src/lib/payment-conditional-amount-helpers.js'
 import { stringHasValue } from '~/src/lib/utils.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
 
@@ -197,19 +198,6 @@ export function enrichPreviewModel(basePreviewModel, definition) {
  */
 
 /**
- * @param {PaymentFieldComponent} component
- * @returns {number}
- */
-function getDisplayAmount(component) {
-  const baseAmount = component.options.amount
-  if (baseAmount > 0) {
-    return baseAmount
-  }
-  const conditional = component.options.conditionalAmounts ?? []
-  return conditional.length > 0 ? conditional[0].amount : 0
-}
-
-/**
  * Get payment info from the form definition
  * @param {FormDefinition} definition
  * @param {string} [slug]
@@ -226,7 +214,7 @@ export function getPaymentInfo(definition, slug) {
     )
 
     if (paymentComponent) {
-      const displayAmount = getDisplayAmount(paymentComponent)
+      const displayAmount = getPaymentDisplayAmount(paymentComponent)
       const pageId = page.id ?? ''
       const editUrl =
         slug && pageId
