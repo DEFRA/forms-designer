@@ -419,8 +419,8 @@ describe('editor-v2 - question details advanced settings model', () => {
       })
       const result = advancedSettingsFields(['instructionText'], question)
       expect(result).toHaveLength(1)
-      expect(result[0].value).toContain('MAGIC map tool')
-      expect(result[0].value).toContain('Easting and Northing')
+      expect(result[0].value).toContain('Search for a place or postcode')
+      expect(result[0].value).toContain('Click to add the location to the map')
     })
 
     test('should use validation value over default for location instruction', () => {
@@ -610,8 +610,8 @@ describe('editor-v2 - question details advanced settings model', () => {
       expect(result[0].items?.[0].checked).toBe(false)
 
       // Verify instructionText has default content
-      expect(result[1].value).toContain('MAGIC map tool')
-      expect(result[1].value).toContain('Easting and Northing')
+      expect(result[1].value).toContain('Search for a place or postcode')
+      expect(result[1].value).toContain('Click to add the location to the map')
     })
   })
 })
