@@ -122,11 +122,11 @@ export default [
       try {
         // Live metrics only
         const metrics = await getMetrics()
-        const lines = getLiveMetricsAsCsv(metrics)
+        const lines = await getLiveMetricsAsCsv(metrics)
 
         const streamData = new Readable({
           read() {
-            this.push(lines.join('\n'))
+            this.push(lines)
             this.push(null)
           }
         })

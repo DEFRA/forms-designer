@@ -1,4 +1,5 @@
 import { FormStatus } from '@defra/forms-model'
+import { stringify } from 'csv-stringify'
 
 import config from '~/src/config.js'
 import {
@@ -158,49 +159,59 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
+ * @param {Input} input
+ * @returns {Promise<string>}
+ */
+export function createCsv(input) {
+  return new Promise((resolve, reject) => {
+    stringify(
+      input,
+      { bom: true },
+      /** @type {Callback} */ function (err, output) {
+        if (err) {
+          reject(err instanceof Error ? err : new Error('CSV stringify error'))
+          return
+        }
+
+        resolve(Buffer.from(output, 'utf8').toString())
+      }
+    )
+  })
+}
+
+/**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
-export function getLiveMetricsAsCsv(metrics) {
+export async function getLiveMetricsAsCsv(metrics) {
   const liveOnly = metrics.overview.filter(
     (ov) => ov.formStatus === FormStatus.Live
   )
-
-  // Add submission counts
-  liveOnly.forEach((form) => {
-    const count = metrics.totals.liveSubmissions
-      ? /** @type {number | undefined} */ (
-          metrics.totals.liveSubmissions[form.formId]
-        )
-      : 0
-    form.submissionsCount = count ?? 0
-  })
 
   // Sort forms by name then status
   const formsSorted = liveOnly.toSorted((a, b) => {
     const formNameA = /** @type {string} */ (a.summaryMetrics.name)
     const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return `${formNameA}${a.formStatus}`.localeCompare(
-      `${formNameB}${b.formStatus}`
-    )
+    return formNameA.localeCompare(formNameB)
   })
 
-  const contentOutput = /** @type {string[]} */ ([
-    '"Form name","Form URL","Live submissions"'
-  ])
+  const headers = ['Form name','Form URL','Live submissions']
+
+  const values = /** @type {string[][]} */ ([])
+  values.push(headers)
+
   formsSorted.forEach((ov) => {
     const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
       ov.summaryMetrics
     )
-    const escapedFormName = summaryMetrics.name
-      .replaceAll('"', '')
-      .replaceAll('=', '')
-    contentOutput.push(
-      `"${escapedFormName}","${config.appBaseUrl}/library/${summaryMetrics.slug}","${ov.submissionsCount}"`
-    )
+    values.push([summaryMetrics.name, `${config.appBaseUrl}/library/${summaryMetrics.slug}`, `${ov.submissionsCount}`])
   })
-  return contentOutput
+
+  const csv = await createCsv(values)
+
+  return csv
 }
 
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { Input, Callback } from 'csv-stringify'
  */

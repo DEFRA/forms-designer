@@ -515,19 +515,15 @@ describe('metrics models', () => {
   })
 
   describe('getLiveMetricsAsCsv', () => {
-    it('should generate live CSV', () => {
+    it('should generate live CSV', async () => {
       jest.mocked(config).appBaseUrl = 'http://app-base-url:3000'
       const metrics = {
-        totals: {
-          liveSubmissions: {
-            'form-id-1': 5
-          }
-        },
+        totals: {},
         overview: [
           {
             formId: 'form-id-1',
             formStatus: FormStatus.Live,
-            summaryMetrics: { name: 'Form 1', slug: 'form-1' }
+            summaryMetrics: { name: 'Form 1', slug: 'form-1', submissionsCount: 5 },
           },
           {
             formId: 'form-id-2',
@@ -542,15 +538,10 @@ describe('metrics models', () => {
         ]
       }
       // @ts-expect-error - partial mock of data
-      const csvOut = getLiveMetricsAsCsv(metrics)
-      expect(csvOut).toHaveLength(3)
-      expect(csvOut[0]).toBe('"Form name","Form URL","Live submissions"')
-      expect(csvOut[1]).toBe(
-        '"Form 1","http://app-base-url:3000/library/form-1","5"'
-      )
-      expect(csvOut[2]).toBe(
-        '"Form 2","http://app-base-url:3000/library/form-2","0"'
-      )
+      const csvOut = await getLiveMetricsAsCsv(metrics)
+      expect(csvOut).toBe(`Form name,Form URL,Live submissions
+Form 1,http://app-base-url:3000/library/form-1,5
+Form 2,http://app-base-url:3000/library/form-2,0`)
     })
   })
 })
