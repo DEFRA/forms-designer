@@ -96,8 +96,7 @@ jobs:
         uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
-          registry-url: https://registry.npmjs.org
-          scope: '@defra'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Update package versions
         run: npm version patch --workspaces --include-workspace-root --git-tag-version false --save
