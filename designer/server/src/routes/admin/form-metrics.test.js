@@ -5,6 +5,7 @@ import { StatusCodes } from 'http-status-codes'
 import { createServer } from '~/src/createServer.js'
 import { getMetrics } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
+import { buildQueryFromPayload } from '~/src/routes/admin/form-metrics.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -187,10 +188,11 @@ describe('Form metrics routes', () => {
       expect(response.headers['content-disposition']).toBe(
         `attachment; filename="live-metrics-${today}.csv"`
       )
-
       // Verify only headers rows (since supplied data did not include any live rows)
       const csvContent = response.payload
-      expect(csvContent).toBe('"Form name","Form URL","Live submissions"')
+      expect(csvContent).toBe(
+        '\ufeff"Form name","Form URL","Live submissions"\n'
+      )
     })
 
     test('should throw if error during download', async () => {

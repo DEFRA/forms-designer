@@ -1,4 +1,4 @@
-import { FormStatus } from '@defra/forms-model'
+import { FormStatus, organisations } from '@defra/forms-model'
 import { stringify } from 'csv-stringify'
 
 import config from '~/src/config.js'
@@ -175,7 +175,7 @@ export function createCsv(input) {
   return new Promise((resolve, reject) => {
     stringify(
       input,
-      { bom: true },
+      { bom: true, quoted: true },
       /** @type {Callback} */ function (err, output) {
         if (err) {
           reject(err instanceof Error ? err : new Error('CSV stringify error'))
@@ -203,7 +203,7 @@ export async function getLiveMetricsAsCsv(metrics) {
     return formNameA.localeCompare(formNameB)
   })
 
-  const headers = ['Form name','Form URL','Live submissions']
+  const headers = ['Form name', 'Form URL', 'Live submissions']
 
   const values = /** @type {string[][]} */ ([])
   values.push(headers)
@@ -212,7 +212,11 @@ export async function getLiveMetricsAsCsv(metrics) {
     const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
       ov.summaryMetrics
     )
-    values.push([summaryMetrics.name, `${config.appBaseUrl}/library/${summaryMetrics.slug}`, `${ov.submissionsCount}`])
+    values.push([
+      summaryMetrics.name,
+      `${config.appBaseUrl}/library/${summaryMetrics.slug}`,
+      `${ov.submissionsCount}`
+    ])
   })
 
   const csv = await createCsv(values)
@@ -223,4 +227,5 @@ export async function getLiveMetricsAsCsv(metrics) {
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { Input, Callback } from 'csv-stringify'
+ * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
  */
