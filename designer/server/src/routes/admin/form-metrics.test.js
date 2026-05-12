@@ -224,6 +224,33 @@ describe('Form metrics routes', () => {
       expect(response.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR)
     })
   })
+
+  describe('buildQueryFromPayload', () => {
+    it('should build query string', () => {
+      const payload = {
+        showFilter: 'N',
+        searchText: 'some text',
+        status: ['draft', 'live'],
+        org: ['Org1', 'Org2']
+      }
+      expect(buildQueryFromPayload(payload)).toBe(
+        '?showFilter=N&searchText=some%2520text&status=draft&status=live&org=Org1&org=Org2'
+      )
+    })
+
+    it('should return empty string when no payload', () => {
+      const payload = {}
+      expect(buildQueryFromPayload(payload)).toBe('')
+    })
+
+    it('should return empty string when action is clear', () => {
+      const payload = {
+        action: 'clear',
+        searchText: 'some text'
+      }
+      expect(buildQueryFromPayload(payload)).toBe('')
+    })
+  })
 })
 
 /**

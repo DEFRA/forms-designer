@@ -1238,26 +1238,172 @@ exports[`Form metrics routes form-metrics should render report form with form ac
   </div>
 </div>
 
+  <form method="post">
+    <div class="moj-filter-layout">
+      <div class="moj-filter-layout__filter" style="display: block">
 
-  <table class="govuk-table">
-    <thead class="govuk-table__head">
-      <tr class="govuk-table__row">
-        <th scope="col" class="govuk-table__header">Form name</th>
-        <th scope="col" class="govuk-table__header">Organisation</th>
-        <th scope="col" class="govuk-table__header">Status</th>
-        <th scope="col" class="govuk-table__header">Pages</th>
-        <th scope="col" class="govuk-table__header">Question types</th>
-        <th scope="col" class="govuk-table__header">Conditions</th>
-        <th scope="col" class="govuk-table__header">Sections</th>
-        <th scope="col" class="govuk-table__header">Re-published</th>
-        <th scope="col" class="govuk-table__header">Days to publish</th>
-        <th scope="col" class="govuk-table__header">Features</th>
-        <th scope="col" class="govuk-table__header">Submissions</th>
-      </tr>
-    </thead>
-    <tbody class="govuk-table__body">
-    </tbody>
-  </table>
+        
+<div class="moj-filter" data-module="moj-filter">
+
+  <div class="moj-filter__header">
+
+    <div class="moj-filter__header-title">
+      <h2 class="govuk-heading-m">Filter</h2>
+    </div>
+
+    <div class="moj-filter__header-action">
+      
+    </div>
+
+  </div>
+
+  <div class="moj-filter__content">
+
+
+    <div class="moj-filter__options">
+
+      <button type="submit" class="govuk-button" data-module="govuk-button" data-test-id="submit-button">
+  Apply filters
+</button>
+
+        <button type="submit" name="action" value="clear" class="govuk-link govuk-link--no-visited-state pull-right govuk-!-padding-top-2">Clear filters</button>
+
+  <div class="govuk-form-group">
+  <label class="govuk-label govuk-label--m" for="searchText">
+    Search for a form
+  </label>
+  <input class="govuk-input" id="searchText" name="searchText" type="text">
+</div>
+
+
+  <div class="govuk-form-group">
+  <fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+    Status
+  </legend>
+  <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="status" name="status" type="checkbox" value="draft" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="status">
+        Draft
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="status-2" name="status" type="checkbox" value="live" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="status-2">
+        Live
+      </label>
+    </div>
+  </div>
+</fieldset>
+</div>
+
+
+  <div class="govuk-form-group">
+  <fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+    Organisation
+  </legend>
+  <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org" name="org" type="checkbox" value="Animal and Plant Health Agency – APHA" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org">
+        Animal and Plant Health Agency – APHA (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-2" name="org" type="checkbox" value="Centre for Environment, Fisheries and Aquaculture Science – Cefas" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-2">
+        Centre for Environment, Fisheries and Aquaculture Science – Cefas (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-3" name="org" type="checkbox" value="Defra" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-3">
+        Defra (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-4" name="org" type="checkbox" value="Environment Agency" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-4">
+        Environment Agency (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-5" name="org" type="checkbox" value="Forestry Commission" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-5">
+        Forestry Commission (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-6" name="org" type="checkbox" value="Marine Management Organisation – MMO" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-6">
+        Marine Management Organisation – MMO (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-7" name="org" type="checkbox" value="Natural England" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-7">
+        Natural England (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-8" name="org" type="checkbox" value="Rural Payments Agency – RPA" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-8">
+        Rural Payments Agency – RPA (0)
+      </label>
+    </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-9" name="org" type="checkbox" value="Veterinary Medicines Directorate – VMD" checked>
+      <label class="govuk-label govuk-checkboxes__label" for="org-9">
+        Veterinary Medicines Directorate – VMD (0)
+      </label>
+    </div>
+  </div>
+</fieldset>
+</div>
+
+
+
+    </div>
+
+  </div>
+
+</div>
+
+
+      </div>
+
+      <div class="moj-filter-layout__content">
+
+        <div class="moj-action-bar">
+          <div class="moj-action-bar__filter">
+            <button type="submit" name="showFilter" value="N" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="true" data-govuk-button-init="">Hide filter</button>
+          </div>
+        </div>
+
+        <table class="govuk-table moj-scrollable-pane" data-module="moj-sortable-table">
+          <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+              <th scope="col" class="govuk-table__header" aria-sort="ascending">Form name</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Organisation</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Status</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Pages</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Question types</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Conditions</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Sections</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Re-published</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Days to publish</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Features</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Submissions</th>
+            </tr>
+          </thead>
+          <tbody class="govuk-table__body">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </form>
 
 
 </div>

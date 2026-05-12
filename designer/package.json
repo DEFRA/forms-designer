@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-designer",
-  "version": "3.0.656",
+  "version": "3.0.660",
   "private": true,
   "description": "Defra forms designer",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/designer#readme",
@@ -36,8 +36,8 @@
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.5",
-    "@defra/forms-engine-plugin": "^4.7.3",
-    "@defra/forms-model": "^3.0.656",
+    "@defra/forms-engine-plugin": "^4.11.3",
+    "@defra/forms-model": "^3.0.660",
     "@defra/hapi-tracing": "^1.28.0",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@hapi/basic": "^7.0.2",
@@ -53,6 +53,7 @@
     "@hapi/vision": "^7.0.3",
     "@hapi/wreck": "^18.1.0",
     "@hapi/yar": "^11.0.3",
+    "@ministryofjustice/frontend": "^8.0.0",
     "@types/dagre": "^0.7.52",
     "@types/govuk-frontend": "^5.7.0",
     "@types/hapi__cookie": "^12.0.5",
@@ -135,6 +136,9 @@
     "webpack": "^5.105.2",
     "webpack-assets-manifest": "^6.1.0",
     "webpack-cli": "^6.0.1"
+  },
+  "optionalDependencies": {
+    "sass-embedded-linux-x64": "^1.86.0"
   },
   "engines": {
     "node": "^22.12.0",

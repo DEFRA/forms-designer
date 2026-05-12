@@ -56,14 +56,16 @@ export async function getDeadLetterQueueMessages(dlq, token, options) {
 
   const requestUrl = new URL(`./admin/deadletter${qualifier}/view`, endpoint)
 
-  if (options?.visibilityTimeout) {
+  // Allow zero as valid parameter value
+  if (options?.visibilityTimeout !== undefined) {
     requestUrl.searchParams.set(
       'visibilityTimeout',
       options.visibilityTimeout.toString()
     )
   }
 
-  if (options?.waitTimeSeconds) {
+  // Allow zero as valid parameter value
+  if (options?.waitTimeSeconds !== undefined) {
     requestUrl.searchParams.set(
       'waitTimeSeconds',
       options.waitTimeSeconds.toString()
@@ -104,14 +106,16 @@ export async function getDeadLetterQueueMessage(
     endpoint
   )
 
-  if (options?.visibilityTimeout) {
+  // Allow zero as valid parameter value
+  if (options?.visibilityTimeout !== undefined) {
     requestUrl.searchParams.set(
       'visibilityTimeout',
       options.visibilityTimeout.toString()
     )
   }
 
-  if (options?.waitTimeSeconds) {
+  // Allow zero as valid parameter value
+  if (options?.waitTimeSeconds !== undefined) {
     requestUrl.searchParams.set(
       'waitTimeSeconds',
       options.waitTimeSeconds.toString()

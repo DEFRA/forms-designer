@@ -110,7 +110,8 @@ function processPreview(preview, index) {
       VTS_OUTDOOR_URL: '/maps/api/maps/vts/OS_VTS_3857_Outdoor.json',
       VTS_DARK_URL: '/maps/api/maps/vts/OS_VTS_3857_Dark.json',
       VTS_BLACK_AND_WHITE_URL:
-        '/maps/api/maps/vts/OS_VTS_3857_Black_and_White.json'
+        '/maps/api/maps/vts/OS_VTS_3857_Black_and_White.json',
+      VTS_AERIAL_URL: '/maps/api/maps/vts/esri-aerial.json'
     }
   })
 

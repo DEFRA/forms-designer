@@ -88,6 +88,10 @@ describe('Route helpers', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
     jest.mocked(getUsers).mockResolvedValueOnce(userList)

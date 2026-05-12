@@ -40,6 +40,7 @@ describe('metrics models', () => {
               name: 'form2'
             },
             featureMetrics: {},
+            submissionsCount: 2,
             updatedAt: new Date()
           },
           {
@@ -50,6 +51,7 @@ describe('metrics models', () => {
               name: 'form1'
             },
             featureMetrics: {},
+            submissionsCount: 5,
             updatedAt: new Date()
           }
         ],
@@ -77,126 +79,124 @@ describe('metrics models', () => {
       }
 
       // @ts-expect-error - partial data mocked
-      const model = metricsFormActivityViewModel(mockMetrics)
+      const model = metricsFormActivityViewModel(mockMetrics, {})
 
-      expect(model).toEqual({
-        formMetricRows: [
-          {
-            daysToPublish: '-',
-            features: [],
-            formName: 'form1',
-            name: 'form1',
-            submissions: 5,
-            republished: '-'
-          },
-          {
-            daysToPublish: '-',
-            features: [],
-            formName: 'form2',
-            name: 'form2',
-            submissions: 2,
-            republished: '-'
+      expect(model.formMetricRows).toEqual([
+        {
+          daysToPublish: '-',
+          features: [],
+          formName: 'form2',
+          name: 'form2',
+          submissions: 2,
+          republished: '-'
+        },
+        {
+          daysToPublish: '-',
+          features: [],
+          formName: 'form1',
+          name: 'form1',
+          submissions: 5,
+          republished: '-'
+        }
+      ])
+      expect(model.overviewMetrics).toEqual({
+        last7Days: {
+          fromDate: '25 December 2025',
+          toDate: '1 January 2026',
+          title: 'Last 7 days',
+          newFormsCreated: getExpectedTile(
+            'New forms created',
+            'previous 7 days',
+            'No difference in forms created than last week'
+          ),
+          formsPublished: getExpectedTile(
+            'Forms published',
+            'previous 7 days',
+            'No difference in forms published than last week'
+          ),
+          formSubmissions: getExpectedTile(
+            'Form submissions',
+            'previous 7 days',
+            'No difference in submissions  than last week'
+          ),
+          formsInDraft: getExpectedTile(
+            'Forms in draft',
+            'previous 7 days',
+            'No difference in forms  than last week'
+          ),
+          timeToPublish: {
+            ...getExpectedTile(
+              'Average time to publish',
+              'previous 7 days',
+              'No difference in days  than last week'
+            ),
+            units: 'days'
           }
-        ],
-        overviewMetrics: {
-          last7Days: {
-            fromDate: '25 December 2025',
-            toDate: '1 January 2026',
-            title: 'Last 7 days',
-            newFormsCreated: getExpectedTile(
-              'New forms created',
-              'previous 7 days',
-              'No difference in forms created than last week'
-            ),
-            formsPublished: getExpectedTile(
-              'Forms published',
-              'previous 7 days',
-              'No difference in forms published than last week'
-            ),
-            formSubmissions: getExpectedTile(
-              'Form submissions',
-              'previous 7 days',
-              'No difference in submissions  than last week'
-            ),
-            formsInDraft: getExpectedTile(
-              'Forms in draft',
-              'previous 7 days',
-              'No difference in forms  than last week'
-            ),
-            timeToPublish: {
-              ...getExpectedTile(
-                'Average time to publish',
-                'previous 7 days',
-                'No difference in days  than last week'
-              ),
-              units: 'days'
-            }
-          },
-          last30Days: {
-            fromDate: '2 December 2025',
-            toDate: '1 January 2026',
-            title: 'Last 30 days',
-            newFormsCreated: getExpectedTile(
-              'New forms created',
+        },
+        last30Days: {
+          fromDate: '2 December 2025',
+          toDate: '1 January 2026',
+          title: 'Last 30 days',
+          newFormsCreated: getExpectedTile(
+            'New forms created',
+            'previous 30 days',
+            'No difference in forms created than last month'
+          ),
+          formsPublished: getExpectedTile(
+            'Forms published',
+            'previous 30 days',
+            'No difference in forms published than last month'
+          ),
+          formSubmissions: getExpectedTile(
+            'Form submissions',
+            'previous 30 days',
+            'No difference in submissions  than last month'
+          ),
+          formsInDraft: getExpectedTile(
+            'Forms in draft',
+            'previous 30 days',
+            'No difference in forms  than last month'
+          ),
+          timeToPublish: {
+            ...getExpectedTile(
+              'Average time to publish',
               'previous 30 days',
-              'No difference in forms created than last month'
+              'No difference in days  than last month'
             ),
-            formsPublished: getExpectedTile(
-              'Forms published',
-              'previous 30 days',
-              'No difference in forms published than last month'
-            ),
-            formSubmissions: getExpectedTile(
-              'Form submissions',
-              'previous 30 days',
-              'No difference in submissions  than last month'
-            ),
-            formsInDraft: getExpectedTile(
-              'Forms in draft',
-              'previous 30 days',
-              'No difference in forms  than last month'
-            ),
-            timeToPublish: {
-              ...getExpectedTile(
-                'Average time to publish',
-                'previous 30 days',
-                'No difference in days  than last month'
-              ),
-              units: 'days'
-            }
-          },
-          allTime: {
-            fromDate: undefined,
-            toDate: undefined,
-            title: 'All time',
-            newFormsCreated: getExpectedTile(
-              'New forms created',
+            units: 'days'
+          }
+        },
+        allTime: {
+          fromDate: undefined,
+          toDate: undefined,
+          title: 'All time',
+          newFormsCreated: getExpectedTile(
+            'New forms created',
+            'previous year',
+            'No difference in forms created than last year'
+          ),
+          formsPublished: getExpectedTile(
+            'Forms published',
+            'previous year',
+            'No difference in forms published than last year'
+          ),
+          formSubmissions: getExpectedTile(
+            'Form submissions',
+            'previous year',
+            'No difference in submissions  than last year'
+          ),
+          formsInDraft: getExpectedTile(
+            'Forms in draft',
+            'previous year',
+            'No difference in forms  than last year'
+          ),
+          timeToPublish: {
+            ...getExpectedTile(
+              'Average time to publish',
               'previous year',
-              'No difference in forms created than last year'
+              'No difference in days  than last year'
             ),
-            formsPublished: getExpectedTile(
-              'Forms published',
-              'previous year',
-              'No difference in forms published than last year'
-            ),
-            formSubmissions: getExpectedTile(
-              'Form submissions',
-              'previous year',
-              'No difference in submissions  than last year'
-            ),
-            formsInDraft: getExpectedTile(
-              'Forms in draft',
-              'previous year',
-              'No difference in forms  than last year'
-            ),
-            timeToPublish: {
-              ...getExpectedTile(
-                'Average time to publish',
-                'previous year',
-                'No difference in days  than last year'
-              ),
-              units: 'days'
-            }
+            units: 'days'
           }
         }
       })

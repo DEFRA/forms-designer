@@ -104,7 +104,10 @@ export async function getMessageCounts(token) {
   const radioItems = []
   for (const dlq of Object.values(DeadLetterQueues)) {
     try {
-      const messages = await getDeadLetterQueueMessages(dlq, token)
+      const messages = await getDeadLetterQueueMessages(dlq, token, {
+        visibilityTimeout: 0,
+        waitTimeSeconds: 0
+      })
       const countSuffix = messages.length === 1 ? 'message' : 'messages'
       radioItems.push({
         value: dlq,
@@ -502,7 +505,7 @@ export default [
       const { dlq, messageId } = params
       const { messageJson } = payload
 
-      const { error, body } = validateMessageJson(messageJson)
+      const { error, body } = validateMessageJson(dlq, messageJson)
       if (error) {
         return redirectWithErrors(
           request,

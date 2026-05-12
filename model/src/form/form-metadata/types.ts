@@ -175,6 +175,12 @@ export interface FormMetadata {
   notificationEmail?: string
 
   /**
+   * Whether the form has been taken offline. When true, the runtime renders
+   * an unavailable page instead of the form.
+   */
+  offline?: boolean
+
+  /**
    * The draft state of the form
    */
   draft?: FormMetadataState
@@ -236,6 +242,7 @@ export type FormMetadataInput = Pick<
   | 'privacyNoticeUrl'
   | 'termsAndConditionsAgreed'
   | 'notificationEmail'
+  | 'offline'
 >
 
 export interface FormResponse {

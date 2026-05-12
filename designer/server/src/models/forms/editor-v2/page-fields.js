@@ -51,6 +51,8 @@ const checkBoxFieldQuestions = [
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]
 
+const radiosFieldQuestions = [QuestionAdvancedSettings.Countries]
+
 /**
  * @param {GovukField} field
  */
@@ -74,6 +76,10 @@ export function getFieldComponentType(field) {
 
   if (fileUploadFields.includes(fieldName)) {
     return ComponentType.FileUploadField
+  }
+
+  if (radiosFieldQuestions.includes(fieldName)) {
+    return ComponentType.RadiosField
   }
 
   throw new Error(

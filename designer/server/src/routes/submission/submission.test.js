@@ -253,6 +253,10 @@ describe('Submission routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   describe('GET', () => {
     test('should show view map page', async () => {
       jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)

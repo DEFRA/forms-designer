@@ -24,6 +24,10 @@ describe('Editor v2 question details routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   test('GET - should redirect when enhanced action is delete', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     jest
