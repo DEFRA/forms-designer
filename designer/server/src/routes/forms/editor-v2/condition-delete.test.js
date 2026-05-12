@@ -150,7 +150,7 @@ describe('Editor v2 condition delete routes', () => {
       )
     })
 
-    test('cascade-cleans PaymentField references before deleting the condition', async () => {
+    test('blocks deletion when the condition is referenced by a PaymentField', async () => {
       const definitionWithPaymentRef = buildDefinition({
         engine: Engine.V2,
         pages: [
@@ -182,10 +182,6 @@ describe('Editor v2 condition delete routes', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(definitionWithPaymentRef)
-      jest
-        .mocked(editor.removePaymentConditionalAmountReference)
-        .mockResolvedValueOnce()
-      jest.mocked(editor.deleteCondition).mockResolvedValueOnce()
 
       const options = {
         method: 'post',
@@ -193,24 +189,13 @@ describe('Editor v2 condition delete routes', () => {
         auth
       }
 
-      const { response } = await renderResponse(server, options)
+      const { container } = await renderResponse(server, options)
 
-      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(
-        editor.removePaymentConditionalAmountReference
-      ).toHaveBeenCalledWith(
-        testFormMetadata.id,
-        auth.credentials.token,
-        definitionWithPaymentRef,
-        'p1',
-        'c1',
-        'cond1'
+      const $errorMessage = container.getByText(
+        'This condition cannot be deleted because it is used for a conditional payment amount. Remove the conditional payment amount that uses it before deleting it.'
       )
-      expect(editor.deleteCondition).toHaveBeenCalledWith(
-        testFormMetadata.id,
-        auth.credentials.token,
-        'cond1'
-      )
+      expect($errorMessage).toBeInTheDocument()
+      expect(editor.deleteCondition).not.toHaveBeenCalled()
     })
 
     test('should show error message when condition is referenced by other conditions', async () => {

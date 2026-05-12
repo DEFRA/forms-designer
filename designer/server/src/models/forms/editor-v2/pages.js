@@ -364,13 +364,29 @@ export function buildConditionsFilter(definition, filter) {
     condA.displayName.localeCompare(condB.displayName)
   )
 
-  // Find all condition ids that are assigned to at least one page
+  // Find all condition ids that are assigned to at least one page,
+  // or referenced by a PaymentField's conditional amounts.
   const assignedConditionIds = new Set(
     definition.pages
       .filter(({ condition }) => condition !== undefined)
       .map((x) => x.condition)
       .filter(Boolean)
   )
+  for (const page of definition.pages) {
+    const components = hasComponents(page) ? page.components : []
+    for (const component of components) {
+      if (component.type !== ComponentType.PaymentField) {
+        continue
+      }
+      const conditionalAmounts =
+        /** @type {{ conditionalAmounts?: Array<{ condition: string }> }} */ (
+          component.options
+        ).conditionalAmounts ?? []
+      for (const entry of conditionalAmounts) {
+        assignedConditionIds.add(entry.condition)
+      }
+    }
+  }
 
   return {
     show: conditions.length > 0,
