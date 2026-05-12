@@ -11,12 +11,12 @@ import {
 } from '@defra/forms-model'
 
 import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
-import { getPaymentDisplayAmount } from '~/src/lib/payment-conditional-amount-helpers.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
+import { getPaymentDisplayAmount } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
 import {
   buildPreviewUrl,
   getPaymentInfo

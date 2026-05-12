@@ -9,9 +9,9 @@ import {
 
 import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
 import config from '~/src/config.js'
-import { getPaymentDisplayAmount } from '~/src/lib/payment-conditional-amount-helpers.js'
 import { stringHasValue } from '~/src/lib/utils.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
+import { getPaymentDisplayAmount } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
 
 export const DEFAULT_TRUNCATE_LENGTH = 50
 export const DECLARATION_PREVIEW_TITLE = 'Preview of Check answers page'

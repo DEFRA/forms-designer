@@ -112,6 +112,13 @@ export function handleSaveConditionalAmount(request, stateId, definition) {
 }
 
 /**
+ * Runs AFTER Joi schema validation passes on the inline conditional-amount
+ * Save. Two checks against the live form definition:
+ *   1. Does the chosen condition still exist? Catches stale dropdown
+ *      submissions where the condition was deleted in another tab.
+ *   2. Is the same condition already used by another tile? Prevents
+ *      duplicate rules that would silently shadow each other at runtime.
+ * Errors land on the conditionalAmountCondition dropdown.
  * @param {{ amount: number, condition: string }} value
  * @param {ConditionalAmountState[]} items
  * @param {ConditionalAmountEditRow} editRow

@@ -336,6 +336,10 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
 }
 
 /**
+ * Editor input value for the base "Payment amount" field. Defaults to
+ * '0' for missing or non-numeric values. Does NOT fall back to a
+ * conditional amount, that is end-user display logic (see
+ * getPaymentDisplayAmount in payment-conditional-amounts.js).
  * @param { FormComponentsDef | undefined } questionFields
  */
 function getPaymentAmount(questionFields) {
