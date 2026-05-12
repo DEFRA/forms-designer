@@ -1,4 +1,4 @@
-import { FormStatus } from '@defra/forms-model'
+import { FormStatus, organisations } from '@defra/forms-model'
 
 import {
   componentUsageFeatures,
@@ -25,46 +25,55 @@ const tilePeriodNames = {
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FilterAndSortCriteria} filterAndSort
  */
-export function metricsFormActivityViewModel(metrics) {
-  // Sort forms by name then status
-  const overviewsSorted = metrics.overview.toSorted((a, b) => {
-    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
-    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return `${formNameA}${a.formStatus}`.localeCompare(
-      `${formNameB}${b.formStatus}`
-    )
+export function metricsFormActivityViewModel(metrics, filterAndSort) {
+  const organisationMap = /** @type {Map<string, number>} */ (new Map())
+  organisations.forEach((org) => {
+    organisationMap.set(org, 0)
   })
-
-  // Create a map of certain counts per form for quicker lookups
-  const formSubmissionCountsLive = createFormMap(metrics.totals.liveSubmissions)
-  const formSubmissionCountsDraft = createFormMap(
-    metrics.totals.draftSubmissions
-  )
-  const formDaysToPublish = createFormMap(metrics.totals.daysToPublish)
-  const formRepublished = createFormMap(metrics.totals.republished)
+  metrics.overview.forEach((row) => {
+    const org = /** @type {string} */ (row.summaryMetrics.organisation)
+    organisationMap.set(org, (organisationMap.get(org) ?? 0) + 1)
+  })
 
   return {
     overviewMetrics: mapTotalMetrics(metrics.totals, tilePeriodNames),
-    formMetricRows: mapOverviewMetrics(
-      overviewsSorted,
-      formSubmissionCountsDraft,
-      formSubmissionCountsLive,
-      formDaysToPublish,
-      formRepublished
-    )
+    formMetricRows: mapOverviewMetrics(metrics.overview),
+    sort: {
+      sortCol: filterAndSort.sortCol,
+      sortDir: filterAndSort.sortDir
+    },
+    filter: {
+      showFilter: filterAndSort.showFilter,
+      searchText: filterAndSort.searchText,
+      status: filterAndSort.status,
+      organisation: filterAndSort.org,
+      organisationList: Array.from(organisationMap, ([key, count]) => ({
+        text: `${key} (${count})`,
+        value: key,
+        checked:
+          !filterAndSort.org?.length ||
+          filterAndSort.org.includes(encodeURI(key))
+      })),
+      statusList: [
+        {
+          text: 'Draft',
+          value: 'draft',
+          checked:
+            !filterAndSort.status?.length ||
+            filterAndSort.status.includes(FormStatus.Draft)
+        },
+        {
+          text: 'Live',
+          value: 'live',
+          checked:
+            !filterAndSort.status?.length ||
+            filterAndSort.status.includes(FormStatus.Live)
+        }
+      ]
+    }
   }
-}
-
-/**
- * @param {Record<string, number> | undefined} metricValues
- */
-function createFormMap(metricValues) {
-  const formMap = new Map()
-  for (const [formId, count] of Object.entries(metricValues ?? {})) {
-    formMap.set(formId, count)
-  }
-  return formMap
 }
 
 /**
@@ -158,4 +167,5 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
  */

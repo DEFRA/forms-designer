@@ -13,6 +13,7 @@ export const environment = nunjucks.configure(
     join(config.appDir, 'common/templates'),
     join(config.appDir, 'common/components'),
     join(config.clientSrc, 'views'),
+    dirname(resolvePkg.sync('@ministryofjustice/frontend/package.json')),
     join(dirname(resolvePkg.sync('govuk-frontend/package.json')), 'dist'),
     join(
       dirname(

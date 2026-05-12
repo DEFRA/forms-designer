@@ -394,3 +394,8 @@
     }
   }
 }
+
+// Fix to remove vertical grey line
+.moj-action-bar__filter::after {
+  width: 0;
+}

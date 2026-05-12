@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
 import { getMetrics } from '~/src/lib/metrics.js'
+import { buildQueryFromPayload } from '~/src/routes/admin/form-metrics.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -69,6 +70,85 @@ describe('Form metrics routes', () => {
       expect(response.result).toMatchSnapshot()
     })
 
+    test('should apply filtering', async () => {
+      const mockMetrics = {
+        overview: [],
+        totals: /** @type {FormTotalsMetric} */ ({
+          last7Days: {},
+          prev7Days: {},
+          last30Days: {},
+          prev30Days: {},
+          lastYear: {},
+          prevYear: {},
+          allTime: {},
+          draftSubmissions: {},
+          liveSubmissions: {},
+          updatedAt: new Date('2026-01-01T00:00:00.000Z')
+        })
+      }
+      jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+
+      const options = {
+        method: 'post',
+        url: '/admin/form-metrics',
+        auth,
+        payload: {
+          showFilter: 'N',
+          searchText: 'some text',
+          status: ['live', 'draft'],
+          org: ['Org1', 'Org2']
+        }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(headers.location).toBe(
+        '/admin/form-metrics?showFilter=N&searchText=some%2520text&status=live&status=draft&org=Org1&org=Org2'
+      )
+    })
+
+    test('should clear filtering', async () => {
+      const mockMetrics = {
+        overview: [],
+        totals: /** @type {FormTotalsMetric} */ ({
+          last7Days: {},
+          prev7Days: {},
+          last30Days: {},
+          prev30Days: {},
+          lastYear: {},
+          prevYear: {},
+          allTime: {},
+          draftSubmissions: {},
+          liveSubmissions: {},
+          updatedAt: new Date('2026-01-01T00:00:00.000Z')
+        })
+      }
+      jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+
+      const options = {
+        method: 'post',
+        url: '/admin/form-metrics?showFilter=N&searchText=some%2520text&status=live&status=draft&org=Org1&org=Org2',
+        auth,
+        payload: {
+          showFilter: 'N',
+          searchText: 'some text',
+          status: ['live', 'draft'],
+          org: ['Org1', 'Org2'],
+          action: 'clear'
+        }
+      }
+
+      const {
+        response: { statusCode, headers }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+      expect(headers.location).toBe('/admin/form-metrics')
+    })
+
     test('should render regenerate form', async () => {
       const options = {
         method: 'get',
@@ -106,6 +186,33 @@ describe('Form metrics routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(headers.location).toBe('/admin/index')
+    })
+  })
+
+  describe('buildQueryFromPayload', () => {
+    it('should build query string', () => {
+      const payload = {
+        showFilter: 'N',
+        searchText: 'some text',
+        status: ['draft', 'live'],
+        org: ['Org1', 'Org2']
+      }
+      expect(buildQueryFromPayload(payload)).toBe(
+        '?showFilter=N&searchText=some%2520text&status=draft&status=live&org=Org1&org=Org2'
+      )
+    })
+
+    it('should return empty string when no payload', () => {
+      const payload = {}
+      expect(buildQueryFromPayload(payload)).toBe('')
+    })
+
+    it('should return empty string when action is clear', () => {
+      const payload = {
+        action: 'clear',
+        searchText: 'some text'
+      }
+      expect(buildQueryFromPayload(payload)).toBe('')
     })
   })
 })

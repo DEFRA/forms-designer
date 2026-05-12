@@ -6,14 +6,32 @@ const metricsEndpoint = new URL('/report/', config.auditUrl)
 
 /**
  * Get metrics
+ * @param {FilterCriteria} [filter]
  */
-export async function getMetrics() {
+export async function getMetrics(filter = {}) {
   const getJsonByType =
     /** @type {typeof getJson<{ overview: FormOverviewMetric[], totals: FormTotalsMetric }>} */ (
       getJson
     )
 
   const requestUrl = new URL(metricsEndpoint)
+
+  if (filter.searchText) {
+    requestUrl.searchParams.set('searchText', filter.searchText)
+  }
+
+  if (filter.status) {
+    filter.status.forEach((st) => {
+      requestUrl.searchParams.append('status', st)
+    })
+  }
+
+  if (filter.org) {
+    filter.org.forEach((org) => {
+      requestUrl.searchParams.append('org', org)
+    })
+  }
+
   const { body } = await getJsonByType(requestUrl)
 
   return body
@@ -32,4 +50,5 @@ export async function regenerateMetrics(token) {
 
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
  */
