@@ -209,13 +209,14 @@ export async function getLiveMetricsAsCsv(metrics) {
   values.push(headers)
 
   formsSorted.forEach((ov) => {
-    const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
-      ov.summaryMetrics
-    )
+    const summaryMetrics =
+      /** @type {{ name: string, slug: string, submissionsCount?: number }} */ (
+        ov.summaryMetrics
+      )
     values.push([
       summaryMetrics.name,
       `${config.appBaseUrl}/library/${summaryMetrics.slug}`,
-      `${ov.submissionsCount}`
+      `${summaryMetrics.submissionsCount ?? 0}`
     ])
   })
 

@@ -543,9 +543,10 @@ describe('metrics models', () => {
       }
       // @ts-expect-error - partial mock of data
       const csvOut = await getLiveMetricsAsCsv(metrics)
-      expect(csvOut).toBe(`Form name,Form URL,Live submissions
-Form 1,http://app-base-url:3000/library/form-1,5
-Form 2,http://app-base-url:3000/library/form-2,0`)
+      expect(csvOut).toBe(`\ufeff"Form name","Form URL","Live submissions"
+"Form 1","http://app-base-url:3000/library/form-1","5"
+"Form 2","http://app-base-url:3000/library/form-2","0"
+`)
     })
   })
 })
