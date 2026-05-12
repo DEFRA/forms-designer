@@ -12,6 +12,10 @@ describe('Form create routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   const routes = ['/create/title', '/create/organisation', '/create/team']
 
   test.each(routes)(`GET '%p' matches test snapshot`, async (route) => {

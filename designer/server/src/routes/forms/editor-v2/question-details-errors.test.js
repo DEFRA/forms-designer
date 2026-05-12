@@ -26,6 +26,10 @@ describe('Editor v2 question details error messages', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
   })

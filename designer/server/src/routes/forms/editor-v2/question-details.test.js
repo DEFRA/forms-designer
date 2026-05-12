@@ -77,6 +77,10 @@ describe('Editor v2 question details routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
     jest

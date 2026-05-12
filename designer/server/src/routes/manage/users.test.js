@@ -23,6 +23,10 @@ describe('Manage users route', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
   })

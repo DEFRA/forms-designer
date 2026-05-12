@@ -35,6 +35,10 @@ describe('Editor v2 conditions-join routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
   })

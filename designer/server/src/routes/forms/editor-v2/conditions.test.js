@@ -41,6 +41,10 @@ describe('Editor v2 conditions routes', () => {
     await server.initialize()
   })
 
+  afterAll(async () => {
+    await server.stop()
+  })
+
   beforeEach(() => {
     jest.clearAllMocks()
   })

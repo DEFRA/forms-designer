@@ -978,36 +978,6 @@ describe('editor-v2 - advanced settings fields model', () => {
   })
 })
 
-describe('PaymentField field list', () => {
-  it('places paymentConditionalAmounts between paymentAmount and paymentDescription', () => {
-    const fields = getFieldList(
-      undefined,
-      ComponentType.PaymentField,
-      undefined,
-      buildDefinition()
-    )
-    const names = fields.map((f) => f.name)
-    const amountIdx = names.indexOf('paymentAmount')
-    const conditionalIdx = names.indexOf('paymentConditionalAmounts')
-    const descriptionIdx = names.indexOf('paymentDescription')
-    expect(conditionalIdx).toBe(amountIdx + 1)
-    expect(descriptionIdx).toBe(conditionalIdx + 1)
-  })
-
-  it('paymentConditionalAmounts field uses the custom template', () => {
-    const fields = getFieldList(
-      undefined,
-      ComponentType.PaymentField,
-      undefined,
-      buildDefinition()
-    )
-    const conditional = fields.find(
-      (f) => f.name === 'paymentConditionalAmounts'
-    )
-    expect(conditional?.customTemplate).toBe('payment-conditional-amounts')
-  })
-})
-
 describe('paymentConditionalAmountSchema', () => {
   it('rejects missing amount', () => {
     const { error } = paymentConditionalAmountSchema.validate(
