@@ -523,7 +523,11 @@ describe('metrics models', () => {
           {
             formId: 'form-id-1',
             formStatus: FormStatus.Live,
-            summaryMetrics: { name: 'Form 1', slug: 'form-1', submissionsCount: 5 },
+            summaryMetrics: {
+              name: 'Form 1',
+              slug: 'form-1',
+              submissionsCount: 5
+            }
           },
           {
             formId: 'form-id-2',
