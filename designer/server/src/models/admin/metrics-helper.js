@@ -235,7 +235,7 @@ export function mapOverviewMetrics(metrics) {
  */
 export function calcChangePercentage(currCount, prevCount) {
   if (currCount === 0 && prevCount === 0) {
-    return '-'
+    return '0.0'
   }
   if (prevCount === 0) {
     return '100'

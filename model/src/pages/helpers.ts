@@ -155,6 +155,27 @@ export function hasPaymentQuestionInForm(definition: FormDefinition) {
 }
 
 /**
+ * Helper function to determine if the form uses postcode lookup
+ */
+export function hasPostcodeLookupInForm(definition: FormDefinition) {
+  if (definition.pages.length === 0) {
+    return false
+  }
+
+  for (const page of definition.pages) {
+    const addressField = hasComponents(page)
+      ? page.components.find(
+          (component) => component.type === ComponentType.UkAddressField
+        )
+      : undefined
+    if (addressField?.options.usePostcodeLookup) {
+      return true
+    }
+  }
+  return false
+}
+
+/**
  * Helper function to determine if a specific question type exists in the form
  */
 export function hasSpecificQuestionTypeInForm(
@@ -166,10 +187,10 @@ export function hasSpecificQuestionTypeInForm(
   }
 
   for (const page of definition.pages) {
-    const hasPayment = hasComponents(page)
+    const hasSpecificComponent = hasComponents(page)
       ? page.components.some((component) => component.type === componentType)
       : false
-    if (hasPayment) {
+    if (hasSpecificComponent) {
       return true
     }
   }

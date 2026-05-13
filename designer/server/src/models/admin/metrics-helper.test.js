@@ -48,7 +48,7 @@ describe('metrics model', () => {
 
   describe('calcChangePercentage', () => {
     it('should handle zero for current and previous', () => {
-      expect(calcChangePercentage(0, 0)).toBe('-')
+      expect(calcChangePercentage(0, 0)).toBe('0.0')
     })
     it('should handle zero for previous', () => {
       expect(calcChangePercentage(1, 0)).toBe('100')

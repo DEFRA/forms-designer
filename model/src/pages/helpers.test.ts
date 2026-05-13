@@ -2,7 +2,8 @@ import {
   buildCheckboxComponent,
   buildMarkdownComponent,
   buildPaymentComponent,
-  buildTextFieldComponent
+  buildTextFieldComponent,
+  buildUkAddressFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
 import {
@@ -30,6 +31,7 @@ import {
   hasFormComponents,
   hasNext,
   hasPaymentQuestionInForm,
+  hasPostcodeLookupInForm,
   hasRepeater,
   hasSpecificQuestionTypeInForm,
   isEndPage,
@@ -715,6 +717,79 @@ describe('helpers', () => {
       expect(
         hasSpecificQuestionTypeInForm(definition, ComponentType.PaymentField)
       ).toBe(false)
+    })
+  })
+
+  describe('hasPostcodeLookupInForm', () => {
+    it('should return true if form contains address question with postcode lookup turned on', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const addressFieldComponent = buildUkAddressFieldComponent({
+        options: { usePostcodeLookup: true }
+      })
+      const page2 = buildQuestionPage({
+        components: [addressFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPostcodeLookupInForm(definition)).toBe(true)
+    })
+
+    it('should return false if form contains address question but postcode lookup turned off', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const addressFieldComponent = buildUkAddressFieldComponent({
+        options: { usePostcodeLookup: false }
+      })
+      const page2 = buildQuestionPage({
+        components: [addressFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPostcodeLookupInForm(definition)).toBe(false)
+    })
+
+    it('should return false if form contains address question but postcode lookup missing', () => {
+      const textFieldComponent = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent]
+      })
+      const addressFieldComponent = buildUkAddressFieldComponent()
+      const page2 = buildQuestionPage({
+        components: [addressFieldComponent]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPostcodeLookupInForm(definition)).toBe(false)
+    })
+
+    it('should return false if form doesnt contain address question', () => {
+      const textFieldComponent1 = buildTextFieldComponent()
+      const page1 = buildQuestionPage({
+        components: [textFieldComponent1]
+      })
+      const textFieldComponent2 = buildTextFieldComponent()
+      const page2 = buildQuestionPage({
+        components: [textFieldComponent2]
+      })
+      const definition = buildDefinition({
+        pages: [page1, page2]
+      })
+      expect(hasPostcodeLookupInForm(definition)).toBe(false)
+    })
+
+    it('should return false if form has no pages', () => {
+      const definition = buildDefinition({
+        pages: []
+      })
+      expect(hasPostcodeLookupInForm(definition)).toBe(false)
     })
   })
 })
