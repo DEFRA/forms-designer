@@ -178,11 +178,11 @@ export function createCsv(input) {
       { bom: true, quoted: true },
       /** @type {Callback} */ function (err, output) {
         if (err) {
-          // @ts-expect-error - error object not stringly typed
           reject(
             err instanceof Error
               ? err
-              : new Error(`CSV stringify error: ${err.message}`)
+              : // @ts-expect-error - error object not stringly typed
+                new Error(`CSV stringify error: ${err.message}`)
           )
           return
         }
