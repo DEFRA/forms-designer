@@ -195,7 +195,6 @@ export function guidanceViewModel(
     },
     previewModel,
     cardTitle: `Page settings`,
-    cardCaption: null,
     cardHeading,
     navigation,
     previewPageUrl,

@@ -285,8 +285,6 @@ export function handleAutocomplete(question, state, definition) {
 export function getCardHeadings(details) {
   return {
     cardTitle: `Question ${details.questionNum}`,
-    cardCaption: null,
-    cardHeading: null,
     cardId: 'edit-question'
   }
 }
