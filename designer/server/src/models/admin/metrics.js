@@ -181,7 +181,7 @@ export function createCsv(input) {
           reject(
             err instanceof Error
               ? err
-              : // @ts-expect-error - error object not stringly typed
+              : // @ts-expect-error - error object not strongly typed
                 new Error(`CSV stringify error: ${err.message}`)
           )
           return
