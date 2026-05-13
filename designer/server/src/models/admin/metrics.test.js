@@ -3,6 +3,7 @@ import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 import config from '~/src/config.js'
 import {
   combineModel,
+  createCsv,
   getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
@@ -547,6 +548,19 @@ describe('metrics models', () => {
 "Form 1","http://app-base-url:3000/library/form-1","5"
 "Form 2","http://app-base-url:3000/library/form-2","0"
 `)
+    })
+  })
+
+  describe('createCsv', () => {
+    it('should throw if error', async () => {
+      const veryLongInput = Array.from({ length: 200000 }).map(() =>
+        Array.from({ length: 100 }).map(
+          () => 'ABCDEFGHIJKLMNOPQRSTUVXYZ0123456789'
+        )
+      )
+      await expect(() => createCsv(veryLongInput)).rejects.toThrow(
+        'CSV stringify error: Cannot create a string longer than 0x1fffffe8 characters'
+      )
     })
   })
 })
