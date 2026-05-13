@@ -1,22 +1,11 @@
-import {
-  Level2MakingAFormMenu,
-  WebsiteLevel1Routes
-} from '~/src/routes/website/constants.js'
+import { Level2MakingAFormMenu } from '~/src/routes/website/constants.js'
 import features from '~/src/routes/website/content/features.js'
-import { whatsNewLatest } from '~/src/routes/website/content/whatsNew.js'
 
 export default {
   home: {
     mastHead: {
       heading: 'Create and publish Defra forms on GOV.UK',
       description: 'Create and publish Defra forms on GOV.UK'
-    },
-    whatsNew: {
-      date: {
-        text: '30 January 2026',
-        iso: '2026-01-30T15:00:00.000Z'
-      },
-      text: 'Confirmation emails now include customer answers and unique reference numbers.'
     }
   },
   makingAForm: {
@@ -68,7 +57,8 @@ export default {
             text: 'Plan your form'
           },
           {
-            param: Level2MakingAFormMenu.ADAPTING_A_PDF_OR_PAPER_FORM_TO_A_DIGITAL_FORM,
+            param:
+              Level2MakingAFormMenu.ADAPTING_A_PDF_OR_PAPER_FORM_TO_A_DIGITAL_FORM,
             text: 'Adapting a PDF or paper form to a digital form'
           },
           {
@@ -86,7 +76,8 @@ export default {
             text: 'Write a privacy notice'
           },
           {
-            param: Level2MakingAFormMenu.AGREE_TO_THE_DATA_PROTECTION_TERMS_AND_CONDITIONS,
+            param:
+              Level2MakingAFormMenu.AGREE_TO_THE_DATA_PROTECTION_TERMS_AND_CONDITIONS,
             text: 'Agree to the data protection terms and conditions'
           },
           {
@@ -104,7 +95,8 @@ export default {
         parent: true,
         children: [
           {
-            param: Level2MakingAFormMenu.CHOOSE_THE_RIGHT_FORMAT_FOR_YOUR_QUESTIONS,
+            param:
+              Level2MakingAFormMenu.CHOOSE_THE_RIGHT_FORMAT_FOR_YOUR_QUESTIONS,
             text: 'Choose the right format for your questions'
           },
           {
@@ -130,14 +122,6 @@ export default {
         ]
       }
     ]
-  },
-  whatsNew: {
-    mastHead: {
-      heading: 'Updates',
-      caption: "What's new",
-      description: 'Updates to the Defra Form Designer and Developer Plugin.'
-    },
-    latest: whatsNewLatest
   },
   resources: {},
   features

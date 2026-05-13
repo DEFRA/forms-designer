@@ -64,8 +64,13 @@ export default /** @satisfies {ServerRoute[]} */ ([
       const { params } = request
       const { subMenu } = params
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const contentMenus = /** @type {XGovContentSubNavigationItemWithChildren} */
-        (content.makingAForm.menus.find(menu => menu.children.find((c) => c.param === subMenu)))
+      const contentMenus =
+        /** @type {XGovContentSubNavigationItemWithChildren} */
+        (
+          content.makingAForm.menus.find((menu) =>
+            menu.children.find((c) => c.param === subMenu)
+          )
+        )
 
       const model = websiteSubmenuModel(
         WebsiteLevel1Routes.MAKING_A_FORM,

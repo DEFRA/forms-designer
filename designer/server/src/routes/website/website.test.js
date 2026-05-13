@@ -1,5 +1,3 @@
-import { AssertionError } from 'assert'
-
 import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
@@ -26,39 +24,11 @@ describe('Health check route', () => {
       url: '/'
     }
 
-    const { container, document } = await renderResponse(server, options)
+    const { container } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', { level: 1 })
-    const $whatsNewTextObj = document.querySelector(
-      '.app-masthead .govuk-card__content .govuk-body'
-    )
-
-    if (
-      $whatsNewTextObj?.textContent === undefined ||
-      $whatsNewTextObj.textContent === null
-    ) {
-      throw new AssertionError({ message: '$whatsNewTextObj is missing' })
-    }
-    const $time = document.querySelector(
-      '.app-masthead .govuk-card__content time'
-    )
-
-    if ($time === null) {
-      throw new AssertionError({ message: '$time is null' })
-    }
-
-    const $whatsNewText = $whatsNewTextObj.textContent.trim()
-
-    const $timeIso = $time.getAttribute('datetime')
     const $navigation = container.getByRole('navigation', { name: 'menu' })
-    const menus = [
-      'Services',
-      'About',
-      'Get started',
-      'Features',
-      'Resources',
-      'Support'
-    ]
+    const menus = ['Home', 'Features', 'Making a form', 'Support']
     const $navigationItems = within($navigation).getAllByRole('link')
 
     menus.forEach((item, idx) => {
@@ -67,75 +37,56 @@ describe('Health check route', () => {
     expect($heading).toHaveTextContent(
       'Create and publish Defra forms on GOV.UK'
     )
-    expect($whatsNewText.length).toBeTruthy()
-    // @ts-expect-error - testing for invalid input
-    expect(new Date($timeIso)).not.toBeNaN()
   })
 
-  test('/services should redirect to home when not logged in', async () => {
+  test('/resources should redirect to home when not logged in', async () => {
     const options = {
       method: 'GET',
-      url: '/services'
+      url: '/resources'
     }
 
     const {
-      response: { headers, statusCode }
+      response: { statusCode }
     } = await renderResponse(server, options)
 
     expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
-    expect(headers.location).toBe('/')
   })
 
-  test('/services should show the Defra Forms Website Services page', async () => {
+  test('/resources should show the Defra Forms Website Resources page', async () => {
     const options = {
       method: 'GET',
-      url: '/services',
+      url: '/resources',
       auth
     }
 
     const { container } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', { level: 1 })
-    expect($heading).toHaveTextContent(
-      'Create and publish Defra forms on GOV.UK'
-    )
+    expect($heading).toHaveTextContent('Resources')
   })
 
-  test('/about should show the Defra Forms Website About page', async () => {
+  test('/making-a-form should show the Defra Forms Website Making a Form page', async () => {
     const options = {
       method: 'GET',
-      url: '/about'
+      url: '/making-a-form'
     }
 
     const { container } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', { level: 1 })
-    expect($heading).toHaveTextContent('About the Defra Forms team')
+    expect($heading).toHaveTextContent('Making a form')
   })
 
-  test('/get-started should load get Get Started page', async () => {
+  test('/making-a-form/what-makes-a-good-form should load Make a form live checklist', async () => {
     const options = {
       method: 'GET',
-      url: '/get-started'
+      url: '/making-a-form/what-makes-a-good-form'
     }
 
     const { container, response } = await renderResponse(server, options)
     const $heading = container.getByRole('heading', { level: 1 })
 
-    expect($heading).toHaveTextContent('Get access to the Defra Form Designer')
-    expect(response.result).toMatchSnapshot()
-  })
-
-  test('/get-started/make-form-live-checklist should load Make a form live checklist', async () => {
-    const options = {
-      method: 'GET',
-      url: '/get-started/make-form-live-checklist'
-    }
-
-    const { container, response } = await renderResponse(server, options)
-    const $heading = container.getByRole('heading', { level: 1 })
-
-    expect($heading).toHaveTextContent('Make a form live checklist')
+    expect($heading).toHaveTextContent('What makes a good form')
     expect(response.result).toMatchSnapshot()
   })
 
@@ -152,29 +103,6 @@ describe('Health check route', () => {
     expect(response.result).toMatchSnapshot()
   })
 
-  test('/resources should load Does this need to be... page', async () => {
-    const options = {
-      method: 'GET',
-      url: '/resources'
-    }
-
-    const { container, response } = await renderResponse(server, options)
-    const $heading = container.getByRole('heading', { level: 1 })
-
-    expect($heading).toHaveTextContent('Does this need to be a form?')
-    expect(response.result).toMatchSnapshot()
-  })
-
-  test('/resources/accessibility-and-inclusion should load Accessibility and inclusion page', async () => {
-    const options = {
-      method: 'GET',
-      url: '/resources/accessibility-and-inclusion'
-    }
-
-    const { response } = await renderResponse(server, options)
-    expect(response.result).toMatchSnapshot()
-  })
-
   test('/support should shows the Defra Forms Website Support page', async () => {
     const options = {
       method: 'GET',
@@ -185,19 +113,6 @@ describe('Health check route', () => {
 
     const $heading = container.getByRole('heading', { level: 1 })
     expect($heading).toHaveTextContent('Support')
-    expect(response.result).toMatchSnapshot()
-  })
-
-  test("/whats-new should show the What's new page", async () => {
-    const options = {
-      method: 'GET',
-      url: '/whats-new'
-    }
-
-    const { container, response } = await renderResponse(server, options)
-
-    const $heading = container.getByRole('heading', { level: 1 })
-    expect($heading).toHaveTextContent('Updates')
     expect(response.result).toMatchSnapshot()
   })
 })

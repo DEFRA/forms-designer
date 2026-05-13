@@ -60,7 +60,7 @@ export function getWebsitePageNavigation(route, isGuest) {
  */
 export function getSubnavigation(parent, activeMenu) {
   /**
-    @param { XGovContentSubNavigationItemWithChildren } menu
+    @param { XGovContentSubNavigationItem } menu
    */
   return function (menu) {
     const { param, ...subMenu } = menu
@@ -117,7 +117,7 @@ export function getSubmenuPaginatorMap(currentMenu) {
 
   return new Map(
     currentMenu.children?.map(({ param }, idx) => [
-      param,
+      param ?? '',
       {
         previous: previous[idx],
         next: next[idx]

@@ -21,20 +21,6 @@ export function buildEntry(text, url, options) {
 }
 
 /**
- * @param { string | undefined } path
- * @param { string } pathChecked
- */
-// export function isVisible(path, pathChecked) {
-//   if (path !== undefined && formsWebsitePaths.includes(pathChecked)) {
-//     return formsWebsitePaths.some((websitePath) => {
-//       return path.includes(websitePath)
-//     })
-//   }
-
-//   return true
-// }
-
-/**
  * @param {Partial<Request> | null} request
  */
 export function buildNavigation(request) {
@@ -50,15 +36,16 @@ export function buildNavigation(request) {
     }),
     buildEntry('Resources', formsResourcesPath, {
       isActive: !!request?.path?.startsWith(formsResourcesPath),
-      isVisible: request?.auth?.isAuthenticated
+      isVisible: request?.auth?.isAuthenticated ?? false
     }),
     buildEntry('Support', formsSupportPath, {
       isActive: !!request?.path?.startsWith(formsSupportPath)
     })
-  ].filter(({ isVisible }) => isVisible)
-  // .map(({ isVisible: _isVisible, ...entry }) => {
-  //   return entry
-  // })
+  ]
+    .filter(({ isVisible }) => isVisible)
+    .map(({ isVisible: _isVisible, ...entry }) => {
+      return entry
+    })
 }
 
 /**
