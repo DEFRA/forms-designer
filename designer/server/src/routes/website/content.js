@@ -1,17 +1,19 @@
 import { Level2MakingAFormMenu } from '~/src/routes/website/constants.js'
 import features from '~/src/routes/website/content/features.js'
 
+const heading = 'Create and publish Defra forms on GOV.UK'
+
 export default {
   home: {
     mastHead: {
-      heading: 'Create and publish Defra forms on GOV.UK',
-      description: 'Create and publish Defra forms on GOV.UK'
+      heading,
+      description: heading
     }
   },
   makingAForm: {
     mastHead: {
-      heading: 'Create and publish Defra forms on GOV.UK',
-      description: 'Create and publish Defra forms on GOV.UK'
+      heading,
+      description: heading
     },
     menus: [
       {
