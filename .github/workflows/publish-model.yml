@@ -102,7 +102,7 @@ jobs:
         run: npm install -g "npm@$(node -p 'require("./package.json").engines.npm')"
 
       - name: Update package versions
-        run: npm version patch --workspaces --include-workspace-root --no-git-tag-version
+        run: npm version patch --workspaces --include-workspace-root --git-tag-version false --save
 
       - name: Commit and push updates
         run: |
