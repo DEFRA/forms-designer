@@ -1000,6 +1000,20 @@ describe('editor-v2 - advanced settings fields model', () => {
       )
       expect(conditional?.customTemplate).toBe('payment-conditional-amounts')
     })
+
+    it('does not render any base field more than once', () => {
+      // A duplicate entry renders the inline editor twice, which makes the
+      // browser submit conditionalAmount/conditionalAmountCondition as arrays
+      // and breaks the Joi string validator. See PR #1443.
+      const fields = getFieldList(
+        undefined,
+        ComponentType.PaymentField,
+        undefined,
+        buildDefinition()
+      )
+      const names = fields.map((f) => f.name)
+      expect(names).toEqual([...new Set(names)])
+    })
   })
 
   describe('getFileUploadFields', () => {
