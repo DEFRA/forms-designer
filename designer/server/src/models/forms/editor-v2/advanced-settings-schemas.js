@@ -19,6 +19,12 @@ const EXACT_CHECKS_ERROR_MESSAGE =
   'Exact number of checkboxes must be a whole number greater than or equal to 2'
 const MINMAX_OR_EXACT_ERROR_MESSAGE =
   'Enter an exact amount or choose the minimum and maximum range allowed'
+const MIN_FEATURES_ERROR_MESSAGE =
+  'Minimum number of features must be a whole number greater than or equal to 1'
+const MAX_FEATURES_ERROR_MESSAGE =
+  'Maximum number of features must be a whole number greater than or equal to 1'
+const EXACT_FEATURES_ERROR_MESSAGE =
+  'Exact number of features must be a whole number greater than or equal to 1'
 const MAX_PRECISION = 5
 
 /**
@@ -151,5 +157,37 @@ export const allSpecificSchemas = Joi.object().keys({
     }),
     otherwise: Joi.string().optional().allow('')
   }),
-  countries: questionDetailsFullSchema.countriesSchema
+  countries: questionDetailsFullSchema.countriesSchema,
+  exactFeatures: questionDetailsFullSchema.exactFeaturesSchema
+    .when('minFeatures', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
+      '*': EXACT_FEATURES_ERROR_MESSAGE
+    })
+    .when('maxFeatures', {
+      is: Joi.exist(),
+      then: Joi.number().forbidden(),
+      otherwise: Joi.number().empty('').integer()
+    })
+    .messages({
+      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
+      '*': EXACT_FEATURES_ERROR_MESSAGE
+    }),
+  minFeatures: questionDetailsFullSchema.minFeaturesSchema
+    .messages({
+      'number.max':
+        'Minimum number of features cannot be greater than the maximum',
+      '*': MIN_FEATURES_ERROR_MESSAGE
+    })
+    .when('maxFeatures', {
+      is: Joi.exist(),
+      then: Joi.number().max(Joi.ref('maxFeatures'))
+    }),
+  maxFeatures: questionDetailsFullSchema.maxFeaturesSchema.messages({
+    '*': MAX_FEATURES_ERROR_MESSAGE
+  })
 })

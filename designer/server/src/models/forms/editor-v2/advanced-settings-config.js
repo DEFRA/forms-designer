@@ -81,7 +81,12 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Classes
     ],
     HiddenField: [],
-    GeospatialField: [QuestionAdvancedSettings.Countries]
+    GeospatialField: [
+      QuestionAdvancedSettings.Countries,
+      QuestionAdvancedSettings.MinFeatures,
+      QuestionAdvancedSettings.MaxFeatures,
+      QuestionAdvancedSettings.ExactFeatures
+    ]
   })
 
 /**
@@ -366,6 +371,42 @@ export const allAdvancedSettingsFields =
           text: 'Any'
         }
       ]
+    },
+    [QuestionAdvancedSettings.ExactFeatures]: {
+      name: 'exactFeatures',
+      id: 'exactFeatures',
+      label: {
+        text: 'Exact items (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The exact number of features a user must define'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.MinFeatures]: {
+      name: 'minFeatures',
+      id: 'minFeatures',
+      label: {
+        text: 'Minimum items (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The minimum number of features a user can define'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.MaxFeatures]: {
+      name: 'maxFeatures',
+      id: 'maxFeatures',
+      label: {
+        text: 'Maximum items (optional)',
+        classes: GOVUK_LABEL__M
+      },
+      hint: {
+        text: 'The maximum number of features a user can define'
+      },
+      classes: GOVUK_INPUT_WIDTH_3
     }
   })
 

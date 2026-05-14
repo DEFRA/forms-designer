@@ -135,37 +135,43 @@ export function getAdditionalSchema(payload) {
   const schemaMapping = [
     {
       key: 'min',
-      sources: ['minLength', 'min', 'minFiles', 'minChecks'],
+      sources: ['minLength', 'min', 'minFiles', 'minChecks', 'minFeatures'],
       getValue: () =>
         payload.minLength ??
         payload.min ??
         payload.minFiles ??
-        payload.minChecks,
+        payload.minChecks ??
+        payload.minFeatures,
       shouldInclude: () =>
         payload.minLength ??
         isValueOrZero(payload.min) ??
         isValueOrZero(payload.minFiles) ??
-        isValueOrZero(payload.minChecks)
+        isValueOrZero(payload.minChecks) ??
+        isValueOrZero(payload.minFeatures)
     },
     {
       key: 'max',
-      sources: ['maxLength', 'max', 'maxFiles', 'maxChecks'],
+      sources: ['maxLength', 'max', 'maxFiles', 'maxChecks', 'maxFeatures'],
       getValue: () =>
         payload.maxLength ??
         payload.max ??
         payload.maxFiles ??
-        payload.maxChecks,
+        payload.maxChecks ??
+        payload.maxFeatures,
       shouldInclude: () =>
         payload.maxLength ??
         isValueOrZero(payload.max) ??
         payload.maxFiles ??
-        isValueOrZero(payload.maxChecks)
+        isValueOrZero(payload.maxChecks) ??
+        isValueOrZero(payload.maxFeatures)
     },
     {
       key: 'length',
-      sources: ['exactFiles', 'exactChecks'],
-      getValue: () => payload.exactFiles ?? payload.exactChecks,
-      shouldInclude: () => payload.exactFiles ?? payload.exactChecks
+      sources: ['exactFiles', 'exactChecks', 'exactFeatures'],
+      getValue: () =>
+        payload.exactFiles ?? payload.exactChecks ?? payload.exactFeatures,
+      shouldInclude: () =>
+        payload.exactFiles ?? payload.exactChecks ?? payload.exactFeatures
     },
     {
       key: 'regex',

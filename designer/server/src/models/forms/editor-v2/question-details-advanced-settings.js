@@ -31,7 +31,7 @@ export function addDateFieldProperties(question) {
 }
 
 /**
- * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent | CheckboxesFieldComponent } question
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent | CheckboxesFieldComponent | GeospatialFieldComponent } question
  */
 export function addMinMaxFieldProperties(question) {
   if (question.type === ComponentType.FileUploadField) {
@@ -46,6 +46,13 @@ export function addMinMaxFieldProperties(question) {
       exactChecks: question.schema?.length,
       minChecks: question.schema?.min,
       maxChecks: question.schema?.max
+    }
+  }
+  if (question.type === ComponentType.GeospatialField) {
+    return {
+      exactFeatures: question.schema?.length,
+      minFeatures: question.schema?.min,
+      maxFeatures: question.schema?.max
     }
   }
   return {
@@ -96,7 +103,8 @@ export function mapToQuestionOptions(question) {
     ComponentType.MultilineTextField,
     ComponentType.NumberField,
     ComponentType.FileUploadField,
-    ComponentType.CheckboxesField
+    ComponentType.CheckboxesField,
+    ComponentType.GeospatialField
   ])
   const isLocationField = isLocationFieldType(question.type)
 

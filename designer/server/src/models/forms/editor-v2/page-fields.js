@@ -28,7 +28,10 @@ const textFieldQuestions = [
   QuestionAdvancedSettings.Suffix,
   QuestionAdvancedSettings.MinChecks,
   QuestionAdvancedSettings.MaxChecks,
-  QuestionAdvancedSettings.ExactChecks
+  QuestionAdvancedSettings.ExactChecks,
+  QuestionAdvancedSettings.MinFeatures,
+  QuestionAdvancedSettings.MaxFeatures,
+  QuestionAdvancedSettings.ExactFeatures
 ]
 
 const multiLineTextFieldQuestions = [
