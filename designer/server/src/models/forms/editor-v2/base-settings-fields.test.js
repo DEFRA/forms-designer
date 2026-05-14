@@ -936,6 +936,40 @@ describe('editor-v2 - advanced settings fields model', () => {
       )
       expect(result).toBeUndefined()
     })
+
+    test('paymentAmount returns "0" when amount is exactly 0 (DF-832 zero-bypass)', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.PaymentField,
+        name: 'payment',
+        title: 'payment',
+        options: { amount: 0, description: '' }
+      })
+      const result = getFieldValue(
+        'paymentAmount',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('0')
+    })
+
+    test('paymentAmount returns "0" when amount is missing (new component default)', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.PaymentField,
+        name: 'payment',
+        title: 'payment',
+        options: { description: '' }
+      })
+      const result = getFieldValue(
+        'paymentAmount',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('0')
+    })
   })
 
   describe('getFileUploadFields', () => {
@@ -1077,6 +1111,51 @@ describe('PaymentField required fields gated on enhancedAction', () => {
     )
     expect(errorPaths(result)).not.toEqual(
       expect.arrayContaining(paymentBaseFieldPaths)
+    )
+  })
+
+  describe('radioText required only on save-item (DF-832 regression guard)', () => {
+    const radiosBase = {
+      questionType: 'RadiosField',
+      question: 'q',
+      name: 'AbCdEf',
+      shortDescription: 'sd',
+      list: 'list-id'
+    }
+
+    it('errors with "Enter item text" when enhancedAction=save-item and radioText is empty', () => {
+      const { error } = baseSchema.validate(
+        {
+          ...radiosBase,
+          enhancedAction: 'save-item',
+          radioText: '',
+          listItemsData: '[]'
+        },
+        { abortEarly: false }
+      )
+      expect(
+        error?.details.find((d) => d.path[0] === 'radioText')?.message
+      ).toBe('Enter item text')
+    })
+
+    it.each([
+      'add-item',
+      're-order',
+      'add-conditional-amount',
+      'save-conditional-amount',
+      'cancel-conditional-amount',
+      undefined
+    ])(
+      'does not require radioText when enhancedAction=%s',
+      (enhancedAction) => {
+        const payload = enhancedAction
+          ? { ...radiosBase, enhancedAction, radioText: '' }
+          : { ...radiosBase, radioText: '' }
+        const { error } = baseSchema.validate(payload, { abortEarly: false })
+        expect(
+          error?.details.find((d) => d.path[0] === 'radioText')
+        ).toBeUndefined()
+      }
     )
   })
 

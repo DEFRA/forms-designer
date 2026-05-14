@@ -3,6 +3,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
+import { findConditionReferences } from '~/src/lib/condition-references.js'
 import { deleteCondition } from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -63,6 +64,27 @@ export default [
       const formId = metadata.id
 
       try {
+        const definition = await forms.getDraftFormDefinition(formId, token)
+        const { paymentFields } = findConditionReferences(
+          definition,
+          conditionId
+        )
+
+        if (paymentFields.length > 0) {
+          const errorList = buildSimpleErrorList([
+            'This condition cannot be deleted because it is used for a conditional payment amount. Remove the conditional payment amount that uses it before deleting it.'
+          ])
+
+          return h.view(CONFIRMATION_PAGE_VIEW, {
+            ...viewModel.deleteConditionConfirmationPageViewModel(
+              metadata,
+              definition,
+              conditionId
+            ),
+            errorList
+          })
+        }
+
         await deleteCondition(formId, token, conditionId)
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

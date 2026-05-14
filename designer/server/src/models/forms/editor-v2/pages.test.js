@@ -137,6 +137,79 @@ describe('editor-v2 - pages model', () => {
     })
   })
 
+  describe('mapPageData display order (DF-832)', () => {
+    test('renders Summary before Payment in the listing, regardless of array order', () => {
+      const res = mapPageData('slug', testFormDefinitionWithPayment, undefined)
+      const titles = res.pages.map((p) => p.title)
+      const summaryIdx = titles.findIndex((t) => t === 'Check your answers')
+      const paymentIdx = titles.findIndex((t) => t === 'Payment')
+      expect(summaryIdx).toBeGreaterThanOrEqual(0)
+      expect(paymentIdx).toBeGreaterThanOrEqual(0)
+      expect(summaryIdx).toBeLessThan(paymentIdx)
+    })
+
+    test('preserves original definition.pages index in pageNum despite sorted display order', () => {
+      // testFormDefinitionWithPayment authors order: [PaymentPage(p1), SummaryPage(p2)]
+      // Display order: SummaryPage, PaymentPage
+      // pageNum still reflects the authored order: Payment is page 1, Summary is page 2.
+      const res = mapPageData('slug', testFormDefinitionWithPayment, undefined)
+      const summary = /** @type {*} */ (
+        res.pages.find((p) => p.title === 'Check your answers')
+      )
+      const payment = /** @type {*} */ (
+        res.pages.find((p) => p.title === 'Payment')
+      )
+      expect(payment.pageNum).toBe(1)
+      expect(summary.pageNum).toBe(2)
+    })
+
+    test('Total amount falls back to first conditional amount when default is zero', () => {
+      const def = structuredClone(testFormDefinitionWithPayment)
+      const paymentComp = /** @type {*} */ (def.pages[0]).components[0]
+      paymentComp.options.amount = 0
+      paymentComp.options.conditionalAmounts = [
+        { amount: 12, condition: 'c1' },
+        { amount: 30, condition: 'c2' }
+      ]
+      const res = mapQuestionRows(def, def.pages[0])
+      expect(res[1]).toEqual({
+        key: { text: 'Total amount' },
+        value: { text: '£12.00' }
+      })
+    })
+
+    test('Total amount renders £0.00 when default is zero and no conditional amounts exist', () => {
+      const def = structuredClone(testFormDefinitionWithPayment)
+      const paymentComp = /** @type {*} */ (def.pages[0]).components[0]
+      paymentComp.options.amount = 0
+      paymentComp.options.conditionalAmounts = []
+      const res = mapQuestionRows(def, def.pages[0])
+      expect(res[1]).toEqual({
+        key: { text: 'Total amount' },
+        value: { text: '£0.00' }
+      })
+    })
+
+    test('Terminal pages sort after Payment in the display order', () => {
+      const def = structuredClone(testFormDefinitionWithPayment)
+      def.pages.push(
+        /** @type {*} */ ({
+          id: 'p3',
+          path: '/exit',
+          title: 'You cannot continue',
+          controller: 'TerminalPageController',
+          next: [],
+          components: []
+        })
+      )
+      const res = mapPageData('slug', def, undefined)
+      const titles = res.pages.map((p) => p.title)
+      expect(titles.indexOf('Payment')).toBeLessThan(
+        titles.indexOf('You cannot continue')
+      )
+    })
+  })
+
   describe('mapQuestionRows', () => {
     test('should map question rows', () => {
       const resPageOneQuestions = mapQuestionRows(

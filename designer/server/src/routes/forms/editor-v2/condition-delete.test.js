@@ -1,4 +1,5 @@
 import {
+  ComponentType,
   Engine,
   FormDefinitionError,
   FormDefinitionErrorType
@@ -129,6 +130,9 @@ describe('Editor v2 condition delete routes', () => {
   describe('POST /condition/{conditionId}/delete', () => {
     test('should delete condition and redirect to conditions list', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testDefinition)
       jest.mocked(editor.deleteCondition).mockResolvedValueOnce()
 
       const options = {
@@ -148,6 +152,54 @@ describe('Editor v2 condition delete routes', () => {
         auth.credentials.token,
         'cond2'
       )
+    })
+
+    test('blocks deletion when the condition is referenced by a PaymentField', async () => {
+      const definitionWithPaymentRef = buildDefinition({
+        engine: Engine.V2,
+        pages: [
+          {
+            id: 'p1',
+            title: 'Pay',
+            path: '/pay',
+            next: [],
+            components: [
+              {
+                id: 'c1',
+                name: 'pay',
+                title: 'Pay',
+                type: ComponentType.PaymentField,
+                hint: '',
+                options: {
+                  amount: 25,
+                  description: 'Fee',
+                  conditionalAmounts: [{ amount: 50, condition: 'cond1' }]
+                }
+              }
+            ]
+          }
+        ],
+        conditions: [{ id: 'cond1', displayName: 'Cond 1', items: [] }]
+      })
+
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWithPaymentRef)
+
+      const options = {
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/condition/cond1/delete',
+        auth
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $errorMessage = container.getByText(
+        'This condition cannot be deleted because it is used for a conditional payment amount. Remove the conditional payment amount that uses it before deleting it.'
+      )
+      expect($errorMessage).toBeInTheDocument()
+      expect(editor.deleteCondition).not.toHaveBeenCalled()
     })
 
     test('should show error message when condition is referenced by other conditions', async () => {
@@ -174,6 +226,7 @@ describe('Editor v2 condition delete routes', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(testDefinition)
+        .mockResolvedValueOnce(testDefinition)
 
       const options = {
         method: 'post',
@@ -194,6 +247,9 @@ describe('Editor v2 condition delete routes', () => {
       const genericError = Boom.badRequest('Generic error')
 
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testDefinition)
       jest.mocked(editor.deleteCondition).mockRejectedValueOnce(genericError)
 
       const options = {

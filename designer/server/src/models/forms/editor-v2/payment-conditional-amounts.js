@@ -58,5 +58,22 @@ export function getPaymentConditionalAmountsViewModel({ definition, state }) {
 }
 
 /**
- * @import { FormDefinition, QuestionSessionState } from '@defra/forms-model'
+ * End-user-facing display amount for a PaymentField. Falls back to the
+ * first conditional amount when the base amount is zero, mirroring the
+ * runtime preview model's _displayAmount behaviour. Distinct from the
+ * editor input value (see getPaymentAmount in base-settings-fields.js).
+ * @param {PaymentFieldComponent} component
+ * @returns {number}
+ */
+export function getPaymentDisplayAmount(component) {
+  const amount = component.options.amount
+  if (amount > 0) {
+    return amount
+  }
+  const conditional = component.options.conditionalAmounts ?? []
+  return conditional.length > 0 ? conditional[0].amount : 0
+}
+
+/**
+ * @import { FormDefinition, PaymentFieldComponent, QuestionSessionState } from '@defra/forms-model'
  */

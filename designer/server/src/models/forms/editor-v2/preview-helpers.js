@@ -11,6 +11,7 @@ import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js
 import config from '~/src/config.js'
 import { stringHasValue } from '~/src/lib/utils.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
+import { getPaymentDisplayAmount } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
 
 export const DEFAULT_TRUNCATE_LENGTH = 50
 export const DECLARATION_PREVIEW_TITLE = 'Preview of Check answers page'
@@ -213,7 +214,7 @@ export function getPaymentInfo(definition, slug) {
     )
 
     if (paymentComponent) {
-      const amount = paymentComponent.options.amount
+      const displayAmount = getPaymentDisplayAmount(paymentComponent)
       const pageId = page.id ?? ''
       const editUrl =
         slug && pageId
@@ -222,7 +223,7 @@ export function getPaymentInfo(definition, slug) {
       return {
         hasPayment: true,
         description: paymentComponent.options.description,
-        amount: formatCurrency(amount),
+        amount: formatCurrency(displayAmount),
         pageId,
         path: page.path,
         editUrl

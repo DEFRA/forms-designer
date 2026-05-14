@@ -135,19 +135,23 @@ describe('mergeConditionalAmountsIntoOptions', () => {
     expect(result.options.description).toBe('Fee')
   })
 
-  it('omits conditionalAmounts when state has none', () => {
+  it('writes an empty array when state has an explicit empty list (user removed everything)', () => {
     const result = mergeConditionalAmountsIntoOptions(paymentDetails(), {
       conditionalAmounts: []
     })
-    expect(result.options.conditionalAmounts).toBeUndefined()
+    expect(result.options.conditionalAmounts).toEqual([])
   })
 
-  it('omits conditionalAmounts when state is undefined', () => {
-    const result = mergeConditionalAmountsIntoOptions(
-      paymentDetails(),
-      undefined
-    )
-    expect(result.options.conditionalAmounts).toBeUndefined()
+  it('leaves questionDetails untouched when state.conditionalAmounts is undefined (fresh session / lost session)', () => {
+    const input = paymentDetails()
+    const result = mergeConditionalAmountsIntoOptions(input, {})
+    expect(result).toBe(input)
+  })
+
+  it('leaves questionDetails untouched when state itself is undefined', () => {
+    const input = paymentDetails()
+    const result = mergeConditionalAmountsIntoOptions(input, undefined)
+    expect(result).toBe(input)
   })
 
   it('is a no-op for non-PaymentField components', () => {
@@ -161,12 +165,13 @@ describe('mergeConditionalAmountsIntoOptions', () => {
     expect(result).toBe(questionDetails)
   })
 
-  it('preserves an existing options object when no merge is needed', () => {
+  it('writes empty array on existing options object when user emptied the list', () => {
     const questionDetails = paymentDetails({ options: { amount: 5 } })
     const result = mergeConditionalAmountsIntoOptions(questionDetails, {
       conditionalAmounts: []
     })
-    expect(result).toBe(questionDetails)
+    expect(result.options.amount).toBe(5)
+    expect(result.options.conditionalAmounts).toEqual([])
   })
 })
 

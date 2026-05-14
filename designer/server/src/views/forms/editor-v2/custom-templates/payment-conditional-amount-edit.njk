@@ -15,7 +15,7 @@
   prefix: { text: "£" },
   classes: "govuk-input--width-10",
   value: paymentConditionalAmounts.editRow.amount,
-  errorMessage: errorList | selectattr("href", "equalto", "#conditionalAmount") | first
+  errorMessage: formErrors.conditionalAmount
 }) }}
 
 <p class="govuk-heading-s govuk-!-margin-bottom-1">Charge this amount if</p>
@@ -24,9 +24,9 @@
 {{ govukSelect({
   id: "conditionalAmountCondition",
   name: "conditionalAmountCondition",
-  label: { text: "Select an existing condition" },
+  label: { text: "Select an existing condition", classes: "govuk-visually-hidden" },
   items: conditionItems,
-  errorMessage: errorList | selectattr("href", "equalto", "#conditionalAmountCondition") | first
+  errorMessage: formErrors.conditionalAmountCondition
 }) }}
 
 <div class="govuk-button-group">

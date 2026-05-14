@@ -16,6 +16,7 @@ import {
   getSectionForPage
 } from '~/src/models/forms/editor-v2/common.js'
 import { getPageConditionDetails } from '~/src/models/forms/editor-v2/condition-helpers.js'
+import { getPaymentDisplayAmount } from '~/src/models/forms/editor-v2/payment-conditional-amounts.js'
 import {
   buildPreviewUrl,
   getPaymentInfo
@@ -116,6 +117,14 @@ export function mapMarkdown(component, isSummary) {
 }
 
 /**
+ * @param {PaymentFieldComponent} component
+ * @returns {string}
+ */
+function formatPaymentTotal(component) {
+  return formatCurrency(getPaymentDisplayAmount(component))
+}
+
+/**
  * @param {FormDefinition} definition
  * @param {Page} page
  */
@@ -139,7 +148,7 @@ export function mapQuestionRows(definition, page) {
       },
       {
         key: { text: 'Total amount' },
-        value: { text: formatCurrency(paymentComponent.options.amount) }
+        value: { text: formatPaymentTotal(paymentComponent) }
       }
     ]
   }
@@ -212,6 +221,12 @@ export function mapPageData(slug, definition, filterOptions) {
           filterOptions.includes(p.condition ?? 'unknown') ||
           isAnEndPage(p)
       )
+      .map((page, originalIndex) => ({ page, originalIndex }))
+      .sort((a, b) => {
+        const rankDiff = pageDisplayRank(a.page) - pageDisplayRank(b.page)
+        return rankDiff !== 0 ? rankDiff : a.originalIndex - b.originalIndex
+      })
+      .map(({ page }) => page)
       .map((page) => {
         const isEndPage = isAnEndPage(page)
         const isSummary = isSummaryPage(page)
@@ -231,6 +246,31 @@ export function mapPageData(slug, definition, filterOptions) {
         }
       })
   }
+}
+
+const DISPLAY_RANK_QUESTION = 0
+const DISPLAY_RANK_SUMMARY = 1
+const DISPLAY_RANK_PAYMENT = 2
+const DISPLAY_RANK_TERMINAL = 3
+
+/**
+ * Display-order rank for the form overview listing. Mirrors the runtime flow:
+ * question pages → Check your answers (Summary) → Payment → terminal/exit pages.
+ * `pageNum` continues to come from the original definition.pages index so labels
+ * are stable regardless of display order.
+ * @param {Page} page
+ */
+function pageDisplayRank(page) {
+  if (isSummaryPage(page)) {
+    return DISPLAY_RANK_SUMMARY
+  }
+  if (isPaymentPage(page)) {
+    return DISPLAY_RANK_PAYMENT
+  }
+  if (page.controller === ControllerType.Terminal) {
+    return DISPLAY_RANK_TERMINAL
+  }
+  return DISPLAY_RANK_QUESTION
 }
 
 /**
@@ -324,13 +364,29 @@ export function buildConditionsFilter(definition, filter) {
     condA.displayName.localeCompare(condB.displayName)
   )
 
-  // Find all condition ids that are assigned to at least one page
+  // Find all condition ids that are assigned to at least one page,
+  // or referenced by a PaymentField's conditional amounts.
   const assignedConditionIds = new Set(
     definition.pages
       .filter(({ condition }) => condition !== undefined)
       .map((x) => x.condition)
       .filter(Boolean)
   )
+  for (const page of definition.pages) {
+    const components = hasComponents(page) ? page.components : []
+    for (const component of components) {
+      if (component.type !== ComponentType.PaymentField) {
+        continue
+      }
+      const conditionalAmounts =
+        /** @type {{ conditionalAmounts?: Array<{ condition: string }> }} */ (
+          component.options
+        ).conditionalAmounts ?? []
+      for (const entry of conditionalAmounts) {
+        assignedConditionIds.add(entry.condition)
+      }
+    }
+  }
 
   return {
     show: conditions.length > 0,
