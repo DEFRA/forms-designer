@@ -248,7 +248,7 @@ export function calcChangePercentage(currCount, prevCount) {
  * @param {number} num
  */
 export function oneDecimalPlace(num) {
-  return parseFloat(num.toFixed(1))
+  return Number.parseFloat(num.toFixed(1))
 }
 
 /**
