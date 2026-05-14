@@ -3,7 +3,6 @@ import { checkAnswersSettingsBaseViewModel } from '~/src/models/forms/editor-v2/
 import { GOVUK_LABEL__M } from '~/src/models/forms/editor-v2/common.js'
 import { enrichPreviewModel } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
-  CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_DECLARATION,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
@@ -90,7 +89,6 @@ export function checkAnswersSettingsViewModel(
   return {
     ...model,
     fields,
-    cardCaption: CHECK_ANSWERS_CAPTION,
     tabConfig: getCheckAnswersTabConfig(
       metadata.slug,
       pageId,

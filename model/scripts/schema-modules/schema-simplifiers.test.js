@@ -182,9 +182,9 @@ describe('Schema Simplifiers', () => {
 
       expect(schema.description).toContain('nested multiple levels deep')
       expect(schema.examples).toBeDefined()
-      expect(schema.examples.length).toBe(1)
+      expect(schema.examples).toHaveLength(1)
       expect(schema.examples[0].conditions).toBeDefined()
-      expect(schema.examples[0].conditions.length).toBe(2)
+      expect(schema.examples[0].conditions).toHaveLength(2)
 
       const example = schema.examples[0]
       expect(example.conditions[0].field).toBeDefined()
@@ -315,7 +315,7 @@ describe('Schema Simplifiers', () => {
 
       processNestedSchemas(schema, '/test')
 
-      expect(schema.items.length).toBe(3)
+      expect(schema.items).toHaveLength(3)
       expect(schema.items[0].type).toBe(originalItems[0].type)
       expect(schema.items[1].type).toBe(originalItems[1].type)
       expect(schema.items[2].type).toBe(originalItems[2].type)
@@ -356,11 +356,11 @@ describe('Schema Simplifiers', () => {
 
       // Verify that all arrays still exist and have the correct length
       expect(schema.oneOf).toBeDefined()
-      expect(schema.oneOf.length).toBe(originalOneOf.length)
+      expect(schema.oneOf).toHaveLength(originalOneOf.length)
       expect(schema.anyOf).toBeDefined()
-      expect(schema.anyOf.length).toBe(originalAnyOf.length)
+      expect(schema.anyOf).toHaveLength(originalAnyOf.length)
       expect(schema.allOf).toBeDefined()
-      expect(schema.allOf.length).toBe(originalAllOf.length)
+      expect(schema.allOf).toHaveLength(originalAllOf.length)
 
       // Verify that core properties of each item were preserved
       // This proves the items were processed (since simplifyForDocs was called on each)
@@ -441,7 +441,7 @@ describe('Schema Simplifiers', () => {
         expect(schema.oneOf).not.toBe(originalOneOfRef)
 
         expect(schema.anyOf).toBe('not an array')
-        expect(schema.allOf).toBe(null)
+        expect(schema.allOf).toBeNull()
 
         expect(stringifySpy).toHaveBeenCalled()
       } finally {
@@ -514,7 +514,7 @@ describe('Schema Simplifiers', () => {
       expect(simplifyForDocs('string value')).toBe('string value')
       expect(simplifyForDocs(42)).toBe(42)
       expect(simplifyForDocs(true)).toBe(true)
-      expect(simplifyForDocs(undefined)).toBe(undefined)
+      expect(simplifyForDocs(undefined)).toBeUndefined()
     })
 
     it('should return early when handleRepeatProperty returns a special result', () => {

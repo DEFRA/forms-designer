@@ -162,10 +162,9 @@ export function checkAnswersSettingsBaseViewModel(
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
+      `Edit settings: ${pageHeading.toLowerCase()}`,
       formTitle
     ),
-    cardTitle: pageHeading,
-    cardHeading: pageHeading,
     navigation,
     errorList: buildErrorList(formErrors),
     formErrors: validation?.formErrors,
@@ -192,6 +191,7 @@ export function checkAnswersSettingsBaseViewModel(
 export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   const { title: formTitle, slug } = metadata
   const pageTitle = 'Check answers page overview'
+  const mastheadHeading = 'Edit settings: page overview'
   const formPath = formOverviewPath(slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -215,12 +215,16 @@ export function checkAnswersOverviewViewModel(metadata, definition, pageId) {
   const paymentInfo = getPaymentInfo(definition, slug)
 
   return {
-    ...baseModelFields(slug, `${pageTitle} - ${formTitle}`, formTitle),
+    ...baseModelFields(
+      slug,
+      `${pageTitle} - ${formTitle}`,
+      mastheadHeading,
+      formTitle
+    ),
     pageId,
     slug,
     pageTitle,
     cardTitle: PAGE_OVERVIEW_TITLE,
-    cardHeading: pageTitle,
     tabConfig: getCheckAnswersTabConfig(
       slug,
       pageId,

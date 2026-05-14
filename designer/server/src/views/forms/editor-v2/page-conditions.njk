@@ -54,10 +54,10 @@
                         {% if pageCondition and pageConditionDetails %}
                           {% set conditionCount = 1 %}
                           <div class="app-condition-applied govuk-!-margin-bottom-6">
-                            <h3 class="govuk-heading-m govuk-!-margin-top-0">{{ conditionCount }} added condition{{ 's' if conditionCount != 1 else '' }}</h3>
+                            <h2 class="govuk-heading-m govuk-!-margin-top-0">{{ conditionCount }} added condition{{ 's' if conditionCount != 1 else '' }}</h2>
                             <div class="app-condition-applied__content">
                               <div class="app-condition-applied__details">
-                                <h4 class="govuk-heading-s govuk-!-margin-bottom-2">{{ pageConditionDetails.displayName }}</h4>
+                                <h3 class="govuk-heading-s govuk-!-margin-bottom-2">{{ pageConditionDetails.displayName }}</h3>
                                 <p class="govuk-body govuk-!-margin-bottom-0">{{ pageConditionPresentationString or "'How do you want to receive your order?' is 'delivery'" }}</p>
                               </div>
                               <div class="app-condition-applied__actions">

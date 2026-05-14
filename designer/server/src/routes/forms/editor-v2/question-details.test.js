@@ -168,20 +168,14 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
-    const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 1')
     const $previewHeading = container.getByText('This is your first field')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadHeading).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 1')
-    expect($cardHeading).toHaveClass('govuk-heading-l')
     expect($previewHeading).toHaveTextContent('This is your first field')
     expect($previewHeading).toBeInstanceOf(HTMLLabelElement)
     expect($previewHeading.getAttribute('for')).toContain('inputField')
@@ -230,19 +224,13 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 2')
-    const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 2')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadHeading).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Question 2')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 2')
-    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Save and continue')
@@ -289,19 +277,13 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
-    const $cardCaption = container.getByText('Page 1')
-    const $cardHeading = container.getByText('Edit question 1')
 
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadHeading).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
-    expect($cardHeading).toHaveTextContent('Edit question 1')
-    expect($cardHeading).toHaveClass('govuk-heading-l')
 
     expect($actions).toHaveLength(5)
     expect($actions[2]).toHaveTextContent('Preview error messages')
@@ -340,14 +322,10 @@ describe('Editor v2 question details routes', () => {
 
     const $mastheadHeading = container.getByText('Test form')
 
-    const $cardCaption = container.getByText('Page 1')
-
     const $actions = container.getAllByRole('button')
 
     expect($mastheadHeading).toHaveTextContent('Test form')
-    expect($mastheadHeading).toHaveClass('govuk-heading-xl')
-    expect($cardCaption).toHaveTextContent('Page 1')
-    expect($cardCaption).toHaveClass('govuk-caption-l')
+    expect($mastheadHeading).toHaveClass('govuk-caption-l')
 
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')

@@ -27,7 +27,7 @@ export function ListFieldEdit({ children }: Readonly<Props>) {
         <ComponentListSelect />
         {children}
         <RenderInPortal>
-          <ListsEdit showEditLists={true} />
+          <ListsEdit showEditLists />
         </RenderInPortal>
       </ListContextProvider>
     </ListsEditorContextProvider>

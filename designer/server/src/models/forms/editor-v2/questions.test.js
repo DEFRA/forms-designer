@@ -338,7 +338,7 @@ describe('editor-v2 - questions model', () => {
         )
 
         expect(result).toHaveProperty('cardTitle', 'Page 1 overview')
-        expect(result).toHaveProperty('cardCaption', 'Page 1')
+        expect(result).toHaveProperty('cardCaption', 'Content')
         expect(result).toHaveProperty('currentTab', 'overview')
         expect(result).toHaveProperty('baseUrl')
         expect(result).toHaveProperty('navigation')

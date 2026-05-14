@@ -41,19 +41,23 @@ describe('Editor v2 confirmation-email-settings routes', () => {
 
     const { container, document } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Test form')
+    const $mastheadHeading = container.getByText(
+      'Edit settings: confirmation email'
+    )
+    const $mastheadCaption = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Confirmation email')
     const $checkboxes = container.getAllByRole('checkbox')
 
     const $actions = container.getAllByRole('button')
     const $previewPanel = document.getElementById('preview-panel')
 
-    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveTextContent(
+      'Edit settings: confirmation email'
+    )
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadCaption).toHaveClass('app-masthead__caption')
     expect($cardHeadings[0]).toHaveTextContent('Confirmation email')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Confirmation email')
-    expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
     expect($checkboxes).toHaveLength(1)
     expect($checkboxes[0]).not.toBeChecked()
@@ -82,18 +86,22 @@ describe('Editor v2 confirmation-email-settings routes', () => {
 
     const { container } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Test form')
+    const $mastheadHeading = container.getByText(
+      'Edit settings: confirmation email'
+    )
+    const $mastheadCaption = container.getByText('Test form')
     const $cardHeadings = container.getAllByText('Confirmation email')
     const $checkboxes = container.getAllByRole('checkbox')
 
     const $actions = container.getAllByRole('button')
 
-    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveTextContent(
+      'Edit settings: confirmation email'
+    )
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadCaption).toHaveClass('app-masthead__caption')
     expect($cardHeadings[0]).toHaveTextContent('Confirmation email')
     expect($cardHeadings[0]).toHaveClass('editor-card-title')
-    expect($cardHeadings[1]).toHaveTextContent('Confirmation email')
-    expect($cardHeadings[1]).toHaveClass('govuk-heading-l')
 
     expect($checkboxes).toHaveLength(1)
     expect($checkboxes[0]).toBeChecked()

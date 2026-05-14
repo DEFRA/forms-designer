@@ -285,8 +285,6 @@ export function handleAutocomplete(question, state, definition) {
 export function getCardHeadings(details) {
   return {
     cardTitle: `Question ${details.questionNum}`,
-    cardCaption: `Page ${details.pageNum}`,
-    cardHeading: `Edit question ${details.questionNum}`,
     cardId: 'edit-question'
   }
 }
@@ -390,7 +388,7 @@ export async function questionDetailsViewModel(
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
-  const pageHeading = details.pageTitle
+  const pageHeading = `Edit page ${details.pageNum}: question ${details.questionNum}`
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
   await applyPaymentValues(
@@ -411,7 +409,7 @@ export async function questionDetailsViewModel(
     state,
     enhancedFields: enhancedFieldList,
     paymentConditionalAmounts,
-    ...baseModelFields(metadata.slug, pageTitle, pageHeading),
+    ...baseModelFields(metadata.slug, pageTitle, pageHeading, formTitle),
     name: details.question.name || randomId(),
     questionId,
     basePageFields,

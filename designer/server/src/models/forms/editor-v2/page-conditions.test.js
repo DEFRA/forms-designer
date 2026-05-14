@@ -339,11 +339,8 @@ describe('page-conditions model', () => {
       )
       expect(result).toHaveProperty('pageId', pageId)
       expect(result).toHaveProperty('cardTitle', 'Page 1')
-      expect(result).toHaveProperty('cardCaption', 'Page 1: Farm Details')
-      expect(result).toHaveProperty(
-        'pageSpecificHeading',
-        'Page 1: Farm Details'
-      )
+      expect(result).toHaveProperty('cardCaption', 'Farm Details')
+      expect(result).toHaveProperty('pageSpecificHeading', 'Farm Details')
       expect(result).toHaveProperty('currentTab', 'conditions')
       expect(result).toHaveProperty('baseUrl')
       expect(result).toHaveProperty('backLink')
@@ -372,11 +369,8 @@ describe('page-conditions model', () => {
       )
       expect(result).toHaveProperty('pageId', pageId)
       expect(result).toHaveProperty('cardTitle', 'Page 1')
-      expect(result).toHaveProperty('cardCaption', 'Page 1: Farm Details')
-      expect(result).toHaveProperty(
-        'pageSpecificHeading',
-        'Page 1: Farm Details'
-      )
+      expect(result).toHaveProperty('cardCaption', 'Farm Details')
+      expect(result).toHaveProperty('pageSpecificHeading', 'Farm Details')
       expect(result).toHaveProperty('currentTab', 'conditions')
       expect(result).toHaveProperty('baseUrl')
       expect(result).toHaveProperty('backLink')
@@ -590,7 +584,7 @@ describe('page-conditions model', () => {
       )
 
       expect(result.cardTitle).toBe('Page 2')
-      expect(result.cardCaption).toBe('Page 2: Farm Operations')
+      expect(result.cardCaption).toBe('Farm Operations')
     })
 
     it('should handle empty conditions array', () => {
@@ -630,10 +624,7 @@ describe('page-conditions model', () => {
         mockOptions
       )
 
-      expect(result).toHaveProperty(
-        'pageSpecificHeading',
-        'Page 1: Farm Details'
-      )
+      expect(result).toHaveProperty('pageSpecificHeading', 'Farm Details')
     })
 
     it('should generate correct pageSpecificHeading when page has no title', () => {
@@ -684,10 +675,7 @@ describe('page-conditions model', () => {
         mockOptions
       )
 
-      expect(result).toHaveProperty(
-        'pageSpecificHeading',
-        'Page 2: Farm Operations'
-      )
+      expect(result).toHaveProperty('pageSpecificHeading', 'Farm Operations')
     })
   })
 

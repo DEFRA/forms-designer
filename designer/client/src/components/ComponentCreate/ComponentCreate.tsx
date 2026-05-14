@@ -118,7 +118,7 @@ export function ComponentCreate(props: Readonly<Props>) {
   } = useComponentCreate(props)
 
   const componentName = selectedComponent?.type
-    ? String(i18n(`fieldTypeToName.${selectedComponent.type}`))
+    ? i18n(`fieldTypeToName.${selectedComponent.type}`)
     : ''
 
   return (

@@ -63,7 +63,7 @@ describe('guidance model', () => {
         undefined
       )
 
-      expect(result.pageTitle).toBe('Edit guidance page - Test form')
+      expect(result.pageTitle).toBe('Content - Edit page 1: guidance')
       expect(result.hasPageCondition).toBeFalsy()
       expect(result.previewPageUrl).toContain('/guidance-page')
       expect(result.previewModel.pageTitle.text).toBe('Guidance page')
@@ -98,7 +98,7 @@ describe('guidance model', () => {
         undefined
       )
 
-      expect(result.pageTitle).toBe('Edit guidance page - Test form')
+      expect(result.pageTitle).toBe('Content - Edit page 0: guidance')
       expect(result.hasPageCondition).toBeFalsy()
       expect(result.previewPageUrl).toContain('')
     })
@@ -124,7 +124,7 @@ describe('guidance model', () => {
         undefined
       )
 
-      expect(result.pageTitle).toBe('Edit guidance page - Test form')
+      expect(result.pageTitle).toBe('Content - Edit page 1: guidance')
       expect(result.hasPageCondition).toBeTruthy()
     })
 

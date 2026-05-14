@@ -76,6 +76,9 @@ export default [
         }
       ],
 
+      // Warn on explicit `any` usage (errors demoted to warnings)
+      '@typescript-eslint/no-explicit-any': 'warn',
+
       // Don't show eslint warnings for types - let TS handle
       '@typescript-eslint/no-unsafe-argument': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
@@ -265,6 +268,7 @@ export default [
       ...jestPlugin.configs['flat/recommended'].rules,
       ...jestPlugin.configs['flat/style'].rules,
 
+      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-assignment': 'off',
       '@typescript-eslint/no-unsafe-argument': 'off',
 

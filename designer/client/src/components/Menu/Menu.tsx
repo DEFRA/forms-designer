@@ -250,7 +250,7 @@ export function Menu() {
                 highlightAll()
               }}
               className="app-tabs--overview"
-            ></Tabs>
+            />
           </Flyout>
         </RenderInPortal>
       )}

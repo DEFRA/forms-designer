@@ -42,7 +42,7 @@ function guidanceFields(
       name: 'pageHeading',
       id: 'pageHeading',
       label: {
-        text: 'Page heading',
+        text: 'Heading',
         classes: GOVUK_LABEL__M
       },
       hint: {
@@ -101,7 +101,7 @@ export function getGuidancePreviewModel(
   page,
   previewPageUrl,
   guidance = '',
-  sectionInfo = undefined
+  sectionInfo
 ) {
   const components = hasComponents(page) ? page.components : []
 
@@ -149,7 +149,9 @@ export function guidanceViewModel(
   validation,
   notification
 ) {
-  const formTitle = metadata.title
+  const pageNum = getPageNum(definition, pageId)
+  const formCaptionTitle = metadata.title
+  const formTitle = `Edit page ${pageNum}: guidance`
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -159,7 +161,6 @@ export function guidanceViewModel(
   )
   const { formValues, formErrors } = validation ?? {}
 
-  const pageNum = getPageNum(definition, pageId)
   const page = getPageFromDefinition(definition, pageId)
   const components = hasComponents(page) ? page.components : []
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
@@ -172,7 +173,7 @@ export function guidanceViewModel(
   )
 
   const guidanceTextVal = formValues?.guidanceText ?? guidanceComponent?.content
-  const cardHeading = 'Edit guidance page'
+  const cardHeading = 'Content'
   const pageTitle = `${cardHeading} - ${formTitle}`
   const exitPageVal = page?.controller === ControllerType.Terminal
 
@@ -183,7 +184,7 @@ export function guidanceViewModel(
   // prettier-ignore
   const previewModel = getGuidancePreviewModel(page, previewPageUrl, guidanceTextVal, sectionInfo)
   return {
-    ...baseModelFields(metadata.slug, pageTitle, formTitle),
+    ...baseModelFields(metadata.slug, pageTitle, formTitle, formCaptionTitle),
     fields: {
       ...guidanceFields(
         pageHeadingVal,
@@ -194,7 +195,6 @@ export function guidanceViewModel(
     },
     previewModel,
     cardTitle: `Page settings`,
-    cardCaption: `Page ${pageNum}`,
     cardHeading,
     navigation,
     previewPageUrl,

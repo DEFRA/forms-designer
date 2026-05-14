@@ -180,7 +180,7 @@ export function List() {
 export function Html() {
   return (
     <ComponentField className="app-content">
-      <span className="app-field-heading govuk-!-margin-bottom-1"></span>
+      <span className="app-field-heading govuk-!-margin-bottom-1" />
       <span className="app-field-line" />
       <span className="app-field-line" />
       <span className="app-field-line" />

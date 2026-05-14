@@ -20,7 +20,6 @@ import {
   getPaymentInfo
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
-  CHECK_ANSWERS_CAPTION,
   CHECK_ANSWERS_TAB_SECTIONS,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
@@ -140,12 +139,15 @@ export function sectionsViewModel(
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
 
   return {
-    ...baseModelFields(slug, `${pageTitle} - ${formTitle}`, formTitle),
+    ...baseModelFields(
+      slug,
+      `${pageTitle} - ${formTitle}`,
+      `Edit settings: sections`,
+      formTitle
+    ),
     pageId,
     slug,
     pageTitle,
-    cardTitle: pageTitle,
-    cardCaption: CHECK_ANSWERS_CAPTION,
     tabConfig: getCheckAnswersTabConfig(
       slug,
       pageId,
