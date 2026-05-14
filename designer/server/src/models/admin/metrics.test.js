@@ -14,7 +14,7 @@ import {
 function getExpectedTile(title, ariaPeriod, strapline) {
   return {
     ariaLabel: `There has been no change compared to the ${ariaPeriod}`,
-    changePercentage: '-',
+    changePercentage: 0,
     changeSymbol: '',
     changeValue: 0,
     count: 0,

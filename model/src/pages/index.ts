@@ -15,6 +15,7 @@ export {
   hasFormComponents,
   hasNext,
   hasPaymentQuestionInForm,
+  hasPostcodeLookupInForm,
   hasRepeater,
   hasSpecificQuestionTypeInForm,
   includesFileUploadField,

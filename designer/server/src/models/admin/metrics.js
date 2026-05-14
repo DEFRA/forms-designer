@@ -52,24 +52,18 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
       organisationList: Array.from(organisationMap, ([key, count]) => ({
         text: `${key} (${count})`,
         value: key,
-        checked:
-          !filterAndSort.org?.length ||
-          filterAndSort.org.includes(encodeURI(key))
+        checked: filterAndSort.org?.includes(encodeURI(key))
       })),
       statusList: [
         {
           text: 'Draft',
           value: 'draft',
-          checked:
-            !filterAndSort.status?.length ||
-            filterAndSort.status.includes(FormStatus.Draft)
+          checked: filterAndSort.status?.includes(FormStatus.Draft)
         },
         {
           text: 'Live',
           value: 'live',
-          checked:
-            !filterAndSort.status?.length ||
-            filterAndSort.status.includes(FormStatus.Live)
+          checked: filterAndSort.status?.includes(FormStatus.Live)
         }
       ]
     }

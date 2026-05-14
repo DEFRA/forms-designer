@@ -542,7 +542,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -562,7 +562,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -582,7 +582,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -609,7 +609,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -630,7 +630,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -660,7 +660,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -680,7 +680,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -700,7 +700,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -727,7 +727,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -748,7 +748,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -778,7 +778,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -798,7 +798,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -818,7 +818,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -845,7 +845,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -866,7 +866,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
           <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
-            0 (-%)
+            0 (0%)
           </strong>
     
         </div>
@@ -907,7 +907,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
   Apply filters
 </button>
 
-        <button type="submit" name="action" value="clear" class="govuk-link govuk-link--no-visited-state pull-right govuk-!-padding-top-2">Clear filters</button>
+        <button type="submit" name="action" value="clear" class="govuk-button govuk-button--secondary pull-right govuk-!-padding-top-2">Clear filters</button>
 
   <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="searchText">
@@ -924,13 +924,13 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
   </legend>
   <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="status" name="status" type="checkbox" value="draft" checked>
+      <input class="govuk-checkboxes__input" id="status" name="status" type="checkbox" value="draft">
       <label class="govuk-label govuk-checkboxes__label" for="status">
         Draft
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="status-2" name="status" type="checkbox" value="live" checked>
+      <input class="govuk-checkboxes__input" id="status-2" name="status" type="checkbox" value="live">
       <label class="govuk-label govuk-checkboxes__label" for="status-2">
         Live
       </label>
@@ -947,55 +947,55 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
   </legend>
   <div class="govuk-checkboxes govuk-checkboxes--small" data-module="govuk-checkboxes">
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org" name="org" type="checkbox" value="Animal and Plant Health Agency – APHA" checked>
+      <input class="govuk-checkboxes__input" id="org" name="org" type="checkbox" value="Animal and Plant Health Agency – APHA">
       <label class="govuk-label govuk-checkboxes__label" for="org">
         Animal and Plant Health Agency – APHA (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-2" name="org" type="checkbox" value="Centre for Environment, Fisheries and Aquaculture Science – Cefas" checked>
+      <input class="govuk-checkboxes__input" id="org-2" name="org" type="checkbox" value="Centre for Environment, Fisheries and Aquaculture Science – Cefas">
       <label class="govuk-label govuk-checkboxes__label" for="org-2">
         Centre for Environment, Fisheries and Aquaculture Science – Cefas (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-3" name="org" type="checkbox" value="Defra" checked>
+      <input class="govuk-checkboxes__input" id="org-3" name="org" type="checkbox" value="Defra">
       <label class="govuk-label govuk-checkboxes__label" for="org-3">
         Defra (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-4" name="org" type="checkbox" value="Environment Agency" checked>
+      <input class="govuk-checkboxes__input" id="org-4" name="org" type="checkbox" value="Environment Agency">
       <label class="govuk-label govuk-checkboxes__label" for="org-4">
         Environment Agency (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-5" name="org" type="checkbox" value="Forestry Commission" checked>
+      <input class="govuk-checkboxes__input" id="org-5" name="org" type="checkbox" value="Forestry Commission">
       <label class="govuk-label govuk-checkboxes__label" for="org-5">
         Forestry Commission (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-6" name="org" type="checkbox" value="Marine Management Organisation – MMO" checked>
+      <input class="govuk-checkboxes__input" id="org-6" name="org" type="checkbox" value="Marine Management Organisation – MMO">
       <label class="govuk-label govuk-checkboxes__label" for="org-6">
         Marine Management Organisation – MMO (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-7" name="org" type="checkbox" value="Natural England" checked>
+      <input class="govuk-checkboxes__input" id="org-7" name="org" type="checkbox" value="Natural England">
       <label class="govuk-label govuk-checkboxes__label" for="org-7">
         Natural England (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-8" name="org" type="checkbox" value="Rural Payments Agency – RPA" checked>
+      <input class="govuk-checkboxes__input" id="org-8" name="org" type="checkbox" value="Rural Payments Agency – RPA">
       <label class="govuk-label govuk-checkboxes__label" for="org-8">
         Rural Payments Agency – RPA (0)
       </label>
     </div>
     <div class="govuk-checkboxes__item">
-      <input class="govuk-checkboxes__input" id="org-9" name="org" type="checkbox" value="Veterinary Medicines Directorate – VMD" checked>
+      <input class="govuk-checkboxes__input" id="org-9" name="org" type="checkbox" value="Veterinary Medicines Directorate – VMD">
       <label class="govuk-label govuk-checkboxes__label" for="org-9">
         Veterinary Medicines Directorate – VMD (0)
       </label>
@@ -1033,7 +1033,7 @@ exports[`Form metrics routes form-metrics should render report form 1`] = `
               <th scope="col" class="govuk-table__header" aria-sort="none">Question types</th>
               <th scope="col" class="govuk-table__header" aria-sort="none">Conditions</th>
               <th scope="col" class="govuk-table__header" aria-sort="none">Sections</th>
-              <th scope="col" class="govuk-table__header" aria-sort="none">Re-published</th>
+              <th scope="col" class="govuk-table__header" aria-sort="none">Repub-lished</th>
               <th scope="col" class="govuk-table__header" aria-sort="none">Days to publish</th>
               <th scope="col" class="govuk-table__header" aria-sort="none">Features</th>
               <th scope="col" class="govuk-table__header" aria-sort="none">Submissions</th>
