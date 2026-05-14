@@ -4,6 +4,7 @@ import {
   buildAriaLabel,
   buildChangePhrase,
   calcChangePercentage,
+  componentUsageFormStructures,
   mapOverviewMetrics,
   oneDecimalPlace
 } from '~/src/models/admin/metrics-helper.js'
@@ -138,8 +139,94 @@ describe('metrics model', () => {
       expect(oneDecimalPlace(10 / 0)).toBe(Infinity)
     })
   })
+
+  describe('componentUsageFormStructures', () => {
+    it('should handle no metrics', () => {
+      const metrics =
+        /** @type {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} */ ({
+          overview: [],
+          totals: {
+            type: FormMetricType.TotalsMetric,
+            updatedAt: new Date()
+          }
+        })
+      expect(componentUsageFormStructures(metrics, FormStatus.Draft)).toEqual(
+        []
+      )
+    })
+
+    it('should calculate min/max/avg', () => {
+      const metrics = {
+        overview: [
+          {
+            type: FormMetricType.OverviewMetric,
+            formId: 'form-id-1',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: {},
+            featureMetrics: {
+              formStructure: /** @type {Record<string, number>} */ ({
+                pages: 5,
+                sections: 3,
+                conditions: 2,
+                questionTypes: 10
+              })
+            },
+            submissionsCount: 0,
+            updatedAt: new Date()
+          },
+          {
+            type: FormMetricType.OverviewMetric,
+            formId: 'form-id-2',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: {},
+            featureMetrics: {
+              formStructure: /** @type {Record<string, number>} */ ({
+                pages: 17,
+                sections: 7,
+                conditions: 4,
+                questionTypes: 11
+              })
+            },
+            submissionsCount: 0,
+            updatedAt: new Date()
+          }
+        ],
+        totals: {
+          type: FormMetricType.TotalsMetric,
+          updatedAt: new Date()
+        }
+      }
+      // @ts-expect-error - partial mock of data
+      expect(componentUsageFormStructures(metrics, FormStatus.Draft)).toEqual([
+        {
+          metricName: 'Pages per form',
+          minimum: 5,
+          maximum: 17,
+          average: '11.0'
+        },
+        {
+          metricName: 'Sections per form',
+          minimum: 3,
+          maximum: 7,
+          average: '5.0'
+        },
+        {
+          metricName: 'Conditions per form',
+          minimum: 2,
+          maximum: 4,
+          average: '3.0'
+        },
+        {
+          metricName: 'Question types per form',
+          minimum: 10,
+          maximum: 11,
+          average: '10.5'
+        }
+      ])
+    })
+  })
 })
 
 /**
- * @import { FormOverviewMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  */
