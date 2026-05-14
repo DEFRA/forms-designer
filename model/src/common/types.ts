@@ -1,4 +1,4 @@
-import { type FormStatus } from '~/src/common/enums.js'
+import { type FormExtendedStatus, type FormStatus } from '~/src/common/enums.js'
 import {
   type PaginationOptions,
   type PaginationResult
@@ -29,6 +29,12 @@ export interface FilterOptions {
    * Status values present in the results
    */
   status?: FormStatus[]
+
+  /**
+   * Extended status values present in the results (e.g. Offline)
+   * i.e. not part of the standard form status list
+   */
+  extendedStatuses?: FormExtendedStatus[]
 }
 
 /**

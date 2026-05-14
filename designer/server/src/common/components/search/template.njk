@@ -83,6 +83,9 @@
   {% set authors = params.filters.authors | default([]) %}
   {% set organisations = params.filters.organisations | default([]) %}
   {% set statuses = params.filters.statuses | default([]) %}
+  {% for extendedStatus in params.filters.extendedStatuses %}
+    {% set statuses = (statuses.push(extendedStatus), statuses) %}
+  {% endfor %}
 
   {% set authorsRadios = [] %}
   {% for a in authors %}
