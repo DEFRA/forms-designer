@@ -136,9 +136,12 @@ export const notificationEmailAddressSchema =
     'Email address to receive form submission notifications'
   )
 
-export const offlineSchema = Joi.boolean().description(
-  'Whether the form has been taken offline; runtime renders an unavailable page when true'
-)
+export const offlineSchema = Joi.boolean()
+  .optional()
+  .default(false)
+  .description(
+    'Whether the form has been taken offline and is unavailable to new sessions'
+  )
 
 export const authoredAtSchema = Joi.date()
   .iso()
@@ -241,6 +244,7 @@ export const formMetadataSchema = formMetadataInputSchema
   .append<FormMetadata>({
     id: idSchema,
     slug: slugSchema,
+    offline: offlineSchema,
     draft: formMetadataStateSchema.description(
       'Metadata for the draft version'
     ),
