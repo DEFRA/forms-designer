@@ -54,7 +54,7 @@ const straplineWording =
 /**
  * @param {string} changeSymbol - '+' or '-' or ''
  * @param {number} changeValue
- * @param {string} changePercentage
+ * @param {number} changePercentage
  * @param {string} periodPhrase
  */
 export function buildAriaLabel(
@@ -232,15 +232,23 @@ export function mapOverviewMetrics(metrics) {
 /**
  * @param {number} currCount
  * @param {number} prevCount
+ * @returns {number}
  */
 export function calcChangePercentage(currCount, prevCount) {
   if (currCount === 0 && prevCount === 0) {
-    return '0.0'
+    return 0
   }
   if (prevCount === 0) {
-    return '100'
+    return 100
   }
-  return (((currCount - prevCount) / prevCount) * 100).toFixed(1)
+  return oneDecimalPlace(((currCount - prevCount) / prevCount) * 100)
+}
+
+/**
+ * @param {number} num
+ */
+export function oneDecimalPlace(num) {
+  return parseFloat(num.toFixed(1))
 }
 
 /**
@@ -268,10 +276,10 @@ export function collateSpecificTileCounts(
 
   const notEqualSymbol = currPeriodCount > prevPeriodCount ? '+' : '-'
   const counts =
-    /** @type {{ count: number, changeSymbol: string, changeValue: number, changePercentage: string, units?: string }} */ ({
-      count: currPeriodCount,
+    /** @type {{ count: number, changeSymbol: string, changeValue: number, changePercentage: number, units?: string }} */ ({
+      count: oneDecimalPlace(currPeriodCount),
       changeSymbol: currPeriodCount === prevPeriodCount ? '' : notEqualSymbol,
-      changeValue: currPeriodCount - prevPeriodCount,
+      changeValue: oneDecimalPlace(currPeriodCount - prevPeriodCount),
       changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount)
     })
   if (units) {

@@ -4,25 +4,26 @@ import {
   buildAriaLabel,
   buildChangePhrase,
   calcChangePercentage,
-  mapOverviewMetrics
+  mapOverviewMetrics,
+  oneDecimalPlace
 } from '~/src/models/admin/metrics-helper.js'
 
 describe('metrics model', () => {
   describe('buildAriaLabel', () => {
     it('should build label when no change from previous period', () => {
-      const label = buildAriaLabel('', 0, '0.0', 'last 7 days')
+      const label = buildAriaLabel('', 0, 0, 'last 7 days')
       expect(label).toBe('There has been no change compared to the last 7 days')
     })
 
     it('should build label when positive change from previous period', () => {
-      const label = buildAriaLabel('+', 10, '5.1', 'last 7 days')
+      const label = buildAriaLabel('+', 10, 5.1, 'last 7 days')
       expect(label).toBe(
         'There has been an increase of 10 (+5.1%) compared to the last 7 days'
       )
     })
 
     it('should build label when negative change from previous period', () => {
-      const label = buildAriaLabel('-', 7, '-3.1', 'last 7 days')
+      const label = buildAriaLabel('-', 7, -3.1, 'last 7 days')
       expect(label).toBe(
         'There has been a decrease of 7 (-3.1%) compared to the last 7 days'
       )
@@ -48,13 +49,16 @@ describe('metrics model', () => {
 
   describe('calcChangePercentage', () => {
     it('should handle zero for current and previous', () => {
-      expect(calcChangePercentage(0, 0)).toBe('0.0')
+      expect(calcChangePercentage(0, 0)).toBe(0)
     })
     it('should handle zero for previous', () => {
-      expect(calcChangePercentage(1, 0)).toBe('100')
+      expect(calcChangePercentage(1, 0)).toBe(100)
     })
     it('should handle normal percentage', () => {
-      expect(calcChangePercentage(1, 2)).toBe('-50.0')
+      expect(calcChangePercentage(1, 2)).toBe(-50)
+    })
+    it('should truncate to one decimal place', () => {
+      expect(calcChangePercentage(1, 3)).toBe(-66.7)
     })
   })
 
@@ -114,6 +118,24 @@ describe('metrics model', () => {
           republished: 2
         }
       ])
+    })
+  })
+
+  describe('oneDecimalPlace', () => {
+    it('should handle zero', () => {
+      expect(oneDecimalPlace(0)).toBe(0)
+    })
+    it('should handle 1 decimal place', () => {
+      expect(oneDecimalPlace(5.2)).toBe(5.2)
+    })
+    it('should handle 2 decimal places', () => {
+      expect(oneDecimalPlace(5.26)).toBe(5.3)
+    })
+    it('should handle many decimal places', () => {
+      expect(oneDecimalPlace(5.2169034)).toBe(5.2)
+    })
+    it('should handle Infinity', () => {
+      expect(oneDecimalPlace(10 / 0)).toBe(Infinity)
     })
   })
 })
