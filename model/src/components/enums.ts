@@ -25,7 +25,8 @@ export enum ComponentType {
   LatLongField = 'LatLongField',
   HiddenField = 'HiddenField',
   PaymentField = 'PaymentField',
-  GeospatialField = 'GeospatialField'
+  GeospatialField = 'GeospatialField',
+  NotificationBanner = 'NotificationBanner'
 }
 
 export enum GeospatialFieldOptionsCountryEnum {
