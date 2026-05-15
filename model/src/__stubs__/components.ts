@@ -218,15 +218,15 @@ export function buildMarkdownComponent(
 }
 
 export function buildNotificationBannerComponent(
-  partial: Partial<NotificationBannerComponent> = {}
+  partialNotificationBanner: Partial<NotificationBannerComponent> = {}
 ): NotificationBannerComponent {
   return {
-    id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-    title: 'Notification banner',
+    id: 'c7e3f1a2-9b84-4d56-8f0e-3a5c2d7b1e94',
+    title: 'NotificationBanner Component',
     name: 'NotificationBannerComponent',
     content: '',
     options: {},
-    ...partial,
+    ...partialNotificationBanner,
     type: ComponentType.NotificationBanner
   }
 }
