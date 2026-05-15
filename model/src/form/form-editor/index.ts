@@ -23,7 +23,7 @@ import { preventUnicodeInEmail } from '~/src/form/utils/prevent-unicode.js'
 
 export const emailAddressNoUnicodeSchema = Joi.string()
   .trim()
-  .email()
+  .email({ tlds: { allow: false } })
   .custom((value, helpers) => preventUnicodeInEmail(value, helpers))
   .description('Email address preventing unicode characters')
 
