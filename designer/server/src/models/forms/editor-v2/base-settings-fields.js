@@ -462,8 +462,7 @@ export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentConditionalAmounts,
   QuestionBaseSettings.PaymentDescription,
   QuestionBaseSettings.PaymentTestApiKey,
-  QuestionBaseSettings.PaymentLiveApiKey,
-  QuestionBaseSettings.PaymentConditionalAmounts
+  QuestionBaseSettings.PaymentLiveApiKey
 ])
 
 /**
