@@ -3,7 +3,7 @@
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 <div class="govuk-error-summary-container"></div>
 
-  <form method="post" novalidate="" onsubmit="return false;">
+  <form method="post" action="#" novalidate="" onsubmit="return false;">
     {{ govukFileUpload(model) }}
 
     {{ govukButton({

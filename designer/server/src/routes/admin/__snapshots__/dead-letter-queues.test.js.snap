@@ -522,7 +522,7 @@ exports[`Dead-letter queues routes Journey should render form with radio options
       </div>
     </div>
 
-    <form class="form" method="post">
+    <form class="form" method="post" action="#">
 
       <div class="govuk-form-group">
   <fieldset class="govuk-fieldset">

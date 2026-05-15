@@ -168,7 +168,7 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 
   <main class="govuk-main-wrapper" id="main-content">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
 
@@ -480,7 +480,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
 
   <main class="govuk-main-wrapper" id="main-content">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
     <div class="govuk-width-container app-width-container--wide">
@@ -758,7 +758,7 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
 
   <main class="govuk-main-wrapper" id="main-content">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
 

@@ -97,7 +97,7 @@ export function ListItemEdit() {
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
+      <form action="#" onSubmit={handleSubmit} autoComplete="off" noValidate>
         <Input
           id="title"
           name="list-item-text"

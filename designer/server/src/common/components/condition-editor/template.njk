@@ -8,7 +8,7 @@
 {% from "editor-card/macro.njk" import appEditorCard %}
 {% from "condition-value-editor/macro.njk" import appConditionValueEditor %}
 
-<form class="form" method="post">
+<form class="form" method="post" action="#">
   {% call govukFieldset({
     legend: {
       text: params.legendText,

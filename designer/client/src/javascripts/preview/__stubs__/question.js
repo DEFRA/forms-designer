@@ -197,7 +197,7 @@ export function questionDetailsLeftPanelBuilder(listItemsHTML) {
 
     <h1 class="govuk-heading-l" id="page-heading">Edit question 1</h1>
 
-    <form class="form" method="post" id="question-form">
+    <form class="form" method="post" action="#" id="question-form">
       <div class="govuk-form-group">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-label--m" for="question">
