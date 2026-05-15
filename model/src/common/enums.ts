@@ -3,7 +3,7 @@ export enum FormStatus {
   Live = 'live'
 }
 
-export enum FormExtendedStatus {
+export enum FormFilterStatus {
   Draft = 'draft',
   Live = 'live',
   Offline = 'offline'

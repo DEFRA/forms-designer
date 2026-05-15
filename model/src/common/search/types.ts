@@ -1,4 +1,4 @@
-import { type FormExtendedStatus } from '~/src/common/enums.js'
+import { type FormFilterStatus } from '~/src/common/enums.js'
 
 /**
  * Search options for querying forms
@@ -25,5 +25,5 @@ export interface SearchOptions {
    * Filter by form status
    * Array of statuses to filter by
    */
-  status?: FormExtendedStatus[]
+  status?: FormFilterStatus[]
 }
