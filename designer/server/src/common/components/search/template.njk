@@ -83,9 +83,6 @@
   {% set authors = params.filters.authors | default([]) %}
   {% set organisations = params.filters.organisations | default([]) %}
   {% set statuses = params.filters.statuses | default([]) %}
-  {% for extendedStatus in params.filters.extendedStatuses %}
-    {% set statuses = (statuses.push(extendedStatus), statuses) %}
-  {% endfor %}
 
   {% set authorsRadios = [] %}
   {% for a in authors %}
@@ -119,7 +116,7 @@
   {% endfor %}
 
   {% set statusCheckBoxes = [] %}
-  {% for status in statuses %}
+  {% for status in statuses | sort %}
     {% set statusCheckBoxes = (statusCheckBoxes.push({
       text: status | capitalize,
       value: status,

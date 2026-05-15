@@ -28,7 +28,7 @@ export const searchOptionFields = {
     .default([])
     .description('Filter by organisation(s), empty array matches all'),
   status: Joi.array()
-    .items(Joi.string().valid('draft', 'live'))
+    .items(Joi.string().valid('draft', 'live', 'offline'))
     .single()
     .optional()
     .default([])

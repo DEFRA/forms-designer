@@ -4,6 +4,8 @@ export enum FormStatus {
 }
 
 export enum FormExtendedStatus {
+  Draft = 'draft',
+  Live = 'live',
   Offline = 'offline'
 }
 
