@@ -460,6 +460,24 @@ export const countriesSchema = Joi.array()
   .single()
   .description('The country to be included in a geospatial field')
 
+export const exactFeaturesSchema = Joi.number()
+  .empty('')
+  .integer()
+  .min(1)
+  .description('Specifies the exact number of features required to be defined.')
+
+export const minFeaturesSchema = Joi.number()
+  .empty('')
+  .integer()
+  .min(1)
+  .description('Minimum number of features required to be defined.')
+
+export const maxFeaturesSchema = Joi.number()
+  .empty('')
+  .integer()
+  .min(1)
+  .description('Maximum number of features allowed to be defined.')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -652,7 +670,10 @@ export const questionDetailsFullSchema = {
   minChecksSchema,
   maxChecksSchema,
   exactChecksSchema,
-  countriesSchema
+  countriesSchema,
+  minFeaturesSchema,
+  maxFeaturesSchema,
+  exactFeaturesSchema
 }
 
 export const formEditorInputPageKeys = {

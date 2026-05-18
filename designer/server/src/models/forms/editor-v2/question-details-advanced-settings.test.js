@@ -206,6 +206,38 @@ describe('editor-v2 - question details advanced settings model', () => {
         exactChecks: 3
       })
     })
+
+    test('should add minFeatures/maxFeatures if geospatial', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.GeospatialField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          min: 2,
+          max: 4
+        }
+      })
+      expect(res).toEqual({
+        minFeatures: 2,
+        maxFeatures: 4
+      })
+    })
+
+    test('should add exactFeatures if geospatial', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.GeospatialField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          length: 3
+        }
+      })
+      expect(res).toEqual({
+        exactFeatures: 3
+      })
+    })
   })
 
   describe('addRegexFieldProperties', () => {

@@ -373,6 +373,21 @@ export interface FormEditor {
    * The country restriction for geospatial questions
    */
   countries?: (GeospatialFieldOptionsCountry | 'any')[]
+
+  /**
+   * The exact number of features to define for geospatial questions
+   */
+  exactFeatures: string
+
+  /**
+   * The minimum number of features to define for geospatial questions
+   */
+  minFeatures: string
+
+  /**
+   * The maximum number of features to define for geospatial questions
+   */
+  maxFeatures: string
 }
 
 export type FormEditorInputPage = Pick<
@@ -455,6 +470,9 @@ export type FormEditorInputQuestion = Pick<
   | 'conditionalAmount'
   | 'conditionalAmountCondition'
   | 'countries'
+  | 'exactFeatures'
+  | 'minFeatures'
+  | 'maxFeatures'
 >
 
 export type FormEditorInputPageSettings = Pick<

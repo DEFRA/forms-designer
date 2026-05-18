@@ -280,6 +280,11 @@ export interface GeospatialFieldComponent extends FormFieldBase {
     condition?: string
     countries?: GeospatialFieldOptionsCountry[]
   }
+  schema?: {
+    max?: number
+    min?: number
+    length?: number
+  }
 }
 
 // Content Fields
