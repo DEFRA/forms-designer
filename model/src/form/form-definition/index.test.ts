@@ -13,6 +13,7 @@ import {
   buildMarkdownComponent,
   buildMonthYearFieldComponent,
   buildMultilineTextFieldComponent,
+  buildNotificationBannerComponent,
   buildNumberFieldComponent,
   buildRadioComponent,
   buildRadiosComponent,
@@ -339,7 +340,8 @@ describe('Form definition schema', () => {
           [ComponentType.Details, buildDetailsComponent()],
           [ComponentType.Html, buildHtmlComponent()],
           [ComponentType.Markdown, buildMarkdownComponent()],
-          [ComponentType.InsetText, buildInsetTextComponent()]
+          [ComponentType.InsetText, buildInsetTextComponent()],
+          [ComponentType.NotificationBanner, buildNotificationBannerComponent()]
         ])('should permit content fields - %s', (componentType, component) => {
           const { error } = contentComponentSchema.validate(component)
           expect(error).toBeUndefined()
@@ -369,7 +371,7 @@ describe('Form definition schema', () => {
             const { error } = contentComponentSchema.validate(component)
             expect(error).toEqual(
               new ValidationError(
-                '"type" must be one of [Details, Html, Markdown, InsetText, List]',
+                '"type" must be one of [Details, Html, Markdown, InsetText, List, NotificationBanner]',
                 [],
                 component
               )
