@@ -388,6 +388,11 @@ export interface FormEditor {
    * The maximum number of features to define for geospatial questions
    */
   maxFeatures: string
+
+  /**
+   * The geometry types restriction for geospatial questions
+   */
+  geometryTypes?: string[]
 }
 
 export type FormEditorInputPage = Pick<

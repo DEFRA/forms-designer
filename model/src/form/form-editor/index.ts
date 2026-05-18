@@ -3,6 +3,7 @@ import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import {
   ComponentType,
+  GeospatialFieldGeometryTypesEnum,
   GeospatialFieldOptionsCountryEnum
 } from '~/src/components/enums.js'
 import {
@@ -477,6 +478,10 @@ export const maxFeaturesSchema = Joi.number()
   .integer()
   .min(1)
   .description('Maximum number of features allowed to be defined.')
+
+export const geometryTypesSchema = Joi.array()
+  .items(Joi.string().valid(...Object.values(GeospatialFieldGeometryTypesEnum)))
+  .description('The geometry types allowed in a geospatial field')
 
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
