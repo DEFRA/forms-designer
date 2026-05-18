@@ -35,6 +35,12 @@ export enum GeospatialFieldOptionsCountryEnum {
   Wales = 'wales'
 }
 
+export enum GeospatialFieldGeometryTypesEnum {
+  Point = 'point',
+  Line = 'line',
+  Shape = 'shape'
+}
+
 export const PreviewTypeEnum = {
   ...ComponentType,
   Question: 'Question',

@@ -1,4 +1,7 @@
-import { type ComponentType } from '~/src/components/enums.js'
+import {
+  type ComponentType,
+  type GeospatialFieldGeometryTypesEnum
+} from '~/src/components/enums.js'
 import {
   type ComponentDef,
   type GeospatialFieldOptionsCountry
@@ -388,6 +391,11 @@ export interface FormEditor {
    * The maximum number of features to define for geospatial questions
    */
   maxFeatures: string
+
+  /**
+   * The geometry types restriction for geospatial questions
+   */
+  geometryTypes?: GeospatialFieldGeometryTypesEnum[]
 }
 
 export type FormEditorInputPage = Pick<
