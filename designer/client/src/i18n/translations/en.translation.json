@@ -190,6 +190,8 @@
     "MonthYearField_info": "Allows users to manually enter a month and year",
     "MultilineTextField": "Textarea",
     "MultilineTextField_info": "A text box for users to enter multiple lines of text into, for example as ‘Additional info’",
+    "NotificationBanner": "Notification banner",
+    "NotificationBanner_info": "A banner that draws attention to important information or a success message",
     "NumberField": "Number",
     "NumberField_info": "A text box that users can only enter numbers into",
     "RadiosField": "Radios",
