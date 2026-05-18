@@ -75,7 +75,7 @@ describe('Type guards', () => {
         options: {}
       } satisfies ComponentDef,
       {
-        name: 'NotificationBanner',
+        name: 'content',
         title: 'Notification banner',
         type: ComponentType.NotificationBanner,
         content: 'Important information about your application.',
@@ -121,7 +121,7 @@ describe('Type guards', () => {
         content: 'It can take up to 8 weeks to register a lasting power of…'
       } satisfies ComponentDef,
       {
-        name: 'NotificationBanner',
+        name: 'content',
         title: 'Notification banner',
         type: ComponentType.NotificationBanner,
         content: 'Important information about your application.',
