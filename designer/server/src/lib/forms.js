@@ -125,6 +125,18 @@ export async function getLiveFormDefinition(id, token) {
 }
 
 /**
+ * Get form definition, preferring draft over live
+ * @param {FormMetadata} metadata
+ * @param {string} token
+ */
+export function getFormDefinition(metadata, token) {
+  if (metadata.draft) {
+    return getDraftFormDefinition(metadata.id, token)
+  }
+  return getLiveFormDefinition(metadata.id, token)
+}
+
+/**
  * Retrieves a form definition version from the form manager for a given id
  * @param {string} id - the id of the form
  * @param {number} versionNumber - the version of the form

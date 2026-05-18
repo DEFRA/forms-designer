@@ -86,7 +86,7 @@ export default [
       const scopes = getUserScopes(auth)
 
       const metadata = await forms.get(slug, token)
-      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+      const definition = await forms.getFormDefinition(metadata, token)
 
       const formId = metadata.id
 

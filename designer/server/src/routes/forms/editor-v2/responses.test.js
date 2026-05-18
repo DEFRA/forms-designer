@@ -157,6 +157,30 @@ describe('Editor v2 responses routes', () => {
       )
       expect($error).toBeInTheDocument()
     })
+
+    test('should render page when form has no draft (live-only form)', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce({
+        ...testFormMetadata,
+        draft: undefined,
+        notificationEmail: 'test@defra.gov.uk'
+      })
+
+      const options = {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/responses',
+        auth
+      }
+
+      const {
+        container,
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.OK)
+      expect(
+        container.getByText('Download responses as an Excel spreadsheet')
+      ).toBeInTheDocument()
+    })
   })
 
   describe('POST', () => {
