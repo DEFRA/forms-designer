@@ -678,7 +678,8 @@ export const questionDetailsFullSchema = {
   countriesSchema,
   minFeaturesSchema,
   maxFeaturesSchema,
-  exactFeaturesSchema
+  exactFeaturesSchema,
+  geometryTypesSchema
 }
 
 export const formEditorInputPageKeys = {

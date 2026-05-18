@@ -2,6 +2,7 @@ import { type LanguageMessages } from 'joi'
 
 import {
   type ComponentType,
+  type GeospatialFieldGeometryTypesEnum,
   type PreviewTypeEnum
 } from '~/src/components/enums.js'
 import {
@@ -279,7 +280,7 @@ export interface GeospatialFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     condition?: string
     countries?: GeospatialFieldOptionsCountry[]
-    geometryTypes?: string[]
+    geometryTypes?: GeospatialFieldGeometryTypesEnum[]
   }
   schema?: {
     max?: number
