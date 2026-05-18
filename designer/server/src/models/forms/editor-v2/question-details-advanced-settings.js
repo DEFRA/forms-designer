@@ -239,9 +239,11 @@ export function advancedSettingsFields(options, question, validation) {
         ),
         items: fieldSettings.items?.map((item) => ({
           ...item,
-          checked: /** @type {string | undefined} */ (
-            formValues[fieldName]
-          )?.includes(item.value ?? '')
+          checked:
+            item.value &&
+            /** @type {string | undefined} */ (formValues[fieldName])?.includes(
+              item.value
+            )
         }))
       }
     }
