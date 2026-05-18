@@ -68,17 +68,17 @@ describe('Type guards', () => {
         content: 'It can take up to 8 weeks to register a lasting power of…'
       } satisfies ComponentDef,
       {
-        name: 'field',
-        title: 'Items',
-        type: ComponentType.List,
-        list: 'items',
-        options: {}
-      } satisfies ComponentDef,
-      {
         name: 'content',
         title: 'Notification banner',
         type: ComponentType.NotificationBanner,
         content: 'Important information about your application.',
+        options: {}
+      } satisfies ComponentDef,
+      {
+        name: 'field',
+        title: 'Items',
+        type: ComponentType.List,
+        list: 'items',
         options: {}
       } satisfies ComponentDef
     ])('should allow content types', (component) => {
@@ -161,8 +161,8 @@ describe('isConditionalRevealType', () => {
     ComponentType.Html,
     ComponentType.Markdown,
     ComponentType.InsetText,
-    ComponentType.List,
-    ComponentType.NotificationBanner
+    ComponentType.NotificationBanner,
+    ComponentType.List
   ])('should return true for content types: %s', (type) => {
     expect(isConditionalRevealType(type)).toBe(true)
   })

@@ -371,7 +371,7 @@ describe('Form definition schema', () => {
             const { error } = contentComponentSchema.validate(component)
             expect(error).toEqual(
               new ValidationError(
-                '"type" must be one of [Details, Html, Markdown, InsetText, List, NotificationBanner]',
+                '"type" must be one of [Details, Html, Markdown, InsetText, NotificationBanner, List]',
                 [],
                 component
               )

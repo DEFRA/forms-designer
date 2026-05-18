@@ -17,6 +17,7 @@ export enum ComponentType {
   Details = 'Details',
   List = 'List',
   Markdown = 'Markdown',
+  NotificationBanner = 'NotificationBanner',
   FileUploadField = 'FileUploadField',
   DeclarationField = 'DeclarationField',
   EastingNorthingField = 'EastingNorthingField',
@@ -25,8 +26,7 @@ export enum ComponentType {
   LatLongField = 'LatLongField',
   HiddenField = 'HiddenField',
   PaymentField = 'PaymentField',
-  GeospatialField = 'GeospatialField',
-  NotificationBanner = 'NotificationBanner'
+  GeospatialField = 'GeospatialField'
 }
 
 export enum GeospatialFieldOptionsCountryEnum {
