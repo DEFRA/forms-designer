@@ -73,6 +73,13 @@ describe('Type guards', () => {
         type: ComponentType.List,
         list: 'items',
         options: {}
+      } satisfies ComponentDef,
+      {
+        name: 'NotificationBanner',
+        title: 'Notification banner',
+        type: ComponentType.NotificationBanner,
+        content: 'Important information about your application.',
+        options: {}
       } satisfies ComponentDef
     ])('should allow content types', (component) => {
       const { type } = component
@@ -112,6 +119,13 @@ describe('Type guards', () => {
         title: '',
         type: ComponentType.InsetText,
         content: 'It can take up to 8 weeks to register a lasting power of…'
+      } satisfies ComponentDef,
+      {
+        name: 'NotificationBanner',
+        title: 'Notification banner',
+        type: ComponentType.NotificationBanner,
+        content: 'Important information about your application.',
+        options: {}
       } satisfies ComponentDef
     ])('should allow content types with textarea field', (component) => {
       const { type } = component
@@ -147,7 +161,8 @@ describe('isConditionalRevealType', () => {
     ComponentType.Html,
     ComponentType.Markdown,
     ComponentType.InsetText,
-    ComponentType.List
+    ComponentType.List,
+    ComponentType.NotificationBanner
   ])('should return true for content types: %s', (type) => {
     expect(isConditionalRevealType(type)).toBe(true)
   })
