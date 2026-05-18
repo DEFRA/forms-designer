@@ -330,6 +330,7 @@ export interface NotificationBannerComponent extends ContentFieldBase {
   content: string
   options: ContentFieldBase['options'] & {
     type?: 'success'
+    heading?: string
     condition?: string
   }
 }
