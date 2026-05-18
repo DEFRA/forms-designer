@@ -130,7 +130,7 @@ const locationSubItems = [
     value: ComponentType.LatLongField
   },
   {
-    text: 'An area or points on a map',
+    text: 'An area, a line, or points on a map',
     value: ComponentType.GeospatialField
   }
 ]

@@ -49,7 +49,8 @@ const checkBoxFieldQuestions = [
   QuestionBaseSettings.ImageTypes,
   QuestionBaseSettings.TabularDataTypes,
   QuestionBaseSettings.UsePostcodeLookup,
-  QuestionAdvancedSettings.GiveInstructions
+  QuestionAdvancedSettings.GiveInstructions,
+  QuestionAdvancedSettings.GeometryTypes
 ]
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]

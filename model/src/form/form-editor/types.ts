@@ -477,6 +477,7 @@ export type FormEditorInputQuestion = Pick<
   | 'paymentLiveApiKey'
   | 'conditionalAmount'
   | 'conditionalAmountCondition'
+  | 'geometryTypes'
   | 'countries'
   | 'exactFeatures'
   | 'minFeatures'

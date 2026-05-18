@@ -385,7 +385,8 @@ describe('editor-v2 - question details advanced settings model', () => {
         }
       })
       expect(res).toEqual({
-        countries: ['wales']
+        countries: ['wales'],
+        geometryTypes: ['point', 'line', 'shape']
       })
     })
   })

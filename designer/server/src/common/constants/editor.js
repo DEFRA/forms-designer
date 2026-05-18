@@ -84,7 +84,7 @@ export const QuestionTypeDescriptions =
     },
     {
       type: ComponentType.GeospatialField,
-      description: 'Location: An area or points on a map'
+      description: 'Location: An area, a line, or points on a map'
     }
   ])
 
@@ -135,6 +135,7 @@ export const QuestionAdvancedSettings =
     MinChecks: 'minChecks',
     MaxChecks: 'maxChecks',
     ExactChecks: 'exactChecks',
+    GeometryTypes: 'geometryTypes',
     Countries: 'countries',
     MinFeatures: 'minFeatures',
     MaxFeatures: 'maxFeatures',

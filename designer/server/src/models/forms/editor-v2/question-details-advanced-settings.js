@@ -1,4 +1,7 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum
+} from '@defra/forms-model'
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
@@ -6,6 +9,7 @@ import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { allEnhancedFields } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getDefaultLocationInstructions } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
+import { getFieldComponentType } from '~/src/models/forms/editor-v2/page-fields.js'
 
 /**
  * @param {NumberFieldComponent} question
@@ -156,7 +160,10 @@ export function mapToQuestionOptions(question) {
     question.type === ComponentType.GeospatialField
       ? {
           countries: /** @type {GeospatialFieldComponent} */ (question).options
-            .countries ?? ['any']
+            .countries ?? ['any'],
+          geometryTypes:
+            /** @type {GeospatialFieldComponent} */ (question).options
+              .geometryTypes ?? Object.values(GeospatialFieldGeometryTypesEnum)
         }
       : {}
 
@@ -217,6 +224,24 @@ export function advancedSettingsFields(options, question, validation) {
           checked: isCheckboxSelected(
             /** @type {string | undefined} */ (formValues[fieldName])
           )
+        }))
+      }
+    }
+
+    if (
+      getFieldComponentType(fieldSettings) === ComponentType.CheckboxesField
+    ) {
+      // Re-apply checkbox values
+      return {
+        ...fieldSettings,
+        ...insertValidationErrors(
+          formErrors ? formErrors[fieldName] : undefined
+        ),
+        items: fieldSettings.items?.map((item) => ({
+          ...item,
+          checked: /** @type {string | undefined} */ (
+            formValues[fieldName]
+          )?.includes(item.value ?? '')
         }))
       }
     }
