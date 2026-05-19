@@ -481,6 +481,7 @@ export const maxFeaturesSchema = Joi.number()
 
 export const geometryTypesSchema = Joi.array()
   .items(Joi.string().valid(...Object.values(GeospatialFieldGeometryTypesEnum)))
+  .single()
   .description('The geometry types allowed in a geospatial field')
 
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {

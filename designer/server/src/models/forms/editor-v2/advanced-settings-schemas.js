@@ -157,6 +157,16 @@ export const allSpecificSchemas = Joi.object().keys({
     }),
     otherwise: Joi.string().optional().allow('')
   }),
+  geometryTypes: Joi.when('questionType', {
+    is: 'GeospatialField',
+    then: questionDetailsFullSchema.geometryTypesSchema
+      .min(1)
+      .required()
+      .messages({
+        '*': 'Choose at least one geometry type'
+      })
+  }),
+  otherwise: Joi.array().optional(),
   countries: questionDetailsFullSchema.countriesSchema,
   exactFeatures: questionDetailsFullSchema.exactFeaturesSchema
     .when('minFeatures', {

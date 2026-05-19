@@ -1,8 +1,15 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum
+} from '@defra/forms-model'
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
-import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
+import {
+  hasCheckedValue,
+  insertValidationErrors,
+  isCheckboxSelected
+} from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { allEnhancedFields } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getDefaultLocationInstructions } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
@@ -27,6 +34,28 @@ export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
     maxPast: question.options.maxDaysInPast
+  }
+}
+
+/**
+ * @param { LocationFieldComponent } question
+ */
+export function addLocationFieldProperties(question) {
+  return {
+    giveInstructions: question.options.instructionText ? 'true' : undefined,
+    instructionText: question.options.instructionText
+  }
+}
+
+/**
+ * @param { GeospatialFieldComponent } question
+ */
+export function addGeospatialFieldProperties(question) {
+  return {
+    countries: question.options.countries ?? ['any'],
+    geometryTypes:
+      question.options.geometryTypes ??
+      Object.values(GeospatialFieldGeometryTypesEnum)
   }
 }
 
@@ -143,21 +172,13 @@ export function mapToQuestionOptions(question) {
       )
     : {}
   const locationExtras = isLocationField
-    ? {
-        giveInstructions: /** @type {LocationFieldComponent} */ (question)
-          .options.instructionText
-          ? 'true'
-          : undefined,
-        instructionText: /** @type {LocationFieldComponent} */ (question)
-          .options.instructionText
-      }
+    ? addLocationFieldProperties(
+        /** @type {LocationFieldComponent} */ (question)
+      )
     : {}
   const geospatialExtras =
     question.type === ComponentType.GeospatialField
-      ? {
-          countries: /** @type {GeospatialFieldComponent} */ (question).options
-            .countries ?? ['any']
-        }
+      ? addGeospatialFieldProperties(question)
       : {}
 
   return {
@@ -216,6 +237,23 @@ export function advancedSettingsFields(options, question, validation) {
           }),
           checked: isCheckboxSelected(
             /** @type {string | undefined} */ (formValues[fieldName])
+          )
+        }))
+      }
+    }
+
+    if (fieldName === QuestionAdvancedSettings.GeometryTypes) {
+      // Re-apply checkbox values
+      return {
+        ...fieldSettings,
+        ...insertValidationErrors(
+          formErrors ? formErrors[fieldName] : undefined
+        ),
+        items: fieldSettings.items?.map((item) => ({
+          ...item,
+          checked: hasCheckedValue(
+            /** @type {string[] | undefined} */ (formValues[fieldName]),
+            item.value
           )
         }))
       }

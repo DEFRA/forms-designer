@@ -1,3 +1,6 @@
+import { GeospatialFieldGeometryTypesEnum } from '@defra/forms-model'
+import upperFirst from 'lodash/upperFirst.js'
+
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import {
   GOVUK_INPUT_WIDTH_3,
@@ -82,6 +85,7 @@ export const advancedSettingsPerComponentType =
     ],
     HiddenField: [],
     GeospatialField: [
+      QuestionAdvancedSettings.GeometryTypes,
       QuestionAdvancedSettings.Countries,
       QuestionAdvancedSettings.MinFeatures,
       QuestionAdvancedSettings.MaxFeatures,
@@ -333,6 +337,23 @@ export const allAdvancedSettingsFields =
         text: 'The maximum number of checkboxes a user can select'
       },
       classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.GeometryTypes]: {
+      name: 'geometryTypes',
+      id: 'geometryTypes',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Choose the geometry types you accept',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      formGroup: { classes: 'app-settings-checkboxes' },
+      items: Object.values(GeospatialFieldGeometryTypesEnum).map((typ) => ({
+        value: typ,
+        text: upperFirst(typ)
+      }))
     },
     [QuestionAdvancedSettings.Countries]: {
       name: 'countries',

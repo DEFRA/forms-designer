@@ -94,6 +94,12 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.paymentDescription !== undefined
     },
     {
+      key: 'geometryTypes',
+      getValue: () => payload.geometryTypes,
+      shouldInclude: () =>
+        Array.isArray(payload.geometryTypes) && payload.geometryTypes.length
+    },
+    {
       key: 'countries',
       getValue: () => payload.countries,
       shouldInclude: () =>

@@ -50,6 +50,17 @@ export function isCheckboxSelected(checkboxVal) {
 }
 
 /**
+ * @param { string[] | undefined } options
+ * @param { string | undefined } value
+ */
+export function hasCheckedValue(options, value) {
+  if (!value || !options || options.length === 0) {
+    return false
+  }
+  return options.includes(value)
+}
+
+/**
  *
  * @param {string | undefined | null} str
  * @returns {boolean}
