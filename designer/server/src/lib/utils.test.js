@@ -21,6 +21,7 @@ import {
   getHeaders,
   getListFromComponent,
   handlePrecision,
+  hasCheckedValue,
   mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
@@ -342,6 +343,24 @@ describe('utils', () => {
     })
     it('should accept zero (DF-832: base payment amount allows £0)', () => {
       expect(handlePrecision(0, mockHelpers, 2)).toBe(0)
+    })
+  })
+
+  describe('hasCheckedValue', () => {
+    it('should return false if options are undefined', () => {
+      expect(hasCheckedValue(undefined, 'test')).toBe(false)
+    })
+    it('should return false if no options', () => {
+      expect(hasCheckedValue([], 'test')).toBe(false)
+    })
+    it('should return false if undefined value', () => {
+      expect(hasCheckedValue(['option1'], undefined)).toBe(false)
+    })
+    it('should return false if empty value', () => {
+      expect(hasCheckedValue([''], '')).toBe(false)
+    })
+    it('should return true if value matches', () => {
+      expect(hasCheckedValue(['abc', 'def'], 'abc')).toBe(true)
     })
   })
 })

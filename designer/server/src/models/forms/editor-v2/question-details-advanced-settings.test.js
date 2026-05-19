@@ -456,6 +456,22 @@ describe('editor-v2 - question details advanced settings model', () => {
       expect(result[0].value).toContain('Click to add the location to the map')
     })
 
+    test('should re-apply checkbox values for geospatial fields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.GeospatialField,
+        name: 'geospatial',
+        title: 'geospatial title',
+        options: {}
+      })
+      const result = advancedSettingsFields(['geometryTypes'], question)
+      expect(result).toHaveLength(1)
+      expect(result[0].items).toHaveLength(3)
+      const items = result[0]?.items ?? []
+      expect(items[0]).toEqual({ text: 'Point', value: 'point', checked: true })
+      expect(items[1]).toEqual({ text: 'Line', value: 'line', checked: true })
+      expect(items[2]).toEqual({ text: 'Shape', value: 'shape', checked: true })
+    })
+
     test('should use validation value over default for location instruction', () => {
       const question = /** @type {ComponentDef} */ ({
         type: ComponentType.OsGridRefField,
