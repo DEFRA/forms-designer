@@ -459,6 +459,12 @@ export interface PlatformCsatExcelRequestedMessage extends DesignerMessageBase {
   data: ExcelGenerationMessageData
 }
 
+export interface PlatformMetricsDownloadRequestedMessage
+  extends DesignerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED
+}
+
 export interface FormsBackupRequestedMessage extends DesignerMessageBase {
   type: AuditEventMessageType.FORMS_BACKUP_REQUESTED
   data: FormsBackupRequestedMessageData
@@ -515,6 +521,7 @@ export type AuditMessage =
   | FormSubmissionExcelRequestedMessage
   | FormCsatExcelRequestedMessage
   | PlatformCsatExcelRequestedMessage
+  | PlatformMetricsDownloadRequestedMessage
   | FormsBackupRequestedMessage
   | FormSecretDeletedMessage
   | FormSecretSavedMessage

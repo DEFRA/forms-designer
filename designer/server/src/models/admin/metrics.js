@@ -1,5 +1,7 @@
 import { FormStatus, organisations } from '@defra/forms-model'
+import { stringify } from 'csv-stringify'
 
+import config from '~/src/config.js'
 import {
   componentUsageFeatures,
   componentUsageFormStructures,
@@ -160,6 +162,70 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
+ * @param {Input} input
+ * @returns {Promise<string>}
+ */
+export function createCsv(input) {
+  return new Promise((resolve, reject) => {
+    stringify(
+      input,
+      { bom: true, quoted: true },
+      /** @type {Callback} */ function (err, output) {
+        if (err) {
+          reject(
+            err instanceof Error
+              ? err
+              : // @ts-expect-error - error object not strongly typed
+                new Error(`CSV stringify error: ${err.message}`)
+          )
+          return
+        }
+
+        resolve(Buffer.from(output, 'utf8').toString())
+      }
+    )
+  })
+}
+
+/**
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ */
+export async function getLiveMetricsAsCsv(metrics) {
+  const liveOnly = metrics.overview.filter(
+    (ov) => ov.formStatus === FormStatus.Live
+  )
+
+  // Sort forms by name then status
+  const formsSorted = liveOnly.toSorted((a, b) => {
+    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
+    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
+    return formNameA.localeCompare(formNameB)
+  })
+
+  const headers = ['Form name', 'Form URL', 'Live submissions']
+
+  const values = /** @type {string[][]} */ ([])
+  values.push(headers)
+
+  formsSorted.forEach((ov) => {
+    const summaryMetrics =
+      /** @type {{ name: string, slug: string, submissionsCount?: number }} */ (
+        ov.summaryMetrics
+      )
+    values.push([
+      summaryMetrics.name,
+      `${config.appBaseUrl}/library/${summaryMetrics.slug}`,
+      `${summaryMetrics.submissionsCount ?? 0}`
+    ])
+  })
+
+  const csv = await createCsv(values)
+
+  return csv
+}
+
+/**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { Input, Callback } from 'csv-stringify'
  * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
  */

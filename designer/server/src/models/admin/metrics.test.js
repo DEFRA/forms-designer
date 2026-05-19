@@ -1,10 +1,15 @@
 import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
+import config from '~/src/config.js'
 import {
   combineModel,
+  createCsv,
+  getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
+
+jest.mock('~/src/config.ts')
 
 /**
  * @param {string} title
@@ -507,6 +512,55 @@ describe('metrics models', () => {
           }
         }
       ])
+    })
+  })
+
+  describe('getLiveMetricsAsCsv', () => {
+    it('should generate live CSV', async () => {
+      jest.mocked(config).appBaseUrl = 'http://app-base-url:3000'
+      const metrics = {
+        totals: {},
+        overview: [
+          {
+            formId: 'form-id-1',
+            formStatus: FormStatus.Live,
+            summaryMetrics: {
+              name: 'Form 1',
+              slug: 'form-1',
+              submissionsCount: 5
+            }
+          },
+          {
+            formId: 'form-id-2',
+            formStatus: FormStatus.Live,
+            summaryMetrics: { name: 'Form 2', slug: 'form-2' }
+          },
+          {
+            formId: 'form-id-3',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: { name: 'Form 3', slug: 'form-3' }
+          }
+        ]
+      }
+      // @ts-expect-error - partial mock of data
+      const csvOut = await getLiveMetricsAsCsv(metrics)
+      expect(csvOut).toBe(`\ufeff"Form name","Form URL","Live submissions"
+"Form 1","http://app-base-url:3000/library/form-1","5"
+"Form 2","http://app-base-url:3000/library/form-2","0"
+`)
+    })
+  })
+
+  describe('createCsv', () => {
+    it('should throw if error', async () => {
+      const veryLongInput = Array.from({ length: 200000 }).map(() =>
+        Array.from({ length: 100 }).map(
+          () => 'ABCDEFGHIJKLMNOPQRSTUVXYZ0123456789'
+        )
+      )
+      await expect(() => createCsv(veryLongInput)).rejects.toThrow(
+        'CSV stringify error: Cannot create a string longer than 0x1fffffe8 characters'
+      )
     })
   })
 })
