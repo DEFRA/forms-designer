@@ -111,7 +111,7 @@
   }) }}
 {% endset -%}
 
-{% set showFilter = model.filter.showFilter !== 'N' %}
+{% set showFilter = model.filter.showFilter === 'Y' %}
 
   <form method="post">
     <div class="moj-filter-layout">

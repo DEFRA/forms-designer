@@ -236,7 +236,7 @@ describe('Form metrics routes', () => {
         org: ['Org1', 'Org2']
       }
       expect(buildQueryFromPayload(payload)).toBe(
-        '?showFilter=N&searchText=some%2520text&status=draft&status=live&org=Org1&org=Org2'
+        '?searchText=some%2520text&showFilter=N&status=draft&status=live&org=Org1&org=Org2'
       )
     })
 

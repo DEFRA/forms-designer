@@ -1240,7 +1240,7 @@ exports[`Form metrics routes form-metrics should render report form with form ac
 
   <form method="post">
     <div class="moj-filter-layout">
-      <div class="moj-filter-layout__filter" style="display: block">
+      <div class="moj-filter-layout__filter" style="display: none">
 
         
 <div class="moj-filter" data-module="moj-filter">
@@ -1378,7 +1378,7 @@ exports[`Form metrics routes form-metrics should render report form with form ac
 
         <div class="moj-action-bar">
           <div class="moj-action-bar__filter">
-            <button type="submit" name="showFilter" value="N" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="true" data-govuk-button-init="">Hide filter</button>
+            <button type="submit" name="showFilter" value="Y" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="false" data-govuk-button-init="">Show filter</button>
           </div>
         </div>
 

@@ -48,7 +48,9 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
     },
     filter: {
       showFilter: filterAndSort.showFilter,
-      searchText: filterAndSort.searchText,
+      searchText: filterAndSort.searchText
+        ? decodeURI(filterAndSort.searchText)
+        : undefined,
       status: filterAndSort.status,
       organisation: filterAndSort.org,
       organisationList: Array.from(organisationMap, ([key, count]) => ({

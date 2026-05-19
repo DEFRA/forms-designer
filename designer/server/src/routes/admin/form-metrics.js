@@ -47,21 +47,24 @@ export function buildQueryFromPayload(payload) {
   }
 
   const params = new URLSearchParams()
-  if (payload.showFilter === 'N') {
-    params.set('showFilter', 'N')
-  }
   if (payload.searchText) {
-    params.set('searchText', encodeURI(payload.searchText))
+    params.set('searchText', encodeURI(payload.searchText.trim()))
+    params.set('showFilter', 'Y')
   }
   if (payload.status) {
     payload.status.forEach((st) => {
       params.append('status', st)
     })
+    params.set('showFilter', 'Y')
   }
   if (payload.org) {
     payload.org.forEach((org) => {
       params.append('org', encodeURI(org))
     })
+    params.set('showFilter', 'Y')
+  }
+  if (payload.showFilter === 'Y' || payload.showFilter === 'N') {
+    params.set('showFilter', payload.showFilter)
   }
   return params.size ? `?${params.toString()}` : ''
 }
