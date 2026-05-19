@@ -129,7 +129,7 @@ export async function getLiveFormDefinition(id, token) {
  * @param {FormMetadata} metadata
  * @param {string} token
  */
-export function getFormDefinition(metadata, token) {
+export function getDraftFormDefinitionWithLiveFallback(metadata, token) {
   if (metadata.draft) {
     return getDraftFormDefinition(metadata.id, token)
   }

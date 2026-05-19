@@ -696,7 +696,7 @@ describe('Forms library routes', () => {
       })
     })
 
-    describe('getFormDefinition', () => {
+    describe('getDraftFormDefinitionWithLiveFallback', () => {
       const token = auth.credentials.token
 
       beforeEach(() => {
@@ -710,7 +710,10 @@ describe('Forms library routes', () => {
           body: formDefinition
         })
 
-        const result = await forms.getFormDefinition(formMetadata, token)
+        const result = await forms.getDraftFormDefinitionWithLiveFallback(
+          formMetadata,
+          token
+        )
 
         const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
         const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
@@ -729,7 +732,7 @@ describe('Forms library routes', () => {
         })
 
         const metadataWithoutDraft = { ...formMetadata, draft: undefined }
-        const result = await forms.getFormDefinition(
+        const result = await forms.getDraftFormDefinitionWithLiveFallback(
           metadataWithoutDraft,
           token
         )
