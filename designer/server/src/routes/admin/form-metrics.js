@@ -8,7 +8,11 @@ import Joi from 'joi'
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
-import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
+import {
+  MetricsFilterFields,
+  getMetrics,
+  regenerateMetrics
+} from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import {
   getLiveMetricsAsCsv,
@@ -22,6 +26,8 @@ const ROUTE_ADMIN_INDEX = '/admin/index'
 
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
+
+const SHOW_FILTER = 'showFilter'
 
 const filterAndSortSchema = Joi.object({
   // Sorting
@@ -48,23 +54,23 @@ export function buildQueryFromPayload(payload) {
 
   const params = new URLSearchParams()
   if (payload.searchText) {
-    params.set('searchText', encodeURI(payload.searchText.trim()))
-    params.set('showFilter', 'Y')
+    params.set(MetricsFilterFields.SearchText, payload.searchText.trim())
+    params.set(SHOW_FILTER, 'Y')
   }
   if (payload.status) {
     payload.status.forEach((st) => {
-      params.append('status', st)
+      params.append(MetricsFilterFields.Status, st)
     })
-    params.set('showFilter', 'Y')
+    params.set(SHOW_FILTER, 'Y')
   }
   if (payload.org) {
     payload.org.forEach((org) => {
-      params.append('org', encodeURI(org))
+      params.append(MetricsFilterFields.Org, org)
     })
-    params.set('showFilter', 'Y')
+    params.set(SHOW_FILTER, 'Y')
   }
   if (payload.showFilter === 'Y' || payload.showFilter === 'N') {
-    params.set('showFilter', payload.showFilter)
+    params.set(SHOW_FILTER, payload.showFilter)
   }
   return params.size ? `?${params.toString()}` : ''
 }
