@@ -254,7 +254,7 @@ export class LinkEdit extends Component<Props, State> {
         )}
 
         <div className="govuk-hint">{i18n('addLink.header.hint')}</div>
-        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
+        <form action="#" onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div
             className={classNames({
               'govuk-form-group': true,

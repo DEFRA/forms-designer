@@ -109,7 +109,7 @@ export function ComponentEdit(props: Readonly<Props>) {
         <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
       )}
 
-      <form onSubmit={handleSubmit} autoComplete="off" noValidate>
+      <form action="#" onSubmit={handleSubmit} autoComplete="off" noValidate>
         <ComponentTypeEdit />
 
         <div className="govuk-button-group">

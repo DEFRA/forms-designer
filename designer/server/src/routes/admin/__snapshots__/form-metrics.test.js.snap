@@ -202,7 +202,7 @@ exports[`Form metrics routes form-metrics should render regenerate form 1`] = `
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full">
   
-    <form method="post">
+    <form method="post" action="#">
       <h2 class="govuk-heading-l">Regenerating metrics</h2>
       <p class="govuk-body">This will clear out the 'metrics' collection in the 'forms-audit-api' database, and regenerate a full history of metrics.</p>
 
@@ -1238,7 +1238,7 @@ exports[`Form metrics routes form-metrics should render report form with form ac
   </div>
 </div>
 
-  <form method="post">
+  <form method="post" action="#">
     <div class="moj-filter-layout">
       <div class="moj-filter-layout__filter" style="display: none">
 

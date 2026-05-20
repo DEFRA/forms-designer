@@ -100,7 +100,7 @@ describe('summary page controller', () => {
 
     it('should return showConfirmationEmail as true when fallback value is "true"', () => {
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input type="hidden" id="showConfirmationEmailFallback" value="true">
         </form>
         ${questionDetailsPreviewHTML}
@@ -117,7 +117,7 @@ describe('summary page controller', () => {
 
     it('should return showConfirmationEmail as false when fallback value is "false"', () => {
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input type="hidden" id="showConfirmationEmailFallback" value="false">
         </form>
         ${questionDetailsPreviewHTML}
@@ -148,7 +148,7 @@ describe('summary page controller', () => {
 
     it('should default to false when no radio buttons or fallback are present', () => {
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
         </form>
         ${questionDetailsPreviewHTML}
       `
@@ -178,7 +178,7 @@ describe('summary page controller', () => {
 
     it('should return showConfirmationEmail when checkbox is unchecked', () => {
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true">
         </form>
         ${questionDetailsPreviewHTML}
@@ -195,7 +195,7 @@ describe('summary page controller', () => {
 
     it('should return false when checkbox is checked', () => {
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true" checked>
         </form>
         ${questionDetailsPreviewHTML}
@@ -213,7 +213,7 @@ describe('summary page controller', () => {
 
     it('should return true when checkbox exists but is not checked', () => {
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input class="govuk-checkboxes__input" id="disableConfirmationEmail" name="disableConfirmationEmail" type="checkbox" value="true">
         </form>
         ${questionDetailsPreviewHTML}
@@ -232,7 +232,7 @@ describe('summary page controller', () => {
     it('should handle fallback value with various string representations', () => {
       // Test with string "true"
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input type="hidden" id="showConfirmationEmailFallback" value="true">
         </form>
         ${questionDetailsPreviewHTML}
@@ -247,7 +247,7 @@ describe('summary page controller', () => {
 
       // Test with empty string
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input type="hidden" id="showConfirmationEmailFallback" value="">
         </form>
         ${questionDetailsPreviewHTML}
@@ -262,7 +262,7 @@ describe('summary page controller', () => {
 
       // Test with arbitrary string
       document.body.innerHTML = `
-        <form id="checkAnswersForm">
+        <form id="checkAnswersForm" action="#">
           <input type="hidden" id="showConfirmationEmailFallback" value="yes">
         </form>
         ${questionDetailsPreviewHTML}

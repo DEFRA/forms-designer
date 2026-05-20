@@ -316,7 +316,7 @@ export const summaryPageHTML = (
   disableConfirmationEmail = false,
   showConfirmationEmailFallback = 'false'
 ) => `
-<form id="checkAnswersForm" class="form" method="post">
+<form id="checkAnswersForm" class="form" method="post" action="#">
   <input type="hidden" id="showConfirmationEmailFallback" value="${showConfirmationEmailFallback}">
   <fieldset class="govuk-fieldset">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">

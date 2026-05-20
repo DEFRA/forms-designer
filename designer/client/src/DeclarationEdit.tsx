@@ -63,7 +63,7 @@ export class DeclarationEdit extends Component<Props, State> {
     const { declaration } = this.state
 
     return (
-      <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
+      <form action="#" onSubmit={this.onSubmit} autoComplete="off" noValidate>
         <Textarea
           id="field-declaration"
           name="declaration"
