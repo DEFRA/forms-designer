@@ -190,7 +190,7 @@ describe('editor-v2 - pages model', () => {
       })
     })
 
-    test('Terminal pages sort after Payment in the display order', () => {
+    test('Terminal pages should remain in the display order', () => {
       const def = structuredClone(testFormDefinitionWithPayment)
       def.pages.push(
         /** @type {*} */ ({
@@ -204,9 +204,8 @@ describe('editor-v2 - pages model', () => {
       )
       const res = mapPageData('slug', def, undefined)
       const titles = res.pages.map((p) => p.title)
-      expect(titles.indexOf('Payment')).toBeLessThan(
-        titles.indexOf('You cannot continue')
-      )
+      expect(titles.indexOf('You cannot continue')).toBe(0)
+      expect(titles.indexOf('Payment')).toBe(2)
     })
   })
 

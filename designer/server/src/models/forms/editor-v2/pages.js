@@ -251,11 +251,10 @@ export function mapPageData(slug, definition, filterOptions) {
 const DISPLAY_RANK_QUESTION = 0
 const DISPLAY_RANK_SUMMARY = 1
 const DISPLAY_RANK_PAYMENT = 2
-const DISPLAY_RANK_TERMINAL = 3
 
 /**
  * Display-order rank for the form overview listing. Mirrors the runtime flow:
- * question pages → Check your answers (Summary) → Payment → terminal/exit pages.
+ * Question pages → Check your answers (Summary) → Payment pages.
  * `pageNum` continues to come from the original definition.pages index so labels
  * are stable regardless of display order.
  * @param {Page} page
@@ -266,9 +265,6 @@ function pageDisplayRank(page) {
   }
   if (isPaymentPage(page)) {
     return DISPLAY_RANK_PAYMENT
-  }
-  if (page.controller === ControllerType.Terminal) {
-    return DISPLAY_RANK_TERMINAL
   }
   return DISPLAY_RANK_QUESTION
 }
