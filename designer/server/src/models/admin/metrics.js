@@ -54,7 +54,7 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
       organisationList: Array.from(organisationMap, ([key, count]) => ({
         text: `${key} (${count})`,
         value: key,
-        checked: filterAndSort.org?.includes(encodeURI(key))
+        checked: filterAndSort.org?.includes(key)
       })),
       statusList: [
         {

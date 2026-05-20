@@ -4,6 +4,12 @@ import { getHeaders } from '~/src/lib/utils.js'
 
 const metricsEndpoint = new URL('/report/', config.auditUrl)
 
+export const MetricsFilterFields = {
+  SearchText: 'searchText',
+  Status: 'status',
+  Org: 'org'
+}
+
 /**
  * Get metrics
  * @param {FilterCriteria} [filter]
@@ -17,18 +23,21 @@ export async function getMetrics(filter = {}) {
   const requestUrl = new URL(metricsEndpoint)
 
   if (filter.searchText) {
-    requestUrl.searchParams.set('searchText', filter.searchText)
+    requestUrl.searchParams.set(
+      MetricsFilterFields.SearchText,
+      filter.searchText
+    )
   }
 
   if (filter.status) {
     filter.status.forEach((st) => {
-      requestUrl.searchParams.append('status', st)
+      requestUrl.searchParams.append(MetricsFilterFields.Status, st)
     })
   }
 
   if (filter.org) {
     filter.org.forEach((org) => {
-      requestUrl.searchParams.append('org', org)
+      requestUrl.searchParams.append(MetricsFilterFields.Org, org)
     })
   }
 

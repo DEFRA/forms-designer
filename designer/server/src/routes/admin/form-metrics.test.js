@@ -233,10 +233,10 @@ describe('Form metrics routes', () => {
         showFilter: 'N',
         searchText: 'some text',
         status: ['draft', 'live'],
-        org: ['Org1', 'Org2']
+        org: ['Org 1', 'Org 2']
       }
       expect(buildQueryFromPayload(payload)).toBe(
-        '?showFilter=N&searchText=some%2520text&status=draft&status=live&org=Org1&org=Org2'
+        '?searchText=some+text&showFilter=N&status=draft&status=live&org=Org+1&org=Org+2'
       )
     })
 
