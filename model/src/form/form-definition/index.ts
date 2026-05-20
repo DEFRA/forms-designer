@@ -520,7 +520,8 @@ export const componentSchema = Joi.object<ComponentDef>()
         ComponentType.Details,
         ComponentType.Html,
         ComponentType.InsetText,
-        ComponentType.Markdown
+        ComponentType.Markdown,
+        ComponentType.NotificationBanner
       ),
       then: Joi.string()
         .trim()
@@ -538,7 +539,8 @@ export const componentSchema = Joi.object<ComponentDef>()
         ComponentType.Details,
         ComponentType.Html,
         ComponentType.InsetText,
-        ComponentType.Markdown
+        ComponentType.Markdown,
+        ComponentType.NotificationBanner
       ),
       then: Joi.string()
         .trim()
@@ -701,6 +703,7 @@ export const contentComponentSchema = componentSchemaV2.keys({
     .valid(ComponentType.Html)
     .valid(ComponentType.Markdown)
     .valid(ComponentType.InsetText)
+    .valid(ComponentType.NotificationBanner)
     .valid(ComponentType.List)
     .required()
     .description('Content only component type (Details, Html, Markdown, etc.)')

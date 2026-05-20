@@ -141,6 +141,13 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
     options: {}
   },
   {
+    name: 'NotificationBanner',
+    title: 'Notification banner',
+    type: ComponentType.NotificationBanner,
+    content: '',
+    options: {}
+  },
+  {
     name: 'List',
     title: 'List',
     type: ComponentType.List,

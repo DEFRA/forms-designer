@@ -17,6 +17,7 @@ export enum ComponentType {
   Details = 'Details',
   List = 'List',
   Markdown = 'Markdown',
+  NotificationBanner = 'NotificationBanner',
   FileUploadField = 'FileUploadField',
   DeclarationField = 'DeclarationField',
   EastingNorthingField = 'EastingNorthingField',

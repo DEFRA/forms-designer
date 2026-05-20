@@ -55,6 +55,7 @@ interface ContentFieldBase {
     | ComponentType.Markdown
     | ComponentType.InsetText
     | ComponentType.List
+    | ComponentType.NotificationBanner
   name: string
   title: string
   options?: {
@@ -331,6 +332,16 @@ export interface ListComponent extends ContentFieldBase {
   }
 }
 
+export interface NotificationBannerComponent extends ContentFieldBase {
+  type: ComponentType.NotificationBanner
+  content: string
+  options: ContentFieldBase['options'] & {
+    type?: 'success'
+    heading?: string
+    condition?: string
+  }
+}
+
 export interface AutocompleteFieldComponent extends ListFieldBase {
   type: ComponentType.AutocompleteField
   options: ListFieldBase['options'] & {
@@ -401,6 +412,7 @@ export type ContentComponentsDef =
   | MarkdownComponent
   | InsetTextComponent
   | ListComponent
+  | NotificationBannerComponent
 
 // Components that render lists
 export type ListComponentsDef =
