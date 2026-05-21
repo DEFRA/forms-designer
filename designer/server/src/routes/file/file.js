@@ -91,9 +91,10 @@ export default [
       const { query, payload, params, auth, server } = request
       const { credentials } = auth
       const { token } = credentials
-      const { referenceNumber, ajax } = query
-      let { email } = payload
       const { fileId } = params
+      const { referenceNumber } = query
+      let { email } = payload
+      const isAsyncFetch = request.headers.accept === 'application/json'
 
       if (!userSession.hasUser(credentials)) {
         return Boom.unauthorized()
@@ -120,7 +121,7 @@ export default [
           config.fileDownloadPasswordTtl
         )
 
-        if (!ajax && referenceNumber) {
+        if (!isAsyncFetch && referenceNumber) {
           return h.redirect(`/files-download/${referenceNumber}`)
         }
 
@@ -131,7 +132,7 @@ export default [
           auditUser
         )
 
-        return ajax
+        return isAsyncFetch
           ? { url, fileName: fileStatus.filename }
           : h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
@@ -253,7 +254,7 @@ export default [
 
       return h.view(
         'file/download-all',
-        file.downloadAllViewModel(email, referenceNumber, files, definition)
+        file.downloadAllViewModel(email, files, definition)
       )
     },
     options: {

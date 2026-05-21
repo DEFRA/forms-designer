@@ -45,19 +45,12 @@ function resetStatusTags() {
  * Downloads all files from the given array of file objects, with a delay between each download to prevent browser freezing
  * @param {{href: string, fileId: string}[]} files - an array of URLs and file IDs for the files to download
  * @param {string} email - the email address of the user
- * @param {DownloadCallback} onDownloadStarted - a callback function that is called when each file download starts, with the fileId and file object as arguments
- * @param {DownloadCallback} onDownloadFinished - a callback function that is called after each file is downloaded, with the fileId and file object as arguments
  */
-export async function downloadAllFiles(
-  files,
-  email,
-  onDownloadStarted,
-  onDownloadFinished
-) {
+export async function downloadAllFiles(files, email) {
   resetStatusTags()
 
   for (const file of files) {
-    await downloadFile(file, email, onDownloadStarted, onDownloadFinished)
+    await downloadFile(file, email)
   }
 }
 
@@ -65,15 +58,8 @@ export async function downloadAllFiles(
  * Downloads a single file from the given URL, with a delay between each download to prevent browser freezing
  * @param {{href: string, fileId: string}} file - an array of URLs and file IDs for the files to download
  * @param {string} email - the email address of the user
- * @param {DownloadCallback} onDownloadStarted - a callback function that is called when each file download starts, with the fileId and file object as arguments
- * @param {DownloadCallback} onDownloadFinished - a callback function that is called after each file is downloaded, with the fileId and file object as arguments
  */
-async function downloadFile(
-  file,
-  email,
-  onDownloadStarted,
-  onDownloadFinished
-) {
+async function downloadFile(file, email) {
   const { href, fileId } = file
 
   onDownloadStarted(fileId)
@@ -81,7 +67,10 @@ async function downloadFile(
   const opts = {
     method: 'POST',
     body: JSON.stringify({ email }),
-    headers: { 'Content-Type': 'application/json' }
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json'
+    }
   }
   const response = await fetch(`${href}?ajax=true`, opts)
   const { url, fileName } = await response.json()
@@ -99,6 +88,9 @@ async function downloadFile(
  * @param {string} fileId - the ID of the downloaded file
  */
 function onDownloadStarted(fileId) {
+  document
+    .getElementById(`downloaded-tag-${fileId}`)
+    ?.classList.add('app-hidden')
   document
     .getElementById(`downloading-tag-${fileId}`)
     ?.classList.remove('app-hidden')
@@ -128,7 +120,7 @@ async function downloadAll(email) {
     fileId: /** @type {string} */ (link.getAttribute('data-fileid'))
   }))
 
-  await downloadAllFiles(files, email, onDownloadStarted, onDownloadFinished)
+  await downloadAllFiles(files, email)
 }
 
 /**
@@ -181,7 +173,7 @@ export function init(email) {
       if (fileId && href) {
         const file = { href, fileId }
 
-        downloadFile(file, email, onDownloadStarted, onDownloadFinished)
+        downloadFile(file, email)
           .catch((err) => {
             // eslint-disable-next-line no-console
             console.error('Error downloading file:', err)
