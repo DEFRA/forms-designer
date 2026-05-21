@@ -34,20 +34,15 @@ export function fileViewModel(email, validation) {
 
 /**
  * @param {string} email
- * @param {string} referenceNumber
  * @param {Record<string, FormAdapterFile[]>} files
  * @param {FormDefinition} definition
  */
 export function downloadAllViewModel(
   email,
-  referenceNumber,
   files,
   definition
 ) {
   const pageTitle = 'Download attached files'
-  const fileKeys = Object.keys(files)
-  const allFiles = fileKeys.flatMap((key) => files[key])
-
   const list = Object.entries(files).flatMap(([name, fileList]) => {
     const component = getComponent(definition, name)
 
@@ -86,20 +81,6 @@ export function downloadAllViewModel(
     },
     email,
     list,
-    files,
-    allFiles,
-    // field: {
-    //   id: 'email',
-    //   name: 'email',
-    //   label: {
-    //     text: 'Email address'
-    //   },
-    //   value: validation?.formValues.email ?? email
-    // },
-    // errorList: buildErrorList(validation?.formErrors, ['email']),
-    // formErrors: validation?.formErrors,
-    // formValues: validation?.formValues,
-    referenceNumber,
     buttonText: 'Download all files'
   }
 }
