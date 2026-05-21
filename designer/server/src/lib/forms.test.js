@@ -696,6 +696,57 @@ describe('Forms library routes', () => {
       })
     })
 
+    describe('getDraftFormDefinitionWithLiveFallback', () => {
+      const token = auth.credentials.token
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+      })
+
+      it('should fetch the draft definition when draft exists on metadata', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formDefinition
+        })
+
+        const result = await forms.getDraftFormDefinitionWithLiveFallback(
+          formMetadata,
+          token
+        )
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe(
+          '/forms/661e4ca5039739ef2902b214/definition/draft'
+        )
+        expect(result).toEqual(formDefinition)
+      })
+
+      it('should fetch the live definition when no draft exists on metadata', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formDefinition
+        })
+
+        const metadataWithoutDraft = { ...formMetadata, draft: undefined }
+        const result = await forms.getDraftFormDefinitionWithLiveFallback(
+          metadataWithoutDraft,
+          token
+        )
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe(
+          '/forms/661e4ca5039739ef2902b214/definition'
+        )
+        expect(result).toEqual(formDefinition)
+      })
+    })
+
     describe('getFormDefinitionVersion', () => {
       const token = auth.credentials.token
 
