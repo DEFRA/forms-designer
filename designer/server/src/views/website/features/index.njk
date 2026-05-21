@@ -1,85 +1,91 @@
 {% extends "layouts/forms-website.njk" %}
 {% from "masthead/macro.njk" import appMasthead %}
-{% from "govuk/components/tabs/macro.njk" import govukTabs %}
-{% from "x-govuk/components/related-navigation/macro.njk" import xGovukRelatedNavigation %}
-
-{% set description %}
-  The Defra Form Designer is in private beta. We're working on some <a href="#coming-soon" class="govuk-link govuk-link--inverse govuk-link--no-visited-state">
-  exciting features</a> right now.
-{% endset -%}
 
 {% block beforeContent %}
 {{ appMasthead({
   heading: {
     text: "Features"
-  },
-  description: {
-    html: description
   }
 }) }}
 {% endblock -%}
-{% set formsDesigner %}
-  {%- include "website/features/forms-designer.njk" -%}
-{% endset -%}
-{% set developerPlugin %}
-  {%- include "website/features/developer-plugin.njk" -%}
-{% endset -%}
-{% set compare %}
-  {%- include "website/features/compare.njk" -%}
-{% endset -%}
 
 {% block content %}
-<div>
-  <div class="govuk-width-container">
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
-        {{ govukTabs({
-          items: [
-            {
-              label: "Forms Designer",
-              id: "forms-designer",
-              panel: {
-                html: formsDesigner
-              }
-            },
-            {
-              label: "Developer Plugin",
-              id: "developer-plugin",
-              panel: {
-                html: developerPlugin
-              }
-            },
-            {
-              label: "Compare",
-              id: "compare",
-              panel: {
-                html: compare
-              }
-            }
-          ]
-        }) }}
-      </div>
-      <div class="govuk-grid-column-one-third">
-        <div class="x-govuk-related-navigation">
-          <nav class="x-govuk-related-navigation__nav-section" aria-labelledby="related-navigation-related-content">
-            <h2 class="x-govuk-related-navigation__main-heading" id="related-navigation-related-content">Related content</h2>
-            <ul class="x-govuk-related-navigation__link-list">
-              <li class="x-govuk-related-navigation__link">
-                <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://dxt-prototype-682ae311ff10.herokuapp.com/index">Design history</a>
-                <p class="govuk-body-s">We record user research findings and design changes.</p>
-              </li>
-              <li class="x-govuk-related-navigation__link">
-                <a class="govuk-link x-govuk-related-navigation__section-link x-govuk-related-navigation__section-link--other" href="https://submit-form-to-defra.service.gov.uk/preview/live/register-as-a-unicorn-breeder">Register as a unicorn breeder demo form</a>
-                <p class="govuk-body-s">Try the Register as a unicorn breeder demo form to find out
-                  how we
-                  can
-                  capture information.</p>
-              </li>
+  <div>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <div class="app-prose-scope">
+            <p>
+              Defra Forms makes it easy and cost effective to move traditional forms online, creating interactive GOV.UK services that are simple for customers to use and faster for Defra teams to manage.
+            </p>
+            <p>
+              We provide two products: Defra Form Designer and the Developer Plugin.
+            </p>
+            <h2>Defra Form Designer</h2>
+            <h3>Features</h3>
+            <h4>Form creation</h4>
+            <p>
+              A broad range of question types designed to meet government standards, including names, dates, addresses and reference numbers. There are also lists, multiple choice options, yes/no answers and guidance pages.
+            </p>
+            <h4>Conditions</h4>
+            <p>
+              Defra Forms has a powerful conditions feature that means that users will only see the questions that are relevant to them. Conditions can be simple or advanced, and we provide guidance on how to get the most out of them.
+            </p>
+            <h4>Locations and maps</h4>
+            <p>
+              Let users provide location information, such as grid references, easting and northing, postcodes or addresses. There is also a map feature which lets users add pins to a map, or draw shapes.
+            </p>
+            <h4>File upload</h4>
+            <p>
+              Let users upload files in any format, up to 99.9mb in size.
+            </p>
+            <h4>Payments</h4>
+            <p>
+              Defra Forms is integrated with GOV.UK Pay so your form can now take card payments, if your team is set up with a Worldpay account.
+            </p>
+            <h4>Delivery formats</h4>
+            <p>
+              Receive form submissions in a way that suits your team and processing:
+            </p>
+            <ul>
+              <li>Human-readable email for teams who manage submissions manually</li>
+              <li>Machine-readable JSON emails for automated integration with your team's systems</li>
+              <li>Export all form responses to Excel format</li>
+              <li>Integrate form submissions directly into a Sharepoint list</li>
             </ul>
-          </nav>
+            <p>
+              Contact <a href="mailto:defraforms@defra.gov.uk">defraforms@defra.gov.uk</a> for access to Defra Form Designer.
+            <h2>Developer Plugin</h2>
+            <p>
+              For developers who need to integrate form capabilities directly into their existing applications and systems. <a href="https://defra.github.io/forms-engine-plugin/">More about the Developer Plugin on Github</a>
+            </p>
+            <h3>Features</h3>
+            <h4>Seamless Integration</h4>
+            <p>
+              Integrate forms directly into your existing applications with minimal setup and configuration.
+            </p>
+            <h4>API-first design</h4>
+            <p>
+              Built with developers in mind, featuring comprehensive APIs for form creation, management, and data retrieval.
+            </p>
+            <h4>Custom styling</h4>
+            <p>
+              Full control over form appearance and styling to match your application's design system.
+            </p>
+            <h3>Perfect for:</h3>
+              <ul>
+                <li>Web applications requiring embedded forms</li>
+                <li>Internal tools and dashboards</li>
+                <li>Customer portals and self-service systems</li>
+                <li>Multi-tenant SaaS applications</li>
+                <li>Applications with custom authentication</li>
+                <li>Systems requiring real-time form updates</li>
+                <li>Applications needing custom validation rules</li>
+                <li>High-traffic websites and applications</li>
+              </ul>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 {% endblock %}
