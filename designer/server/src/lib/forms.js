@@ -155,6 +155,27 @@ export async function getFormDefinitionVersion(id, versionNumber, token) {
 }
 
 /**
+ * Get form definition associated with a submission
+ * @param {FormAdapterSubmissionMessageMeta} meta - metadata containing version information
+ * @param {string} token - auth token
+ */
+export async function getFormDefinitionForSubmission(meta, token) {
+  const { formId, versionMetadata } = meta
+
+  if (versionMetadata) {
+    return getFormDefinitionVersion(
+      formId,
+      versionMetadata.versionNumber,
+      token
+    )
+  } else {
+    return meta.isPreview
+      ? getDraftFormDefinition(formId, token)
+      : getLiveFormDefinition(formId, token)
+  }
+}
+
+/**
  * Get form metadata by ID
  * @param {string} id
  * @param {string} token
@@ -315,4 +336,5 @@ export async function listAll(token, options = {}) {
 
 /**
  * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, FormVersionMetadata, QueryOptions, QueryResult } from '@defra/forms-model'
+ * @import { FormAdapterSubmissionMessageMeta } from '@defra/forms-engine-plugin/types'
  */
