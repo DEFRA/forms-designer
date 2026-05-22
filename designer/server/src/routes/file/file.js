@@ -250,11 +250,8 @@ export default [
       )
 
       const firstFile = allFiles[0]
-      if (!email) {
-        return h.redirect(
-          `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
-        )
-      } else {
+
+      if (email) {
         // Ensure the stored email is the correct one for this submission
         try {
           await createFileLink(firstFile.fileId, email, token)
@@ -263,6 +260,10 @@ export default [
             `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
           )
         }
+      } else {
+        return h.redirect(
+          `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
+        )
       }
 
       return h.view(
