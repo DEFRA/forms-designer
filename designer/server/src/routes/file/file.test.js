@@ -565,6 +565,65 @@ describe('File routes', () => {
         JSON.stringify({ url: '/download-link', fileName: 'my-form-file6' })
       )
     })
+
+    test('should return json when invoked with accept application/json header when response is GONE', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.GONE,
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file3'
+      })
+
+      jest
+        .mocked(file.createFileLink)
+        .mockRejectedValueOnce(Boom.resourceGone())
+
+      const options = {
+        method: 'post',
+        url: `${fileDownloadUrl}?referenceNumber=${referenceNumber}`,
+        auth,
+        payload: { email },
+        headers: {
+          accept: 'application/json'
+        }
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.GONE)
+      expect(response.payload).toBe(
+        JSON.stringify({ error: 'The link has expired' })
+      )
+    })
+
+    test('should return json when invoked with accept application/json header when response is FORBIDDEN', async () => {
+      jest.mocked(file.checkFileStatus).mockResolvedValueOnce({
+        statusCode: StatusCodes.OK,
+        emailIsCaseSensitive: false,
+        filename: 'my-form-file8'
+      })
+
+      jest.mocked(file.createFileLink).mockRejectedValueOnce(Boom.forbidden())
+
+      const options = {
+        method: 'post',
+        url: `${fileDownloadUrl}?referenceNumber=${referenceNumber}`,
+        auth,
+        payload: { email },
+        headers: {
+          accept: 'application/json'
+        }
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.FORBIDDEN)
+      expect(response.payload).toBe(
+        JSON.stringify({
+          error:
+            'This is not the email address the file was sent to. To confirm the file was meant for your team, enter the email address the file was sent to.'
+        })
+      )
+    })
   })
 })
 
