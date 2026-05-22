@@ -1,3 +1,5 @@
+import { FormStatus } from '@defra/forms-engine-plugin/types'
+
 import config from '~/src/config.js'
 import { delJson, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
@@ -169,7 +171,7 @@ export async function getFormDefinitionForSubmission(meta, token) {
       token
     )
   } else {
-    return meta.isPreview
+    return meta.status === FormStatus.Draft
       ? getDraftFormDefinition(formId, token)
       : getLiveFormDefinition(formId, token)
   }
