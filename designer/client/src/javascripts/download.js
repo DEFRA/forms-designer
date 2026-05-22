@@ -64,10 +64,12 @@ async function downloadFile(file, email) {
   const response = await fetch(href, opts)
   const { url, fileName } = await response.json()
 
-  download(url, fileName).catch((err) => {
+  try {
+    await download(url, fileName)
+  } catch (err) {
     // eslint-disable-next-line no-console
     console.error(`Error downloading file ${fileName}:`, err)
-  })
+  }
 
   onDownloadFinished(fileId)
 }
@@ -136,21 +138,22 @@ export function init(email) {
    * Handles the click event for the download all button
    * @param {Event} e
    */
-  function onClickDownloadAll(e) {
+  async function onClickDownloadAll(e) {
     e.preventDefault()
 
     this.disabled = true
 
-    downloadAll(email)
-      .catch((err) => {
-        // eslint-disable-next-line no-console
-        console.error('Error downloading files:', err)
-      })
-      .finally(() => {
-        this.disabled = false
-      })
+    try {
+      await downloadAll(email)
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Error downloading files:', err)
+    } finally {
+      this.disabled = false
+    }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   downloadAllBtn?.addEventListener('click', onClickDownloadAll, false)
 
   const summaryList = document.getElementById('download-all-list')
@@ -159,7 +162,7 @@ export function init(email) {
    * Handles the click event for the download single file links
    * @param {Event} e
    */
-  function onClickDownloadFileLink(e) {
+  async function onClickDownloadFileLink(e) {
     e.preventDefault()
 
     const target = e.target
@@ -175,18 +178,17 @@ export function init(email) {
       if (fileId && href) {
         const file = { href, fileId }
 
-        downloadFile(file, email)
-          .catch((err) => {
-            // eslint-disable-next-line no-console
-            console.error('Error downloading file:', err)
-          })
-          .finally(() => {
-            this.disabled = false
-          })
+        try {
+          await downloadFile(file, email)
+        } catch (err) {
+          // eslint-disable-next-line no-console
+          console.error('Error downloading files:', err)
+        }
       }
     }
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   summaryList?.addEventListener('click', onClickDownloadFileLink, false)
 }
 
