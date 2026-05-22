@@ -118,6 +118,7 @@ describe('Download Client JS', () => {
           // @ts-expect-error - Response type
           .mockImplementation(() =>
             Promise.resolve({
+              ok: true,
               json: () =>
                 Promise.resolve({
                   url: 'http://example.com/file',
