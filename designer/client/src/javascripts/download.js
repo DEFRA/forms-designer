@@ -44,19 +44,6 @@ function resetStatusTags() {
 }
 
 /**
- * Downloads all files from the given array of file objects, with a delay between each download to prevent browser freezing
- * @param {{href: string, fileId: string}[]} files - an array of URLs and file IDs for the files to download
- * @param {string} email - the email address of the user
- */
-export async function downloadAllFiles(files, email) {
-  resetStatusTags()
-
-  for (const file of files) {
-    await downloadFile(file, email)
-  }
-}
-
-/**
  * Downloads a single file from the given URL, with a delay between each download to prevent browser freezing
  * @param {{href: string, fileId: string}} file - an array of URLs and file IDs for the files to download
  * @param {string} email - the email address of the user
@@ -123,6 +110,19 @@ async function downloadAll(email) {
   }))
 
   await downloadAllFiles(files, email)
+}
+
+/**
+ * Downloads all files from the given array of file objects, with a delay between each download to prevent browser freezing
+ * @param {{href: string, fileId: string}[]} files - an array of URLs and file IDs for the files to download
+ * @param {string} email - the email address of the user
+ */
+export async function downloadAllFiles(files, email) {
+  resetStatusTags()
+
+  for (const file of files) {
+    await downloadFile(file, email)
+  }
 }
 
 /**
