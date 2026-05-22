@@ -68,13 +68,14 @@ async function downloadFile(file, email, referenceNumber) {
     const { url, fileName } = await response.json()
     await download(url, fileName)
   } else {
+    const forbiddenCode = 403
     const next = `/file-download/${fileId}`
 
     // Redirect to email entry page
     // If the response was forbibben then include the reference
     // number to they come back to the download all page afterward
     window.location.replace(
-      response.status === 403
+      response.status === forbiddenCode
         ? next
         : `${next}?referenceNumber=${referenceNumber}`
     )
