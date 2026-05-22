@@ -1,3 +1,5 @@
+const APP_HIDDEN_CLASS = 'app-hidden'
+
 /**
  * Returns a promise that resolves after the specified number of milliseconds
  * @param {number} milliseconds - the number of milliseconds to wait before resolving the promise
@@ -37,8 +39,8 @@ function resetStatusTags() {
     '.govuk-tag[id^="downloaded-tag-"]'
   )
 
-  downloadingTags.forEach((tag) => tag.classList.add('app-hidden'))
-  downloadedTags.forEach((tag) => tag.classList.add('app-hidden'))
+  downloadingTags.forEach((tag) => tag.classList.add(APP_HIDDEN_CLASS))
+  downloadedTags.forEach((tag) => tag.classList.add(APP_HIDDEN_CLASS))
 }
 
 /**
@@ -90,10 +92,10 @@ async function downloadFile(file, email) {
 function onDownloadStarted(fileId) {
   document
     .getElementById(`downloaded-tag-${fileId}`)
-    ?.classList.add('app-hidden')
+    ?.classList.add(APP_HIDDEN_CLASS)
   document
     .getElementById(`downloading-tag-${fileId}`)
-    ?.classList.remove('app-hidden')
+    ?.classList.remove(APP_HIDDEN_CLASS)
 }
 
 /**
@@ -103,10 +105,10 @@ function onDownloadStarted(fileId) {
 function onDownloadFinished(fileId) {
   document
     .getElementById(`downloading-tag-${fileId}`)
-    ?.classList.add('app-hidden')
+    ?.classList.add(APP_HIDDEN_CLASS)
   document
     .getElementById(`downloaded-tag-${fileId}`)
-    ?.classList.remove('app-hidden')
+    ?.classList.remove(APP_HIDDEN_CLASS)
 }
 
 /**
