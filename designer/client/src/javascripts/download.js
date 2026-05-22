@@ -61,7 +61,7 @@ async function downloadFile(file, email) {
       Accept: 'application/json'
     }
   }
-  const response = await fetch(`${href}?ajax=true`, opts)
+  const response = await fetch(href, opts)
   const { url, fileName } = await response.json()
 
   download(url, fileName).catch((err) => {

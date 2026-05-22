@@ -191,8 +191,7 @@ export default [
       },
       validate: {
         query: Joi.object({
-          referenceNumber: Joi.string().optional(),
-          ajax: Joi.boolean().optional()
+          referenceNumber: Joi.string().optional()
         }),
         payload: Joi.object({
           email: emailSchema
