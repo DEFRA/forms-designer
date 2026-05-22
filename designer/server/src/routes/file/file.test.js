@@ -297,6 +297,20 @@ describe('File routes', () => {
         `/file-download/${firstFileId}?referenceNumber=${referenceNumber}`
       )
     })
+
+    test('should show unauthorized page when user is unauthorized for download all files', async () => {
+      const options = {
+        method: 'GET',
+        url: filesDownloadUrl,
+        auth
+      }
+
+      jest.spyOn(userSession, 'hasUser').mockReturnValue(false)
+
+      const result = await renderResponse(server, options)
+
+      expect(result.response.statusCode).toBe(401)
+    })
   })
 
   describe('POST', () => {
