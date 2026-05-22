@@ -146,7 +146,9 @@ export default [
 
           const pageTitle = 'The link has expired'
 
-          return h.view('file/expired', errorViewModel(pageTitle))
+          return isAsyncFetch
+            ? h.response({ error: pageTitle }).code(StatusCodes.GONE)
+            : h.view('file/expired', errorViewModel(pageTitle))
         }
 
         if (
@@ -164,19 +166,23 @@ export default [
             auditUser
           )
 
+          const errorMessage =
+            'This is not the email address the file was sent to. To confirm the file was meant for your team, enter the email address the file was sent to.'
           const validation = {
             formErrors: {
               email: {
-                text: 'This is not the email address the file was sent to. To confirm the file was meant for your team, enter the email address the file was sent to.'
+                text: errorMessage
               }
             },
             formValues: { email }
           }
 
-          return h.view(
-            'file/download-page',
-            file.fileViewModel(email, validation)
-          )
+          return isAsyncFetch
+            ? h.response({ error: errorMessage }).code(StatusCodes.FORBIDDEN)
+            : h.view(
+                'file/download-page',
+                file.fileViewModel(email, validation)
+              )
         }
 
         throw err
@@ -243,17 +249,25 @@ export default [
         sessionNames.fileDownloadPassword
       )
 
+      const firstFile = allFiles[0]
       if (!email) {
-        const firstFile = allFiles[0]
-
         return h.redirect(
           `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
         )
+      } else {
+        // Ensure the stored email is the correct one for this submission
+        try {
+          await createFileLink(firstFile.fileId, email, token)
+        } catch {
+          return h.redirect(
+            `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
+          )
+        }
       }
 
       return h.view(
         'file/download-all',
-        file.downloadAllViewModel(email, files, definition)
+        file.downloadAllViewModel(email, referenceNumber, files, definition)
       )
     },
     options: {
