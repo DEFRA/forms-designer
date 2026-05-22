@@ -2,6 +2,7 @@ import { init } from '~/src/javascripts/download.js'
 
 describe('Download Client JS', () => {
   const email = 'enrique.chase@defra.gov.uk'
+  const referenceNumber = 'ARM-WJ6-7VJ'
 
   beforeEach(() => {
     jest.resetAllMocks()
@@ -67,7 +68,7 @@ describe('Download Client JS', () => {
         'addEventListener'
       )
 
-      expect(() => init(email)).not.toThrow()
+      expect(() => init(email, referenceNumber)).not.toThrow()
 
       expect(downloadAllBtnClickListener).toHaveBeenCalledTimes(1)
       expect(downloadAllBtnClickListener).toHaveBeenCalledWith(
