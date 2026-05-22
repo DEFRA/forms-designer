@@ -105,10 +105,12 @@ function onDownloadFinished(fileId) {
  * @param {string} email - the email address of the user
  */
 async function downloadAll(email) {
-  const links = document.querySelectorAll('.govuk-summary-list__actions a')
+  const links = /** @type {NodeListOf<HTMLAnchorElement>} */ (
+    document.querySelectorAll('.govuk-summary-list__actions a')
+  )
   const files = Array.from(links).map((link) => ({
     href: /** @type {string} */ (link.getAttribute('href')),
-    fileId: /** @type {string} */ (link.getAttribute('data-fileid'))
+    fileId: /** @type {string} */ (link.dataset['data-fileid'])
   }))
 
   await downloadAllFiles(files, email)
