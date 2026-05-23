@@ -1,6 +1,5 @@
-import { FormMetricName, FormStatus, organisations } from '@defra/forms-model'
+import { FormStatus, organisations } from '@defra/forms-model'
 import { stringify } from 'csv-stringify'
-import { format } from 'date-fns'
 
 import config from '~/src/config.js'
 import {
@@ -30,11 +29,10 @@ const tilePeriodNames = {
   }
 }
 
-const metricNameFull = /** @type {Record<FormMetricName, string>} */ ({
-  [FormMetricName.NewFormsCreated]: 'new forms created',
-  [FormMetricName.FormsFirstPublished]: 'first published',
-  [FormMetricName.FormsRePublished]: 're-published',
-  [FormMetricName.Submissions]: 'submissions'
+const periodSlugs = /** @type {Record<string, string>} */ ({
+  'last-7-days': 'last7Days',
+  'last-30-days': 'last30Days',
+  'all-time': 'allTime'
 })
 
 /**
@@ -84,12 +82,6 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
   }
 }
 
-const periodSlugs = /** @type {Record<string, string>} */ ({
-  'last-7-days': 'last7Days',
-  'last-30-days': 'last30Days',
-  'all-time': 'allTime'
-})
-
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {string} period
@@ -112,8 +104,9 @@ export function metricsDrilldownViewModel(metrics, period, metricName) {
     ...createDrilldownHeaderAndRows(metrics, metricName, details)
   }
 
+  const tileConfig = MetricsTileConfig[metricName]
   return {
-    metricName: metricNameFull[metricName],
+    metricName: tileConfig.drillDown.displayName,
     periodName: periodDetails.title,
     fromDate: periodDetails.fromDate,
     toDate: periodDetails.toDate,
@@ -139,22 +132,27 @@ function createDrilldownHeaderAndRows(metrics, metricName, details) {
     }
   })
 
-  const head = [
-    {
-      text: 'Form name',
-      attributes: { 'aria-sort': 'ascending' },
-      classes: 'govuk-!-width-one-half'
-    },
-    { text: 'Organisation', attributes: { 'aria-sort': 'none' } }
-  ]
-  addCustomHeaders(head, metricName)
+  const tileConfig = MetricsTileConfig[metricName]
+
+  const head =
+    /** @type {{text: string, attributes?: Record<string, string>, classes?: string }[]} */ ([
+      {
+        text: 'Form name',
+        attributes: { 'aria-sort': 'ascending' },
+        classes: 'govuk-!-width-one-half'
+      },
+      { text: 'Organisation', attributes: { 'aria-sort': 'none' } }
+    ])
+
+  if (tileConfig.drillDown.headers) {
+    head.push(tileConfig.drillDown.headers)
+  }
 
   const rows = /** @type {Array<{ text?: any, html?: string }[]>} */ ([])
   const countsMap = /** @type {Map<string, number>} */ (new Map())
 
-  const tileConfig = MetricsTileConfig[metricName]
   // Grouped - sum the drilldown results rather than display separate values for the same form
-  if (tileConfig.drillDownGrouped) {
+  if (tileConfig.drillDown.grouped) {
     details.forEach((detail) => {
       const total = countsMap.get(detail.formId) ?? 0
       const newTotal = total + detail.metricValue
@@ -176,13 +174,13 @@ function createDrilldownHeaderAndRows(metrics, metricName, details) {
     // Not grouped
     details.forEach((detail) => {
       const formNameInfo = formMap.get(detail.formId)
-      if (formNameInfo) {
+      if (formNameInfo && tileConfig.drillDown.valueFunc) {
         rows.push([
           {
             html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
           },
           { text: formNameInfo.organisation },
-          { ...mapCustomValue(metricName, detail) }
+          { ...tileConfig.drillDown.valueFunc(detail) }
         ])
       }
     })
@@ -191,72 +189,6 @@ function createDrilldownHeaderAndRows(metrics, metricName, details) {
   return {
     head,
     rows
-  }
-}
-
-/**
- * @param {{ text: string, attributes?: any, classes?: string }[]} head
- * @param {FormMetricName} metricName
- */
-function addCustomHeaders(head, metricName) {
-  if (metricName === FormMetricName.NewFormsCreated) {
-    head.push({ text: 'Created date', attributes: { 'aria-sort': 'none' } })
-  }
-  if (metricName === FormMetricName.FormsFirstPublished) {
-    head.push({
-      text: 'First published date',
-      attributes: { 'aria-sort': 'none' }
-    })
-  }
-  if (metricName === FormMetricName.FormsRePublished) {
-    head.push({ text: 'Re-published', attributes: { 'aria-sort': 'none' } })
-  }
-  if (metricName === FormMetricName.Submissions) {
-    head.push({ text: 'Submissions', attributes: { 'aria-sort': 'none' } })
-  }
-}
-
-/**
- * @param {FormMetricName} metricName
- * @param {FormTimelineMetric} detail
- */
-function mapCustomValue(metricName, detail) {
-  if (metricName === FormMetricName.NewFormsCreated) {
-    return dateCell(detail.createdAt)
-  }
-  if (metricName === FormMetricName.FormsFirstPublished) {
-    return dateCell(detail.createdAt)
-  }
-  if (metricName === FormMetricName.FormsRePublished) {
-    return { text: detail.metricValue }
-  }
-  if (metricName === FormMetricName.Submissions) {
-    return numberCell(detail.metricValue)
-  }
-}
-
-/**
- * @param { string | Date } dateString
- */
-function dateCell(dateString) {
-  const date = new Date(dateString)
-  return {
-    text: format(date, 'dd MMM yyyy h:mm aaa'),
-    attributes: {
-      'data-sort-value': format(date, 'dd MMM yyyy h:mm aaa')
-    }
-  }
-}
-
-/**
- * @param {number} num
- */
-function numberCell(num) {
-  return {
-    text: num,
-    attributes: {
-      'data-sort-value': num
-    }
   }
 }
 
@@ -413,7 +345,7 @@ export async function getLiveMetricsAsCsv(metrics) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { Input, Callback } from 'csv-stringify'
  * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
  */

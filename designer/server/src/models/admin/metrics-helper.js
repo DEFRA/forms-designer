@@ -37,43 +37,88 @@ const formStructureMetricNames =
     questionTypes: 'Question types per form'
   })
 
+/**
+ * @typedef {object} TileDrillDown
+ * @property {boolean} enabled - true if drill down is allowed
+ * @property {boolean} grouped - true if drill down results are to be grouped per form
+ * @property {string} displayName - display name for metric
+ * @property {{ text: string, attributes?: Record<string, string> }} [headers] - custom headers for drill down
+ * @property {(detail: FormTimelineMetric) => { text: string, attributes?: Record<string, string | number> }} [valueFunc] - function to return custom value
+ */
+
+/**
+ * @typedef {object} MetricTileConfigRecordType
+ * @property {string} noun - noun used in tile phrase structure
+ * @property {string} verb - verb used in tile phrase structure
+ * @property {TileDrillDown} drillDown - config for drill down operations
+ */
+
 export const MetricsTileConfig =
-  /** @type {Record<FormMetricName, { noun: string, verb: string, drillDownEnabled: boolean, drillDownGrouped: boolean }>} */ ({
+  /** @type {Record<FormMetricName, MetricTileConfigRecordType>} */ ({
     [FormMetricName.NewFormsCreated]: {
       noun: 'form',
       verb: 'created',
-      drillDownEnabled: true,
-      drillDownGrouped: false
+      drillDown: {
+        displayName: 'new forms created',
+        enabled: true,
+        grouped: false,
+        headers: { text: 'Created date', attributes: { 'aria-sort': 'none' } },
+        valueFunc: (detail) => dateCell(detail.createdAt)
+      }
     },
     [FormMetricName.FormsFirstPublished]: {
       noun: 'form',
       verb: 'first published',
-      drillDownEnabled: true,
-      drillDownGrouped: false
+      drillDown: {
+        displayName: 'forms first published',
+        enabled: true,
+        grouped: false,
+        headers: {
+          text: 'First published date',
+          attributes: { 'aria-sort': 'none' }
+        },
+        valueFunc: (detail) => dateCell(detail.createdAt)
+      }
     },
     [FormMetricName.FormsRePublished]: {
       noun: 'form',
       verb: 're-published',
-      drillDownEnabled: true,
-      drillDownGrouped: true
+      drillDown: {
+        displayName: 'forms re-published',
+        enabled: true,
+        grouped: true,
+        headers: { text: 'Re-published', attributes: { 'aria-sort': 'none' } },
+        valueFunc: (detail) => numberCell(detail.metricValue)
+      }
     },
     [FormMetricName.Submissions]: {
       noun: 'submission',
       verb: '',
-      drillDownEnabled: true,
-      drillDownGrouped: true
+      drillDown: {
+        displayName: 'submissions',
+        enabled: true,
+        grouped: true,
+        headers: { text: 'Submissions', attributes: { 'aria-sort': 'none' } },
+        valueFunc: (detail) => numberCell(detail.metricValue)
+      }
     },
     [FormMetricName.FormsInDraft]: {
       noun: 'form',
       verb: '',
-      drillDownEnabled: false,
-      drillDownGrouped: false
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
     },
     [FormMetricName.TimeToPublish]: {
       noun: 'day',
       verb: '',
-      drillDownEnabled: false,
-      drillDownGrouped: false
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
     }
   })
 
@@ -323,7 +368,7 @@ export function collateSpecificTileCounts(
 
   const nounPlural = counts.changeValue === 1 ? '' : 's'
 
-  const { noun, verb, drillDownEnabled } = MetricsTileConfig[metricName]
+  const { noun, verb, drillDown } = MetricsTileConfig[metricName]
 
   return {
     ...counts,
@@ -335,8 +380,8 @@ export function collateSpecificTileCounts(
     ),
     strapline: `${changePhrase} ${noun}${nounPlural} ${verb} than ${periodNames.straplinePeriodName}`,
     drillDown: {
-      enabled: drillDownEnabled,
-      url: drillDownEnabled
+      enabled: drillDown.enabled,
+      url: drillDown.enabled
         ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}`
         : ''
     }
@@ -465,5 +510,30 @@ export function mapTotalMetrics(totals, tilePeriodNames) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @param { string | Date } dateString
+ */
+export function dateCell(dateString) {
+  const date = new Date(dateString)
+  return {
+    text: format(date, 'dd MMM yyyy h:mm aaa'),
+    attributes: {
+      'data-sort-value': format(date, 'dd MMM yyyy h:mm aaa')
+    }
+  }
+}
+
+/**
+ * @param {number} num
+ */
+export function numberCell(num) {
+  return {
+    text: num.toString(),
+    attributes: {
+      'data-sort-value': num
+    }
+  }
+}
+
+/**
+ * @import { FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
  */
