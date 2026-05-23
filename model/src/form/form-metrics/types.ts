@@ -6,6 +6,7 @@ import {
 
 export interface FormTotalMetric {
   count?: number
+  details?: string | Date | number
 }
 
 export interface FormTotalsMetric {
@@ -22,6 +23,7 @@ export interface FormTotalsMetric {
   daysToPublish?: Record<string, number>
   republished?: Record<string, number>
   updatedAt: Date
+  earliestDate: Date
 }
 
 export interface FormOverviewMetric {
@@ -38,7 +40,7 @@ export interface FormTimelineMetric {
   type: FormMetricType.TimelineMetric
   formId: string
   formStatus: FormStatus
-  metricName: string
+  metricName: FormMetricName
   metricValue: number
   createdAt: Date
 }

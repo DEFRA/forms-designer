@@ -885,18 +885,19 @@ exports[`Form metrics routes form-metrics should render report form with form ac
   <div class="govuk-tabs__panel" id="last-7-days">
     <!-- Form Activity Section -->
     <div class="govuk-!-margin-bottom-6">
-        <span class="govuk-caption-m">25 December 2025 to 1 January 2026</span>
+      <span class="govuk-caption-m">25 December 2025 to 1 January 2026</span>
+    
       <h2 class="govuk-heading-l">Last 7 days</h2>
     
       <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Form activity</h2>
       <div class="govuk-grid-row">
         <!-- Forms Created -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-new-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">New forms created</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -910,13 +911,13 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     </div>
     
     
-        <!-- Forms Published -->
+        <!-- Forms First Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-published">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms published</span>
-          <span class="gem-c-big-number__value">0
+          <span class="gem-c-big-number__label">Forms first published</span>
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -925,18 +926,38 @@ exports[`Form metrics routes form-metrics should render report form with form ac
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms published than last week</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms first published than last week</p>
+      </div>
+    </div>
+    
+    
+        <!-- Forms Re Published -->
+        <!-- Metrics tile -->
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-re-published">
+      <div class="app-metric-tile">
+        <div class="gem-c-big-number">
+          <span class="gem-c-big-number__label">Forms re-published</span>
+            <span class="gem-c-big-number__value">0</span>
+          </span>
+        </div>
+        <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+          <strong class="govuk-tag " aria-label="There has been no change compared to the previous 7 days">
+            0 (0%)
+          </strong>
+    
+        </div>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms re-published than last week</p>
       </div>
     </div>
     
     
         <!-- Form Submissions -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-form-submissions">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Form submissions</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -959,11 +980,11 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     
         <!-- Forms in Draft -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-in-draft">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Forms in draft</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -979,11 +1000,11 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     
         <!-- Average Time to Publish -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-average-time-to-publish">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Average time to publish</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           <span class="app-big-number-unit">days</span>
           </span>
         </div>
@@ -1003,18 +1024,19 @@ exports[`Form metrics routes form-metrics should render report form with form ac
   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="last-30-days">
     <!-- Form Activity Section -->
     <div class="govuk-!-margin-bottom-6">
-        <span class="govuk-caption-m">2 December 2025 to 1 January 2026</span>
+      <span class="govuk-caption-m">2 December 2025 to 1 January 2026</span>
+    
       <h2 class="govuk-heading-l">Last 30 days</h2>
     
       <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Form activity</h2>
       <div class="govuk-grid-row">
         <!-- Forms Created -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-new-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">New forms created</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1028,13 +1050,13 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     </div>
     
     
-        <!-- Forms Published -->
+        <!-- Forms First Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-published">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms published</span>
-          <span class="gem-c-big-number__value">0
+          <span class="gem-c-big-number__label">Forms first published</span>
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1043,18 +1065,38 @@ exports[`Form metrics routes form-metrics should render report form with form ac
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms published than last month</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms first published than last month</p>
+      </div>
+    </div>
+    
+    
+        <!-- Forms Re Published -->
+        <!-- Metrics tile -->
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-re-published">
+      <div class="app-metric-tile">
+        <div class="gem-c-big-number">
+          <span class="gem-c-big-number__label">Forms re-published</span>
+            <span class="gem-c-big-number__value">0</span>
+          </span>
+        </div>
+        <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+          <strong class="govuk-tag " aria-label="There has been no change compared to the previous 30 days">
+            0 (0%)
+          </strong>
+    
+        </div>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms re-published than last month</p>
       </div>
     </div>
     
     
         <!-- Form Submissions -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-form-submissions">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Form submissions</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1077,11 +1119,11 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     
         <!-- Forms in Draft -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-in-draft">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Forms in draft</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1097,11 +1139,11 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     
         <!-- Average Time to Publish -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-average-time-to-publish">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Average time to publish</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           <span class="app-big-number-unit">days</span>
           </span>
         </div>
@@ -1121,18 +1163,19 @@ exports[`Form metrics routes form-metrics should render report form with form ac
   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="all-time">
     <!-- Form Activity Section -->
     <div class="govuk-!-margin-bottom-6">
-        <span class="govuk-caption-m">Since launch</span>
+      <span class="govuk-caption-m"> to 1 January 2026</span>
+    
       <h2 class="govuk-heading-l">All time</h2>
     
       <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Form activity</h2>
       <div class="govuk-grid-row">
         <!-- Forms Created -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-new-forms-created">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">New forms created</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1146,13 +1189,13 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     </div>
     
     
-        <!-- Forms Published -->
+        <!-- Forms First Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-published">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms published</span>
-          <span class="gem-c-big-number__value">0
+          <span class="gem-c-big-number__label">Forms first published</span>
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1161,18 +1204,38 @@ exports[`Form metrics routes form-metrics should render report form with form ac
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms published than last year</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms first published than last year</p>
+      </div>
+    </div>
+    
+    
+        <!-- Forms Re Published -->
+        <!-- Metrics tile -->
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-re-published">
+      <div class="app-metric-tile">
+        <div class="gem-c-big-number">
+          <span class="gem-c-big-number__label">Forms re-published</span>
+            <span class="gem-c-big-number__value">0</span>
+          </span>
+        </div>
+        <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
+          <strong class="govuk-tag " aria-label="There has been no change compared to the previous year">
+            0 (0%)
+          </strong>
+    
+        </div>
+        <p class="govuk-body-xs app-metric-caption">No difference in forms re-published than last year</p>
       </div>
     </div>
     
     
         <!-- Form Submissions -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-form-submissions">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Form submissions</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1195,11 +1258,11 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     
         <!-- Forms in Draft -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-forms-in-draft">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Forms in draft</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1215,11 +1278,11 @@ exports[`Form metrics routes form-metrics should render report form with form ac
     
         <!-- Average Time to Publish -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop" data-testid="headline-column-average-time-to-publish">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
           <span class="gem-c-big-number__label">Average time to publish</span>
-          <span class="gem-c-big-number__value">0
+            <span class="gem-c-big-number__value">0</span>
           <span class="app-big-number-unit">days</span>
           </span>
         </div>
@@ -1380,6 +1443,7 @@ exports[`Form metrics routes form-metrics should render report form with form ac
           <div class="moj-action-bar__filter">
             <button type="submit" name="showFilter" value="Y" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="false" data-govuk-button-init="">Show filter</button>
           </div>
+          <span class="govuk-heading-s pull-right">0 rows</span>
         </div>
 
         <table class="govuk-table moj-scrollable-pane" data-module="moj-sortable-table">

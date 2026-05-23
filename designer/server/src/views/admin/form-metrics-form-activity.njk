@@ -139,6 +139,7 @@
           <div class="moj-action-bar__filter">
             <button type="submit" name="showFilter" value="{{ 'N' if showFilter else 'Y' }}" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="{{ 'true' if showFilter else 'false' }}" data-govuk-button-init="">{{ 'Hide' if showFilter else 'Show' }} filter</button>
           </div>
+          <span class="govuk-heading-s pull-right">{{ model.formMetricRows.length }} row{{ 's' if model.formMetricRows.length !== 1 }}</span>
         </div>
 
         <table class="govuk-table moj-scrollable-pane" data-module="moj-sortable-table">

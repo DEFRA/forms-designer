@@ -5,7 +5,8 @@ import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
 
 const FULL_DATE_MASK = 'd MMMM yyyy'
 const NEW_FORMS_CREATED_TITLE = 'New forms created'
-const FORMS_PUBLISHED_TITLE = 'Forms published'
+const FORMS_FIRST_PUBLISHED_TITLE = 'Forms first published'
+const FORMS_REPUBLISHED_TITLE = 'Forms re-published'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
 const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
 const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
@@ -36,19 +37,51 @@ const formStructureMetricNames =
     questionTypes: 'Question types per form'
   })
 
-const straplineWording =
-  /** @type {Record<FormMetricName, { noun: string, verb: string}>} */ ({
-    [FormMetricName.NewFormsCreated]: { noun: 'form', verb: 'created' },
-    [FormMetricName.FormsPublished]: { noun: 'form', verb: 'published' },
-    [FormMetricName.Submissions]: { noun: 'submission', verb: '' },
-    [FormMetricName.FormsInDraft]: { noun: 'form', verb: '' },
-    [FormMetricName.TimeToPublish]: { noun: 'day', verb: '' }
+export const MetricsTileConfig =
+  /** @type {Record<FormMetricName, { noun: string, verb: string, drillDownEnabled: boolean, drillDownGrouped: boolean }>} */ ({
+    [FormMetricName.NewFormsCreated]: {
+      noun: 'form',
+      verb: 'created',
+      drillDownEnabled: true,
+      drillDownGrouped: false
+    },
+    [FormMetricName.FormsFirstPublished]: {
+      noun: 'form',
+      verb: 'first published',
+      drillDownEnabled: true,
+      drillDownGrouped: false
+    },
+    [FormMetricName.FormsRePublished]: {
+      noun: 'form',
+      verb: 're-published',
+      drillDownEnabled: true,
+      drillDownGrouped: true
+    },
+    [FormMetricName.Submissions]: {
+      noun: 'submission',
+      verb: '',
+      drillDownEnabled: true,
+      drillDownGrouped: true
+    },
+    [FormMetricName.FormsInDraft]: {
+      noun: 'form',
+      verb: '',
+      drillDownEnabled: false,
+      drillDownGrouped: false
+    },
+    [FormMetricName.TimeToPublish]: {
+      noun: 'day',
+      verb: '',
+      drillDownEnabled: false,
+      drillDownGrouped: false
+    }
   })
 
 /**
  * @typedef PeriodName
  * @property {string} ariaPeriodName - period name within aria label
  * @property {string} straplinePeriodName - period name within strapline
+ * @property {string} slug - part of url used for drilldown navigation
  */
 
 /**
@@ -255,7 +288,7 @@ export function oneDecimalPlace(num) {
  * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
  * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {FormMetricName} metricName
- * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
+ * @param {PeriodName} periodNames
  * @param { string | undefined } [units]
  */
 export function collateSpecificTileCounts(
@@ -290,7 +323,7 @@ export function collateSpecificTileCounts(
 
   const nounPlural = counts.changeValue === 1 ? '' : 's'
 
-  const { noun, verb } = straplineWording[metricName]
+  const { noun, verb, drillDownEnabled } = MetricsTileConfig[metricName]
 
   return {
     ...counts,
@@ -300,14 +333,20 @@ export function collateSpecificTileCounts(
       counts.changePercentage,
       periodNames.ariaPeriodName
     ),
-    strapline: `${changePhrase} ${noun}${nounPlural} ${verb} than ${periodNames.straplinePeriodName}`
+    strapline: `${changePhrase} ${noun}${nounPlural} ${verb} than ${periodNames.straplinePeriodName}`,
+    drillDown: {
+      enabled: drillDownEnabled,
+      url: drillDownEnabled
+        ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}`
+        : ''
+    }
   }
 }
 
 /**
  * @param {string} title
  * @param {FormMetricName} metricName
- * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: { ariaPeriodName: string, straplinePeriodName: string } }} commonParams
+ * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: PeriodName }} commonParams
  * @param {string} [units]
  */
 function createTile(title, metricName, commonParams, units) {
@@ -329,7 +368,7 @@ function createTile(title, metricName, commonParams, units) {
  * @param {string} title
  * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
  * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
- * @param {{ ariaPeriodName: string, straplinePeriodName: string }} periodNames
+ * @param {PeriodName} periodNames
  */
 export function mapOverviewTiles(
   fromDate,
@@ -353,9 +392,14 @@ export function mapOverviewTiles(
       FormMetricName.NewFormsCreated,
       commonParams
     ),
-    formsPublished: createTile(
-      FORMS_PUBLISHED_TITLE,
-      FormMetricName.FormsPublished,
+    formsFirstPublished: createTile(
+      FORMS_FIRST_PUBLISHED_TITLE,
+      FormMetricName.FormsFirstPublished,
+      commonParams
+    ),
+    formsRePublished: createTile(
+      FORMS_REPUBLISHED_TITLE,
+      FormMetricName.FormsRePublished,
       commonParams
     ),
     formSubmissions: createTile(
@@ -405,8 +449,8 @@ export function mapTotalMetrics(totals, tilePeriodNames) {
   )
 
   const allTime = mapOverviewTiles(
-    undefined,
-    undefined,
+    totals.earliestDate,
+    reportMorning,
     'All time',
     totals.allTime,
     totals.prevYear,

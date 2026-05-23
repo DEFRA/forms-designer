@@ -1,8 +1,10 @@
-import { FormStatus, organisations } from '@defra/forms-model'
+import { FormMetricName, FormStatus, organisations } from '@defra/forms-model'
 import { stringify } from 'csv-stringify'
+import { format } from 'date-fns'
 
 import config from '~/src/config.js'
 import {
+  MetricsTileConfig,
   componentUsageFeatures,
   componentUsageFormStructures,
   componentUsageQuestionTypes,
@@ -13,17 +15,27 @@ import {
 const tilePeriodNames = {
   last7Days: {
     ariaPeriodName: 'previous 7 days',
-    straplinePeriodName: 'last week'
+    straplinePeriodName: 'last week',
+    slug: 'last-7-days'
   },
   last30Days: {
     ariaPeriodName: 'previous 30 days',
-    straplinePeriodName: 'last month'
+    straplinePeriodName: 'last month',
+    slug: 'last-30-days'
   },
   allTime: {
     ariaPeriodName: 'previous year',
-    straplinePeriodName: 'last year'
+    straplinePeriodName: 'last year',
+    slug: 'all-time'
   }
 }
+
+const metricNameFull = /** @type {Record<FormMetricName, string>} */ ({
+  [FormMetricName.NewFormsCreated]: 'new forms created',
+  [FormMetricName.FormsFirstPublished]: 'first published',
+  [FormMetricName.FormsRePublished]: 're-published',
+  [FormMetricName.Submissions]: 'submissions'
+})
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
@@ -68,6 +80,182 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
           checked: filterAndSort.status?.includes(FormStatus.Live)
         }
       ]
+    }
+  }
+}
+
+const periodSlugs = /** @type {Record<string, string>} */ ({
+  'last-7-days': 'last7Days',
+  'last-30-days': 'last30Days',
+  'all-time': 'allTime'
+})
+
+/**
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {string} period
+ * @param {FormMetricName} metricName
+ */
+export function metricsDrilldownViewModel(metrics, period, metricName) {
+  const overviewMetrics = /** @type {Record<string, any>} */ (
+    mapTotalMetrics(metrics.totals, tilePeriodNames)
+  )
+  const periodSelector = periodSlugs[period]
+  const periodDetails = overviewMetrics[periodSelector]
+  const totals = /** @type {Record<string, any>} */ (metrics.totals)
+  const details = totals[periodSelector][metricName].details
+  const table = {
+    classes: 'moj-scrollable-pane',
+    attributes: {
+      'data-module': 'moj-sortable-table'
+    },
+    firstCellIsHeader: true,
+    ...createDrilldownHeaderAndRows(metrics, metricName, details)
+  }
+
+  return {
+    metricName: metricNameFull[metricName],
+    periodName: periodDetails.title,
+    fromDate: periodDetails.fromDate,
+    toDate: periodDetails.toDate,
+    table
+  }
+}
+
+/**
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FormMetricName} metricName
+ * @param {FormTimelineMetric[]} details
+ * @returns
+ */
+function createDrilldownHeaderAndRows(metrics, metricName, details) {
+  const formMap = new Map()
+  metrics.overview.forEach((ov) => {
+    if (!formMap.get(ov.formId)) {
+      formMap.set(ov.formId, {
+        name: ov.summaryMetrics.name,
+        slug: ov.summaryMetrics.slug,
+        organisation: ov.summaryMetrics.organisation
+      })
+    }
+  })
+
+  const head = [
+    {
+      text: 'Form name',
+      attributes: { 'aria-sort': 'ascending' },
+      classes: 'govuk-!-width-one-half'
+    },
+    { text: 'Organisation', attributes: { 'aria-sort': 'none' } }
+  ]
+  addCustomHeaders(head, metricName)
+
+  const rows = /** @type {Array<{ text?: any, html?: string }[]>} */ ([])
+  const countsMap = /** @type {Map<String, number }>} */ (new Map())
+
+  const tileConfig = MetricsTileConfig[metricName]
+  // Grouped - sum the drilldown results rather than display separate values for the same form
+  if (tileConfig.drillDownGrouped) {
+    details.forEach((detail) => {
+      const total = countsMap.get(detail.formId) ?? 0
+      const newTotal = total + detail.metricValue
+      countsMap.set(detail.formId, newTotal)
+    })
+    countsMap.keys().forEach((formId) => {
+      const formNameInfo = formMap.get(formId)
+      if (formNameInfo) {
+        rows.push([
+          {
+            html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
+          },
+          { text: formNameInfo.organisation },
+          { text: countsMap.get(formId) }
+        ])
+      }
+    })
+  } else {
+    // Not grouped
+    details.forEach((detail) => {
+      const formNameInfo = formMap.get(detail.formId)
+      if (formNameInfo) {
+        rows.push([
+          {
+            html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
+          },
+          { text: formNameInfo.organisation },
+          { ...mapCustomValue(metricName, detail) }
+        ])
+      }
+    })
+  }
+
+  return {
+    head,
+    rows
+  }
+}
+
+/**
+ * @param {{ text: string, attributes?: any, classes?: string }[]} head
+ * @param {FormMetricName} metricName
+ */
+function addCustomHeaders(head, metricName) {
+  if (metricName === FormMetricName.NewFormsCreated) {
+    head.push({ text: 'Created date', attributes: { 'aria-sort': 'none' } })
+  }
+  if (metricName === FormMetricName.FormsFirstPublished) {
+    head.push({
+      text: 'First published date',
+      attributes: { 'aria-sort': 'none' }
+    })
+  }
+  if (metricName === FormMetricName.FormsRePublished) {
+    head.push({ text: 'Re-published', attributes: { 'aria-sort': 'none' } })
+  }
+  if (metricName === FormMetricName.Submissions) {
+    head.push({ text: 'Submissions', attributes: { 'aria-sort': 'none' } })
+  }
+}
+
+/**
+ * @param {FormMetricName} metricName
+ * @param {FormTimelineMetric} detail
+ */
+function mapCustomValue(metricName, detail) {
+  if (metricName === FormMetricName.NewFormsCreated) {
+    return dateCell(detail.createdAt)
+  }
+  if (metricName === FormMetricName.FormsFirstPublished) {
+    return dateCell(detail.createdAt)
+  }
+  if (metricName === FormMetricName.FormsRePublished) {
+    return { text: detail.metricValue }
+  }
+  if (metricName === FormMetricName.Submissions) {
+    return numberCell(detail.metricValue)
+  }
+}
+
+/**
+ * @param { string | Date } dateString
+ */
+function dateCell(dateString) {
+  const date = new Date(dateString)
+  return {
+    text: format(date, 'dd MMM yyyy h:mm aaa'),
+    attributes: {
+      'data-sort-value': format(date, 'dd MMM yyyy h:mm aaa')
+    }
+  }
+}
+
+/**
+ * @param {number} num
+ */
+function numberCell(num) {
+  return {
+    text: num,
+    attributes: {
+      'data-sort-value': num
     }
   }
 }
@@ -208,14 +396,14 @@ export async function getLiveMetricsAsCsv(metrics) {
   values.push(headers)
 
   formsSorted.forEach((ov) => {
-    const summaryMetrics =
-      /** @type {{ name: string, slug: string, submissionsCount?: number }} */ (
-        ov.summaryMetrics
-      )
+    const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
+      ov.summaryMetrics
+    )
+    const count = /** @type { number | undefined } */ (ov.submissionsCount)
     values.push([
       summaryMetrics.name,
       `${config.appBaseUrl}/library/${summaryMetrics.slug}`,
-      `${summaryMetrics.submissionsCount ?? 0}`
+      `${count ?? 0}`
     ])
   })
 
@@ -225,7 +413,7 @@ export async function getLiveMetricsAsCsv(metrics) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { Input, Callback } from 'csv-stringify'
  * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
  */
