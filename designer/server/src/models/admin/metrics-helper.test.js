@@ -147,7 +147,8 @@ describe('metrics model', () => {
           overview: [],
           totals: {
             type: FormMetricType.TotalsMetric,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            earliestDate: new Date('2025-03-01')
           }
         })
       expect(componentUsageFormStructures(metrics, FormStatus.Draft)).toEqual(

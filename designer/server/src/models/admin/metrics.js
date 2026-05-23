@@ -150,7 +150,7 @@ function createDrilldownHeaderAndRows(metrics, metricName, details) {
   addCustomHeaders(head, metricName)
 
   const rows = /** @type {Array<{ text?: any, html?: string }[]>} */ ([])
-  const countsMap = /** @type {Map<String, number }>} */ (new Map())
+  const countsMap = /** @type {Map<string, number>} */ (new Map())
 
   const tileConfig = MetricsTileConfig[metricName]
   // Grouped - sum the drilldown results rather than display separate values for the same form
