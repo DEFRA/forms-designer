@@ -8,7 +8,8 @@ import {
   componentUsageFormStructures,
   componentUsageQuestionTypes,
   mapOverviewMetrics,
-  mapTotalMetrics
+  mapTotalMetrics,
+  numberCell
 } from '~/src/models/admin/metrics-helper.js'
 
 const tilePeriodNames = {
@@ -118,9 +119,8 @@ export function metricsDrilldownViewModel(metrics, period, metricName) {
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {FormMetricName} metricName
  * @param {FormTimelineMetric[]} details
- * @returns
  */
-function createDrilldownHeaderAndRows(metrics, metricName, details) {
+export function createDrilldownHeaderAndRows(metrics, metricName, details) {
   const formMap = new Map()
   metrics.overview.forEach((ov) => {
     if (!formMap.get(ov.formId)) {
@@ -166,7 +166,7 @@ function createDrilldownHeaderAndRows(metrics, metricName, details) {
             html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
           },
           { text: formNameInfo.organisation },
-          { text: countsMap.get(formId) }
+          { ...numberCell(countsMap.get(formId) ?? 0) }
         ])
       }
     })

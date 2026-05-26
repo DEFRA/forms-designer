@@ -4,6 +4,7 @@ import config from '~/src/config.js'
 import {
   combineModel,
   createCsv,
+  createDrilldownHeaderAndRows,
   getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
@@ -627,6 +628,167 @@ describe('metrics models', () => {
           }
         }
       ])
+    })
+
+    describe('createDrilldownHeaderAndRows', () => {
+      const drilldownMetrics = {
+        totals: {},
+        overview: [
+          {
+            formId: 'form-id-1',
+            formStatus: FormStatus.Live,
+            summaryMetrics: {
+              name: 'Form 1',
+              slug: 'form-1',
+              organisation: 'Org 1'
+            }
+          },
+          {
+            formId: 'form-id-2',
+            formStatus: FormStatus.Live,
+            summaryMetrics: {
+              name: 'Form 2',
+              slug: 'form-2',
+              organisation: 'Org 2'
+            }
+          },
+          {
+            formId: 'form-id-3',
+            formStatus: FormStatus.Draft,
+            summaryMetrics: {
+              name: 'Form 3',
+              slug: 'form-3',
+              organisation: 'Org 2'
+            }
+          }
+        ]
+      }
+      it('should create headers and rows for grouped metrics', () => {
+        const details = [
+          {
+            formId: 'form-id-1',
+            metricValue: 55
+          },
+          {
+            formId: 'form-id-3',
+            metricValue: 2
+          },
+          {
+            formId: 'form-id-1',
+            metricValue: 990
+          }
+        ]
+        const res = createDrilldownHeaderAndRows(
+          // @ts-expect-error - partial mock of data
+          drilldownMetrics,
+          'Submissions',
+          details
+        )
+        expect(res).toEqual({
+          head: [
+            {
+              attributes: { 'aria-sort': 'ascending' },
+              classes: 'govuk-!-width-one-half',
+              text: 'Form name'
+            },
+            { attributes: { 'aria-sort': 'none' }, text: 'Organisation' },
+            { attributes: { 'aria-sort': 'none' }, text: 'Submissions' }
+          ],
+          rows: [
+            [
+              {
+                html: '<a href="/library/form-1" class="govuk-link govuk-link--no-visited-state">Form 1</a>'
+              },
+              {
+                text: 'Org 1'
+              },
+              {
+                attributes: {
+                  'data-sort-value': 1045
+                },
+                text: '1,045'
+              }
+            ],
+            [
+              {
+                html: '<a href="/library/form-3" class="govuk-link govuk-link--no-visited-state">Form 3</a>'
+              },
+              {
+                text: 'Org 2'
+              },
+              {
+                attributes: {
+                  'data-sort-value': 2
+                },
+                text: '2'
+              }
+            ]
+          ]
+        })
+      })
+
+      it('should create headers and rows for non-grouped metrics', () => {
+        const details = [
+          {
+            formId: 'form-id-1',
+            createdAt: new Date('2026-02-01T14:00:00.000Z')
+          },
+          {
+            formId: 'form-id-3',
+            createdAt: new Date('2026-03-02T08:00:00.000Z')
+          }
+        ]
+        const res = createDrilldownHeaderAndRows(
+          // @ts-expect-error - partial mock of data
+          drilldownMetrics,
+          'FormsFirstPublished',
+          details
+        )
+        expect(res).toEqual({
+          head: [
+            {
+              attributes: { 'aria-sort': 'ascending' },
+              classes: 'govuk-!-width-one-half',
+              text: 'Form name'
+            },
+            { attributes: { 'aria-sort': 'none' }, text: 'Organisation' },
+            {
+              attributes: { 'aria-sort': 'none' },
+              text: 'First published date'
+            }
+          ],
+          rows: [
+            [
+              {
+                html: '<a href="/library/form-1" class="govuk-link govuk-link--no-visited-state">Form 1</a>'
+              },
+              {
+                text: 'Org 1'
+              },
+              {
+                attributes: {
+                  'data-sort-value': '2026-02-01 14:00:00'
+                },
+                text: '01 Feb 2026 2:00 pm'
+              }
+            ],
+            [
+              {
+                html: '<a href="/library/form-3" class="govuk-link govuk-link--no-visited-state">Form 3</a>'
+              },
+              {
+                text: 'Org 2'
+              },
+              {
+                attributes: {
+                  'data-sort-value': '2026-03-02 08:00:00'
+                },
+                text: '02 Mar 2026 8:00 am'
+              }
+            ]
+          ]
+        })
+      })
     })
   })
 

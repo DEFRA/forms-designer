@@ -517,7 +517,7 @@ export function dateCell(dateString) {
   return {
     text: format(date, 'dd MMM yyyy h:mm aaa'),
     attributes: {
-      'data-sort-value': format(date, 'dd MMM yyyy h:mm aaa')
+      'data-sort-value': format(date, 'yyyy-MM-dd HH:mm:ss')
     }
   }
 }
@@ -527,7 +527,7 @@ export function dateCell(dateString) {
  */
 export function numberCell(num) {
   return {
-    text: num.toString(),
+    text: formatNumber(num),
     attributes: {
       'data-sort-value': num
     }
