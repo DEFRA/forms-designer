@@ -1,7 +1,5 @@
 import { FormStatus, organisations } from '@defra/forms-model'
-import { stringify } from 'csv-stringify'
 
-import config from '~/src/config.js'
 import {
   MetricsTileConfig,
   componentUsageFeatures,
@@ -50,9 +48,10 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
     organisationMap.set(org, (organisationMap.get(org) ?? 0) + 1)
   })
 
+  const rows = mapOverviewMetrics(metrics.overview)
   return {
     overviewMetrics: mapTotalMetrics(metrics.totals, tilePeriodNames),
-    formMetricRows: mapOverviewMetrics(metrics.overview),
+    formMetricRows: sortMetricRows(rows, filterAndSort),
     sort: {
       sortCol: filterAndSort.sortCol,
       sortDir: filterAndSort.sortDir
@@ -81,6 +80,23 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
       ]
     }
   }
+}
+
+/**
+ * @param {any[]} rows
+ * @param {SortCriteria} sortCriteria
+ */
+function sortMetricRows(rows, { sortCol, sortDir }) {
+  if (!sortCol || !sortDir) {
+    return rows
+  }
+  return rows.sort((a, b) => {
+    const valA = /** @type {string} */ (a[sortCol])
+    const valB = /** @type {string} */ (b[sortCol])
+    return sortDir === 'ascending'
+      ? valA.localeCompare(valB)
+      : valB.localeCompare(valA)
+  })
 }
 
 /**
@@ -282,70 +298,6 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @param {Input} input
- * @returns {Promise<string>}
- */
-export function createCsv(input) {
-  return new Promise((resolve, reject) => {
-    stringify(
-      input,
-      { bom: true, quoted: true },
-      /** @type {Callback} */ function (err, output) {
-        if (err) {
-          reject(
-            err instanceof Error
-              ? err
-              : // @ts-expect-error - error object not strongly typed
-                new Error(`CSV stringify error: ${err.message}`)
-          )
-          return
-        }
-
-        resolve(Buffer.from(output, 'utf8').toString())
-      }
-    )
-  })
-}
-
-/**
- * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
- */
-export async function getLiveMetricsAsCsv(metrics) {
-  const liveOnly = metrics.overview.filter(
-    (ov) => ov.formStatus === FormStatus.Live
-  )
-
-  // Sort forms by name then status
-  const formsSorted = liveOnly.toSorted((a, b) => {
-    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
-    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return formNameA.localeCompare(formNameB)
-  })
-
-  const headers = ['Form name', 'Form URL', 'Live submissions']
-
-  const values = /** @type {string[][]} */ ([])
-  values.push(headers)
-
-  formsSorted.forEach((ov) => {
-    const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
-      ov.summaryMetrics
-    )
-    const count = /** @type { number | undefined } */ (ov.submissionsCount)
-    values.push([
-      summaryMetrics.name,
-      `${config.appBaseUrl}/library/${summaryMetrics.slug}`,
-      `${count ?? 0}`
-    ])
-  })
-
-  const csv = await createCsv(values)
-
-  return csv
-}
-
-/**
  * @import { FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { Input, Callback } from 'csv-stringify'
- * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
+ * @import { FilterAndSortCriteria , SortCriteria} from '~/src/models/admin/metrics-helper.js'
  */

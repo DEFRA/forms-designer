@@ -5,12 +5,14 @@ import { StatusCodes } from 'http-status-codes'
 import { createServer } from '~/src/createServer.js'
 import { getMetrics } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
+import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import { buildQueryFromPayload } from '~/src/routes/admin/form-metrics.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/metrics.js')
 jest.mock('~/src/messaging/publish.js')
+jest.mock('~/src/models/admin/metrics-excel.js')
 
 describe('Form metrics routes', () => {
   /** @type {Server} */
@@ -254,6 +256,9 @@ describe('Form metrics routes', () => {
         }
         // @ts-expect-error - partial mock of data
         jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest
+          .mocked(getMetricsAsExcel)
+          .mockResolvedValueOnce(Buffer.from('Dummy xlsx content'))
 
         const options = {
           method: 'get',
@@ -268,15 +273,14 @@ describe('Form metrics routes', () => {
         const today = format(new Date(), 'yyyy-MM-dd')
 
         // Verify headers
-        expect(response.headers['content-type']).toBe('text/csv; charset=utf-8')
+        expect(response.headers['content-type']).toBe(
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
         expect(response.headers['content-disposition']).toBe(
-          `attachment; filename="live-metrics-${today}.csv"`
+          `attachment; filename="form-metrics-${today}.xlsx"`
         )
-        // Verify only headers rows (since supplied data did not include any live rows)
-        const csvContent = response.payload
-        expect(csvContent).toBe(
-          '\ufeff"Form name","Form URL","Live submissions"\n'
-        )
+        const content = response.payload
+        expect(content).toBe('Dummy xlsx content')
       })
 
       test('should throw if error during download', async () => {

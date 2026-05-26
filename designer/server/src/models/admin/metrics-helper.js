@@ -28,6 +28,15 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string }} FilterAndSortCriteria
  */
 
+/**
+ * @typedef {object} TableRowMetric
+ * @property {string} formName - name of the form
+ * @property {string} features - list of features
+ * @property {number} submissions - count of submissions
+ * @property {number | string} daysToPublish - number of days from draft to live
+ * @property {number | string} republished - number of times the form has been re-published
+ */
+
 const formStructureMetricNames =
   /** @type {Partial<Record<string, string>>} */ ({
     pages: 'Pages per form',
@@ -287,22 +296,23 @@ export function componentUsageFormStructures(metrics, formStatus) {
 
 /**
  * @param {FormOverviewMetric[]} metrics
+ * @returns {TableRowMetric[]}
  */
 export function mapOverviewMetrics(metrics) {
   return metrics.map((metric) => ({
     ...metric.summaryMetrics,
-    formName: metric.summaryMetrics.name,
+    formName: /** @type {string} */ (metric.summaryMetrics.name),
     features: Array.isArray(metric.summaryMetrics.features)
       ? metric.summaryMetrics.features.join(', ')
-      : [],
+      : '',
     submissions: metric.submissionsCount,
     daysToPublish:
       metric.formStatus === FormStatus.Live
-        ? metric.summaryMetrics.daysToPublish
+        ? /** @type {number} */ (metric.summaryMetrics.daysToPublish)
         : '-',
     republished:
       metric.formStatus === FormStatus.Live
-        ? metric.summaryMetrics.republished
+        ? /** @type {number} */ (metric.summaryMetrics.republished)
         : '-'
   }))
 }
