@@ -6,7 +6,11 @@ import {
 
 export interface FormTotalMetric {
   count?: number
-  details?: string | Date | number
+  details?: {
+    formId: string
+    metricValue?: string | Date | number
+    createdAt?: Date
+  }
 }
 
 export interface FormTotalsMetric {
