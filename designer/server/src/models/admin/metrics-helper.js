@@ -6,7 +6,7 @@ import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
 const FULL_DATE_MASK = 'd MMMM yyyy'
 const NEW_FORMS_CREATED_TITLE = 'New forms created'
 const FORMS_FIRST_PUBLISHED_TITLE = 'Forms first published'
-const FORMS_REPUBLISHED_TITLE = 'Forms re-published'
+const FORMS_REPUBLISHED_TITLE = 'Form re-publishes'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
 const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
 const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
@@ -81,13 +81,13 @@ export const MetricsTileConfig =
       }
     },
     [FormMetricName.FormsRePublished]: {
-      noun: 'form',
-      verb: 're-published',
+      noun: '',
+      verb: 're-publishes',
       drillDown: {
-        displayName: 'forms re-published',
+        displayName: 're-publishes',
         enabled: true,
         grouped: true,
-        headers: { text: 'Re-published', attributes: { 'aria-sort': 'none' } },
+        headers: { text: 'Re-publishes', attributes: { 'aria-sort': 'none' } },
         valueFunc: (detail) => numberCell(detail.metricValue)
       }
     },
@@ -370,6 +370,8 @@ export function collateSpecificTileCounts(
 
   const { noun, verb, drillDown } = MetricsTileConfig[metricName]
 
+  const nounCombined = noun ? `${noun}${nounPlural}` : ''
+
   return {
     ...counts,
     ariaLabel: buildAriaLabel(
@@ -378,7 +380,7 @@ export function collateSpecificTileCounts(
       counts.changePercentage,
       periodNames.ariaPeriodName
     ),
-    strapline: `${changePhrase} ${noun}${nounPlural} ${verb} than ${periodNames.straplinePeriodName}`,
+    strapline: `${changePhrase} ${nounCombined} ${verb} than ${periodNames.straplinePeriodName}`,
     drillDown: {
       enabled: drillDown.enabled,
       url: drillDown.enabled
