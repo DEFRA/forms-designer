@@ -933,10 +933,10 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     
         <!-- Forms Re Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-re-published">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-publishes">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms re-published</span>
+          <span class="gem-c-big-number__label">Form re-publishes</span>
             <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
@@ -946,7 +946,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms re-published than last week</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in  re-publishes than last week</p>
       </div>
     </div>
     
@@ -1072,10 +1072,10 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     
         <!-- Forms Re Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-re-published">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-publishes">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms re-published</span>
+          <span class="gem-c-big-number__label">Form re-publishes</span>
             <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
@@ -1085,7 +1085,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms re-published than last month</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in  re-publishes than last month</p>
       </div>
     </div>
     
@@ -1211,10 +1211,10 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     
         <!-- Forms Re Published -->
         <!-- Metrics tile -->
-    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-re-published">
+    <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-publishes">
       <div class="app-metric-tile">
         <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms re-published</span>
+          <span class="gem-c-big-number__label">Form re-publishes</span>
             <span class="gem-c-big-number__value">0</span>
           </span>
         </div>
@@ -1224,7 +1224,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
           </strong>
     
         </div>
-        <p class="govuk-body-xs app-metric-caption">No difference in forms re-published than last year</p>
+        <p class="govuk-body-xs app-metric-caption">No difference in  re-publishes than last year</p>
       </div>
     </div>
     
