@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes'
 import {
   testFormDefinitionWithAGuidancePage,
   testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithPayment,
   testFormDefinitionWithSinglePage,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
@@ -16,11 +17,13 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
+import { deletePaymentSecret, existsSecret } from '~/src/lib/secrets.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/secrets.js')
 
 describe('Editor v2 question delete routes', () => {
   /** @type {Server} */
@@ -251,6 +254,40 @@ describe('Editor v2 question delete routes', () => {
       'p1',
       testFormDefinitionWithSinglePage
     )
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
+  test('POST - should delete page, delete payment secret, and redirect to pages list', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithPayment)
+    jest
+      .mocked(existsSecret)
+      .mockResolvedValueOnce({
+        exists: true,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(deletePage).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      testFormDefinitionWithPayment
+    )
+    expect(deletePaymentSecret).toHaveBeenCalled()
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
   })
 

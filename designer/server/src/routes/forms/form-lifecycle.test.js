@@ -2,13 +2,16 @@ import Boom from '@hapi/boom'
 import { within } from '@testing-library/dom'
 import { StatusCodes } from 'http-status-codes'
 
+import { testFormDefinitionWithSinglePage } from '~/src/__stubs__/form-definition.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { deletePaymentSecret, existsSecret } from '~/src/lib/secrets.js'
 import { formsLibraryPath } from '~/src/models/links.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
+jest.mock('~/src/lib/secrets.js')
 
 describe('Test form draft and live creation route handlers', () => {
   /** @type {Server} */
@@ -132,13 +135,21 @@ describe('Test form draft and live creation route handlers', () => {
     expect($bodyText).not.toBeInTheDocument()
   })
 
-  test('When a live form is created, it should redirect to the library', async () => {
+  test('When a live form is created, it should redirect to the library (and not delete a payment secret)', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(metadata)
 
     // @ts-expect-error we don't care about the full response
     jest.mocked(forms.makeDraftFormLive).mockResolvedValueOnce({
       statusCode: 200
     })
+
+    jest
+      .mocked(existsSecret)
+      .mockResolvedValueOnce({
+        exists: false,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
 
     const options = {
       method: 'POST',
@@ -151,6 +162,39 @@ describe('Test form draft and live creation route handlers', () => {
     )
 
     expect(headers.location).toBe('/library/my-form')
+  })
+
+  test('When a live form is created, it should redirect to the library (and delete live payment secret)', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(metadata)
+
+    // @ts-expect-error we don't care about the full response
+    jest.mocked(forms.makeDraftFormLive).mockResolvedValueOnce({
+      statusCode: 200
+    })
+
+    jest
+      .mocked(existsSecret)
+      .mockResolvedValueOnce({
+        exists: true,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
+    jest
+      .mocked(forms.getLiveFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithSinglePage)
+
+    const options = {
+      method: 'POST',
+      url: '/library/my-form/make-draft-live',
+      auth
+    }
+
+    const { headers } = /** @type {ServerInjectResponse<string>} */ (
+      await server.inject(options)
+    )
+
+    expect(headers.location).toBe('/library/my-form')
+    expect(deletePaymentSecret).toHaveBeenCalled()
   })
 
   test('When a live form creation fails, it should throw an error', async () => {

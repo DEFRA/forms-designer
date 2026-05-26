@@ -1,4 +1,10 @@
-import { FormDefinitionError, Scopes, isFormType } from '@defra/forms-model'
+import {
+  FormDefinitionError,
+  Scopes,
+  getPageFromDefinition,
+  isFormType,
+  isPaymentPage
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -6,6 +12,11 @@ import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.j
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  PAYMENT_TEST_API_KEY,
+  deletePaymentSecret,
+  existsSecret
+} from '~/src/lib/secrets.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-delete.js'
 import { editorv2Path } from '~/src/models/links.js'
@@ -84,11 +95,22 @@ export default [
       const definition = await forms.getDraftFormDefinition(formId, token)
 
       try {
+        const page = getPageFromDefinition(definition, pageId)
+        const isPayment = isPaymentPage(page)
+
         // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
         if (questionId && shouldDeleteQuestionOnly(pageId, definition)) {
           await deleteQuestion(formId, token, pageId, questionId, definition)
         } else {
           await deletePage(formId, token, pageId, definition)
+        }
+
+        if (isPayment) {
+          // Delete TEST payment API key (if present)
+          const exists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
+          if (exists.exists) {
+            await deletePaymentSecret(formId, false, token)
+          }
         }
 
         // Redirect POST to GET

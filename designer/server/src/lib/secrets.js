@@ -3,7 +3,7 @@ import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
-import { getJson, postJson } from '~/src/lib/fetch.js'
+import { delJson, getJson, postJson } from '~/src/lib/fetch.js'
 import { getLiveFormDefinition } from '~/src/lib/forms.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
@@ -187,6 +187,24 @@ export async function savePaymentSecrets(
     }
   }
   return ''
+}
+
+/**
+ * @param {string} formId
+ * @param {boolean} isLive
+ * @param {string} token
+ */
+export async function deletePaymentSecret(formId, isLive, token) {
+  const key = isLive ? PAYMENT_LIVE_API_KEY_PENDING : PAYMENT_TEST_API_KEY
+  const { response } = await delJson(
+    buildRequestUrl(formId, key),
+    getHeaders(token)
+  )
+  if (response.statusCode !== StatusCodes.OK) {
+    throw new Error(
+      `Failed to delete ${isLive ? 'LIVE' : 'TEST'} Payment API key`
+    )
+  }
 }
 
 /**
