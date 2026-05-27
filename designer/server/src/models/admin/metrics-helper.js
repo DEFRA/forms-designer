@@ -386,7 +386,8 @@ export function collateSpecificTileCounts(
       url: drillDown.enabled
         ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}`
         : ''
-    }
+    },
+    classes: ''
   }
 }
 

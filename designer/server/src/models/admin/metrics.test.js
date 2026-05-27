@@ -25,7 +25,8 @@ function getExpectedTile(title, ariaPeriod, strapline) {
     changeValue: 0,
     count: 0,
     strapline,
-    title
+    title,
+    classes: ''
   }
 }
 

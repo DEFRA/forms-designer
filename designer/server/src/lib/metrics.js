@@ -47,6 +47,21 @@ export async function getMetrics(filter = {}) {
 }
 
 /**
+ * Get metrics for a specific form
+ * @param {string} formId
+ */
+export async function getMetricsForForm(formId) {
+  const getJsonByType =
+    /** @type {typeof getJson<{ totals: FormTotalsMetric }>} */ (getJson)
+
+  const requestUrl = new URL(formId, metricsEndpoint)
+
+  const { body } = await getJsonByType(requestUrl)
+
+  return body
+}
+
+/**
  * Regenerate the full set of metrics afresh (clears the 'mertics' DB and repopulates)
  * @param {string} token
  */

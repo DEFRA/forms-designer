@@ -6,8 +6,9 @@
   {% set changeSymbolPercent = '' %}
 {% endif %}
 {% set metricTestId = params.testId or ('headline-column-' + (params.title | lower | replace(' ', '-'))) %}
+{% set tileClasses = params.classes if params.classes else "govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" %}
 <!-- Metrics tile -->
-<div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="{{ metricTestId }}">
+<div class="{{ tileClasses }}" data-testid="{{ metricTestId }}">
   <div class="app-metric-tile">
     <div class="gem-c-big-number">
       <span class="gem-c-big-number__label">{{ params.title }}</span>

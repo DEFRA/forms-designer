@@ -12,7 +12,7 @@ import {
   numberCell
 } from '~/src/models/admin/metrics-helper.js'
 
-const tilePeriodNames = {
+export const tilePeriodNames = {
   last7Days: {
     ariaPeriodName: 'previous 7 days',
     straplinePeriodName: 'last week',

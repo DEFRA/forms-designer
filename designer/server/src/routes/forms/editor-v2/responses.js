@@ -1,4 +1,5 @@
 import { Scopes, isFeedbackForm } from '@defra/forms-model'
+import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -8,10 +9,13 @@ import {
   mapUserForAudit
 } from '~/src/common/helpers/auth/user-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { getMetricsForForm } from '~/src/lib/metrics.js'
 import {
   publishFormCsatExcelRequestedEvent,
   publishFormSubmissionExcelRequestedEvent
 } from '~/src/messaging/publish.js'
+import { mapTotalMetrics } from '~/src/models/admin/metrics-helper.js'
+import { tilePeriodNames } from '~/src/models/admin/metrics.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import {
@@ -93,6 +97,8 @@ export default [
 
       const formId = metadata.id
 
+      const metricsModel = await getMetricTilesForForm(formId)
+
       const errorList = generateErrorList(metadata)
 
       const formPath = formOverviewPath(slug)
@@ -116,7 +122,8 @@ export default [
         navigation,
         notification,
         isFeedbackForm: isFeedbackForm(definition),
-        canRequestFeedback: scopes.includes(Scopes.FormsFeedback)
+        canRequestFeedback: scopes.includes(Scopes.FormsFeedback),
+        metricsModel
       })
     },
     options: {
@@ -185,6 +192,34 @@ export default [
     }
   })
 ]
+
+/**
+ * @param {string} formId
+ */
+async function getMetricTilesForForm(formId) {
+  const classes =
+    'govuk-grid-column-one-third govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop'
+  const metrics = await getMetricsForForm(formId)
+  const metricsModel = mapTotalMetrics(metrics.totals, tilePeriodNames)
+  const submissionsTiles = {
+    last7: metricsModel.last7Days.formSubmissions,
+    last30: metricsModel.last30Days.formSubmissions,
+    allTime: metricsModel.allTime.formSubmissions
+  }
+  // Disable drill-down
+  submissionsTiles.last7.drillDown.enabled = false
+  submissionsTiles.last30.drillDown.enabled = false
+  submissionsTiles.allTime.drillDown.enabled = false
+  // Override classes
+  submissionsTiles.last7.classes = classes
+  submissionsTiles.last30.classes = classes
+  submissionsTiles.allTime.classes = classes
+  // Override titles
+  submissionsTiles.last7.title = 'Last 7 days'
+  submissionsTiles.last30.title = 'Last 30 days'
+  submissionsTiles.allTime.title = `All time - since ${format(metrics.totals.earliestDate, 'd MMM yyyy')}`
+  return metricsModel
+}
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
