@@ -73,7 +73,7 @@ async function downloadFile(file, email, referenceNumber) {
 
     // Redirect to email entry page
     // If the response was forbibben then include the reference
-    // number to they come back to the download all page afterward
+    // number so they come back to the download all page afterward
     window.location.replace(
       response.status === forbiddenCode
         ? next
