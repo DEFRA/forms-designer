@@ -14,7 +14,10 @@ import {
   publishFormFileDownloadSuccessEvent
 } from '~/src/messaging/publish.js'
 import { errorViewModel } from '~/src/models/errors.js'
-import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
+import {
+  downloadCompleteModel,
+  getBrowserSafeDownloadUrl
+} from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
 import { redirectWithErrors } from '~/src/routes/forms/create.js'
 import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
@@ -133,7 +136,10 @@ export default [
         )
 
         return isAsyncFetch
-          ? { url, fileName: fileStatus.filename }
+          ? {
+              url: getBrowserSafeDownloadUrl(url),
+              fileName: fileStatus.filename
+            }
           : h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
         if (
