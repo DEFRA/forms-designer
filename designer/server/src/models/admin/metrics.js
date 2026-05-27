@@ -86,13 +86,13 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
  * @param {any[]} rows
  * @param {SortCriteria} sortCriteria
  */
-function sortMetricRows(rows, { sortCol, sortDir }) {
+export function sortMetricRows(rows, { sortCol, sortDir }) {
   if (!sortCol || !sortDir) {
     return rows
   }
   return rows.sort((a, b) => {
-    const valA = /** @type {string} */ (a[sortCol])
-    const valB = /** @type {string} */ (b[sortCol])
+    const valA = /** @type {string} */ (a[sortCol] ?? '')
+    const valB = /** @type {string} */ (b[sortCol] ?? '')
     return sortDir === 'ascending'
       ? valA.localeCompare(valB)
       : valB.localeCompare(valA)

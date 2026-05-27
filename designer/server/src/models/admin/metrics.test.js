@@ -4,7 +4,8 @@ import {
   combineModel,
   createDrilldownHeaderAndRows,
   metricsComponentUsageViewModel,
-  metricsFormActivityViewModel
+  metricsFormActivityViewModel,
+  sortMetricRows
 } from '~/src/models/admin/metrics.js'
 
 jest.mock('~/src/config.ts')
@@ -786,6 +787,55 @@ describe('metrics models', () => {
           ]
         })
       })
+    })
+  })
+
+  describe('sortMetricsRows', () => {
+    const rows = [
+      { name: 'Smith', value: 'Smith value' },
+      { name: 'Abingdon', value: 'Abingdon value' },
+      { name: 'Carter', value: 'Carter value' }
+    ]
+
+    it('should ignore sort if no criteria passed', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {})
+      expect(res).toEqual(rows)
+    })
+
+    it('should ignore sort if no match of column name', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {
+        sortCol: 'badname',
+        sortDir: 'ascending'
+      })
+      expect(res).toEqual(rows)
+    })
+
+    it('should ignore sort ascending', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {
+        sortCol: 'name',
+        sortDir: 'ascending'
+      })
+      expect(res).toEqual([
+        { name: 'Abingdon', value: 'Abingdon value' },
+        { name: 'Carter', value: 'Carter value' },
+        { name: 'Smith', value: 'Smith value' }
+      ])
+    })
+
+    it('should ignore sort descending', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {
+        sortCol: 'name',
+        sortDir: 'descending'
+      })
+      expect(res).toEqual([
+        { name: 'Smith', value: 'Smith value' },
+        { name: 'Carter', value: 'Carter value' },
+        { name: 'Abingdon', value: 'Abingdon value' }
+      ])
     })
   })
 })
