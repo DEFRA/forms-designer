@@ -6,7 +6,7 @@ import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
 const FULL_DATE_MASK = 'd MMMM yyyy'
 const NEW_FORMS_CREATED_TITLE = 'New forms created'
 const FORMS_FIRST_PUBLISHED_TITLE = 'Forms first published'
-const FORMS_REPUBLISHED_TITLE = 'Form re-publishes'
+const FORMS_REPUBLISHED_TITLE = 'Form re-published'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
 const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
 const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
@@ -91,12 +91,12 @@ export const MetricsTileConfig =
     },
     [FormMetricName.FormsRePublished]: {
       noun: '',
-      verb: 're-publishes',
+      verb: 're-published',
       drillDown: {
-        displayName: 're-publishes',
+        displayName: 're-published',
         enabled: true,
         grouped: true,
-        headers: { text: 'Re-publishes', attributes: { 'aria-sort': 'none' } },
+        headers: { text: 'Re-published', attributes: { 'aria-sort': 'none' } },
         valueFunc: (detail) => numberCell(detail.metricValue)
       }
     },

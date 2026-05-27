@@ -126,9 +126,9 @@ describe('metrics models', () => {
         },
         formsRePublished: {
           ...getExpectedTile(
-            'Form re-publishes',
+            'Form re-published',
             'previous 7 days',
-            'No difference in  re-publishes than last week'
+            'No difference in  re-published than last week'
           ),
           drillDown: {
             enabled: true,
@@ -198,9 +198,9 @@ describe('metrics models', () => {
         },
         formsRePublished: {
           ...getExpectedTile(
-            'Form re-publishes',
+            'Form re-published',
             'previous 30 days',
-            'No difference in  re-publishes than last month'
+            'No difference in  re-published than last month'
           ),
           drillDown: {
             enabled: true,
@@ -270,9 +270,9 @@ describe('metrics models', () => {
         },
         formsRePublished: {
           ...getExpectedTile(
-            'Form re-publishes',
+            'Form re-published',
             'previous year',
-            'No difference in  re-publishes than last year'
+            'No difference in  re-published than last year'
           ),
           drillDown: {
             enabled: true,
