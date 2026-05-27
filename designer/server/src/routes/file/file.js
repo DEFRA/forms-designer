@@ -8,14 +8,19 @@ import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import config from '~/src/config.js'
 import { checkFileStatus, createFileLink } from '~/src/lib/file.js'
+import { getFormDefinitionForSubmission } from '~/src/lib/forms.js'
 import {
   publishFormFileDownloadFailureEvent,
   publishFormFileDownloadSuccessEvent
 } from '~/src/messaging/publish.js'
 import { errorViewModel } from '~/src/models/errors.js'
-import { downloadCompleteModel } from '~/src/models/file/download-complete.js'
+import {
+  downloadCompleteModel,
+  getBrowserSafeDownloadUrl
+} from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
 import { redirectWithErrors } from '~/src/routes/forms/create.js'
+import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
 
 export const emailSchema = Joi.string().trim().required().messages({
   'string.empty': 'Enter an email address'
@@ -86,11 +91,13 @@ export default [
     method: 'POST',
     path: '/file-download/{fileId}',
     async handler(request, h) {
-      const { payload, params, auth, server } = request
+      const { query, payload, params, auth, server } = request
       const { credentials } = auth
       const { token } = credentials
-      let { email } = payload
       const { fileId } = params
+      const { referenceNumber } = query
+      let { email } = payload
+      const isAsyncFetch = request.headers.accept === 'application/json'
 
       if (!userSession.hasUser(credentials)) {
         return Boom.unauthorized()
@@ -108,6 +115,7 @@ export default [
         }
 
         const { url } = await createFileLink(fileId, email, token)
+        logger.info(`File download link created for file ID ${fileId}`)
 
         await server.methods.state.set(
           credentials.user.id,
@@ -115,7 +123,10 @@ export default [
           email,
           config.fileDownloadPasswordTtl
         )
-        logger.info(`File download link created for file ID ${fileId}`)
+
+        if (!isAsyncFetch && referenceNumber) {
+          return h.redirect(`/files-download/${referenceNumber}`)
+        }
 
         const auditUser = mapUserForAudit(auth.credentials.user)
         await publishFormFileDownloadSuccessEvent(
@@ -123,7 +134,13 @@ export default [
           fileStatus.filename,
           auditUser
         )
-        return h.view('file/download-complete', downloadCompleteModel(url))
+
+        return isAsyncFetch
+          ? {
+              url: getBrowserSafeDownloadUrl(url),
+              fileName: fileStatus.filename
+            }
+          : h.view('file/download-complete', downloadCompleteModel(url))
       } catch (err) {
         if (
           Boom.isBoom(err) &&
@@ -135,7 +152,9 @@ export default [
 
           const pageTitle = 'The link has expired'
 
-          return h.view('file/expired', errorViewModel(pageTitle))
+          return isAsyncFetch
+            ? h.response({ error: pageTitle }).code(StatusCodes.GONE)
+            : h.view('file/expired', errorViewModel(pageTitle))
         }
 
         if (
@@ -153,19 +172,23 @@ export default [
             auditUser
           )
 
+          const errorMessage =
+            'This is not the email address the file was sent to. To confirm the file was meant for your team, enter the email address the file was sent to.'
           const validation = {
             formErrors: {
               email: {
-                text: 'This is not the email address the file was sent to. To confirm the file was meant for your team, enter the email address the file was sent to.'
+                text: errorMessage
               }
             },
             formValues: { email }
           }
 
-          return h.view(
-            'file/download-page',
-            file.fileViewModel(email, validation)
-          )
+          return isAsyncFetch
+            ? h.response({ error: errorMessage }).code(StatusCodes.FORBIDDEN)
+            : h.view(
+                'file/download-page',
+                file.fileViewModel(email, validation)
+              )
         }
 
         throw err
@@ -179,6 +202,9 @@ export default [
         }
       },
       validate: {
+        query: Joi.object({
+          referenceNumber: Joi.string().optional()
+        }),
         payload: Joi.object({
           email: emailSchema
         }).required(),
@@ -190,6 +216,72 @@ export default [
             false,
             sessionNames.validationFailure.fileDownload
           )
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: { referenceNumber: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: '/files-download/{referenceNumber}',
+    async handler(request, h) {
+      const { params, server, auth } = request
+      const { referenceNumber } = params
+      const { credentials } = auth
+      const { token } = credentials
+
+      if (!userSession.hasUser(credentials)) {
+        return Boom.unauthorized()
+      }
+
+      const record = await getSubmissionRecord(referenceNumber, token)
+      const files = record.data.files
+      const fileKeys = Object.keys(files)
+      const allFiles = fileKeys.flatMap((key) => files[key])
+
+      if (!allFiles.length) {
+        return Boom.badRequest('No files associated with this submission')
+      }
+
+      const definition = await getFormDefinitionForSubmission(
+        record.meta,
+        token
+      )
+
+      const email = await server.methods.state.get(
+        credentials.user.id,
+        sessionNames.fileDownloadPassword
+      )
+
+      const firstFile = allFiles[0]
+
+      if (email) {
+        // Ensure the stored email is the correct one for this submission
+        try {
+          await createFileLink(firstFile.fileId, email, token)
+        } catch {
+          return h.redirect(
+            `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
+          )
+        }
+      } else {
+        return h.redirect(
+          `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
+        )
+      }
+
+      return h.view(
+        'file/download-all',
+        file.downloadAllViewModel(email, referenceNumber, files, definition)
+      )
+    },
+    options: {
+      auth: {
+        access: {
+          entity: 'user',
+          scope: false
         }
       }
     }
