@@ -73,8 +73,8 @@ export default [
         await forms.makeDraftFormLive(form.id, token)
 
         // Delete payment secret if no longer in live form
-        const exists = await existsSecret(form.id, PAYMENT_LIVE_API_KEY, token)
-        if (exists.exists) {
+        const liveKey = await existsSecret(form.id, PAYMENT_LIVE_API_KEY, token)
+        if (liveKey.exists) {
           const definition = await forms.getLiveFormDefinition(form.id, token)
           if (!hasPaymentQuestionInForm(definition)) {
             await deletePaymentSecret(form.id, PAYMENT_LIVE_API_KEY, token)

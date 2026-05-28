@@ -157,7 +157,7 @@ export default [
  * @param {string} formId
  * @param {string} token
  */
-async function cleanupPaymentKeys(formId, token) {
+export async function cleanupPaymentKeys(formId, token) {
   // Run checks in parallel
   const exists = await Promise.all([
     existsSecret(formId, PAYMENT_TEST_API_KEY, token),
