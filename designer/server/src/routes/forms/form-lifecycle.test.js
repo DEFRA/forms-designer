@@ -143,13 +143,11 @@ describe('Test form draft and live creation route handlers', () => {
       statusCode: 200
     })
 
-    jest
-      .mocked(existsSecret)
-      .mockResolvedValueOnce({
-        exists: false,
-        createdAt: undefined,
-        updatedAt: undefined
-      })
+    jest.mocked(existsSecret).mockResolvedValueOnce({
+      exists: false,
+      createdAt: undefined,
+      updatedAt: undefined
+    })
 
     const options = {
       method: 'POST',
@@ -172,13 +170,11 @@ describe('Test form draft and live creation route handlers', () => {
       statusCode: 200
     })
 
-    jest
-      .mocked(existsSecret)
-      .mockResolvedValueOnce({
-        exists: true,
-        createdAt: undefined,
-        updatedAt: undefined
-      })
+    jest.mocked(existsSecret).mockResolvedValueOnce({
+      exists: true,
+      createdAt: undefined,
+      updatedAt: undefined
+    })
     jest
       .mocked(forms.getLiveFormDefinition)
       .mockResolvedValueOnce(testFormDefinitionWithSinglePage)

@@ -108,7 +108,7 @@ export default [
 
         if (isPayment) {
           // Handle deletion of payment API keys
-          await cleanupPaymentKeys(formId, metadata, token)
+          await cleanupPaymentKeys(formId, token)
         }
 
         // Redirect POST to GET
@@ -155,10 +155,9 @@ export default [
 
 /**
  * @param {string} formId
- * @param {FormMetadata} metadata
  * @param {string} token
  */
-async function cleanupPaymentKeys(formId, metadata, token) {
+async function cleanupPaymentKeys(formId, token) {
   // Delete TEST payment API key (if present)
   const exists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
   if (exists.exists) {

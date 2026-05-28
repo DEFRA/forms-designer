@@ -6,6 +6,7 @@ import config from '~/src/config.js'
 import {
   baseOptions,
   createMockResponse,
+  mockedDelJson,
   mockedGetJson,
   mockedPostJson,
   token
@@ -13,6 +14,7 @@ import {
 import { getLiveFormDefinition } from '~/src/lib/forms.js'
 import {
   MASKED_KEY,
+  deletePaymentSecret,
   existsSecret,
   getPaymentSecretsMasked,
   savePaymentSecret,
@@ -90,6 +92,31 @@ describe('secrets.js', () => {
         },
         ...baseOptions
       })
+    })
+
+    it('should throw if error', async () => {
+      mockedPostJson.mockResolvedValueOnce({
+        response: createMockResponse({
+          statusCode: StatusCodes.INTERNAL_SERVER_ERROR
+        }),
+        body: {}
+      })
+      await expect(() =>
+        savePaymentSecret(formId, secretName, true, token)
+      ).rejects.toThrow('Failed to save LIVE Payment API key')
+    })
+  })
+
+  describe('deletePaymentSecret', () => {
+    it('should delete the secret', async () => {
+      mockedDelJson.mockResolvedValueOnce({
+        response: createMockResponse({ statusCode: StatusCodes.OK }),
+        body: {}
+      })
+      const requestUrl = new URL(secretName, baseRequestUrl)
+      await deletePaymentSecret(formId, secretName, token)
+
+      expect(mockedDelJson).toHaveBeenCalledWith(requestUrl, baseOptions)
     })
 
     it('should throw if error', async () => {

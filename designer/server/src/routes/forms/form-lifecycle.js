@@ -77,7 +77,7 @@ export default [
         if (exists.exists) {
           const definition = await forms.getLiveFormDefinition(form.id, token)
           if (!hasPaymentQuestionInForm(definition)) {
-            await deletePaymentSecret(form.id, true, token)
+            await deletePaymentSecret(form.id, PAYMENT_LIVE_API_KEY, token)
           }
         }
 
