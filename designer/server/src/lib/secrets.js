@@ -191,19 +191,16 @@ export async function savePaymentSecrets(
 
 /**
  * @param {string} formId
- * @param {boolean} isLive
+ * @param {string} secretName
  * @param {string} token
  */
-export async function deletePaymentSecret(formId, isLive, token) {
-  const key = isLive ? PAYMENT_LIVE_API_KEY_PENDING : PAYMENT_TEST_API_KEY
+export async function deletePaymentSecret(formId, secretName, token) {
   const { response } = await delJson(
-    buildRequestUrl(formId, key),
+    buildRequestUrl(formId, secretName),
     getHeaders(token)
   )
   if (response.statusCode !== StatusCodes.OK) {
-    throw new Error(
-      `Failed to delete ${isLive ? 'LIVE' : 'TEST'} Payment API key`
-    )
+    throw new Error(`Failed to delete ${secretName} Payment API key`)
   }
 }
 

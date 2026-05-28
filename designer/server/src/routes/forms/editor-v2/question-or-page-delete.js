@@ -13,6 +13,7 @@ import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import {
+  PAYMENT_LIVE_API_KEY_PENDING,
   PAYMENT_TEST_API_KEY,
   deletePaymentSecret,
   existsSecret
@@ -106,11 +107,8 @@ export default [
         }
 
         if (isPayment) {
-          // Delete TEST payment API key (if present)
-          const exists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
-          if (exists.exists) {
-            await deletePaymentSecret(formId, false, token)
-          }
+          // Handle deletion of payment API keys
+          await cleanupPaymentKeys(formId, metadata, token)
         }
 
         // Redirect POST to GET
@@ -156,6 +154,29 @@ export default [
 ]
 
 /**
- * @import { FormDefinition } from '@defra/forms-model'
+ * @param {string} formId
+ * @param {FormMetadata} metadata
+ * @param {string} token
+ */
+async function cleanupPaymentKeys(formId, metadata, token) {
+  // Delete TEST payment API key (if present)
+  const exists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
+  if (exists.exists) {
+    await deletePaymentSecret(formId, PAYMENT_TEST_API_KEY, token)
+  }
+
+  // Delete LIVE_PENDING payment API key (if present)
+  const existsPending = await existsSecret(
+    formId,
+    PAYMENT_LIVE_API_KEY_PENDING,
+    token
+  )
+  if (existsPending.exists) {
+    await deletePaymentSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token)
+  }
+}
+
+/**
+ * @import { FormDefinition, FormMetadata } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

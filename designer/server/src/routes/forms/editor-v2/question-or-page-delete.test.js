@@ -269,6 +269,11 @@ describe('Editor v2 question delete routes', () => {
         createdAt: undefined,
         updatedAt: undefined
       })
+      .mockResolvedValueOnce({
+        exists: true,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
 
     const options = {
       method: 'post',
@@ -287,7 +292,8 @@ describe('Editor v2 question delete routes', () => {
       'p1',
       testFormDefinitionWithPayment
     )
-    expect(deletePaymentSecret).toHaveBeenCalled()
+    // Should have deleted TEST and PENDING keys
+    expect(deletePaymentSecret).toHaveBeenCalledTimes(2)
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
   })
 
