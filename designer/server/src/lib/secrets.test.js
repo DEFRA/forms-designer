@@ -120,15 +120,15 @@ describe('secrets.js', () => {
     })
 
     it('should throw if error', async () => {
-      mockedPostJson.mockResolvedValueOnce({
+      mockedDelJson.mockResolvedValueOnce({
         response: createMockResponse({
           statusCode: StatusCodes.INTERNAL_SERVER_ERROR
         }),
         body: {}
       })
       await expect(() =>
-        savePaymentSecret(formId, secretName, true, token)
-      ).rejects.toThrow('Failed to save LIVE Payment API key')
+        deletePaymentSecret(formId, secretName, token)
+      ).rejects.toThrow('Failed to delete my-new-secret Payment API key')
     })
   })
 

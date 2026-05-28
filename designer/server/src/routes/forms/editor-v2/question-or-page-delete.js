@@ -176,6 +176,6 @@ async function cleanupPaymentKeys(formId, token) {
 }
 
 /**
- * @import { FormDefinition, FormMetadata } from '@defra/forms-model'
+ * @import { FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */
