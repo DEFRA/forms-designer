@@ -158,19 +158,19 @@ export default [
  * @param {string} token
  */
 async function cleanupPaymentKeys(formId, token) {
+  // Run checks in parallel
+  const exists = await Promise.all([
+    existsSecret(formId, PAYMENT_TEST_API_KEY, token),
+    existsSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token)
+  ])
+
   // Delete TEST payment API key (if present)
-  const exists = await existsSecret(formId, PAYMENT_TEST_API_KEY, token)
-  if (exists.exists) {
+  if (exists[0].exists) {
     await deletePaymentSecret(formId, PAYMENT_TEST_API_KEY, token)
   }
 
   // Delete LIVE_PENDING payment API key (if present)
-  const existsPending = await existsSecret(
-    formId,
-    PAYMENT_LIVE_API_KEY_PENDING,
-    token
-  )
-  if (existsPending.exists) {
+  if (exists[1].exists) {
     await deletePaymentSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token)
   }
 }
