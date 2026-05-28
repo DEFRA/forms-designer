@@ -2,11 +2,8 @@
 
 <!-- Form Activity Section -->
 <div class="govuk-!-margin-bottom-6">
-  {% if params.fromDate and params.toDate %}
-    <span class="govuk-caption-m">{{ params.fromDate }} to {{ params.toDate }}</span>
-  {% else %}
-    <span class="govuk-caption-m">Since launch</span>
-  {% endif %}
+  <span class="govuk-caption-m">{{ params.fromDate }} to {{ params.toDate }}</span>
+
   <h2 class="govuk-heading-l">{{ params.title }}</h2>
 
   <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Form activity</h2>
@@ -14,8 +11,11 @@
     <!-- Forms Created -->
     {{ appMetricsTile(params.newFormsCreated) }}
 
-    <!-- Forms Published -->
-    {{ appMetricsTile(params.formsPublished) }}
+    <!-- Forms First Published -->
+    {{ appMetricsTile(params.formsFirstPublished) }}
+
+    <!-- Forms Re Published -->
+    {{ appMetricsTile(params.formsRePublished) }}
 
     <!-- Form Submissions -->
     {{ appMetricsTile(params.formSubmissions) }}

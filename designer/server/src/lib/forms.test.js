@@ -747,6 +747,101 @@ describe('Forms library routes', () => {
       })
     })
 
+    describe('getFormDefinitionForSubmission', () => {
+      const token = auth.credentials.token
+      const formId = '69cbf817dfb03f22b7e03242'
+      const referenceNumber = 'PDT-UC2-M3A'
+      const formSubmissionMeta = {
+        schemaVersion: 1,
+        timestamp: new Date('2026-05-18T11:24:20.592Z'),
+        referenceNumber,
+        formName: 'File upload',
+        formId,
+        formSlug: 'file-upload',
+        status: FormStatus.Draft,
+        isPreview: true,
+        notificationEmail: 'enrique.chase@defra.gov.uk',
+        custom: {
+          userConfirmationEmail: 'enrique.chase@defra.gov.uk'
+        },
+        versionMetadata: {
+          versionNumber: 1,
+          createdAt: new Date('2026-05-18T11:24:20.592Z')
+        }
+      }
+
+      beforeEach(() => {
+        jest.clearAllMocks()
+      })
+
+      it('should fetch the explicit version if it exists in the submission meta', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formDefinition
+        })
+
+        const result = await forms.getFormDefinitionForSubmission(
+          formSubmissionMeta,
+          token
+        )
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe(
+          '/forms/69cbf817dfb03f22b7e03242/versions/1/definition'
+        )
+        expect(result).toEqual(formDefinition)
+      })
+
+      it('should fetch the draft if no version exists in the submission meta', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formDefinition
+        })
+
+        const result = await forms.getFormDefinitionForSubmission(
+          { ...formSubmissionMeta, versionMetadata: undefined },
+          token
+        )
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe(
+          '/forms/69cbf817dfb03f22b7e03242/definition/draft'
+        )
+        expect(result).toEqual(formDefinition)
+      })
+
+      it('should fetch the live if no version exists in the submission meta', async () => {
+        jest.spyOn(fetch, 'getJson').mockResolvedValueOnce({
+          /** @type {any} */
+          response: {},
+          body: formDefinition
+        })
+
+        const result = await forms.getFormDefinitionForSubmission(
+          {
+            ...formSubmissionMeta,
+            status: FormStatus.Live,
+            versionMetadata: undefined
+          },
+          token
+        )
+
+        const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
+        const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
+
+        expect(calledUrl.pathname).toBe(
+          '/forms/69cbf817dfb03f22b7e03242/definition'
+        )
+        expect(result).toEqual(formDefinition)
+      })
+    })
+
     describe('getFormDefinitionVersion', () => {
       const token = auth.credentials.token
 

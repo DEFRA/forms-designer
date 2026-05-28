@@ -1,6 +1,6 @@
 import { Readable } from 'node:stream'
 
-import { Scopes, getErrorMessage } from '@defra/forms-model'
+import { FormMetricName, Scopes, getErrorMessage } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -17,12 +17,15 @@ import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/pu
 import {
   getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
+  metricsDrilldownViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
 
 const ROUTE_FULL_PATH = '/admin/form-metrics/{tab?}'
 const ROUTE_BASE_PATH = '/admin/form-metrics'
 const ROUTE_ADMIN_INDEX = '/admin/index'
+const ROUTE_DRILLDOWN_PATH =
+  '/admin/form-metrics/drilldown/{period}/{metricName}'
 
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
@@ -42,6 +45,13 @@ const filterAndSortSchema = Joi.object({
   org: Joi.array().items(Joi.string()).single().optional(),
   action: Joi.string().valid('clear').optional().allow(''),
   showFilter: Joi.string().valid('Y', 'N').allow('')
+})
+
+const drilldownParamSchema = Joi.object({
+  period: Joi.string().required(),
+  metricName: Joi.string()
+    .valid(...Object.values(FormMetricName))
+    .required()
 })
 
 /**
@@ -232,6 +242,42 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute< { Params: { period: string, metricName: FormMetricName } } >}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_DRILLDOWN_PATH,
+    async handler(request, h) {
+      const { params } = request
+      const { period, metricName } = params
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      const metrics = await getMetrics()
+      const model = metricsDrilldownViewModel(metrics, period, metricName)
+
+      return h.view('admin/form-metrics-drilldown', {
+        pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
+        pageHeading: { text: METRICS_TITLE },
+        backLink: {
+          text: 'Back to overview metrics',
+          href: `/admin/form-metrics/#${period}`
+        },
+        navigation,
+        model
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
+      },
+      validate: {
+        params: drilldownParamSchema
       }
     }
   })
