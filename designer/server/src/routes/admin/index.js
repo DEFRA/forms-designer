@@ -168,13 +168,9 @@ export default [
       }
     }
   }),
-
   ...adminResetSaveAndExitRoutes,
-
   ...adminDeadLetterQueuesRoutes,
-
   ...adminFormInspectRoutes,
-
   ...adminFormMetricsRoutes
 ]
 

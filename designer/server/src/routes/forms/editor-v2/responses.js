@@ -26,15 +26,16 @@ const schema = Joi.object({
 })
 
 /**
- * @param { string | undefined } email
+ * @param { string } email
+ * @param { boolean } isSharedMailbox
  */
-export function generateSuccessMessage(email) {
+export function generateSuccessMessage(email, isSharedMailbox) {
   return `
   <h3 class="govuk-notification-banner__heading">
-    We have emailed a link to your shared mailbox
+    We have emailed a link to your ${isSharedMailbox ? 'shared' : ''} mailbox
   </h3>
   <p class="govuk-body">This might take a couple of minutes.</p>
-  <p class="govuk-body">Shared mailbox: ${email}</p>`
+  <p class="govuk-body">${isSharedMailbox ? 'Shared mailbox' : 'Mailbox'}: ${email}</p>`
 }
 
 /**
@@ -143,27 +144,42 @@ export default [
       const { action } = payload
 
       const metadata = await forms.get(slug, token)
+      const user = mapUserForAudit(auth.credentials.user)
 
-      if (metadata.notificationEmail) {
-        const user = mapUserForAudit(auth.credentials.user)
+      if (action === 'submissions' && metadata.notificationEmail) {
         const excelData = {
           formId: metadata.id,
           formName: metadata.title,
           notificationEmail: metadata.notificationEmail
         }
 
-        if (action === 'submissions') {
-          await sendFormSubmissionsFile(metadata.id, token)
-          await publishFormSubmissionExcelRequestedEvent(excelData, user)
-        } else {
-          await sendFeedbackSubmissionsFile(metadata.id, token)
-          await publishFormCsatExcelRequestedEvent(excelData, user)
-        }
+        await sendFormSubmissionsFile(metadata.id, token)
+        await publishFormSubmissionExcelRequestedEvent(excelData, user)
 
         yar.flash(
           sessionNames.successNotification,
-          generateSuccessMessage(metadata.notificationEmail)
+          generateSuccessMessage(metadata.notificationEmail, true)
         )
+      } else {
+        const userEmail = auth.credentials.user?.email
+          ? auth.credentials.user.email.toLowerCase()
+          : undefined
+
+        if (userEmail) {
+          const excelData = {
+            formId: metadata.id,
+            formName: metadata.title,
+            notificationEmail: userEmail
+          }
+
+          await sendFeedbackSubmissionsFile(metadata.id, token)
+          await publishFormCsatExcelRequestedEvent(excelData, user)
+
+          yar.flash(
+            sessionNames.successNotification,
+            generateSuccessMessage(userEmail, false)
+          )
+        }
       }
 
       // Redirect to same page
