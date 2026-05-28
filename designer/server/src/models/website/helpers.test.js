@@ -1,6 +1,6 @@
 import { getSubmenuPaginatorMap } from '~/src/models/website/helpers.js'
 import {
-  Level2GetStartedMenu,
+  Level2MakingAFormMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
 
@@ -9,24 +9,20 @@ describe('helpers', () => {
     it('should zip the menus', () => {
       const menuStub = {
         text: 'Get started',
-        param: WebsiteLevel1Routes.GET_STARTED,
+        param: WebsiteLevel1Routes.MAKING_A_FORM,
         parent: true,
         children: [
           {
-            param: Level2GetStartedMenu.GET_ACCESS,
-            text: 'Get access to the Defra Form Designer'
+            param: Level2MakingAFormMenu.MAKE_SURE_YOU_NEED_A_FORM,
+            text: 'Make sure you need a form'
           },
           {
-            param: Level2GetStartedMenu.MAKE_FORM_LIVE,
-            text: 'Make a form live checklist'
+            param: Level2MakingAFormMenu.VIEW_THE_DEMO_FORM,
+            text: 'View the demo form'
           },
           {
-            param: Level2GetStartedMenu.FORM_SUITABILITY,
-            text: 'Form suitability criteria'
-          },
-          {
-            param: Level2GetStartedMenu.MEASURING_SUCCESS,
-            text: 'Measuring the success of your form'
+            param: Level2MakingAFormMenu.WATCH_THE_OVERVIEW_VIDEO,
+            text: 'Watch the overview video'
           }
         ]
       }
@@ -34,46 +30,33 @@ describe('helpers', () => {
 
       expect([...zippedMenus.entries()]).toEqual([
         [
-          Level2GetStartedMenu.GET_ACCESS,
+          'make-sure-you-need-a-form',
           {
             next: {
-              href: '/get-started/make-form-live-checklist',
-              labelText: 'Make a form live checklist'
+              href: '/making-a-form/view-the-demo-form',
+              labelText: 'View the demo form'
             }
           }
         ],
         [
-          Level2GetStartedMenu.MAKE_FORM_LIVE,
+          'view-the-demo-form',
           {
             previous: {
-              href: '/get-started/get-access',
-              labelText: 'Get access to the Defra Form Designer'
+              href: '/making-a-form/make-sure-you-need-a-form',
+              labelText: 'Make sure you need a form'
             },
             next: {
-              href: '/get-started/form-suitability-criteria',
-              labelText: 'Form suitability criteria'
+              href: '/making-a-form/watch-the-overview-video',
+              labelText: 'Watch the overview video'
             }
           }
         ],
         [
-          Level2GetStartedMenu.FORM_SUITABILITY,
+          'watch-the-overview-video',
           {
             previous: {
-              href: '/get-started/make-form-live-checklist',
-              labelText: 'Make a form live checklist'
-            },
-            next: {
-              href: '/get-started/measuring-suitability',
-              labelText: 'Measuring the success of your form'
-            }
-          }
-        ],
-        [
-          Level2GetStartedMenu.MEASURING_SUCCESS,
-          {
-            previous: {
-              href: '/get-started/form-suitability-criteria',
-              labelText: 'Form suitability criteria'
+              href: '/making-a-form/view-the-demo-form',
+              labelText: 'View the demo form'
             }
           }
         ]

@@ -4,16 +4,16 @@ import { WebsiteLevel1Routes } from '~/src/routes/website/constants.js'
 /**
  * @param {boolean} isGuest
  */
-export function websiteAboutModel(isGuest) {
+export function websiteResourcesModel(isGuest) {
   return {
     isGuest,
-    pageTitle: 'Defra Forms: About the Defra Forms team',
+    pageTitle: 'Defra Forms: Resources',
     pageNavigation: getWebsitePageNavigation(
-      WebsiteLevel1Routes.ABOUT,
+      WebsiteLevel1Routes.RESOURCES,
       isGuest
     ),
     pageHeading: {
-      text: 'About the Defra Forms team',
+      text: 'Resources',
       description: 'large'
     }
   }

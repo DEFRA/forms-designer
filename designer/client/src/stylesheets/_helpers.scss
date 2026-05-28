@@ -18,3 +18,18 @@
 .break-on-newlines {
   white-space: pre-line;
 }
+
+.app-hidden {
+  display: none;
+  visibility: hidden;
+}
+
+.js-show {
+  display: none;
+}
+
+.js-enabled {
+  .js-show {
+    display: initial;
+  }
+}

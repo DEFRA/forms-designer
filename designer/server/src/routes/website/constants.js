@@ -5,40 +5,41 @@
  */
 export const WebsiteLevel1Routes = {
   HOME: '',
-  SERVICES: 'services',
-  WHATS_NEW: 'whats-new',
-  ABOUT: 'about',
-  GET_STARTED: 'get-started',
   FEATURES: 'features',
+  MAKING_A_FORM: 'making-a-form',
   RESOURCES: 'resources',
   SUPPORT: 'support'
 }
-/**
- * Enum for get started menus.
- * @readonly
- * @enum {string}
- */
-export const Level2GetStartedMenu = {
-  GET_ACCESS: 'get-access',
-  MAKE_FORM_LIVE: 'make-form-live-checklist',
-  FORM_SUITABILITY: 'form-suitability-criteria',
-  MEASURING_SUCCESS: 'measuring-suitability'
-}
 
 /**
- * Enum for get Resources menus.
+ * Enum for making a form menus.
  * @readonly
  * @enum {string}
  */
-export const Level2ResourcesMenu = {
-  DOES_IT_NEED: 'does-this-need-to-be-a-form',
-  ACCESSIBILITY: 'accessibility-and-inclusion',
-  SMES: 'working-with-subject-matter-experts',
-  QUESTION_PROTOCOLS: 'question-protocols',
-  PROTOTYPING: 'prototyping-a-form',
-  FORM_PAGES_GOVUK: 'form-pages-on-govuk',
-  PEER_REVIEWING: 'peer-reviewing-forms',
-  PRIVACY_NOTICES: 'privacy-notices'
+export const Level2MakingAFormMenu = {
+  MAKE_SURE_YOU_NEED_A_FORM: 'make-sure-you-need-a-form',
+  VIEW_THE_DEMO_FORM: 'view-the-demo-form',
+  WATCH_THE_OVERVIEW_VIDEO: 'watch-the-overview-video',
+  WHAT_MAKES_A_GOOD_FORM: 'what-makes-a-good-form',
+  GET_THE_RIGHT_PEOPLE_TOGETHER: 'get-the-right-people-together',
+  PLAN_TO_RECEIVE_ONLINE_SUBMISSIONS: 'plan-to-receive-online-submissions',
+  ONLY_ASK_FOR_INFORMATION_YOU_NEED: 'only-ask-for-information-you-need',
+  PLAN_YOUR_FORM: 'plan-your-form',
+  ADAPTING_A_PDF_OR_PAPER_FORM_TO_A_DIGITAL_FORM:
+    'adapting-a-pdf-or-paper-form-to-a-digital-form',
+  TAKE_PAYMENTS: 'take-payments',
+  WRITE_A_PRIVACY_NOTICE: 'write-a-privacy-notice',
+  AGREE_TO_THE_DATA_PROTECTION_TERMS_AND_CONDITIONS:
+    'agree-to-the-data-protection-terms-and-conditions',
+  CREATE_GUIDANCE_PAGES_ON_GOVUK: 'create-guidance-pages-on-govuk',
+  HAVE_AN_ALTERNATIVE_CONTACT_METHOD: 'have-an-alternative-contact-method',
+  CHOOSE_THE_RIGHT_FORMAT_FOR_YOUR_QUESTIONS:
+    'choose-the-right-format-for-your-questions',
+  HOW_TO_MAKE_CONDITIONS: 'how-to-make-conditions',
+  SHARE_A_DRAFT_WITH_OTHERS: 'share-a-draft-with-others',
+  GET_A_PEER_REVIEW: 'get-a-peer-review',
+  SUBMIT_FOR_PUBLICATION: 'submit-for-publication',
+  RETIRING_A_PDF_OR_PAPER_FORM: 'retiring-a-pdf-or-paper-form'
 }
 
 /**
