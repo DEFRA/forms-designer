@@ -340,7 +340,7 @@ describe('Editor v2 responses routes', () => {
           {
             formId: mockMetadata.id,
             formName: mockMetadata.title,
-            notificationEmail: mockMetadata.notificationEmail
+            notificationEmail: 'dummy@defra.gov.uk'
           },
           expect.objectContaining({
             id: expect.any(String),
