@@ -958,7 +958,18 @@ describe('Editor v2 question details routes', () => {
         editRow: {
           expanded: false
         },
-        listItems: [],
+        listItems: [
+          {
+            text: 'option 1',
+            hint: { text: 'option 1 hint' },
+            value: 'option 1 val'
+          },
+          {
+            text: 'option 2',
+            hint: { text: 'option 2 hint' },
+            value: 'option 2 val'
+          }
+        ],
         questionType: 'RadiosField'
       }
     )
