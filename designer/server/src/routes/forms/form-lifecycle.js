@@ -1,4 +1,8 @@
-import { Scopes, getErrorMessage } from '@defra/forms-model'
+import {
+  Scopes,
+  getErrorMessage,
+  hasPaymentQuestionInForm
+} from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
@@ -7,6 +11,11 @@ import { sessionNames } from '~/src/common/constants/session-names.js'
 import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  PAYMENT_LIVE_API_KEY,
+  deletePaymentSecret,
+  existsSecret
+} from '~/src/lib/secrets.js'
 import * as formLifecycle from '~/src/models/forms/form-lifecycle.js'
 import { formOverviewPath, formsLibraryPath } from '~/src/models/links.js'
 import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.js'
@@ -62,6 +71,15 @@ export default [
 
       try {
         await forms.makeDraftFormLive(form.id, token)
+
+        // Delete payment secret if no longer in live form
+        const liveKey = await existsSecret(form.id, PAYMENT_LIVE_API_KEY, token)
+        if (liveKey.exists) {
+          const definition = await forms.getLiveFormDefinition(form.id, token)
+          if (!hasPaymentQuestionInForm(definition)) {
+            await deletePaymentSecret(form.id, PAYMENT_LIVE_API_KEY, token)
+          }
+        }
 
         logger.info(
           `[formPublished] Form '${form.slug}' (${form.title}) successfully made live - formId: ${form.id}`
