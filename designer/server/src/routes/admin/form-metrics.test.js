@@ -258,7 +258,7 @@ describe('Form metrics routes', () => {
         jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
         jest
           .mocked(getMetricsAsExcel)
-          .mockResolvedValueOnce(Buffer.from('Dummy xlsx content'))
+          .mockReturnValueOnce(Buffer.from('Dummy xlsx content'))
 
         const options = {
           method: 'get',

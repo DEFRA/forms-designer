@@ -8,6 +8,7 @@ import {
 /**
  * @typedef {string | number | Date | undefined} ExcelCellValue
  * @typedef {{ title: string, dataKey: string, attributes?: { wch?: number } }} WorksheetColumn
+ * @typedef {Buffer} XLSXBuffer
  */
 
 const activityColumns = [
@@ -205,10 +206,12 @@ export function getMetricsAsExcel(metrics) {
     'Usage - Form structure'
   )
 
-  const buffer = xlsx.write(workbook, {
-    bookType: 'xlsx',
-    type: 'buffer'
-  })
+  const buffer = /** @type {XLSXBuffer} */ (
+    xlsx.write(workbook, {
+      bookType: 'xlsx',
+      type: 'buffer'
+    })
+  )
 
   return buffer
 }

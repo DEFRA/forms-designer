@@ -10,6 +10,21 @@ import {
   numberCell
 } from '~/src/models/admin/metrics-helper.js'
 
+/**
+ * @typedef {object} ComponentUsageModel
+ * @property {{ questionTypeName: string, draft: ComponentUsageQuestionType, live: ComponentUsageQuestionType }[]} formUsageQuestionTypes - question type metrics
+ * @property {{ featureName: string, draft: ComponentUsageFeature, live: ComponentUsageFeature}[]} formUsageFeatures - feature metrics
+ * @property {{ metricName: string, draft: ComponentUsageFormStructure, live: ComponentUsageFormStructure}[]} formUsageFormStructures - form structure metrics
+ */
+
+/**
+ * @typedef {object} FormActivityModel
+ * @property {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView}} overviewMetrics - overview tiles
+ * @property {TableRowMetric[]} formMetricRows - row per form for display in the table
+ * @property {SortCriteria} sort - sort criteria
+ * @property {FilterCriteria} filter - filter criteria
+ */
+
 const tilePeriodNames = {
   last7Days: {
     ariaPeriodName: 'previous 7 days',
@@ -49,7 +64,7 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
   })
 
   const rows = mapOverviewMetrics(metrics.overview)
-  return {
+  return /** @type {FormActivityModel} */ ({
     overviewMetrics: mapTotalMetrics(metrics.totals, tilePeriodNames),
     formMetricRows: sortMetricRows(rows, filterAndSort),
     sort: {
@@ -79,11 +94,11 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
         }
       ]
     }
-  }
+  })
 }
 
 /**
- * @param {any[]} rows
+ * @param {TableRowMetric[]} rows
  * @param {SortCriteria} sortCriteria
  */
 export function sortMetricRows(rows, { sortCol, sortDir }) {
@@ -91,7 +106,9 @@ export function sortMetricRows(rows, { sortCol, sortDir }) {
     return rows
   }
   return rows.sort((a, b) => {
+    // @ts-expect-error - allow lookup since we know the key, even though it's dynamic
     const valA = /** @type {string} */ (a[sortCol] ?? '')
+    // @ts-expect-error - allow lookup since we know the key, even though it's dynamic
     const valB = /** @type {string} */ (b[sortCol] ?? '')
     return sortDir === 'ascending'
       ? valA.localeCompare(valB)
@@ -272,7 +289,7 @@ export function metricsComponentUsageViewModel(metrics) {
     'metricName'
   )
 
-  return combinedModel
+  return /** @type {ComponentUsageModel} */ (combinedModel)
 }
 
 /**
@@ -299,5 +316,5 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 
 /**
  * @import { FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { FilterAndSortCriteria , SortCriteria} from '~/src/models/admin/metrics-helper.js'
+ * @import { ComponentUsageQuestionType, ComponentUsageFeature, ComponentUsageFormStructure, FilterAndSortCriteria , FilterCriteria, FormTilesView, SortCriteria, TableRowMetric} from '~/src/models/admin/metrics-helper.js'
  */

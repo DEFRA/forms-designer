@@ -209,7 +209,7 @@ export default [
       try {
         // Live metrics only
         const metrics = await getMetrics()
-        const buffer = await getMetricsAsExcel(metrics)
+        const buffer = getMetricsAsExcel(metrics)
 
         const now = new Date()
         const filename = `form-metrics-${format(now, 'yyyy-MM-dd')}.xlsx`

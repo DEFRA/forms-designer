@@ -5,7 +5,7 @@ import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 
 describe('metrics-excel', () => {
   describe('getMetricsAsExcel', () => {
-    it('should create XLSX file with correct content', async () => {
+    it('should create XLSX file with correct content', () => {
       const metrics = {
         overview: [
           {
@@ -250,7 +250,7 @@ describe('metrics-excel', () => {
         }
       }
       // @ts-expect-error - partial mock of data
-      const res = await getMetricsAsExcel(metrics)
+      const res = getMetricsAsExcel(metrics)
       expect(res.toString('hex')).toEqual(excelSnapshot)
     })
   })
