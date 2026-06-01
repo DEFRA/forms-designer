@@ -327,6 +327,45 @@ export function handlePrecision(value, helpers, precision) {
 }
 
 /**
+ * Custom Joi validator for GDS dates
+ * @param {any} value
+ * @param {any} helpers
+ */
+export function handleGdsDate(value, helpers) {
+  if (typeof helpers.original !== 'string') {
+    return helpers.error('any.required')
+  }
+
+  const dateParts = helpers.original.split('-')
+
+  const dayNum = Number.parseInt(dateParts[2])
+  const monthNum = Number.parseInt(dateParts[1])
+  const yearNum = Number.parseInt(dateParts[0])
+
+  if (isNaN(dayNum)) {
+    return helpers.error('day-missing')
+  }
+  if (isNaN(monthNum)) {
+    return helpers.error('month-missing')
+  }
+  if (isNaN(yearNum)) {
+    return helpers.error('year-missing')
+  }
+
+  if (dayNum > 31 || dayNum < 1) {
+    return helpers.error('day-range')
+  }
+  if (monthNum > 12 || dayNum < 1) {
+    return helpers.error('month-range')
+  }
+  if (yearNum > 3000 || yearNum < 1000) {
+    return helpers.error('year-range')
+  }
+
+  return helpers.error('number.precision')
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ComponentDef, FormDefinition, Item, List, ListItem, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'

@@ -2,6 +2,8 @@ import { questionDetailsFullSchema } from '@defra/forms-model'
 import JoiDate from '@joi/date'
 import JoiBase from 'joi'
 
+import { handleGdsDate } from '~/src/lib/utils.js'
+
 const Joi = JoiBase.extend(JoiDate)
 
 const MIN_FILES_ERROR_MESSAGE =
@@ -41,12 +43,12 @@ export const allSpecificSchemas = Joi.object().keys({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
   earliestDate: Joi.date()
-    .format('YYYY-MM-DD')
+    .custom(handleGdsDate)
     .raw()
     .empty('')
     .description('Earliest date of allowed date range for date inputs'),
   latestDate: Joi.date()
-    .format('YYYY-MM-DD')
+    .custom(handleGdsDate)
     .raw()
     .empty('')
     .description('Latest date of allowed date range for date inputs'),

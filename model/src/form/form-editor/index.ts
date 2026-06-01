@@ -1,4 +1,5 @@
-import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
+import JoiDate from '@joi/date'
+import JoiBase, { type ArraySchema, type GetRuleOptions } from 'joi'
 
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import {
@@ -21,6 +22,8 @@ import {
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
 import { preventUnicodeInEmail } from '~/src/form/utils/prevent-unicode.js'
+
+const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
 export const emailAddressNoUnicodeSchema = Joi.string()
   .trim()
@@ -368,18 +371,6 @@ export const maxPastSchema = Joi.number()
   .min(0)
   .description('Maximum days in the past allowed for date inputs')
 
-export const earliestDateSchema = {
-  'earliestDate-day': Joi.number().min(1).max(31),
-  'earliestDate-month': Joi.number().min(1).max(12),
-  'earliestDate-year': Joi.number().min(1000).max(3000)
-}
-
-export const latestDateSchema = {
-  'latestDate-day': Joi.number().min(1).max(31),
-  'latestDate-month': Joi.number().min(1).max(12),
-  'latestDate-year': Joi.number()
-}
-
 export const precisionSchema = Joi.number()
   .empty('')
   .integer()
@@ -509,11 +500,11 @@ interface DSLSchema<TSchema = Record<string, unknown>[]>
   keys: (keys: string[]) => DSLSchema<TSchema>
 }
 
-interface CustomValidator extends Joi.Root {
+interface CustomValidator extends JoiBase.Root {
   dsv<TSchema>(): DSLSchema<TSchema>
 }
 
-export const customValidator = Joi.extend((joi: Joi.Root) => {
+export const customValidator = Joi.extend((joi: JoiBase.Root) => {
   return {
     type: 'dsv',
     base: joi.array(),
@@ -648,7 +639,6 @@ export const questionDetailsFullSchema = {
   classesSchema,
   declarationTextSchema,
   documentTypesSchema,
-  earliestDateSchema,
   enhancedActionSchema,
   exactFilesSchema,
   fileTypesSchema,
@@ -656,7 +646,6 @@ export const questionDetailsFullSchema = {
   imageTypesSchema,
   instructionTextSchema,
   jsEnabledSchema,
-  latestDateSchema,
   listForQuestionSchema,
   listItemCountSchema,
   listItemsDataSchema,
