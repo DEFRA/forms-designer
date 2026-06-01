@@ -199,5 +199,6 @@ export const allSpecificSchemas = Joi.object().keys({
     }),
   maxFeatures: questionDetailsFullSchema.maxFeaturesSchema.messages({
     '*': MAX_FEATURES_ERROR_MESSAGE
-  })
+  }),
+  telephoneNumberFormat: questionDetailsFullSchema.telephoneNumberFormatSchema
 })

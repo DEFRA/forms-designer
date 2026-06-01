@@ -50,7 +50,10 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Classes
     ],
     UkAddressField: [],
-    TelephoneNumberField: [QuestionAdvancedSettings.Classes],
+    TelephoneNumberField: [
+      QuestionAdvancedSettings.Classes,
+      QuestionAdvancedSettings.TelephoneNumberFormat
+    ],
     EmailAddressField: [QuestionAdvancedSettings.Classes],
     Html: [],
     InsetText: [],
@@ -428,6 +431,36 @@ export const allAdvancedSettingsFields =
         text: 'The maximum number of features a user can define'
       },
       classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.TelephoneNumberFormat]: {
+      name: 'telephoneNumberFormat',
+      id: 'telephoneNumberFormat',
+      classes: 'govuk-radios--small',
+      fieldset: {
+        legend: {
+          text: 'Format of telephone number',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--m'
+        }
+      },
+      formGroup: { classes: 'app-settings-radios' },
+      items: [
+        {
+          value: 'uk',
+          text: 'UK'
+        },
+        {
+          value: 'international',
+          text: 'International'
+        },
+        {
+          divider: 'or'
+        },
+        {
+          value: 'any',
+          text: 'Any'
+        }
+      ]
     }
   })
 

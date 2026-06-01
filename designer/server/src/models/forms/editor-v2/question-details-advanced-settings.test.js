@@ -389,6 +389,20 @@ describe('editor-v2 - question details advanced settings model', () => {
         geometryTypes: ['point', 'line', 'shape']
       })
     })
+
+    test('should map a telephone number field with format', () => {
+      const res = mapToQuestionOptions({
+        type: ComponentType.TelephoneNumberField,
+        name: 'phone',
+        title: 'phone title',
+        options: {
+          format: 'uk'
+        }
+      })
+      expect(res).toEqual({
+        telephoneNumberFormat: 'uk'
+      })
+    })
   })
 
   describe('advancedSettingsFields', () => {

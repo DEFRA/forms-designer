@@ -58,6 +58,12 @@ describe('editor-v2 - advanced settings fields model', () => {
         ComponentType.RadiosField
       )
     })
+
+    test('should return RadiosField for telephone number format', () => {
+      expect(getFieldComponentType({ name: 'telephoneNumberFormat' })).toBe(
+        ComponentType.RadiosField
+      )
+    })
   })
 
   describe('mapQuestionDetails', () => {

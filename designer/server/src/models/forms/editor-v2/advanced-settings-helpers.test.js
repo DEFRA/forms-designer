@@ -35,6 +35,11 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ suffix: ' per item' })
     })
 
+    it('should include telephoneNumberFormat when provided', () => {
+      const result = getAdditionalOptions({ telephoneNumberFormat: 'uk' })
+      expect(result).toEqual({ telephoneNumberFormat: 'uk' })
+    })
+
     it('should include countries when provided', () => {
       const result = getAdditionalOptions({ countries: ['scotland'] })
       expect(result).toEqual({ countries: ['scotland'] })
