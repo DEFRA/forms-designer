@@ -37,7 +37,7 @@ describe('advanced-settings-helpers', () => {
 
     it('should include telephoneNumberFormat when provided', () => {
       const result = getAdditionalOptions({ telephoneNumberFormat: 'uk' })
-      expect(result).toEqual({ telephoneNumberFormat: 'uk' })
+      expect(result).toEqual({ format: 'uk' })
     })
 
     it('should include countries when provided', () => {
