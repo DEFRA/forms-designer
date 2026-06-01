@@ -3,6 +3,7 @@ import upperFirst from 'lodash/upperFirst.js'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import {
+  GOVUK_FIELDSET_LEGEND__M,
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
@@ -349,7 +350,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Choose the geometry types you accept',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
+          classes: GOVUK_FIELDSET_LEGEND__M
         }
       },
       formGroup: { classes: 'app-settings-checkboxes' },
@@ -366,7 +367,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Which country must the features be in?',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
+          classes: GOVUK_FIELDSET_LEGEND__M
         }
       },
       formGroup: { classes: 'app-settings-radios' },
@@ -440,7 +441,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Format of telephone number',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
+          classes: GOVUK_FIELDSET_LEGEND__M
         }
       },
       formGroup: { classes: 'app-settings-radios' },
