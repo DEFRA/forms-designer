@@ -1,1 +1,55 @@
-{%- include "website/resources/does-this-need-to-be-a-form.njk" -%}
+{% extends "layouts/forms-website.njk" %}
+{% from "masthead/macro.njk" import appMasthead %}
+
+{% block beforeContent %}
+{{ appMasthead({
+  heading: {
+    text: "Resources"
+  }
+}) }}
+{% endblock -%}
+
+{% block content %}
+  <div>
+    <div class="govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <div class="app-prose-scope">
+            <h2 id="overview-video" class="govuk-heading-s">Overview video</h2>
+            <p>
+              <a href="https://defra.sharepoint.com/:v:/t/Team811/IQA6mJgFJKvyT6e1me1DLd6GAd-2OubmD5x0m4wGRA_GnTE?e=MGK2Tr">Watch an overview video (Sharepoint link)</a> of getting set up with Defra Form Designer and managing the design of your form.
+            </p>
+            <h2 id="demo-form" class="govuk-heading-s">Demo form</h2>
+            <p>
+              <a href="https://submit-form-to-defra.service.gov.uk/form/preview/live/register-as-a-unicorn-breeder/whats-your-name">Look at an example of a published form</a> to see how they look on GOV.UK
+            </p>
+            <h2 id="workshop-template" class="govuk-heading-s">Workshop template</h2>
+            <p>
+              <a href="https://app.mural.co/t/coredefra2548/m/defraallcompany8330/1744130012719/bef3836382cc8f6f98dc2e5b0f1d29adab888475">Visit this form design workshop template (Mural link)</a> to structure a workshop with your colleagues.
+            </p>
+            <h2 id="question-vault" class="govuk-heading-s">Question vault</h2>
+            <p>
+              <a href="assets/downloads/Question-vault.xlsx" download>Download this list of common form questions (XLSX format)</a> to save time writing them from scratch.
+            </p>
+            <h2 id="question-protocols" class="govuk-heading-s">Question protocols</h2>
+            <p>
+              <a href="/assets/website/DefraForms_question-protocol.xlsx" download>Download a question protocol spreadsheet (XLSX format)</a> to run with colleagues to ensure you are only asking for the information you need.
+            </p>
+            <h2 id="conditions" class="govuk-heading-s">Conditions</h2>
+            <p>
+              <a href="https://app.mural.co/t/coredefra2548/m/coredefra2548/1751297300202/00ad82fafbf1d85a49a366db1aa7f63e791ec660">Look at an example of conditional logic (Mural link)</a> to understand how to plan conditional journeys through your form.
+            </p>
+            <h2 id="mailbox" class="govuk-heading-s">Mailbox</h2>
+            <p>
+              <a href="https://defragroup.service-now.com/esc?id=sc_cat_item&table=sc_cat_item&sys_id=c8a2bb111bb1ea14848b8594e34bcb1c&searchTerm=mailbox">Contact MyIt</a> to request a dedicated email inbox for form submissions.
+            </p>
+            <h2 id="data-protection" class="govuk-heading-s">Data protection</h2>
+            <p>
+              <a href="https://defra.sharepoint.com/sites/Defraintranet/SitePages/Data-protection.aspx">Go to Defra's data protection Sharepoint page</a> to understand your data protection responsibilities, and find contacts for your Defra organisation.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

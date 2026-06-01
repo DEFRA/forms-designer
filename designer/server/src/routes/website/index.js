@@ -1,15 +1,13 @@
 import Joi from 'joi'
 
 import { hasAuthenticated } from '~/src/common/helpers/auth/get-user-session.js'
-import { websiteAboutModel } from '~/src/models/website/about.js'
 import { websiteFeaturesModel } from '~/src/models/website/features.js'
-import { websiteServicesModel } from '~/src/models/website/services.js'
+import { websiteMakingAFormModel } from '~/src/models/website/making-a-form.js'
+import { websiteResourcesModel } from '~/src/models/website/resources.js'
 import { websiteSubmenuModel } from '~/src/models/website/shared.js'
 import { websiteSupportModel } from '~/src/models/website/support.js'
-import { websiteWhatsNewModel } from '~/src/models/website/whats-new.js'
 import {
-  Level2GetStartedMenu,
-  Level2ResourcesMenu,
+  Level2MakingAFormMenu,
   WebsiteLevel1Routes
 } from '~/src/routes/website/constants.js'
 import content from '~/src/routes/website/content.js'
@@ -19,20 +17,16 @@ import content from '~/src/routes/website/content.js'
  */
 export const pageNavigationBase = [
   {
-    param: WebsiteLevel1Routes.SERVICES,
-    text: 'Services'
-  },
-  {
-    param: WebsiteLevel1Routes.ABOUT,
-    text: 'About'
-  },
-  {
-    param: WebsiteLevel1Routes.GET_STARTED,
-    text: 'Get started'
+    param: WebsiteLevel1Routes.HOME,
+    text: 'Home'
   },
   {
     param: WebsiteLevel1Routes.FEATURES,
     text: 'Features'
+  },
+  {
+    param: WebsiteLevel1Routes.MAKING_A_FORM,
+    text: 'Making a form'
   },
   {
     param: WebsiteLevel1Routes.RESOURCES,
@@ -44,29 +38,18 @@ export const pageNavigationBase = [
   }
 ]
 
-const [_, ...pageNavigationGuestBase] = pageNavigationBase
-
-export const pageNavigationGuest = [
-  {
-    param: '',
-    text: 'Services'
-  },
-  ...pageNavigationGuestBase
-]
+export const pageNavigationGuest = pageNavigationBase.filter(
+  (nav) => nav.param !== WebsiteLevel1Routes.RESOURCES
+)
 
 export default /** @satisfies {ServerRoute[]} */ ([
   {
     method: 'GET',
-    path: `/${WebsiteLevel1Routes.SERVICES}`,
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}`,
     handler(request, h) {
       const isGuest = !hasAuthenticated(request.auth.credentials)
-
-      if (isGuest) {
-        return h.redirect('/')
-      }
-
-      const servicesModel = websiteServicesModel(isGuest)
-      return h.view('website/index', servicesModel)
+      const model = websiteMakingAFormModel(isGuest)
+      return h.view(`website/making-a-form/index`, model)
     },
     options: {
       auth: {
@@ -76,67 +59,27 @@ export default /** @satisfies {ServerRoute[]} */ ([
   },
   {
     method: 'GET',
-    path: `/${WebsiteLevel1Routes.WHATS_NEW}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const whatsNewModel = websiteWhatsNewModel(isGuest)
-      return h.view('website/whats-new', whatsNewModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.ABOUT}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteAboutModel(isGuest)
-      return h.view('website/about', aboutModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.GET_STARTED}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.GET_STARTED,
-        Level2GetStartedMenu.GET_ACCESS,
-        content.getStarted.menus,
-        'Getting started guide',
-        isGuest
-      )
-      return h.view('website/get-started/index', aboutModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.GET_STARTED}/{subMenu}`,
+    path: `/${WebsiteLevel1Routes.MAKING_A_FORM}/{subMenu}`,
     handler(request, h) {
       const { params } = request
       const { subMenu } = params
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const aboutModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.GET_STARTED,
+      const contentMenus =
+        /** @type {XGovContentSubNavigationItemWithChildren} */
+        (
+          content.makingAForm.menus.find((menu) =>
+            menu.children.find((c) => c.param === subMenu)
+          )
+        )
+
+      const model = websiteSubmenuModel(
+        WebsiteLevel1Routes.MAKING_A_FORM,
         subMenu,
-        content.getStarted.menus,
-        'Getting started guide',
+        contentMenus,
+        'Making a form',
         isGuest
       )
-      return h.view(`website/get-started/${subMenu}`, aboutModel)
+      return h.view(`website/making-a-form/${subMenu}`, model)
     },
     options: {
       auth: {
@@ -144,7 +87,7 @@ export default /** @satisfies {ServerRoute[]} */ ([
       },
       validate: {
         params: Joi.object().keys({
-          subMenu: Joi.string().valid(...Object.values(Level2GetStartedMenu))
+          subMenu: Joi.string().valid(...Object.values(Level2MakingAFormMenu))
         })
       }
     }
@@ -154,46 +97,8 @@ export default /** @satisfies {ServerRoute[]} */ ([
     path: `/${WebsiteLevel1Routes.RESOURCES}`,
     handler(request, h) {
       const isGuest = !hasAuthenticated(request.auth.credentials)
-      const resourceModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.RESOURCES,
-        Level2ResourcesMenu.DOES_IT_NEED,
-        content.resources.menus,
-        'Good form design guide',
-        isGuest
-      )
+      const resourceModel = websiteResourcesModel(isGuest)
       return h.view('website/resources/index', resourceModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      }
-    }
-  },
-  {
-    method: 'GET',
-    path: `/${WebsiteLevel1Routes.RESOURCES}/{subMenu}`,
-    handler(request, h) {
-      const isGuest = !hasAuthenticated(request.auth.credentials)
-      const { params } = request
-      const { subMenu } = params
-      const aboutModel = websiteSubmenuModel(
-        WebsiteLevel1Routes.RESOURCES,
-        subMenu,
-        content.resources.menus,
-        'Good form design guide',
-        isGuest
-      )
-      return h.view(`website/resources/${subMenu}`, aboutModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      },
-      validate: {
-        params: Joi.object().keys({
-          subMenu: Joi.string().valid(...Object.values(Level2ResourcesMenu))
-        })
-      }
     }
   },
   {
@@ -227,5 +132,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
 ])
 
 /**
- * @import { ServerRoute, AuthArtifacts, ResponseToolkit, Request } from '@hapi/hapi'
+ * @import { ServerRoute } from '@hapi/hapi'
+ * @import { XGovContentSubNavigationItemWithChildren } from '~/src/models/website/helpers.js'
  */

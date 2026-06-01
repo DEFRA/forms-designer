@@ -21,7 +21,7 @@ function isLoopbackBaseUrl(baseUrl) {
 /**
  * @param {string | undefined} downloadUrl
  */
-function getBrowserSafeDownloadUrl(downloadUrl) {
+export function getBrowserSafeDownloadUrl(downloadUrl) {
   if (!downloadUrl || !isLoopbackBaseUrl(config.appBaseUrl)) {
     return downloadUrl
   }

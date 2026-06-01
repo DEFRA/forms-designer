@@ -40,13 +40,6 @@ describe('Auth view models', () => {
           mastHead: {
             description: 'Create and publish Defra forms on GOV.UK',
             heading: 'Create and publish Defra forms on GOV.UK'
-          },
-          whatsNew: {
-            date: {
-              iso: expect.any(String),
-              text: expect.any(String)
-            },
-            text: expect.any(String)
           }
         },
         displayHomeNav: true,
@@ -59,23 +52,15 @@ describe('Auth view models', () => {
           {
             isActive: true,
             url: '/',
-            text: 'Services'
-          },
-          {
-            url: '/about',
-            text: 'About'
-          },
-          {
-            url: '/get-started',
-            text: 'Get started'
+            text: 'Home'
           },
           {
             url: '/features',
             text: 'Features'
           },
           {
-            url: '/resources',
-            text: 'Resources'
+            url: '/making-a-form',
+            text: 'Making a form'
           },
           {
             url: '/support',
@@ -95,13 +80,6 @@ describe('Auth view models', () => {
           mastHead: {
             description: 'Create and publish Defra forms on GOV.UK',
             heading: 'Create and publish Defra forms on GOV.UK'
-          },
-          whatsNew: {
-            date: {
-              iso: expect.any(String),
-              text: expect.any(String)
-            },
-            text: expect.any(String)
           }
         },
         displayHomeNav: true,
@@ -114,23 +92,15 @@ describe('Auth view models', () => {
           {
             isActive: true,
             url: '/',
-            text: 'Services'
-          },
-          {
-            url: '/about',
-            text: 'About'
-          },
-          {
-            url: '/get-started',
-            text: 'Get started'
+            text: 'Home'
           },
           {
             url: '/features',
             text: 'Features'
           },
           {
-            url: '/resources',
-            text: 'Resources'
+            url: '/making-a-form',
+            text: 'Making a form'
           },
           {
             url: '/support',
@@ -155,13 +125,6 @@ describe('Auth view models', () => {
           mastHead: {
             description: 'Create and publish Defra forms on GOV.UK',
             heading: 'Create and publish Defra forms on GOV.UK'
-          },
-          whatsNew: {
-            date: {
-              iso: expect.any(String),
-              text: expect.any(String)
-            },
-            text: expect.any(String)
           }
         },
         displayHomeNav: true,
@@ -174,23 +137,15 @@ describe('Auth view models', () => {
           {
             isActive: true,
             url: '/',
-            text: 'Services'
-          },
-          {
-            url: '/about',
-            text: 'About'
-          },
-          {
-            url: '/get-started',
-            text: 'Get started'
+            text: 'Home'
           },
           {
             url: '/features',
             text: 'Features'
           },
           {
-            url: '/resources',
-            text: 'Resources'
+            url: '/making-a-form',
+            text: 'Making a form'
           },
           {
             url: '/support',

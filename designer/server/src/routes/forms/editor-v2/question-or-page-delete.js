@@ -1,4 +1,10 @@
-import { FormDefinitionError, Scopes, isFormType } from '@defra/forms-model'
+import {
+  FormDefinitionError,
+  Scopes,
+  getPageFromDefinition,
+  isFormType,
+  isPaymentPage
+} from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
@@ -6,6 +12,12 @@ import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.j
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  PAYMENT_LIVE_API_KEY_PENDING,
+  PAYMENT_TEST_API_KEY,
+  deletePaymentSecret,
+  existsSecret
+} from '~/src/lib/secrets.js'
 import { getComponentsOnPageFromDefinition } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/question-delete.js'
 import { editorv2Path } from '~/src/models/links.js'
@@ -84,11 +96,19 @@ export default [
       const definition = await forms.getDraftFormDefinition(formId, token)
 
       try {
+        const page = getPageFromDefinition(definition, pageId)
+        const isPayment = isPaymentPage(page)
+
         // If only one (non-guidance question) on the page, 'deleting the question' becomes 'deleting the page'
         if (questionId && shouldDeleteQuestionOnly(pageId, definition)) {
           await deleteQuestion(formId, token, pageId, questionId, definition)
         } else {
           await deletePage(formId, token, pageId, definition)
+        }
+
+        if (isPayment) {
+          // Handle deletion of payment API keys
+          await cleanupPaymentKeys(formId, token)
         }
 
         // Redirect POST to GET
@@ -132,6 +152,28 @@ export default [
     }
   })
 ]
+
+/**
+ * @param {string} formId
+ * @param {string} token
+ */
+export async function cleanupPaymentKeys(formId, token) {
+  // Run checks in parallel
+  const exists = await Promise.all([
+    existsSecret(formId, PAYMENT_TEST_API_KEY, token),
+    existsSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token)
+  ])
+
+  // Delete TEST payment API key (if present)
+  if (exists[0].exists) {
+    await deletePaymentSecret(formId, PAYMENT_TEST_API_KEY, token)
+  }
+
+  // Delete LIVE_PENDING payment API key (if present)
+  if (exists[1].exists) {
+    await deletePaymentSecret(formId, PAYMENT_LIVE_API_KEY_PENDING, token)
+  }
+}
 
 /**
  * @import { FormDefinition } from '@defra/forms-model'
