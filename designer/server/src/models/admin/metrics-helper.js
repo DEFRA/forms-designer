@@ -28,6 +28,54 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string }} FilterAndSortCriteria
  */
 
+/**
+ * @typedef {object} TableRowMetric
+ * @property {string} formName - name of the form
+ * @property {string} features - list of features
+ * @property {number} submissions - count of submissions
+ * @property {number | string} daysToPublish - number of days from draft to live
+ * @property {number | string} republished - number of times the form has been re-published
+ */
+
+/**
+ * @typedef {object} MetricsTile
+ * @property {string} title - title for the tile
+ * @property {string} ariaLabel - text for aria label
+ * @property {string} strapline - strapline text
+ * @property {TileDrillDown} drillDown - drilldown config
+ */
+
+/**
+ * @typedef {object} FormTilesView
+ * @property { string | undefined } fromDate - name of the form
+ * @property { string | undefined } toDate - list of features
+ * @property {string} title - title for section
+ * @property {Record<FormMetricName, MetricsTile>} tiles - tiles to be displayed
+ */
+
+/**
+ * @typedef {object} ComponentUsageQuestionType
+ * @property {string} questionTypeName - name of question type
+ * @property {number} totalUsage - total number of times this question type is used
+ * @property {number} formsUsing - total number of forms that use this question type
+ * @property {string} percentage - percentage 'number of forms using' / 'total number of forms'
+ */
+
+/**
+ * @typedef {object} ComponentUsageFeature
+ * @property {string} featureName - name of feature
+ * @property {number} formsUsing - total number of forms that use this feature
+ * @property {string} percentage - percentage 'number of forms using' / 'total number of forms'
+ */
+
+/**
+ * @typedef {object} ComponentUsageFormStructure
+ * @property {string} metricName - name of metric
+ * @property {string} average - average value across all forms
+ * @property {number} minimum - minimum number across all forms
+ * @property {number} maximum - maximum number across all forms
+ */
+
 const formStructureMetricNames =
   /** @type {Partial<Record<string, string>>} */ ({
     pages: 'Pages per form',
@@ -38,7 +86,7 @@ const formStructureMetricNames =
   })
 
 /**
- * @typedef {object} TileDrillDown
+ * @typedef {object} TileDrillDownConfig
  * @property {boolean} enabled - true if drill down is allowed
  * @property {boolean} grouped - true if drill down results are to be grouped per form
  * @property {string} displayName - display name for metric
@@ -47,10 +95,16 @@ const formStructureMetricNames =
  */
 
 /**
+ * @typedef {object} TileDrillDown
+ * @property {boolean} enabled - true if drill down is allowed
+ * @property {string} url - the path for the drilldown operation
+ */
+
+/**
  * @typedef {object} MetricTileConfigRecordType
  * @property {string} noun - noun used in tile phrase structure
  * @property {string} verb - verb used in tile phrase structure
- * @property {TileDrillDown} drillDown - config for drill down operations
+ * @property {TileDrillDownConfig} drillDown - config for drill down operations
  */
 
 export const MetricsTileConfig =
@@ -173,12 +227,12 @@ export function buildChangePhrase(counts) {
 export function mapQuestionTypes(questionTypes, forms, totalForms) {
   return questionTypes.map((qt) => {
     const numForms = forms.get(qt[0]) ?? 0
-    return {
+    return /** @type {ComponentUsageQuestionType} */ ({
       questionTypeName: qt[0],
       totalUsage: qt[1],
       formsUsing: numForms,
       percentage: `${((numForms / totalForms) * 100).toFixed(1)}%`
-    }
+    })
   })
 }
 
@@ -238,11 +292,14 @@ export function componentUsageFeatures(metrics, formStatus) {
   // Sort results in reverse order of counts
   return [...formsUsing.entries()]
     .sort(([_aKey, aVal], [_bKey, bVal]) => bVal - aVal)
-    .map((f) => ({
-      featureName: f[0],
-      formsUsing: f[1],
-      percentage: `${((f[1] / totalForms) * 100).toFixed(1)}%`
-    }))
+    .map(
+      (f) =>
+        /** @type {ComponentUsageFeature} */ ({
+          featureName: f[0],
+          formsUsing: f[1],
+          percentage: `${((f[1] / totalForms) * 100).toFixed(1)}%`
+        })
+    )
 }
 
 /**
@@ -277,34 +334,41 @@ export function componentUsageFormStructures(metrics, formStatus) {
     }
   }
 
-  return Array.from(structureStats).map((f) => ({
-    metricName: formStructureMetricNames[f[0]] ?? 'Unknown',
-    average: f[1].avg.toFixed(1),
-    minimum: f[1].min,
-    maximum: f[1].max
-  }))
+  return Array.from(structureStats).map(
+    (f) =>
+      /** @type {ComponentUsageFormStructure} */ ({
+        metricName: formStructureMetricNames[f[0]] ?? 'Unknown',
+        average: f[1].avg.toFixed(1),
+        minimum: f[1].min,
+        maximum: f[1].max
+      })
+  )
 }
 
 /**
  * @param {FormOverviewMetric[]} metrics
+ * @returns {TableRowMetric[]}
  */
 export function mapOverviewMetrics(metrics) {
-  return metrics.map((metric) => ({
-    ...metric.summaryMetrics,
-    formName: metric.summaryMetrics.name,
-    features: Array.isArray(metric.summaryMetrics.features)
-      ? metric.summaryMetrics.features.join(', ')
-      : [],
-    submissions: metric.submissionsCount,
-    daysToPublish:
-      metric.formStatus === FormStatus.Live
-        ? metric.summaryMetrics.daysToPublish
-        : '-',
-    republished:
-      metric.formStatus === FormStatus.Live
-        ? metric.summaryMetrics.republished
-        : '-'
-  }))
+  return metrics.map(
+    (metric) =>
+      /** @type {TableRowMetric} */ ({
+        ...metric.summaryMetrics,
+        formName: /** @type {string} */ (metric.summaryMetrics.name),
+        features: Array.isArray(metric.summaryMetrics.features)
+          ? metric.summaryMetrics.features.join(', ')
+          : '',
+        submissions: metric.submissionsCount,
+        daysToPublish:
+          metric.formStatus === FormStatus.Live
+            ? /** @type {number} */ (metric.summaryMetrics.daysToPublish)
+            : '-',
+        republished:
+          metric.formStatus === FormStatus.Live
+            ? /** @type {number} */ (metric.summaryMetrics.republished)
+            : '-'
+      })
+  )
 }
 
 /**
@@ -397,7 +461,7 @@ export function collateSpecificTileCounts(
  * @param {string} [units]
  */
 function createTile(title, metricName, commonParams, units) {
-  return {
+  return /** @type {MetricsTile} */ ({
     title,
     ...collateSpecificTileCounts(
       commonParams.currPeriod,
@@ -406,7 +470,7 @@ function createTile(title, metricName, commonParams, units) {
       commonParams.periodNames,
       units
     )
-  }
+  })
 }
 
 /**
@@ -430,42 +494,44 @@ export function mapOverviewTiles(
     prevPeriod,
     periodNames
   }
-  return {
+  return /** @type {FormTilesView} */ ({
     fromDate: fromDate ? format(fromDate, FULL_DATE_MASK) : undefined,
     toDate: toDate ? format(toDate, FULL_DATE_MASK) : undefined,
     title,
-    newFormsCreated: createTile(
-      NEW_FORMS_CREATED_TITLE,
-      FormMetricName.NewFormsCreated,
-      commonParams
-    ),
-    formsFirstPublished: createTile(
-      FORMS_FIRST_PUBLISHED_TITLE,
-      FormMetricName.FormsFirstPublished,
-      commonParams
-    ),
-    formsRePublished: createTile(
-      FORMS_REPUBLISHED_TITLE,
-      FormMetricName.FormsRePublished,
-      commonParams
-    ),
-    formSubmissions: createTile(
-      FORM_SUBMISSIONS_TITLE,
-      FormMetricName.Submissions,
-      commonParams
-    ),
-    formsInDraft: createTile(
-      FORMS_IN_DRAFT_TITLE,
-      FormMetricName.FormsInDraft,
-      commonParams
-    ),
-    timeToPublish: createTile(
-      TIME_TO_PUBLISH_TITLE,
-      FormMetricName.TimeToPublish,
-      commonParams,
-      'days'
-    )
-  }
+    tiles: {
+      [FormMetricName.NewFormsCreated]: createTile(
+        NEW_FORMS_CREATED_TITLE,
+        FormMetricName.NewFormsCreated,
+        commonParams
+      ),
+      [FormMetricName.FormsFirstPublished]: createTile(
+        FORMS_FIRST_PUBLISHED_TITLE,
+        FormMetricName.FormsFirstPublished,
+        commonParams
+      ),
+      [FormMetricName.FormsRePublished]: createTile(
+        FORMS_REPUBLISHED_TITLE,
+        FormMetricName.FormsRePublished,
+        commonParams
+      ),
+      [FormMetricName.Submissions]: createTile(
+        FORM_SUBMISSIONS_TITLE,
+        FormMetricName.Submissions,
+        commonParams
+      ),
+      [FormMetricName.FormsInDraft]: createTile(
+        FORMS_IN_DRAFT_TITLE,
+        FormMetricName.FormsInDraft,
+        commonParams
+      ),
+      [FormMetricName.TimeToPublish]: createTile(
+        TIME_TO_PUBLISH_TITLE,
+        FormMetricName.TimeToPublish,
+        commonParams,
+        'days'
+      )
+    }
+  })
 }
 
 /**
@@ -504,11 +570,11 @@ export function mapTotalMetrics(totals, tilePeriodNames) {
     tilePeriodNames.allTime
   )
 
-  return {
+  return /** @type {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView }} */ ({
     last7Days,
     last30Days,
     allTime
-  }
+  })
 }
 
 /**
