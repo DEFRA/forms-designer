@@ -368,6 +368,18 @@ export const maxPastSchema = Joi.number()
   .min(0)
   .description('Maximum days in the past allowed for date inputs')
 
+export const earliestDateSchema = {
+  'earliestDate-day': Joi.number().min(1).max(31),
+  'earliestDate-month': Joi.number().min(1).max(12),
+  'earliestDate-year': Joi.number().min(1000).max(3000)
+}
+
+export const latestDateSchema = {
+  'latestDate-day': Joi.number().min(1).max(31),
+  'latestDate-month': Joi.number().min(1).max(12),
+  'latestDate-year': Joi.number()
+}
+
 export const precisionSchema = Joi.number()
   .empty('')
   .integer()
@@ -636,6 +648,7 @@ export const questionDetailsFullSchema = {
   classesSchema,
   declarationTextSchema,
   documentTypesSchema,
+  earliestDateSchema,
   enhancedActionSchema,
   exactFilesSchema,
   fileTypesSchema,
@@ -643,6 +656,7 @@ export const questionDetailsFullSchema = {
   imageTypesSchema,
   instructionTextSchema,
   jsEnabledSchema,
+  latestDateSchema,
   listForQuestionSchema,
   listItemCountSchema,
   listItemsDataSchema,

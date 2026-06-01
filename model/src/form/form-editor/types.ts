@@ -202,6 +202,16 @@ export interface FormEditor {
   maxPast: string
 
   /**
+   * The earliest date in a date range that users can enter
+   */
+  earliestDate: Date
+
+  /**
+   * The latest date in a date range that users can enter
+   */
+  latestDate: Date
+
+  /**
    * The exact number of files to upload
    */
   exactFiles: string
@@ -449,6 +459,8 @@ export type FormEditorInputQuestion = Pick<
   | 'max'
   | 'maxFuture'
   | 'maxPast'
+  | 'earliestDate'
+  | 'latestDate'
   | 'exactFiles'
   | 'minFiles'
   | 'maxFiles'

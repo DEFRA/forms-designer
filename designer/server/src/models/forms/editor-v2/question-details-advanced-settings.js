@@ -33,7 +33,9 @@ export function addNumberFieldProperties(question) {
 export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
-    maxPast: question.options.maxDaysInPast
+    maxPast: question.options.maxDaysInPast,
+    earliestDate: question.options.earliestDate,
+    latestDate: question.options.latestDate
   }
 }
 
@@ -256,6 +258,25 @@ export function advancedSettingsFields(options, question, validation) {
             item.value
           )
         }))
+      }
+    }
+
+    if (
+      (fieldName === QuestionAdvancedSettings.EarliestDate ||
+        fieldName === QuestionAdvancedSettings.LatestDate) &&
+      fieldSettings.items?.length &&
+      fieldSettings.items.length === 3
+    ) {
+      // Split date into component parts
+      const dateParts = /** @type {string} */ (value ?? '').split('-')
+      fieldSettings.items[0].value = dateParts[2]
+      fieldSettings.items[1].value = dateParts[1]
+      fieldSettings.items[2].value = dateParts[0]
+      return {
+        ...fieldSettings,
+        ...insertValidationErrors(
+          formErrors ? formErrors[fieldName] : undefined
+        )
       }
     }
 

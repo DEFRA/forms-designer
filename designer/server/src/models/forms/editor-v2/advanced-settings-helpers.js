@@ -62,6 +62,16 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.maxPast !== undefined
     },
     {
+      key: 'earliestDate',
+      getValue: () => payload.earliestDate,
+      shouldInclude: () => payload.earliestDate !== undefined
+    },
+    {
+      key: 'latestDate',
+      getValue: () => payload.latestDate,
+      shouldInclude: () => payload.latestDate !== undefined
+    },
+    {
       key: 'usePostcodeLookup',
       getValue: () => isCheckboxSelected(payload.usePostcodeLookup),
       shouldInclude: () => payload.usePostcodeLookup !== undefined

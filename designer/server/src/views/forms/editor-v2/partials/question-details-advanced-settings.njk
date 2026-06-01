@@ -2,9 +2,13 @@
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/date-input/macro.njk" import govukDateInput %}
 
 {% macro renderFieldByType(field) %}
   {% set fieldType = getFieldType(field) %}
+  {% if field.beforeContentHtml %}
+    {{ field.beforeContentHtml | safe }}
+  {% endif %}
   {% if fieldType == 'TextField' %}
     {{ govukInput(field) }}
   {% elif fieldType == 'MultilineTextField' %}
@@ -13,6 +17,8 @@
     {{ govukCheckboxes(field) }}
   {% elif fieldType == 'RadiosField' %}
     {{ govukRadios(field) }}
+  {% elif fieldType == 'DatePartsField' %}
+    {{ govukDateInput(field) }}
   {% endif %}
 {% endmacro %}
 

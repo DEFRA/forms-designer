@@ -57,6 +57,11 @@ const fileUploadFields = [QuestionBaseSettings.FileTypes]
 
 const radiosFieldQuestions = [QuestionAdvancedSettings.Countries]
 
+const dateFieldQuestions = [
+  QuestionAdvancedSettings.EarliestDate,
+  QuestionAdvancedSettings.LatestDate
+]
+
 /**
  * @param {GovukField} field
  */
@@ -84,6 +89,10 @@ export function getFieldComponentType(field) {
 
   if (radiosFieldQuestions.includes(fieldName)) {
     return ComponentType.RadiosField
+  }
+
+  if (dateFieldQuestions.includes(fieldName)) {
+    return ComponentType.DatePartsField
   }
 
   throw new Error(

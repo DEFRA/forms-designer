@@ -571,6 +571,16 @@ export const componentSchema = Joi.object<ComponentDef>()
       maxDaysInFuture: Joi.number()
         .empty('')
         .description('Maximum days in the future allowed for date inputs'),
+      earliestDate: Joi.date()
+        .format('YYYY-MM-DD')
+        .raw()
+        .empty('')
+        .description('Earliest date of allowed date range for date inputs'),
+      latestDate: Joi.date()
+        .format('YYYY-MM-DD')
+        .raw()
+        .empty('')
+        .description('Latest date of allowed date range for date inputs'),
       customValidationMessage: Joi.string()
         .trim()
         .allow('')

@@ -1,5 +1,8 @@
 import { questionDetailsFullSchema } from '@defra/forms-model'
-import Joi from 'joi'
+import JoiDate from '@joi/date'
+import JoiBase from 'joi'
+
+const Joi = JoiBase.extend(JoiDate)
 
 const MIN_FILES_ERROR_MESSAGE =
   'Minimum file count must be a whole number between 1 and 25'
@@ -37,6 +40,16 @@ export const allSpecificSchemas = Joi.object().keys({
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
+  earliestDate: Joi.date()
+    .format('YYYY-MM-DD')
+    .raw()
+    .empty('')
+    .description('Earliest date of allowed date range for date inputs'),
+  latestDate: Joi.date()
+    .format('YYYY-MM-DD')
+    .raw()
+    .empty('')
+    .description('Latest date of allowed date range for date inputs'),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
       is: Joi.exist(),

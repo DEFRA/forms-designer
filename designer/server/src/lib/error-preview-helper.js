@@ -24,7 +24,9 @@ const fieldMappings = /** @type { Partial<AdvancedFieldMappingsType> } */ ({
   YesNoField: {},
   DatePartsField: {
     dateMin: 'maxPast',
-    dateMax: 'maxFuture'
+    dateMax: 'maxFuture',
+    earliestDate: 'earliestDate',
+    latestDate: 'latestDate'
   },
   MonthYearField: {
     dateMin: 'dateMin',
@@ -199,6 +201,19 @@ export function getDateLimits(fields, questionType, propertyName) {
       'maxFuture',
       '[max days in the future]'
     )
+  }
+
+  if (propertyName === 'earliestDate') {
+    return getFieldProperty(
+      fields,
+      questionType,
+      'earliestDate',
+      '[first date]'
+    )
+  }
+
+  if (propertyName === 'latestDate') {
+    return getFieldProperty(fields, questionType, 'latestDate', '[second date]')
   }
 
   return '[unknown]'
