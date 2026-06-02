@@ -5,6 +5,7 @@
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "metrics-tile/macro.njk" import appMetricsTile %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -77,6 +78,21 @@
         }}
       {% endif %}
     </form>
+
+    <div class="govuk-body">
+      <h2 class="govuk-heading-s">Live submissions</h2>
+      <div class="govuk-grid-row">
+        <!-- Form Submissions - last 7 days -->
+        {{ appMetricsTile(metricsModel.last7Days.tiles.Submissions) }}
+
+        <!-- Form Submissions - last 30 days -->
+        {{ appMetricsTile(metricsModel.last30Days.tiles.Submissions) }}
+
+        <!-- Form Submissions - all time -->
+        {{ appMetricsTile(metricsModel.allTime.tiles.Submissions) }}
+      </div>
+    </div>
+
   {% endcall %}
 {% endblock %}
 
