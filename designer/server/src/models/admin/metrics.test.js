@@ -764,6 +764,10 @@ describe('metrics models', () => {
           {
             formId: 'form-id-3',
             createdAt: new Date('2026-03-02T08:00:00.000Z')
+          },
+          {
+            formId: 'form-id-unknown',
+            createdAt: new Date('2026-03-02T08:00:00.000Z')
           }
         ]
         const res = createDrilldownHeaderAndRows(
@@ -806,6 +810,20 @@ describe('metrics models', () => {
               },
               {
                 text: 'Org 2'
+              },
+              {
+                attributes: {
+                  'data-sort-value': '2026-03-02 08:00:00'
+                },
+                text: '02 Mar 2026 8:00 am'
+              }
+            ],
+            [
+              {
+                html: '<a href="/library/not-found" class="govuk-link govuk-link--no-visited-state">Form not found</a>'
+              },
+              {
+                text: 'Unknown'
               },
               {
                 attributes: {
