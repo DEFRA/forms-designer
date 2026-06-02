@@ -1,5 +1,3 @@
-import { Readable } from 'node:stream'
-
 import { FormMetricName, Scopes, getErrorMessage } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
@@ -14,8 +12,8 @@ import {
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
+import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
-  getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
   metricsDrilldownViewModel,
   metricsFormActivityViewModel
@@ -211,24 +209,20 @@ export default [
       try {
         // Live metrics only
         const metrics = await getMetrics()
-        const lines = await getLiveMetricsAsCsv(metrics)
-
-        const streamData = new Readable({
-          read() {
-            this.push(lines)
-            this.push(null)
-          }
-        })
+        const buffer = getMetricsAsExcel(metrics)
 
         const now = new Date()
-        const filename = `live-metrics-${format(now, 'yyyy-MM-dd')}.csv`
+        const filename = `form-metrics-${format(now, 'yyyy-MM-dd')}.xlsx`
 
         const auditUser = mapUserForAudit(auth.credentials.user)
         await publishPlatformMetricsDownloadRequestedEvent(auditUser)
 
         return h
-          .response(streamData)
-          .header('Content-Type', 'text/csv; charset=utf-8')
+          .response(buffer)
+          .header(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          )
           .header('Content-Disposition', `attachment; filename="${filename}"`)
       } catch (err) {
         logger.error(

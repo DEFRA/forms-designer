@@ -9,16 +9,16 @@
   <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Form activity</h2>
   <div class="govuk-grid-row">
     <!-- Forms Created -->
-    {{ appMetricsTile(params.newFormsCreated) }}
+    {{ appMetricsTile(params.tiles.NewFormsCreated) }}
 
     <!-- Forms First Published -->
-    {{ appMetricsTile(params.formsFirstPublished) }}
+    {{ appMetricsTile(params.tiles.FormsFirstPublished) }}
 
     <!-- Forms Re Published -->
-    {{ appMetricsTile(params.formsRePublished) }}
+    {{ appMetricsTile(params.tiles.FormsRePublished) }}
 
     <!-- Form Submissions -->
-    {{ appMetricsTile(params.formSubmissions) }}
+    {{ appMetricsTile(params.tiles.Submissions) }}
   </div>
 </div>
 
@@ -28,9 +28,9 @@
   <div class="govuk-grid-row">
 
     <!-- Forms in Draft -->
-    {{ appMetricsTile(params.formsInDraft) }}
+    {{ appMetricsTile(params.tiles.FormsInDraft) }}
 
     <!-- Average Time to Publish -->
-    {{ appMetricsTile(params.timeToPublish) }}
+    {{ appMetricsTile(params.tiles.TimeToPublish) }}
   </div>
 </div>
