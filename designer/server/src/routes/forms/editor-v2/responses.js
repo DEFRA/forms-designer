@@ -1,4 +1,4 @@
-import { Scopes, isFeedbackForm } from '@defra/forms-model'
+import { FormMetricName, Scopes, isFeedbackForm } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -217,27 +217,39 @@ async function getMetricTilesForForm(formId) {
     'govuk-grid-column-one-third govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop'
   const metrics = await getMetricsForForm(formId)
   const metricsModel = mapTotalMetrics(metrics.totals, tilePeriodNames)
-  const submissionsTiles = {
-    last7: metricsModel.last7Days.formSubmissions,
-    last30: metricsModel.last30Days.formSubmissions,
-    allTime: metricsModel.allTime.formSubmissions
-  }
-  // Disable drill-down
-  submissionsTiles.last7.drillDown.enabled = false
-  submissionsTiles.last30.drillDown.enabled = false
-  submissionsTiles.allTime.drillDown.enabled = false
-  // Override classes
-  submissionsTiles.last7.classes = classes
-  submissionsTiles.last30.classes = classes
-  submissionsTiles.allTime.classes = classes
-  // Override titles
-  submissionsTiles.last7.title = 'Last 7 days'
-  submissionsTiles.last30.title = 'Last 30 days'
-  submissionsTiles.allTime.title = `All time - since ${format(metrics.totals.earliestDate, 'd MMM yyyy')}`
+
+  // Override submissions tiles titling/styling
+  const last7DaysSubmissions =
+    metricsModel.last7Days.tiles[FormMetricName.Submissions]
+  const last30DaysSubmissions =
+    metricsModel.last30Days.tiles[FormMetricName.Submissions]
+  const allTimeSubmissions =
+    metricsModel.allTime.tiles[FormMetricName.Submissions]
+
+  overrideTileStyling(last7DaysSubmissions, 'Last 7 days', classes)
+  overrideTileStyling(last30DaysSubmissions, 'Last 30 days', classes)
+  overrideTileStyling(
+    allTimeSubmissions,
+    `All time - since ${format(metrics.totals.earliestDate, 'd MMM yyyy')}`,
+    classes
+  )
+
   return metricsModel
+}
+
+/**
+ * @param {MetricsTile} tile
+ * @param {string} title
+ * @param {string} classes
+ */
+function overrideTileStyling(tile, title, classes) {
+  tile.drillDown.enabled = false
+  tile.title = title
+  tile.classes = classes
 }
 
 /**
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { FormMetadata } from '@defra/forms-model'
+ * @import { MetricsTile } from '~/src/models/admin/metrics-helper.js'
  */
