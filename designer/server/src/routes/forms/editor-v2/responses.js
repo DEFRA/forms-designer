@@ -219,17 +219,16 @@ async function getMetricTilesForForm(formId) {
   const metricsModel = mapTotalMetrics(metrics.totals, tilePeriodNames)
 
   // Override submissions tiles titling/styling
-  const last7DaysSubmissions =
-    metricsModel.last7Days.tiles[FormMetricName.Submissions]
-  const last30DaysSubmissions =
-    metricsModel.last30Days.tiles[FormMetricName.Submissions]
-  const allTimeSubmissions =
-    metricsModel.allTime.tiles[FormMetricName.Submissions]
+  const submissionsTiles = {
+    last7: metricsModel.last7Days.tiles[FormMetricName.Submissions],
+    last30: metricsModel.last30Days.tiles[FormMetricName.Submissions],
+    allTime: metricsModel.allTime.tiles[FormMetricName.Submissions]
+  }
 
-  overrideTileStyling(last7DaysSubmissions, 'Last 7 days', classes)
-  overrideTileStyling(last30DaysSubmissions, 'Last 30 days', classes)
+  overrideTileStyling(submissionsTiles.last7, 'Last 7 days', classes)
+  overrideTileStyling(submissionsTiles.last30, 'Last 30 days', classes)
   overrideTileStyling(
-    allTimeSubmissions,
+    submissionsTiles.allTime,
     `All time - since ${format(metrics.totals.earliestDate, 'd MMM yyyy')}`,
     classes
   )

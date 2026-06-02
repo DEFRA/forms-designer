@@ -83,13 +83,13 @@
       <h2 class="govuk-heading-s">Live submissions</h2>
       <div class="govuk-grid-row">
         <!-- Form Submissions - last 7 days -->
-        {{ appMetricsTile(metricsModel.last7Days.formSubmissions) }}
+        {{ appMetricsTile(metricsModel.last7Days.tiles.Submissions) }}
 
         <!-- Form Submissions - last 30 days -->
-        {{ appMetricsTile(metricsModel.last30Days.formSubmissions) }}
+        {{ appMetricsTile(metricsModel.last30Days.tiles.Submissions) }}
 
         <!-- Form Submissions - all time -->
-        {{ appMetricsTile(metricsModel.allTime.formSubmissions) }}
+        {{ appMetricsTile(metricsModel.allTime.tiles.Submissions) }}
       </div>
     </div>
 
