@@ -25,7 +25,7 @@ import {
  * @property {FilterCriteria} filter - filter criteria
  */
 
-const tilePeriodNames = {
+export const tilePeriodNames = {
   last7Days: {
     ariaPeriodName: 'previous 7 days',
     straplinePeriodName: 'last week',

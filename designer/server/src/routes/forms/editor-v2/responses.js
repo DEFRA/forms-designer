@@ -1,4 +1,5 @@
-import { Scopes, isFeedbackForm } from '@defra/forms-model'
+import { FormMetricName, Scopes, isFeedbackForm } from '@defra/forms-model'
+import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
@@ -8,10 +9,13 @@ import {
   mapUserForAudit
 } from '~/src/common/helpers/auth/user-helper.js'
 import * as forms from '~/src/lib/forms.js'
+import { getMetricsForForm } from '~/src/lib/metrics.js'
 import {
   publishFormCsatExcelRequestedEvent,
   publishFormSubmissionExcelRequestedEvent
 } from '~/src/messaging/publish.js'
+import { mapTotalMetrics } from '~/src/models/admin/metrics-helper.js'
+import { tilePeriodNames } from '~/src/models/admin/metrics.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 import {
@@ -94,6 +98,8 @@ export default [
 
       const formId = metadata.id
 
+      const metricsModel = await getMetricTilesForForm(formId)
+
       const errorList = generateErrorList(metadata)
 
       const formPath = formOverviewPath(slug)
@@ -117,7 +123,8 @@ export default [
         navigation,
         notification,
         isFeedbackForm: isFeedbackForm(definition),
-        canRequestFeedback: scopes.includes(Scopes.FormsFeedback)
+        canRequestFeedback: scopes.includes(Scopes.FormsFeedback),
+        metricsModel
       })
     },
     options: {
@@ -203,6 +210,45 @@ export default [
 ]
 
 /**
+ * @param {string} formId
+ */
+async function getMetricTilesForForm(formId) {
+  const classes =
+    'govuk-grid-column-one-third govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop'
+  const metrics = await getMetricsForForm(formId)
+  const metricsModel = mapTotalMetrics(metrics.totals, tilePeriodNames)
+
+  // Override submissions tiles titling/styling
+  const submissionsTiles = {
+    last7: metricsModel.last7Days.tiles[FormMetricName.Submissions],
+    last30: metricsModel.last30Days.tiles[FormMetricName.Submissions],
+    allTime: metricsModel.allTime.tiles[FormMetricName.Submissions]
+  }
+
+  overrideTileStyling(submissionsTiles.last7, 'Last 7 days', classes)
+  overrideTileStyling(submissionsTiles.last30, 'Last 30 days', classes)
+  overrideTileStyling(
+    submissionsTiles.allTime,
+    `All time - since ${format(metrics.totals.earliestDate, 'd MMM yyyy')}`,
+    classes
+  )
+
+  return metricsModel
+}
+
+/**
+ * @param {MetricsTile} tile
+ * @param {string} title
+ * @param {string} classes
+ */
+function overrideTileStyling(tile, title, classes) {
+  tile.drillDown.enabled = false
+  tile.title = title
+  tile.classes = classes
+}
+
+/**
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { FormMetadata } from '@defra/forms-model'
+ * @import { MetricsTile } from '~/src/models/admin/metrics-helper.js'
  */

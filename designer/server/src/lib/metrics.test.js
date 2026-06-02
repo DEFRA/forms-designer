@@ -9,6 +9,7 @@ import {
 import {
   getDrilldownMetrics,
   getMetrics,
+  getMetricsForForm,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 
@@ -88,6 +89,18 @@ describe('metrics.js', () => {
       expect(mockedPostJson).toHaveBeenCalledWith(expectedUrl, {
         headers: { Authorization: 'Bearer token' }
       })
+    })
+  })
+
+  describe('getMetricsForForm', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      const expectedUrl = new URL('/report/form-id-1', auditEndpoint)
+      await getMetricsForForm('form-id-1')
+      expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl)
     })
   })
 })

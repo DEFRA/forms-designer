@@ -42,6 +42,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @property {string} title - title for the tile
  * @property {string} ariaLabel - text for aria label
  * @property {string} strapline - strapline text
+ * @property {string} classes - custom classes
  * @property {TileDrillDown} drillDown - drilldown config
  */
 
@@ -450,7 +451,8 @@ export function collateSpecificTileCounts(
       url: drillDown.enabled
         ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}`
         : ''
-    }
+    },
+    classes: ''
   }
 }
 
