@@ -49,6 +49,12 @@ const periodSlugs = /** @type {Record<string, string>} */ ({
   'all-time': 'allTime'
 })
 
+const FORM_NOT_FOUND = {
+  name: 'Form not found',
+  slug: 'not-found',
+  organisation: 'Unknown'
+}
+
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {FilterAndSortCriteria} filterAndSort
@@ -117,25 +123,37 @@ export function sortMetricRows(rows, { sortCol, sortDir }) {
 }
 
 /**
- * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {string} periodSlug
+ */
+export function getPeriodNameFromSlug(periodSlug) {
+  return periodSlugs[periodSlug]
+}
+
+/**
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} tileMetrics
+ * @param {FormDrilldownMetric[]} drilldownMetrics
  * @param {string} period
  * @param {FormMetricName} metricName
  */
-export function metricsDrilldownViewModel(metrics, period, metricName) {
+export function metricsDrilldownViewModel(
+  tileMetrics,
+  drilldownMetrics,
+  period,
+  metricName
+) {
   const overviewMetrics = /** @type {Record<string, any>} */ (
-    mapTotalMetrics(metrics.totals, tilePeriodNames)
+    mapTotalMetrics(tileMetrics.totals, tilePeriodNames)
   )
-  const periodSelector = periodSlugs[period]
+  const periodSelector = getPeriodNameFromSlug(period)
   const periodDetails = overviewMetrics[periodSelector]
-  const totals = /** @type {Record<string, any>} */ (metrics.totals)
-  const details = totals[periodSelector][metricName].details
+
   const table = {
     classes: 'moj-scrollable-pane',
     attributes: {
       'data-module': 'moj-sortable-table'
     },
     firstCellIsHeader: true,
-    ...createDrilldownHeaderAndRows(metrics, metricName, details)
+    ...createDrilldownHeaderAndRows(tileMetrics, metricName, drilldownMetrics)
   }
 
   const tileConfig = MetricsTileConfig[metricName]
@@ -151,7 +169,7 @@ export function metricsDrilldownViewModel(metrics, period, metricName) {
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {FormMetricName} metricName
- * @param {FormTimelineMetric[]} details
+ * @param {FormDrilldownMetric[]} details
  */
 export function createDrilldownHeaderAndRows(metrics, metricName, details) {
   const formMap = new Map()
@@ -192,22 +210,20 @@ export function createDrilldownHeaderAndRows(metrics, metricName, details) {
       countsMap.set(detail.formId, newTotal)
     })
     countsMap.keys().forEach((formId) => {
-      const formNameInfo = formMap.get(formId)
-      if (formNameInfo) {
-        rows.push([
-          {
-            html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
-          },
-          { text: formNameInfo.organisation },
-          { ...numberCell(countsMap.get(formId) ?? 0) }
-        ])
-      }
+      const formNameInfo = formMap.get(formId) ?? FORM_NOT_FOUND
+      rows.push([
+        {
+          html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
+        },
+        { text: formNameInfo.organisation },
+        { ...numberCell(countsMap.get(formId) ?? 0) }
+      ])
     })
   } else {
     // Not grouped
     details.forEach((detail) => {
-      const formNameInfo = formMap.get(detail.formId)
-      if (formNameInfo && tileConfig.drillDown.valueFunc) {
+      const formNameInfo = formMap.get(detail.formId) ?? FORM_NOT_FOUND
+      if (tileConfig.drillDown.valueFunc) {
         rows.push([
           {
             html: `<a href="/library/${formNameInfo.slug}" class="govuk-link govuk-link--no-visited-state">${formNameInfo.name}</a>`
@@ -315,6 +331,6 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @import { FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { ComponentUsageQuestionType, ComponentUsageFeature, ComponentUsageFormStructure, FilterAndSortCriteria , FilterCriteria, FormTilesView, SortCriteria, TableRowMetric} from '~/src/models/admin/metrics-helper.js'
  */

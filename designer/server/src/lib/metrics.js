@@ -47,6 +47,24 @@ export async function getMetrics(filter = {}) {
 }
 
 /**
+ * Get drilldown metrics (details within a tile)
+ * @param {string} period
+ * @param {FormMetricName} metricName
+ */
+export async function getDrilldownMetrics(period, metricName) {
+  const getJsonByType =
+    /** @type {typeof getJson<{ drilldownRows: FormDrilldownMetric[] }>} */ (
+      getJson
+    )
+
+  const requestUrl = new URL(`${period}/${metricName}`, metricsEndpoint)
+
+  const { body } = await getJsonByType(requestUrl)
+
+  return body.drilldownRows
+}
+
+/**
  * Regenerate the full set of metrics afresh (clears the 'mertics' DB and repopulates)
  * @param {string} token
  */
@@ -58,6 +76,6 @@ export async function regenerateMetrics(token) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
  */

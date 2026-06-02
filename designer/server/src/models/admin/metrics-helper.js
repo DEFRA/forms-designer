@@ -91,7 +91,7 @@ const formStructureMetricNames =
  * @property {boolean} grouped - true if drill down results are to be grouped per form
  * @property {string} displayName - display name for metric
  * @property {{ text: string, attributes?: Record<string, string> }} [headers] - custom headers for drill down
- * @property {(detail: FormTimelineMetric) => { text: string, attributes?: Record<string, string | number> }} [valueFunc] - function to return custom value
+ * @property {(detail: FormDrilldownMetric) => { text: string, attributes?: Record<string, string | number> }} [valueFunc] - function to return custom value
  */
 
 /**
@@ -603,5 +603,5 @@ export function numberCell(num) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormDrilldownMetric, FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  */

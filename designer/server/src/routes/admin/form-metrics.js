@@ -8,12 +8,14 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
 import {
   MetricsFilterFields,
+  getDrilldownMetrics,
   getMetrics,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
+  getPeriodNameFromSlug,
   metricsComponentUsageViewModel,
   metricsDrilldownViewModel,
   metricsFormActivityViewModel
@@ -251,8 +253,19 @@ export default [
       const { period, metricName } = params
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
-      const metrics = await getMetrics()
-      const model = metricsDrilldownViewModel(metrics, period, metricName)
+      const periodName = getPeriodNameFromSlug(period)
+
+      // Get tile metrics, for period ranges and form details lookups
+      const tileMetrics = await getMetrics()
+
+      const drilldownMetrics = await getDrilldownMetrics(periodName, metricName)
+
+      const model = metricsDrilldownViewModel(
+        tileMetrics,
+        drilldownMetrics,
+        period,
+        metricName
+      )
 
       return h.view('admin/form-metrics-drilldown', {
         pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
