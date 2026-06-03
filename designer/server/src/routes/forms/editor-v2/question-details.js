@@ -220,15 +220,15 @@ export function overrideStateIfJsEnabled(request) {
       'questionType' in payload
         ? /** @type {string} */ (payload.questionType)
         : undefined
+    const stateId =
+      'stateId' in params ? /** @type {string} */ (params.stateId) : 'unknown'
+    const existing = getQuestionSessionState(request.yar, stateId) ?? {}
     const listItemsData =
       'listItemsData' in payload
         ? /** @type {string} */ (payload.listItemsData)
-        : undefined
-    const stateId =
-      'stateId' in params ? /** @type {string} */ (params.stateId) : 'unknown'
+        : JSON.stringify(existing.listItems)
 
     if (jsEnabled) {
-      const existing = getQuestionSessionState(request.yar, stateId) ?? {}
       const overriddenState = buildOverriddenState(
         existing,
         questionType,
