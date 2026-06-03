@@ -268,7 +268,7 @@ export function advancedSettingsFields(options, question, validation) {
     ) {
       return {
         ...fieldSettings,
-        ...buildDateValuesAndErrors(fieldName, formValues, formErrors)
+        ...buildDateValuesAndErrors(`${fieldName}-parts`, formValues, formErrors)
       }
     }
 

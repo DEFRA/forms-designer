@@ -2,6 +2,8 @@ import { questionDetailsFullSchema } from '@defra/forms-model'
 import JoiDate from '@joi/date'
 import JoiBase from 'joi'
 
+import { gdsDateExtension } from '~/src/common/helpers/date-field-helper.js'
+
 const Joi = JoiBase.extend(JoiDate)
 
 const MIN_FILES_ERROR_MESSAGE =
@@ -30,6 +32,8 @@ const EXACT_FEATURES_ERROR_MESSAGE =
   'Exact number of features must be a whole number greater than or equal to 1'
 const MAX_PRECISION = 5
 
+const CustomJoi = Joi.extend(gdsDateExtension)
+
 /**
  * Joi validation schemas for all advanced settings fields
  */
@@ -40,12 +44,15 @@ export const allSpecificSchemas = Joi.object().keys({
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
-  'earliestDate-day': Joi.number().min(1).max(31).allow(''),
-  'earliestDate-month': Joi.number().min(1).max(12).allow(''),
-  'earliestDate-year': Joi.number().min(1000).max(3000).allow(''),
-  'latestDate-day': Joi.number().min(1).max(31).allow(''),
-  'latestDate-month': Joi.number().min(1).max(12).allow(''),
-  'latestDate-year': Joi.number().min(1000).max(3000).allow(''),
+  'earliestDate-parts': CustomJoi.dateParts(),
+  'latestDate-parts': CustomJoi.dateParts(),
+  // earliestDate: CustomJoi.dateParts(),
+  // 'earliestDate-month': Joi.number().allow(''),
+  // 'earliestDate-month': CustomJoi.dateParts(),
+  // 'earliestDate-year': CustomJoi.dateParts(),
+  // 'latestDate-day': CustomJoi.dateParts().allow(''),
+  // 'latestDate-month': CustomJoi.dateParts().allow(''),
+  // 'latestDate-year': CustomJoi.dateParts().allow(''),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
       is: Joi.exist(),
