@@ -64,14 +64,14 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.maxPast !== undefined
     },
     {
-      key: 'earliestDate-parts',
-      getValue: () => payload['earliestDate-parts'] ? format(payload['earliestDate-parts'], 'yyyy-MM-dd') : '',
-      shouldInclude: () => payload['earliestDate-parts'] !== undefined
+      key: 'earliestDate',
+      getValue: () => payload.earliestDate ? format(payload.earliestDate, 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload.earliestDate !== undefined
     },
     {
-      key: 'latestDate-parts',
-      getValue: () => payload['latestDate-parts'] ? format(payload['latestDate-parts'], 'yyyy-MM-dd') : '',
-      shouldInclude: () => payload['latestDate-parts'] !== undefined
+      key: 'latestDate',
+      getValue: () => payload.latestDate ? format(payload.latestDate, 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload.latestDate !== undefined
     },
     {
       key: 'usePostcodeLookup',

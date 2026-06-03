@@ -44,8 +44,8 @@ export const allSpecificSchemas = Joi.object().keys({
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
-  'earliestDate-parts': CustomJoi.dateParts(),
-  'latestDate-parts': CustomJoi.dateParts(),
+  earliestDate: CustomJoi.dateParts(),
+  latestDate: CustomJoi.dateParts(),
   // earliestDate: CustomJoi.dateParts(),
   // 'earliestDate-month': Joi.number().allow(''),
   // 'earliestDate-month': CustomJoi.dateParts(),

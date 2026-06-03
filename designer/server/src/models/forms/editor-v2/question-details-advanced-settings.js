@@ -35,8 +35,8 @@ export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
     maxPast: question.options.maxDaysInPast,
-    ['earliestDate-parts']: question.options['earliestDate-parts']?.split('-').reverse(),
-    ['latestDate-parts']: question.options['latestDate-parts']?.split('-').reverse()
+    earliestDate: question.options.earliestDate?.split('-').reverse(),
+    latestDate: question.options.latestDate?.split('-').reverse()
   }
 }
 
@@ -268,7 +268,7 @@ export function advancedSettingsFields(options, question, validation) {
     ) {
       return {
         ...fieldSettings,
-        ...buildDateValuesAndErrors(`${fieldName}-parts`, formValues, formErrors)
+        ...buildDateValuesAndErrors(fieldName, formValues, formErrors)
       }
     }
 

@@ -123,16 +123,18 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
     items: [
       {
         id: `${fieldName}-day`,
-        name: 'parts',
+        name: fieldName,
         label: 'Day',
+        autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[0]),
         classes:
           'govuk-input--width-2' + (dateErrors ? ' govuk-input--error' : '')
       },
       {
         id: `${fieldName}-month`,
-        name: 'parts',
+        name: fieldName,
         label: 'Month',
+        autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[1]),
         classes:
           'govuk-input--width-2' +
@@ -140,8 +142,9 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
       },
       {
         id: `${fieldName}-year`,
-        name: 'parts',
+        name: fieldName,
         label: 'Year',
+        autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[2]),
         classes:
           'govuk-input--width-4' +

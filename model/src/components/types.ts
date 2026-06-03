@@ -72,8 +72,8 @@ interface DateFieldBase extends FormFieldBase {
   options: FormFieldBase['options'] & {
     maxDaysInPast?: number
     maxDaysInFuture?: number
-    earliestDate?: Date
-    latestDate?: Date
+    earliestDate?: string
+    latestDate?: string
   }
 }
 

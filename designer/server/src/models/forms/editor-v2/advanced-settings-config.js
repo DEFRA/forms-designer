@@ -218,7 +218,6 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.EarliestDate]: {
       name: 'earliestDate',
       id: 'earliestDate',
-      namePrefix: 'earliestDate',
       fieldset: {
         legend: {
           text: 'First date',
@@ -232,7 +231,6 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.LatestDate]: {
       name: 'latestDate',
       id: 'latestDate',
-      namePrefix: 'latestDate',
       fieldset: {
         legend: {
           text: 'Second date',
