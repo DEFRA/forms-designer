@@ -448,11 +448,11 @@ export const allAdvancedSettingsFields =
       items: [
         {
           value: 'uk',
-          text: 'UK'
+          text: 'UK only'
         },
         {
           value: 'international',
-          text: 'International'
+          text: 'International only'
         },
         {
           divider: 'or'
