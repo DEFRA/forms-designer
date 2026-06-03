@@ -4,7 +4,8 @@ import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import {
   ComponentType,
   GeospatialFieldGeometryTypesEnum,
-  GeospatialFieldOptionsCountryEnum
+  GeospatialFieldOptionsCountryEnum,
+  TelephoneNumberFieldOptionsFormatEnum
 } from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
@@ -484,6 +485,10 @@ export const geometryTypesSchema = Joi.array()
   .single()
   .description('The geometry types allowed in a geospatial field')
 
+export const telephoneNumberFormatSchema = Joi.string()
+  .valid(...Object.values(TelephoneNumberFieldOptionsFormatEnum), 'any')
+  .description('The format for the telephone number field')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
@@ -680,7 +685,8 @@ export const questionDetailsFullSchema = {
   minFeaturesSchema,
   maxFeaturesSchema,
   exactFeaturesSchema,
-  geometryTypesSchema
+  geometryTypesSchema,
+  telephoneNumberFormatSchema
 }
 
 export const formEditorInputPageKeys = {
