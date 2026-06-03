@@ -25,7 +25,7 @@ const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
   {
     text: 'Phone number',
     hint: {
-      text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
+      text: 'A phone number, for example, 07700 900 982 or +44 808 157 0192'
     },
     value: ComponentType.TelephoneNumberField
   },
