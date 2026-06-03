@@ -1,3 +1,5 @@
+import { format } from 'date-fns/format'
+
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
@@ -62,14 +64,14 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.maxPast !== undefined
     },
     {
-      key: 'earliestDate',
-      getValue: () => payload.earliestDate,
-      shouldInclude: () => payload.earliestDate !== undefined
+      key: 'earliestDate-parts',
+      getValue: () => payload['earliestDate-parts'] ? format(payload['earliestDate-parts'], 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload['earliestDate-parts'] !== undefined
     },
     {
-      key: 'latestDate',
-      getValue: () => payload.latestDate,
-      shouldInclude: () => payload.latestDate !== undefined
+      key: 'latestDate-parts',
+      getValue: () => payload['latestDate-parts'] ? format(payload['latestDate-parts'], 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload['latestDate-parts'] !== undefined
     },
     {
       key: 'usePostcodeLookup',

@@ -204,12 +204,12 @@ export interface FormEditor {
   /**
    * The earliest date in a date range that users can enter
    */
-  earliestDate: Date
+  ['earliestDate-parts']: Date
 
   /**
    * The latest date in a date range that users can enter
    */
-  latestDate: Date
+  ['latestDate-parts']: Date
 
   /**
    * The exact number of files to upload
@@ -459,8 +459,8 @@ export type FormEditorInputQuestion = Pick<
   | 'max'
   | 'maxFuture'
   | 'maxPast'
-  | 'earliestDate'
-  | 'latestDate'
+  | 'earliestDate-parts'
+  | 'latestDate-parts'
   | 'exactFiles'
   | 'minFiles'
   | 'maxFiles'
