@@ -4,7 +4,11 @@ import {
   mockedGetJson,
   mockedPostJson
 } from '~/src/lib/__stubs__/editor.js'
-import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
+import {
+  getMetrics,
+  getMetricsForForm,
+  regenerateMetrics
+} from '~/src/lib/metrics.js'
 
 jest.mock('~/src/lib/fetch.js')
 
@@ -61,6 +65,18 @@ describe('metrics.js', () => {
       expect(mockedPostJson).toHaveBeenCalledWith(expectedUrl, {
         headers: { Authorization: 'Bearer token' }
       })
+    })
+  })
+
+  describe('getMetricsForForm', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      const expectedUrl = new URL('/report/form-id-1', auditEndpoint)
+      await getMetricsForForm('form-id-1')
+      expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl)
     })
   })
 })

@@ -1,7 +1,5 @@
 import { FormStatus, organisations } from '@defra/forms-model'
-import { stringify } from 'csv-stringify'
 
-import config from '~/src/config.js'
 import {
   MetricsTileConfig,
   componentUsageFeatures,
@@ -12,7 +10,22 @@ import {
   numberCell
 } from '~/src/models/admin/metrics-helper.js'
 
-const tilePeriodNames = {
+/**
+ * @typedef {object} ComponentUsageModel
+ * @property {{ questionTypeName: string, draft: ComponentUsageQuestionType, live: ComponentUsageQuestionType }[]} formUsageQuestionTypes - question type metrics
+ * @property {{ featureName: string, draft: ComponentUsageFeature, live: ComponentUsageFeature}[]} formUsageFeatures - feature metrics
+ * @property {{ metricName: string, draft: ComponentUsageFormStructure, live: ComponentUsageFormStructure}[]} formUsageFormStructures - form structure metrics
+ */
+
+/**
+ * @typedef {object} FormActivityModel
+ * @property {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView}} overviewMetrics - overview tiles
+ * @property {TableRowMetric[]} formMetricRows - row per form for display in the table
+ * @property {SortCriteria} sort - sort criteria
+ * @property {FilterCriteria} filter - filter criteria
+ */
+
+export const tilePeriodNames = {
   last7Days: {
     ariaPeriodName: 'previous 7 days',
     straplinePeriodName: 'last week',
@@ -50,9 +63,10 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
     organisationMap.set(org, (organisationMap.get(org) ?? 0) + 1)
   })
 
-  return {
+  const rows = mapOverviewMetrics(metrics.overview)
+  return /** @type {FormActivityModel} */ ({
     overviewMetrics: mapTotalMetrics(metrics.totals, tilePeriodNames),
-    formMetricRows: mapOverviewMetrics(metrics.overview),
+    formMetricRows: sortMetricRows(rows, filterAndSort),
     sort: {
       sortCol: filterAndSort.sortCol,
       sortDir: filterAndSort.sortDir
@@ -80,7 +94,26 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
         }
       ]
     }
+  })
+}
+
+/**
+ * @param {TableRowMetric[]} rows
+ * @param {SortCriteria} sortCriteria
+ */
+export function sortMetricRows(rows, { sortCol, sortDir }) {
+  if (!sortCol || !sortDir) {
+    return rows
   }
+  return rows.sort((a, b) => {
+    // @ts-expect-error - allow lookup since we know the key, even though it's dynamic
+    const valA = /** @type {string} */ (a[sortCol] ?? '')
+    // @ts-expect-error - allow lookup since we know the key, even though it's dynamic
+    const valB = /** @type {string} */ (b[sortCol] ?? '')
+    return sortDir === 'ascending'
+      ? valA.localeCompare(valB)
+      : valB.localeCompare(valA)
+  })
 }
 
 /**
@@ -256,7 +289,7 @@ export function metricsComponentUsageViewModel(metrics) {
     'metricName'
   )
 
-  return combinedModel
+  return /** @type {ComponentUsageModel} */ (combinedModel)
 }
 
 /**
@@ -282,70 +315,6 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @param {Input} input
- * @returns {Promise<string>}
- */
-export function createCsv(input) {
-  return new Promise((resolve, reject) => {
-    stringify(
-      input,
-      { bom: true, quoted: true },
-      /** @type {Callback} */ function (err, output) {
-        if (err) {
-          reject(
-            err instanceof Error
-              ? err
-              : // @ts-expect-error - error object not strongly typed
-                new Error(`CSV stringify error: ${err.message}`)
-          )
-          return
-        }
-
-        resolve(Buffer.from(output, 'utf8').toString())
-      }
-    )
-  })
-}
-
-/**
- * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
- */
-export async function getLiveMetricsAsCsv(metrics) {
-  const liveOnly = metrics.overview.filter(
-    (ov) => ov.formStatus === FormStatus.Live
-  )
-
-  // Sort forms by name then status
-  const formsSorted = liveOnly.toSorted((a, b) => {
-    const formNameA = /** @type {string} */ (a.summaryMetrics.name)
-    const formNameB = /** @type {string} */ (b.summaryMetrics.name)
-    return formNameA.localeCompare(formNameB)
-  })
-
-  const headers = ['Form name', 'Form URL', 'Live submissions']
-
-  const values = /** @type {string[][]} */ ([])
-  values.push(headers)
-
-  formsSorted.forEach((ov) => {
-    const summaryMetrics = /** @type {{ name: string, slug: string }} */ (
-      ov.summaryMetrics
-    )
-    const count = /** @type { number | undefined } */ (ov.submissionsCount)
-    values.push([
-      summaryMetrics.name,
-      `${config.appBaseUrl}/library/${summaryMetrics.slug}`,
-      `${count ?? 0}`
-    ])
-  })
-
-  const csv = await createCsv(values)
-
-  return csv
-}
-
-/**
  * @import { FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { Input, Callback } from 'csv-stringify'
- * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
+ * @import { ComponentUsageQuestionType, ComponentUsageFeature, ComponentUsageFormStructure, FilterAndSortCriteria , FilterCriteria, FormTilesView, SortCriteria, TableRowMetric} from '~/src/models/admin/metrics-helper.js'
  */

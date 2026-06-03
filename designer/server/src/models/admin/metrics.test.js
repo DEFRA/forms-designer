@@ -1,13 +1,11 @@
 import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
-import config from '~/src/config.js'
 import {
   combineModel,
-  createCsv,
   createDrilldownHeaderAndRows,
-  getLiveMetricsAsCsv,
   metricsComponentUsageViewModel,
-  metricsFormActivityViewModel
+  metricsFormActivityViewModel,
+  sortMetricRows
 } from '~/src/models/admin/metrics.js'
 
 jest.mock('~/src/config.ts')
@@ -25,7 +23,8 @@ function getExpectedTile(title, ariaPeriod, strapline) {
     changeValue: 0,
     count: 0,
     strapline,
-    title
+    title,
+    classes: ''
   }
 }
 
@@ -86,7 +85,7 @@ describe('metrics models', () => {
       expect(model.formMetricRows).toEqual([
         {
           daysToPublish: '-',
-          features: [],
+          features: '',
           formName: 'form2',
           name: 'form2',
           submissions: 2,
@@ -94,7 +93,7 @@ describe('metrics models', () => {
         },
         {
           daysToPublish: '-',
-          features: [],
+          features: '',
           formName: 'form1',
           name: 'form1',
           submissions: 5,
@@ -105,71 +104,73 @@ describe('metrics models', () => {
         fromDate: '25 December 2025',
         toDate: '1 January 2026',
         title: 'Last 7 days',
-        newFormsCreated: {
-          ...getExpectedTile(
-            'New forms created',
-            'previous 7 days',
-            'No difference in forms created than last week'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-7-days/NewFormsCreated'
-          }
-        },
-        formsFirstPublished: {
-          ...getExpectedTile(
-            'Forms first published',
-            'previous 7 days',
-            'No difference in forms first published than last week'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-7-days/FormsFirstPublished'
-          }
-        },
-        formsRePublished: {
-          ...getExpectedTile(
-            'Form re-published',
-            'previous 7 days',
-            'No difference in  re-published than last week'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-7-days/FormsRePublished'
-          }
-        },
-        formSubmissions: {
-          ...getExpectedTile(
-            'Form submissions',
-            'previous 7 days',
-            'No difference in submissions  than last week'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-7-days/Submissions'
-          }
-        },
-        formsInDraft: {
-          ...getExpectedTile(
-            'Forms in draft',
-            'previous 7 days',
-            'No difference in forms  than last week'
-          ),
-          drillDown: {
-            enabled: false,
-            url: ''
-          }
-        },
-        timeToPublish: {
-          ...getExpectedTile(
-            'Average time to publish',
-            'previous 7 days',
-            'No difference in days  than last week'
-          ),
-          units: 'days',
-          drillDown: {
-            enabled: false,
-            url: ''
+        tiles: {
+          NewFormsCreated: {
+            ...getExpectedTile(
+              'New forms created',
+              'previous 7 days',
+              'No difference in forms created than last week'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-7-days/NewFormsCreated'
+            }
+          },
+          FormsFirstPublished: {
+            ...getExpectedTile(
+              'Forms first published',
+              'previous 7 days',
+              'No difference in forms first published than last week'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-7-days/FormsFirstPublished'
+            }
+          },
+          FormsRePublished: {
+            ...getExpectedTile(
+              'Form re-published',
+              'previous 7 days',
+              'No difference in  re-published than last week'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-7-days/FormsRePublished'
+            }
+          },
+          Submissions: {
+            ...getExpectedTile(
+              'Form submissions',
+              'previous 7 days',
+              'No difference in submissions  than last week'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-7-days/Submissions'
+            }
+          },
+          FormsInDraft: {
+            ...getExpectedTile(
+              'Forms in draft',
+              'previous 7 days',
+              'No difference in forms  than last week'
+            ),
+            drillDown: {
+              enabled: false,
+              url: ''
+            }
+          },
+          TimeToPublish: {
+            ...getExpectedTile(
+              'Average time to publish',
+              'previous 7 days',
+              'No difference in days  than last week'
+            ),
+            units: 'days',
+            drillDown: {
+              enabled: false,
+              url: ''
+            }
           }
         }
       })
@@ -177,71 +178,73 @@ describe('metrics models', () => {
         fromDate: '2 December 2025',
         toDate: '1 January 2026',
         title: 'Last 30 days',
-        newFormsCreated: {
-          ...getExpectedTile(
-            'New forms created',
-            'previous 30 days',
-            'No difference in forms created than last month'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-30-days/NewFormsCreated'
-          }
-        },
-        formsFirstPublished: {
-          ...getExpectedTile(
-            'Forms first published',
-            'previous 30 days',
-            'No difference in forms first published than last month'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-30-days/FormsFirstPublished'
-          }
-        },
-        formsRePublished: {
-          ...getExpectedTile(
-            'Form re-published',
-            'previous 30 days',
-            'No difference in  re-published than last month'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-30-days/FormsRePublished'
-          }
-        },
-        formSubmissions: {
-          ...getExpectedTile(
-            'Form submissions',
-            'previous 30 days',
-            'No difference in submissions  than last month'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/last-30-days/Submissions'
-          }
-        },
-        formsInDraft: {
-          ...getExpectedTile(
-            'Forms in draft',
-            'previous 30 days',
-            'No difference in forms  than last month'
-          ),
-          drillDown: {
-            enabled: false,
-            url: ''
-          }
-        },
-        timeToPublish: {
-          ...getExpectedTile(
-            'Average time to publish',
-            'previous 30 days',
-            'No difference in days  than last month'
-          ),
-          units: 'days',
-          drillDown: {
-            enabled: false,
-            url: ''
+        tiles: {
+          NewFormsCreated: {
+            ...getExpectedTile(
+              'New forms created',
+              'previous 30 days',
+              'No difference in forms created than last month'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-30-days/NewFormsCreated'
+            }
+          },
+          FormsFirstPublished: {
+            ...getExpectedTile(
+              'Forms first published',
+              'previous 30 days',
+              'No difference in forms first published than last month'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-30-days/FormsFirstPublished'
+            }
+          },
+          FormsRePublished: {
+            ...getExpectedTile(
+              'Form re-published',
+              'previous 30 days',
+              'No difference in  re-published than last month'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-30-days/FormsRePublished'
+            }
+          },
+          Submissions: {
+            ...getExpectedTile(
+              'Form submissions',
+              'previous 30 days',
+              'No difference in submissions  than last month'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-30-days/Submissions'
+            }
+          },
+          FormsInDraft: {
+            ...getExpectedTile(
+              'Forms in draft',
+              'previous 30 days',
+              'No difference in forms  than last month'
+            ),
+            drillDown: {
+              enabled: false,
+              url: ''
+            }
+          },
+          TimeToPublish: {
+            ...getExpectedTile(
+              'Average time to publish',
+              'previous 30 days',
+              'No difference in days  than last month'
+            ),
+            units: 'days',
+            drillDown: {
+              enabled: false,
+              url: ''
+            }
           }
         }
       })
@@ -249,71 +252,73 @@ describe('metrics models', () => {
         fromDate: undefined,
         toDate: '1 January 2026',
         title: 'All time',
-        newFormsCreated: {
-          ...getExpectedTile(
-            'New forms created',
-            'previous year',
-            'No difference in forms created than last year'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/all-time/NewFormsCreated'
-          }
-        },
-        formsFirstPublished: {
-          ...getExpectedTile(
-            'Forms first published',
-            'previous year',
-            'No difference in forms first published than last year'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/all-time/FormsFirstPublished'
-          }
-        },
-        formsRePublished: {
-          ...getExpectedTile(
-            'Form re-published',
-            'previous year',
-            'No difference in  re-published than last year'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/all-time/FormsRePublished'
-          }
-        },
-        formSubmissions: {
-          ...getExpectedTile(
-            'Form submissions',
-            'previous year',
-            'No difference in submissions  than last year'
-          ),
-          drillDown: {
-            enabled: true,
-            url: '/admin/form-metrics/drilldown/all-time/Submissions'
-          }
-        },
-        formsInDraft: {
-          ...getExpectedTile(
-            'Forms in draft',
-            'previous year',
-            'No difference in forms  than last year'
-          ),
-          drillDown: {
-            enabled: false,
-            url: ''
-          }
-        },
-        timeToPublish: {
-          ...getExpectedTile(
-            'Average time to publish',
-            'previous year',
-            'No difference in days  than last year'
-          ),
-          units: 'days',
-          drillDown: {
-            enabled: false,
-            url: ''
+        tiles: {
+          NewFormsCreated: {
+            ...getExpectedTile(
+              'New forms created',
+              'previous year',
+              'No difference in forms created than last year'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/all-time/NewFormsCreated'
+            }
+          },
+          FormsFirstPublished: {
+            ...getExpectedTile(
+              'Forms first published',
+              'previous year',
+              'No difference in forms first published than last year'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/all-time/FormsFirstPublished'
+            }
+          },
+          FormsRePublished: {
+            ...getExpectedTile(
+              'Form re-published',
+              'previous year',
+              'No difference in  re-published than last year'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/all-time/FormsRePublished'
+            }
+          },
+          Submissions: {
+            ...getExpectedTile(
+              'Form submissions',
+              'previous year',
+              'No difference in submissions  than last year'
+            ),
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/all-time/Submissions'
+            }
+          },
+          FormsInDraft: {
+            ...getExpectedTile(
+              'Forms in draft',
+              'previous year',
+              'No difference in forms  than last year'
+            ),
+            drillDown: {
+              enabled: false,
+              url: ''
+            }
+          },
+          TimeToPublish: {
+            ...getExpectedTile(
+              'Average time to publish',
+              'previous year',
+              'No difference in days  than last year'
+            ),
+            units: 'days',
+            drillDown: {
+              enabled: false,
+              url: ''
+            }
           }
         }
       })
@@ -792,52 +797,52 @@ describe('metrics models', () => {
     })
   })
 
-  describe('getLiveMetricsAsCsv', () => {
-    it('should generate live CSV', async () => {
-      jest.mocked(config).appBaseUrl = 'http://app-base-url:3000'
-      const metrics = {
-        totals: {},
-        overview: [
-          {
-            formId: 'form-id-1',
-            formStatus: FormStatus.Live,
-            summaryMetrics: {
-              name: 'Form 1',
-              slug: 'form-1'
-            },
-            submissionsCount: 5
-          },
-          {
-            formId: 'form-id-2',
-            formStatus: FormStatus.Live,
-            summaryMetrics: { name: 'Form 2', slug: 'form-2' }
-          },
-          {
-            formId: 'form-id-3',
-            formStatus: FormStatus.Draft,
-            summaryMetrics: { name: 'Form 3', slug: 'form-3' }
-          }
-        ]
-      }
-      // @ts-expect-error - partial mock of data
-      const csvOut = await getLiveMetricsAsCsv(metrics)
-      expect(csvOut).toBe(`\ufeff"Form name","Form URL","Live submissions"
-"Form 1","http://app-base-url:3000/library/form-1","5"
-"Form 2","http://app-base-url:3000/library/form-2","0"
-`)
-    })
-  })
+  describe('sortMetricsRows', () => {
+    const rows = [
+      { name: 'Smith', value: 'Smith value' },
+      { name: 'Abingdon', value: 'Abingdon value' },
+      { name: 'Carter', value: 'Carter value' }
+    ]
 
-  describe('createCsv', () => {
-    it('should throw if error', async () => {
-      const veryLongInput = Array.from({ length: 200000 }).map(() =>
-        Array.from({ length: 100 }).map(
-          () => 'ABCDEFGHIJKLMNOPQRSTUVXYZ0123456789'
-        )
-      )
-      await expect(() => createCsv(veryLongInput)).rejects.toThrow(
-        'CSV stringify error: Cannot create a string longer than 0x1fffffe8 characters'
-      )
+    it('should ignore sort if no criteria passed', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {})
+      expect(res).toEqual(rows)
+    })
+
+    it('should ignore sort if no match of column name', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {
+        sortCol: 'badname',
+        sortDir: 'ascending'
+      })
+      expect(res).toEqual(rows)
+    })
+
+    it('should ignore sort ascending', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {
+        sortCol: 'name',
+        sortDir: 'ascending'
+      })
+      expect(res).toEqual([
+        { name: 'Abingdon', value: 'Abingdon value' },
+        { name: 'Carter', value: 'Carter value' },
+        { name: 'Smith', value: 'Smith value' }
+      ])
+    })
+
+    it('should ignore sort descending', () => {
+      const rowsCopy = JSON.parse(JSON.stringify(rows))
+      const res = sortMetricRows(rowsCopy, {
+        sortCol: 'name',
+        sortDir: 'descending'
+      })
+      expect(res).toEqual([
+        { name: 'Smith', value: 'Smith value' },
+        { name: 'Carter', value: 'Carter value' },
+        { name: 'Abingdon', value: 'Abingdon value' }
+      ])
     })
   })
 })
