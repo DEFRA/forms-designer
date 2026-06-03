@@ -104,7 +104,7 @@ export function leftPadDateIfSupplied(val?: string) {
  * The day/month/year values are then removed from the payload to leave only the 'value' as 'YYYY-MM-DD' for
  * normal validation (as if simply a text string of YYYY-MM-DD format was supplied in the payload).
  */
-export function handleGdsDateFieldsArray(payload: {
+export function handleGdsDateFields(payload: {
   itemAbsDates?: { day?: string; month?: string; year?: string; idx?: string }[]
   items: []
 }) {
@@ -122,46 +122,6 @@ export function handleGdsDateFieldsArray(payload: {
     }
     delete payload.itemAbsDates
   }
-}
-
-/**
- *
- * NOTE - *** this method causes side-effects on the payload ***
- *
- * The GDS 3-part date field is handled by submitting the day/month/year parts as separate fields
- * and then piecing together a string date value in the format YYYY-MM-DD.
- * The day/month/year values are then removed from the payload to leave only the 'value' as 'YYYY-MM-DD' for
- * normal validation (as if simply a text string of YYYY-MM-DD format was supplied in the payload).
- */
-export function handleGdsDateFieldsIndividual(
-  payload: Record<string, string>,
-  fieldNames: string[]
-) {
-  fieldNames.forEach((fieldName) => {
-    const dayField = `${fieldName}-day`
-    const monthField = `${fieldName}-month`
-    const yearField = `${fieldName}-year`
-    const dayValue = payload[dayField]
-    const monthValue = payload[monthField]
-    const yearValue = payload[yearField]
-    if (dayValue || monthValue || yearValue) {
-      //
-      payload[fieldName] =
-        `${yearValue}-${leftPadDateIfSupplied(monthValue)}-${leftPadDateIfSupplied(dayValue)}`
-    }
-    if (dayField in payload) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete payload[dayField]
-    }
-    if (monthField in payload) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete payload[monthField]
-    }
-    if (yearField in payload) {
-      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-      delete payload[yearField]
-    }
-  })
 }
 
 export async function createServer() {
@@ -214,7 +174,6 @@ export async function createServer() {
       '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}',
       '/library/{slug}/editor-v2/page/{pageId}/conditions/{conditionId}/{stateId?}',
       '/library/{slug}/editor-v2/condition/{conditionId}/{stateId?}',
-      '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details/{stateId?}',
       '/library/{slug}/editor-v2/page/{pageId}/question/{questionId}/details/{stateId}/resolve'
     ]
 
@@ -231,13 +190,7 @@ export async function createServer() {
       request.payload = qs.parse(payload)
 
       // @ts-expect-error - dynamic parsing
-      handleGdsDateFieldsArray(request.payload)
-
-      // @ts-expect-error - dynamic parsing
-      handleGdsDateFieldsIndividual(request.payload, [
-        'earliestDate',
-        'latestDate'
-      ])
+      handleGdsDateFields(request.payload)
     }
 
     return h.continue

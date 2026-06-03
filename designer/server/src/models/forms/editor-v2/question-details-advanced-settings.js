@@ -5,6 +5,7 @@ import {
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
+import { buildDateValuesAndErrors } from '~/src/common/helpers/date-field-helper.js'
 import {
   hasCheckedValue,
   insertValidationErrors,
@@ -262,21 +263,12 @@ export function advancedSettingsFields(options, question, validation) {
     }
 
     if (
-      (fieldName === QuestionAdvancedSettings.EarliestDate ||
-        fieldName === QuestionAdvancedSettings.LatestDate) &&
-      fieldSettings.items?.length &&
-      fieldSettings.items.length === 3
+      fieldName === QuestionAdvancedSettings.EarliestDate ||
+      fieldName === QuestionAdvancedSettings.LatestDate
     ) {
-      // Split date into component parts
-      const dateParts = /** @type {string} */ (value ?? '').split('-')
-      fieldSettings.items[0].value = dateParts[2]
-      fieldSettings.items[1].value = dateParts[1]
-      fieldSettings.items[2].value = dateParts[0]
       return {
         ...fieldSettings,
-        ...insertValidationErrors(
-          formErrors ? formErrors[fieldName] : undefined
-        )
+        ...buildDateValuesAndErrors(fieldName, formValues, formErrors)
       }
     }
 

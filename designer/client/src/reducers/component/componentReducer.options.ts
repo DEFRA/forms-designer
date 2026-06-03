@@ -35,8 +35,8 @@ export type OptionsReducerActions =
       name:
         | Options.EDIT_OPTIONS_MAX_DAYS_IN_PAST
         | Options.EDIT_OPTIONS_MAX_DAYS_IN_FUTURE
-        | Options.EDIT_OPTIONS_MIN_DATE
-        | Options.EDIT_OPTIONS_MAX_DATE
+        | Options.EDIT_OPTIONS_EARLIEST_DATE
+        | Options.EDIT_OPTIONS_LATEST_DATE
       payload?: number
       as: Extract<
         ComponentDef,
@@ -44,8 +44,8 @@ export type OptionsReducerActions =
           options: {
             maxDaysInPast?: number
             maxDaysInFuture?: number
-            earilestDate?: Date
-            latestDate?: Date
+            earilestDate?: string
+            latestDate?: string
           }
         }
       >

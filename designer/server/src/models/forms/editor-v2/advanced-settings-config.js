@@ -227,21 +227,7 @@ export const allAdvancedSettingsFields =
         }
       },
       beforeContentHtml:
-        '<label class="govuk-label govuk-label--m" for="earliestDate">If the date must be between two dates (optional)</label>',
-      items: [
-        {
-          name: 'day',
-          classes: 'govuk-input--width-2'
-        },
-        {
-          name: 'month',
-          classes: 'govuk-input--width-2'
-        },
-        {
-          name: 'year',
-          classes: 'govuk-input--width-4'
-        }
-      ]
+        '<label class="govuk-label govuk-label--m" for="earliestDate">If the date must be between two dates (optional)</label>'
     },
     [QuestionAdvancedSettings.LatestDate]: {
       name: 'latestDate',
@@ -253,21 +239,7 @@ export const allAdvancedSettingsFields =
           isPageHeading: false,
           classes: 'govuk-fieldset__legend--s'
         }
-      },
-      items: [
-        {
-          name: 'day',
-          classes: 'govuk-input--width-2'
-        },
-        {
-          name: 'month',
-          classes: 'govuk-input--width-2'
-        },
-        {
-          name: 'year',
-          classes: 'govuk-input--width-4'
-        }
-      ]
+      }
     },
     [QuestionAdvancedSettings.Precision]: {
       name: 'precision',
