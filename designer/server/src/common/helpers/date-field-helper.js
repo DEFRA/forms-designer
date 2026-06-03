@@ -4,8 +4,7 @@ import { leftPadDateIfSupplied } from '~/src/createServer.js'
 import { insertValidationErrors } from '~/src/lib/utils.js'
 
 /**
- * @param {string[] | undefined } value 
- * @returns 
+ * @param {string[] | undefined } value
  */
 const isValidArrayPayload = (value) => {
   if (Array.isArray(value) && value.length === 3) {
@@ -15,17 +14,26 @@ const isValidArrayPayload = (value) => {
   return false
 }
 
-export const gdsDateExtension = joi => {
+/**
+ * @type {import('joi').ExtensionFactory}
+ */
+export const gdsDateExtension = (joi) => {
   const daySchema = joi.number().min(1).max(31)
   const monthSchema = joi.number().min(1).max(12)
   const yearSchema = joi.number().min(1000).max(3000)
-  const partsSchema = joi.array().ordered(
-    daySchema.required(),
-    monthSchema.required(),
-    yearSchema.required()
-  ).length(3)
+  const partsSchema = joi
+    .array()
+    .ordered(
+      daySchema.required(),
+      monthSchema.required(),
+      yearSchema.required()
+    )
+    .length(3)
   const emptyString = joi.string().trim().valid('').required()
-  const emptyPayload = joi.array().items(emptyString, emptyString, emptyString).length(3)
+  const emptyPayload = joi
+    .array()
+    .items(emptyString, emptyString, emptyString)
+    .length(3)
 
   return {
     base: joi.date(),
@@ -38,7 +46,11 @@ export const gdsDateExtension = joi => {
       'dateParts.round': '{{#label}} must be a round number',
       'dateParts.dividable': '{{#label}} must be dividable by {{#q}}'
     },
-    prepare (value, helpers) {
+    /**
+     * @param {any} value
+     * @param {any} _helpers
+     */
+    prepare(value, _helpers) {
       if (!isValidArrayPayload(value)) {
         return { value }
       }
@@ -56,27 +68,43 @@ export const gdsDateExtension = joi => {
     },
     coerce: {
       from: 'object',
+      /**
+       * @param {any} value
+       * @param {any} helpers
+       */
       method: function (value, helpers) {
         if (value instanceof Date || !isValidArrayPayload(value)) {
           return { value }
         }
 
-        const { error, value: coerced } = partsSchema.validate(value, { abortEarly: false })
+        const { error, value: coerced } = partsSchema.validate(value, {
+          abortEarly: false
+        })
 
         if (error) {
           const errors = helpers.errorsArray()
 
-          error.details.forEach(err => {
+          const details =
+            /** @type {Array<{ type: string, context: { key: any } }>} */ (
+              error.details
+            )
+          details.forEach((err) => {
             if (err.type === 'number.base') {
               switch (err.context.key) {
                 case 0:
-                  errors.push(helpers.error('dateParts.day.required', err.context))
+                  errors.push(
+                    helpers.error('dateParts.day.required', err.context)
+                  )
                   break
                 case 1:
-                  errors.push(helpers.error('dateParts.month.required', err.context))
+                  errors.push(
+                    helpers.error('dateParts.month.required', err.context)
+                  )
                   break
                 case 2:
-                  errors.push(helpers.error('dateParts.year.required', err.context))
+                  errors.push(
+                    helpers.error('dateParts.year.required', err.context)
+                  )
                   break
                 default:
                   break
@@ -95,7 +123,11 @@ export const gdsDateExtension = joi => {
         const dayStr = `${coerced[0]}`
         const monthStr = `${coerced[1]}`
         try {
-          const date = parse(`${leftPadDateIfSupplied(dayStr)}/${leftPadDateIfSupplied(monthStr)}/${coerced[2]}`, 'dd/MM/yyyy', new Date())
+          const date = parse(
+            `${leftPadDateIfSupplied(dayStr)}/${leftPadDateIfSupplied(monthStr)}/${coerced[2]}`,
+            'dd/MM/yyyy',
+            new Date()
+          )
           if (!isValid(date)) {
             throw new Error('invalid date')
           }
@@ -137,8 +169,7 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
         autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[1]),
         classes:
-          'govuk-input--width-2' +
-          (dateErrors ? ' govuk-input--error' : '')
+          'govuk-input--width-2' + (dateErrors ? ' govuk-input--error' : '')
       },
       {
         id: `${fieldName}-year`,
@@ -147,8 +178,7 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
         autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[2]),
         classes:
-          'govuk-input--width-4' +
-          (dateErrors ? ' govuk-input--error' : '')
+          'govuk-input--width-4' + (dateErrors ? ' govuk-input--error' : '')
       }
     ],
     ...insertValidationErrors(dateErrors)
