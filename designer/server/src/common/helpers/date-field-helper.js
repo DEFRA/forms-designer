@@ -37,14 +37,43 @@ export const gdsDateExtension = (joi) => {
 
   return {
     base: joi.date(),
-    type: 'dateParts',
+    type: 'gdsDateParts',
+    /**
+     * @param {import('joi').AnySchema} schema
+     * @param {...import('joi').SchemaLike} args
+     */
+    args(schema, ...args) {
+      if (!args.length) {
+        return schema
+      }
+
+      const arg = /** @type {{ key: string, label: string }} */ (args[0])
+      if (typeof arg !== 'object') {
+        return schema
+      }
+
+      const key = arg.key
+      const label = arg.label
+      if (typeof key !== 'string' || typeof label !== 'string') {
+        return schema
+      }
+
+      const existingLabels = schema._flags._gdsLabels ?? {}
+      existingLabels[key] = label
+      schema._flags = Object.assign({}, schema._flags, {
+        _gdsLabels: existingLabels
+      })
+      // schema._flags._gdsLabels = existingLabels
+
+      return schema
+    },
     messages: {
-      'dateParts.base': '{{#label}} must be a real date',
-      'dateParts.day.required': '{{#label}} must include a day',
-      'dateParts.month.required': '{{#label}} must include a month',
-      'dateParts.year.required': '{{#label}} must include a year',
-      'dateParts.round': '{{#label}} must be a round number',
-      'dateParts.dividable': '{{#label}} must be dividable by {{#q}}'
+      'number.max': '{{#customLabel}} must be a real date',
+      'number.min': '{{#customLabel}} must be a real date',
+      'dateParts.base': '{{#customLabel}} must be a real date',
+      'dateParts.day.required': '{{#customLabel}} must include a day',
+      'dateParts.month.required': '{{#customLabel}} must include a month',
+      'dateParts.year.required': '{{#customLabel}} must include a year'
     },
     /**
      * @param {any} value
@@ -89,28 +118,34 @@ export const gdsDateExtension = (joi) => {
               error.details
             )
           details.forEach((err) => {
+            const customLabel = /** @type {any} */ (
+              helpers?.schema?._flags?._gdsLabels[helpers.state.path[0]]
+            )
+            const customContext = Object.assign({}, err.context, {
+              customLabel
+            })
             if (err.type === 'number.base') {
               switch (err.context.key) {
                 case 0:
                   errors.push(
-                    helpers.error('dateParts.day.required', err.context)
+                    helpers.error('dateParts.day.required', customContext)
                   )
                   break
                 case 1:
                   errors.push(
-                    helpers.error('dateParts.month.required', err.context)
+                    helpers.error('dateParts.month.required', customContext)
                   )
                   break
                 case 2:
                   errors.push(
-                    helpers.error('dateParts.year.required', err.context)
+                    helpers.error('dateParts.year.required', customContext)
                   )
                   break
                 default:
                   break
               }
             } else {
-              errors.push(helpers.error(err.type, err.context))
+              errors.push(helpers.error(err.type, customContext))
             }
           })
 
@@ -134,7 +169,13 @@ export const gdsDateExtension = (joi) => {
 
           return { value: date }
         } catch {
-          return { value: coerced, errors: helpers.error('date.base') }
+          const customLabel = /** @type {any} */ (
+            helpers?.schema?._flags?._gdsLabel
+          )
+          return {
+            value: coerced,
+            errors: helpers.error('date.base', { label: customLabel })
+          }
         }
       }
     }

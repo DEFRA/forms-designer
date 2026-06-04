@@ -32,8 +32,8 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.MaxPast,
       QuestionAdvancedSettings.MaxFuture,
       // TODO - Hide for now but reinstate once plugin changes are completed
-      // QuestionAdvancedSettings.EarliestDate,
-      // QuestionAdvancedSettings.LatestDate,
+      QuestionAdvancedSettings.EarliestDate,
+      QuestionAdvancedSettings.LatestDate,
       QuestionAdvancedSettings.Classes
     ],
     MonthYearField: [],
