@@ -139,7 +139,8 @@ export const QuestionAdvancedSettings =
     Countries: 'countries',
     MinFeatures: 'minFeatures',
     MaxFeatures: 'maxFeatures',
-    ExactFeatures: 'exactFeatures'
+    ExactFeatures: 'exactFeatures',
+    TelephoneNumberFormat: 'telephoneNumberFormat'
   }
 
 /**

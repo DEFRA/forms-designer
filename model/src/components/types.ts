@@ -118,10 +118,13 @@ export interface NumberFieldComponent extends FormFieldBase {
   }
 }
 
+export type TelephoneNumberFieldOptionsFormat = 'international' | 'uk'
+
 export interface TelephoneNumberFieldComponent extends FormFieldBase {
   type: ComponentType.TelephoneNumberField
   options: FormFieldBase['options'] & {
     condition?: string
+    format?: TelephoneNumberFieldOptionsFormat
     customValidationMessage?: string
   }
 }
