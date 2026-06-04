@@ -7,18 +7,16 @@
 {% endif %}
 {% set metricTestId = params.testId or ('headline-column-' + (params.title | lower | replace(' ', '-'))) %}
 {% set tileClasses = params.classes if params.classes else "govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" %}
+{% set units = '<span class="app-big-number-unit"> ' + params.units + '</span>' if params.units else '' %}
 <!-- Metrics tile -->
 <div class="{{ tileClasses }}" data-testid="{{ metricTestId }}">
   <div class="app-metric-tile">
-    <div class="gem-c-big-number">
-      <span class="gem-c-big-number__label">{{ params.title }}</span>
+    <div class="app-c-big-number">
+      <span class="app-c-big-number__label">{{ params.title }}</span>
       {% if params.count > 0 and params.drillDown.enabled %}
-        <span class="gem-c-big-number__value"><a href="{{ params.drillDown.url }}" class="govuk-link govuk-link--no-visited-state">{{ params.count | formatNumber }}</a></span>
+        <span class="app-c-big-number__value"><a href="{{ params.drillDown.url }}" class="govuk-link govuk-link--no-visited-state">{{ params.count | formatNumber }}{{ units | safe }}</a></span>
       {% else %}
-        <span class="gem-c-big-number__value">{{ params.count | formatNumber }}</span>
-      {% endif %}
-      {% if params.units %}
-      <span class="app-big-number-unit">{{ params.units }}</span>
+        <span class="app-c-big-number__value">{{ params.count | formatNumber }}{{ units | safe }}</span>
       {% endif %}
       </span>
     </div>

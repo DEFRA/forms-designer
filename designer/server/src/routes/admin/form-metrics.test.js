@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
-import { getMetrics } from '~/src/lib/metrics.js'
+import { getDrilldownMetrics, getMetrics } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import { buildQueryFromPayload } from '~/src/routes/admin/form-metrics.js'
@@ -131,8 +131,7 @@ describe('Form metrics routes', () => {
           totals: {
             last7Days: {
               Submissions: {
-                count: 0,
-                details: []
+                count: 0
               }
             },
             prev7Days: {},
@@ -149,6 +148,8 @@ describe('Form metrics routes', () => {
         }
         // @ts-expect-error - partial mock of data
         jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+
+        jest.mocked(getDrilldownMetrics).mockResolvedValueOnce([])
 
         const options = {
           method: 'get',

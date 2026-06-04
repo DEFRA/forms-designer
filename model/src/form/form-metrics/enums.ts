@@ -1,7 +1,8 @@
 export enum FormMetricType {
   TotalsMetric = 'totals-metric',
   OverviewMetric = 'overview-metric',
-  TimelineMetric = 'timeline-metric'
+  TimelineMetric = 'timeline-metric',
+  DrilldownMetric = 'drilldown-metric'
 }
 
 export enum FormMetricName {
