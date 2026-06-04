@@ -910,9 +910,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">New forms created</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">New forms created</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -930,9 +930,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms first published</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Forms first published</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -950,9 +950,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-published">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Form re-published</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Form re-published</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -970,9 +970,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Form submissions</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Form submissions</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -997,9 +997,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms in draft</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Forms in draft</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1017,9 +1017,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Average time to publish</span>
-            <span class="gem-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Average time to publish</span>
+            <span class="app-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1048,9 +1048,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">New forms created</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">New forms created</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1068,9 +1068,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms first published</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Forms first published</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1088,9 +1088,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-published">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Form re-published</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Form re-published</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1108,9 +1108,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Form submissions</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Form submissions</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1135,9 +1135,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms in draft</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Forms in draft</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1155,9 +1155,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Average time to publish</span>
-            <span class="gem-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Average time to publish</span>
+            <span class="app-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1186,9 +1186,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">New forms created</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">New forms created</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1206,9 +1206,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms first published</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Forms first published</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1226,9 +1226,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-published">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Form re-published</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Form re-published</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1246,9 +1246,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Form submissions</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Form submissions</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1273,9 +1273,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Forms in draft</span>
-            <span class="gem-c-big-number__value">0</span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Forms in draft</span>
+            <span class="app-c-big-number__value">0</span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
@@ -1293,9 +1293,9 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         <!-- Metrics tile -->
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
-        <div class="gem-c-big-number">
-          <span class="gem-c-big-number__label">Average time to publish</span>
-            <span class="gem-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
+        <div class="app-c-big-number">
+          <span class="app-c-big-number__label">Average time to publish</span>
+            <span class="app-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
           </span>
         </div>
         <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">

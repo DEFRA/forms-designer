@@ -11,12 +11,12 @@
 <!-- Metrics tile -->
 <div class="{{ tileClasses }}" data-testid="{{ metricTestId }}">
   <div class="app-metric-tile">
-    <div class="gem-c-big-number">
-      <span class="gem-c-big-number__label">{{ params.title }}</span>
+    <div class="app-c-big-number">
+      <span class="app-c-big-number__label">{{ params.title }}</span>
       {% if params.count > 0 and params.drillDown.enabled %}
-        <span class="gem-c-big-number__value"><a href="{{ params.drillDown.url }}" class="govuk-link govuk-link--no-visited-state">{{ params.count | formatNumber }}{{ units | safe }}</a></span>
+        <span class="app-c-big-number__value"><a href="{{ params.drillDown.url }}" class="govuk-link govuk-link--no-visited-state">{{ params.count | formatNumber }}{{ units | safe }}</a></span>
       {% else %}
-        <span class="gem-c-big-number__value">{{ params.count | formatNumber }}{{ units | safe }}</span>
+        <span class="app-c-big-number__value">{{ params.count | formatNumber }}{{ units | safe }}</span>
       {% endif %}
       </span>
     </div>
