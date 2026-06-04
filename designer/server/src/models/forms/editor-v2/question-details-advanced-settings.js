@@ -35,6 +35,7 @@ export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
     maxPast: question.options.maxDaysInPast,
+    // Convert YYYY-MM-DD into an array of parts, for these dates
     earliestDate: question.options.earliestDate?.split('-').reverse(),
     latestDate: question.options.latestDate?.split('-').reverse()
   }
