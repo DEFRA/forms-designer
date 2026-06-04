@@ -55,7 +55,10 @@ const checkBoxFieldQuestions = [
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]
 
-const radiosFieldQuestions = [QuestionAdvancedSettings.Countries]
+const radiosFieldQuestions = [
+  QuestionAdvancedSettings.Countries,
+  QuestionAdvancedSettings.TelephoneNumberFormat
+]
 
 const dateFieldQuestions = [
   QuestionAdvancedSettings.EarliestDate,

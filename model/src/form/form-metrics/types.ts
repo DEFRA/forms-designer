@@ -49,6 +49,15 @@ export interface FormTimelineMetric {
   createdAt: Date
 }
 
+export interface FormDrilldownMetric {
+  type: FormMetricType.DrilldownMetric
+  formId: string
+  metricName: FormMetricName
+  metricValue: number
+  periodName: string
+  createdAt: Date
+}
+
 export type FormMetric =
   | FormTotalsMetric
   | FormOverviewMetric

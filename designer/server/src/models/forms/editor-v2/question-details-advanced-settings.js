@@ -64,6 +64,15 @@ export function addGeospatialFieldProperties(question) {
 }
 
 /**
+ * @param { TelephoneNumberFieldComponent } question
+ */
+export function addTelephoneFieldProperties(question) {
+  return {
+    telephoneNumberFormat: question.options.format ?? 'any'
+  }
+}
+
+/**
  * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent | CheckboxesFieldComponent | GeospatialFieldComponent } question
  */
 export function addMinMaxFieldProperties(question) {
@@ -184,6 +193,10 @@ export function mapToQuestionOptions(question) {
     question.type === ComponentType.GeospatialField
       ? addGeospatialFieldProperties(question)
       : {}
+  const telephoneExtras =
+    question.type === ComponentType.TelephoneNumberField
+      ? addTelephoneFieldProperties(question)
+      : {}
 
   return {
     classes: /** @type {FormComponentsDef} */ (question).options.classes,
@@ -193,7 +206,8 @@ export function mapToQuestionOptions(question) {
     ...multilineExtras,
     ...regexExtras,
     ...locationExtras,
-    ...geospatialExtras
+    ...geospatialExtras,
+    ...telephoneExtras
   }
 }
 
@@ -312,6 +326,6 @@ export function enhancedFields(options, question, validation) {
  */
 
 /**
- * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent, GeospatialFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent, GeospatialFieldComponent, TelephoneNumberFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

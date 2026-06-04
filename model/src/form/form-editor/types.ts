@@ -4,7 +4,8 @@ import {
 } from '~/src/components/enums.js'
 import {
   type ComponentDef,
-  type GeospatialFieldOptionsCountry
+  type GeospatialFieldOptionsCountry,
+  type TelephoneNumberFieldOptionsFormat
 } from '~/src/components/types.js'
 import { type DateDirections, type DateUnits } from '~/src/conditions/enums.js'
 import {
@@ -406,6 +407,11 @@ export interface FormEditor {
    * The geometry types restriction for geospatial questions
    */
   geometryTypes?: GeospatialFieldGeometryTypesEnum[]
+
+  /**
+   * The format restriction for telephone number questions
+   */
+  telephoneNumberFormat?: TelephoneNumberFieldOptionsFormat | 'any'
 }
 
 export type FormEditorInputPage = Pick<
@@ -494,6 +500,7 @@ export type FormEditorInputQuestion = Pick<
   | 'exactFeatures'
   | 'minFeatures'
   | 'maxFeatures'
+  | 'telephoneNumberFormat'
 >
 
 export type FormEditorInputPageSettings = Pick<

@@ -1,3 +1,5 @@
+import { FormMetricName } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import {
   createMockResponse,
@@ -5,6 +7,7 @@ import {
   mockedPostJson
 } from '~/src/lib/__stubs__/editor.js'
 import {
+  getDrilldownMetrics,
   getMetrics,
   getMetricsForForm,
   regenerateMetrics
@@ -48,6 +51,27 @@ describe('metrics.js', () => {
         org: ['Org1', 'Org2']
       })
       expect(result.overview).toEqual([])
+
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+  })
+
+  describe('getDrilldownMetrics', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { drilldownRows: [] }
+      })
+      const expectedUrl = new URL(
+        '/report/last7Days/NewFormsCreated',
+        auditEndpoint
+      )
+      const result = await getDrilldownMetrics(
+        'last7Days',
+        FormMetricName.NewFormsCreated
+      )
+      expect(result).toEqual([])
 
       const calledUrl = mockedGetJson.mock.calls[0][0]
       expect(calledUrl.href).toBe(expectedUrl.href)

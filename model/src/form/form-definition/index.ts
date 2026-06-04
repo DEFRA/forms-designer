@@ -3,7 +3,12 @@ import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
-import { ComponentType } from '~/src/components/enums.js'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum,
+  GeospatialFieldOptionsCountryEnum,
+  TelephoneNumberFieldOptionsFormatEnum
+} from '~/src/components/enums.js'
 import { isConditionalType } from '~/src/components/helpers.js'
 import {
   type ComponentDef,
@@ -631,7 +636,42 @@ export const componentSchema = Joi.object<ComponentDef>()
           .description(
             'Name of EmailAddressField to prepopulate GOV.UK Pay email'
           )
-      }).description('Email field reference - for PaymentField only')
+      }).description('Email field reference - for PaymentField only'),
+      countries: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.GeospatialField).required(),
+        then: Joi.array()
+          .items(
+            Joi.string().valid(
+              ...Object.values(GeospatialFieldOptionsCountryEnum)
+            )
+          )
+          .description(
+            'Country filters for geospatial data - for GeospatialField only'
+          )
+      }).description('Country filters - for GeospatialField only'),
+      geometryTypes: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.GeospatialField).required(),
+        then: Joi.array()
+          .items(
+            Joi.string().valid(
+              ...Object.values(GeospatialFieldGeometryTypesEnum)
+            )
+          )
+          .description(
+            'Geometry types for geospatial data - for GeospatialField only'
+          )
+      }).description('Geometry types - for GeospatialField only'),
+      format: Joi.when('type', {
+        is: Joi.string()
+          .trim()
+          .valid(ComponentType.TelephoneNumberField)
+          .required(),
+        then: Joi.string()
+          .valid(...Object.values(TelephoneNumberFieldOptionsFormatEnum))
+          .description(
+            'Format for telephone number - for TelephoneNumberField only'
+          )
+      }).description('Format - for TelephoneNumberField only')
     })
       .default({})
       .unknown(true)

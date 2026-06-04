@@ -29,11 +29,11 @@
 }
 
 // GOV.UK Publishing Components big number styles
-.gem-c-big-number {
+.app-c-big-number {
   margin-bottom: 0;
 }
 
-.gem-c-big-number__value {
+.app-c-big-number__value {
   display: block;
   font-size: 3rem;
   font-weight: 700;
@@ -43,12 +43,12 @@
 }
 
 @media (min-width: 40.0625em) {
-  .gem-c-big-number__value {
+  .app-c-big-number__value {
     font-size: 3.5rem;
   }
 }
 
-.gem-c-big-number__label {
+.app-c-big-number__label {
   display: block;
   font-size: 1rem;
   font-weight: 600;
@@ -103,7 +103,7 @@
 }
 
 // Ensure consistent vertical alignment
-.app-metric-tile .gem-c-big-number {
+.app-metric-tile .app-c-big-number {
   flex: 1 0 auto;
 }
 

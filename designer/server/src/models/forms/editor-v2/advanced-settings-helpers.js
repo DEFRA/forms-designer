@@ -118,6 +118,12 @@ export function getAdditionalOptions(payload) {
         Array.isArray(payload.countries) &&
         payload.countries.length === 1 &&
         payload.countries[0] !== 'any'
+    },
+    {
+      key: 'format',
+      getValue: () => payload.telephoneNumberFormat,
+      shouldInclude: () =>
+        payload.telephoneNumberFormat && payload.telephoneNumberFormat !== 'any'
     }
   ]
 
