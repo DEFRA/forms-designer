@@ -63,7 +63,6 @@ export const gdsDateExtension = (joi) => {
       schema._flags = Object.assign({}, schema._flags, {
         _gdsLabels: existingLabels
       })
-      // schema._flags._gdsLabels = existingLabels
 
       return schema
     },
@@ -174,7 +173,7 @@ export const gdsDateExtension = (joi) => {
           )
           return {
             value: coerced,
-            errors: helpers.error('date.base', { label: customLabel })
+            errors: helpers.error('date.base', { customLabel })
           }
         }
       }

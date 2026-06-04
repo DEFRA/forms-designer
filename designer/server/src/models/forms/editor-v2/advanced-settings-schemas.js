@@ -4,7 +4,7 @@ import JoiBase from 'joi'
 
 import { gdsDateExtension } from '~/src/common/helpers/date-field-helper.js'
 
-const Joi = JoiBase.extend(JoiDate)
+const Joi = JoiBase.extend(JoiDate).extend(gdsDateExtension)
 
 const MIN_FILES_ERROR_MESSAGE =
   'Minimum file count must be a whole number between 1 and 25'
@@ -32,7 +32,7 @@ const EXACT_FEATURES_ERROR_MESSAGE =
   'Exact number of features must be a whole number greater than or equal to 1'
 const MAX_PRECISION = 5
 
-const CustomJoi = Joi.extend(gdsDateExtension)
+export const gdsDate = Joi.gdsDateParts()
 
 /**
  * Joi validation schemas for all advanced settings fields
@@ -44,14 +44,8 @@ export const allSpecificSchemas = Joi.object().keys({
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
-  earliestDate: CustomJoi.gdsDateParts({
-    key: 'earliestDate',
-    label: 'First date'
-  }),
-  latestDate: CustomJoi.gdsDateParts({
-    key: 'latestDate',
-    label: 'Second date'
-  }),
+  earliestDate: gdsDate,
+  latestDate: gdsDate,
   min: questionDetailsFullSchema.minSchema
     .when('max', {
       is: Joi.exist(),
