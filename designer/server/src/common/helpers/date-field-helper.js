@@ -125,7 +125,9 @@ export const gdsDateExtension = (joi) => {
             const customContext = Object.assign({}, err.context, { key })
             if (err.type === 'number.base') {
               const elemName =
-                err.context.key < 3 ? elementLookup[err.context.key] : ''
+                err.context.key < numOfDateParts
+                  ? elementLookup[err.context.key]
+                  : ''
               if (elemName) {
                 errors.push(
                   helpers.error(`dateParts.${elemName}.required`, customContext)
