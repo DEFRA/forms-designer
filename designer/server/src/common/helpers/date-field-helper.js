@@ -5,11 +5,14 @@ import {
   leftPadDateIfSupplied
 } from '~/src/lib/utils.js'
 
+const BASE_ERROR = '{{#label}} must be a real date'
+const numOfDateParts = 3
+
 /**
  * @param {string[] | undefined } value
  */
 const isValidArrayPayload = (value) => {
-  if (Array.isArray(value) && value.length === 3) {
+  if (Array.isArray(value) && value.length === numOfDateParts) {
     return true
   }
 
@@ -30,20 +33,20 @@ export const gdsDateExtension = (joi) => {
       monthSchema.required(),
       yearSchema.required()
     )
-    .length(3)
+    .length(numOfDateParts)
   const emptyString = joi.string().trim().valid('').required()
   const emptyPayload = joi
     .array()
     .items(emptyString, emptyString, emptyString)
-    .length(3)
+    .length(numOfDateParts)
 
   return {
     base: joi.date(),
     type: 'gdsDateParts',
     messages: {
-      'number.max': '{{#label}} must be a real date',
-      'number.min': '{{#label}} must be a real date',
-      'dateParts.base': '{{#label}} must be a real date',
+      'number.max': BASE_ERROR,
+      'number.min': BASE_ERROR,
+      'dateParts.base': BASE_ERROR,
       'dateParts.day.required': '{{#label}} must include a day',
       'dateParts.month.required': '{{#label}} must include a month',
       'dateParts.year.required': '{{#label}} must include a year'

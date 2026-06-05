@@ -65,12 +65,14 @@ export function getAdditionalOptions(payload) {
     },
     {
       key: 'earliestDate',
-      getValue: () => payload.earliestDate ? format(payload.earliestDate, 'yyyy-MM-dd') : '',
+      getValue: () =>
+        payload.earliestDate ? format(payload.earliestDate, 'yyyy-MM-dd') : '',
       shouldInclude: () => payload.earliestDate !== undefined
     },
     {
       key: 'latestDate',
-      getValue: () => payload.latestDate ? format(payload.latestDate, 'yyyy-MM-dd') : '',
+      getValue: () =>
+        payload.latestDate ? format(payload.latestDate, 'yyyy-MM-dd') : '',
       shouldInclude: () => payload.latestDate !== undefined
     },
     {
