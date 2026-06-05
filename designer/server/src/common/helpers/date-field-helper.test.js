@@ -2,6 +2,7 @@ import JoiBase from 'joi'
 
 import {
   buildDateValuesAndErrors,
+  dateRangeValidation,
   gdsDateExtension
 } from '~/src/common/helpers/date-field-helper.js'
 
@@ -160,6 +161,51 @@ describe('date-field-helper', () => {
             value: '2012'
           }
         ]
+      })
+    })
+  })
+
+  describe('dateRangeValidation', () => {
+    it('should error when early but no later', () => {
+      const mockHelper = {
+        error: jest.fn().mockImplementationOnce((err) => err)
+      }
+      const values = { earliestDate: '2000-02-01' }
+      expect(
+        dateRangeValidation(values, mockHelper, 'earliestDate', 'latestDate')
+      ).toBe('date.later.required')
+    })
+
+    it('should error when later but no early', () => {
+      const mockHelper = {
+        error: jest.fn().mockImplementationOnce((err) => err)
+      }
+      const values = { latestDate: '2000-02-01' }
+      expect(
+        dateRangeValidation(values, mockHelper, 'earliestDate', 'latestDate')
+      ).toBe('date.earlier.required')
+    })
+
+    it('should error when later is later than early', () => {
+      const mockHelper = {
+        error: jest.fn().mockImplementationOnce((err) => err)
+      }
+      const values = { earliestDate: '2001-02-01', latestDate: '2000-02-01' }
+      expect(
+        dateRangeValidation(values, mockHelper, 'earliestDate', 'latestDate')
+      ).toBe('date.swapped')
+    })
+
+    it('should pass when early is before later', () => {
+      const mockHelper = {
+        error: jest.fn().mockImplementationOnce((err) => err)
+      }
+      const values = { earliestDate: '2001-02-01', latestDate: '2002-02-01' }
+      expect(
+        dateRangeValidation(values, mockHelper, 'earliestDate', 'latestDate')
+      ).toEqual({
+        earliestDate: '2001-02-01',
+        latestDate: '2002-02-01'
       })
     })
   })

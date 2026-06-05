@@ -2,7 +2,10 @@ import { questionDetailsFullSchema } from '@defra/forms-model'
 import JoiDate from '@joi/date'
 import JoiBase from 'joi'
 
-import { gdsDateExtension } from '~/src/common/helpers/date-field-helper.js'
+import {
+  dateRangeValidation,
+  gdsDateExtension
+} from '~/src/common/helpers/date-field-helper.js'
 
 const Joi = JoiBase.extend(JoiDate).extend(gdsDateExtension)
 
@@ -35,182 +38,187 @@ const MAX_PRECISION = 5
 /**
  * Joi validation schemas for all advanced settings fields
  */
-export const allSpecificSchemas = Joi.object().keys({
-  maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
-    '*': 'Maximum days in the future must be a positive whole number'
-  }),
-  maxPast: questionDetailsFullSchema.maxPastSchema.messages({
-    '*': 'Maximum days in the past must be a positive whole number'
-  }),
-  earliestDate: Joi.gdsDateParts().label('First date'),
-  // .when('latestDate', {
-  //   is: Joi.exist(),
-  //   then: Joi.date().format('YYYY-MM-DD').max(Joi.ref('latestDate')),
-  //   otherwise: Joi.string().empty('')
-  // }),
-  latestDate: Joi.gdsDateParts().label('Second date'),
-  min: questionDetailsFullSchema.minSchema
-    .when('max', {
-      is: Joi.exist(),
-      then: Joi.number().max(Joi.ref('max')),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'number.base': 'Lowest number must be a whole number',
-      'number.integer': 'Lowest number must be a whole number',
-      '*': 'Lowest number cannot be more than the highest number'
+export const allSpecificSchemas = Joi.object()
+  .keys({
+    maxFuture: questionDetailsFullSchema.maxFutureSchema.messages({
+      '*': 'Maximum days in the future must be a positive whole number'
     }),
-  max: questionDetailsFullSchema.maxSchema.messages({
-    '*': 'Highest number must be a whole number'
-  }),
-  exactFiles: questionDetailsFullSchema.exactFilesSchema
-    .when('minFiles', {
-      is: Joi.exist(),
-      then: Joi.number().forbidden(),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'number.base': EXACT_FILES_ERROR_MESSAGE,
-      'number.integer': EXACT_FILES_ERROR_MESSAGE,
-      'number.min': EXACT_FILES_ERROR_MESSAGE,
-      'number.max': EXACT_FILES_ERROR_MESSAGE,
-      '*': MINMAX_OR_EXACT_ERROR_MESSAGE
-    })
-    .when('maxFiles', {
-      is: Joi.exist(),
-      then: Joi.number().forbidden(),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'number.base': EXACT_FILES_ERROR_MESSAGE,
-      'number.integer': EXACT_FILES_ERROR_MESSAGE,
-      'number.min': EXACT_FILES_ERROR_MESSAGE,
-      'number.max': EXACT_FILES_ERROR_MESSAGE,
-      '*': MINMAX_OR_EXACT_ERROR_MESSAGE
+    maxPast: questionDetailsFullSchema.maxPastSchema.messages({
+      '*': 'Maximum days in the past must be a positive whole number'
     }),
-  minFiles: questionDetailsFullSchema.minFilesSchema.when('maxFiles', {
-    is: Joi.exist(),
-    then: Joi.number().max(Joi.ref('maxFiles')).messages({
-      'number.max':
-        'The minimum number of files you accept cannot be greater than the maximum',
-      '*': MIN_FILES_ERROR_MESSAGE
-    }),
-    otherwise: Joi.number().empty('').integer().messages({
-      '*': MIN_FILES_ERROR_MESSAGE
-    })
-  }),
-  maxFiles: questionDetailsFullSchema.maxFilesSchema.messages({
-    '*': MAX_FILES_ERROR_MESSAGE
-  }),
-  minLength: questionDetailsFullSchema.minLengthSchema.when('maxLength', {
-    is: Joi.exist(),
-    then: Joi.number().max(Joi.ref('maxLength')).messages({
-      'number.max':
-        'Minimum length must be less than or equal to maximum length',
-      '*': MIN_LENGTH_ERROR_MESSAGE
-    }),
-    otherwise: Joi.number().empty('').integer().messages({
-      '*': MIN_LENGTH_ERROR_MESSAGE
-    })
-  }),
-  maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
-    '*': MAX_LENGTH_ERROR_MESSAGE
-  }),
-  exactChecks: questionDetailsFullSchema.exactChecksSchema
-    .when('minChecks', {
-      is: Joi.exist(),
-      then: Joi.number().forbidden(),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
-      '*': EXACT_CHECKS_ERROR_MESSAGE
-    })
-    .when('maxChecks', {
-      is: Joi.exist(),
-      then: Joi.number().forbidden(),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
-      '*': EXACT_CHECKS_ERROR_MESSAGE
-    }),
-  minChecks: questionDetailsFullSchema.minChecksSchema
-    .messages({
-      'number.max':
-        'Minimum number of checkboxes cannot be greater than the maximum',
-      '*': MIN_CHECKS_ERROR_MESSAGE
-    })
-    .when('maxChecks', {
-      is: Joi.exist(),
-      then: Joi.number().max(Joi.ref('maxChecks'))
-    }),
-  maxChecks: questionDetailsFullSchema.maxChecksSchema.messages({
-    '*': MAX_CHECKS_ERROR_MESSAGE
-  }),
-  precision: questionDetailsFullSchema.precisionSchema
-    .max(MAX_PRECISION)
-    .messages({
-      '*': `Enter a whole number between 0 and ${MAX_PRECISION}`
-    }),
-  prefix: questionDetailsFullSchema.prefixSchema,
-  suffix: questionDetailsFullSchema.suffixSchema,
-  regex: questionDetailsFullSchema.regexSchema,
-  rows: questionDetailsFullSchema.rowsSchema.messages({
-    '*': 'Enter a positive whole number'
-  }),
-  classes: questionDetailsFullSchema.classesSchema,
-  giveInstructions: Joi.string().optional().allow(''),
-  instructionText: Joi.when('giveInstructions', {
-    is: 'true',
-    then: Joi.string().trim().required().messages({
-      'string.empty': 'Enter instructions to help users answer this question',
-      '*': 'Enter instructions to help users answer this question'
-    }),
-    otherwise: Joi.string().optional().allow('')
-  }),
-  geometryTypes: Joi.when('questionType', {
-    is: 'GeospatialField',
-    then: questionDetailsFullSchema.geometryTypesSchema
-      .min(1)
-      .required()
-      .messages({
-        '*': 'Choose at least one geometry type'
+    earliestDate: Joi.gdsDateParts().label('First date'),
+    latestDate: Joi.gdsDateParts().label('Second date'),
+    min: questionDetailsFullSchema.minSchema
+      .when('max', {
+        is: Joi.exist(),
+        then: Joi.number().max(Joi.ref('max')),
+        otherwise: Joi.number().empty('').integer()
       })
-  }),
-  otherwise: Joi.array().optional(),
-  countries: questionDetailsFullSchema.countriesSchema,
-  exactFeatures: questionDetailsFullSchema.exactFeaturesSchema
-    .when('minFeatures', {
-      is: Joi.exist(),
-      then: Joi.number().forbidden(),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
-      '*': EXACT_FEATURES_ERROR_MESSAGE
-    })
-    .when('maxFeatures', {
-      is: Joi.exist(),
-      then: Joi.number().forbidden(),
-      otherwise: Joi.number().empty('').integer()
-    })
-    .messages({
-      'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
-      '*': EXACT_FEATURES_ERROR_MESSAGE
+      .messages({
+        'number.base': 'Lowest number must be a whole number',
+        'number.integer': 'Lowest number must be a whole number',
+        '*': 'Lowest number cannot be more than the highest number'
+      }),
+    max: questionDetailsFullSchema.maxSchema.messages({
+      '*': 'Highest number must be a whole number'
     }),
-  minFeatures: questionDetailsFullSchema.minFeaturesSchema
-    .messages({
-      'number.max':
-        'Minimum number of features cannot be greater than the maximum',
-      '*': MIN_FEATURES_ERROR_MESSAGE
-    })
-    .when('maxFeatures', {
+    exactFiles: questionDetailsFullSchema.exactFilesSchema
+      .when('minFiles', {
+        is: Joi.exist(),
+        then: Joi.number().forbidden(),
+        otherwise: Joi.number().empty('').integer()
+      })
+      .messages({
+        'number.base': EXACT_FILES_ERROR_MESSAGE,
+        'number.integer': EXACT_FILES_ERROR_MESSAGE,
+        'number.min': EXACT_FILES_ERROR_MESSAGE,
+        'number.max': EXACT_FILES_ERROR_MESSAGE,
+        '*': MINMAX_OR_EXACT_ERROR_MESSAGE
+      })
+      .when('maxFiles', {
+        is: Joi.exist(),
+        then: Joi.number().forbidden(),
+        otherwise: Joi.number().empty('').integer()
+      })
+      .messages({
+        'number.base': EXACT_FILES_ERROR_MESSAGE,
+        'number.integer': EXACT_FILES_ERROR_MESSAGE,
+        'number.min': EXACT_FILES_ERROR_MESSAGE,
+        'number.max': EXACT_FILES_ERROR_MESSAGE,
+        '*': MINMAX_OR_EXACT_ERROR_MESSAGE
+      }),
+    minFiles: questionDetailsFullSchema.minFilesSchema.when('maxFiles', {
       is: Joi.exist(),
-      then: Joi.number().max(Joi.ref('maxFeatures'))
+      then: Joi.number().max(Joi.ref('maxFiles')).messages({
+        'number.max':
+          'The minimum number of files you accept cannot be greater than the maximum',
+        '*': MIN_FILES_ERROR_MESSAGE
+      }),
+      otherwise: Joi.number().empty('').integer().messages({
+        '*': MIN_FILES_ERROR_MESSAGE
+      })
     }),
-  maxFeatures: questionDetailsFullSchema.maxFeaturesSchema.messages({
-    '*': MAX_FEATURES_ERROR_MESSAGE
-  }),
-  telephoneNumberFormat: questionDetailsFullSchema.telephoneNumberFormatSchema
-})
+    maxFiles: questionDetailsFullSchema.maxFilesSchema.messages({
+      '*': MAX_FILES_ERROR_MESSAGE
+    }),
+    minLength: questionDetailsFullSchema.minLengthSchema.when('maxLength', {
+      is: Joi.exist(),
+      then: Joi.number().max(Joi.ref('maxLength')).messages({
+        'number.max':
+          'Minimum length must be less than or equal to maximum length',
+        '*': MIN_LENGTH_ERROR_MESSAGE
+      }),
+      otherwise: Joi.number().empty('').integer().messages({
+        '*': MIN_LENGTH_ERROR_MESSAGE
+      })
+    }),
+    maxLength: questionDetailsFullSchema.maxLengthSchema.messages({
+      '*': MAX_LENGTH_ERROR_MESSAGE
+    }),
+    exactChecks: questionDetailsFullSchema.exactChecksSchema
+      .when('minChecks', {
+        is: Joi.exist(),
+        then: Joi.number().forbidden(),
+        otherwise: Joi.number().empty('').integer()
+      })
+      .messages({
+        'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
+        '*': EXACT_CHECKS_ERROR_MESSAGE
+      })
+      .when('maxChecks', {
+        is: Joi.exist(),
+        then: Joi.number().forbidden(),
+        otherwise: Joi.number().empty('').integer()
+      })
+      .messages({
+        'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
+        '*': EXACT_CHECKS_ERROR_MESSAGE
+      }),
+    minChecks: questionDetailsFullSchema.minChecksSchema
+      .messages({
+        'number.max':
+          'Minimum number of checkboxes cannot be greater than the maximum',
+        '*': MIN_CHECKS_ERROR_MESSAGE
+      })
+      .when('maxChecks', {
+        is: Joi.exist(),
+        then: Joi.number().max(Joi.ref('maxChecks'))
+      }),
+    maxChecks: questionDetailsFullSchema.maxChecksSchema.messages({
+      '*': MAX_CHECKS_ERROR_MESSAGE
+    }),
+    precision: questionDetailsFullSchema.precisionSchema
+      .max(MAX_PRECISION)
+      .messages({
+        '*': `Enter a whole number between 0 and ${MAX_PRECISION}`
+      }),
+    prefix: questionDetailsFullSchema.prefixSchema,
+    suffix: questionDetailsFullSchema.suffixSchema,
+    regex: questionDetailsFullSchema.regexSchema,
+    rows: questionDetailsFullSchema.rowsSchema.messages({
+      '*': 'Enter a positive whole number'
+    }),
+    classes: questionDetailsFullSchema.classesSchema,
+    giveInstructions: Joi.string().optional().allow(''),
+    instructionText: Joi.when('giveInstructions', {
+      is: 'true',
+      then: Joi.string().trim().required().messages({
+        'string.empty': 'Enter instructions to help users answer this question',
+        '*': 'Enter instructions to help users answer this question'
+      }),
+      otherwise: Joi.string().optional().allow('')
+    }),
+    geometryTypes: Joi.when('questionType', {
+      is: 'GeospatialField',
+      then: questionDetailsFullSchema.geometryTypesSchema
+        .min(1)
+        .required()
+        .messages({
+          '*': 'Choose at least one geometry type'
+        })
+    }),
+    otherwise: Joi.array().optional(),
+    countries: questionDetailsFullSchema.countriesSchema,
+    exactFeatures: questionDetailsFullSchema.exactFeaturesSchema
+      .when('minFeatures', {
+        is: Joi.exist(),
+        then: Joi.number().forbidden(),
+        otherwise: Joi.number().empty('').integer()
+      })
+      .messages({
+        'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
+        '*': EXACT_FEATURES_ERROR_MESSAGE
+      })
+      .when('maxFeatures', {
+        is: Joi.exist(),
+        then: Joi.number().forbidden(),
+        otherwise: Joi.number().empty('').integer()
+      })
+      .messages({
+        'any.unknown': MINMAX_OR_EXACT_ERROR_MESSAGE,
+        '*': EXACT_FEATURES_ERROR_MESSAGE
+      }),
+    minFeatures: questionDetailsFullSchema.minFeaturesSchema
+      .messages({
+        'number.max':
+          'Minimum number of features cannot be greater than the maximum',
+        '*': MIN_FEATURES_ERROR_MESSAGE
+      })
+      .when('maxFeatures', {
+        is: Joi.exist(),
+        then: Joi.number().max(Joi.ref('maxFeatures'))
+      }),
+    maxFeatures: questionDetailsFullSchema.maxFeaturesSchema.messages({
+      '*': MAX_FEATURES_ERROR_MESSAGE
+    }),
+    telephoneNumberFormat: questionDetailsFullSchema.telephoneNumberFormatSchema
+  })
+  // @ts-expect-error - dynamic Joi types
+  .custom((value, helpers) =>
+    dateRangeValidation(value, helpers, 'earliestDate', 'latestDate')
+  )
+  .messages({
+    'date.later.required': 'Enter a Second date',
+    'date.earlier.required': 'Enter a First date',
+    'date.swapped': 'First date must be earlier than Second date'
+  })

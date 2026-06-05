@@ -15,11 +15,7 @@ const elementLookup = ['day', 'month', 'year']
  * @param {string[] | undefined } value
  */
 const isValidArrayPayload = (value) => {
-  if (Array.isArray(value) && value.length === numOfDateParts) {
-    return true
-  }
-
-  return false
+  return Array.isArray(value) && value.length === numOfDateParts
 }
 
 const errorMessages = {
@@ -122,7 +118,7 @@ export const gdsDateExtension = (joi) => {
               error.details
             )
           details.forEach((err) => {
-            const customContext = Object.assign({}, err.context, { key })
+            const customContext = { ...err.context, key }
             if (err.type === 'number.base') {
               const elemName =
                 err.context.key < numOfDateParts
@@ -205,6 +201,35 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
     ],
     ...insertValidationErrors(dateErrors)
   }
+}
+
+/**
+ * @param {any} value
+ * @param {any} helpers
+ * @param {string} earlierFieldName
+ * @param {string} laterFieldName
+ */
+export function dateRangeValidation(
+  value,
+  helpers,
+  earlierFieldName,
+  laterFieldName
+) {
+  const earlierValue = value[earlierFieldName]
+  const laterValue = value[laterFieldName]
+  if (earlierValue && !laterValue) {
+    return helpers.error('date.later.required', { key: laterFieldName })
+  }
+
+  if (!earlierValue && laterValue) {
+    return helpers.error('date.earlier.required', { key: earlierFieldName })
+  }
+
+  if (earlierValue > laterValue) {
+    return helpers.error('date.swapped', { key: earlierFieldName })
+  }
+
+  return value
 }
 
 /**
