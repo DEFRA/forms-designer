@@ -1,5 +1,8 @@
 import { ComponentType } from '~/src/components/enums.js'
-import { type ComponentDef } from '~/src/components/types.js'
+import {
+  type ComponentDef,
+  type PaymentFieldComponent
+} from '~/src/components/types.js'
 
 /**
  * Defaults for creating new components
@@ -205,7 +208,7 @@ export const ComponentTypes: readonly ComponentDef[] = Object.freeze([
       description: 'payment desc',
       conditionalAmounts: []
     }
-  },
+  } as PaymentFieldComponent,
   {
     name: 'GeospatialField',
     title: 'Geospatial field',
