@@ -1,4 +1,4 @@
-import { isValid, parse } from 'date-fns'
+import { isValid, parseISO } from 'date-fns'
 
 import {
   insertValidationErrors,
@@ -133,10 +133,8 @@ export const gdsDateExtension = (joi) => {
         const dayStr = `${coerced[0]}`
         const monthStr = `${coerced[1]}`
         try {
-          const date = parse(
-            `${leftPadDateIfSupplied(dayStr)}/${leftPadDateIfSupplied(monthStr)}/${coerced[2]}`,
-            'dd/MM/yyyy',
-            new Date()
+          const date = parseISO(
+            `${coerced[2]}-${leftPadDateIfSupplied(monthStr)}-${leftPadDateIfSupplied(dayStr)}`
           )
           if (!isValid(date)) {
             throw new Error('invalid date')
