@@ -10,3 +10,38 @@
   position: relative;
   top: -15px;
 }
+
+.app-options-filter {
+  margin-bottom: govuk-spacing(4);
+}
+
+.app-options-filter__row {
+  display: flex;
+  align-items: flex-start;
+  gap: govuk-spacing(2);
+}
+
+.app-options-filter__input {
+  flex: 1 1 auto;
+}
+
+.app-options-filter__clear {
+  flex: 0 0 auto;
+  margin-bottom: 0;
+}
+
+// The `hidden` attribute alone is overridden by GOV.UK's
+// `.govuk-checkboxes__item { display: block }`, so this more specific rule
+// ensures filtered-out options are actually hidden.
+.govuk-checkboxes__item[hidden] {
+  display: none;
+}
+
+.app-options-filter__hidden-notice {
+  margin-top: govuk-spacing(2);
+  margin-bottom: 0;
+}
+
+.app-options-filter__hidden-notice[hidden] {
+  display: none;
+}
