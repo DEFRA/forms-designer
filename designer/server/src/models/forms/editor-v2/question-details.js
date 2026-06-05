@@ -45,6 +45,8 @@ const zeroIsValidForFields = [
   'max'
 ]
 
+const datePartsFields = ['earliestDate', 'latestDate']
+
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
  * in the details section
@@ -73,6 +75,13 @@ export function hasDataOrErrorForDisplay(
     if (
       zeroIsValidForFields.includes(fieldObj.name ?? 'unknown') &&
       fieldObj.value !== undefined
+    ) {
+      return true
+    }
+
+    if (
+      datePartsFields.includes(fieldObj.name ?? 'unknown') &&
+      fieldObj.items?.some((x) => x.value)
     ) {
       return true
     }
