@@ -1,7 +1,9 @@
 import { isValid, parse } from 'date-fns'
 
-import { leftPadDateIfSupplied } from '~/src/createServer.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import {
+  insertValidationErrors,
+  leftPadDateIfSupplied
+} from '~/src/lib/utils.js'
 
 /**
  * @param {string[] | undefined } value
@@ -38,41 +40,13 @@ export const gdsDateExtension = (joi) => {
   return {
     base: joi.date(),
     type: 'gdsDateParts',
-    /**
-     * @param {import('joi').AnySchema} schema
-     * @param {...import('joi').SchemaLike} args
-     */
-    args(schema, ...args) {
-      if (!args.length) {
-        return schema
-      }
-
-      const arg = /** @type {{ key: string, label: string }} */ (args[0])
-      if (typeof arg !== 'object') {
-        return schema
-      }
-
-      const key = arg.key
-      const label = arg.label
-      if (typeof key !== 'string' || typeof label !== 'string') {
-        return schema
-      }
-
-      const existingLabels = schema._flags._gdsLabels ?? {}
-      existingLabels[key] = label
-      schema._flags = Object.assign({}, schema._flags, {
-        _gdsLabels: existingLabels
-      })
-
-      return schema
-    },
     messages: {
-      'number.max': '{{#customLabel}} must be a real date',
-      'number.min': '{{#customLabel}} must be a real date',
-      'dateParts.base': '{{#customLabel}} must be a real date',
-      'dateParts.day.required': '{{#customLabel}} must include a day',
-      'dateParts.month.required': '{{#customLabel}} must include a month',
-      'dateParts.year.required': '{{#customLabel}} must include a year'
+      'number.max': '{{#label}} must be a real date',
+      'number.min': '{{#label}} must be a real date',
+      'dateParts.base': '{{#label}} must be a real date',
+      'dateParts.day.required': '{{#label}} must include a day',
+      'dateParts.month.required': '{{#label}} must include a month',
+      'dateParts.year.required': '{{#label}} must include a year'
     },
     /**
      * @param {any} value
@@ -109,6 +83,8 @@ export const gdsDateExtension = (joi) => {
           abortEarly: false
         })
 
+        const key = helpers.state.path[0]
+
         if (error) {
           const errors = helpers.errorsArray()
 
@@ -117,11 +93,8 @@ export const gdsDateExtension = (joi) => {
               error.details
             )
           details.forEach((err) => {
-            const customLabel = /** @type {any} */ (
-              helpers?.schema?._flags?._gdsLabels[helpers.state.path[0]]
-            )
             const customContext = Object.assign({}, err.context, {
-              customLabel
+              key
             })
             if (err.type === 'number.base') {
               switch (err.context.key) {
@@ -168,12 +141,9 @@ export const gdsDateExtension = (joi) => {
 
           return { value: date }
         } catch {
-          const customLabel = /** @type {any} */ (
-            helpers?.schema?._flags?._gdsLabel
-          )
           return {
             value: coerced,
-            errors: helpers.error('date.base', { customLabel })
+            errors: helpers.error('date.base', { key })
           }
         }
       }

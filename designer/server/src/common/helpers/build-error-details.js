@@ -36,11 +36,21 @@ export function buildErrorDetails(error) {
       return errors
     }
 
+    if (typeof context.key === 'number') {
+      return {
+        ...errors,
+        [context.label]: {
+          text: message,
+          href: `#${context.label}`
+        }
+      }
+    }
+
     return {
       ...errors,
-      [context.label]: {
+      [context.key ?? 'general']: {
         text: message,
-        href: `#${context.label}`
+        href: `#${context.key}`
       }
     }
   }, /** @type {ErrorDetails} */ ({}))

@@ -32,8 +32,6 @@ const EXACT_FEATURES_ERROR_MESSAGE =
   'Exact number of features must be a whole number greater than or equal to 1'
 const MAX_PRECISION = 5
 
-export const gdsDate = Joi.gdsDateParts()
-
 /**
  * Joi validation schemas for all advanced settings fields
  */
@@ -44,8 +42,8 @@ export const allSpecificSchemas = Joi.object().keys({
   maxPast: questionDetailsFullSchema.maxPastSchema.messages({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
-  earliestDate: gdsDate,
-  latestDate: gdsDate,
+  earliestDate: Joi.gdsDateParts().label('First date'),
+  latestDate: Joi.gdsDateParts().label('Second date'),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
       is: Joi.exist(),

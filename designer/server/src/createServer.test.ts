@@ -1,10 +1,7 @@
 import { type Server } from '@hapi/hapi'
 import { StatusCodes } from 'http-status-codes'
 
-import {
-  handleGdsDateFields,
-  leftPadDateIfSupplied
-} from '~/src/createServer.js'
+import { handleGdsDateFields } from '~/src/createServer.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -238,18 +235,6 @@ describe('Server tests', () => {
       const { statusCode } = await server.inject(options)
 
       expect(statusCode).toBe(StatusCodes.NOT_FOUND) // dummy URL, that's fine since it's not a redirect
-    })
-  })
-
-  describe('leftPadDate', () => {
-    test('should perform left pad', () => {
-      expect(leftPadDateIfSupplied(undefined)).toBe('')
-      expect(leftPadDateIfSupplied('')).toBe('')
-      expect(leftPadDateIfSupplied('0')).toBe('00')
-      expect(leftPadDateIfSupplied('1')).toBe('01')
-      expect(leftPadDateIfSupplied('9')).toBe('09')
-      expect(leftPadDateIfSupplied('10')).toBe('10')
-      expect(leftPadDateIfSupplied('99')).toBe('99')
     })
   })
 

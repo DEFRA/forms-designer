@@ -22,6 +22,7 @@ import {
   getListFromComponent,
   handlePrecision,
   hasCheckedValue,
+  leftPadDateIfSupplied,
   mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
@@ -361,6 +362,18 @@ describe('utils', () => {
     })
     it('should return true if value matches', () => {
       expect(hasCheckedValue(['abc', 'def'], 'abc')).toBe(true)
+    })
+  })
+
+  describe('leftPadDate', () => {
+    test('should perform left pad', () => {
+      expect(leftPadDateIfSupplied(undefined)).toBe('')
+      expect(leftPadDateIfSupplied('')).toBe('')
+      expect(leftPadDateIfSupplied('0')).toBe('00')
+      expect(leftPadDateIfSupplied('1')).toBe('01')
+      expect(leftPadDateIfSupplied('9')).toBe('09')
+      expect(leftPadDateIfSupplied('10')).toBe('10')
+      expect(leftPadDateIfSupplied('99')).toBe('99')
     })
   })
 })
