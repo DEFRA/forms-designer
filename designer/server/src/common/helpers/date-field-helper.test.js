@@ -1,3 +1,4 @@
+import { parseISO } from 'date-fns'
 import JoiBase from 'joi'
 
 import {
@@ -21,8 +22,8 @@ describe('date-field-helper', () => {
       })
       expect(error).toBeUndefined()
       expect(value).toEqual({
-        earliestDate: new Date('2000-05-17T23:00:00.000Z'),
-        latestDate: new Date('2022-03-21T00:00:00.000Z')
+        earliestDate: parseISO('2000-05-17T23:00:00.000Z'),
+        latestDate: parseISO('2022-03-21T00:00:00.000Z')
       })
     })
 
@@ -33,7 +34,7 @@ describe('date-field-helper', () => {
       })
       expect(error).toBeUndefined()
       expect(value).toEqual({
-        latestDate: new Date('2022-03-21T00:00:00.000Z')
+        latestDate: parseISO('2022-03-21T00:00:00.000Z')
       })
     })
 

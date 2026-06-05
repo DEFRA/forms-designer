@@ -55,6 +55,20 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ maxDaysInPast: '60' })
     })
 
+    it('should map earliestDate to correct format', () => {
+      const result = getAdditionalOptions({
+        earliestDate: new Date('2023-02-01T00:00:00.000Z')
+      })
+      expect(result).toEqual({ earliestDate: '2023-02-01' })
+    })
+
+    it('should map latestDate to correct format', () => {
+      const result = getAdditionalOptions({
+        latestDate: new Date('2012-06-02T00:00:00.000Z')
+      })
+      expect(result).toEqual({ latestDate: '2012-06-02' })
+    })
+
     it('should convert usePostcodeLookup to boolean', () => {
       const result = getAdditionalOptions({ usePostcodeLookup: 'true' })
       expect(result).toEqual({ usePostcodeLookup: true })
