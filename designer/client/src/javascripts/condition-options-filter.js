@@ -127,7 +127,7 @@ function buildFilterControls(checkboxes, inputId, statusId) {
   clear.type = 'button'
   clear.className =
     'govuk-button govuk-button--secondary app-options-filter__clear'
-  clear.setAttribute('data-module', 'govuk-button')
+  clear.dataset.module = 'govuk-button'
   clear.textContent = 'Clear filter'
 
   const status = document.createElement('div')
@@ -240,7 +240,7 @@ export function enhanceOptionsFilter(container) {
   )
 
   // Insert directly below the "Select a value" legend, above the options.
-  legend.insertAdjacentElement('afterend', group)
+  legend.after(group)
 
   const { notice, showAll } = buildHiddenNotice()
   checkboxes.append(notice)
