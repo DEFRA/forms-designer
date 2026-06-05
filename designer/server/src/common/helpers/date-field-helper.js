@@ -6,6 +6,7 @@ import {
 } from '~/src/lib/utils.js'
 
 const BASE_ERROR = '{{#label}} must be a real date'
+const ERROR_CLASS = ' govuk-input--error'
 const numOfDateParts = 3
 
 /**
@@ -19,39 +20,50 @@ const isValidArrayPayload = (value) => {
   return false
 }
 
+const errorMessages = {
+  'number.max': BASE_ERROR,
+  'number.min': BASE_ERROR,
+  'date.base': BASE_ERROR,
+  'dateParts.base': BASE_ERROR,
+  'dateParts.day.required': '{{#label}} must include a day',
+  'dateParts.month.required': '{{#label}} must include a month',
+  'dateParts.year.required': '{{#label}} must include a year'
+}
+
+/**
+ * @param {import('joi').Root} joi
+ */
+function setupSchema(joi) {
+  const daySchema = joi.number().min(1).max(31)
+  const monthSchema = joi.number().min(1).max(12)
+  const yearSchema = joi.number().min(1000).max(3000)
+  const emptyString = joi.string().trim().valid('').required()
+  return {
+    partsSchema: joi
+      .array()
+      .ordered(
+        daySchema.required(),
+        monthSchema.required(),
+        yearSchema.required()
+      )
+      .length(numOfDateParts),
+    emptyPayload: joi
+      .array()
+      .items(emptyString, emptyString, emptyString)
+      .length(numOfDateParts)
+  }
+}
+
 /**
  * @type {import('joi').ExtensionFactory}
  */
 export const gdsDateExtension = (joi) => {
-  const daySchema = joi.number().min(1).max(31)
-  const monthSchema = joi.number().min(1).max(12)
-  const yearSchema = joi.number().min(1000).max(3000)
-  const partsSchema = joi
-    .array()
-    .ordered(
-      daySchema.required(),
-      monthSchema.required(),
-      yearSchema.required()
-    )
-    .length(numOfDateParts)
-  const emptyString = joi.string().trim().valid('').required()
-  const emptyPayload = joi
-    .array()
-    .items(emptyString, emptyString, emptyString)
-    .length(numOfDateParts)
+  const { partsSchema, emptyPayload } = setupSchema(joi)
 
   return {
     base: joi.string(),
     type: 'gdsDateParts',
-    messages: {
-      'number.max': BASE_ERROR,
-      'number.min': BASE_ERROR,
-      'date.base': BASE_ERROR,
-      'dateParts.base': BASE_ERROR,
-      'dateParts.day.required': '{{#label}} must include a day',
-      'dateParts.month.required': '{{#label}} must include a month',
-      'dateParts.year.required': '{{#label}} must include a year'
-    },
+    messages: errorMessages,
     /**
      * @param {any} value
      * @param {any} _helpers
@@ -174,8 +186,7 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
         label: 'Day',
         autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[0]),
-        classes:
-          'govuk-input--width-2' + (dateErrors ? ' govuk-input--error' : '')
+        classes: 'govuk-input--width-2' + (dateErrors ? ERROR_CLASS : '')
       },
       {
         id: `${fieldName}-month`,
@@ -183,8 +194,7 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
         label: 'Month',
         autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[1]),
-        classes:
-          'govuk-input--width-2' + (dateErrors ? ' govuk-input--error' : '')
+        classes: 'govuk-input--width-2' + (dateErrors ? ERROR_CLASS : '')
       },
       {
         id: `${fieldName}-year`,
@@ -192,8 +202,7 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
         label: 'Year',
         autocomplete: 'off',
         value: /** @type { string | undefined } */ (parts[2]),
-        classes:
-          'govuk-input--width-4' + (dateErrors ? ' govuk-input--error' : '')
+        classes: 'govuk-input--width-4' + (dateErrors ? ERROR_CLASS : '')
       }
     ],
     ...insertValidationErrors(dateErrors)
