@@ -607,6 +607,90 @@ describe('Form definition schema', () => {
         })
       })
 
+      const listRefListId = '14ec8ab5-05a0-4b00-b866-d40146077d7a'
+      const listWithIds: List = {
+        ...list,
+        id: listRefListId,
+        items: [
+          {
+            id: 'a9dd35af-187e-4027-b8b1-e58a4aab3a82',
+            text: 'Red',
+            value: 'red'
+          },
+          {
+            id: 'b2c3d4e5-6f70-4123-8abc-1234567890ab',
+            text: 'Blue',
+            value: 'blue'
+          }
+        ]
+      }
+
+      /**
+       * @param {ConditionListItemRefValueDataV2} value
+       */
+      const buildWithListRefValue = (
+        value: ConditionListItemRefValueDataV2
+      ): FormDefinition => ({
+        ...definition,
+        // `name` is required for `isFormDefinition` to recognise the full
+        // definition and therefore run the list item ref validators.
+        name: 'Multi-select reference check',
+        lists: [listWithIds, list2],
+        conditions: [
+          stringValueCondition,
+          relativeDateCondition,
+          { ...listItemRefCondition, items: [{ ...listItemRefData, value }] },
+          conditionRefCondition
+        ]
+      })
+
+      it('should accept a multi-select list condition (itemIds + itemsCoordinator)', () => {
+        const { error } = formDefinitionV2Schema.validate(
+          buildWithListRefValue({
+            listId: listRefListId,
+            itemIds: [
+              'a9dd35af-187e-4027-b8b1-e58a4aab3a82',
+              'b2c3d4e5-6f70-4123-8abc-1234567890ab'
+            ],
+            itemsCoordinator: Coordinator.OR
+          })
+        )
+
+        expect(error).toBeUndefined()
+      })
+
+      it('should fail validation when an itemIds entry is not in the list', () => {
+        const { error } = formDefinitionV2Schema.validate(
+          buildWithListRefValue({
+            listId: listRefListId,
+            itemIds: [
+              'a9dd35af-187e-4027-b8b1-e58a4aab3a82',
+              '00000000-0000-0000-0000-000000000000'
+            ]
+          })
+        )
+
+        expect(error).toBeDefined()
+        expect(error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.RefConditionItemId
+        )
+      })
+
+      it('should fail validation when neither itemId nor itemIds is supplied', () => {
+        const { error } = formDefinitionV2Schema.validate(
+          buildWithListRefValue(
+            /** @type {ConditionListItemRefValueDataV2} */ {
+              listId: listRefListId
+            }
+          )
+        )
+
+        expect(error).toBeDefined()
+        expect(error?.message).toContain(
+          'must contain at least one of [itemId, itemIds]'
+        )
+      })
+
       it('should reject if there are duplicate list ids', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,

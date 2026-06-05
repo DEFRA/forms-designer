@@ -118,7 +118,7 @@ describe('editor-v2 - condition-value', () => {
         undefined
       )
       expect(valueField).toEqual({
-        classes: 'govuk-radios--small',
+        classes: 'govuk-checkboxes--small',
         fieldset: {
           legend: {
             text: 'Select a value',
@@ -130,22 +130,57 @@ describe('editor-v2 - condition-value', () => {
           {
             text: 'Red',
             value: 'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
-            id: 'items[2].value.itemId'
+            id: 'items[2].value.itemId',
+            checked: false
           },
           {
             text: 'Blue',
             value: '689d3f66-88f7-4dc0-b199-841b72393c19',
-            id: 'items[2].value.itemId1'
+            id: 'items[2].value.itemId1',
+            checked: true
           },
           {
             text: 'Green',
             value: '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171',
-            id: 'items[2].value.itemId2'
+            id: 'items[2].value.itemId2',
+            checked: false
           }
         ],
-        name: 'items[2][value][itemId]',
-        value: '689d3f66-88f7-4dc0-b199-841b72393c19'
+        name: 'items[2][value][itemIds]'
       })
+    })
+
+    test('should pre-check options from new itemIds array (multi-select)', () => {
+      const listItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {
+          itemIds: [
+            'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
+            '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171'
+          ]
+        }
+      })
+      const selectedComponent =
+        // @ts-expect-error - coerce page type that has components
+        testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
+      const valueField =
+        /** @type {{ items: { value: string, checked: boolean }[] }} */ (
+          buildValueField(
+            ConditionType.ListItemRef,
+            2,
+            listItem,
+            selectedComponent,
+            testFormDefinitionWithMultipleV2Conditions,
+            undefined
+          )
+        )
+      expect(valueField.items.map((itm) => itm.checked)).toEqual([
+        true,
+        false,
+        true
+      ])
     })
 
     test('should return list value field with undefined value', () => {
