@@ -19,7 +19,15 @@
     {% else %}
       <p class="govuk-body">Multiple selections will result in any of them meeting the condition (OR).</p>
     {% endif %}
-    {{ govukCheckboxes(params.value) }}
+    {% if params.value.enableOptionsFilter %}
+      {# The filter box itself is added by the client-side enhancement, so it is #}
+      {# absent (not just hidden) when JavaScript is unavailable. #}
+      <div data-module="app-options-filter">
+        {{ govukCheckboxes(params.value) }}
+      </div>
+    {% else %}
+      {{ govukCheckboxes(params.value) }}
+    {% endif %}
   {% case "BooleanValue" %}
     {{ govukRadios(params.value) }}
   {% case "DateValue" %}

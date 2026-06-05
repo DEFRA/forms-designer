@@ -14,6 +14,8 @@ import {
   createAll
 } from 'govuk-frontend'
 
+import { initConditionOptionsFilters } from '~/src/javascripts/condition-options-filter.js'
+
 createAll(Accordion)
 createAll(Button)
 createAll(CharacterCount)
@@ -26,6 +28,9 @@ createAll(NotificationBanner)
 createAll(ServiceHeader)
 
 MOJ.initAll()
+
+// Adds a filter box to long condition answer-option lists (no-op elsewhere).
+initConditionOptionsFilters()
 
 const jsElem = /** @type { HTMLInputElement | null } */ (
   document.getElementById('jsEnabled')

@@ -1,4 +1,9 @@
-import { ConditionType, DateDirections, OperatorName } from '@defra/forms-model'
+import {
+  ComponentType,
+  ConditionType,
+  DateDirections,
+  OperatorName
+} from '@defra/forms-model'
 
 import {
   buildDeclarationComponent,
@@ -181,6 +186,77 @@ describe('editor-v2 - condition-value', () => {
         false,
         true
       ])
+    })
+
+    test('should not enable the options filter for short lists', () => {
+      const listItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
+        operator: 'is',
+        value: {}
+      })
+      const selectedComponent =
+        // @ts-expect-error - coerce page type that has components
+        testFormDefinitionWithMultipleV2Conditions.pages[1].components[0]
+      const valueField = /** @type {{ enableOptionsFilter?: boolean }} */ (
+        buildValueField(
+          ConditionType.ListItemRef,
+          2,
+          listItem,
+          selectedComponent,
+          testFormDefinitionWithMultipleV2Conditions,
+          undefined
+        )
+      )
+      expect(valueField.enableOptionsFilter).toBeUndefined()
+    })
+
+    test('should enable the options filter for lists with more than 10 items', () => {
+      const listId = 'big-list-id'
+      const selectedComponent = /** @type {ConditionalComponentsDef} */ ({
+        id: '11111111-1111-1111-1111-111111111111',
+        type: ComponentType.AutocompleteField,
+        name: 'favourite',
+        title: 'Favourite',
+        list: listId,
+        options: {}
+      })
+      const definition = /** @type {FormDefinition} */ ({
+        ...testFormDefinitionWithMultipleV2Conditions,
+        lists: [
+          ...testFormDefinitionWithMultipleV2Conditions.lists,
+          {
+            id: listId,
+            name: 'bigList',
+            title: 'Big list',
+            type: 'string',
+            items: Array.from({ length: 11 }, (_, idx) => ({
+              id: `item-${idx}`,
+              text: `Option ${idx}`,
+              value: `${idx}`
+            }))
+          }
+        ]
+      })
+      const listItem = /** @type {ConditionDataV2} */ ({
+        id: '1',
+        componentId: selectedComponent.id,
+        operator: 'is',
+        value: {}
+      })
+      const valueField =
+        /** @type {{ enableOptionsFilter?: boolean, items: object[] }} */ (
+          buildValueField(
+            ConditionType.ListItemRef,
+            2,
+            listItem,
+            selectedComponent,
+            definition,
+            undefined
+          )
+        )
+      expect(valueField.items).toHaveLength(11)
+      expect(valueField.enableOptionsFilter).toBe(true)
     })
 
     test('should return list value field with undefined value', () => {
@@ -576,5 +652,5 @@ describe('editor-v2 - condition-value', () => {
 
 /**
  * @import { ErrorDetails, ErrorDetailsItem } from '~/src/common/helpers/types.js'
- * @import { ConditionDataV2, List } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, FormDefinition, List } from '@defra/forms-model'
  */
