@@ -9,6 +9,8 @@ const BASE_ERROR = '{{#label}} must be a real date'
 const ERROR_CLASS = ' govuk-input--error'
 const numOfDateParts = 3
 
+const elementLookup = ['day', 'month', 'year']
+
 /**
  * @param {string[] | undefined } value
  */
@@ -55,6 +57,27 @@ function setupSchema(joi) {
 }
 
 /**
+ * @param {any} value
+ * @param {ArraySchema<any[]>} emptyPayload
+ */
+function prepareImpl(value, emptyPayload) {
+  if (!isValidArrayPayload(value)) {
+    return { value }
+  }
+
+  // Treat three empty strings as
+  // empty and let the base type handle it
+  const { error } = emptyPayload.validate(value)
+  const isEmpty = !error
+
+  if (isEmpty) {
+    return { value: undefined }
+  }
+
+  return { value }
+}
+
+/**
  * @type {import('joi').ExtensionFactory}
  */
 export const gdsDateExtension = (joi) => {
@@ -69,20 +92,7 @@ export const gdsDateExtension = (joi) => {
      * @param {any} _helpers
      */
     prepare(value, _helpers) {
-      if (!isValidArrayPayload(value)) {
-        return { value }
-      }
-
-      // Treat three empty strings as
-      // empty and let the base type handle it
-      const { error } = emptyPayload.validate(value)
-      const isEmpty = !error
-
-      if (isEmpty) {
-        return { value: undefined }
-      }
-
-      return { value }
+      return prepareImpl(value, emptyPayload)
     },
     coerce: {
       from: 'object',
@@ -112,28 +122,14 @@ export const gdsDateExtension = (joi) => {
               error.details
             )
           details.forEach((err) => {
-            const customContext = Object.assign({}, err.context, {
-              key
-            })
+            const customContext = Object.assign({}, err.context, { key })
             if (err.type === 'number.base') {
-              switch (err.context.key) {
-                case 0:
-                  errors.push(
-                    helpers.error('dateParts.day.required', customContext)
-                  )
-                  break
-                case 1:
-                  errors.push(
-                    helpers.error('dateParts.month.required', customContext)
-                  )
-                  break
-                case 2:
-                  errors.push(
-                    helpers.error('dateParts.year.required', customContext)
-                  )
-                  break
-                default:
-                  break
+              const elemName =
+                err.context.key < 3 ? elementLookup[err.context.key] : ''
+              if (elemName) {
+                errors.push(
+                  helpers.error(`dateParts.${elemName}.required`, customContext)
+                )
               }
             } else {
               errors.push(helpers.error(err.type, customContext))
@@ -210,5 +206,6 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
 }
 
 /**
+ * @import { ArraySchema } from 'joi'
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
  */

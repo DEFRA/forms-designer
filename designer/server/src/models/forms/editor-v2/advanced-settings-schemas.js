@@ -43,6 +43,11 @@ export const allSpecificSchemas = Joi.object().keys({
     '*': 'Maximum days in the past must be a positive whole number'
   }),
   earliestDate: Joi.gdsDateParts().label('First date'),
+  // .when('latestDate', {
+  //   is: Joi.exist(),
+  //   then: Joi.date().format('YYYY-MM-DD').max(Joi.ref('latestDate')),
+  //   otherwise: Joi.string().empty('')
+  // }),
   latestDate: Joi.gdsDateParts().label('Second date'),
   min: questionDetailsFullSchema.minSchema
     .when('max', {
