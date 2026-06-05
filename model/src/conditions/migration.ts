@@ -61,13 +61,13 @@ function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
   const foundList = model.getListById(listId)
 
   if (!foundList) {
-    throw Error(`List ${listId} not found`)
+    throw new Error(`List ${listId} not found`)
   }
 
   const item = foundList.items.find((item) => item.id === itemId)
 
   if (!item) {
-    throw Error(`List item ${itemId} not found`)
+    throw new Error(`List item ${itemId} not found`)
   }
 
   return item
@@ -127,7 +127,7 @@ function convertListItemRefConditionV2(
   const values = createConditionValueDataListFromListItemRefV2(condition, model)
 
   if (!values.length) {
-    throw Error('List item ref condition has no selected items')
+    throw new Error('List item ref condition has no selected items')
   }
 
   if (values.length === 1) {
@@ -233,11 +233,11 @@ function convertConditionDataV2(
   const component = model.getComponentById(condition.componentId)
 
   if (!component) {
-    throw Error('Component not found')
+    throw new Error('Component not found')
   }
 
   if (!isConditionalType(component.type)) {
-    throw Error(`Component ${component.name} does not support conditions`)
+    throw new Error(`Component ${component.name} does not support conditions`)
   }
 
   const field = {
@@ -271,7 +271,7 @@ function convertConditionDataV2(
   } else if (isConditionRelativeDateValueDataV2(condition)) {
     newValue = createConditionValueDataFromRelativeDateValueDataV2(condition)
   } else {
-    throw Error('Unsupported condition type')
+    throw new Error('Unsupported condition type')
   }
 
   return {
@@ -290,7 +290,7 @@ function convertConditionRefDataFromV2(
   const refCondition = model.getConditionById(condition.conditionId)
 
   if (!refCondition) {
-    throw Error('Component not found')
+    throw new Error('Component not found')
   }
 
   return {
