@@ -203,14 +203,14 @@ export interface FormEditor {
   maxPast: string
 
   /**
-   * The earliest date in a date range that users can enter
+   * The earliest date in a date range that users can enter (YYYY-MM-DD)
    */
-  earliestDate: Date
+  earliestDate: string
 
   /**
-   * The latest date in a date range that users can enter
+   * The latest date in a date range that users can enter (YYYY-MM-DD)
    */
-  latestDate: Date
+  latestDate: string
 
   /**
    * The exact number of files to upload

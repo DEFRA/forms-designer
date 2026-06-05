@@ -1,4 +1,3 @@
-import { parseISO } from 'date-fns'
 import JoiBase from 'joi'
 
 import {
@@ -17,13 +16,13 @@ describe('date-field-helper', () => {
 
     it('should pass a valid date', () => {
       const { value, error } = schema.validate({
-        earliestDate: ['18', '5', '2000'],
+        earliestDate: ['18', '11', '2000'],
         latestDate: ['21', '3', '2022']
       })
       expect(error).toBeUndefined()
       expect(value).toEqual({
-        earliestDate: parseISO('2000-05-17T23:00:00.000Z'),
-        latestDate: parseISO('2022-03-21T00:00:00.000Z')
+        earliestDate: '2000-11-18',
+        latestDate: '2022-03-21'
       })
     })
 
@@ -34,7 +33,7 @@ describe('date-field-helper', () => {
       })
       expect(error).toBeUndefined()
       expect(value).toEqual({
-        latestDate: parseISO('2022-03-21T00:00:00.000Z')
+        latestDate: '2022-03-21'
       })
     })
 
@@ -44,7 +43,7 @@ describe('date-field-helper', () => {
         latestDate: ['21', '3', '2022']
       })
       expect(error).toEqual(
-        new JoiBase.ValidationError('"First date" must be a valid date', [], {})
+        new JoiBase.ValidationError('"First date" must be a real date', [], {})
       )
     })
 
@@ -86,7 +85,7 @@ describe('date-field-helper', () => {
     it('should error for impossible date', () => {
       const { error } = schema.validate({ earliestDate: ['29', '02', '2001'] })
       expect(error).toEqual(
-        new JoiBase.ValidationError('"First date" must be a valid date', [], {})
+        new JoiBase.ValidationError('"First date" must be a real date', [], {})
       )
     })
   })

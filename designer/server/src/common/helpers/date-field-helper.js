@@ -41,11 +41,12 @@ export const gdsDateExtension = (joi) => {
     .length(numOfDateParts)
 
   return {
-    base: joi.date(),
+    base: joi.string(),
     type: 'gdsDateParts',
     messages: {
       'number.max': BASE_ERROR,
       'number.min': BASE_ERROR,
+      'date.base': BASE_ERROR,
       'dateParts.base': BASE_ERROR,
       'dateParts.day.required': '{{#label}} must include a day',
       'dateParts.month.required': '{{#label}} must include a month',
@@ -78,15 +79,18 @@ export const gdsDateExtension = (joi) => {
        * @param {any} helpers
        */
       method: function (value, helpers) {
-        if (value instanceof Date || !isValidArrayPayload(value)) {
-          return { value }
+        const key = helpers.state.path[0]
+
+        if (!isValidArrayPayload(value)) {
+          return {
+            value,
+            errors: helpers.error('date.base', { key })
+          }
         }
 
         const { error, value: coerced } = partsSchema.validate(value, {
           abortEarly: false
         })
-
-        const key = helpers.state.path[0]
 
         if (error) {
           const errors = helpers.errorsArray()
@@ -133,14 +137,14 @@ export const gdsDateExtension = (joi) => {
         const dayStr = `${coerced[0]}`
         const monthStr = `${coerced[1]}`
         try {
-          const date = parseISO(
-            `${coerced[2]}-${leftPadDateIfSupplied(monthStr)}-${leftPadDateIfSupplied(dayStr)}`
-          )
+          const dateStr = `${coerced[2]}-${leftPadDateIfSupplied(monthStr)}-${leftPadDateIfSupplied(dayStr)}`
+          const date = parseISO(dateStr)
+
           if (!isValid(date)) {
             throw new Error('invalid date')
           }
 
-          return { value: date }
+          return { value: dateStr }
         } catch {
           return {
             value: coerced,
