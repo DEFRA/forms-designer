@@ -28,7 +28,7 @@ export function isFormDefinition(
 /**
  * TypeGuard to check if something is a ConditionListItemRefValueDataV2
  * @param { unknown } conditionValueData
- * @returns {boolean}
+ * @returns { conditionValueData is ConditionListItemRefValueDataV2 }
  */
 export function isConditionListItemRefValueData(
   conditionValueData: unknown
