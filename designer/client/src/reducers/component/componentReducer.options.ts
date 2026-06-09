@@ -44,7 +44,7 @@ export type OptionsReducerActions =
           options: {
             maxDaysInPast?: number
             maxDaysInFuture?: number
-            earilestDate?: string
+            earliestDate?: string
             latestDate?: string
           }
         }
