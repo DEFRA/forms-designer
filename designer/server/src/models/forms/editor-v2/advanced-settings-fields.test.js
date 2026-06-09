@@ -64,6 +64,18 @@ describe('editor-v2 - advanced settings fields model', () => {
         ComponentType.RadiosField
       )
     })
+
+    test('should return DateField for earliestDate format', () => {
+      expect(getFieldComponentType({ name: 'earliestDate' })).toBe(
+        ComponentType.DatePartsField
+      )
+    })
+
+    test('should return DateField for latestDate format', () => {
+      expect(getFieldComponentType({ name: 'latestDate' })).toBe(
+        ComponentType.DatePartsField
+      )
+    })
   })
 
   describe('mapQuestionDetails', () => {
