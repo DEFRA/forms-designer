@@ -46,11 +46,17 @@ export function buildErrorDetails(error) {
       }
     }
 
+    const key =
+      context.key ??
+      (Array.isArray(context.missing) && context.missing.length
+        ? context.missing[0]
+        : 'general')
+
     return {
       ...errors,
-      [context.key ?? 'general']: {
+      [key]: {
         text: message,
-        href: `#${context.key}`
+        href: `#${key}`
       }
     }
   }, /** @type {ErrorDetails} */ ({}))

@@ -7,15 +7,15 @@ import {
 
 const BASE_ERROR = '{{#label}} must be a real date'
 const ERROR_CLASS = ' govuk-input--error'
-const numOfDateParts = 3
+const NUMBER_OF_DATE_PARTS = 3
 
 const elementLookup = ['day', 'month', 'year']
 
 /**
- * @param {string[] | undefined } value
+ * @param {any} value
  */
 const isValidArrayPayload = (value) => {
-  return Array.isArray(value) && value.length === numOfDateParts
+  return Array.isArray(value) && value.length === NUMBER_OF_DATE_PARTS
 }
 
 const errorMessages = {
@@ -36,19 +36,22 @@ function setupSchema(joi) {
   const monthSchema = joi.number().min(1).max(12)
   const yearSchema = joi.number().min(1000).max(3000)
   const emptyString = joi.string().trim().valid('').required()
+
   return {
-    partsSchema: joi
-      .array()
-      .ordered(
-        daySchema.required(),
-        monthSchema.required(),
-        yearSchema.required()
-      )
-      .length(numOfDateParts),
+    partsSchema: /** @type {import('joi').ArraySchema<number[]>} */ (
+      joi
+        .array()
+        .ordered(
+          daySchema.required(),
+          monthSchema.required(),
+          yearSchema.required()
+        )
+        .length(NUMBER_OF_DATE_PARTS)
+    ),
     emptyPayload: joi
       .array()
       .items(emptyString, emptyString, emptyString)
-      .length(numOfDateParts)
+      .length(NUMBER_OF_DATE_PARTS)
   }
 }
 
@@ -80,7 +83,7 @@ export const gdsDateExtension = (joi) => {
   const { partsSchema, emptyPayload } = setupSchema(joi)
 
   return {
-    base: joi.string(),
+    base: joi.date(),
     type: 'gdsDateParts',
     messages: errorMessages,
     /**
@@ -97,33 +100,28 @@ export const gdsDateExtension = (joi) => {
        * @param {any} helpers
        */
       method: function (value, helpers) {
-        const key = helpers.state.path[0]
-
         if (!isValidArrayPayload(value)) {
-          return {
-            value,
-            errors: helpers.error('date.base', { key })
-          }
+          return { value }
         }
 
+        const key = helpers.state.path[0]
         const { error, value: coerced } = partsSchema.validate(value, {
           abortEarly: false
         })
 
         if (error) {
+          const details = error.details
           const errors = helpers.errorsArray()
 
-          const details =
-            /** @type {Array<{ type: string, context: { key: any } }>} */ (
-              error.details
-            )
           details.forEach((err) => {
             const customContext = { ...err.context, key }
             if (err.type === 'number.base') {
               const elemName =
-                err.context.key < numOfDateParts
+                typeof err.context?.key === 'number' &&
+                err.context.key < NUMBER_OF_DATE_PARTS
                   ? elementLookup[err.context.key]
                   : ''
+
               if (elemName) {
                 errors.push(
                   helpers.error(`dateParts.${elemName}.required`, customContext)
@@ -140,23 +138,18 @@ export const gdsDateExtension = (joi) => {
           }
         }
 
-        const dayStr = `${coerced[0]}`
-        const monthStr = `${coerced[1]}`
-        try {
-          const dateStr = `${coerced[2]}-${leftPadDateIfSupplied(monthStr)}-${leftPadDateIfSupplied(dayStr)}`
-          const date = parseISO(dateStr)
+        const date = parseISO(
+          `${coerced[2]}-${leftPadDateIfSupplied(coerced[1].toString())}-${leftPadDateIfSupplied(coerced[0].toString())}`
+        )
 
-          if (!isValid(date)) {
-            throw new Error('invalid date')
-          }
-
-          return { value: dateStr }
-        } catch {
+        if (!isValid(date)) {
           return {
-            value: coerced,
+            value,
             errors: helpers.error('date.base', { key })
           }
         }
+
+        return { value: date }
       }
     }
   }
@@ -201,35 +194,6 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
     ],
     ...insertValidationErrors(dateErrors)
   }
-}
-
-/**
- * @param {any} value
- * @param {any} helpers
- * @param {string} earlierFieldName
- * @param {string} laterFieldName
- */
-export function dateRangeValidation(
-  value,
-  helpers,
-  earlierFieldName,
-  laterFieldName
-) {
-  const earlierValue = value[earlierFieldName]
-  const laterValue = value[laterFieldName]
-  if (earlierValue && !laterValue) {
-    return helpers.error('date.later.required', { key: laterFieldName })
-  }
-
-  if (!earlierValue && laterValue) {
-    return helpers.error('date.earlier.required', { key: earlierFieldName })
-  }
-
-  if (earlierValue > laterValue) {
-    return helpers.error('date.swapped', { key: earlierFieldName })
-  }
-
-  return value
 }
 
 /**

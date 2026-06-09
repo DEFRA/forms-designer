@@ -2,10 +2,7 @@ import { questionDetailsFullSchema } from '@defra/forms-model'
 import JoiDate from '@joi/date'
 import JoiBase from 'joi'
 
-import {
-  dateRangeValidation,
-  gdsDateExtension
-} from '~/src/common/helpers/date-field-helper.js'
+import { gdsDateExtension } from '~/src/common/helpers/date-field-helper.js'
 
 const Joi = JoiBase.extend(JoiDate).extend(gdsDateExtension)
 
@@ -46,8 +43,27 @@ export const allSpecificSchemas = Joi.object()
     maxPast: questionDetailsFullSchema.maxPastSchema.messages({
       '*': 'Maximum days in the past must be a positive whole number'
     }),
-    earliestDate: Joi.gdsDateParts().label('First date'),
-    latestDate: Joi.gdsDateParts().label('Second date'),
+    earliestDate: Joi.gdsDateParts()
+      .label('First date')
+      .when('maxFuture', {
+        is: questionDetailsFullSchema.maxFutureSchema.required(),
+        then: Joi.forbidden()
+      })
+      .when('maxPast', {
+        is: questionDetailsFullSchema.maxPastSchema.required(),
+        then: Joi.forbidden()
+      })
+      .messages({
+        'any.unknown': 'First date is not allowed when maximum days is set'
+      }),
+    latestDate: Joi.gdsDateParts()
+      .label('Second date')
+      .when('earliestDate', {
+        is: Joi.gdsDateParts().required(),
+        then: Joi.gdsDateParts().min(Joi.ref('earliestDate')).messages({
+          'date.min': 'Second date must be greater than or equal to first date'
+        })
+      }),
     min: questionDetailsFullSchema.minSchema
       .when('max', {
         is: Joi.exist(),
@@ -67,13 +83,6 @@ export const allSpecificSchemas = Joi.object()
         is: Joi.exist(),
         then: Joi.number().forbidden(),
         otherwise: Joi.number().empty('').integer()
-      })
-      .messages({
-        'number.base': EXACT_FILES_ERROR_MESSAGE,
-        'number.integer': EXACT_FILES_ERROR_MESSAGE,
-        'number.min': EXACT_FILES_ERROR_MESSAGE,
-        'number.max': EXACT_FILES_ERROR_MESSAGE,
-        '*': MINMAX_OR_EXACT_ERROR_MESSAGE
       })
       .when('maxFiles', {
         is: Joi.exist(),
@@ -213,12 +222,7 @@ export const allSpecificSchemas = Joi.object()
     }),
     telephoneNumberFormat: questionDetailsFullSchema.telephoneNumberFormatSchema
   })
-  // @ts-expect-error - dynamic Joi types
-  .custom((value, helpers) =>
-    dateRangeValidation(value, helpers, 'earliestDate', 'latestDate')
-  )
+  .and('earliestDate', 'latestDate')
   .messages({
-    'date.later.required': 'Enter a Second date',
-    'date.earlier.required': 'Enter a First date',
-    'date.swapped': 'First date must be earlier than Second date'
+    'object.and': 'Enter both a first and second date, or remove both dates'
   })
