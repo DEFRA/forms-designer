@@ -1,10 +1,9 @@
 import { questionDetailsFullSchema } from '@defra/forms-model'
-import JoiDate from '@joi/date'
 import JoiBase from 'joi'
 
 import { gdsDateExtension } from '~/src/common/helpers/date-field-helper.js'
 
-const Joi = JoiBase.extend(JoiDate).extend(gdsDateExtension)
+const Joi = JoiBase.extend(gdsDateExtension)
 
 const MIN_FILES_ERROR_MESSAGE =
   'Minimum file count must be a whole number between 1 and 25'
