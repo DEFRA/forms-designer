@@ -4,6 +4,7 @@ import upperFirst from 'lodash/upperFirst.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import {
   GOVUK_FIELDSET_LEGEND__M,
+  GOVUK_FIELDSET_LEGEND__S,
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
@@ -229,7 +230,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'First date',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--s'
+          classes: GOVUK_FIELDSET_LEGEND__S
         }
       },
       beforeContentHtml:
@@ -242,7 +243,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Second date',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--s'
+          classes: GOVUK_FIELDSET_LEGEND__S
         }
       }
     },
@@ -253,7 +254,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'First date',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--s'
+          classes: GOVUK_FIELDSET_LEGEND__S
         }
       },
       beforeContentHtml:
@@ -266,7 +267,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Second date',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--s'
+          classes: GOVUK_FIELDSET_LEGEND__S
         }
       }
     },
