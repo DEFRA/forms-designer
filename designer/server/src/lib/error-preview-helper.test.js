@@ -174,7 +174,7 @@ describe('Error-preview-help functions', () => {
     test('should return latestDate value', () => {
       const result = getDateLimits(
         fields,
-        ComponentType.MonthYearField,
+        ComponentType.DatePartsField,
         'latestDate'
       )
       expect(result).toBe('2002-01-01')
