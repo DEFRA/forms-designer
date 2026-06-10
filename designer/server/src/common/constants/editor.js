@@ -127,6 +127,8 @@ export const QuestionAdvancedSettings =
     MaxPast: 'maxPast',
     EarliestDate: 'earliestDate',
     LatestDate: 'latestDate',
+    EarliestMonthYear: 'earliestMonthYear',
+    LatestMonthYear: 'latestMonthYear',
     Precision: 'precision',
     Prefix: 'prefix',
     Suffix: 'suffix',

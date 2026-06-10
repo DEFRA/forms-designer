@@ -2,8 +2,9 @@ import { questionDetailsFullSchema } from '@defra/forms-model'
 import JoiBase from 'joi'
 
 import { gdsDateExtension } from '~/src/common/helpers/date-field-helper.js'
+import { gdsMonthYearExtension } from '~/src/common/helpers/month-year-field-helper.js'
 
-const Joi = JoiBase.extend(gdsDateExtension)
+const Joi = JoiBase.extend(gdsDateExtension).extend(gdsMonthYearExtension)
 
 const MIN_FILES_ERROR_MESSAGE =
   'Minimum file count must be a whole number between 1 and 25'
@@ -62,6 +63,18 @@ export const allSpecificSchemas = Joi.object()
         then: Joi.gdsDateParts().min(Joi.ref('earliestDate')).messages({
           'date.min': 'Second date must be greater than or equal to first date'
         })
+      }),
+    earliestMonthYear: Joi.gdsMonthYearParts().label('First month and year'),
+    latestMonthYear: Joi.gdsMonthYearParts()
+      .label('Second month and year')
+      .when('earliestMonthYear', {
+        is: Joi.gdsMonthYearParts().required(),
+        then: Joi.gdsMonthYearParts()
+          .min(Joi.ref('earliestMonthYear'))
+          .messages({
+            'date.min':
+              'Second month and year must be greater than or equal to first month and year'
+          })
       }),
     min: questionDetailsFullSchema.minSchema
       .when('max', {
@@ -222,6 +235,7 @@ export const allSpecificSchemas = Joi.object()
     telephoneNumberFormat: questionDetailsFullSchema.telephoneNumberFormatSchema
   })
   .and('earliestDate', 'latestDate')
+  .and('earliestMonthYear', 'latestMonthYear')
   .messages({
     'object.and': 'Enter both a first and second date, or remove both dates'
   })

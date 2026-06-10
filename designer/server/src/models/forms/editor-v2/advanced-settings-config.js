@@ -35,7 +35,10 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.LatestDate,
       QuestionAdvancedSettings.Classes
     ],
-    MonthYearField: [],
+    MonthYearField: [
+      QuestionAdvancedSettings.EarliestMonthYear,
+      QuestionAdvancedSettings.LatestMonthYear
+    ],
     SelectField: [],
     AutocompleteField: [],
     RadiosField: [],
@@ -235,6 +238,30 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.LatestDate]: {
       name: 'latestDate',
       id: 'latestDate',
+      fieldset: {
+        legend: {
+          text: 'Second date',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--s'
+        }
+      }
+    },
+    [QuestionAdvancedSettings.EarliestMonthYear]: {
+      name: 'earliestMonthYear',
+      id: 'earliestMonthYear',
+      fieldset: {
+        legend: {
+          text: 'First date',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--s'
+        }
+      },
+      beforeContentHtml:
+        '<label class="govuk-label govuk-label--m" for="earliestMonthYear">If the date must be between two dates (optional)</label>'
+    },
+    [QuestionAdvancedSettings.LatestMonthYear]: {
+      name: 'latestMonthYear',
+      id: 'latestMonthYear',
       fieldset: {
         legend: {
           text: 'Second date',

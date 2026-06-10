@@ -6,6 +6,7 @@ import {
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import { buildDateValuesAndErrors } from '~/src/common/helpers/date-field-helper.js'
+import { buildMonthYearValuesAndErrors } from '~/src/common/helpers/month-year-field-helper.js'
 import {
   hasCheckedValue,
   insertValidationErrors,
@@ -29,7 +30,7 @@ export function addNumberFieldProperties(question) {
 }
 
 /**
- * @param { DatePartsFieldComponent | MonthYearFieldComponent } question
+ * @param { DatePartsFieldComponent } question
  */
 export function addDateFieldProperties(question) {
   return {
@@ -38,6 +39,17 @@ export function addDateFieldProperties(question) {
     // Convert YYYY-MM-DD into an array of parts, for these dates
     earliestDate: question.options.earliestDate?.split('-').reverse(),
     latestDate: question.options.latestDate?.split('-').reverse()
+  }
+}
+
+/**
+ * @param { MonthYearFieldComponent } question
+ */
+export function addMonthYearFieldProperties(question) {
+  return {
+    // Convert YYYY-MM into an array of parts, for these dates
+    earliestMonthYear: question.options.earliestMonthYear?.split('-').reverse(),
+    latestMonthYear: question.options.latestMonthYear?.split('-').reverse()
   }
 }
 
@@ -136,10 +148,6 @@ export function mapToQuestionOptions(question) {
   const isNumberField = isTypeOfField(question.type, [
     ComponentType.NumberField
   ])
-  const isDateField = isTypeOfField(question.type, [
-    ComponentType.DatePartsField,
-    ComponentType.MonthYearField
-  ])
   const hasMinMax = isTypeOfField(question.type, [
     ComponentType.TextField,
     ComponentType.MultilineTextField,
@@ -153,13 +161,18 @@ export function mapToQuestionOptions(question) {
   const numberExtras = isNumberField
     ? addNumberFieldProperties(/** @type {NumberFieldComponent} */ (question))
     : {}
-  const dateExtras = isDateField
-    ? addDateFieldProperties(
-        /** @type { DatePartsFieldComponent | MonthYearFieldComponent } */ (
-          question
+  const dateExtras =
+    question.type === ComponentType.DatePartsField
+      ? addDateFieldProperties(
+          /** @type { DatePartsFieldComponent } */ (question)
         )
-      )
-    : {}
+      : {}
+  const monthYearExtras =
+    question.type === ComponentType.MonthYearField
+      ? addMonthYearFieldProperties(
+          /** @type { MonthYearFieldComponent } */ (question)
+        )
+      : {}
   const minMaxExtras = hasMinMax
     ? addMinMaxFieldProperties(
         /** @type { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } */ (
@@ -202,6 +215,7 @@ export function mapToQuestionOptions(question) {
     classes: /** @type {FormComponentsDef} */ (question).options.classes,
     ...numberExtras,
     ...dateExtras,
+    ...monthYearExtras,
     ...minMaxExtras,
     ...multilineExtras,
     ...regexExtras,
@@ -284,6 +298,16 @@ export function advancedSettingsFields(options, question, validation) {
       return {
         ...fieldSettings,
         ...buildDateValuesAndErrors(fieldName, formValues, formErrors)
+      }
+    }
+
+    if (
+      fieldName === QuestionAdvancedSettings.EarliestMonthYear ||
+      fieldName === QuestionAdvancedSettings.LatestMonthYear
+    ) {
+      return {
+        ...fieldSettings,
+        ...buildMonthYearValuesAndErrors(fieldName, formValues, formErrors)
       }
     }
 

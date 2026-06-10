@@ -139,7 +139,9 @@ describe('Error-preview-help functions', () => {
       { name: 'maxPast', value: '30' },
       { name: 'maxFuture', value: '60' },
       { name: 'earliestDate', value: '2001-01-01' },
-      { name: 'latestDate', value: '2002-01-01' }
+      { name: 'latestDate', value: '2002-01-01' },
+      { name: 'earliestMonthYear', value: '2001-01' },
+      { name: 'latestMonthYear', value: '2002-01' }
     ]
 
     test('should return dateMin value', () => {
@@ -172,10 +174,28 @@ describe('Error-preview-help functions', () => {
     test('should return latestDate value', () => {
       const result = getDateLimits(
         fields,
-        ComponentType.DatePartsField,
+        ComponentType.MonthYearField,
         'latestDate'
       )
       expect(result).toBe('2002-01-01')
+    })
+
+    test('should return earliestMonthYear value', () => {
+      const result = getDateLimits(
+        fields,
+        ComponentType.MonthYearField,
+        'earliestMonthYear'
+      )
+      expect(result).toBe('2001-01')
+    })
+
+    test('should return latestMonthYear value', () => {
+      const result = getDateLimits(
+        fields,
+        ComponentType.MonthYearField,
+        'latestMonthYear'
+      )
+      expect(result).toBe('2002-01')
     })
 
     test('should return unknown for invalid property', () => {

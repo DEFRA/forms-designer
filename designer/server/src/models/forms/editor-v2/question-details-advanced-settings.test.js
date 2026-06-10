@@ -363,14 +363,14 @@ describe('editor-v2 - question details advanced settings model', () => {
         name: 'month',
         title: 'month title',
         options: {
-          maxDaysInFuture: 365,
-          maxDaysInPast: 730,
+          earliestMonthYear: '2000-01',
+          latestMonthYear: '2025-12',
           classes: 'month-class'
         }
       })
       expect(res).toEqual({
-        maxFuture: 365,
-        maxPast: 730,
+        earliestMonthYear: ['01', '2000'],
+        latestMonthYear: ['12', '2025'],
         classes: 'month-class'
       })
     })
