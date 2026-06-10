@@ -1,4 +1,7 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum
+} from '@defra/forms-model'
 
 import {
   getAdditionalOptions,
@@ -55,6 +58,34 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ maxDaysInPast: '60' })
     })
 
+    it('should map earliestDate to correct format', () => {
+      const result = getAdditionalOptions({
+        earliestDate: '2023-02-01'
+      })
+      expect(result).toEqual({ earliestDate: '2023-02-01' })
+    })
+
+    it('should map empty earliestDate', () => {
+      const result = getAdditionalOptions({
+        earliestDate: ''
+      })
+      expect(result).toEqual({ earliestDate: '' })
+    })
+
+    it('should map latestDate to correct format', () => {
+      const result = getAdditionalOptions({
+        latestDate: '2012-06-02'
+      })
+      expect(result).toEqual({ latestDate: '2012-06-02' })
+    })
+
+    it('should map empty latestDate', () => {
+      const result = getAdditionalOptions({
+        latestDate: ''
+      })
+      expect(result).toEqual({ latestDate: '' })
+    })
+
     it('should convert usePostcodeLookup to boolean', () => {
       const result = getAdditionalOptions({ usePostcodeLookup: 'true' })
       expect(result).toEqual({ usePostcodeLookup: true })
@@ -101,6 +132,16 @@ describe('advanced-settings-helpers', () => {
         paymentDescription: 'Payment desc'
       })
       expect(result).toEqual({ description: 'Payment desc' })
+    })
+
+    it('should map geometryTypes', () => {
+      const result = getAdditionalOptions({
+        geometryTypes: [
+          GeospatialFieldGeometryTypesEnum.Point,
+          GeospatialFieldGeometryTypesEnum.Line
+        ]
+      })
+      expect(result).toEqual({ geometryTypes: ['point', 'line'] })
     })
 
     it('should combine multiple options', () => {

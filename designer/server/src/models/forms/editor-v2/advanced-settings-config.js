@@ -31,6 +31,8 @@ export const advancedSettingsPerComponentType =
     DatePartsField: [
       QuestionAdvancedSettings.MaxPast,
       QuestionAdvancedSettings.MaxFuture,
+      QuestionAdvancedSettings.EarliestDate,
+      QuestionAdvancedSettings.LatestDate,
       QuestionAdvancedSettings.Classes
     ],
     MonthYearField: [],
@@ -216,6 +218,30 @@ export const allAdvancedSettingsFields =
         text: 'Determines the earliest date users can enter'
       },
       classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.EarliestDate]: {
+      name: 'earliestDate',
+      id: 'earliestDate',
+      fieldset: {
+        legend: {
+          text: 'First date',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--s'
+        }
+      },
+      beforeContentHtml:
+        '<label class="govuk-label govuk-label--m" for="earliestDate">If the date must be between two dates (optional)</label>'
+    },
+    [QuestionAdvancedSettings.LatestDate]: {
+      name: 'latestDate',
+      id: 'latestDate',
+      fieldset: {
+        legend: {
+          text: 'Second date',
+          isPageHeading: false,
+          classes: 'govuk-fieldset__legend--s'
+        }
+      }
     },
     [QuestionAdvancedSettings.Precision]: {
       name: 'precision',

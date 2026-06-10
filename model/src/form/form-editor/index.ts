@@ -1,4 +1,5 @@
-import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
+import JoiDate from '@joi/date'
+import JoiBase, { type ArraySchema, type GetRuleOptions } from 'joi'
 
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import {
@@ -22,6 +23,8 @@ import {
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
 import { preventUnicodeInEmail } from '~/src/form/utils/prevent-unicode.js'
+
+const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
 export const emailAddressNoUnicodeSchema = Joi.string()
   .trim()
@@ -502,11 +505,11 @@ interface DSLSchema<TSchema = Record<string, unknown>[]>
   keys: (keys: string[]) => DSLSchema<TSchema>
 }
 
-interface CustomValidator extends Joi.Root {
+interface CustomValidator extends JoiBase.Root {
   dsv<TSchema>(): DSLSchema<TSchema>
 }
 
-export const customValidator = Joi.extend((joi: Joi.Root) => {
+export const customValidator = Joi.extend((joi: JoiBase.Root) => {
   return {
     type: 'dsv',
     base: joi.array(),

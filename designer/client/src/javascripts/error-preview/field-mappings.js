@@ -20,7 +20,9 @@ export const fieldMappings =
       dateMax: {
         fieldName: 'maxFuture',
         placeholder: '[max days in the future]'
-      }
+      },
+      earliestDate: { fieldName: 'earliestDate', placeholder: '[first date]' },
+      latestDate: { fieldName: 'latestDate', placeholder: '[second date]' }
     },
     [ComponentType.FileUploadField]: {
       min: { fieldName: 'minFiles', placeholder: '[min file count]' },

@@ -5,6 +5,7 @@ import {
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
+import { buildDateValuesAndErrors } from '~/src/common/helpers/date-field-helper.js'
 import {
   hasCheckedValue,
   insertValidationErrors,
@@ -33,7 +34,10 @@ export function addNumberFieldProperties(question) {
 export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
-    maxPast: question.options.maxDaysInPast
+    maxPast: question.options.maxDaysInPast,
+    // Convert YYYY-MM-DD into an array of parts, for these dates
+    earliestDate: question.options.earliestDate?.split('-').reverse(),
+    latestDate: question.options.latestDate?.split('-').reverse()
   }
 }
 
@@ -270,6 +274,16 @@ export function advancedSettingsFields(options, question, validation) {
             item.value
           )
         }))
+      }
+    }
+
+    if (
+      fieldName === QuestionAdvancedSettings.EarliestDate ||
+      fieldName === QuestionAdvancedSettings.LatestDate
+    ) {
+      return {
+        ...fieldSettings,
+        ...buildDateValuesAndErrors(fieldName, formValues, formErrors)
       }
     }
 
