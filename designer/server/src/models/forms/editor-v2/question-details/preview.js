@@ -179,6 +179,9 @@ export class QuestionPreviewElements {
     shortDescription: (field, instance) => {
       instance._shortDesc = getValueAsString(field)
     },
+    errorDescription: (field, instance) => {
+      instance._errorDesc = getValueAsString(field)
+    },
     autoCompleteOptions: (field, instance) => {
       instance.autocompleteOptions = getValueAsString(field)
     },

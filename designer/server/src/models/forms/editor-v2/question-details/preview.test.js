@@ -95,6 +95,20 @@ describe('preview', () => {
     value: 'Short answer'
   }
 
+  const errorDescription = {
+    id: 'errorDescription',
+    name: 'errorDescription',
+    idPrefix: 'errorDescription',
+    label: {
+      text: 'Error description',
+      classes: 'govuk-label--m'
+    },
+    hint: {
+      text: 'Used in error messages instead of the short description.'
+    },
+    value: 'Short error description'
+  }
+
   const autocompleteOptions = {
     id: 'autoCompleteOptions',
     name: 'autoCompleteOptions',
@@ -171,6 +185,7 @@ describe('preview', () => {
     hintText,
     questionOptional,
     shortDescription,
+    errorDescription,
     usePostcodeLookup,
     classes,
     prefix,
@@ -286,6 +301,7 @@ describe('preview', () => {
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
+        errorDesc: '',
         usePostcodeLookup: true,
         items: [],
         prefix: 'pre',
@@ -307,6 +323,7 @@ describe('preview', () => {
         content: '',
         optional: false,
         shortDesc: '',
+        errorDesc: '',
         usePostcodeLookup: false,
         items: [],
         prefix: '',

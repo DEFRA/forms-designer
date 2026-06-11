@@ -129,9 +129,9 @@ describe('error-preview', () => {
       sourcesElem[0].value = 'Primary source text'
       sourcesElem[1].value = 'Secondary source text'
       res.updateText(sourcesElem, targets, '[placeholder]')
-      expect(targets[0].textContent).toBe('Primary source text')
+      expect(targets[0].textContent).toBe('primary source text')
       expect(targets[targets.length - 1].textContent).toBe(
-        'Primary source text'
+        'primary source text'
       )
     })
 
