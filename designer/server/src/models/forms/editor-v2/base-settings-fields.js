@@ -84,6 +84,7 @@ export const baseSchema = Joi.object().keys({
       })
     }
   ),
+  errorDescription: questionDetailsFullSchema.errorDescriptionSchema,
   questionType: questionDetailsFullSchema.questionTypeFullSchema.messages({
     '*': 'The question type is missing'
   }),
@@ -305,6 +306,8 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
       return questionFields?.hint
     case 'shortDescription':
       return questionFields?.shortDescription
+    case 'errorDescription':
+      return questionFields?.errorDescription
     case 'declarationText': {
       const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
         questionFields
@@ -401,7 +404,8 @@ export const baseQuestionFields =
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const autocompleteFields =

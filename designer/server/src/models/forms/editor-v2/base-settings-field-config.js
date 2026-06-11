@@ -46,6 +46,18 @@ export const allBaseSettingsFields = {
       text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
     }
   },
+  errorDescription: {
+    id: 'errorDescription',
+    name: 'errorDescription',
+    idPrefix: 'errorDescription',
+    label: {
+      text: 'Error description',
+      classes: GOVUK_LABEL__M
+    },
+    hint: {
+      text: 'Used in error messages instead of the short description.'
+    }
+  },
   fileTypes: {
     id: 'fileTypes',
     name: 'fileTypes',

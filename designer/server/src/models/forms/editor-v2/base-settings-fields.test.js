@@ -63,6 +63,19 @@ describe('editor-v2 - advanced settings fields model', () => {
             text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
           },
           value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'Used in error messages instead of the short description.'
+          },
+          value: undefined
         }
       ]
       expect(
@@ -121,6 +134,19 @@ describe('editor-v2 - advanced settings fields model', () => {
           },
           hint: {
             text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+          },
+          value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'Used in error messages instead of the short description.'
           },
           value: undefined
         }
@@ -719,13 +745,13 @@ describe('editor-v2 - advanced settings fields model', () => {
 
     test('should return base fields for undefined question type', () => {
       const fields = getQuestionFieldList(undefined)
-      expect(fields).toHaveLength(4)
+      expect(fields).toHaveLength(5)
       expect(fields[0]).toBe('question')
     })
 
     test('should return base fields for unmapped question type', () => {
       const fields = getQuestionFieldList(ComponentType.TextField)
-      expect(fields).toHaveLength(4)
+      expect(fields).toHaveLength(5)
       expect(fields[0]).toBe('question')
     })
   })
@@ -802,6 +828,25 @@ describe('editor-v2 - advanced settings fields model', () => {
         undefined
       )
       expect(result).toBe('Short desc')
+    })
+
+    test('should return error description from component', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        errorDescription: 'Error desc',
+        type: ComponentType.TextField,
+        name: 'test',
+        title: 'test',
+        options: {},
+        schema: {}
+      })
+      const result = getFieldValue(
+        'errorDescription',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Error desc')
     })
 
     test('should return questionOptional as string', () => {

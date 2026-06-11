@@ -234,6 +234,9 @@ export function mapExtraRootFields(payload) {
   if (payload.declarationText) {
     rootFields.content = payload.declarationText
   }
+  if (payload.errorDescription) {
+    rootFields.errorDescription = payload.errorDescription
+  }
   return rootFields
 }
 
