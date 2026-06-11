@@ -301,7 +301,7 @@ describe('preview', () => {
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
-        errorDesc: '',
+        errorDesc: 'Short error description',
         usePostcodeLookup: true,
         items: [],
         prefix: 'pre',

@@ -157,6 +157,7 @@ describe('list', () => {
         largeTitle: true,
         shortDesc: 'your quest',
         content: '',
+        errorDesc: '',
         items: expectedList
       })
       const listText = /** @type {HTMLInputElement} */ (

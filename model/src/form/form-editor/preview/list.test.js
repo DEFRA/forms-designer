@@ -332,6 +332,7 @@ describe('list', () => {
         optional: false,
         content: '',
         shortDesc: 'shortDesc',
+        errorDesc: '',
         items: [
           {
             id: listId1,
