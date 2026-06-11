@@ -18,6 +18,7 @@ export class UnsupportedQuestionDomElements extends DomElements {
       hintText: '',
       optional: true,
       shortDesc: '',
+      errorDesc: '',
       userClasses: '',
       items: [],
       content: ''

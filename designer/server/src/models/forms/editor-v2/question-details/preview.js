@@ -91,6 +91,11 @@ export class QuestionPreviewElements {
    * @type {string}
    * @protected
    */
+  _errorDesc = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _userClasses = ''
   /**
    * @type {string}
@@ -232,6 +237,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      errorDesc: this._errorDesc,
       userClasses: this._userClasses,
       usePostcodeLookup: this._usePostcodeLookup,
       prefix: this._prefix,
