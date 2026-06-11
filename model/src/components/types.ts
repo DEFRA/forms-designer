@@ -23,6 +23,7 @@ interface FormFieldBase {
   id?: string
   type: FormComponentsDef['type']
   shortDescription?: string
+  errorDescription?: string
   name: string
   title: string
   hint?: string

@@ -519,7 +519,11 @@ export const componentSchema = Joi.object<ComponentDef>()
     shortDescription: Joi.string()
       .custom(rtrimOnly)
       .optional()
-      .description('Brief description of the component purpose'),
+      .description('Short description of the component used in the summary'),
+    errorDescription: Joi.string()
+      .custom(rtrimOnly)
+      .optional()
+      .description('Description that will be displayed in error messages'),
     name: Joi.when('type', {
       is: Joi.string().valid(
         ComponentType.Details,
