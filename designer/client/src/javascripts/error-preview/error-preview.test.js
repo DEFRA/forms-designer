@@ -95,6 +95,46 @@ describe('error-preview', () => {
       expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
     })
 
+    it('should updateText with placeholder if both sources have an empty text value', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const advancedFields = fieldMappings[ComponentType.TextField]
+      const res = new ErrorPreviewDomElements(advancedFields)
+      expect(res).toBeDefined()
+      const targets = /** @type {HTMLInputElement[]} */ (
+        Array.from(document.querySelectorAll('.error-preview-shortDescription'))
+      )
+      const sourcesElem = [
+        document.createElement('input'),
+        document.createElement('input')
+      ]
+      sourcesElem[0].value = ''
+      sourcesElem[1].value = ''
+      res.updateText(sourcesElem, targets, '[placeholder]')
+      expect(targets[0].textContent).toBe('[placeholder]')
+      expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
+    })
+
+    it('should updateText with priority placeholder if both sources have an empty text value', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const advancedFields = fieldMappings[ComponentType.TextField]
+      const res = new ErrorPreviewDomElements(advancedFields)
+      expect(res).toBeDefined()
+      const targets = /** @type {HTMLInputElement[]} */ (
+        Array.from(document.querySelectorAll('.error-preview-shortDescription'))
+      )
+      const sourcesElem = [
+        document.createElement('input'),
+        document.createElement('input')
+      ]
+      sourcesElem[0].value = 'Primary source text'
+      sourcesElem[1].value = 'Secondary source text'
+      res.updateText(sourcesElem, targets, '[placeholder]')
+      expect(targets[0].textContent).toBe('Primary source text')
+      expect(targets[targets.length - 1].textContent).toBe(
+        'Primary source text'
+      )
+    })
+
     it('should not update elements with data-fixed="true"', () => {
       document.body.innerHTML = shortDescInputHTML + panelHTML
       const res = new ErrorPreviewDomElements(undefined)
