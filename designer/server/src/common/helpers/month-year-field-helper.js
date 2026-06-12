@@ -16,7 +16,7 @@ const partFields = [
 ]
 
 /**
- * @param {any[]} coerced
+ * @param {number[]} coerced
  */
 function buildDateString(coerced) {
   return `${coerced[1]}-${leftPadDateIfSupplied(coerced[0].toString())}-01`
@@ -32,7 +32,7 @@ const errorMessages = {
 }
 
 /**
- * @param {import('joi').Root} joi
+ * @param {Root} joi
  */
 function setupSchema(joi) {
   const monthSchema = joi.number().min(1).max(12)
@@ -47,14 +47,14 @@ function setupSchema(joi) {
 
 /**
  * @param {any} value
- * @param {import('joi').ArraySchema<any[]>} emptyPayload
+ * @param {ArraySchema<''[]>} emptyPayload
  */
 function prepareImpl(value, emptyPayload) {
   return prepareDatePartsValue(value, emptyPayload, NUMBER_OF_DATE_PARTS)
 }
 
 /**
- * @type {import('joi').ExtensionFactory}
+ * @type {ExtensionFactory}
  */
 export const gdsMonthYearExtension = (joi) => {
   const { partsSchema, emptyPayload } = setupSchema(joi)
@@ -98,5 +98,6 @@ export function buildMonthYearValuesAndErrors(fieldName, values, errors) {
 }
 
 /**
+ * @import { Root, ArraySchema, ExtensionFactory } from 'joi'
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
  */

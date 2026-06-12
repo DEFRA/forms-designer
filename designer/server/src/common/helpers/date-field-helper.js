@@ -34,7 +34,7 @@ const errorMessages = {
 }
 
 /**
- * @param {import('joi').Root} joi
+ * @param {Root} joi
  */
 function setupSchema(joi) {
   const daySchema = joi.number().min(1).max(31)
@@ -50,14 +50,14 @@ function setupSchema(joi) {
 
 /**
  * @param {any} value
- * @param {import('joi').ArraySchema<any[]>} emptyPayload
+ * @param {ArraySchema<''[]>} emptyPayload
  */
 function prepareImpl(value, emptyPayload) {
   return prepareDatePartsValue(value, emptyPayload, NUMBER_OF_DATE_PARTS)
 }
 
 /**
- * @type {import('joi').ExtensionFactory}
+ * @type {ExtensionFactory}
  */
 export const gdsDateExtension = (joi) => {
   const { partsSchema, emptyPayload } = setupSchema(joi)
@@ -101,5 +101,6 @@ export function buildDateValuesAndErrors(fieldName, values, errors) {
 }
 
 /**
+ * @import { Root, ArraySchema, ExtensionFactory } from 'joi'
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
  */

@@ -13,30 +13,32 @@ export const isValidDatePartsPayload = (value, partCount) => {
 }
 
 /**
- * @param {import('joi').Root} joi
- * @param {Array<import('joi').Schema>} partSchemas
+ * @param {Root} joi
+ * @param {NumberSchema<number>[]} partSchemas
  * @param {number} partCount
  */
 export function setupDatePartsSchema(joi, partSchemas, partCount) {
   const emptyString = joi.string().trim().valid('').required()
 
   return {
-    partsSchema: /** @type {import('joi').ArraySchema<any[]>} */ (
+    partsSchema: /** @type {ArraySchema<number[]>} */ (
       joi
         .array()
         .ordered(...partSchemas)
         .length(partCount)
     ),
-    emptyPayload: joi
-      .array()
-      .items(...Array.from({ length: partCount }, () => emptyString))
-      .length(partCount)
+    emptyPayload: /** @type {ArraySchema<''[]>} */ (
+      joi
+        .array()
+        .items(...Array.from({ length: partCount }, () => emptyString))
+        .length(partCount)
+    )
   }
 }
 
 /**
  * @param {any} value
- * @param {import('joi').ArraySchema<any[]>} emptyPayload
+ * @param {ArraySchema<''[]>} emptyPayload
  * @param {number} partCount
  */
 export function prepareDatePartsValue(value, emptyPayload, partCount) {
@@ -58,10 +60,10 @@ export function prepareDatePartsValue(value, emptyPayload, partCount) {
  * @param {any} value
  * @param {any} helpers
  * @param {{
- *   partsSchema: import('joi').ArraySchema<any[]>
+ *   partsSchema: ArraySchema<number[]>
  *   partCount: number
  *   elementLookup: string[]
- *   buildDateString: (parts: any[]) => string
+ *   buildDateString: (parts: number[]) => string
  * }} options
  */
 export function coerceDatePartsValue(value, helpers, options) {
@@ -148,5 +150,6 @@ export function buildDatePartsValuesAndErrors(
 }
 
 /**
+ * @import { Root, ArraySchema, NumberSchema } from 'joi'
  * @import { ErrorDetails } from '~/src/common/helpers/types.js'
  */
