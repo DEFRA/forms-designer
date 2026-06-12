@@ -1,5 +1,6 @@
 import Joi from 'joi'
 
+import { FormFilterStatus } from '~/src/common/enums.js'
 import { type SearchOptions } from '~/src/common/search/types.js'
 import { organisations } from '~/src/form/form-metadata/index.js'
 
@@ -28,7 +29,7 @@ export const searchOptionFields = {
     .default([])
     .description('Filter by organisation(s), empty array matches all'),
   status: Joi.array()
-    .items(Joi.string().valid('draft', 'live'))
+    .items(Joi.string().valid(...Object.values(FormFilterStatus)))
     .single()
     .optional()
     .default([])

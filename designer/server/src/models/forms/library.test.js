@@ -1,4 +1,4 @@
-import { FormStatus, SchemaVersion } from '@defra/forms-model'
+import { FormFilterStatus, SchemaVersion } from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
@@ -1266,9 +1266,9 @@ describe('Forms Library Models', () => {
               totalItems: 30
             },
             search: {
-              status: /** @type {FormStatus[]} */ ([
-                FormStatus.Draft,
-                FormStatus.Live
+              status: /** @type {FormFilterStatus[]} */ ([
+                FormFilterStatus.Draft,
+                FormFilterStatus.Live
               ])
             }
           }
@@ -1278,7 +1278,7 @@ describe('Forms Library Models', () => {
         const viewModel = await listViewModel('token', {
           page: 2,
           perPage: 10,
-          status: [FormStatus.Draft, FormStatus.Live]
+          status: [FormFilterStatus.Draft, FormFilterStatus.Live]
         })
 
         expect(viewModel.pagination).toBeTruthy()

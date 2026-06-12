@@ -3,6 +3,12 @@ export enum FormStatus {
   Live = 'live'
 }
 
+export enum FormFilterStatus {
+  Draft = 'draft',
+  Live = 'live',
+  Offline = 'offline'
+}
+
 export enum ApiErrorCode {
   General = 'General',
   DuplicatePagePathPage = 'DuplicatePagePathPage',
