@@ -90,7 +90,7 @@ describe('preview', () => {
       classes: 'govuk-label--m'
     },
     hint: {
-      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
     },
     value: 'Short answer'
   }
@@ -104,7 +104,7 @@ describe('preview', () => {
       classes: 'govuk-label--m'
     },
     hint: {
-      text: 'Used in error messages instead of the short description.'
+      text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
     },
     value: 'Short error description'
   }
