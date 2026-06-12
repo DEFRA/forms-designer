@@ -94,6 +94,7 @@ export const QuestionBaseSettings = {
   HintText: 'hintText',
   QuestionOptional: 'questionOptional',
   ShortDescription: 'shortDescription',
+  ErrorDescription: 'errorDescription',
   DeclarationText: 'declarationText',
   FileTypes: 'fileTypes',
   DocumentTypes: 'documentTypes',

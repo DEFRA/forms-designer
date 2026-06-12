@@ -121,6 +121,7 @@ describe('question', () => {
         userClasses: '',
         optional: true,
         content: '',
+        errorDesc: '',
         shortDesc: 'shortDesc',
         items: []
       })
@@ -133,6 +134,7 @@ describe('question', () => {
         userClasses: '',
         optional: true,
         content: '',
+        errorDesc: '',
         shortDesc: 'shortDesc',
         items: []
       })

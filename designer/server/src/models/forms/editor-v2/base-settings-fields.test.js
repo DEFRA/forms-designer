@@ -60,7 +60,20 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
+          },
+          value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
           },
           value: undefined
         }
@@ -120,7 +133,20 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
+          },
+          value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
           },
           value: undefined
         }
@@ -244,7 +270,7 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
           },
           value: undefined
         }
@@ -313,7 +339,7 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
           },
           value: undefined
         }
@@ -719,13 +745,13 @@ describe('editor-v2 - advanced settings fields model', () => {
 
     test('should return base fields for undefined question type', () => {
       const fields = getQuestionFieldList(undefined)
-      expect(fields).toHaveLength(4)
+      expect(fields).toHaveLength(5)
       expect(fields[0]).toBe('question')
     })
 
     test('should return base fields for unmapped question type', () => {
       const fields = getQuestionFieldList(ComponentType.TextField)
-      expect(fields).toHaveLength(4)
+      expect(fields).toHaveLength(5)
       expect(fields[0]).toBe('question')
     })
   })
@@ -802,6 +828,25 @@ describe('editor-v2 - advanced settings fields model', () => {
         undefined
       )
       expect(result).toBe('Short desc')
+    })
+
+    test('should return error description from component', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        errorDescription: 'Error desc',
+        type: ComponentType.TextField,
+        name: 'test',
+        title: 'test',
+        options: {},
+        schema: {}
+      })
+      const result = getFieldValue(
+        'errorDescription',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Error desc')
     })
 
     test('should return questionOptional as string', () => {

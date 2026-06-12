@@ -9,6 +9,7 @@ const textFieldQuestions = [
   QuestionBaseSettings.Question,
   QuestionBaseSettings.Name,
   QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription,
   QuestionBaseSettings.PaymentAmount,
   QuestionBaseSettings.PaymentDescription,
   QuestionBaseSettings.PaymentTestApiKey,

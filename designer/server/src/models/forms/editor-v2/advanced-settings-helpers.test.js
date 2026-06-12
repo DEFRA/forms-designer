@@ -428,5 +428,12 @@ describe('advanced-settings-helpers', () => {
       })
       expect(result).toEqual({ list: 'myList' })
     })
+
+    it('should include error description when provided', () => {
+      const result = mapExtraRootFields({
+        errorDescription: 'My error description'
+      })
+      expect(result).toEqual({ errorDescription: 'My error description' })
+    })
   })
 })
