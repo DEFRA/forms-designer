@@ -76,6 +76,18 @@ describe('editor-v2 - advanced settings fields model', () => {
         ComponentType.DatePartsField
       )
     })
+
+    test('should return DateField for earliestMonthYear format', () => {
+      expect(getFieldComponentType({ name: 'earliestMonthYear' })).toBe(
+        ComponentType.DatePartsField
+      )
+    })
+
+    test('should return DateField for latestMonthYear format', () => {
+      expect(getFieldComponentType({ name: 'latestMonthYear' })).toBe(
+        ComponentType.DatePartsField
+      )
+    })
   })
 
   describe('mapQuestionDetails', () => {

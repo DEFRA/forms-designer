@@ -16,6 +16,7 @@ export const GOVUK_LABEL__M = 'govuk-label--m'
 export const GOVUK_INPUT_WIDTH_2 = 'govuk-input--width-2'
 export const GOVUK_INPUT_WIDTH_3 = 'govuk-input--width-3'
 export const GOVUK_FIELDSET_LEGEND__M = 'govuk-fieldset__legend--m'
+export const GOVUK_FIELDSET_LEGEND__S = 'govuk-fieldset__legend--s'
 export const CHANGES_SAVED_SUCCESSFULLY = 'Changes saved successfully'
 
 /**

@@ -7,11 +7,10 @@ import {
 import { leftPadDateIfSupplied } from '~/src/lib/utils.js'
 
 const BASE_ERROR = '{{#label}} must be a real date'
-const NUMBER_OF_DATE_PARTS = 3
+const NUMBER_OF_DATE_PARTS = 2
 
-const elementLookup = ['day', 'month', 'year']
+const elementLookup = ['month', 'year']
 const partFields = [
-  { idSuffix: 'day', label: 'Day', classes: 'govuk-input--width-2' },
   { idSuffix: 'month', label: 'Month', classes: 'govuk-input--width-2' },
   { idSuffix: 'year', label: 'Year', classes: 'govuk-input--width-4' }
 ]
@@ -20,7 +19,7 @@ const partFields = [
  * @param {number[]} coerced
  */
 function buildDateString(coerced) {
-  return `${coerced[2]}-${leftPadDateIfSupplied(coerced[1].toString())}-${leftPadDateIfSupplied(coerced[0].toString())}`
+  return `${coerced[1]}-${leftPadDateIfSupplied(coerced[0].toString())}-01`
 }
 
 const errorMessages = {
@@ -28,7 +27,6 @@ const errorMessages = {
   'number.min': BASE_ERROR,
   'date.base': BASE_ERROR,
   'dateParts.base': BASE_ERROR,
-  'dateParts.day.required': '{{#label}} must include a day',
   'dateParts.month.required': '{{#label}} must include a month',
   'dateParts.year.required': '{{#label}} must include a year'
 }
@@ -37,13 +35,12 @@ const errorMessages = {
  * @param {Root} joi
  */
 function setupSchema(joi) {
-  const daySchema = joi.number().min(1).max(31)
   const monthSchema = joi.number().min(1).max(12)
   const yearSchema = joi.number().min(1000).max(3000)
 
   return setupDatePartsSchema(
     joi,
-    [daySchema.required(), monthSchema.required(), yearSchema.required()],
+    [monthSchema.required(), yearSchema.required()],
     NUMBER_OF_DATE_PARTS
   )
 }
@@ -59,12 +56,12 @@ function prepareImpl(value, emptyPayload) {
 /**
  * @type {ExtensionFactory}
  */
-export const gdsDateExtension = (joi) => {
+export const gdsMonthYearExtension = (joi) => {
   const { partsSchema, emptyPayload } = setupSchema(joi)
 
   return {
     base: joi.date(),
-    type: 'gdsDateParts',
+    type: 'gdsMonthYearParts',
     messages: errorMessages,
     /**
      * @param {any} value
@@ -96,7 +93,7 @@ export const gdsDateExtension = (joi) => {
  * @param {Record<string, string | string[] | number | boolean | undefined> } values
  * @param {ErrorDetails | undefined} errors
  */
-export function buildDateValuesAndErrors(fieldName, values, errors) {
+export function buildMonthYearValuesAndErrors(fieldName, values, errors) {
   return buildDatePartsValuesAndErrors(fieldName, values, errors, partFields)
 }
 
