@@ -17,7 +17,7 @@ const partFields = [
 ]
 
 /**
- * @param {any[]} coerced
+ * @param {number[]} coerced
  */
 function buildDateString(coerced) {
   return `${coerced[2]}-${leftPadDateIfSupplied(coerced[1].toString())}-${leftPadDateIfSupplied(coerced[0].toString())}`
