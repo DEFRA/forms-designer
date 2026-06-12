@@ -213,7 +213,6 @@ export interface FormEditor {
   latestDate: string
 
   /**
-<<<<<<< HEAD
    * The earliest month and year in a date range that users can enter (YYYY-MM)
    */
   earliestMonthYear: string
@@ -224,8 +223,6 @@ export interface FormEditor {
   latestMonthYear: string
 
   /**
-=======
->>>>>>> main
    * The exact number of files to upload
    */
   exactFiles: string
