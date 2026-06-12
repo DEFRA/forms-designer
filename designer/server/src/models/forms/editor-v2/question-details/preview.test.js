@@ -100,7 +100,7 @@ describe('preview', () => {
     name: 'errorDescription',
     idPrefix: 'errorDescription',
     label: {
-      text: 'Error description',
+      text: 'Error description (optional)',
       classes: 'govuk-label--m'
     },
     hint: {

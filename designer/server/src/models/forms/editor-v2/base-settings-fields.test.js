@@ -69,7 +69,7 @@ describe('editor-v2 - advanced settings fields model', () => {
           name: 'errorDescription',
           idPrefix: 'errorDescription',
           label: {
-            text: 'Error description',
+            text: 'Error description (optional)',
             classes: GOVUK_LABEL__M
           },
           hint: {
@@ -142,7 +142,7 @@ describe('editor-v2 - advanced settings fields model', () => {
           name: 'errorDescription',
           idPrefix: 'errorDescription',
           label: {
-            text: 'Error description',
+            text: 'Error description (optional)',
             classes: GOVUK_LABEL__M
           },
           hint: {

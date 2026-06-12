@@ -51,7 +51,7 @@ export const allBaseSettingsFields = {
     name: 'errorDescription',
     idPrefix: 'errorDescription',
     label: {
-      text: 'Error description',
+      text: 'Error description (optional)',
       classes: GOVUK_LABEL__M
     },
     hint: {
