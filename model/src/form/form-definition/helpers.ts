@@ -40,8 +40,28 @@ export function isConditionListItemRefValueData(
   return (
     typeof conditionValueData === 'object' &&
     'listId' in conditionValueData &&
-    'itemId' in conditionValueData
+    ('itemId' in conditionValueData || 'itemIds' in conditionValueData)
   )
+}
+
+/**
+ * Normalises a list item ref condition value to an array of item ids,
+ * reading either the new `itemIds` or the legacy single `itemId`.
+ * @param { ConditionListItemRefValueDataV2 | undefined } value
+ * @returns { string[] }
+ */
+export function getConditionListItemIds(
+  value: ConditionListItemRefValueDataV2 | undefined
+): string[] {
+  if (!value) {
+    return []
+  }
+
+  if (value.itemIds?.length) {
+    return value.itemIds
+  }
+
+  return value.itemId ? [value.itemId] : []
 }
 
 /**

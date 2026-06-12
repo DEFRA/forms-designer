@@ -1,6 +1,9 @@
 import { ConditionType, OperatorName } from '@defra/forms-model'
 import {
+  buildCheckboxComponent,
   buildDefinition,
+  buildList,
+  buildListItem,
   buildQuestionPage,
   buildTextFieldComponent
 } from '@defra/forms-model/stubs'
@@ -72,6 +75,55 @@ describe('condition-helpers', () => {
     it('should return component names used in condition', () => {
       const result = getReferencedComponentNamesV2(mockConditionV2, definition)
       expect(Array.isArray(result)).toBe(true)
+    })
+
+    it('should collect names from nested grouped conditions (multi-select list)', () => {
+      const listItem1 = buildListItem({ id: 'item1', text: 'A', value: 'a' })
+      const listItem2 = buildListItem({ id: 'item2', text: 'B', value: 'b' })
+      const list = buildList({
+        id: 'list1',
+        name: 'favouritesList',
+        items: [listItem1, listItem2]
+      })
+      const checkboxComponent = buildCheckboxComponent({
+        id: 'checkbox-field',
+        name: 'favourites',
+        title: 'Favourites',
+        list: 'favouritesList'
+      })
+
+      /**
+       * Selecting multiple list items expands into a nested condition group,
+       * which is the recursive branch under test.
+       * @type {ConditionWrapperV2}
+       */
+      const multiSelectCondition = {
+        id: 'condMulti',
+        displayName: 'Multi-select Condition',
+        items: [
+          {
+            id: 'multiItem',
+            componentId: 'checkbox-field',
+            operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
+            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+          }
+        ]
+      }
+
+      const multiSelectDefinition = buildDefinition({
+        pages: [buildQuestionPage({ components: [checkboxComponent] })],
+        conditions: [multiSelectCondition],
+        lists: [list]
+      })
+
+      const result = getReferencedComponentNamesV2(
+        multiSelectCondition,
+        multiSelectDefinition
+      )
+
+      // Both expanded conditions reference the same checkbox component name.
+      expect(result).toEqual(['favourites', 'favourites'])
     })
   })
 

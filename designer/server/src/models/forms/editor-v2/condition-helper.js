@@ -1,6 +1,7 @@
 import {
   ComponentType,
   ConditionType,
+  Coordinator,
   OperatorName,
   conditionDataSchemaV2,
   conditionWrapperSchemaV2,
@@ -281,13 +282,62 @@ export function buildConditionsFields(
       ? `items[${idx}][value][listId]`
       : ''
 
+  // Checkbox questions let the author choose how multiple selections combine
+  // (AND/OR); other list questions (radio/autocomplete/select) combine with OR.
+  const isCheckboxList =
+    conditionType === ConditionType.ListItemRef &&
+    selectedComponent?.type === ComponentType.CheckboxesField
+
+  const itemsCoordinator = isCheckboxList
+    ? buildItemsCoordinatorField(idx, item)
+    : undefined
+
+  // Single-answer list questions (radio/autocomplete/select) combine multiple
+  // selections with OR for a positive match, but with AND for an "is not" match
+  // (i.e. the answer must not be any of the selected options).
+  const isAndCombination =
+    conditionType === ConditionType.ListItemRef &&
+    !isCheckboxList &&
+    operatorValue === OperatorName.IsNot
+
   // prettier-ignore
   const value = 'operator' in item && component.value && operator?.value
       ? buildValueField(conditionType, idx, item, selectedComponent, definition, validation)
       : undefined
 
   // prettier-ignore
-  return { component, operator, value, conditionType, idField, listId, conditionTypeName, listIdName}
+  return { component, operator, value, conditionType, idField, listId, conditionTypeName, listIdName, isCheckboxList, itemsCoordinator, isAndCombination}
+}
+
+/**
+ * Builds the "How do you want to combine these checkbox selections?" control
+ * shown above the checkbox options for checkbox question conditions.
+ * @param {number} idx
+ * @param { ConditionDataV2 | ConditionRefDataV2 } item
+ */
+export function buildItemsCoordinatorField(idx, item) {
+  const valueObj =
+    'value' in item
+      ? /** @type { ConditionListItemRefValueDataV2 | undefined } */ (
+          item.value
+        )
+      : undefined
+
+  return {
+    id: `items[${idx}].value.itemsCoordinator`,
+    name: `items[${idx}][value][itemsCoordinator]`,
+    fieldset: {
+      legend: {
+        text: 'How do you want to combine these checkbox selections?',
+        classes: GOVUK_LABEL_S
+      }
+    },
+    value: valueObj?.itemsCoordinator ?? Coordinator.AND,
+    items: [
+      { text: 'All must be met (AND)', value: Coordinator.AND },
+      { text: 'Any can be met (OR)', value: Coordinator.OR }
+    ]
+  }
 }
 
 /**
@@ -393,6 +443,6 @@ export function buildConditionEditor(definition, validation, state) {
  */
 
 /**
- * @import { ConditionalComponentsDef, ConditionDataV2, ConditionRefDataV2, ConditionSessionState, ConditionWrapperV2, FormDefinition, FormEditor, Page } from '@defra/forms-model'
+ * @import { ConditionalComponentsDef, ConditionDataV2, ConditionListItemRefValueDataV2, ConditionRefDataV2, ConditionSessionState, ConditionWrapperV2, FormDefinition, FormEditor, Page } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

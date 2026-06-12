@@ -1,4 +1,4 @@
-import { ConditionType, OperatorName } from '@defra/forms-model'
+import { ConditionType, Coordinator, OperatorName } from '@defra/forms-model'
 import {
   buildDeclarationFieldComponent,
   buildNumberFieldComponent,
@@ -8,6 +8,7 @@ import {
 } from '@defra/forms-model/stubs'
 
 import {
+  buildItemsCoordinatorField,
   getConditionType,
   isConditionRequiresNumberValue
 } from '~/src/models/forms/editor-v2/condition-helper.js'
@@ -52,6 +53,40 @@ describe('condition-helper', () => {
     })
   })
 
+  describe('buildItemsCoordinatorField', () => {
+    test('should default to AND when no coordinator is set', () => {
+      const field = buildItemsCoordinatorField(
+        0,
+        /** @type {ConditionDataV2} */ ({
+          id: '1',
+          value: { listId: 'list1', itemIds: ['a', 'b'] }
+        })
+      )
+      expect(field.name).toBe('items[0][value][itemsCoordinator]')
+      expect(field.value).toBe(Coordinator.AND)
+      expect(field.items).toEqual([
+        { text: 'All must be met (AND)', value: Coordinator.AND },
+        { text: 'Any can be met (OR)', value: Coordinator.OR }
+      ])
+    })
+
+    test('should reflect an existing coordinator selection', () => {
+      const field = buildItemsCoordinatorField(
+        2,
+        /** @type {ConditionDataV2} */ ({
+          id: '1',
+          value: {
+            listId: 'list1',
+            itemIds: ['a'],
+            itemsCoordinator: Coordinator.OR
+          }
+        })
+      )
+      expect(field.value).toBe(Coordinator.OR)
+      expect(field.name).toBe('items[2][value][itemsCoordinator]')
+    })
+  })
+
   describe('getConditionType', () => {
     test('should return ListItemRef when a list component', () => {
       const component = buildSelectFieldComponent()
@@ -75,3 +110,7 @@ describe('condition-helper', () => {
     })
   })
 })
+
+/**
+ * @import { ConditionDataV2 } from '@defra/forms-model'
+ */

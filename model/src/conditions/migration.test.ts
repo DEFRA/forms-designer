@@ -13,9 +13,29 @@ import {
   type RuntimeFormModel
 } from '~/src/conditions/migration.js'
 import {
+  type ConditionData,
+  type ConditionGroupData,
+  type ConditionRefData
+} from '~/src/conditions/types.js'
+import {
   type ConditionWrapperV2,
   type List
 } from '~/src/form/form-definition/types.js'
+
+/**
+ * Safely reads the coordinator of a nested condition within an expanded group.
+ */
+const innerCoordinatorAt = (
+  condition: ConditionData | ConditionRefData | ConditionGroupData,
+  index: number
+): Coordinator | undefined => {
+  if (!('conditions' in condition)) {
+    return undefined
+  }
+
+  const inner = condition.conditions[index]
+  return 'coordinator' in inner ? inner.coordinator : undefined
+}
 
 describe('Migration', () => {
   let model: RuntimeFormModel
@@ -278,6 +298,214 @@ describe('Migration', () => {
       expect(() =>
         convertConditionWrapperFromV2(conditionWrapper, model)
       ).toThrow('List item nonExistentItem not found')
+    })
+  })
+
+  describe('multi-select list conditions', () => {
+    const list: List = {
+      id: 'list1',
+      items: [
+        { id: 'item1', text: 'Item 1', value: 'item1Value' },
+        { id: 'item2', text: 'Item 2', value: 'item2Value' }
+      ],
+      name: 'Test List',
+      title: 'Test List',
+      type: 'string'
+    }
+
+    /**
+     * @param {ComponentType} type
+     */
+    const componentOfType = (type: ComponentType): ComponentDef =>
+      ({
+        id: 'component1',
+        name: 'testComponent',
+        title: 'Test Component',
+        type,
+        options: {},
+        list: 'list1'
+      }) as ComponentDef
+
+    const field = {
+      name: 'testComponent',
+      display: 'Test Component'
+    }
+
+    beforeEach(() => {
+      model.getListById = jest.fn().mockReturnValue(list)
+    })
+
+    test('radio "is" with multiple items expands to an OR group', () => {
+      model.getComponentById = jest
+        .fn()
+        .mockReturnValue(componentOfType(ComponentType.RadiosField))
+
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: 'wrapper1',
+        displayName: 'Radio multi',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
+            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+          }
+        ]
+      }
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+
+      expect(result.value.conditions).toEqual([
+        {
+          conditions: [
+            {
+              field: { ...field, type: ComponentType.RadiosField },
+              operator: OperatorName.Is,
+              value: {
+                type: ConditionType.Value,
+                value: 'item1Value',
+                display: 'Item 1'
+              },
+              coordinator: undefined
+            },
+            {
+              field: { ...field, type: ComponentType.RadiosField },
+              operator: OperatorName.Is,
+              value: {
+                type: ConditionType.Value,
+                value: 'item2Value',
+                display: 'Item 2'
+              },
+              coordinator: Coordinator.OR
+            }
+          ]
+        }
+      ])
+    })
+
+    test('radio "is not" with multiple items expands to an AND group', () => {
+      model.getComponentById = jest
+        .fn()
+        .mockReturnValue(componentOfType(ComponentType.RadiosField))
+
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: 'wrapper1',
+        displayName: 'Radio multi negative',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.IsNot,
+            type: ConditionType.ListItemRef,
+            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+          }
+        ]
+      }
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+      const group = result.value.conditions[0]
+
+      expect(innerCoordinatorAt(group, 1)).toBe(Coordinator.AND)
+    })
+
+    test('checkbox honours the author-chosen items coordinator', () => {
+      model.getComponentById = jest
+        .fn()
+        .mockReturnValue(componentOfType(ComponentType.CheckboxesField))
+
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: 'wrapper1',
+        displayName: 'Checkbox multi',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Contains,
+            type: ConditionType.ListItemRef,
+            value: {
+              listId: 'list1',
+              itemIds: ['item1', 'item2'],
+              itemsCoordinator: Coordinator.AND
+            }
+          }
+        ]
+      }
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+      const group = result.value.conditions[0]
+
+      expect(innerCoordinatorAt(group, 1)).toBe(Coordinator.AND)
+    })
+
+    test('checkbox defaults to OR when no items coordinator is set', () => {
+      model.getComponentById = jest
+        .fn()
+        .mockReturnValue(componentOfType(ComponentType.CheckboxesField))
+
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: 'wrapper1',
+        displayName: 'Checkbox multi default',
+        items: [
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Contains,
+            type: ConditionType.ListItemRef,
+            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+          }
+        ]
+      }
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+      const group = result.value.conditions[0]
+
+      expect(innerCoordinatorAt(group, 1)).toBe(Coordinator.OR)
+    })
+
+    test('outer coordinator is applied to the first condition of an expanded group', () => {
+      model.getComponentById = jest.fn().mockImplementation((id: string) => {
+        return id === 'component1'
+          ? componentOfType(ComponentType.RadiosField)
+          : ({
+              id: 'component2',
+              name: 'otherComponent',
+              title: 'Other Component',
+              type: ComponentType.TextField,
+              options: {},
+              schema: {}
+            } as ComponentDef)
+      })
+
+      const conditionWrapper: ConditionWrapperV2 = {
+        id: 'wrapper1',
+        displayName: 'Mixed',
+        coordinator: Coordinator.AND,
+        items: [
+          {
+            id: 'condition0',
+            componentId: 'component2',
+            operator: OperatorName.Is,
+            type: ConditionType.StringValue,
+            value: 'test'
+          },
+          {
+            id: 'condition1',
+            componentId: 'component1',
+            operator: OperatorName.Is,
+            type: ConditionType.ListItemRef,
+            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+          }
+        ]
+      }
+
+      const result = convertConditionWrapperFromV2(conditionWrapper, model)
+      const group = result.value.conditions[1]
+
+      // First inner condition carries the wrapper (outer) coordinator...
+      expect(innerCoordinatorAt(group, 0)).toBe(Coordinator.AND)
+      // ...subsequent ones carry the inner OR coordinator.
+      expect(innerCoordinatorAt(group, 1)).toBe(Coordinator.OR)
     })
   })
 
