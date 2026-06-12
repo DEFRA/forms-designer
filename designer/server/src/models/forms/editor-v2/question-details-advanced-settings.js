@@ -30,24 +30,24 @@ export function addNumberFieldProperties(question) {
 }
 
 /**
+ * Returns `DatePartsFieldComponent` options, converting earliest/latest setting from YYYY-MM strings into an array of parts
  * @param { DatePartsFieldComponent } question
  */
 export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
     maxPast: question.options.maxDaysInPast,
-    // Convert YYYY-MM-DD into an array of parts, for these dates
     earliestDate: question.options.earliestDate?.split('-').reverse(),
     latestDate: question.options.latestDate?.split('-').reverse()
   }
 }
 
 /**
+ * Returns `MonthYearFieldComponent` options, converting earliest/latest setting from YYYY-MM strings into an array of parts
  * @param { MonthYearFieldComponent } question
  */
 export function addMonthYearFieldProperties(question) {
   return {
-    // Convert YYYY-MM into an array of parts, for these dates
     earliestMonthYear: question.options.earliestMonthYear?.split('-').reverse(),
     latestMonthYear: question.options.latestMonthYear?.split('-').reverse()
   }
