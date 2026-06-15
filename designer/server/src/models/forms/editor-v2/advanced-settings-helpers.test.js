@@ -86,6 +86,34 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ latestDate: '' })
     })
 
+    it('should map earliestMonthYear to correct format', () => {
+      const result = getAdditionalOptions({
+        earliestMonthYear: '2023-02-01'
+      })
+      expect(result).toEqual({ earliestMonthYear: '2023-02' })
+    })
+
+    it('should map empty earliestMonthYear', () => {
+      const result = getAdditionalOptions({
+        earliestMonthYear: ''
+      })
+      expect(result).toEqual({ earliestMonthYear: '' })
+    })
+
+    it('should map latestMonthYear to correct format', () => {
+      const result = getAdditionalOptions({
+        latestMonthYear: '2012-06-02'
+      })
+      expect(result).toEqual({ latestMonthYear: '2012-06' })
+    })
+
+    it('should map empty latestMonthYear', () => {
+      const result = getAdditionalOptions({
+        latestMonthYear: ''
+      })
+      expect(result).toEqual({ latestMonthYear: '' })
+    })
+
     it('should convert usePostcodeLookup to boolean', () => {
       const result = getAdditionalOptions({ usePostcodeLookup: 'true' })
       expect(result).toEqual({ usePostcodeLookup: true })

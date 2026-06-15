@@ -218,6 +218,16 @@ export interface FormEditor {
   latestDate: string
 
   /**
+   * The earliest month and year in a date range that users can enter (YYYY-MM)
+   */
+  earliestMonthYear: string
+
+  /**
+   * The latest month and year in a date range that users can enter (YYYY-MM)
+   */
+  latestMonthYear: string
+
+  /**
    * The exact number of files to upload
    */
   exactFiles: string
@@ -473,6 +483,8 @@ export type FormEditorInputQuestion = Pick<
   | 'maxPast'
   | 'earliestDate'
   | 'latestDate'
+  | 'earliestMonthYear'
+  | 'latestMonthYear'
   | 'exactFiles'
   | 'minFiles'
   | 'maxFiles'

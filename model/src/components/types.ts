@@ -66,7 +66,7 @@ interface ContentFieldBase {
 }
 
 interface DateFieldBase extends FormFieldBase {
-  type: ComponentType.DatePartsField | ComponentType.MonthYearField
+  type: ComponentType.DatePartsField
   name: string
   title: string
   hint?: string
@@ -256,10 +256,12 @@ export interface DatePartsFieldComponent extends DateFieldBase {
   }
 }
 
-export interface MonthYearFieldComponent extends DateFieldBase {
+export interface MonthYearFieldComponent extends FormFieldBase {
   type: ComponentType.MonthYearField
-  options: DateFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     customValidationMessage?: string
+    earliestMonthYear?: string
+    latestMonthYear?: string
   }
 }
 

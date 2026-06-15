@@ -49,7 +49,7 @@ describe('render-error-template', () => {
     it('should return correct label for EastingNorthingField validation errors', () => {
       expect(
         getDefaultErrorLabel(ComponentType.EastingNorthingField, false)
-      ).toBe('[short description]')
+      ).toBe('[description]')
     })
 
     it('should return correct label for LatLongField base errors', () => {
@@ -60,7 +60,7 @@ describe('render-error-template', () => {
 
     it('should return correct label for LatLongField validation errors', () => {
       expect(getDefaultErrorLabel(ComponentType.LatLongField, false)).toBe(
-        '[short description]'
+        '[description]'
       )
     })
 
@@ -72,7 +72,7 @@ describe('render-error-template', () => {
 
     it('should return correct label for OsGridRefField validation errors', () => {
       expect(getDefaultErrorLabel(ComponentType.OsGridRefField, false)).toBe(
-        '[short description]'
+        '[description]'
       )
     })
 
@@ -85,12 +85,12 @@ describe('render-error-template', () => {
     it('should return correct label for NationalGridFieldNumberField validation errors', () => {
       expect(
         getDefaultErrorLabel(ComponentType.NationalGridFieldNumberField, false)
-      ).toBe('[short description]')
+      ).toBe('[description]')
     })
 
     it('should return fallback for other field types', () => {
       expect(getDefaultErrorLabel(ComponentType.TextField)).toBe(
-        '[short description]'
+        '[description]'
       )
     })
   })
@@ -210,7 +210,7 @@ describe('render-error-template', () => {
         undefined,
         undefined
       )
-      expect(result).toBe('[short description]')
+      expect(result).toBe('[description]')
     })
 
     it('should use default when short and error description are empty', () => {
@@ -339,7 +339,7 @@ describe('render-error-template', () => {
       expect(result).toBe('Enter National Grid reference')
     })
 
-    it('should use [short description] fallback for other field types', () => {
+    it('should use [description] fallback for other field types', () => {
       const template = {
         type: 'string.empty',
         template: 'Enter {#label}'
@@ -356,7 +356,7 @@ describe('render-error-template', () => {
         ComponentType.TextField
       )
 
-      expect(result).toBe('Enter [short description]')
+      expect(result).toBe('Enter [description]')
     })
 
     it('should ignore custom short description for location field base errors only', () => {
@@ -473,7 +473,7 @@ describe('render-error-template', () => {
         ComponentType.TextField
       )
 
-      expect(result).toBe('Enter [short description]')
+      expect(result).toBe('Enter [description]')
     })
   })
 })

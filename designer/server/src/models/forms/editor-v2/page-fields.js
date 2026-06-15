@@ -66,6 +66,11 @@ const dateFieldQuestions = [
   QuestionAdvancedSettings.LatestDate
 ]
 
+const monthYearFieldQuestions = [
+  QuestionAdvancedSettings.EarliestMonthYear,
+  QuestionAdvancedSettings.LatestMonthYear
+]
+
 /**
  * @param {GovukField} field
  */
@@ -95,7 +100,10 @@ export function getFieldComponentType(field) {
     return ComponentType.RadiosField
   }
 
-  if (dateFieldQuestions.includes(fieldName)) {
+  if (
+    dateFieldQuestions.includes(fieldName) ||
+    monthYearFieldQuestions.includes(fieldName)
+  ) {
     return ComponentType.DatePartsField
   }
 

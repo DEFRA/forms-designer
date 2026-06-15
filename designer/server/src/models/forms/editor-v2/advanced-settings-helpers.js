@@ -76,6 +76,22 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.latestDate !== undefined
     },
     {
+      key: 'earliestMonthYear',
+      getValue: () =>
+        payload.earliestMonthYear
+          ? format(payload.earliestMonthYear, 'yyyy-MM')
+          : '',
+      shouldInclude: () => payload.earliestMonthYear !== undefined
+    },
+    {
+      key: 'latestMonthYear',
+      getValue: () =>
+        payload.latestMonthYear
+          ? format(payload.latestMonthYear, 'yyyy-MM')
+          : '',
+      shouldInclude: () => payload.latestMonthYear !== undefined
+    },
+    {
       key: 'usePostcodeLookup',
       getValue: () => isCheckboxSelected(payload.usePostcodeLookup),
       shouldInclude: () => payload.usePostcodeLookup !== undefined

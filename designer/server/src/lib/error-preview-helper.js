@@ -29,8 +29,8 @@ const fieldMappings = /** @type { Partial<AdvancedFieldMappingsType> } */ ({
     latestDate: 'latestDate'
   },
   MonthYearField: {
-    dateMin: 'dateMin',
-    dateMax: 'dateMax'
+    earliestMonthYear: 'earliestMonthYear',
+    latestMonthYear: 'latestMonthYear'
   },
   SelectField: {},
   AutocompleteField: {},
@@ -214,6 +214,24 @@ export function getDateLimits(fields, questionType, propertyName) {
 
   if (propertyName === 'latestDate') {
     return getFieldProperty(fields, questionType, 'latestDate', '[second date]')
+  }
+
+  if (propertyName === 'earliestMonthYear') {
+    return getFieldProperty(
+      fields,
+      questionType,
+      'earliestMonthYear',
+      '[first month and year]'
+    )
+  }
+
+  if (propertyName === 'latestMonthYear') {
+    return getFieldProperty(
+      fields,
+      questionType,
+      'latestMonthYear',
+      '[second month and year]'
+    )
   }
 
   return '[unknown]'
