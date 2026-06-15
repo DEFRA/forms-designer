@@ -176,8 +176,8 @@ export class ErrorPreviewEventListeners {
    * @protected
    */
   _getDefaultPlaceholder() {
-    // All location fields now use [short description] placeholder for consistency
-    return '[short description]'
+    // All location fields now use [description] placeholder for consistency
+    return '[description]'
   }
 
   /**

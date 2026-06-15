@@ -15,7 +15,7 @@ import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 const basePageFieldsFallback = /** @type {BasePageFields[]} */ ([])
 const extraFieldsFallback = /** @type {GovukField[]} */ ([])
-const SHORT_DESCRIPTION_PLACEHOLDER = '[short description]'
+const SHORT_DESCRIPTION_PLACEHOLDER = '[description]'
 
 /**
  * Check if component type is a location field
