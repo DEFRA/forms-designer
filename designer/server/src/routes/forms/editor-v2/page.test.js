@@ -41,7 +41,7 @@ describe('Editor v2 page routes', () => {
     const $radios = container.getAllByRole('radio')
     const $actions = container.getAllByRole('button')
 
-    expect($mainHeading).toHaveTextContent('Test form')
+    expect($mainHeading).toHaveTextContent('Add page')
     expect($legend).toHaveTextContent('What kind of page do you need?')
     expect($radios[0]).toHaveAccessibleName('Question page')
     expect($radios[1]).toHaveAccessibleName('Guidance page')
