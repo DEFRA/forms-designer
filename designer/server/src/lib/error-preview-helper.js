@@ -29,8 +29,8 @@ const fieldMappings = /** @type { Partial<AdvancedFieldMappingsType> } */ ({
     latestDate: 'dateLatest'
   },
   MonthYearField: {
-    earliestMonthYear: 'earliestMonthYear',
-    latestMonthYear: 'latestMonthYear'
+    earliestMonthYear: 'dateEarliestMonthYear',
+    latestMonthYear: 'dateLatestMonthYear'
   },
   SelectField: {},
   AutocompleteField: {},
@@ -203,7 +203,10 @@ export function getDateLimits(fields, questionType, propertyName) {
     )
   }
 
-  if (propertyName === 'dateEarliest' && questionType === ComponentType.DatePartsField) {
+  if (
+    propertyName === 'dateEarliest' &&
+    questionType === ComponentType.DatePartsField
+  ) {
     return getFieldProperty(
       fields,
       questionType,
@@ -212,11 +215,17 @@ export function getDateLimits(fields, questionType, propertyName) {
     )
   }
 
-  if (propertyName === 'dateLatest' && questionType === ComponentType.DatePartsField) {
+  if (
+    propertyName === 'dateLatest' &&
+    questionType === ComponentType.DatePartsField
+  ) {
     return getFieldProperty(fields, questionType, 'latestDate', '[second date]')
   }
 
-  if (propertyName === 'dateEarliest' && questionType === ComponentType.MonthYearField) {
+  if (
+    propertyName === 'dateEarliest' &&
+    questionType === ComponentType.MonthYearField
+  ) {
     return getFieldProperty(
       fields,
       questionType,
@@ -225,7 +234,10 @@ export function getDateLimits(fields, questionType, propertyName) {
     )
   }
 
-  if (propertyName === 'dateLatest' && questionType === ComponentType.MonthYearField) {
+  if (
+    propertyName === 'dateLatest' &&
+    questionType === ComponentType.MonthYearField
+  ) {
     return getFieldProperty(
       fields,
       questionType,
