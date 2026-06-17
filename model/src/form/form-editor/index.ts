@@ -496,8 +496,9 @@ type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
 
-interface DSLSchema<TSchema = Record<string, unknown>[]>
-  extends ArraySchema<TSchema> {
+interface DSLSchema<
+  TSchema = Record<string, unknown>[]
+> extends ArraySchema<TSchema> {
   rowSeparator: (rowSep: string | RegExp) => DSLSchema<TSchema>
   row: (rowSep: string | RegExp) => DSLSchema<TSchema>
   colSeparator: (colSep: string | RegExp) => DSLSchema<TSchema>
