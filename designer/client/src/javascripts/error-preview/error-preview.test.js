@@ -95,6 +95,46 @@ describe('error-preview', () => {
       expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
     })
 
+    it('should updateText with placeholder if both sources have an empty text value', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const advancedFields = fieldMappings[ComponentType.TextField]
+      const res = new ErrorPreviewDomElements(advancedFields)
+      expect(res).toBeDefined()
+      const targets = /** @type {HTMLInputElement[]} */ (
+        Array.from(document.querySelectorAll('.error-preview-shortDescription'))
+      )
+      const sourcesElem = [
+        document.createElement('input'),
+        document.createElement('input')
+      ]
+      sourcesElem[0].value = ''
+      sourcesElem[1].value = ''
+      res.updateText(sourcesElem, targets, '[placeholder]')
+      expect(targets[0].textContent).toBe('[placeholder]')
+      expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
+    })
+
+    it('should updateText with priority placeholder if both sources have an empty text value', () => {
+      document.body.innerHTML = shortDescInputHTML + panelHTML
+      const advancedFields = fieldMappings[ComponentType.TextField]
+      const res = new ErrorPreviewDomElements(advancedFields)
+      expect(res).toBeDefined()
+      const targets = /** @type {HTMLInputElement[]} */ (
+        Array.from(document.querySelectorAll('.error-preview-shortDescription'))
+      )
+      const sourcesElem = [
+        document.createElement('input'),
+        document.createElement('input')
+      ]
+      sourcesElem[0].value = 'Primary source text'
+      sourcesElem[1].value = 'Secondary source text'
+      res.updateText(sourcesElem, targets, '[placeholder]')
+      expect(targets[0].textContent).toBe('primary source text')
+      expect(targets[targets.length - 1].textContent).toBe(
+        'Primary source text'
+      )
+    })
+
     it('should not update elements with data-fixed="true"', () => {
       document.body.innerHTML = shortDescInputHTML + panelHTML
       const res = new ErrorPreviewDomElements(undefined)
@@ -108,7 +148,7 @@ describe('error-preview', () => {
       // Create a normal element
       const normalElem = document.createElement('span')
       normalElem.classList.add('error-preview-shortDescription')
-      normalElem.textContent = '[Short description]'
+      normalElem.textContent = '[description]'
 
       const sourceElem = document.createElement('input')
       sourceElem.value = 'my custom text'
@@ -450,7 +490,7 @@ describe('error-preview', () => {
       expect(removeSpy).toHaveBeenCalled()
     })
 
-    it('should always return [short description] placeholder for all component types', () => {
+    it('should always return [description] placeholder for all component types', () => {
       document.body.innerHTML = shortDescInputHTML + panelHTML
       const baseElements = new ErrorPreviewDomElements(undefined)
       const mockErrorPreview = /** @type {ErrorPreview} */ (
@@ -464,9 +504,7 @@ describe('error-preview', () => {
         ComponentType.EastingNorthingField
       )
       // @ts-expect-error - accessing protected method for testing
-      expect(eastingListener._getDefaultPlaceholder()).toBe(
-        '[short description]'
-      )
+      expect(eastingListener._getDefaultPlaceholder()).toBe('[description]')
 
       // Test LatLongField
       const latLongListener = new ErrorPreviewEventListeners(
@@ -475,9 +513,7 @@ describe('error-preview', () => {
         ComponentType.LatLongField
       )
       // @ts-expect-error - accessing protected method for testing
-      expect(latLongListener._getDefaultPlaceholder()).toBe(
-        '[short description]'
-      )
+      expect(latLongListener._getDefaultPlaceholder()).toBe('[description]')
 
       // Test OsGridRefField
       const osGridListener = new ErrorPreviewEventListeners(
@@ -486,9 +522,7 @@ describe('error-preview', () => {
         ComponentType.OsGridRefField
       )
       // @ts-expect-error - accessing protected method for testing
-      expect(osGridListener._getDefaultPlaceholder()).toBe(
-        '[short description]'
-      )
+      expect(osGridListener._getDefaultPlaceholder()).toBe('[description]')
 
       // Test NationalGridFieldNumberField
       const nationalGridListener = new ErrorPreviewEventListeners(
@@ -498,7 +532,7 @@ describe('error-preview', () => {
       )
       // @ts-expect-error - accessing protected method for testing
       expect(nationalGridListener._getDefaultPlaceholder()).toBe(
-        '[short description]'
+        '[description]'
       )
 
       // Test other component types
@@ -508,9 +542,7 @@ describe('error-preview', () => {
         ComponentType.TextField
       )
       // @ts-expect-error - accessing protected method for testing
-      expect(textFieldListener._getDefaultPlaceholder()).toBe(
-        '[short description]'
-      )
+      expect(textFieldListener._getDefaultPlaceholder()).toBe('[description]')
 
       // Test undefined component type
       const undefinedListener = new ErrorPreviewEventListeners(
@@ -519,9 +551,7 @@ describe('error-preview', () => {
         undefined
       )
       // @ts-expect-error - accessing protected method for testing
-      expect(undefinedListener._getDefaultPlaceholder()).toBe(
-        '[short description]'
-      )
+      expect(undefinedListener._getDefaultPlaceholder()).toBe('[description]')
     })
   })
 

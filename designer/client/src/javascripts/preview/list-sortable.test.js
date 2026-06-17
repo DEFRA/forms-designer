@@ -104,6 +104,7 @@ describe('list-sortable', () => {
         shortDesc: 'your quest',
         largeTitle: true,
         content: '',
+        errorDesc: '',
         items: expectedList
       })
       const listText = /** @type {HTMLInputElement} */ (
