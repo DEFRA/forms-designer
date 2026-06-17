@@ -454,7 +454,8 @@ export const locationFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question,
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([

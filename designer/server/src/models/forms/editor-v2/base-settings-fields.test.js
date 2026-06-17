@@ -712,14 +712,14 @@ describe('editor-v2 - advanced settings fields model', () => {
       const locationFields = getQuestionFieldList(
         ComponentType.EastingNorthingField
       )
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
       expect(locationFields[1]).toBe('hintText')
     })
 
     test('should return location fields for OsGridRefField', () => {
       const locationFields = getQuestionFieldList(ComponentType.OsGridRefField)
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
     })
 
@@ -727,13 +727,13 @@ describe('editor-v2 - advanced settings fields model', () => {
       const locationFields = getQuestionFieldList(
         ComponentType.NationalGridFieldNumberField
       )
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
     })
 
     test('should return location fields for LatLongField', () => {
       const locationFields = getQuestionFieldList(ComponentType.LatLongField)
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
     })
 
