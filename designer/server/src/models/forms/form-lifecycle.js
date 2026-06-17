@@ -2,6 +2,8 @@ import { render } from '~/src/common/nunjucks/index.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/library.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
+const GOVUK_BUTTON_SECONDARY = 'govuk-button--secondary'
+
 /**
  * Model to represent confirmation page dialog for a given form.
  * @param {FormMetadata} form
@@ -48,7 +50,7 @@ export function makeDraftLiveConfirmationPageViewModel(
       {
         href: formPath,
         text: 'Cancel',
-        classes: 'govuk-button--secondary'
+        classes: GOVUK_BUTTON_SECONDARY
       }
     ]
   }
@@ -96,7 +98,7 @@ export function deleteDraftConfirmationPageViewModel(
       {
         href: formPath,
         text: 'Cancel',
-        classes: 'govuk-button--secondary'
+        classes: GOVUK_BUTTON_SECONDARY
       }
     ]
   }
@@ -143,7 +145,7 @@ export function takeFormOfflineConfirmationPageViewModel(
       {
         href: formPath,
         text: 'Cancel',
-        classes: 'govuk-button--secondary'
+        classes: GOVUK_BUTTON_SECONDARY
       }
     ]
   }

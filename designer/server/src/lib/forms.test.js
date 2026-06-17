@@ -1032,6 +1032,54 @@ describe('Forms library routes', () => {
       expect(calledUrl.searchParams.get('title')).toBe('test')
     })
   })
+
+  describe('takeOffline', () => {
+    it('should call correct url', async () => {
+      const mockResponse = {
+        data: [formMetadata],
+        meta: {}
+      }
+      jest.spyOn(fetch, 'postJson').mockResolvedValueOnce({
+        /** @type { any } */
+        response: {},
+        body: mockResponse
+      })
+
+      await forms.takeOffline('form-id', 'token')
+
+      const fetchPostJsonMock = /** @type {jest.Mock} */ (fetch.postJson)
+      /** @type {Array<[URL, object]>} */
+      const mockCalls = fetchPostJsonMock.mock.calls
+      const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+      expect(calledUrl.href).toBe(
+        'http://localhost:3001/forms/form-id/take-offline'
+      )
+    })
+  })
+
+  describe('makeOnlineAgain', () => {
+    it('should call correct url', async () => {
+      const mockResponse = {
+        data: [formMetadata],
+        meta: {}
+      }
+      jest.spyOn(fetch, 'postJson').mockResolvedValueOnce({
+        /** @type { any } */
+        response: {},
+        body: mockResponse
+      })
+
+      await forms.makeOnlineAgain('form-id', 'token')
+
+      const fetchPostJsonMock = /** @type {jest.Mock} */ (fetch.postJson)
+      /** @type {Array<[URL, object]>} */
+      const mockCalls = fetchPostJsonMock.mock.calls
+      const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+      expect(calledUrl.href).toBe(
+        'http://localhost:3001/forms/form-id/make-online-again'
+      )
+    })
+  })
 })
 
 /**

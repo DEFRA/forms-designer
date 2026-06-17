@@ -172,7 +172,7 @@ export default [
         await forms.makeOnlineAgain(form.id, token)
 
         logger.info(
-          `[takeOffline] Successfully made offline form online again - form '${slug}' - formId: ${form.id}`
+          `[makeOnlineAgain] Successfully made offline form online again - form '${slug}' - formId: ${form.id}`
         )
 
         yar.flash(
@@ -184,7 +184,7 @@ export default [
       } catch (err) {
         logger.error(
           err,
-          `[takeOfflineFailed] Failed to make offline form online again - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
+          `[makeOnlineAgainFailed] Failed to make offline form online again - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
         )
         throw err
       }
