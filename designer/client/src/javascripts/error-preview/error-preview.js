@@ -21,6 +21,9 @@ export class ErrorPreviewDomElements {
     const shortDescEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('shortDescription')
     )
+    const errorDescEl = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('errorDescription')
+    )
     const shortDescTargetEls = /** @type {HTMLInputElement[]} */ (
       Array.from(
         document.getElementsByClassName('error-preview-shortDescription')
@@ -31,6 +34,10 @@ export class ErrorPreviewDomElements {
      * @type {HTMLInputElement|null}
      */
     this.shortDesc = shortDescEl
+    /**
+     * @type {HTMLInputElement|null}
+     */
+    this.errorDesc = errorDescEl
     /**
      * @type {HTMLInputElement[]}
      */
@@ -114,7 +121,7 @@ export class ErrorPreviewDomElements {
   }
 
   /**
-   * @param { HTMLInputElement | null } source
+   * @param { HTMLInputElement | null | (HTMLInputElement | null)[] } source
    * @param {HTMLElementOrNull[]} targets
    * @param {string} placeholder
    */
@@ -127,7 +134,9 @@ export class ErrorPreviewDomElements {
           return
         }
 
-        const sourceText = source?.value ?? ''
+        const sourceText = Array.isArray(source)
+          ? (source.find((el) => el?.value)?.value ?? '')
+          : (source?.value ?? '')
         const newText = sourceText !== '' ? sourceText : placeholder
         const newTextFinal = elem.dataset.templatefunc
           ? this.applyTemplateFunction(elem, newText)
@@ -176,8 +185,8 @@ export class ErrorPreviewEventListeners {
    * @protected
    */
   _getDefaultPlaceholder() {
-    // All location fields now use [short description] placeholder for consistency
-    return '[short description]'
+    // All location fields now use [description] placeholder for consistency
+    return '[description]'
   }
 
   /**
@@ -253,7 +262,21 @@ export class ErrorPreviewEventListeners {
        */
       (_target) => {
         this.baseElements.updateText(
-          this.baseElements.shortDesc,
+          [this.baseElements.errorDesc, this.baseElements.shortDesc],
+          this.baseElements.shortDescTargets,
+          this._getDefaultPlaceholder()
+        )
+      },
+      'input'
+    ])
+    const errorDesc = /** @type {ListenerRow} */ ([
+      this.baseElements.errorDesc,
+      /**
+       * @param {HTMLInputElement} _target
+       */
+      (_target) => {
+        this.baseElements.updateText(
+          [this.baseElements.errorDesc, this.baseElements.shortDesc],
           this.baseElements.shortDescTargets,
           this._getDefaultPlaceholder()
         )
@@ -292,7 +315,7 @@ export class ErrorPreviewEventListeners {
       })
     )
 
-    return [...advanced, shortDesc, ...this.highlightListeners]
+    return [...advanced, shortDesc, errorDesc, ...this.highlightListeners]
   }
 
   /**

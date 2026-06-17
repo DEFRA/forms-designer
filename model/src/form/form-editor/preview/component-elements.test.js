@@ -26,6 +26,7 @@ describe('component-elements', () => {
     const values = elements.values
     expect(values).toEqual({
       content: '',
+      errorDesc: '',
       hintText: '',
       items: [],
       optional: false,
@@ -46,6 +47,7 @@ describe('component-elements', () => {
     const values = elements.values
     expect(values).toEqual({
       content: '',
+      errorDesc: '',
       hintText: '',
       items: [],
       optional: false,
@@ -66,6 +68,7 @@ describe('component-elements', () => {
     const values = elements.values
     expect(values).toEqual({
       content: '',
+      errorDesc: '',
       hintText: '',
       items: [],
       optional: false,
@@ -86,6 +89,7 @@ describe('MultilineTextFieldComponentPreviewElements', () => {
 
     expect(elements.values).toEqual({
       content: '',
+      errorDesc: '',
       hintText: 'Provide details',
       items: [],
       optional: false,

@@ -26,6 +26,7 @@ export class ComponentElements {
       hintText: '',
       optional: !required,
       shortDesc: '',
+      errorDesc: '',
       userClasses:
         this._component.options && 'classes' in this._component.options
           ? (this._component.options.classes ?? '')

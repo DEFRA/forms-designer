@@ -90,9 +90,23 @@ describe('preview', () => {
       classes: 'govuk-label--m'
     },
     hint: {
-      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
     },
     value: 'Short answer'
+  }
+
+  const errorDescription = {
+    id: 'errorDescription',
+    name: 'errorDescription',
+    idPrefix: 'errorDescription',
+    label: {
+      text: 'Error description (optional)',
+      classes: 'govuk-label--m'
+    },
+    hint: {
+      text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
+    },
+    value: 'Short error description'
   }
 
   const autocompleteOptions = {
@@ -171,6 +185,7 @@ describe('preview', () => {
     hintText,
     questionOptional,
     shortDescription,
+    errorDescription,
     usePostcodeLookup,
     classes,
     prefix,
@@ -286,6 +301,7 @@ describe('preview', () => {
         largeTitle: true,
         optional: true,
         shortDesc: 'Short answer',
+        errorDesc: 'Short error description',
         usePostcodeLookup: true,
         items: [],
         prefix: 'pre',
@@ -307,6 +323,7 @@ describe('preview', () => {
         content: '',
         optional: false,
         shortDesc: '',
+        errorDesc: '',
         usePostcodeLookup: false,
         items: [],
         prefix: '',

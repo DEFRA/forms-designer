@@ -146,7 +146,7 @@ describe('index', () => {
         classes: 'govuk-label--m'
       },
       hint: {
-        text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+        text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
       },
       value: 'Short answer'
     }
