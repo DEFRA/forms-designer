@@ -22,6 +22,44 @@ import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.
 
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
+/**
+ * @param {Request} request
+ * @param {ResponseToolkit} h
+ * @param {(formId: string, token: string) => Promise<unknown>} operation
+ * @param {string} successMessage
+ * @param {string} failureMessage
+ * @param {string} notificationText
+ */
+async function genericFormAction(
+  request,
+  h,
+  operation,
+  successMessage,
+  failureMessage,
+  notificationText
+) {
+  const { token } = request.auth.credentials
+  const { yar } = request
+  const { slug } = request.params
+  const form = await forms.get(slug, token)
+
+  try {
+    await operation(form.id, token)
+
+    logger.info(`${successMessage} - form '${slug}' - formId: ${form.id}`)
+
+    yar.flash(sessionNames.successNotification, notificationText)
+
+    return h.redirect(formOverviewPath(slug))
+  } catch (err) {
+    logger.error(
+      err,
+      `${failureMessage} - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
+    )
+    throw err
+  }
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
@@ -157,37 +195,20 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   * @satisfies {ServerRoute}
    */
   ({
     method: 'GET',
     path: '/library/{slug}/manage-form/make-online-again',
-    async handler(request, h) {
-      const { token } = request.auth.credentials
-      const { yar } = request
-      const { slug } = request.params
-      const form = await forms.get(slug, token)
-
-      try {
-        await forms.makeOnlineAgain(form.id, token)
-
-        logger.info(
-          `[makeOnlineAgain] Successfully made offline form online again - form '${slug}' - formId: ${form.id}`
-        )
-
-        yar.flash(
-          sessionNames.successNotification,
-          notifications.FORM_REPUBLISH_OFFLINE
-        )
-
-        return h.redirect(formOverviewPath(slug))
-      } catch (err) {
-        logger.error(
-          err,
-          `[makeOnlineAgainFailed] Failed to make offline form online again - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
-        )
-        throw err
-      }
+    handler(request, h) {
+      return genericFormAction(
+        request,
+        h,
+        forms.makeOnlineAgain,
+        '[makeOnlineAgain] Successfully made offline form online again',
+        '[makeOnlineAgainFailed] Failed to make offline form online again',
+        notifications.FORM_REPUBLISH_OFFLINE
+      )
     },
     options: {
       auth: {
@@ -200,38 +221,20 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   * @satisfies {ServerRoute}
    */
   ({
     method: 'POST',
     path: '/library/{slug}/manage-form/take-form-offline',
-    async handler(request, h) {
-      const { yar } = request
-      const { token } = request.auth.credentials
-      const { slug } = request.params
-
-      const form = await forms.get(slug, token)
-
-      try {
-        await forms.takeOffline(form.id, token)
-
-        logger.info(
-          `[takeOffline] Successfully took form offline - form '${slug}' - formId: ${form.id}`
-        )
-
-        yar.flash(
-          sessionNames.successNotification,
-          notifications.FORM_TAKEN_OFFLINE
-        )
-
-        return h.redirect(formOverviewPath(slug))
-      } catch (err) {
-        logger.error(
-          err,
-          `[takeOfflineFailed] Failed to take form offline - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
-        )
-        throw err
-      }
+    handler(request, h) {
+      return genericFormAction(
+        request,
+        h,
+        forms.takeOffline,
+        '[takeOffline] Successfully took form offline',
+        '[takeOfflineFailed] Failed to take form offline',
+        notifications.FORM_TAKEN_OFFLINE
+      )
     },
     options: {
       auth: {
@@ -244,38 +247,20 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   * @satisfies {ServerRoute}
    */
   ({
     method: 'POST',
     path: '/library/{slug}/manage-form/create-draft-from-live',
     async handler(request, h) {
-      const { yar } = request
-      const { token } = request.auth.credentials
-      const { slug } = request.params
-
-      const form = await forms.get(slug, token)
-
-      try {
-        await forms.createDraft(form.id, token)
-
-        logger.info(
-          `[draftCreated] Draft successfully created from live form '${slug}' - formId: ${form.id}`
-        )
-
-        yar.flash(
-          sessionNames.successNotification,
-          notifications.FORM_DRAFT_CREATED
-        )
-
-        return h.redirect(formOverviewPath(slug))
-      } catch (err) {
-        logger.error(
-          err,
-          `[draftCreationFailed] Failed to create draft from live form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
-        )
-        throw err
-      }
+      return genericFormAction(
+        request,
+        h,
+        forms.createDraft,
+        '[draftCreated] Draft successfully created from live form',
+        '[draftCreationFailed] Failed to create draft from live form',
+        notifications.FORM_DRAFT_CREATED
+      )
     },
     options: {
       auth: {
@@ -401,5 +386,5 @@ export default [
 
 /**
  * @import { FormBySlugInput } from '@defra/forms-model'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */
