@@ -330,7 +330,7 @@ describe('Forms library routes', () => {
       ).toMatchObject(formDefinition)
     })
 
-    it('Form overview has draft buttons in side bar', async () => {
+    it('Form overview has draft buttons and an offline button in side bar', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce({
         ...formMetadata,
         // Switch draft with live for test
@@ -349,8 +349,9 @@ describe('Forms library routes', () => {
       const $card = document.querySelector('.app-form-card')
       const $buttons = $card?.querySelectorAll('.govuk-button')
 
-      expect($buttons).toHaveLength(1)
+      expect($buttons).toHaveLength(2)
       expect($buttons?.[0]).toHaveTextContent('Create draft to edit')
+      expect($buttons?.[1]).toHaveTextContent('Take form offline')
     })
 
     it('Form overview has live buttons in side bar', async () => {
