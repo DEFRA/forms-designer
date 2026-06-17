@@ -285,6 +285,34 @@ export async function createDraft(id, token) {
 }
 
 /**
+ * Takes a form offline
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export async function takeOffline(id, token) {
+  const requestUrl = new URL(`./${id}/take-offline`, formsEndpoint)
+  const { response } = await postJson(requestUrl, {
+    ...getHeaders(token)
+  })
+
+  return response
+}
+
+/**
+ * Makes an offline form online again
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export async function makeOnlineAgain(id, token) {
+  const requestUrl = new URL(`./${id}/make-online-again`, formsEndpoint)
+  const { response } = await postJson(requestUrl, {
+    ...getHeaders(token)
+  })
+
+  return response
+}
+
+/**
  * Updates a metadata object.
  * @param {string} id
  * @param {Partial<FormMetadataInput>} metadata

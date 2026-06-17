@@ -28,7 +28,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/library/{slug}/make-draft-live',
+    path: '/library/{slug}/manage-form/make-draft-live',
     async handler(request, h) {
       const { yar } = request
       const { token } = request.auth.credentials
@@ -62,7 +62,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/library/{slug}/make-draft-live',
+    path: '/library/{slug}/manage-form/make-draft-live',
     async handler(request, h) {
       const { yar } = request
       const { token } = request.auth.credentials
@@ -102,7 +102,9 @@ export default [
 
           yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
 
-          return h.redirect(`${formOverviewPath(form.slug)}/make-draft-live`)
+          return h.redirect(
+            `${formOverviewPath(form.slug)}/manage-form/make-draft-live`
+          )
         }
 
         logger.error(
@@ -127,8 +129,126 @@ export default [
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
   ({
+    method: 'GET',
+    path: '/library/{slug}/manage-form/take-form-offline',
+    async handler(request, h) {
+      const { token } = request.auth.credentials
+      const { slug } = request.params
+      const form = await forms.get(slug, token)
+      const formDefinition = await forms.getLiveFormDefinition(form.id, token)
+
+      return h.view(
+        CONFIRMATION_PAGE_VIEW,
+        formLifecycle.takeFormOfflineConfirmationPageViewModel(
+          form,
+          formDefinition,
+          []
+        )
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormPublish}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/manage-form/make-online-again',
+    async handler(request, h) {
+      const { token } = request.auth.credentials
+      const { yar } = request
+      const { slug } = request.params
+      const form = await forms.get(slug, token)
+
+      try {
+        await forms.makeOnlineAgain(form.id, token)
+
+        logger.info(
+          `[takeOffline] Successfully made offline form online again - form '${slug}' - formId: ${form.id}`
+        )
+
+        yar.flash(
+          sessionNames.successNotification,
+          notifications.FORM_REPUBLISH_OFFLINE
+        )
+
+        return h.redirect(formOverviewPath(slug))
+      } catch (err) {
+        logger.error(
+          err,
+          `[takeOfflineFailed] Failed to make offline form online again - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
+        )
+        throw err
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormPublish}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
     method: 'POST',
-    path: '/library/{slug}/create-draft-from-live',
+    path: '/library/{slug}/manage-form/take-form-offline',
+    async handler(request, h) {
+      const { yar } = request
+      const { token } = request.auth.credentials
+      const { slug } = request.params
+
+      const form = await forms.get(slug, token)
+
+      try {
+        await forms.takeOffline(form.id, token)
+
+        logger.info(
+          `[takeOffline] Successfully took form offline - form '${slug}' - formId: ${form.id}`
+        )
+
+        yar.flash(
+          sessionNames.successNotification,
+          notifications.FORM_TAKEN_OFFLINE
+        )
+
+        return h.redirect(formOverviewPath(slug))
+      } catch (err) {
+        logger.error(
+          err,
+          `[takeOfflineFailed] Failed to take form offline - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
+        )
+        throw err
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormPublish}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
+   */
+  ({
+    method: 'POST',
+    path: '/library/{slug}/manage-form/create-draft-from-live',
     async handler(request, h) {
       const { yar } = request
       const { token } = request.auth.credentials

@@ -1,3 +1,5 @@
 export const FORM_LIVE_CREATED = 'This form is now live'
 export const FORM_DRAFT_CREATED = 'New draft created'
 export const FORM_DELETED_DRAFT = 'Draft form deleted'
+export const FORM_TAKEN_OFFLINE = 'This form is now offline'
+export const FORM_REPUBLISH_OFFLINE = 'This form has been republished online'

@@ -72,7 +72,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'GET',
-      url: '/library/my-form/make-draft-live',
+      url: '/library/my-form/manage-form/make-draft-live',
       auth
     }
 
@@ -103,7 +103,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'GET',
-      url: '/library/my-form/make-draft-live',
+      url: '/library/my-form/manage-form/make-draft-live',
       auth
     }
 
@@ -124,7 +124,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'GET',
-      url: '/library/my-form/make-draft-live',
+      url: '/library/my-form/manage-form/make-draft-live',
       auth
     }
 
@@ -151,7 +151,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'POST',
-      url: '/library/my-form/make-draft-live',
+      url: '/library/my-form/manage-form/make-draft-live',
       auth
     }
 
@@ -181,7 +181,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'POST',
-      url: '/library/my-form/make-draft-live',
+      url: '/library/my-form/manage-form/make-draft-live',
       auth
     }
 
@@ -199,7 +199,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'POST',
-      url: '/library/my-form/make-draft-live',
+      url: '/library/my-form/manage-form/make-draft-live',
       auth
     }
 
@@ -220,7 +220,7 @@ describe('Test form draft and live creation route handlers', () => {
 
     const options = {
       method: 'POST',
-      url: '/library/my-form/create-draft-from-live',
+      url: '/library/my-form/manage-form/create-draft-from-live',
       auth
     }
 
