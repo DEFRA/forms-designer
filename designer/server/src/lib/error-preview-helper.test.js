@@ -138,10 +138,10 @@ describe('Error-preview-help functions', () => {
     const fields = [
       { name: 'maxPast', value: '30' },
       { name: 'maxFuture', value: '60' },
-      { name: 'earliestDate', value: '2001-01-01' },
-      { name: 'latestDate', value: '2002-01-01' },
-      { name: 'earliestMonthYear', value: '2001-01' },
-      { name: 'latestMonthYear', value: '2002-01' }
+      { name: 'dateEarliest', value: '2001-01-01' },
+      { name: 'dateLatest', value: '2002-01-01' },
+      { name: 'dateEarliestMonthYear', value: '2001-01' },
+      { name: 'dateLatestMonthYear', value: '2002-01' }
     ]
 
     test('should return dateMin value', () => {
@@ -166,7 +166,7 @@ describe('Error-preview-help functions', () => {
       const result = getDateLimits(
         fields,
         ComponentType.DatePartsField,
-        'earliestDate'
+        'dateEarliest'
       )
       expect(result).toBe('2001-01-01')
     })
@@ -175,7 +175,7 @@ describe('Error-preview-help functions', () => {
       const result = getDateLimits(
         fields,
         ComponentType.DatePartsField,
-        'latestDate'
+        'dateLatest'
       )
       expect(result).toBe('2002-01-01')
     })
@@ -184,7 +184,7 @@ describe('Error-preview-help functions', () => {
       const result = getDateLimits(
         fields,
         ComponentType.MonthYearField,
-        'earliestMonthYear'
+        'dateEarliest'
       )
       expect(result).toBe('2001-01')
     })
@@ -193,7 +193,7 @@ describe('Error-preview-help functions', () => {
       const result = getDateLimits(
         fields,
         ComponentType.MonthYearField,
-        'latestMonthYear'
+        'dateLatest'
       )
       expect(result).toBe('2002-01')
     })
