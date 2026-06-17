@@ -21,7 +21,10 @@ export default {
   // Configure mocks for JavaScript imports
   moduleNameMapper: {
     '\\.(css|scss)$': '<rootDir>/test/mocks/webpack/stylesheet.cjs',
-    '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.cjs'
+    '\\.(ico|png|svg)$': '<rootDir>/test/mocks/webpack/image.cjs',
+    // The real UMD bundle throws "Automatic publicPath is not supported in
+    // this browser" under jsdom, so stub it out for all client tests
+    '^@defra/interactive-map(/.*)?$': '<rootDir>/test/mocks/interactive-map.cjs'
   },
 
   // Enable Babel transforms for node_modules
