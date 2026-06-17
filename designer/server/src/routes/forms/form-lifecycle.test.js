@@ -487,6 +487,32 @@ describe('Form lifecycle route handlers', () => {
       expect(response.headers.location).toBe('/library/my-form')
       expect(forms.makeOnlineAgain).toHaveBeenCalled()
     })
+
+    test('Make form online again should throw error', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce({
+        ...metadata,
+        draft: state,
+        live: state
+      })
+      jest
+        .mocked(forms.makeOnlineAgain)
+        .mockRejectedValueOnce(Boom.badRequest('An example error message here'))
+
+      const options = {
+        method: 'GET',
+        url: '/library/my-form/manage-form/make-online-again',
+        auth
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        name: 'Sorry, there is a problem with the service',
+        level: 1
+      })
+
+      expect($heading).toBeInTheDocument()
+    })
   })
 })
 
