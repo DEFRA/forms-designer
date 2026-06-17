@@ -89,6 +89,11 @@ export class QuestionPreviewElements {
    * @type {string}
    * @protected
    */
+  _errorDesc = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _userClasses = ''
   /**
    * @type {string}
@@ -133,6 +138,7 @@ export class QuestionPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      errorDesc: this._errorDesc,
       userClasses: this._userClasses,
       items: this._items,
       content: this._content
@@ -307,6 +313,7 @@ export const baseElements = /** @type {BaseSettings} */ ({
   hintText: 'Choose one adventure that best suits you.',
   userClasses: '',
   shortDesc: '',
+  errorDesc: '',
   content: '',
   largeTitle: true
 })
@@ -318,6 +325,7 @@ export const numberElements = /** @type {NumberSettings} */ ({
   hintText: 'Choose one adventure that best suits you.',
   userClasses: '',
   shortDesc: '',
+  errorDesc: '',
   content: '',
   largeTitle: true,
   prefix: '',
@@ -400,6 +408,11 @@ export class NumberPreviewElements {
    * @type {string}
    * @protected
    */
+  _errorDesc = ''
+  /**
+   * @type {string}
+   * @protected
+   */
   _userClasses = ''
   /**
    * @type {string}
@@ -458,6 +471,7 @@ export class NumberPreviewElements {
       hintText: this._hintText,
       optional: this._optional,
       shortDesc: this._shortDesc,
+      errorDesc: this._errorDesc,
       userClasses: this._userClasses,
       prefix: this._prefix,
       suffix: this._suffix,

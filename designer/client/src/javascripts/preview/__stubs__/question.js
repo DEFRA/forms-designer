@@ -383,7 +383,7 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
             <li>
               <a id="empty-input-error-shorttext" class="govuk-error-message">
                 <span class="govuk-visually-hidden">Error:</span>
-                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[Short description]</span>
+                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[description]</span>
               </a>
             </li>
           </ul>

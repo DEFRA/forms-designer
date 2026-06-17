@@ -73,6 +73,11 @@ export interface FormEditor {
   shortDescription: string
 
   /**
+   * The error description of the question
+   */
+  errorDescription: string
+
+  /**
    * The value of checkbox to reveal instruction text field
    */
   giveInstructions: string
@@ -460,6 +465,7 @@ export type FormEditorInputQuestion = Pick<
   | 'name'
   | 'question'
   | 'shortDescription'
+  | 'errorDescription'
   | 'hintText'
   | 'declarationText'
   | 'questionOptional'
@@ -537,6 +543,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'question'
   | 'hintText'
   | 'shortDescription'
+  | 'errorDescription'
   | 'questionOptional'
   | 'questionType'
   | 'fileTypes'
@@ -745,6 +752,7 @@ export interface FormEditorGovukField {
   instructionText?: GovukField
   questionOptional?: GovukField
   shortDescription?: GovukField
+  errorDescription?: GovukField
   fileTypes?: GovukField
   documentTypes?: GovukField
   imageTypes?: GovukField

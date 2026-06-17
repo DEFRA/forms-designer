@@ -20,6 +20,7 @@ export interface BaseSettings {
   hintText: string
   optional: boolean
   shortDesc: string
+  errorDesc: string
   userClasses: string
   items: ListElement[]
   content: string
