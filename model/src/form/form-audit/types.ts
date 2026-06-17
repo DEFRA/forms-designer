@@ -383,6 +383,16 @@ export interface FormUpdatedMessage extends ManagerMessageBase {
   data: FormUpdatedMessageData
 }
 
+export interface FormTakenOfflineMessage extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_TAKEN_OFFLINE
+}
+
+export interface FormMadeOnlineAgainMessage extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_MADE_ONLINE_AGAIN
+}
+
 export interface EntitlementCreatedMessage extends EntitlementMessageBase {
   category: AuditEventMessageCategory.ENTITLEMENT
   type: AuditEventMessageType.ENTITLEMENT_CREATED
@@ -494,6 +504,8 @@ export type AuditMessage =
   | FormDraftDeletedMessage
   | FormMigratedMessage
   | FormUpdatedMessage
+  | FormTakenOfflineMessage
+  | FormMadeOnlineAgainMessage
   | EntitlementCreatedMessage
   | EntitlementUpdatedMessage
   | EntitlementDeletedMessage
