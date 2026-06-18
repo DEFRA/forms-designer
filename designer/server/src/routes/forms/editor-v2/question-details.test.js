@@ -339,9 +339,9 @@ describe('Editor v2 question details routes', () => {
     expect($actions[4]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
-    expect($fields[3].id).toBe('minFiles')
-    expect($fields[4].id).toBe('maxFiles')
-    expect($fields[5].id).toBe('exactFiles')
+    expect($fields[4].id).toBe('minFiles')
+    expect($fields[5].id).toBe('maxFiles')
+    expect($fields[6].id).toBe('exactFiles')
 
     const $checkboxes = /** @type {HTMLInputElement[]} */ (
       container.getAllByRole('checkbox')

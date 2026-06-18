@@ -273,6 +273,19 @@ describe('editor-v2 - advanced settings fields model', () => {
             text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
           },
           value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
+          },
+          value: undefined
         }
       ]
       expect(
@@ -340,6 +353,19 @@ describe('editor-v2 - advanced settings fields model', () => {
           },
           hint: {
             text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
+          },
+          value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
           },
           value: undefined
         }
@@ -674,28 +700,28 @@ describe('editor-v2 - advanced settings fields model', () => {
       const fileUploadFields = getQuestionFieldList(
         ComponentType.FileUploadField
       )
-      expect(fileUploadFields).toHaveLength(5)
+      expect(fileUploadFields).toHaveLength(6)
       expect(fileUploadFields[0]).toBe('question')
       expect(fileUploadFields[3]).toBe('fileTypes')
     })
 
     test('should return Radios or Checkboxes for Radios', () => {
       const res = getQuestionFieldList(ComponentType.RadiosField)
-      expect(res).toHaveLength(5)
+      expect(res).toHaveLength(6)
       expect(res[0]).toBe('question')
-      expect(res[4]).toBe('radiosOrCheckboxes')
+      expect(res[5]).toBe('radiosOrCheckboxes')
     })
 
     test('should return Radios or Checkboxes for Checkboxes', () => {
       const res = getQuestionFieldList(ComponentType.CheckboxesField)
-      expect(res).toHaveLength(5)
+      expect(res).toHaveLength(6)
       expect(res[0]).toBe('question')
-      expect(res[4]).toBe('radiosOrCheckboxes')
+      expect(res[5]).toBe('radiosOrCheckboxes')
     })
 
     test('should return usePostcodeLookup for UkAddressField', () => {
       const ukAddressField = getQuestionFieldList(ComponentType.UkAddressField)
-      expect(ukAddressField).toHaveLength(5)
+      expect(ukAddressField).toHaveLength(6)
       expect(ukAddressField[0]).toBe('question')
       expect(ukAddressField[3]).toBe('usePostcodeLookup')
     })
@@ -704,7 +730,7 @@ describe('editor-v2 - advanced settings fields model', () => {
       const autocompleteFields = getQuestionFieldList(
         ComponentType.AutocompleteField
       )
-      expect(autocompleteFields).toHaveLength(5)
+      expect(autocompleteFields).toHaveLength(6)
       expect(autocompleteFields[3]).toBe('autoCompleteOptions')
     })
 
@@ -739,8 +765,8 @@ describe('editor-v2 - advanced settings fields model', () => {
 
     test('should return base fields for SelectField', () => {
       const selectFields = getQuestionFieldList(ComponentType.SelectField)
-      expect(selectFields).toHaveLength(5)
-      expect(selectFields[4]).toBe('radiosOrCheckboxes')
+      expect(selectFields).toHaveLength(6)
+      expect(selectFields[5]).toBe('radiosOrCheckboxes')
     })
 
     test('should return base fields for undefined question type', () => {
