@@ -168,7 +168,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/library/{slug}/manage-form/take-form-offline',
+    path: '/library/{slug}/manage-form/take-offline',
     async handler(request, h) {
       const { token } = request.auth.credentials
       const { slug } = request.params
@@ -199,7 +199,7 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/library/{slug}/manage-form/make-online-again',
+    path: '/library/{slug}/manage-form/make-online',
     handler(request, h) {
       return genericFormAction(
         request,
@@ -225,7 +225,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/library/{slug}/manage-form/take-form-offline',
+    path: '/library/{slug}/manage-form/take-offline',
     handler(request, h) {
       return genericFormAction(
         request,
@@ -385,6 +385,6 @@ export default [
 ]
 
 /**
- * @import { FormBySlugInput } from '@defra/forms-model'
+ * @import { FormBySlugInput, FormMetadata } from '@defra/forms-model'
  * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

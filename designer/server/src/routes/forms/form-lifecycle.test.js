@@ -421,7 +421,7 @@ describe('Form lifecycle route handlers', () => {
 
       const options = {
         method: 'GET',
-        url: '/library/my-form/manage-form/take-form-offline',
+        url: '/library/my-form/manage-form/take-offline',
         auth
       }
 
@@ -457,7 +457,7 @@ describe('Form lifecycle route handlers', () => {
 
       const options = {
         method: 'POST',
-        url: '/library/my-form/manage-form/take-form-offline',
+        url: '/library/my-form/manage-form/take-offline',
         auth
       }
 

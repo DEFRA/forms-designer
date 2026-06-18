@@ -289,13 +289,8 @@ export async function createDraft(id, token) {
  * @param {string} id - form ID
  * @param {string} token - auth token
  */
-export async function takeOffline(id, token) {
-  const requestUrl = new URL(`./${id}/take-offline`, formsEndpoint)
-  const { response } = await postJson(requestUrl, {
-    ...getHeaders(token)
-  })
-
-  return response
+export function takeOffline(id, token) {
+  return updateMetadata(id, { offline: true }, token)
 }
 
 /**
@@ -303,13 +298,8 @@ export async function takeOffline(id, token) {
  * @param {string} id - form ID
  * @param {string} token - auth token
  */
-export async function makeOnlineAgain(id, token) {
-  const requestUrl = new URL(`./${id}/make-online-again`, formsEndpoint)
-  const { response } = await postJson(requestUrl, {
-    ...getHeaders(token)
-  })
-
-  return response
+export function makeOnlineAgain(id, token) {
+  return updateMetadata(id, { offline: false }, token)
 }
 
 /**
