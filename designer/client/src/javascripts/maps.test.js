@@ -41,7 +41,7 @@ describe('Maps Client JS', () => {
     // Test doubles injected into the shared interactive-map mocks: the
     // `InteractiveMap` constructor and the draw-ml plugin factory are routed
     // here by test/mocks/interactive-map*.cjs
-    ;/** @type {any} */ (globalThis).interactiveMapMocks = {
+    /** @type {any} */ ;(globalThis).interactiveMapMocks = {
       InteractiveMap: MockInteractiveMap,
       drawMLPlugin
     }
