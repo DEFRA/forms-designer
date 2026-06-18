@@ -281,13 +281,28 @@ export function buildConditionsFields(
       ? `items[${idx}][value][listId]`
       : ''
 
-  // prettier-ignore
-  const value = 'operator' in item && component.value && operator?.value
-      ? buildValueField(conditionType, idx, item, selectedComponent, definition, validation)
+  const value =
+    'operator' in item && component.value && operator?.value
+      ? buildValueField(
+          conditionType,
+          idx,
+          item,
+          selectedComponent,
+          definition,
+          validation
+        )
       : undefined
 
-  // prettier-ignore
-  return { component, operator, value, conditionType, idField, listId, conditionTypeName, listIdName}
+  return {
+    component,
+    operator,
+    value,
+    conditionType,
+    idField,
+    listId,
+    conditionTypeName,
+    listIdName
+  }
 }
 
 /**
