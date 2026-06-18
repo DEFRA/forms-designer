@@ -73,6 +73,7 @@
     "typescript-eslint": "^8.56.1"
   },
   "overrides": {
+    "@defra/interactive-map": "0.0.22-alpha",
     "react-router-dom": "^6.30.3",
     "serialize-javascript": ">=7.0.3"
   },

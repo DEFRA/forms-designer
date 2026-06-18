@@ -5,8 +5,8 @@
  * supported in this browser" when loaded under jsdom, so it cannot be imported
  * in tests. This stand-in covers every shape the forms-engine-plugin map
  * modules import:
- *  - the default `InteractiveMap` constructor (routed through `window.defra`
- *    so tests can supply their own instance)
+ *  - the default `InteractiveMap` constructor (routed through
+ *    `globalThis.interactiveMapMocks` so tests can supply their own instance)
  *  - the default plugin/provider factories (interact, map-styles, draw-ml,
  *    datasets, maplibre provider) as harmless stubs
  *  - the named `maplibreLayerAdapter` adapter export
@@ -20,10 +20,13 @@ function interactiveMapMock(...args) {
   }
 
   // Called as `new InteractiveMap(...)` - delegate to the test-provided mock
-  const Mock = /** @type {any} */ (globalThis.window).defra?.InteractiveMap
+  const Mock = /** @type {any} */ (globalThis).interactiveMapMocks
+    ?.InteractiveMap
 
   if (!Mock) {
-    throw new Error('window.defra.InteractiveMap mock has not been configured')
+    throw new Error(
+      'globalThis.interactiveMapMocks.InteractiveMap has not been configured'
+    )
   }
 
   return new Mock(...args)
