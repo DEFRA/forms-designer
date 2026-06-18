@@ -1,3 +1,5 @@
+import { FormFilterStatus } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import { delJson, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
@@ -37,10 +39,16 @@ export async function list(token, options) {
     )
   }
 
+  // Map status of 'Offline' to the 'offline' search query param
+  // Map other statuses (e.g 'draft' or 'live') to 'status' search query param
+  // @ts-expect-error - 'offline' is only valid for UI, not for backend search
+  if (options.status?.includes(FormFilterStatus.Offline)) {
+    requestUrl.searchParams.append('offline', 'true')
+  }
   if (options.status?.length) {
-    options.status.forEach((status) =>
-      requestUrl.searchParams.append('status', status)
-    )
+    options.status
+      .filter((x) => x.toString() !== FormFilterStatus.Offline.toString())
+      .forEach((status) => requestUrl.searchParams.append('status', status))
   }
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))

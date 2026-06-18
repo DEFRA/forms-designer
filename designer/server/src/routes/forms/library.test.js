@@ -1,6 +1,6 @@
 import {
   AuditEventMessageType,
-  FormFilterStatus,
+  FormStatus,
   SchemaVersion
 } from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
@@ -626,10 +626,7 @@ describe('Forms library routes', () => {
           data: [formMetadata],
           meta: {
             search: {
-              status: /** @type {FormFilterStatus[]} */ ([
-                FormFilterStatus.Draft,
-                FormFilterStatus.Live
-              ])
+              status: [FormStatus.Draft, FormStatus.Live]
             }
           }
         })
@@ -645,10 +642,7 @@ describe('Forms library routes', () => {
         expect(forms.list).toHaveBeenCalledWith(
           auth.credentials.token,
           expect.objectContaining({
-            status: /** @type {FormFilterStatus[]} */ ([
-              FormFilterStatus.Draft,
-              FormFilterStatus.Live
-            ])
+            status: [FormStatus.Draft, FormStatus.Live]
           })
         )
       })
@@ -660,10 +654,7 @@ describe('Forms library routes', () => {
             search: {
               title: 'test',
               organisations: ['Defra', 'Marine Management Organisation – MMO'],
-              status: /** @type {FormFilterStatus[]} */ ([
-                FormFilterStatus.Draft,
-                FormFilterStatus.Live
-              ]),
+              status: [FormStatus.Draft, FormStatus.Live],
               author: 'Enrique Chase'
             }
           }
@@ -682,10 +673,7 @@ describe('Forms library routes', () => {
           expect.objectContaining({
             title: 'test',
             organisations: ['Defra', 'Marine Management Organisation – MMO'],
-            status: /** @type {FormFilterStatus[]} */ ([
-              FormFilterStatus.Draft,
-              FormFilterStatus.Live
-            ]),
+            status: [FormStatus.Draft, FormStatus.Live],
             author: 'Enrique Chase'
           })
         )

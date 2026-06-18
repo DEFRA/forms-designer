@@ -4,14 +4,26 @@
 {% set tagLive = govukTag({ text: "Live", classes: "govuk-tag--green govuk-!-margin-top-1" }) %}
 {% set tagOffline = govukTag({ text: "Offline", classes: "govuk-tag--grey govuk-!-margin-bottom-1" }) %}
 
-{% if params.metadata.offline and params.metadata.draft | length %}
-  {{ tagDraft }} {{ tagOffline }}
-{% elseif params.metadata.offline and params.metadata.live | length %}
-  {{ tagOffline }}
-{% elseif params.metadata.draft | length and params.metadata.live | length %}
-  {{ tagDraft }} {{ tagLive }}
-{% elseif params.metadata.live | length %}
-  {{ tagLive }}
+{% set isDraft = params.metadata.draft | length %}
+{% set isLive = params.metadata.live | length %}
+{% set isOffline = params.metadata.offline %}
+
+{% if isOffline %}
+  {# Offline form #}
+  {% if isDraft %}
+    {{ tagDraft }} {{ tagOffline }}
+  {% endif %}
+  {% if isLive %}
+    {{ tagOffline }}
+  {% endif %}
 {% else %}
-  {{ tagDraft }}
+  {# Online form #}
+  {% if isDraft and isLive %}
+    {{ tagDraft }} {{ tagLive }}
+  {% elseif isLive %}
+    {{ tagLive }}
+  {% else %}
+    {{ tagDraft }}
+  {% endif %}
 {% endif %}
+

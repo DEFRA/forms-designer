@@ -1,4 +1,4 @@
-import { FormFilterStatus, SchemaVersion } from '@defra/forms-model'
+import { FormStatus, SchemaVersion } from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
 
 import config from '~/src/config.js'
@@ -604,10 +604,7 @@ describe('Forms library routes', () => {
         const options = {
           page: 1,
           perPage: 10,
-          status: /** @type {FormFilterStatus[]} */ ([
-            FormFilterStatus.Draft,
-            FormFilterStatus.Live
-          ])
+          status: [FormStatus.Draft, FormStatus.Live]
         }
         const mockResponse = {
           data: [formMetadata],

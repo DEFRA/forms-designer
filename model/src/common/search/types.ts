@@ -1,4 +1,4 @@
-import { type FormFilterStatus } from '~/src/common/enums.js'
+import { type FormStatus } from '~/src/common/enums.js'
 
 /**
  * Search options for querying forms
@@ -25,5 +25,10 @@ export interface SearchOptions {
    * Filter by form status
    * Array of statuses to filter by
    */
-  status?: FormFilterStatus[]
+  status?: FormStatus[]
+
+  /**
+   * Filter by offline forms
+   */
+  offline?: boolean
 }
