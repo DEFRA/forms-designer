@@ -1,4 +1,4 @@
-import { FormFilterStatus } from '@defra/forms-model'
+import { FormFilterStatus, FormStatus } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
@@ -169,6 +169,7 @@ export async function getFormDefinitionVersion(id, versionNumber, token) {
  */
 export async function getFormDefinitionForSubmission(meta, token) {
   const { formId, versionMetadata } = meta
+  const status = /** @type {FormStatus} */ (meta.status)
 
   if (versionMetadata) {
     return getFormDefinitionVersion(
@@ -177,7 +178,7 @@ export async function getFormDefinitionForSubmission(meta, token) {
       token
     )
   } else {
-    return meta.status === FormStatus.Draft
+    return status === FormStatus.Draft
       ? getDraftFormDefinition(formId, token)
       : getLiveFormDefinition(formId, token)
   }
