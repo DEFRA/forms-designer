@@ -46,10 +46,5 @@
 
 {% block bodyEnd %}
   {{ super() }}
-
-  {#  The interactive-map runtime and plugins are bundled into maps.js as ESM via
-      @defra/forms-engine-plugin. Do not also load the UMD `window.defra` build
-      here: that creates a second interactive-map/preact instance and breaks the
-      map (e.g. "Cannot read properties of null (reading 'useEffect')"). #}
   <script type="module" nonce="{{ cspNonce }}" src="{{ getAssetPath("maps.js") }}"></script>
 {% endblock %}

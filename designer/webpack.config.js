@@ -283,11 +283,6 @@ export default /** @type {Configuration} */ ({
           from: 'i18n/translations',
           to: 'assets/translations'
         },
-        // The interactive-map runtime and plugin JS are bundled into maps.js as
-        // ESM via @defra/forms-engine-plugin, so the UMD/ESM JS bundles no
-        // longer need copying. Only the stylesheets (linked from
-        // submission/map.njk) and the image assets (referenced by the
-        // map-styles plugin config) are served as static files.
         {
           from: join(interactiveMapPath, 'dist/css'),
           to: 'assets/interactive-map/css'

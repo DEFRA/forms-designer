@@ -2,10 +2,6 @@ import {
   geospatialMap,
   map as mapImports
 } from '@defra/forms-engine-plugin/shared.js'
-// Source the draw plugin from the same ESM build as `createMap` above so the
-// map and the plugin share a single interactive-map (and preact) instance.
-// Mixing this with the UMD `window.defra` build gives two preact instances and
-// breaks preact hooks (e.g. "Cannot read properties of null (reading 'useEffect')").
 // @ts-expect-error - no types
 import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
 
