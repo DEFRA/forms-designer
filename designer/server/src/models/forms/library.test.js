@@ -6,6 +6,7 @@ import * as forms from '~/src/lib/forms.js'
 import {
   editorViewModel,
   getFormSpecificNavigation,
+  handleOfflineAsStatus,
   listViewModel,
   overviewViewModel
 } from '~/src/models/forms/library.js'
@@ -1297,6 +1298,60 @@ describe('Forms Library Models', () => {
           }
         ])
       })
+    })
+  })
+
+  describe('handleOfflineAsStatus', () => {
+    it('should ignore if no statuses', () => {
+      const searchMeta = {}
+      const filtersMeta = {
+        authors: [],
+        organisations: []
+      }
+      const expectedSearchMeta = {}
+      const expectedFiltersMeta = {
+        authors: [],
+        organisations: []
+      }
+      handleOfflineAsStatus(searchMeta, filtersMeta)
+      expect(searchMeta).toEqual(expectedSearchMeta)
+      expect(filtersMeta).toEqual(expectedFiltersMeta)
+    })
+
+    it('should add offline if statuses exist', () => {
+      const searchMeta = {}
+      const filtersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: []
+      }
+      const expectedSearchMeta = {}
+      const expectedFiltersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: ['offline']
+      }
+      handleOfflineAsStatus(searchMeta, filtersMeta)
+      expect(searchMeta).toEqual(expectedSearchMeta)
+      expect(filtersMeta).toEqual(expectedFiltersMeta)
+    })
+
+    it('should add offline to both filter and search meta', () => {
+      const searchMeta = { offline: true, status: [] }
+      const filtersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: []
+      }
+      const expectedSearchMeta = { offline: true, status: ['offline'] }
+      const expectedFiltersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: ['offline']
+      }
+      handleOfflineAsStatus(searchMeta, filtersMeta)
+      expect(searchMeta).toEqual(expectedSearchMeta)
+      expect(filtersMeta).toEqual(expectedFiltersMeta)
     })
   })
 })

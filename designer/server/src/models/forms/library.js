@@ -48,7 +48,7 @@ const FORM_METADATA_TAB = 'metadata'
  * @param {SearchOptions | undefined} searchMeta
  * @param {FilterOptions | undefined} filtersMeta
  */
-function handleOfflineAsStatus(searchMeta, filtersMeta) {
+export function handleOfflineAsStatus(searchMeta, filtersMeta) {
   // @ts-expect-error - dynamic property
   if (filtersMeta?.statuses) {
     // @ts-expect-error - dynamic property
