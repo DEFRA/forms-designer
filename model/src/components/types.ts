@@ -2,6 +2,7 @@ import { type LanguageMessages } from 'joi'
 
 import {
   type ComponentType,
+  type GeospatialFieldGeometryTypesEnum,
   type PreviewTypeEnum
 } from '~/src/components/enums.js'
 import {
@@ -22,6 +23,7 @@ interface FormFieldBase {
   id?: string
   type: FormComponentsDef['type']
   shortDescription?: string
+  errorDescription?: string
   name: string
   title: string
   hint?: string
@@ -54,6 +56,7 @@ interface ContentFieldBase {
     | ComponentType.Markdown
     | ComponentType.InsetText
     | ComponentType.List
+    | ComponentType.NotificationBanner
   name: string
   title: string
   options?: {
@@ -63,13 +66,15 @@ interface ContentFieldBase {
 }
 
 interface DateFieldBase extends FormFieldBase {
-  type: ComponentType.DatePartsField | ComponentType.MonthYearField
+  type: ComponentType.DatePartsField
   name: string
   title: string
   hint?: string
   options: FormFieldBase['options'] & {
     maxDaysInPast?: number
     maxDaysInFuture?: number
+    earliestDate?: string
+    latestDate?: string
   }
 }
 
@@ -116,10 +121,13 @@ export interface NumberFieldComponent extends FormFieldBase {
   }
 }
 
+export type TelephoneNumberFieldOptionsFormat = 'international' | 'uk'
+
 export interface TelephoneNumberFieldComponent extends FormFieldBase {
   type: ComponentType.TelephoneNumberField
   options: FormFieldBase['options'] & {
     condition?: string
+    format?: TelephoneNumberFieldOptionsFormat
     customValidationMessage?: string
   }
 }
@@ -248,10 +256,12 @@ export interface DatePartsFieldComponent extends DateFieldBase {
   }
 }
 
-export interface MonthYearFieldComponent extends DateFieldBase {
+export interface MonthYearFieldComponent extends FormFieldBase {
   type: ComponentType.MonthYearField
-  options: DateFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     customValidationMessage?: string
+    earliestMonthYear?: string
+    latestMonthYear?: string
   }
 }
 
@@ -279,6 +289,12 @@ export interface GeospatialFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     condition?: string
     countries?: GeospatialFieldOptionsCountry[]
+    geometryTypes?: GeospatialFieldGeometryTypesEnum[]
+  }
+  schema?: {
+    max?: number
+    min?: number
+    length?: number
   }
 }
 
@@ -321,6 +337,16 @@ export interface ListComponent extends ContentFieldBase {
     classes?: string
     hideTitle?: boolean
     bold?: boolean
+  }
+}
+
+export interface NotificationBannerComponent extends ContentFieldBase {
+  type: ComponentType.NotificationBanner
+  content: string
+  options: ContentFieldBase['options'] & {
+    type?: 'success'
+    heading?: string
+    condition?: string
   }
 }
 
@@ -394,6 +420,7 @@ export type ContentComponentsDef =
   | MarkdownComponent
   | InsetTextComponent
   | ListComponent
+  | NotificationBannerComponent
 
 // Components that render lists
 export type ListComponentsDef =

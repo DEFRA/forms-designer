@@ -86,5 +86,34 @@ describe('build error details', () => {
         }
       })
     })
+
+    it('should return errors on object.and', () => {
+      const message = 'Enter both a first and second date, or remove both dates'
+      const error = new ValidationError(
+        message,
+        [
+          {
+            message: 'Enter both a first and second date, or remove both dates',
+            path: [],
+            type: 'object.and',
+            context: {
+              present: ['latestDate'],
+              presentWithLabels: ['Second date'],
+              missing: ['earliestDate'],
+              missingWithLabels: ['First date'],
+              label: 'value',
+              value: {}
+            }
+          }
+        ],
+        {}
+      )
+      expect(buildErrorDetails(error)).toEqual({
+        earliestDate: {
+          text: 'Enter both a first and second date, or remove both dates',
+          href: '#earliestDate'
+        }
+      })
+    })
   })
 })

@@ -1,6 +1,7 @@
-import { FormMetricType, FormStatus } from '@defra/forms-model'
+import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
 import {
+  MetricsTileConfig,
   buildAriaLabel,
   buildChangePhrase,
   calcChangePercentage,
@@ -147,7 +148,8 @@ describe('metrics model', () => {
           overview: [],
           totals: {
             type: FormMetricType.TotalsMetric,
-            updatedAt: new Date()
+            updatedAt: new Date(),
+            earliestDate: new Date('2025-03-01')
           }
         })
       expect(componentUsageFormStructures(metrics, FormStatus.Draft)).toEqual(
@@ -223,6 +225,80 @@ describe('metrics model', () => {
           average: '10.5'
         }
       ])
+    })
+  })
+
+  describe('MetricsTileConfig formatting functions', () => {
+    it('should format date for NewFormsCreated', () => {
+      const config = MetricsTileConfig[FormMetricName.NewFormsCreated]
+      const res = config.drillDown.valueFunc
+        ? config.drillDown.valueFunc(
+            // @ts-expect-error - partial mock of data
+            {
+              createdAt: new Date('2026-02-03T13:25:00.000Z')
+            }
+          )
+        : undefined
+      expect(res).toEqual({
+        attributes: {
+          'data-sort-value': '2026-02-03 13:25:00'
+        },
+        text: '03 Feb 2026 1:25 pm'
+      })
+    })
+
+    it('should format date for FormsFirstPublished', () => {
+      const config = MetricsTileConfig[FormMetricName.FormsFirstPublished]
+      const res = config.drillDown.valueFunc
+        ? config.drillDown.valueFunc(
+            // @ts-expect-error - partial mock of data
+            {
+              createdAt: new Date('2026-02-03T13:25:00.000Z')
+            }
+          )
+        : undefined
+      expect(res).toEqual({
+        attributes: {
+          'data-sort-value': '2026-02-03 13:25:00'
+        },
+        text: '03 Feb 2026 1:25 pm'
+      })
+    })
+
+    it('should format date for FormsRePublished', () => {
+      const config = MetricsTileConfig[FormMetricName.FormsRePublished]
+      const res = config.drillDown.valueFunc
+        ? config.drillDown.valueFunc(
+            // @ts-expect-error - partial mock of data
+            {
+              metricValue: 1500
+            }
+          )
+        : undefined
+      expect(res).toEqual({
+        attributes: {
+          'data-sort-value': 1500
+        },
+        text: '1,500'
+      })
+    })
+
+    it('should format date for Submissions', () => {
+      const config = MetricsTileConfig[FormMetricName.Submissions]
+      const res = config.drillDown.valueFunc
+        ? config.drillDown.valueFunc(
+            // @ts-expect-error - partial mock of data
+            {
+              metricValue: 1500
+            }
+          )
+        : undefined
+      expect(res).toEqual({
+        attributes: {
+          'data-sort-value': 1500
+        },
+        text: '1,500'
+      })
     })
   })
 })

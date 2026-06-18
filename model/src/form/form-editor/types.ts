@@ -1,7 +1,11 @@
-import { type ComponentType } from '~/src/components/enums.js'
+import {
+  type ComponentType,
+  type GeospatialFieldGeometryTypesEnum
+} from '~/src/components/enums.js'
 import {
   type ComponentDef,
-  type GeospatialFieldOptionsCountry
+  type GeospatialFieldOptionsCountry,
+  type TelephoneNumberFieldOptionsFormat
 } from '~/src/components/types.js'
 import { type DateDirections, type DateUnits } from '~/src/conditions/enums.js'
 import {
@@ -67,6 +71,11 @@ export interface FormEditor {
    * The short description of the question
    */
   shortDescription: string
+
+  /**
+   * The error description of the question
+   */
+  errorDescription: string
 
   /**
    * The value of checkbox to reveal instruction text field
@@ -197,6 +206,26 @@ export interface FormEditor {
    * The maximum days in the past to allow for a date
    */
   maxPast: string
+
+  /**
+   * The earliest date in a date range that users can enter (YYYY-MM-DD)
+   */
+  earliestDate: string
+
+  /**
+   * The latest date in a date range that users can enter (YYYY-MM-DD)
+   */
+  latestDate: string
+
+  /**
+   * The earliest month and year in a date range that users can enter (YYYY-MM)
+   */
+  earliestMonthYear: string
+
+  /**
+   * The latest month and year in a date range that users can enter (YYYY-MM)
+   */
+  latestMonthYear: string
 
   /**
    * The exact number of files to upload
@@ -373,6 +402,31 @@ export interface FormEditor {
    * The country restriction for geospatial questions
    */
   countries?: (GeospatialFieldOptionsCountry | 'any')[]
+
+  /**
+   * The exact number of features to define for geospatial questions
+   */
+  exactFeatures: string
+
+  /**
+   * The minimum number of features to define for geospatial questions
+   */
+  minFeatures: string
+
+  /**
+   * The maximum number of features to define for geospatial questions
+   */
+  maxFeatures: string
+
+  /**
+   * The geometry types restriction for geospatial questions
+   */
+  geometryTypes?: GeospatialFieldGeometryTypesEnum[]
+
+  /**
+   * The format restriction for telephone number questions
+   */
+  telephoneNumberFormat?: TelephoneNumberFieldOptionsFormat | 'any'
 }
 
 export type FormEditorInputPage = Pick<
@@ -411,6 +465,7 @@ export type FormEditorInputQuestion = Pick<
   | 'name'
   | 'question'
   | 'shortDescription'
+  | 'errorDescription'
   | 'hintText'
   | 'declarationText'
   | 'questionOptional'
@@ -426,6 +481,10 @@ export type FormEditorInputQuestion = Pick<
   | 'max'
   | 'maxFuture'
   | 'maxPast'
+  | 'earliestDate'
+  | 'latestDate'
+  | 'earliestMonthYear'
+  | 'latestMonthYear'
   | 'exactFiles'
   | 'minFiles'
   | 'maxFiles'
@@ -454,7 +513,12 @@ export type FormEditorInputQuestion = Pick<
   | 'paymentLiveApiKey'
   | 'conditionalAmount'
   | 'conditionalAmountCondition'
+  | 'geometryTypes'
   | 'countries'
+  | 'exactFeatures'
+  | 'minFeatures'
+  | 'maxFeatures'
+  | 'telephoneNumberFormat'
 >
 
 export type FormEditorInputPageSettings = Pick<
@@ -479,6 +543,7 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'question'
   | 'hintText'
   | 'shortDescription'
+  | 'errorDescription'
   | 'questionOptional'
   | 'questionType'
   | 'fileTypes'
@@ -687,6 +752,7 @@ export interface FormEditorGovukField {
   instructionText?: GovukField
   questionOptional?: GovukField
   shortDescription?: GovukField
+  errorDescription?: GovukField
   fileTypes?: GovukField
   documentTypes?: GovukField
   imageTypes?: GovukField

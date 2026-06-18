@@ -99,7 +99,8 @@ export function isContentType(
     ComponentType.Html,
     ComponentType.Markdown,
     ComponentType.InsetText,
-    ComponentType.List
+    ComponentType.List,
+    ComponentType.NotificationBanner
   ]
 
   return !!type && allowedTypes.includes(type)

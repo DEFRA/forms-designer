@@ -147,7 +147,12 @@ export function ComponentCreate(props: Readonly<Props>) {
               <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
             )}
 
-            <form onSubmit={handleSubmit} autoComplete="off" noValidate>
+            <form
+              action="#"
+              onSubmit={handleSubmit}
+              autoComplete="off"
+              noValidate
+            >
               <ComponentTypeEdit />
 
               <button type="submit" className="govuk-button">

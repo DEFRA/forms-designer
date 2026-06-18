@@ -19,7 +19,8 @@ import {
   publishFormDownloadedEvent,
   publishFormSubmissionExcelRequestedEvent,
   publishFormsBackupRequestedEvent,
-  publishPlatformCsatExcelRequestedEvent
+  publishPlatformCsatExcelRequestedEvent,
+  publishPlatformMetricsDownloadRequestedEvent
 } from '~/src/messaging/publish.js'
 
 jest.mock('~/src/messaging/publish-base.js')
@@ -573,6 +574,33 @@ describe('publish', () => {
           undefined,
           invalidUser
         )
+      ).rejects.toThrow(ValidationError)
+    })
+  })
+
+  describe('publishPlatformMetricsDownloadRequestedEvent', () => {
+    it('should publish PLATFORM_METRICS_DOWNLOAD_REQUESTED event', async () => {
+      await publishPlatformMetricsDownloadRequestedEvent(authAuditUser)
+
+      expect(publishEvent).toHaveBeenCalledWith({
+        entityId: 'platform',
+        source: AuditEventMessageSource.FORMS_DESIGNER,
+        messageCreatedAt: expect.any(Date),
+        schemaVersion: AuditEventMessageSchemaVersion.V1,
+        category: AuditEventMessageCategory.FORM,
+        type: AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED,
+        createdAt: expect.any(Date),
+        createdBy: {
+          id: authAuditUser.id,
+          displayName: authAuditUser.displayName
+        }
+      })
+    })
+
+    it('should not publish the event if the schema is incorrect', async () => {
+      await expect(
+        // @ts-expect-error - invalid schema
+        publishPlatformMetricsDownloadRequestedEvent({})
       ).rejects.toThrow(ValidationError)
     })
   })

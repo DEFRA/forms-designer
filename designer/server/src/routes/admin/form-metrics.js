@@ -1,20 +1,36 @@
-import { Scopes } from '@defra/forms-model'
+import { FormMetricName, Scopes, getErrorMessage } from '@defra/forms-model'
+import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
+import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
+import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
-import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
 import {
+  MetricsFilterFields,
+  getDrilldownMetrics,
+  getMetrics,
+  regenerateMetrics
+} from '~/src/lib/metrics.js'
+import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
+import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
+import {
+  getPeriodNameFromSlug,
   metricsComponentUsageViewModel,
+  metricsDrilldownViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
 
 const ROUTE_FULL_PATH = '/admin/form-metrics/{tab?}'
 const ROUTE_BASE_PATH = '/admin/form-metrics'
 const ROUTE_ADMIN_INDEX = '/admin/index'
+const ROUTE_DRILLDOWN_PATH =
+  '/admin/form-metrics/drilldown/{period}/{metricName}'
 
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
+
+const SHOW_FILTER = 'showFilter'
 
 const filterAndSortSchema = Joi.object({
   // Sorting
@@ -31,6 +47,13 @@ const filterAndSortSchema = Joi.object({
   showFilter: Joi.string().valid('Y', 'N').allow('')
 })
 
+const drilldownParamSchema = Joi.object({
+  period: Joi.string().required(),
+  metricName: Joi.string()
+    .valid(...Object.values(FormMetricName))
+    .required()
+})
+
 /**
  * @param {FilterAndSortCriteria} payload
  */
@@ -40,21 +63,24 @@ export function buildQueryFromPayload(payload) {
   }
 
   const params = new URLSearchParams()
-  if (payload.showFilter === 'N') {
-    params.set('showFilter', 'N')
-  }
   if (payload.searchText) {
-    params.set('searchText', encodeURI(payload.searchText))
+    params.set(MetricsFilterFields.SearchText, payload.searchText.trim())
+    params.set(SHOW_FILTER, 'Y')
   }
   if (payload.status) {
     payload.status.forEach((st) => {
-      params.append('status', st)
+      params.append(MetricsFilterFields.Status, st)
     })
+    params.set(SHOW_FILTER, 'Y')
   }
   if (payload.org) {
     payload.org.forEach((org) => {
-      params.append('org', encodeURI(org))
+      params.append(MetricsFilterFields.Org, org)
     })
+    params.set(SHOW_FILTER, 'Y')
+  }
+  if (payload.showFilter === 'Y' || payload.showFilter === 'N') {
+    params.set(SHOW_FILTER, payload.showFilter)
   }
   return params.size ? `?${params.toString()}` : ''
 }
@@ -169,6 +195,96 @@ export default [
       auth: {
         mode: 'required',
         access: { entity: 'user', scope: [`+${Scopes.RegenerateMetrics}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/admin/form-metrics-download',
+    async handler(request, h) {
+      const { auth } = request
+
+      try {
+        // Live metrics only
+        const metrics = await getMetrics()
+        const buffer = getMetricsAsExcel(metrics)
+
+        const now = new Date()
+        const filename = `form-metrics-${format(now, 'yyyy-MM-dd')}.xlsx`
+
+        const auditUser = mapUserForAudit(auth.credentials.user)
+        await publishPlatformMetricsDownloadRequestedEvent(auditUser)
+
+        return h
+          .response(buffer)
+          .header(
+            'Content-Type',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+          )
+          .header('Content-Disposition', `attachment; filename="${filename}"`)
+      } catch (err) {
+        logger.error(
+          err,
+          `[metrics] Error downloading live metrics - ${getErrorMessage(err)}`
+        )
+        throw err
+      }
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute< { Params: { period: string, metricName: FormMetricName } } >}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_DRILLDOWN_PATH,
+    async handler(request, h) {
+      const { params } = request
+      const { period, metricName } = params
+      const navigation = buildAdminNavigation(ADMIN_TOOLS)
+
+      const periodName = getPeriodNameFromSlug(period)
+
+      // Get tile metrics, for period ranges and form details lookups
+      const tileMetrics = await getMetrics()
+
+      const drilldownMetrics = await getDrilldownMetrics(periodName, metricName)
+
+      const model = metricsDrilldownViewModel(
+        tileMetrics,
+        drilldownMetrics,
+        period,
+        metricName
+      )
+
+      return h.view('admin/form-metrics-drilldown', {
+        pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
+        pageHeading: { text: METRICS_TITLE },
+        backLink: {
+          text: 'Back to overview metrics',
+          href: `/admin/form-metrics/#${period}`
+        },
+        navigation,
+        model
+      })
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormsReport}`] }
+      },
+      validate: {
+        params: drilldownParamSchema
       }
     }
   })

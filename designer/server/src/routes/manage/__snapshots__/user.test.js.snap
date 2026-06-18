@@ -204,7 +204,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
     <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="emailAddress">
@@ -534,7 +534,7 @@ exports[`Create and edit user routes GET /manage/users should render view when c
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
     <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="emailAddress">
@@ -845,7 +845,7 @@ exports[`Create and edit user routes GET /manage/users should render view when d
 
   <main class="govuk-main-wrapper govuk-main-wrapper--masthead">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
 
@@ -1165,7 +1165,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
     <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="emailAddress">
@@ -1504,7 +1504,7 @@ exports[`Create and edit user routes GET /manage/users should render view when e
 <div class="govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop">
   
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
     <div class="govuk-form-group">
   <label class="govuk-label govuk-label--m" for="emailAddress">

@@ -20,6 +20,7 @@ describe('location-helpers', () => {
         hintText: '',
         optional: false,
         shortDesc: '',
+        errorDesc: '',
         content: '',
         instructionText: 'Enter your precise location',
         items: []
@@ -68,6 +69,7 @@ describe('location-helpers', () => {
         hintText: '',
         optional: false,
         shortDesc: '',
+        errorDesc: '',
         content: '',
         instructionText: 'Instruction',
         items: []
@@ -99,6 +101,7 @@ describe('location-helpers', () => {
         hintText: '',
         optional: false,
         shortDesc: '',
+        errorDesc: '',
         content: '',
         instructionText: 'Instructions here',
         items: []
@@ -131,6 +134,7 @@ describe('location-helpers', () => {
         hintText: '',
         optional: false,
         shortDesc: '',
+        errorDesc: '',
         content: '',
         instructionText: 'Instructions',
         items: []
@@ -163,6 +167,7 @@ describe('location-helpers', () => {
         hintText: '',
         optional: true,
         shortDesc: '',
+        errorDesc: '',
         content: '',
         instructionText: '',
         items: []

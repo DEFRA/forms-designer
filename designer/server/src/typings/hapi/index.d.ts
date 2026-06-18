@@ -31,7 +31,7 @@ interface StateCache {
 
 /**
  * Type for view responses from Vision plugin.
- * The @hapi/vision plugin extends responses with a 'view' variety
+ * The `@hapi/vision` plugin extends responses with a 'view' variety
  * but this isn't included in the base Hapi TypeScript definitions.
  */
 export interface ViewResponse {

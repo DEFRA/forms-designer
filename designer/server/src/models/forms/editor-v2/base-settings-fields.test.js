@@ -60,7 +60,20 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
+          },
+          value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
           },
           value: undefined
         }
@@ -120,7 +133,20 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
+          },
+          value: undefined
+        },
+        {
+          id: 'errorDescription',
+          name: 'errorDescription',
+          idPrefix: 'errorDescription',
+          label: {
+            text: 'Error description (optional)',
+            classes: GOVUK_LABEL__M
+          },
+          hint: {
+            text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
           },
           value: undefined
         }
@@ -244,7 +270,7 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
           },
           value: undefined
         }
@@ -313,7 +339,7 @@ describe('editor-v2 - advanced settings fields model', () => {
             classes: GOVUK_LABEL__M
           },
           hint: {
-            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+            text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
           },
           value: undefined
         }
@@ -686,14 +712,14 @@ describe('editor-v2 - advanced settings fields model', () => {
       const locationFields = getQuestionFieldList(
         ComponentType.EastingNorthingField
       )
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
       expect(locationFields[1]).toBe('hintText')
     })
 
     test('should return location fields for OsGridRefField', () => {
       const locationFields = getQuestionFieldList(ComponentType.OsGridRefField)
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
     })
 
@@ -701,13 +727,13 @@ describe('editor-v2 - advanced settings fields model', () => {
       const locationFields = getQuestionFieldList(
         ComponentType.NationalGridFieldNumberField
       )
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
     })
 
     test('should return location fields for LatLongField', () => {
       const locationFields = getQuestionFieldList(ComponentType.LatLongField)
-      expect(locationFields).toHaveLength(4)
+      expect(locationFields).toHaveLength(5)
       expect(locationFields[0]).toBe('question')
     })
 
@@ -719,13 +745,13 @@ describe('editor-v2 - advanced settings fields model', () => {
 
     test('should return base fields for undefined question type', () => {
       const fields = getQuestionFieldList(undefined)
-      expect(fields).toHaveLength(4)
+      expect(fields).toHaveLength(5)
       expect(fields[0]).toBe('question')
     })
 
     test('should return base fields for unmapped question type', () => {
       const fields = getQuestionFieldList(ComponentType.TextField)
-      expect(fields).toHaveLength(4)
+      expect(fields).toHaveLength(5)
       expect(fields[0]).toBe('question')
     })
   })
@@ -802,6 +828,25 @@ describe('editor-v2 - advanced settings fields model', () => {
         undefined
       )
       expect(result).toBe('Short desc')
+    })
+
+    test('should return error description from component', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        errorDescription: 'Error desc',
+        type: ComponentType.TextField,
+        name: 'test',
+        title: 'test',
+        options: {},
+        schema: {}
+      })
+      const result = getFieldValue(
+        'errorDescription',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('Error desc')
     })
 
     test('should return questionOptional as string', () => {
@@ -935,6 +980,84 @@ describe('editor-v2 - advanced settings fields model', () => {
         undefined
       )
       expect(result).toBeUndefined()
+    })
+
+    test('paymentAmount returns "0" when amount is exactly 0 (DF-832 zero-bypass)', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.PaymentField,
+        name: 'payment',
+        title: 'payment',
+        options: { amount: 0, description: '' }
+      })
+      const result = getFieldValue(
+        'paymentAmount',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('0')
+    })
+
+    test('paymentAmount returns "0" when amount is missing (new component default)', () => {
+      const questionFields = /** @type {FormComponentsDef} */ ({
+        type: ComponentType.PaymentField,
+        name: 'payment',
+        title: 'payment',
+        options: { description: '' }
+      })
+      const result = getFieldValue(
+        'paymentAmount',
+        questionFields,
+        undefined,
+        buildDefinition(),
+        undefined
+      )
+      expect(result).toBe('0')
+    })
+  })
+
+  describe('PaymentField field list', () => {
+    it('places paymentConditionalAmounts between paymentAmount and paymentDescription', () => {
+      const fields = getFieldList(
+        undefined,
+        ComponentType.PaymentField,
+        undefined,
+        buildDefinition()
+      )
+      const names = fields.map((f) => f.name)
+      const amountIdx = names.indexOf('paymentAmount')
+      const conditionalIdx = names.indexOf('paymentConditionalAmounts')
+      const descriptionIdx = names.indexOf('paymentDescription')
+      expect(conditionalIdx).toBe(amountIdx + 1)
+      expect(descriptionIdx).toBe(conditionalIdx + 1)
+    })
+
+    it('paymentConditionalAmounts field uses the custom template', () => {
+      const fields = getFieldList(
+        undefined,
+        ComponentType.PaymentField,
+        undefined,
+        buildDefinition()
+      )
+      const conditional = fields.find(
+        (f) => f.name === 'paymentConditionalAmounts'
+      )
+      expect(conditional?.customTemplate).toBe('payment-conditional-amounts')
+    })
+
+    it('does not render any base field more than once', () => {
+      // A duplicate entry renders the inline editor twice, which makes the
+      // browser submit conditionalAmount/conditionalAmountCondition as arrays
+      // and breaks the Joi string validator. See PR #1443.
+      const fields = getFieldList(
+        undefined,
+        ComponentType.PaymentField,
+        undefined,
+        buildDefinition()
+      )
+      const names = fields.map((f) => f.name)
+      expect(names).toEqual([...new Set(names)])
     })
   })
 
@@ -1077,6 +1200,51 @@ describe('PaymentField required fields gated on enhancedAction', () => {
     )
     expect(errorPaths(result)).not.toEqual(
       expect.arrayContaining(paymentBaseFieldPaths)
+    )
+  })
+
+  describe('radioText required only on save-item (DF-832 regression guard)', () => {
+    const radiosBase = {
+      questionType: 'RadiosField',
+      question: 'q',
+      name: 'AbCdEf',
+      shortDescription: 'sd',
+      list: 'list-id'
+    }
+
+    it('errors with "Enter item text" when enhancedAction=save-item and radioText is empty', () => {
+      const { error } = baseSchema.validate(
+        {
+          ...radiosBase,
+          enhancedAction: 'save-item',
+          radioText: '',
+          listItemsData: '[]'
+        },
+        { abortEarly: false }
+      )
+      expect(
+        error?.details.find((d) => d.path[0] === 'radioText')?.message
+      ).toBe('Enter item text')
+    })
+
+    it.each([
+      'add-item',
+      're-order',
+      'add-conditional-amount',
+      'save-conditional-amount',
+      'cancel-conditional-amount',
+      undefined
+    ])(
+      'does not require radioText when enhancedAction=%s',
+      (enhancedAction) => {
+        const payload = enhancedAction
+          ? { ...radiosBase, enhancedAction, radioText: '' }
+          : { ...radiosBase, radioText: '' }
+        const { error } = baseSchema.validate(payload, { abortEarly: false })
+        expect(
+          error?.details.find((d) => d.path[0] === 'radioText')
+        ).toBeUndefined()
+      }
     )
   })
 

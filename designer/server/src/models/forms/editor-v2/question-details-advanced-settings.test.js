@@ -206,6 +206,38 @@ describe('editor-v2 - question details advanced settings model', () => {
         exactChecks: 3
       })
     })
+
+    test('should add minFeatures/maxFeatures if geospatial', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.GeospatialField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          min: 2,
+          max: 4
+        }
+      })
+      expect(res).toEqual({
+        minFeatures: 2,
+        maxFeatures: 4
+      })
+    })
+
+    test('should add exactFeatures if geospatial', () => {
+      const res = addMinMaxFieldProperties({
+        type: ComponentType.GeospatialField,
+        name: '',
+        title: '',
+        options: {},
+        schema: {
+          length: 3
+        }
+      })
+      expect(res).toEqual({
+        exactFeatures: 3
+      })
+    })
   })
 
   describe('addRegexFieldProperties', () => {
@@ -331,14 +363,14 @@ describe('editor-v2 - question details advanced settings model', () => {
         name: 'month',
         title: 'month title',
         options: {
-          maxDaysInFuture: 365,
-          maxDaysInPast: 730,
+          earliestMonthYear: '2000-01',
+          latestMonthYear: '2025-12',
           classes: 'month-class'
         }
       })
       expect(res).toEqual({
-        maxFuture: 365,
-        maxPast: 730,
+        earliestMonthYear: ['01', '2000'],
+        latestMonthYear: ['12', '2025'],
         classes: 'month-class'
       })
     })
@@ -353,7 +385,22 @@ describe('editor-v2 - question details advanced settings model', () => {
         }
       })
       expect(res).toEqual({
-        countries: ['wales']
+        countries: ['wales'],
+        geometryTypes: ['point', 'line', 'shape']
+      })
+    })
+
+    test('should map a telephone number field with format', () => {
+      const res = mapToQuestionOptions({
+        type: ComponentType.TelephoneNumberField,
+        name: 'phone',
+        title: 'phone title',
+        options: {
+          format: 'uk'
+        }
+      })
+      expect(res).toEqual({
+        telephoneNumberFormat: 'uk'
       })
     })
   })
@@ -421,6 +468,22 @@ describe('editor-v2 - question details advanced settings model', () => {
       expect(result).toHaveLength(1)
       expect(result[0].value).toContain('Search for a place or postcode')
       expect(result[0].value).toContain('Click to add the location to the map')
+    })
+
+    test('should re-apply checkbox values for geospatial fields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.GeospatialField,
+        name: 'geospatial',
+        title: 'geospatial title',
+        options: {}
+      })
+      const result = advancedSettingsFields(['geometryTypes'], question)
+      expect(result).toHaveLength(1)
+      expect(result[0].items).toHaveLength(3)
+      const items = result[0]?.items ?? []
+      expect(items[0]).toEqual({ text: 'Point', value: 'point', checked: true })
+      expect(items[1]).toEqual({ text: 'Line', value: 'line', checked: true })
+      expect(items[2]).toEqual({ text: 'Shape', value: 'shape', checked: true })
     })
 
     test('should use validation value over default for location instruction', () => {

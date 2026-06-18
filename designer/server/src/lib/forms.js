@@ -133,6 +133,18 @@ export async function getLiveFormDefinition(id, token) {
 }
 
 /**
+ * Get form definition, preferring draft over live
+ * @param {FormMetadata} metadata
+ * @param {string} token
+ */
+export function getDraftFormDefinitionWithLiveFallback(metadata, token) {
+  if (metadata.draft) {
+    return getDraftFormDefinition(metadata.id, token)
+  }
+  return getLiveFormDefinition(metadata.id, token)
+}
+
+/**
  * Retrieves a form definition version from the form manager for a given id
  * @param {string} id - the id of the form
  * @param {number} versionNumber - the version of the form
@@ -148,6 +160,27 @@ export async function getFormDefinitionVersion(id, versionNumber, token) {
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
 
   return body
+}
+
+/**
+ * Get form definition associated with a submission
+ * @param {FormAdapterSubmissionMessageMeta} meta - metadata containing version information
+ * @param {string} token - auth token
+ */
+export async function getFormDefinitionForSubmission(meta, token) {
+  const { formId, versionMetadata } = meta
+
+  if (versionMetadata) {
+    return getFormDefinitionVersion(
+      formId,
+      versionMetadata.versionNumber,
+      token
+    )
+  } else {
+    return meta.status === FormStatus.Draft
+      ? getDraftFormDefinition(formId, token)
+      : getLiveFormDefinition(formId, token)
+  }
 }
 
 /**
@@ -311,4 +344,5 @@ export async function listAll(token, options = {}) {
 
 /**
  * @import { FormDefinition, FormMetadata, FormMetadataInput, FormResponse, FormVersionMetadata, QueryOptions, QueryResult } from '@defra/forms-model'
+ * @import { FormAdapterSubmissionMessageMeta } from '@defra/forms-engine-plugin/types'
  */

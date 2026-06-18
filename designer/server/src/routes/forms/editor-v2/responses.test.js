@@ -1,9 +1,11 @@
+import { FormMetricName } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
+import { getMetricsForForm } from '~/src/lib/metrics.js'
 import {
   publishFormCsatExcelRequestedEvent,
   publishFormSubmissionExcelRequestedEvent
@@ -20,6 +22,7 @@ jest.mock('~/src/lib/error-helper.js')
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/messaging/publish.js')
 jest.mock('~/src/services/formSubmissionService.js')
+jest.mock('~/src/lib/metrics.js')
 
 describe('Editor v2 responses routes', () => {
   /** @type {Server} */
@@ -38,12 +41,40 @@ describe('Editor v2 responses routes', () => {
     jest.resetAllMocks()
   })
 
+  const mockMetricsForForm = {
+    overview: [],
+    totals: {
+      last7Days: {
+        [FormMetricName.Submissions]: 10
+      },
+      prev7Days: {
+        [FormMetricName.Submissions]: 5
+      },
+      last30Days: {},
+      prev30Days: {},
+      lastYear: {},
+      prevYear: {},
+      allTime: {},
+      draftSubmissions: {
+        'form-id-1': 5
+      },
+      liveSubmissions: {
+        'form-id-1': 3
+      },
+      updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+      earliestDate: new Date('2025-05-01')
+    }
+  }
+
   describe('GET', () => {
     test('should render table with options with no feedback scope', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce({
         ...testFormMetadata,
         notificationEmail: 'test@defra.gov.uk'
       })
+
+      // @ts-expect-error - partial mock of data
+      jest.mocked(getMetricsForForm).mockResolvedValueOnce(mockMetricsForForm)
 
       const options = {
         method: 'get',
@@ -92,6 +123,9 @@ describe('Editor v2 responses routes', () => {
         notificationEmail: 'test@defra.gov.uk'
       })
 
+      // @ts-expect-error - partial mock of data
+      jest.mocked(getMetricsForForm).mockResolvedValueOnce(mockMetricsForForm)
+
       const options = {
         method: 'get',
         url: '/library/my-form-slug/editor-v2/responses',
@@ -137,6 +171,9 @@ describe('Editor v2 responses routes', () => {
     test('should render error summary', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
 
+      // @ts-expect-error - partial mock of data
+      jest.mocked(getMetricsForForm).mockResolvedValueOnce(mockMetricsForForm)
+
       const options = {
         method: 'get',
         url: '/library/my-form-slug/editor-v2/responses',
@@ -156,6 +193,33 @@ describe('Editor v2 responses routes', () => {
         { exact: false }
       )
       expect($error).toBeInTheDocument()
+    })
+
+    test('should render page when form has no draft (live-only form)', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce({
+        ...testFormMetadata,
+        draft: undefined,
+        notificationEmail: 'test@defra.gov.uk'
+      })
+
+      // @ts-expect-error - partial mock of data
+      jest.mocked(getMetricsForForm).mockResolvedValueOnce(mockMetricsForForm)
+
+      const options = {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/responses',
+        auth
+      }
+
+      const {
+        container,
+        response: { statusCode }
+      } = await renderResponse(server, options)
+
+      expect(statusCode).toBe(StatusCodes.OK)
+      expect(
+        container.getByText('Download responses as an Excel spreadsheet')
+      ).toBeInTheDocument()
     })
   })
 
@@ -316,7 +380,7 @@ describe('Editor v2 responses routes', () => {
           {
             formId: mockMetadata.id,
             formName: mockMetadata.title,
-            notificationEmail: mockMetadata.notificationEmail
+            notificationEmail: 'dummy@defra.gov.uk'
           },
           expect.objectContaining({
             id: expect.any(String),

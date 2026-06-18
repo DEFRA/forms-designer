@@ -25,6 +25,9 @@ export class QuestionDomElements extends DomElements {
     const shortDescEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('shortDescription')
     )
+    const errorDescEl = /** @type {HTMLInputElement | null} */ (
+      document.getElementById('errorDescription')
+    )
     const userClassesEl = /** @type {HTMLInputElement | null} */ (
       document.getElementById('classes')
     )
@@ -48,6 +51,10 @@ export class QuestionDomElements extends DomElements {
     /**
      * @type {HTMLInputElement|null}
      */
+    this.errorDesc = errorDescEl
+    /**
+     * @type {HTMLInputElement|null}
+     */
     this.userClasses = userClassesEl
   }
 
@@ -60,6 +67,7 @@ export class QuestionDomElements extends DomElements {
     const optional = this.optional?.checked ?? false
     const question = this.question?.value ?? ''
     const shortDesc = this.shortDesc?.value ?? ''
+    const errorDesc = this.errorDesc?.value ?? ''
     const userClasses = this.userClasses?.value ?? ''
 
     return /** @type {BaseSettings} */ ({
@@ -67,6 +75,7 @@ export class QuestionDomElements extends DomElements {
       optional,
       question,
       shortDesc,
+      errorDesc,
       userClasses,
       items: [],
       largeTitle: true,

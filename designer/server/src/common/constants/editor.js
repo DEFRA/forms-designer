@@ -84,7 +84,7 @@ export const QuestionTypeDescriptions =
     },
     {
       type: ComponentType.GeospatialField,
-      description: 'Location: An area or points on a map'
+      description: 'Location: An area, a line, or points on a map'
     }
   ])
 
@@ -94,6 +94,7 @@ export const QuestionBaseSettings = {
   HintText: 'hintText',
   QuestionOptional: 'questionOptional',
   ShortDescription: 'shortDescription',
+  ErrorDescription: 'errorDescription',
   DeclarationText: 'declarationText',
   FileTypes: 'fileTypes',
   DocumentTypes: 'documentTypes',
@@ -125,6 +126,10 @@ export const QuestionAdvancedSettings =
     MaxLength: 'maxLength',
     MaxFuture: 'maxFuture',
     MaxPast: 'maxPast',
+    EarliestDate: 'earliestDate',
+    LatestDate: 'latestDate',
+    EarliestMonthYear: 'earliestMonthYear',
+    LatestMonthYear: 'latestMonthYear',
     Precision: 'precision',
     Prefix: 'prefix',
     Suffix: 'suffix',
@@ -135,7 +140,12 @@ export const QuestionAdvancedSettings =
     MinChecks: 'minChecks',
     MaxChecks: 'maxChecks',
     ExactChecks: 'exactChecks',
-    Countries: 'countries'
+    GeometryTypes: 'geometryTypes',
+    Countries: 'countries',
+    MinFeatures: 'minFeatures',
+    MaxFeatures: 'maxFeatures',
+    ExactFeatures: 'exactFeatures',
+    TelephoneNumberFormat: 'telephoneNumberFormat'
   }
 
 /**

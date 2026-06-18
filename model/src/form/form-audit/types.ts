@@ -85,8 +85,7 @@ export interface FormTitleUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormTitleChanges>
 }
 
-export interface FormOrganisationUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormOrganisationUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormOrganisationChanges>
 }
 
@@ -98,43 +97,35 @@ export interface FormTeamEmailUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormTeamEmailChanges>
 }
 
-export interface FormSupportContactUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormSupportContactUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormSupportContactChanges>
 }
 
-export interface FormSupportPhoneUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormSupportPhoneUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormSupportPhoneChanges>
 }
 
-export interface FormSupportEmailUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormSupportEmailUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormSupportEmailChanges>
 }
 
-export interface FormSupportOnlineUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormSupportOnlineUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormSupportOnlineChanges>
 }
 
-export interface FormPrivacyNoticeUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormPrivacyNoticeUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormPrivacyNoticeChanges>
 }
 
-export interface FormTermsAndConditionsAgreedMessageData
-  extends FormMessageDataBase {
+export interface FormTermsAndConditionsAgreedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormTermsAndConditionsChanges>
 }
 
-export interface FormNotificationEmailUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormNotificationEmailUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormNotificationEmailChanges>
 }
 
-export interface FormSubmissionGuidanceUpdatedMessageData
-  extends FormMessageDataBase {
+export interface FormSubmissionGuidanceUpdatedMessageData extends FormMessageDataBase {
   changes: ChangesMessageData<FormSubmissionGuidanceChanges>
 }
 
@@ -321,24 +312,21 @@ export interface FormPrivacyNoticeUpdatedMessage extends ManagerMessageBase {
   data: FormPrivacyNoticeUpdatedMessageData
 }
 
-export interface FormTermsAndConditionsAgreedMessage
-  extends ManagerMessageBase {
+export interface FormTermsAndConditionsAgreedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_TERMS_AND_CONDITIONS_AGREED
   source: AuditEventMessageSource.FORMS_MANAGER
   data: FormTermsAndConditionsAgreedMessageData
 }
 
-export interface FormNotificationEmailUpdatedMessage
-  extends ManagerMessageBase {
+export interface FormNotificationEmailUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_NOTIFICATION_EMAIL_UPDATED
   source: AuditEventMessageSource.FORMS_MANAGER
   data: FormNotificationEmailUpdatedMessageData
 }
 
-export interface FormSubmissionGuidanceUpdatedMessage
-  extends ManagerMessageBase {
+export interface FormSubmissionGuidanceUpdatedMessage extends ManagerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_GUIDANCE_UPDATED
   source: AuditEventMessageSource.FORMS_MANAGER
@@ -395,6 +383,16 @@ export interface FormUpdatedMessage extends ManagerMessageBase {
   data: FormUpdatedMessageData
 }
 
+export interface FormTakenOfflineMessage extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_TAKEN_OFFLINE
+}
+
+export interface FormMadeOnlineAgainMessage extends ManagerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.FORM_MADE_ONLINE_AGAIN
+}
+
 export interface EntitlementCreatedMessage extends EntitlementMessageBase {
   category: AuditEventMessageCategory.ENTITLEMENT
   type: AuditEventMessageType.ENTITLEMENT_CREATED
@@ -419,29 +417,25 @@ export interface AuthenticationLoginMessage extends AuthenticationMessageBase {
   data: AuthenticationMessageData
 }
 
-export interface AuthenticationLogoutManualMessage
-  extends AuthenticationMessageBase {
+export interface AuthenticationLogoutManualMessage extends AuthenticationMessageBase {
   category: AuditEventMessageCategory.AUTHENTICATION
   type: AuditEventMessageType.AUTHENTICATION_LOGOUT_MANUAL
   data: AuthenticationMessageData
 }
 
-export interface AuthenticationLogoutAutoMessage
-  extends AuthenticationMessageBase {
+export interface AuthenticationLogoutAutoMessage extends AuthenticationMessageBase {
   category: AuditEventMessageCategory.AUTHENTICATION
   type: AuditEventMessageType.AUTHENTICATION_LOGOUT_AUTO
   data: AuthenticationMessageData
 }
 
-export interface AuthenticationLogoutDifferentDeviceMessage
-  extends AuthenticationMessageBase {
+export interface AuthenticationLogoutDifferentDeviceMessage extends AuthenticationMessageBase {
   category: AuditEventMessageCategory.AUTHENTICATION
   type: AuditEventMessageType.AUTHENTICATION_LOGOUT_DIFFERENT_DEVICE
   data: AuthenticationMessageData
 }
 
-export interface FormSubmissionExcelRequestedMessage
-  extends DesignerMessageBase {
+export interface FormSubmissionExcelRequestedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.FORM_SUBMISSION_EXCEL_REQUESTED
   data: ExcelGenerationMessageData
@@ -457,6 +451,11 @@ export interface PlatformCsatExcelRequestedMessage extends DesignerMessageBase {
   category: AuditEventMessageCategory.FORM
   type: AuditEventMessageType.PLATFORM_CSAT_EXCEL_REQUESTED
   data: ExcelGenerationMessageData
+}
+
+export interface PlatformMetricsDownloadRequestedMessage extends DesignerMessageBase {
+  category: AuditEventMessageCategory.FORM
+  type: AuditEventMessageType.PLATFORM_METRICS_DOWNLOAD_REQUESTED
 }
 
 export interface FormsBackupRequestedMessage extends DesignerMessageBase {
@@ -505,6 +504,8 @@ export type AuditMessage =
   | FormDraftDeletedMessage
   | FormMigratedMessage
   | FormUpdatedMessage
+  | FormTakenOfflineMessage
+  | FormMadeOnlineAgainMessage
   | EntitlementCreatedMessage
   | EntitlementUpdatedMessage
   | EntitlementDeletedMessage
@@ -515,6 +516,7 @@ export type AuditMessage =
   | FormSubmissionExcelRequestedMessage
   | FormCsatExcelRequestedMessage
   | PlatformCsatExcelRequestedMessage
+  | PlatformMetricsDownloadRequestedMessage
   | FormsBackupRequestedMessage
   | FormSecretDeletedMessage
   | FormSecretSavedMessage

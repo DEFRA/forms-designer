@@ -1,8 +1,17 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum
+} from '@defra/forms-model'
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
-import { insertValidationErrors, isCheckboxSelected } from '~/src/lib/utils.js'
+import { buildDateValuesAndErrors } from '~/src/common/helpers/date-field-helper.js'
+import { buildMonthYearValuesAndErrors } from '~/src/common/helpers/month-year-field-helper.js'
+import {
+  hasCheckedValue,
+  insertValidationErrors,
+  isCheckboxSelected
+} from '~/src/lib/utils.js'
 import { allAdvancedSettingsFields } from '~/src/models/forms/editor-v2/advanced-settings-fields.js'
 import { allEnhancedFields } from '~/src/models/forms/editor-v2/enhanced-fields.js'
 import { getDefaultLocationInstructions } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
@@ -21,17 +30,62 @@ export function addNumberFieldProperties(question) {
 }
 
 /**
- * @param { DatePartsFieldComponent | MonthYearFieldComponent } question
+ * Returns `DatePartsFieldComponent` options, converting earliest/latest setting from YYYY-MM strings into an array of parts
+ * @param { DatePartsFieldComponent } question
  */
 export function addDateFieldProperties(question) {
   return {
     maxFuture: question.options.maxDaysInFuture,
-    maxPast: question.options.maxDaysInPast
+    maxPast: question.options.maxDaysInPast,
+    earliestDate: question.options.earliestDate?.split('-').reverse(),
+    latestDate: question.options.latestDate?.split('-').reverse()
   }
 }
 
 /**
- * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent | CheckboxesFieldComponent } question
+ * Returns `MonthYearFieldComponent` options, converting earliest/latest setting from YYYY-MM strings into an array of parts
+ * @param { MonthYearFieldComponent } question
+ */
+export function addMonthYearFieldProperties(question) {
+  return {
+    earliestMonthYear: question.options.earliestMonthYear?.split('-').reverse(),
+    latestMonthYear: question.options.latestMonthYear?.split('-').reverse()
+  }
+}
+
+/**
+ * @param { LocationFieldComponent } question
+ */
+export function addLocationFieldProperties(question) {
+  return {
+    giveInstructions: question.options.instructionText ? 'true' : undefined,
+    instructionText: question.options.instructionText
+  }
+}
+
+/**
+ * @param { GeospatialFieldComponent } question
+ */
+export function addGeospatialFieldProperties(question) {
+  return {
+    countries: question.options.countries ?? ['any'],
+    geometryTypes:
+      question.options.geometryTypes ??
+      Object.values(GeospatialFieldGeometryTypesEnum)
+  }
+}
+
+/**
+ * @param { TelephoneNumberFieldComponent } question
+ */
+export function addTelephoneFieldProperties(question) {
+  return {
+    telephoneNumberFormat: question.options.format ?? 'any'
+  }
+}
+
+/**
+ * @param { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent | FileUploadFieldComponent | CheckboxesFieldComponent | GeospatialFieldComponent } question
  */
 export function addMinMaxFieldProperties(question) {
   if (question.type === ComponentType.FileUploadField) {
@@ -46,6 +100,13 @@ export function addMinMaxFieldProperties(question) {
       exactChecks: question.schema?.length,
       minChecks: question.schema?.min,
       maxChecks: question.schema?.max
+    }
+  }
+  if (question.type === ComponentType.GeospatialField) {
+    return {
+      exactFeatures: question.schema?.length,
+      minFeatures: question.schema?.min,
+      maxFeatures: question.schema?.max
     }
   }
   return {
@@ -87,29 +148,31 @@ export function mapToQuestionOptions(question) {
   const isNumberField = isTypeOfField(question.type, [
     ComponentType.NumberField
   ])
-  const isDateField = isTypeOfField(question.type, [
-    ComponentType.DatePartsField,
-    ComponentType.MonthYearField
-  ])
   const hasMinMax = isTypeOfField(question.type, [
     ComponentType.TextField,
     ComponentType.MultilineTextField,
     ComponentType.NumberField,
     ComponentType.FileUploadField,
-    ComponentType.CheckboxesField
+    ComponentType.CheckboxesField,
+    ComponentType.GeospatialField
   ])
   const isLocationField = isLocationFieldType(question.type)
 
   const numberExtras = isNumberField
     ? addNumberFieldProperties(/** @type {NumberFieldComponent} */ (question))
     : {}
-  const dateExtras = isDateField
-    ? addDateFieldProperties(
-        /** @type { DatePartsFieldComponent | MonthYearFieldComponent } */ (
-          question
+  const dateExtras =
+    question.type === ComponentType.DatePartsField
+      ? addDateFieldProperties(
+          /** @type { DatePartsFieldComponent } */ (question)
         )
-      )
-    : {}
+      : {}
+  const monthYearExtras =
+    question.type === ComponentType.MonthYearField
+      ? addMonthYearFieldProperties(
+          /** @type { MonthYearFieldComponent } */ (question)
+        )
+      : {}
   const minMaxExtras = hasMinMax
     ? addMinMaxFieldProperties(
         /** @type { TextFieldComponent | MultilineTextFieldComponent | NumberFieldComponent } */ (
@@ -135,32 +198,30 @@ export function mapToQuestionOptions(question) {
       )
     : {}
   const locationExtras = isLocationField
-    ? {
-        giveInstructions: /** @type {LocationFieldComponent} */ (question)
-          .options.instructionText
-          ? 'true'
-          : undefined,
-        instructionText: /** @type {LocationFieldComponent} */ (question)
-          .options.instructionText
-      }
+    ? addLocationFieldProperties(
+        /** @type {LocationFieldComponent} */ (question)
+      )
     : {}
   const geospatialExtras =
     question.type === ComponentType.GeospatialField
-      ? {
-          countries: /** @type {GeospatialFieldComponent} */ (question).options
-            .countries ?? ['any']
-        }
+      ? addGeospatialFieldProperties(question)
+      : {}
+  const telephoneExtras =
+    question.type === ComponentType.TelephoneNumberField
+      ? addTelephoneFieldProperties(question)
       : {}
 
   return {
     classes: /** @type {FormComponentsDef} */ (question).options.classes,
     ...numberExtras,
     ...dateExtras,
+    ...monthYearExtras,
     ...minMaxExtras,
     ...multilineExtras,
     ...regexExtras,
     ...locationExtras,
-    ...geospatialExtras
+    ...geospatialExtras,
+    ...telephoneExtras
   }
 }
 
@@ -213,6 +274,43 @@ export function advancedSettingsFields(options, question, validation) {
       }
     }
 
+    if (fieldName === QuestionAdvancedSettings.GeometryTypes) {
+      // Re-apply checkbox values
+      return {
+        ...fieldSettings,
+        ...insertValidationErrors(
+          formErrors ? formErrors[fieldName] : undefined
+        ),
+        items: fieldSettings.items?.map((item) => ({
+          ...item,
+          checked: hasCheckedValue(
+            /** @type {string[] | undefined} */ (formValues[fieldName]),
+            item.value
+          )
+        }))
+      }
+    }
+
+    if (
+      fieldName === QuestionAdvancedSettings.EarliestDate ||
+      fieldName === QuestionAdvancedSettings.LatestDate
+    ) {
+      return {
+        ...fieldSettings,
+        ...buildDateValuesAndErrors(fieldName, formValues, formErrors)
+      }
+    }
+
+    if (
+      fieldName === QuestionAdvancedSettings.EarliestMonthYear ||
+      fieldName === QuestionAdvancedSettings.LatestMonthYear
+    ) {
+      return {
+        ...fieldSettings,
+        ...buildMonthYearValuesAndErrors(fieldName, formValues, formErrors)
+      }
+    }
+
     return {
       ...fieldSettings,
       ...insertValidationErrors(formErrors ? formErrors[fieldName] : undefined),
@@ -252,6 +350,6 @@ export function enhancedFields(options, question, validation) {
  */
 
 /**
- * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent, GeospatialFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, DatePartsFieldComponent, EastingNorthingFieldComponent, FileUploadFieldComponent, CheckboxesFieldComponent, FormComponentsDef, FormEditor, GovukField, LatLongFieldComponent, MonthYearFieldComponent, MultilineTextFieldComponent, NationalGridFieldNumberFieldComponent, NumberFieldComponent, OsGridRefFieldComponent, TextFieldComponent, GeospatialFieldComponent, TelephoneNumberFieldComponent } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

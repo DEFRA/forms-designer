@@ -15,7 +15,8 @@ describe('ContentEdit', () => {
     ComponentType.Details,
     ComponentType.Html,
     ComponentType.Markdown,
-    ComponentType.InsetText
+    ComponentType.InsetText,
+    ComponentType.NotificationBanner
   ]
 
   describe('Supported components', () => {

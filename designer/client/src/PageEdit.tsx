@@ -470,7 +470,7 @@ export class PageEdit extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
+        <form action="#" onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <div
             className={classNames('govuk-form-group', {
               'govuk-form-group--error': errors.controller

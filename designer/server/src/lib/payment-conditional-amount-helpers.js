@@ -68,8 +68,13 @@ export function formatConditionForTile(conditionId, conditions) {
 /**
  * Merge `state.conditionalAmounts` onto `questionDetails.options.conditionalAmounts`
  * for PaymentField components. Strips the `id` field (it's a session-only handle).
- * Returns the original questionDetails unchanged when there's nothing to write
- * (non-PaymentField, no state, empty list).
+ *
+ * Semantics for `state.conditionalAmounts`:
+ * - `undefined` (no session knowledge — fresh state or session lost) → leave the
+ *   questionDetails alone so the on-disk component state is preserved
+ * - `[]` (user removed every tile in this session) → write `[]` so the saved
+ *   component reflects the deletion
+ * - non-empty array → write the mapped list
  * @template {Partial<ComponentDef>} T
  * @param {T} questionDetails
  * @param {QuestionSessionState | undefined} state
@@ -79,8 +84,8 @@ export function mergeConditionalAmountsIntoOptions(questionDetails, state) {
   if (questionDetails.type !== ComponentType.PaymentField) {
     return questionDetails
   }
-  const items = state?.conditionalAmounts ?? []
-  if (items.length === 0) {
+  const items = state?.conditionalAmounts
+  if (items === undefined) {
     return questionDetails
   }
   return /** @type {T} */ ({

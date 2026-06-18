@@ -211,7 +211,7 @@ exports[`Reset save and exit routes GET should render form 1`] = `
     <h2 class="govuk-heading-m">Reset save and exit</h2>
     <p class="govuk-body">Reset a save and exit magic link</p>
 
-    <form class="form" method="post">
+    <form class="form" method="post" action="#">
       <div class="govuk-form-group">
   <label class="govuk-label" for="magicLinkId">
     Enter the magic link ID (guid)

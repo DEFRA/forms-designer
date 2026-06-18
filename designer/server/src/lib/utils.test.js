@@ -21,6 +21,8 @@ import {
   getHeaders,
   getListFromComponent,
   handlePrecision,
+  hasCheckedValue,
+  leftPadDateIfSupplied,
   mapListToTextareaStr,
   noListToSave
 } from '~/src/lib/utils.js'
@@ -339,6 +341,39 @@ describe('utils', () => {
     })
     it('should return error if 3 decimal places', () => {
       expect(handlePrecision(123.567, mockHelpers, 2)).toBe('number.precision')
+    })
+    it('should accept zero (DF-832: base payment amount allows £0)', () => {
+      expect(handlePrecision(0, mockHelpers, 2)).toBe(0)
+    })
+  })
+
+  describe('hasCheckedValue', () => {
+    it('should return false if options are undefined', () => {
+      expect(hasCheckedValue(undefined, 'test')).toBe(false)
+    })
+    it('should return false if no options', () => {
+      expect(hasCheckedValue([], 'test')).toBe(false)
+    })
+    it('should return false if undefined value', () => {
+      expect(hasCheckedValue(['option1'], undefined)).toBe(false)
+    })
+    it('should return false if empty value', () => {
+      expect(hasCheckedValue([''], '')).toBe(false)
+    })
+    it('should return true if value matches', () => {
+      expect(hasCheckedValue(['abc', 'def'], 'abc')).toBe(true)
+    })
+  })
+
+  describe('leftPadDate', () => {
+    test('should perform left pad', () => {
+      expect(leftPadDateIfSupplied(undefined)).toBe('')
+      expect(leftPadDateIfSupplied('')).toBe('')
+      expect(leftPadDateIfSupplied('0')).toBe('00')
+      expect(leftPadDateIfSupplied('1')).toBe('01')
+      expect(leftPadDateIfSupplied('9')).toBe('09')
+      expect(leftPadDateIfSupplied('10')).toBe('10')
+      expect(leftPadDateIfSupplied('99')).toBe('99')
     })
   })
 })

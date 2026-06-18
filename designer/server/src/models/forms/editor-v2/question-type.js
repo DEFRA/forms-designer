@@ -47,7 +47,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   {
     text: 'Phone number',
     hint: {
-      text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
+      text: 'For example, 07700 900 982 or +33 123 456 7890'
     },
     value: ComponentType.TelephoneNumberField
   },
@@ -130,7 +130,7 @@ const locationSubItems = [
     value: ComponentType.LatLongField
   },
   {
-    text: 'An area or points on a map',
+    text: 'An area, a line, or points on a map',
     value: ComponentType.GeospatialField
   }
 ]

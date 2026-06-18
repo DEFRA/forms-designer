@@ -143,7 +143,25 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/library">
-                  Forms library
+                  Home
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/making-a-form">
+                  Making a form
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
@@ -168,7 +186,7 @@ exports[`Form create routes GET '"/create/organisation"' matches test snapshot 1
 
   <main class="govuk-main-wrapper" id="main-content">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
 
@@ -455,7 +473,25 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/library">
-                  Forms library
+                  Home
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/making-a-form">
+                  Making a form
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
@@ -480,7 +516,7 @@ exports[`Form create routes GET '"/create/team"' matches test snapshot 1`] = `
 
   <main class="govuk-main-wrapper" id="main-content">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
     <div class="govuk-width-container app-width-container--wide">
@@ -733,7 +769,25 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
               <li class="service-header__nav-list-item">
                 <!-- Use the aria-current="page" attribute on the anchor tag -->
                 <a class="service-header__nav-list-item-link"                  href="/library">
-                  Forms library
+                  Home
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/features">
+                  Features
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/making-a-form">
+                  Making a form
+                </a>
+              </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
+              <li class="service-header__nav-list-item">
+                <!-- Use the aria-current="page" attribute on the anchor tag -->
+                <a class="service-header__nav-list-item-link"                  href="/resources">
+                  Resources
                 </a>
               </li>              <!-- Use the "service-header__nav-list-item--active" modifier class on the li to visually highlight the page the user is currently viewing -->
               <li class="service-header__nav-list-item">
@@ -758,7 +812,7 @@ exports[`Form create routes GET '"/create/title"' matches test snapshot 1`] = `
 
   <main class="govuk-main-wrapper" id="main-content">
 
-  <form method="post" novalidate>
+  <form method="post" action="#" novalidate>
 
 
 

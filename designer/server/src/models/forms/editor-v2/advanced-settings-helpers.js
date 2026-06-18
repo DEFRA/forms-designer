@@ -1,3 +1,5 @@
+import { format } from 'date-fns/format'
+
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
@@ -62,6 +64,34 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.maxPast !== undefined
     },
     {
+      key: 'earliestDate',
+      getValue: () =>
+        payload.earliestDate ? format(payload.earliestDate, 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload.earliestDate !== undefined
+    },
+    {
+      key: 'latestDate',
+      getValue: () =>
+        payload.latestDate ? format(payload.latestDate, 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload.latestDate !== undefined
+    },
+    {
+      key: 'earliestMonthYear',
+      getValue: () =>
+        payload.earliestMonthYear
+          ? format(payload.earliestMonthYear, 'yyyy-MM')
+          : '',
+      shouldInclude: () => payload.earliestMonthYear !== undefined
+    },
+    {
+      key: 'latestMonthYear',
+      getValue: () =>
+        payload.latestMonthYear
+          ? format(payload.latestMonthYear, 'yyyy-MM')
+          : '',
+      shouldInclude: () => payload.latestMonthYear !== undefined
+    },
+    {
       key: 'usePostcodeLookup',
       getValue: () => isCheckboxSelected(payload.usePostcodeLookup),
       shouldInclude: () => payload.usePostcodeLookup !== undefined
@@ -94,12 +124,24 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.paymentDescription !== undefined
     },
     {
+      key: 'geometryTypes',
+      getValue: () => payload.geometryTypes,
+      shouldInclude: () =>
+        Array.isArray(payload.geometryTypes) && payload.geometryTypes.length
+    },
+    {
       key: 'countries',
       getValue: () => payload.countries,
       shouldInclude: () =>
         Array.isArray(payload.countries) &&
         payload.countries.length === 1 &&
         payload.countries[0] !== 'any'
+    },
+    {
+      key: 'format',
+      getValue: () => payload.telephoneNumberFormat,
+      shouldInclude: () =>
+        payload.telephoneNumberFormat && payload.telephoneNumberFormat !== 'any'
     }
   ]
 
@@ -135,37 +177,43 @@ export function getAdditionalSchema(payload) {
   const schemaMapping = [
     {
       key: 'min',
-      sources: ['minLength', 'min', 'minFiles', 'minChecks'],
+      sources: ['minLength', 'min', 'minFiles', 'minChecks', 'minFeatures'],
       getValue: () =>
         payload.minLength ??
         payload.min ??
         payload.minFiles ??
-        payload.minChecks,
+        payload.minChecks ??
+        payload.minFeatures,
       shouldInclude: () =>
         payload.minLength ??
         isValueOrZero(payload.min) ??
         isValueOrZero(payload.minFiles) ??
-        isValueOrZero(payload.minChecks)
+        isValueOrZero(payload.minChecks) ??
+        isValueOrZero(payload.minFeatures)
     },
     {
       key: 'max',
-      sources: ['maxLength', 'max', 'maxFiles', 'maxChecks'],
+      sources: ['maxLength', 'max', 'maxFiles', 'maxChecks', 'maxFeatures'],
       getValue: () =>
         payload.maxLength ??
         payload.max ??
         payload.maxFiles ??
-        payload.maxChecks,
+        payload.maxChecks ??
+        payload.maxFeatures,
       shouldInclude: () =>
         payload.maxLength ??
         isValueOrZero(payload.max) ??
         payload.maxFiles ??
-        isValueOrZero(payload.maxChecks)
+        isValueOrZero(payload.maxChecks) ??
+        isValueOrZero(payload.maxFeatures)
     },
     {
       key: 'length',
-      sources: ['exactFiles', 'exactChecks'],
-      getValue: () => payload.exactFiles ?? payload.exactChecks,
-      shouldInclude: () => payload.exactFiles ?? payload.exactChecks
+      sources: ['exactFiles', 'exactChecks', 'exactFeatures'],
+      getValue: () =>
+        payload.exactFiles ?? payload.exactChecks ?? payload.exactFeatures,
+      shouldInclude: () =>
+        payload.exactFiles ?? payload.exactChecks ?? payload.exactFeatures
     },
     {
       key: 'regex',
@@ -201,6 +249,9 @@ export function mapExtraRootFields(payload) {
   }
   if (payload.declarationText) {
     rootFields.content = payload.declarationText
+  }
+  if (payload.errorDescription) {
+    rootFields.errorDescription = payload.errorDescription
   }
   return rootFields
 }

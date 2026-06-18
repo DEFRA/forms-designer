@@ -84,6 +84,7 @@ export const baseSchema = Joi.object().keys({
       })
     }
   ),
+  errorDescription: questionDetailsFullSchema.errorDescriptionSchema,
   questionType: questionDetailsFullSchema.questionTypeFullSchema.messages({
     '*': 'The question type is missing'
   }),
@@ -138,13 +139,9 @@ export const baseSchema = Joi.object().keys({
   enhancedAction: questionDetailsFullSchema.enhancedActionSchema,
   radioId: questionDetailsFullSchema.radioIdSchema,
   radioText: questionDetailsFullSchema.radioTextSchema.when('enhancedAction', {
-    is: Joi.exist(),
-    then: Joi.string().when('enhancedAction', {
-      is: Joi.string().valid('add-item', 're-order'),
-      then: Joi.string().optional().allow(''),
-      otherwise: Joi.string().trim().required().messages({
-        '*': 'Enter item text'
-      })
+    is: 'save-item',
+    then: Joi.string().trim().required().messages({
+      '*': 'Enter item text'
     }),
     otherwise: Joi.string().optional().allow('')
   }),
@@ -309,6 +306,8 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
       return questionFields?.hint
     case 'shortDescription':
       return questionFields?.shortDescription
+    case 'errorDescription':
+      return questionFields?.errorDescription
     case 'declarationText': {
       const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
         questionFields
@@ -340,15 +339,21 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
 }
 
 /**
+ * Editor input value for the base "Payment amount" field. Defaults to
+ * '0' for missing or non-numeric values. Does NOT fall back to a
+ * conditional amount, that is end-user display logic (see
+ * getPaymentDisplayAmount in payment-conditional-amounts.js).
  * @param { FormComponentsDef | undefined } questionFields
  */
 function getPaymentAmount(questionFields) {
   const paymentField = /** @type {PaymentFieldComponent | undefined} */ (
     questionFields
   )
-  return paymentField?.options.amount
-    ? paymentField.options.amount.toFixed(2)
-    : undefined
+  const amount = paymentField?.options.amount
+  if (typeof amount !== 'number') {
+    return '0'
+  }
+  return amount === 0 ? '0' : amount.toFixed(2)
 }
 
 /**
@@ -399,7 +404,8 @@ export const baseQuestionFields =
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const autocompleteFields =
@@ -448,7 +454,8 @@ export const locationFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question,
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
@@ -457,6 +464,7 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
 
 export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentAmount,
+  QuestionBaseSettings.PaymentConditionalAmounts,
   QuestionBaseSettings.PaymentDescription,
   QuestionBaseSettings.PaymentTestApiKey,
   QuestionBaseSettings.PaymentLiveApiKey

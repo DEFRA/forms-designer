@@ -1,4 +1,7 @@
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum
+} from '@defra/forms-model'
 
 import {
   getAdditionalOptions,
@@ -35,6 +38,11 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ suffix: ' per item' })
     })
 
+    it('should include telephoneNumberFormat when provided', () => {
+      const result = getAdditionalOptions({ telephoneNumberFormat: 'uk' })
+      expect(result).toEqual({ format: 'uk' })
+    })
+
     it('should include countries when provided', () => {
       const result = getAdditionalOptions({ countries: ['scotland'] })
       expect(result).toEqual({ countries: ['scotland'] })
@@ -48,6 +56,62 @@ describe('advanced-settings-helpers', () => {
     it('should map maxPast to maxDaysInPast', () => {
       const result = getAdditionalOptions({ maxPast: '60' })
       expect(result).toEqual({ maxDaysInPast: '60' })
+    })
+
+    it('should map earliestDate to correct format', () => {
+      const result = getAdditionalOptions({
+        earliestDate: '2023-02-01'
+      })
+      expect(result).toEqual({ earliestDate: '2023-02-01' })
+    })
+
+    it('should map empty earliestDate', () => {
+      const result = getAdditionalOptions({
+        earliestDate: ''
+      })
+      expect(result).toEqual({ earliestDate: '' })
+    })
+
+    it('should map latestDate to correct format', () => {
+      const result = getAdditionalOptions({
+        latestDate: '2012-06-02'
+      })
+      expect(result).toEqual({ latestDate: '2012-06-02' })
+    })
+
+    it('should map empty latestDate', () => {
+      const result = getAdditionalOptions({
+        latestDate: ''
+      })
+      expect(result).toEqual({ latestDate: '' })
+    })
+
+    it('should map earliestMonthYear to correct format', () => {
+      const result = getAdditionalOptions({
+        earliestMonthYear: '2023-02-01'
+      })
+      expect(result).toEqual({ earliestMonthYear: '2023-02' })
+    })
+
+    it('should map empty earliestMonthYear', () => {
+      const result = getAdditionalOptions({
+        earliestMonthYear: ''
+      })
+      expect(result).toEqual({ earliestMonthYear: '' })
+    })
+
+    it('should map latestMonthYear to correct format', () => {
+      const result = getAdditionalOptions({
+        latestMonthYear: '2012-06-02'
+      })
+      expect(result).toEqual({ latestMonthYear: '2012-06' })
+    })
+
+    it('should map empty latestMonthYear', () => {
+      const result = getAdditionalOptions({
+        latestMonthYear: ''
+      })
+      expect(result).toEqual({ latestMonthYear: '' })
     })
 
     it('should convert usePostcodeLookup to boolean', () => {
@@ -96,6 +160,16 @@ describe('advanced-settings-helpers', () => {
         paymentDescription: 'Payment desc'
       })
       expect(result).toEqual({ description: 'Payment desc' })
+    })
+
+    it('should map geometryTypes', () => {
+      const result = getAdditionalOptions({
+        geometryTypes: [
+          GeospatialFieldGeometryTypesEnum.Point,
+          GeospatialFieldGeometryTypesEnum.Line
+        ]
+      })
+      expect(result).toEqual({ geometryTypes: ['point', 'line'] })
     })
 
     it('should combine multiple options', () => {
@@ -299,6 +373,21 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ length: '3' })
     })
 
+    it('should map minFeatures to min', () => {
+      const result = getAdditionalSchema({ minFeatures: '2' })
+      expect(result).toEqual({ min: '2' })
+    })
+
+    it('should map maxFeatures to max', () => {
+      const result = getAdditionalSchema({ maxFeatures: '5' })
+      expect(result).toEqual({ max: '5' })
+    })
+
+    it('should map exactFeatures to length', () => {
+      const result = getAdditionalSchema({ exactFeatures: '3' })
+      expect(result).toEqual({ length: '3' })
+    })
+
     it('should include regex when provided', () => {
       const result = getAdditionalSchema({ regex: '^[A-Z]{2}[0-9]{4}$' })
       expect(result).toEqual({ regex: '^[A-Z]{2}[0-9]{4}$' })
@@ -366,6 +455,13 @@ describe('advanced-settings-helpers', () => {
         question: 'Test question'
       })
       expect(result).toEqual({ list: 'myList' })
+    })
+
+    it('should include error description when provided', () => {
+      const result = mapExtraRootFields({
+        errorDescription: 'My error description'
+      })
+      expect(result).toEqual({ errorDescription: 'My error description' })
     })
   })
 })

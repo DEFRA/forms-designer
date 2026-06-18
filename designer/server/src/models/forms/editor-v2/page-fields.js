@@ -9,6 +9,7 @@ const textFieldQuestions = [
   QuestionBaseSettings.Question,
   QuestionBaseSettings.Name,
   QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription,
   QuestionBaseSettings.PaymentAmount,
   QuestionBaseSettings.PaymentDescription,
   QuestionBaseSettings.PaymentTestApiKey,
@@ -28,7 +29,10 @@ const textFieldQuestions = [
   QuestionAdvancedSettings.Suffix,
   QuestionAdvancedSettings.MinChecks,
   QuestionAdvancedSettings.MaxChecks,
-  QuestionAdvancedSettings.ExactChecks
+  QuestionAdvancedSettings.ExactChecks,
+  QuestionAdvancedSettings.MinFeatures,
+  QuestionAdvancedSettings.MaxFeatures,
+  QuestionAdvancedSettings.ExactFeatures
 ]
 
 const multiLineTextFieldQuestions = [
@@ -46,12 +50,26 @@ const checkBoxFieldQuestions = [
   QuestionBaseSettings.ImageTypes,
   QuestionBaseSettings.TabularDataTypes,
   QuestionBaseSettings.UsePostcodeLookup,
-  QuestionAdvancedSettings.GiveInstructions
+  QuestionAdvancedSettings.GiveInstructions,
+  QuestionAdvancedSettings.GeometryTypes
 ]
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]
 
-const radiosFieldQuestions = [QuestionAdvancedSettings.Countries]
+const radiosFieldQuestions = [
+  QuestionAdvancedSettings.Countries,
+  QuestionAdvancedSettings.TelephoneNumberFormat
+]
+
+const dateFieldQuestions = [
+  QuestionAdvancedSettings.EarliestDate,
+  QuestionAdvancedSettings.LatestDate
+]
+
+const monthYearFieldQuestions = [
+  QuestionAdvancedSettings.EarliestMonthYear,
+  QuestionAdvancedSettings.LatestMonthYear
+]
 
 /**
  * @param {GovukField} field
@@ -80,6 +98,13 @@ export function getFieldComponentType(field) {
 
   if (radiosFieldQuestions.includes(fieldName)) {
     return ComponentType.RadiosField
+  }
+
+  if (
+    dateFieldQuestions.includes(fieldName) ||
+    monthYearFieldQuestions.includes(fieldName)
+  ) {
+    return ComponentType.DatePartsField
   }
 
   throw new Error(

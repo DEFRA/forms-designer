@@ -197,7 +197,7 @@ export function questionDetailsLeftPanelBuilder(listItemsHTML) {
 
     <h1 class="govuk-heading-l" id="page-heading">Edit question 1</h1>
 
-    <form class="form" method="post" id="question-form">
+    <form class="form" method="post" action="#" id="question-form">
       <div class="govuk-form-group">
         <div class="govuk-form-group">
           <label class="govuk-label govuk-label--m" for="question">
@@ -383,7 +383,7 @@ export const questionDetailsPreviewTabsHTML = `<div class="govuk-grid-column-one
             <li>
               <a id="empty-input-error-shorttext" class="govuk-error-message">
                 <span class="govuk-visually-hidden">Error:</span>
-                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[Short description]</span>
+                Enter <span id="error-dynamic-text" style="text-transform: lowercase;">[description]</span>
               </a>
             </li>
           </ul>

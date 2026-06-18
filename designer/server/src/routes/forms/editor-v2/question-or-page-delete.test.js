@@ -8,6 +8,7 @@ import { StatusCodes } from 'http-status-codes'
 import {
   testFormDefinitionWithAGuidancePage,
   testFormDefinitionWithNoQuestions,
+  testFormDefinitionWithPayment,
   testFormDefinitionWithSinglePage,
   testFormDefinitionWithTwoPagesAndQuestions,
   testFormDefinitionWithTwoQuestions
@@ -16,11 +17,14 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { deletePage, deleteQuestion } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
+import { deletePaymentSecret, existsSecret } from '~/src/lib/secrets.js'
+import { cleanupPaymentKeys } from '~/src/routes/forms/editor-v2/question-or-page-delete.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/secrets.js')
 
 describe('Editor v2 question delete routes', () => {
   /** @type {Server} */
@@ -254,6 +258,46 @@ describe('Editor v2 question delete routes', () => {
     expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
   })
 
+  test('POST - should delete page, delete payment secret, and redirect to pages list', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithPayment)
+    jest
+      .mocked(existsSecret)
+      .mockResolvedValueOnce({
+        exists: true,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
+      .mockResolvedValueOnce({
+        exists: true,
+        createdAt: undefined,
+        updatedAt: undefined
+      })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/page/p1/delete',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(deletePage).toHaveBeenCalledWith(
+      testFormMetadata.id,
+      expect.anything(),
+      'p1',
+      testFormDefinitionWithPayment
+    )
+    // Should have deleted TEST and PENDING keys
+    expect(deletePaymentSecret).toHaveBeenCalledTimes(2)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+  })
+
   test('POST - should delete question and redirect to pages list', async () => {
     jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
     const definition = structuredClone(
@@ -407,6 +451,79 @@ describe('Editor v2 question delete routes', () => {
     const { response } = await renderResponse(server, options)
 
     expect(response.statusCode).toBe(StatusCodes.BAD_REQUEST)
+  })
+
+  describe('cleanupPaymentKeys', () => {
+    test('should delete TEST key only', async () => {
+      jest
+        .mocked(existsSecret)
+        .mockResolvedValueOnce({
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+        .mockResolvedValueOnce({
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+      await cleanupPaymentKeys('form-id-1', 'token')
+      expect(existsSecret).toHaveBeenCalledTimes(2)
+      expect(deletePaymentSecret).toHaveBeenCalledTimes(1)
+      expect(deletePaymentSecret).toHaveBeenCalledWith(
+        'form-id-1',
+        'payment-test-api-key',
+        'token'
+      )
+    })
+
+    test('should delete TEST key and PENDING key', async () => {
+      jest
+        .mocked(existsSecret)
+        .mockResolvedValueOnce({
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+        .mockResolvedValueOnce({
+          exists: true,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+      await cleanupPaymentKeys('form-id-1', 'token')
+      expect(existsSecret).toHaveBeenCalledTimes(2)
+      expect(deletePaymentSecret).toHaveBeenCalledTimes(2)
+      expect(deletePaymentSecret).toHaveBeenNthCalledWith(
+        1,
+        'form-id-1',
+        'payment-test-api-key',
+        'token'
+      )
+      expect(deletePaymentSecret).toHaveBeenNthCalledWith(
+        2,
+        'form-id-1',
+        'payment-live-api-key-pending',
+        'token'
+      )
+    })
+
+    test('should not delete any keys as none exist', async () => {
+      jest
+        .mocked(existsSecret)
+        .mockResolvedValueOnce({
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+        .mockResolvedValueOnce({
+          exists: false,
+          createdAt: undefined,
+          updatedAt: undefined
+        })
+      await cleanupPaymentKeys('form-id-1', 'token')
+      expect(existsSecret).toHaveBeenCalledTimes(2)
+      expect(deletePaymentSecret).not.toHaveBeenCalled()
+    })
   })
 })
 

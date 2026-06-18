@@ -8,11 +8,11 @@ import { getHeaders } from '~/src/lib/utils.js'
 const submissionEndpoint = new URL('/file/', config.submissionUrl)
 
 /**
- * @param {string} fieldId
+ * @param {string} fileId
  * @returns {Promise<{ statusCode: StatusCodes, emailIsCaseSensitive: boolean, filename: string }>}
  */
-export async function checkFileStatus(fieldId) {
-  const requestUrl = new URL(`./${fieldId}`, submissionEndpoint)
+export async function checkFileStatus(fileId) {
+  const requestUrl = new URL(`./${fileId}`, submissionEndpoint)
 
   try {
     /** @type {{ response: import('http').IncomingMessage, body: { retrievalKeyIsCaseSensitive: boolean, filename: string } }} */

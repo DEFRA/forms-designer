@@ -50,6 +50,17 @@ export function isCheckboxSelected(checkboxVal) {
 }
 
 /**
+ * @param { string[] | undefined } options
+ * @param { string | undefined } value
+ */
+export function hasCheckedValue(options, value) {
+  if (!value || !options || options.length === 0) {
+    return false
+  }
+  return options.includes(value)
+}
+
+/**
  *
  * @param {string | undefined | null} str
  * @returns {boolean}
@@ -302,7 +313,7 @@ export function requiresPageTitle(page) {
  * @param {number} precision - number of decimal places allowed
  */
 export function handlePrecision(value, helpers, precision) {
-  if (!value || typeof value !== 'number') {
+  if (typeof value !== 'number') {
     return helpers.error('any.required')
   }
 
@@ -313,6 +324,13 @@ export function handlePrecision(value, helpers, precision) {
 
   const decimalPlaces = `${value}`.substring(decimalPos + 1).length
   return decimalPlaces <= precision ? value : helpers.error('number.precision')
+}
+
+/**
+ * @param {string | undefined} val
+ */
+export function leftPadDateIfSupplied(val) {
+  return val ? val.padStart(2, '0') : ''
 }
 
 /**

@@ -82,7 +82,7 @@ describe('ItemReorder Class', () => {
   const setupHTML = (includeFixed = false) => {
     document.body.innerHTML = `
       <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
-      <form>
+      <form action="#">
         <ol class="app-reorderable-list" id="items-container" data-module="items-reorder" data-itemtype="Page">
           <li class="app-reorderable-list__item" data-id="page1">
             <div class="govuk-summary-card reorder-panel">

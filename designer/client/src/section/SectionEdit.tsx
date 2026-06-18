@@ -165,7 +165,7 @@ export class SectionEdit extends Component<Props, State> {
           <ErrorSummary errorList={Object.values(errors).filter(Boolean)} />
         )}
 
-        <form onSubmit={this.onSubmit} autoComplete="off" noValidate>
+        <form action="#" onSubmit={this.onSubmit} autoComplete="off" noValidate>
           <Input
             id="section-title"
             name="title"

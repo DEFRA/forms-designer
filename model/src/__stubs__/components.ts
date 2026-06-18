@@ -17,6 +17,7 @@ import {
   type MonthYearFieldComponent,
   type MultilineTextFieldComponent,
   type NationalGridFieldNumberFieldComponent,
+  type NotificationBannerComponent,
   type NumberFieldComponent,
   type OsGridRefFieldComponent,
   type PaymentFieldComponent,
@@ -213,6 +214,20 @@ export function buildMarkdownComponent(
     content: '',
     ...partialMarkdown,
     type: ComponentType.Markdown
+  }
+}
+
+export function buildNotificationBannerComponent(
+  partialNotificationBanner: Partial<NotificationBannerComponent> = {}
+): NotificationBannerComponent {
+  return {
+    id: 'c7e3f1a2-9b84-4d56-8f0e-3a5c2d7b1e94',
+    title: 'NotificationBanner Component',
+    name: 'NotificationBannerComponent',
+    content: '',
+    options: {},
+    ...partialNotificationBanner,
+    type: ComponentType.NotificationBanner
   }
 }
 

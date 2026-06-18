@@ -27,7 +27,7 @@
 
     <p class="govuk-body">Before you upload a new form, you should <a href="{{ downloadAction }}" class="govuk-link">download a copy</a> in case you need it again.</p>
 
-    <form method="post" enctype="multipart/form-data" novalidate>
+    <form method="post" action="#" enctype="multipart/form-data" novalidate>
       {{ govukFileUpload({
         id: "formDefinition",
         name: "formDefinition",

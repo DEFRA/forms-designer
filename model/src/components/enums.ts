@@ -17,6 +17,7 @@ export enum ComponentType {
   Details = 'Details',
   List = 'List',
   Markdown = 'Markdown',
+  NotificationBanner = 'NotificationBanner',
   FileUploadField = 'FileUploadField',
   DeclarationField = 'DeclarationField',
   EastingNorthingField = 'EastingNorthingField',
@@ -33,6 +34,17 @@ export enum GeospatialFieldOptionsCountryEnum {
   NorthernIreland = 'northern-ireland',
   Scotland = 'scotland',
   Wales = 'wales'
+}
+
+export enum GeospatialFieldGeometryTypesEnum {
+  Point = 'point',
+  Line = 'line',
+  Shape = 'shape'
+}
+
+export enum TelephoneNumberFieldOptionsFormatEnum {
+  UK = 'uk',
+  International = 'international'
 }
 
 export const PreviewTypeEnum = {

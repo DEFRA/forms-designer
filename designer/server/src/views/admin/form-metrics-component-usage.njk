@@ -9,6 +9,16 @@
 {% macro displayMetricValue(value) %}
 {% if value %}
 {{ value | formatNumber }}
+{% else %}
+0
+{% endif %}
+{% endmacro %}
+
+{% macro displayMetricPercent(value) %}
+{% if value %}
+{{ value }}
+{% else %}
+0%
 {% endif %}
 {% endmacro %}
 

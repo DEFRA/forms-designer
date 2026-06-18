@@ -30,6 +30,8 @@
     backLink: backLink
   }) %}
 
+  <a href="/admin/form-metrics-download" class="govuk-link govuk-link--no-visited-state pull-right">Download</a>
+
   <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
     <div class="editor-card-title">Form activity</div>
     <nav class="app-page-navigation" aria-label="Component usage">
@@ -109,9 +111,9 @@
   }) }}
 {% endset -%}
 
-{% set showFilter = model.filter.showFilter !== 'N' %}
+{% set showFilter = model.filter.showFilter === 'Y' %}
 
-  <form method="post">
+  <form method="post" action="#">
     <div class="moj-filter-layout">
       <div class="moj-filter-layout__filter" style="display: {{ 'block' if showFilter else 'none' }}">
 
@@ -137,6 +139,7 @@
           <div class="moj-action-bar__filter">
             <button type="submit" name="showFilter" value="{{ 'N' if showFilter else 'Y' }}" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="{{ 'true' if showFilter else 'false' }}" data-govuk-button-init="">{{ 'Hide' if showFilter else 'Show' }} filter</button>
           </div>
+          <span class="govuk-heading-s pull-right">{{ model.formMetricRows.length }} row{{ 's' if model.formMetricRows.length !== 1 }}</span>
         </div>
 
         <table class="govuk-table moj-scrollable-pane" data-module="moj-sortable-table">

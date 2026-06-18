@@ -12,7 +12,8 @@ import {
   formFileDownloadedMapper,
   formSubmissionExcelRequestedMapper,
   formsBackupRequestedMapper,
-  platformCsatExcelRequestedMapper
+  platformCsatExcelRequestedMapper,
+  platformMetricsDownloadRequestedMapper
 } from '~/src/messaging/mappers/events.js'
 import { publishEvent } from '~/src/messaging/publish-base.js'
 
@@ -95,6 +96,16 @@ export async function publishFormFileDownloadSuccessEvent(
     { fileId, filename, user },
     true
   )
+
+  return validateAndPublishEvent(auditMessage)
+}
+
+/**
+ * Publish 'form metrics download requested' event
+ * @param {AuditUser} user
+ */
+export async function publishPlatformMetricsDownloadRequestedEvent(user) {
+  const auditMessage = platformMetricsDownloadRequestedMapper(user)
 
   return validateAndPublishEvent(auditMessage)
 }
