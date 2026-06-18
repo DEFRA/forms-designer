@@ -1039,7 +1039,7 @@ describe('Forms library routes', () => {
         data: [formMetadata],
         meta: {}
       }
-      jest.spyOn(fetch, 'postJson').mockResolvedValueOnce({
+      jest.spyOn(fetch, 'patchJson').mockResolvedValueOnce({
         /** @type { any } */
         response: {},
         body: mockResponse
@@ -1047,13 +1047,13 @@ describe('Forms library routes', () => {
 
       await forms.takeOffline('form-id', 'token')
 
-      const fetchPostJsonMock = /** @type {jest.Mock} */ (fetch.postJson)
+      const fetchPatchJsonMock = /** @type {jest.Mock} */ (fetch.patchJson)
       /** @type {Array<[URL, object]>} */
-      const mockCalls = fetchPostJsonMock.mock.calls
+      const mockCalls = fetchPatchJsonMock.mock.calls
       const calledUrl = /** @type {URL} */ (mockCalls[0][0])
-      expect(calledUrl.href).toBe(
-        'http://localhost:3001/forms/form-id/take-offline'
-      )
+      const payloadObj = /** @type {{ payload: object }} */ (mockCalls[0][1])
+      expect(calledUrl.href).toBe('http://localhost:3001/forms/form-id')
+      expect(payloadObj.payload).toEqual({ offline: true })
     })
   })
 
@@ -1063,21 +1063,21 @@ describe('Forms library routes', () => {
         data: [formMetadata],
         meta: {}
       }
-      jest.spyOn(fetch, 'postJson').mockResolvedValueOnce({
+      jest.spyOn(fetch, 'patchJson').mockResolvedValueOnce({
         /** @type { any } */
         response: {},
         body: mockResponse
       })
 
-      await forms.makeOnlineAgain('form-id', 'token')
+      await forms.makeOnline('form-id', 'token')
 
-      const fetchPostJsonMock = /** @type {jest.Mock} */ (fetch.postJson)
+      const fetchPatchJsonMock = /** @type {jest.Mock} */ (fetch.patchJson)
       /** @type {Array<[URL, object]>} */
-      const mockCalls = fetchPostJsonMock.mock.calls
+      const mockCalls = fetchPatchJsonMock.mock.calls
       const calledUrl = /** @type {URL} */ (mockCalls[0][0])
-      expect(calledUrl.href).toBe(
-        'http://localhost:3001/forms/form-id/make-online-again'
-      )
+      const payloadObj = /** @type {{ payload: object }} */ (mockCalls[0][1])
+      expect(calledUrl.href).toBe('http://localhost:3001/forms/form-id')
+      expect(payloadObj.payload).toEqual({ offline: false })
     })
   })
 })

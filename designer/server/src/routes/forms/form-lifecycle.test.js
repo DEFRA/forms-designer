@@ -477,7 +477,7 @@ describe('Form lifecycle route handlers', () => {
 
       const options = {
         method: 'GET',
-        url: '/library/my-form/manage-form/make-online-again',
+        url: '/library/my-form/manage-form/make-online',
         auth
       }
 
@@ -485,7 +485,7 @@ describe('Form lifecycle route handlers', () => {
 
       expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(response.headers.location).toBe('/library/my-form')
-      expect(forms.makeOnlineAgain).toHaveBeenCalled()
+      expect(forms.makeOnline).toHaveBeenCalled()
     })
 
     test('Make form online again should throw error', async () => {
@@ -495,12 +495,12 @@ describe('Form lifecycle route handlers', () => {
         live: state
       })
       jest
-        .mocked(forms.makeOnlineAgain)
+        .mocked(forms.makeOnline)
         .mockRejectedValueOnce(Boom.badRequest('An example error message here'))
 
       const options = {
         method: 'GET',
-        url: '/library/my-form/manage-form/make-online-again',
+        url: '/library/my-form/manage-form/make-online',
         auth
       }
 

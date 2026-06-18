@@ -135,7 +135,7 @@ export function takeFormOfflineConfirmationPageViewModel(
     },
 
     bodyText: `<p class="govuk-body">This form will be removed from GOV.UK and replaced with a
-    <a href="https://design-system.service.gov.uk/patterns/service-unavailable-pages/" target="_blank">service unavailable page (opens in a new tab)</a>.</p>
+    <a href="https://design-system.service.gov.uk/patterns/service-unavailable-pages/" class="govuk-link govuk-link--no-visited-state" target="_blank">service unavailable page (opens in a new tab)</a>.</p>
     <p class="govuk-body">You can make this form live again at any time.</p>`,
 
     buttons: [

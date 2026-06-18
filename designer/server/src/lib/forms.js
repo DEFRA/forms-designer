@@ -298,7 +298,7 @@ export function takeOffline(id, token) {
  * @param {string} id - form ID
  * @param {string} token - auth token
  */
-export function makeOnlineAgain(id, token) {
+export function makeOnline(id, token) {
   return updateMetadata(id, { offline: false }, token)
 }
 
