@@ -8,9 +8,6 @@ describe('Maps Client JS', () => {
   let addMarkerMock
 
   /** @type {jest.Mock} */
-  let interactPlugin
-
-  /** @type {jest.Mock} */
   let drawMLPlugin
 
   /** @type {jest.Mock} */
@@ -25,8 +22,6 @@ describe('Maps Client JS', () => {
   beforeEach(() => {
     jest.resetAllMocks()
 
-    // eslint-disable-next-line @typescript-eslint/no-empty-function
-    const noop = () => {}
     onMock = jest.fn()
     addMarkerMock = jest.fn()
     fitBoundsMock = jest.fn()
@@ -34,7 +29,6 @@ describe('Maps Client JS', () => {
       fitBounds: fitBoundsMock
     }
     drawPluginAddFeature = jest.fn()
-    interactPlugin = jest.fn()
     drawMLPlugin = jest.fn(() => ({
       addFeature: drawPluginAddFeature
     }))
@@ -44,16 +38,11 @@ describe('Maps Client JS', () => {
       addMarker = addMarkerMock
     }
 
-    // @ts-expect-error - loaded via UMD
-    window.defra = {
+    // Test doubles injected into the shared interactive-map mocks: the
+    // `InteractiveMap` constructor and the draw-ml plugin factory are routed
+    // here by test/mocks/interactive-map*.cjs
+    ;/** @type {any} */ (globalThis).interactiveMapMocks = {
       InteractiveMap: MockInteractiveMap,
-      maplibreProvider: noop,
-      openNamesProvider: noop,
-      mapStylesPlugin: noop,
-      interactPlugin,
-      searchPlugin: noop,
-      zoomControlsPlugin: noop,
-      scaleBarPlugin: noop,
       drawMLPlugin
     }
   })

@@ -283,37 +283,34 @@ export default /** @type {Configuration} */ ({
           from: 'i18n/translations',
           to: 'assets/translations'
         },
+        // The interactive-map runtime and plugin JS are bundled into maps.js as
+        // ESM via @defra/forms-engine-plugin, so the UMD/ESM JS bundles no
+        // longer need copying. Only the stylesheets (linked from
+        // submission/map.njk) and the image assets (referenced by the
+        // map-styles plugin config) are served as static files.
         {
-          from: join(interactiveMapPath, 'dist'),
-          to: 'assets/interactive-map'
+          from: join(interactiveMapPath, 'dist/css'),
+          to: 'assets/interactive-map/css'
         },
         {
-          from: join(interactiveMapPath, 'providers/maplibre'),
-          to: 'assets/interactive-map/providers/maplibre'
+          from: join(interactiveMapPath, 'plugins/beta/map-styles/dist/css'),
+          to: 'assets/interactive-map/plugins/map-styles/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'providers/beta/open-names'),
-          to: 'assets/interactive-map/providers/open-names'
+          from: join(interactiveMapPath, 'plugins/beta/scale-bar/dist/css'),
+          to: 'assets/interactive-map/plugins/scale-bar/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'plugins/beta/map-styles/dist'),
-          to: 'assets/interactive-map/plugins/map-styles/dist'
+          from: join(interactiveMapPath, 'plugins/interact/dist/css'),
+          to: 'assets/interactive-map/plugins/interact/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'plugins/beta/scale-bar/dist'),
-          to: 'assets/interactive-map/plugins/scale-bar/dist'
+          from: join(interactiveMapPath, 'plugins/search/dist/css'),
+          to: 'assets/interactive-map/plugins/search/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'plugins/interact/dist'),
-          to: 'assets/interactive-map/plugins/interact/dist'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/search/dist'),
-          to: 'assets/interactive-map/plugins/search/dist'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/beta/draw-ml/dist'),
-          to: 'assets/interactive-map/plugins/draw-ml/dist'
+          from: join(interactiveMapPath, 'plugins/beta/draw-ml/dist/css'),
+          to: 'assets/interactive-map/plugins/draw-ml/dist/css'
         },
         {
           from: join(interactiveMapPath, 'assets'),

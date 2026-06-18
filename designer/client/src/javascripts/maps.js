@@ -2,6 +2,12 @@ import {
   geospatialMap,
   map as mapImports
 } from '@defra/forms-engine-plugin/shared.js'
+// Source the draw plugin from the same ESM build as `createMap` above so the
+// map and the plugin share a single interactive-map (and preact) instance.
+// Mixing this with the UMD `window.defra` build gives two preact instances and
+// breaks preact hooks (e.g. "Cannot read properties of null (reading 'useEffect')").
+// @ts-expect-error - no types
+import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
 
 const { createMap, defaultConfig: defaultMapConfig } = mapImports
 const {
@@ -75,9 +81,6 @@ function onMapReadyFactory(
  * @param {number} index
  */
 function processPreview(preview, index) {
-  // @ts-expect-error - Defra namespace currently comes from UMD support files
-  const defra = window.defra
-
   const mapId = `map_${index}`
   const geospatialInput = preview.querySelector('.govuk-textarea')
 
@@ -95,7 +98,7 @@ function processPreview(preview, index) {
    */
   const geojson = getGeoJSON(geospatialInput)
   const bounds = geojson.features.length ? getBoundingBox(geojson) : undefined
-  const drawPlugin = defra.drawMLPlugin()
+  const drawPlugin = createDrawMLPlugin()
 
   const initConfig = {
     ...defaultMapConfig,
