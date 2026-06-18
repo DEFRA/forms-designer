@@ -73,6 +73,11 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
     sessionId: Joi.string()
       .required()
       .description('User session identifier for tracking and security'),
+    referenceNumber: Joi.string()
+      // TODO - make this required in later releases - optional for now to avoid release glitches
+      .optional()
+      .allow('')
+      .description('Reference number for the form submission'),
     main: Joi.array<SubmitRecord>()
       .items(formSubmitRecordSchema)
       .required()
