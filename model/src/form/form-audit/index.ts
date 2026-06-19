@@ -24,6 +24,8 @@ import {
   type FormMessageDataBase,
   type FormNotificationEmailChanges,
   type FormNotificationEmailUpdatedMessageData,
+  type FormOfflineChanges,
+  type FormOfflineUpdatedMessageData,
   type FormOrganisationChanges,
   type FormOrganisationUpdatedMessageData,
   type FormPrivacyNoticeChanges,
@@ -58,6 +60,7 @@ import {
   emailResponseTimeSchema,
   idSchema,
   notificationEmailAddressSchema,
+  offlineSchema,
   onlineTextSchema,
   onlineUrlSchema,
   organisationSchema,
@@ -237,6 +240,13 @@ export const formUploadedChanges = Joi.object<FormUploadedChanges>()
   })
   .required()
   .description('Changes schema for FORM_JSON_UPLOADED event')
+
+export const formOfflineChanges = Joi.object<FormOfflineChanges>()
+  .keys({
+    offline: offlineSchema
+  })
+  .required()
+  .description('Changes schema for FORM_OFFLINE_UPDATED event')
 
 export const entitlementMessageData = Joi.object<EntitlementMessageData>().keys(
   {
@@ -532,6 +542,15 @@ export const messageSchema = Joi.object<AuditMessage>()
         {
           is: Joi.string().trim().valid(AuditEventMessageType.DLQ_ACTION),
           then: dlqActionMessageData
+        },
+        {
+          is: Joi.string()
+            .trim()
+            .valid(AuditEventMessageType.FORM_OFFLINE_UPDATED),
+          then: formChangesMessageData<
+            FormOfflineChanges,
+            FormOfflineUpdatedMessageData
+          >(formOfflineChanges)
         }
       ],
       otherwise: Joi.forbidden()

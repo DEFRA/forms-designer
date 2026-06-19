@@ -292,6 +292,24 @@ export async function createDraft(id, token) {
 }
 
 /**
+ * Takes a form offline
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export function takeOffline(id, token) {
+  return updateMetadata(id, { offline: true }, token)
+}
+
+/**
+ * Makes an offline form online again
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export function makeOnline(id, token) {
+  return updateMetadata(id, { offline: false }, token)
+}
+
+/**
  * Updates a metadata object.
  * @param {string} id
  * @param {Partial<FormMetadataInput>} metadata

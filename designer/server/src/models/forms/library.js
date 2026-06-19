@@ -1,5 +1,6 @@
 import {
   FormFilterStatus,
+  FormLibraryActions,
   SchemaVersion,
   buildPaginationPages
 } from '@defra/forms-model'
@@ -190,7 +191,7 @@ function overviewCTA(formPath, formDefinition) {
     {
       text: 'Make draft live',
       attributes: {
-        formaction: `${formPath}/make-draft-live`
+        formaction: `${formPath}/manage-form/make-draft-live`
       }
     }
   ]
@@ -203,7 +204,7 @@ function overviewCTA(formPath, formDefinition) {
     {
       text: 'Make draft live',
       attributes: {
-        formaction: `${formPath}/make-draft-live`
+        formaction: `${formPath}/manage-form/make-draft-live`
       }
     }
   ]
@@ -226,6 +227,20 @@ export function overviewViewModel(metadata, formDef, notification) {
   // prettier-ignore
   const navigation = getFormSpecificNavigation(formPath, metadata, formDef, 'Overview')
   const { formAction, draftButtons } = overviewCTA(formPath, formDef)
+  const offlineButton = metadata.offline
+    ? {
+        text: 'Republish offline form',
+        classes: 'govuk-button--yellow',
+        attributes: {
+          formaction: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
+        }
+      }
+    : {
+        text: 'Take form offline',
+        classes: 'govuk-button--warning',
+        href: `${formPath}/manage-form/${FormLibraryActions.TAKE_OFFLINE}`
+      }
+  const extraButtons = metadata.live ? [offlineButton] : []
 
   return {
     backLink: formsLibraryBackLink,
@@ -246,7 +261,7 @@ export function overviewViewModel(metadata, formDef, notification) {
       // Adjust default action when draft is available
       ...(!metadata.draft
         ? {
-            action: `${formPath}/create-draft-from-live`,
+            action: `${formPath}/manage-form/${FormLibraryActions.CREATE_DRAFT_FROM_LIVE}`,
             method: 'POST'
           }
         : {
@@ -256,8 +271,13 @@ export function overviewViewModel(metadata, formDef, notification) {
 
       // Adjust buttons when draft is available
       buttons: !metadata.draft
-        ? [{ text: 'Create draft to edit' }]
-        : draftButtons,
+        ? [
+            {
+              text: 'Create draft to edit'
+            }
+          ].concat(extraButtons)
+        : // @ts-expect-error - dynamic button properties
+          draftButtons.concat(extraButtons),
       links: metadata.draft
         ? [
             {

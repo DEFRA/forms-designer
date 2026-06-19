@@ -330,7 +330,7 @@ describe('Forms library routes', () => {
       ).toMatchObject(formDefinition)
     })
 
-    it('Form overview has draft buttons in side bar', async () => {
+    it('Form overview has draft buttons and an offline button in side bar', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce({
         ...formMetadata,
         // Switch draft with live for test
@@ -349,8 +349,9 @@ describe('Forms library routes', () => {
       const $card = document.querySelector('.app-form-card')
       const $buttons = $card?.querySelectorAll('.govuk-button')
 
-      expect($buttons).toHaveLength(1)
+      expect($buttons).toHaveLength(2)
       expect($buttons?.[0]).toHaveTextContent('Create draft to edit')
+      expect($buttons?.[1]).toHaveTextContent('Take form offline')
     })
 
     it('Form overview has live buttons in side bar', async () => {
@@ -1026,6 +1027,54 @@ describe('Forms library routes', () => {
       const fetchGetJsonMock = /** @type {jest.Mock} */ (fetch.getJson)
       const calledUrl = /** @type {URL} */ (fetchGetJsonMock.mock.calls[0][0])
       expect(calledUrl.searchParams.get('title')).toBe('test')
+    })
+  })
+
+  describe('takeOffline', () => {
+    it('should call correct url', async () => {
+      const mockResponse = {
+        data: [formMetadata],
+        meta: {}
+      }
+      jest.spyOn(fetch, 'patchJson').mockResolvedValueOnce({
+        /** @type { any } */
+        response: {},
+        body: mockResponse
+      })
+
+      await forms.takeOffline('form-id', 'token')
+
+      const fetchPatchJsonMock = /** @type {jest.Mock} */ (fetch.patchJson)
+      /** @type {Array<[URL, object]>} */
+      const mockCalls = fetchPatchJsonMock.mock.calls
+      const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+      const payloadObj = /** @type {{ payload: object }} */ (mockCalls[0][1])
+      expect(calledUrl.href).toBe('http://localhost:3001/forms/form-id')
+      expect(payloadObj.payload).toEqual({ offline: true })
+    })
+  })
+
+  describe('makeOnlineAgain', () => {
+    it('should call correct url', async () => {
+      const mockResponse = {
+        data: [formMetadata],
+        meta: {}
+      }
+      jest.spyOn(fetch, 'patchJson').mockResolvedValueOnce({
+        /** @type { any } */
+        response: {},
+        body: mockResponse
+      })
+
+      await forms.makeOnline('form-id', 'token')
+
+      const fetchPatchJsonMock = /** @type {jest.Mock} */ (fetch.patchJson)
+      /** @type {Array<[URL, object]>} */
+      const mockCalls = fetchPatchJsonMock.mock.calls
+      const calledUrl = /** @type {URL} */ (mockCalls[0][0])
+      const payloadObj = /** @type {{ payload: object }} */ (mockCalls[0][1])
+      expect(calledUrl.href).toBe('http://localhost:3001/forms/form-id')
+      expect(payloadObj.payload).toEqual({ offline: false })
     })
   })
 })

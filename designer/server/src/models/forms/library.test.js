@@ -314,7 +314,7 @@ describe('Forms Library Models', () => {
               {
                 text: 'Make draft live',
                 attributes: {
-                  formaction: `${formPath}/make-draft-live`
+                  formaction: `${formPath}/manage-form/make-draft-live`
                 }
               }
             ],
@@ -362,7 +362,7 @@ describe('Forms Library Models', () => {
               {
                 text: 'Make draft live',
                 attributes: {
-                  formaction: `${formPath}/make-draft-live`
+                  formaction: `${formPath}/manage-form/make-draft-live`
                 }
               }
             ],
@@ -403,11 +403,16 @@ describe('Forms Library Models', () => {
           },
           notification: notificationMessage,
           formManage: {
-            action: `${formPath}/create-draft-from-live`,
+            action: `${formPath}/manage-form/create-draft-from-live`,
             method: 'POST',
             buttons: [
               {
                 text: 'Create draft to edit'
+              },
+              {
+                text: 'Take form offline',
+                href: '/library/test-form-slug/manage-form/take-offline',
+                classes: 'govuk-button--warning'
               }
             ]
           }
