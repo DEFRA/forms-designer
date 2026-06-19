@@ -223,9 +223,12 @@ function overviewCTA(formPath, formDefinition) {
 export function overviewViewModel(metadata, formDef, notification) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-
-  // prettier-ignore
-  const navigation = getFormSpecificNavigation(formPath, metadata, formDef, 'Overview')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    formDef,
+    'Overview'
+  )
   const { formAction, draftButtons } = overviewCTA(formPath, formDef)
   const offlineButton = metadata.offline
     ? {
