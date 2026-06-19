@@ -499,7 +499,7 @@ describe('Form lifecycle route handlers', () => {
         .mockRejectedValueOnce(Boom.badRequest('An example error message here'))
 
       const options = {
-        method: 'GET',
+        method: 'POST',
         url: '/library/my-form/manage-form/make-online',
         auth
       }
