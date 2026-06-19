@@ -414,7 +414,8 @@ export const autocompleteFields =
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.AutoCompleteOptions,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
@@ -422,7 +423,8 @@ export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
   QuestionBaseSettings.UsePostcodeLookup,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const declarationFields =
@@ -430,7 +432,8 @@ export const declarationFields =
     QuestionBaseSettings.Question,
     QuestionBaseSettings.DeclarationText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
@@ -438,7 +441,8 @@ export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
   QuestionBaseSettings.FileTypes,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const radiosOrCheckboxesFields =
@@ -447,6 +451,7 @@ export const radiosOrCheckboxesFields =
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription,
     QuestionBaseSettings.RadiosOrCheckboxes
   ])
 

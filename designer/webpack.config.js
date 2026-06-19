@@ -284,36 +284,28 @@ export default /** @type {Configuration} */ ({
           to: 'assets/translations'
         },
         {
-          from: join(interactiveMapPath, 'dist'),
-          to: 'assets/interactive-map'
+          from: join(interactiveMapPath, 'dist/css'),
+          to: 'assets/interactive-map/css'
         },
         {
-          from: join(interactiveMapPath, 'providers/maplibre'),
-          to: 'assets/interactive-map/providers/maplibre'
+          from: join(interactiveMapPath, 'plugins/beta/map-styles/dist/css'),
+          to: 'assets/interactive-map/plugins/map-styles/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'providers/beta/open-names'),
-          to: 'assets/interactive-map/providers/open-names'
+          from: join(interactiveMapPath, 'plugins/beta/scale-bar/dist/css'),
+          to: 'assets/interactive-map/plugins/scale-bar/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'plugins/beta/map-styles/dist'),
-          to: 'assets/interactive-map/plugins/map-styles/dist'
+          from: join(interactiveMapPath, 'plugins/interact/dist/css'),
+          to: 'assets/interactive-map/plugins/interact/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'plugins/beta/scale-bar/dist'),
-          to: 'assets/interactive-map/plugins/scale-bar/dist'
+          from: join(interactiveMapPath, 'plugins/search/dist/css'),
+          to: 'assets/interactive-map/plugins/search/dist/css'
         },
         {
-          from: join(interactiveMapPath, 'plugins/interact/dist'),
-          to: 'assets/interactive-map/plugins/interact/dist'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/search/dist'),
-          to: 'assets/interactive-map/plugins/search/dist'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/beta/draw-ml/dist'),
-          to: 'assets/interactive-map/plugins/draw-ml/dist'
+          from: join(interactiveMapPath, 'plugins/beta/draw-ml/dist/css'),
+          to: 'assets/interactive-map/plugins/draw-ml/dist/css'
         },
         {
           from: join(interactiveMapPath, 'assets'),

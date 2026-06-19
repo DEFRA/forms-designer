@@ -26,4 +26,9 @@ export interface SearchOptions {
    * Array of statuses to filter by
    */
   status?: FormStatus[]
+
+  /**
+   * Filter by offline forms
+   */
+  offline?: boolean
 }

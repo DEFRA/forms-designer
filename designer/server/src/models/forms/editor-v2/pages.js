@@ -396,6 +396,12 @@ export function buildConditionsFilter(definition, filter) {
     available: {
       name: 'conditionsFilter',
       classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Select conditions to filter pages by',
+          classes: 'govuk-visually-hidden'
+        }
+      },
       items: conditions
         .map((cond) => {
           const valueStr = 'id' in cond ? cond.id : cond.name

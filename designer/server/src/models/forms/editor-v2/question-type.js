@@ -324,11 +324,14 @@ export function questionTypeViewModel(
   const pageNum = getPageNum(definition, pageId)
   const questionNum = getQuestionNum(definition, pageId, questionId)
   const pageHeading = 'What information do you need from users?'
+  const mastheadHeading =
+    questionId === 'new' ? 'Add question' : 'Edit question'
   const page = getPageFromDefinition(definition, pageId)
   return {
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
+      mastheadHeading,
       formTitle
     ),
     navigation,
