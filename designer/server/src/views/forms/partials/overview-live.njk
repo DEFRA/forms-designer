@@ -1,7 +1,11 @@
 {% from "govuk/components/tag/macro.njk" import govukTag %}
 
 {% set formStatus %}
-  {{ govukTag({ text: "Live", classes: "govuk-tag--green" }) }}
+  {% if form.offline %}
+    {{ govukTag({ text: "Offline", classes: "govuk-tag--grey" }) }}
+  {% else %}
+    {{ govukTag({ text: "Live", classes: "govuk-tag--green" }) }}
+  {% endif %}
 {% endset %}
 
 {% set formCreated %}

@@ -8,22 +8,14 @@
 {% set isLive = params.metadata.live | length %}
 {% set isOffline = params.metadata.offline %}
 
-{% if isOffline %}
-  {# Offline form #}
-  {% if isDraft %}
-    {{ tagDraft }} {{ tagOffline }}
-  {% endif %}
-  {% if isLive %}
-    {{ tagOffline }}
-  {% endif %}
-{% else %}
-  {# Online form #}
-  {% if isDraft and isLive %}
-    {{ tagDraft }} {{ tagLive }}
-  {% elseif isLive %}
-    {{ tagLive }}
-  {% else %}
-    {{ tagDraft }}
-  {% endif %}
+{% if isDraft %}
+  {{ tagDraft }}
 {% endif %}
 
+{% if isLive and not isOffline %}
+  {{ tagLive }}
+{% endif %}
+
+{% if isOffline %}
+  {{ tagOffline }}
+{% endif %}
