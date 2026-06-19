@@ -399,25 +399,3 @@
 .moj-action-bar__filter::after {
   width: 0;
 }
-
-.govuk-button--yellow {
-  background-color: govuk-colour("yellow");
-  color: govuk-colour("black");
-
-  &:link,
-  &:hover,
-  &:visited,
-  &:active {
-    color: govuk-colour("black");
-    text-decoration: none;
-  }
-
-  &:hover {
-    background-color: govuk-shade(govuk-colour("yellow"), 25%);
-  }
-
-  &:active {
-    // Bump the button down so it looks like its being pressed in
-    top: $govuk-border-width-form-element;
-  }
-}
