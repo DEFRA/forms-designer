@@ -207,7 +207,7 @@ export default [
         forms.makeOnline,
         '[makeOnlineAgain] Successfully made offline form online again',
         '[makeOnlineAgainFailed] Failed to make offline form online again',
-        notifications.FORM_REPUBLISH_OFFLINE
+        notifications.FORM_REPUBLISH_ONLINE
       )
     },
     options: {
