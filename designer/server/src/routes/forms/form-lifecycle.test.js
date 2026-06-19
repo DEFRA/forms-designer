@@ -476,7 +476,7 @@ describe('Form lifecycle route handlers', () => {
       })
 
       const options = {
-        method: 'GET',
+        method: 'POST',
         url: '/library/my-form/manage-form/make-online',
         auth
       }
