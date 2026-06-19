@@ -604,10 +604,7 @@ describe('Forms library routes', () => {
         const options = {
           page: 1,
           perPage: 10,
-          status: /** @type {FormStatus[]} */ ([
-            FormStatus.Draft,
-            FormStatus.Live
-          ])
+          status: [FormStatus.Draft, FormStatus.Live]
         }
         const mockResponse = {
           data: [formMetadata],

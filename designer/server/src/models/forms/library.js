@@ -1,4 +1,8 @@
-import { SchemaVersion, buildPaginationPages } from '@defra/forms-model'
+import {
+  FormFilterStatus,
+  SchemaVersion,
+  buildPaginationPages
+} from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -40,6 +44,23 @@ const FORM_METADATA_TAB = 'metadata'
  */
 
 /**
+ * Dynamically add 'Offline' as a status option as this sits as a separate param in the search (not in 'statuses')
+ * @param {SearchOptions | undefined} searchMeta
+ * @param {FilterOptions | undefined} filtersMeta
+ */
+export function handleOfflineAsStatus(searchMeta, filtersMeta) {
+  // @ts-expect-error - dynamic property
+  if (filtersMeta?.statuses) {
+    // @ts-expect-error - dynamic property
+    filtersMeta.statuses.push(FormFilterStatus.Offline)
+    if (searchMeta?.offline && searchMeta.status) {
+      // @ts-expect-error - dynamic property
+      searchMeta.status.push(FormFilterStatus.Offline)
+    }
+  }
+}
+
+/**
  * @param {string} token
  * @param {QueryOptions} listOptions
  * @param {string} [notification] - success notification to display
@@ -55,6 +76,8 @@ export async function listViewModel(token, listOptions, notification) {
   const sortingMeta = formResponse.meta.sorting ?? undefined
   const searchMeta = formResponse.meta.search ?? undefined
   const filtersMeta = formResponse.meta.filters ?? undefined
+
+  handleOfflineAsStatus(searchMeta, filtersMeta)
 
   let pagination
   if (paginationMeta) {
