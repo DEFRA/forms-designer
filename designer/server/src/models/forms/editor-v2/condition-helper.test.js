@@ -59,7 +59,7 @@ describe('condition-helper', () => {
         0,
         /** @type {ConditionDataV2} */ ({
           id: '1',
-          value: { listId: 'list1', itemIds: ['a', 'b'] }
+          value: { listId: 'list1', itemId: ['a', 'b'] }
         })
       )
       expect(field.name).toBe('items[0][value][itemsCoordinator]')
@@ -77,7 +77,7 @@ describe('condition-helper', () => {
           id: '1',
           value: {
             listId: 'list1',
-            itemIds: ['a'],
+            itemId: ['a'],
             itemsCoordinator: Coordinator.OR
           }
         })

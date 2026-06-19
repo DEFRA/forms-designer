@@ -27,16 +27,13 @@ export interface RelativeDateValueData {
 export interface ConditionListItemRefValueDataV2 {
   listId: string
   /**
-   * Legacy single list item reference. Retained so conditions saved before
-   * multi-select support continue to load, display and evaluate. New
-   * conditions are written using `itemIds`.
+   * One or more referenced list item ids (radio, checkbox, autocomplete,
+   * select). New conditions are always written as an array, even for a single
+   * selection. A bare `string` is only retained for backwards compatibility so
+   * conditions saved before multi-select support continue to load, display and
+   * evaluate.
    */
-  itemId?: string
-  /**
-   * One or more referenced list item ids. Written for all new list-based
-   * conditions (radio, checkbox, autocomplete, select).
-   */
-  itemIds?: string[]
+  itemId: string[] | string
   /**
    * How multiple checkbox selections are combined (AND/OR). Only set for
    * checkbox questions; radio/autocomplete/select combine implicitly.

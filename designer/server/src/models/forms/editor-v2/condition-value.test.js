@@ -146,17 +146,17 @@ describe('editor-v2 - condition-value', () => {
             checked: false
           }
         ],
-        name: 'items[2][value][itemIds]'
+        name: 'items[2][value][itemId]'
       })
     })
 
-    test('should pre-check options from new itemIds array (multi-select)', () => {
+    test('should pre-check options from itemId array (multi-select)', () => {
       const listItem = /** @type {ConditionDataV2} */ ({
         id: '1',
         componentId: '7bfc19cf-8d1d-47dd-926e-8363bcc761f2',
         operator: 'is',
         value: {
-          itemIds: [
+          itemId: [
             'e1d4f56e-ad92-49ea-89a8-cf0edb0480f7',
             '93d8b63b-4eef-4c3e-84a7-5b7edb7f9171'
           ]

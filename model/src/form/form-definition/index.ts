@@ -111,9 +111,9 @@ export const listItemIdValidator = (
     return value
   }
 
-  // The condition value is the nearest ancestor for the legacy single
-  // `itemId` field, but one level up for entries within the `itemIds` array,
-  // so locate it by shape rather than by fixed position.
+  // `itemId` is normally an array, so the condition value is one level up from
+  // each entry being validated. For a legacy bare-string `itemId` it is the
+  // nearest ancestor instead, so locate it by shape rather than fixed position.
   const conditionValue = helpers.state.ancestors.find(
     isConditionListItemRefValueData
   )
@@ -258,22 +258,18 @@ const conditionListItemRefDataSchemaV2 =
         })
         .description('The id of the list')
         .error(checkErrors(FormDefinitionError.RefConditionListId)),
-      itemId: Joi.string()
-        .trim()
-        .description('The id of the list item (legacy single selection)')
-        .custom(listItemIdValidator),
-      itemIds: Joi.array()
+      itemId: Joi.array()
         .single()
         .items(Joi.string().trim().custom(listItemIdValidator))
         .min(1)
-        .description('The ids of the selected list items'),
+        .required()
+        .description('The ids of the selected list items.'),
       itemsCoordinator: Joi.string()
         .trim()
         .valid(...Object.values(Coordinator))
         .optional()
         .description('How multiple checkbox selections are combined (and/or)')
     })
-    .or('itemId', 'itemIds')
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
   .description('Relative date specification for date-based conditions')

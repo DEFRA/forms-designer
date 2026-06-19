@@ -349,7 +349,7 @@ describe('Migration', () => {
             componentId: 'component1',
             operator: OperatorName.Is,
             type: ConditionType.ListItemRef,
-            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+            value: { listId: 'list1', itemId: ['item1', 'item2'] }
           }
         ]
       }
@@ -398,7 +398,7 @@ describe('Migration', () => {
             componentId: 'component1',
             operator: OperatorName.IsNot,
             type: ConditionType.ListItemRef,
-            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+            value: { listId: 'list1', itemId: ['item1', 'item2'] }
           }
         ]
       }
@@ -425,7 +425,7 @@ describe('Migration', () => {
             type: ConditionType.ListItemRef,
             value: {
               listId: 'list1',
-              itemIds: ['item1', 'item2'],
+              itemId: ['item1', 'item2'],
               itemsCoordinator: Coordinator.AND
             }
           }
@@ -452,7 +452,7 @@ describe('Migration', () => {
             componentId: 'component1',
             operator: OperatorName.Contains,
             type: ConditionType.ListItemRef,
-            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+            value: { listId: 'list1', itemId: ['item1', 'item2'] }
           }
         ]
       }
@@ -494,7 +494,7 @@ describe('Migration', () => {
             componentId: 'component1',
             operator: OperatorName.Is,
             type: ConditionType.ListItemRef,
-            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+            value: { listId: 'list1', itemId: ['item1', 'item2'] }
           }
         ]
       }

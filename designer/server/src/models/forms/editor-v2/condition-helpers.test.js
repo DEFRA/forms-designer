@@ -106,7 +106,7 @@ describe('condition-helpers', () => {
             componentId: 'checkbox-field',
             operator: OperatorName.Is,
             type: ConditionType.ListItemRef,
-            value: { listId: 'list1', itemIds: ['item1', 'item2'] }
+            value: { listId: 'list1', itemId: ['item1', 'item2'] }
           }
         ]
       }
