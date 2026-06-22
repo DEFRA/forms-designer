@@ -198,7 +198,7 @@ export default [
    * @satisfies {ServerRoute}
    */
   ({
-    method: 'POST',
+    method: 'GET',
     path: '/library/{slug}/manage-form/make-online',
     handler(request, h) {
       return genericFormAction(
