@@ -131,7 +131,7 @@ export function takeFormOfflineConfirmationPageViewModel(
     errorList,
 
     warning: {
-      html: 'Contact details are shown on the service unavailable page, Changes will be visible to users.'
+      html: 'Contact details are shown on the service unavailable page. Changes will be visible to users.'
     },
 
     bodyText: `<p class="govuk-body">This form will be removed from GOV.UK and replaced with a
@@ -140,7 +140,8 @@ export function takeFormOfflineConfirmationPageViewModel(
 
     buttons: [
       {
-        text: 'Take form offline'
+        text: 'Take form offline',
+        classes: 'govuk-button--warning'
       },
       {
         href: formPath,

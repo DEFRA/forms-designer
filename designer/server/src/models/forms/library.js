@@ -233,14 +233,14 @@ export function overviewViewModel(metadata, formDef, notification) {
   const offlineButton = metadata.offline
     ? {
         text: 'Republish offline form',
-        classes: 'govuk-button--yellow',
+        classes: 'govuk-button--secondary',
         attributes: {
           formaction: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
         }
       }
     : {
         text: 'Take form offline',
-        classes: 'govuk-button--warning',
+        classes: 'govuk-button--secondary',
         href: `${formPath}/manage-form/${FormLibraryActions.TAKE_OFFLINE}`
       }
   const extraButtons = metadata.live ? [offlineButton] : []

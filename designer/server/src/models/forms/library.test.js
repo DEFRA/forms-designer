@@ -412,7 +412,7 @@ describe('Forms Library Models', () => {
               {
                 text: 'Take form offline',
                 href: '/library/test-form-slug/manage-form/take-offline',
-                classes: 'govuk-button--warning'
+                classes: 'govuk-button--secondary'
               }
             ]
           }
