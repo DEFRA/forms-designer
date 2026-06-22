@@ -72,7 +72,7 @@ export interface SubmitPayload {
   /**
    * The reference number of the user session
    */
-  referenceNumber: string
+  referenceNumber?: string
 
   /**
    * The main form anwsers
