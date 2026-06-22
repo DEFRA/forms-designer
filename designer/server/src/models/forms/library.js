@@ -234,9 +234,7 @@ export function overviewViewModel(metadata, formDef, notification) {
     ? {
         text: 'Republish offline form',
         classes: 'govuk-button--secondary',
-        attributes: {
-          formaction: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
-        }
+        href: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
       }
     : {
         text: 'Take form offline',
