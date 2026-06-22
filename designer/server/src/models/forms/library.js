@@ -277,8 +277,7 @@ export function overviewViewModel(metadata, formDef, notification) {
               text: 'Create draft to edit'
             }
           ].concat(extraButtons)
-        : // @ts-expect-error - dynamic button properties
-          draftButtons.concat(extraButtons),
+        : draftButtons.concat(extraButtons),
       links: metadata.draft
         ? [
             {
