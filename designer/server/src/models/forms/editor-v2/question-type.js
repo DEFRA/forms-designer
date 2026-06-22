@@ -47,7 +47,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
   {
     text: 'Phone number',
     hint: {
-      text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
+      text: 'For example, 07700 900 982 or +33 123 456 7890'
     },
     value: ComponentType.TelephoneNumberField
   },
@@ -324,11 +324,14 @@ export function questionTypeViewModel(
   const pageNum = getPageNum(definition, pageId)
   const questionNum = getQuestionNum(definition, pageId, questionId)
   const pageHeading = 'What information do you need from users?'
+  const mastheadHeading =
+    questionId === 'new' ? 'Add question' : 'Edit question'
   const page = getPageFromDefinition(definition, pageId)
   return {
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
+      mastheadHeading,
       formTitle
     ),
     navigation,

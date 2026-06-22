@@ -3,7 +3,12 @@ import JoiBase, { type CustomHelpers, type LanguageMessages } from 'joi'
 import { v4 as uuidV4 } from 'uuid'
 
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
-import { ComponentType } from '~/src/components/enums.js'
+import {
+  ComponentType,
+  GeospatialFieldGeometryTypesEnum,
+  GeospatialFieldOptionsCountryEnum,
+  TelephoneNumberFieldOptionsFormatEnum
+} from '~/src/components/enums.js'
 import { isConditionalType } from '~/src/components/helpers.js'
 import {
   type ComponentDef,
@@ -111,9 +116,9 @@ export const listItemIdValidator = (
     return value
   }
 
-  // The condition value is the nearest ancestor for the legacy single
-  // `itemId` field, but one level up for entries within the `itemIds` array,
-  // so locate it by shape rather than by fixed position.
+  // `itemId` is normally an array, so the condition value is one level up from
+  // each entry being validated. For a legacy bare-string `itemId` it is the
+  // nearest ancestor instead, so locate it by shape rather than fixed position.
   const conditionValue = helpers.state.ancestors.find(
     isConditionListItemRefValueData
   )
@@ -258,22 +263,18 @@ const conditionListItemRefDataSchemaV2 =
         })
         .description('The id of the list')
         .error(checkErrors(FormDefinitionError.RefConditionListId)),
-      itemId: Joi.string()
-        .trim()
-        .description('The id of the list item (legacy single selection)')
-        .custom(listItemIdValidator),
-      itemIds: Joi.array()
+      itemId: Joi.array()
         .single()
         .items(Joi.string().trim().custom(listItemIdValidator))
         .min(1)
-        .description('The ids of the selected list items'),
+        .required()
+        .description('The ids of the selected list items.'),
       itemsCoordinator: Joi.string()
         .trim()
         .valid(...Object.values(Coordinator))
         .optional()
         .description('How multiple checkbox selections are combined (and/or)')
     })
-    .or('itemId', 'itemIds')
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()
   .description('Relative date specification for date-based conditions')
@@ -533,7 +534,11 @@ export const componentSchema = Joi.object<ComponentDef>()
     shortDescription: Joi.string()
       .custom(rtrimOnly)
       .optional()
-      .description('Brief description of the component purpose'),
+      .description('Short description of the component used in the summary'),
+    errorDescription: Joi.string()
+      .custom(rtrimOnly)
+      .optional()
+      .description('Description that will be displayed in error messages'),
     name: Joi.when('type', {
       is: Joi.string().valid(
         ComponentType.Details,
@@ -590,6 +595,16 @@ export const componentSchema = Joi.object<ComponentDef>()
       maxDaysInFuture: Joi.number()
         .empty('')
         .description('Maximum days in the future allowed for date inputs'),
+      earliestDate: Joi.date()
+        .format('YYYY-MM-DD')
+        .raw()
+        .empty('')
+        .description('Earliest date of allowed date range for date inputs'),
+      latestDate: Joi.date()
+        .format('YYYY-MM-DD')
+        .raw()
+        .empty('')
+        .description('Latest date of allowed date range for date inputs'),
       customValidationMessage: Joi.string()
         .trim()
         .allow('')
@@ -640,7 +655,42 @@ export const componentSchema = Joi.object<ComponentDef>()
           .description(
             'Name of EmailAddressField to prepopulate GOV.UK Pay email'
           )
-      }).description('Email field reference - for PaymentField only')
+      }).description('Email field reference - for PaymentField only'),
+      countries: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.GeospatialField).required(),
+        then: Joi.array()
+          .items(
+            Joi.string().valid(
+              ...Object.values(GeospatialFieldOptionsCountryEnum)
+            )
+          )
+          .description(
+            'Country filters for geospatial data - for GeospatialField only'
+          )
+      }).description('Country filters - for GeospatialField only'),
+      geometryTypes: Joi.when('type', {
+        is: Joi.string().trim().valid(ComponentType.GeospatialField).required(),
+        then: Joi.array()
+          .items(
+            Joi.string().valid(
+              ...Object.values(GeospatialFieldGeometryTypesEnum)
+            )
+          )
+          .description(
+            'Geometry types for geospatial data - for GeospatialField only'
+          )
+      }).description('Geometry types - for GeospatialField only'),
+      format: Joi.when('type', {
+        is: Joi.string()
+          .trim()
+          .valid(ComponentType.TelephoneNumberField)
+          .required(),
+        then: Joi.string()
+          .valid(...Object.values(TelephoneNumberFieldOptionsFormatEnum))
+          .description(
+            'Format for telephone number - for TelephoneNumberField only'
+          )
+      }).description('Format - for TelephoneNumberField only')
     })
       .default({})
       .unknown(true)

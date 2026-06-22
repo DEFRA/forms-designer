@@ -28,7 +28,7 @@ export function isFormDefinition(
 /**
  * TypeGuard to check if something is a ConditionListItemRefValueDataV2
  * @param { unknown } conditionValueData
- * @returns { definition is ConditionListItemRefValueDataV2 }
+ * @returns { conditionValueData is ConditionListItemRefValueDataV2 }
  */
 export function isConditionListItemRefValueData(
   conditionValueData: unknown
@@ -40,28 +40,25 @@ export function isConditionListItemRefValueData(
   return (
     typeof conditionValueData === 'object' &&
     'listId' in conditionValueData &&
-    ('itemId' in conditionValueData || 'itemIds' in conditionValueData)
+    'itemId' in conditionValueData
   )
 }
 
 /**
- * Normalises a list item ref condition value to an array of item ids,
- * reading either the new `itemIds` or the legacy single `itemId`.
+ * Normalises a list item ref condition value to an array of item ids. `itemId`
+ * is normally an array, but may be a bare string for legacy conditions saved
+ * before multi-select support.
  * @param { ConditionListItemRefValueDataV2 | undefined } value
  * @returns { string[] }
  */
 export function getConditionListItemIds(
   value: ConditionListItemRefValueDataV2 | undefined
 ): string[] {
-  if (!value) {
+  if (!value?.itemId) {
     return []
   }
 
-  if (value.itemIds?.length) {
-    return value.itemIds
-  }
-
-  return value.itemId ? [value.itemId] : []
+  return Array.isArray(value.itemId) ? value.itemId : [value.itemId]
 }
 
 /**

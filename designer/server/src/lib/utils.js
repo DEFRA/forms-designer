@@ -327,6 +327,13 @@ export function handlePrecision(value, helpers, precision) {
 }
 
 /**
+ * @param {string | undefined} val
+ */
+export function leftPadDateIfSupplied(val) {
+  return val ? val.padStart(2, '0') : ''
+}
+
+/**
  * @import { ErrorDetailsItem } from '~/src/common/helpers/types.js'
  * @import { ComponentDef, FormDefinition, Item, List, ListItem, Page, QuestionSessionState, ListComponentsDef } from '@defra/forms-model'
  * @import Wreck from '@hapi/wreck'

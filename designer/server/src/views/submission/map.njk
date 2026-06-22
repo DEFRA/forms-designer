@@ -46,14 +46,5 @@
 
 {% block bodyEnd %}
   {{ super() }}
-
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/providers/maplibre/dist/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/providers/open-names/dist/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/map-styles/dist/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/search/dist/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/scale-bar/dist/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/interact/dist/umd/index.js"></script>
-  <script nonce="{{ cspNonce }}" src="{{assetPath}}/interactive-map/plugins/draw-ml/dist/umd/index.js"></script>
   <script type="module" nonce="{{ cspNonce }}" src="{{ getAssetPath("maps.js") }}"></script>
 {% endblock %}

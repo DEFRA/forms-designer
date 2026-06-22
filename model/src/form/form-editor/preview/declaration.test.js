@@ -61,7 +61,8 @@ describe('declaration', () => {
         content: '',
         shortDesc: 'Agreement',
         items: [],
-        declarationText: 'I agree'
+        declarationText: 'I agree',
+        errorDesc: ''
       })
     })
 

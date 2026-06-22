@@ -151,7 +151,8 @@ export function guidanceViewModel(
 ) {
   const pageNum = getPageNum(definition, pageId)
   const formCaptionTitle = metadata.title
-  const formTitle = `Edit page ${pageNum}: guidance`
+  const verb = pageId === 'new' ? 'Add' : 'Edit'
+  const formTitle = `${verb} page ${pageNum}: guidance`
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -181,8 +182,13 @@ export function guidanceViewModel(
   const sectionInfo = page
     ? getSectionForPage(definition, page, metadata.slug)
     : undefined
-  // prettier-ignore
-  const previewModel = getGuidancePreviewModel(page, previewPageUrl, guidanceTextVal, sectionInfo)
+  const previewModel = getGuidancePreviewModel(
+    page,
+    previewPageUrl,
+    guidanceTextVal,
+    sectionInfo
+  )
+
   return {
     ...baseModelFields(metadata.slug, pageTitle, formTitle, formCaptionTitle),
     fields: {

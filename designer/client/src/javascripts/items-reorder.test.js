@@ -548,7 +548,7 @@ describe('ItemReorder Class', () => {
       expect(itemFocusSpy).toHaveBeenCalled()
 
       expect(itemToInteractWith.classList.contains('reorder-panel-focus')).toBe(
-        true
+        false
       )
     })
 
@@ -567,7 +567,7 @@ describe('ItemReorder Class', () => {
         )
       ).not.toThrow()
 
-      expect(addClassSpy).toHaveBeenCalledWith(panelFocusClass)
+      expect(addClassSpy).not.toHaveBeenCalledWith(panelFocusClass)
       itemReorderInstance.container = originalContainer
     })
 
@@ -589,7 +589,7 @@ describe('ItemReorder Class', () => {
         )
       ).not.toThrow()
 
-      expect(addClassSpy).toHaveBeenCalledWith(panelFocusClass)
+      expect(addClassSpy).not.toHaveBeenCalledWith(panelFocusClass)
       itemReorderInstance.container = originalContainer
     })
 

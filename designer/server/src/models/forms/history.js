@@ -74,6 +74,11 @@ export function getEventDynamicName(record) {
     }
     return `Secret with name ${record.data.secretName} saved`
   }
+  if (record.type === AuditEventMessageType.FORM_OFFLINE_UPDATED) {
+    return record.data.changes.new.offline
+      ? 'Form taken offline'
+      : 'Form republished online'
+  }
   return undefined
 }
 

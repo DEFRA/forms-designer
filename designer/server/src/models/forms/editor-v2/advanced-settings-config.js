@@ -3,6 +3,8 @@ import upperFirst from 'lodash/upperFirst.js'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import {
+  GOVUK_FIELDSET_LEGEND__M,
+  GOVUK_FIELDSET_LEGEND__S,
   GOVUK_INPUT_WIDTH_3,
   GOVUK_LABEL__M
 } from '~/src/models/forms/editor-v2/common.js'
@@ -30,9 +32,14 @@ export const advancedSettingsPerComponentType =
     DatePartsField: [
       QuestionAdvancedSettings.MaxPast,
       QuestionAdvancedSettings.MaxFuture,
+      QuestionAdvancedSettings.EarliestDate,
+      QuestionAdvancedSettings.LatestDate,
       QuestionAdvancedSettings.Classes
     ],
-    MonthYearField: [],
+    MonthYearField: [
+      QuestionAdvancedSettings.EarliestMonthYear,
+      QuestionAdvancedSettings.LatestMonthYear
+    ],
     SelectField: [],
     AutocompleteField: [],
     RadiosField: [],
@@ -50,7 +57,10 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Classes
     ],
     UkAddressField: [],
-    TelephoneNumberField: [QuestionAdvancedSettings.Classes],
+    TelephoneNumberField: [
+      QuestionAdvancedSettings.Classes,
+      QuestionAdvancedSettings.TelephoneNumberFormat
+    ],
     EmailAddressField: [QuestionAdvancedSettings.Classes],
     Html: [],
     InsetText: [],
@@ -213,6 +223,54 @@ export const allAdvancedSettingsFields =
       },
       classes: GOVUK_INPUT_WIDTH_3
     },
+    [QuestionAdvancedSettings.EarliestDate]: {
+      name: 'earliestDate',
+      id: 'earliestDate',
+      fieldset: {
+        legend: {
+          text: 'First date',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__S
+        }
+      },
+      beforeContentHtml:
+        '<label class="govuk-label govuk-label--m" for="earliestDate">If the date must be between two dates (optional)</label>'
+    },
+    [QuestionAdvancedSettings.LatestDate]: {
+      name: 'latestDate',
+      id: 'latestDate',
+      fieldset: {
+        legend: {
+          text: 'Second date',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__S
+        }
+      }
+    },
+    [QuestionAdvancedSettings.EarliestMonthYear]: {
+      name: 'earliestMonthYear',
+      id: 'earliestMonthYear',
+      fieldset: {
+        legend: {
+          text: 'First date',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__S
+        }
+      },
+      beforeContentHtml:
+        '<label class="govuk-label govuk-label--m" for="earliestMonthYear">If the date must be between two dates (optional)</label>'
+    },
+    [QuestionAdvancedSettings.LatestMonthYear]: {
+      name: 'latestMonthYear',
+      id: 'latestMonthYear',
+      fieldset: {
+        legend: {
+          text: 'Second date',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__S
+        }
+      }
+    },
     [QuestionAdvancedSettings.Precision]: {
       name: 'precision',
       id: 'precision',
@@ -346,7 +404,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Choose the geometry types you accept',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
+          classes: GOVUK_FIELDSET_LEGEND__M
         }
       },
       formGroup: { classes: 'app-settings-checkboxes' },
@@ -363,7 +421,7 @@ export const allAdvancedSettingsFields =
         legend: {
           text: 'Which country must the features be in?',
           isPageHeading: false,
-          classes: 'govuk-fieldset__legend--m'
+          classes: GOVUK_FIELDSET_LEGEND__M
         }
       },
       formGroup: { classes: 'app-settings-radios' },
@@ -428,6 +486,36 @@ export const allAdvancedSettingsFields =
         text: 'The maximum number of features a user can define'
       },
       classes: GOVUK_INPUT_WIDTH_3
+    },
+    [QuestionAdvancedSettings.TelephoneNumberFormat]: {
+      name: 'telephoneNumberFormat',
+      id: 'telephoneNumberFormat',
+      classes: 'govuk-radios--small',
+      fieldset: {
+        legend: {
+          text: 'Format of telephone number',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__M
+        }
+      },
+      formGroup: { classes: 'app-settings-radios' },
+      items: [
+        {
+          value: 'uk',
+          text: 'UK only'
+        },
+        {
+          value: 'international',
+          text: 'International only'
+        },
+        {
+          divider: 'or'
+        },
+        {
+          value: 'any',
+          text: 'Any'
+        }
+      ]
     }
   })
 

@@ -223,8 +223,9 @@ function buildListItemValueField(
   const valueObj =
     /** @type { ConditionListItemRefValueDataV2 | undefined } */ (item.value)
 
-  // Reads either the new `itemIds` array or the legacy single `itemId` so
-  // pre-existing conditions render with the correct options pre-checked.
+  // Reads the `itemId` value, which is an array for new multi-select
+  // conditions or a single string for legacy ones, so pre-existing conditions
+  // render with the correct options pre-checked.
   const selectedItemIds = getConditionListItemIds(valueObj)
 
   const items = (
@@ -241,7 +242,7 @@ function buildListItemValueField(
 
   return {
     id: `items[${idx}].value.itemId`,
-    name: `items[${idx}][value][itemIds]`,
+    name: `items[${idx}][value][itemId]`,
     fieldset: {
       legend: {
         text: SELECT_A_VALUE,

@@ -9,6 +9,7 @@ const textFieldQuestions = [
   QuestionBaseSettings.Question,
   QuestionBaseSettings.Name,
   QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription,
   QuestionBaseSettings.PaymentAmount,
   QuestionBaseSettings.PaymentDescription,
   QuestionBaseSettings.PaymentTestApiKey,
@@ -55,7 +56,20 @@ const checkBoxFieldQuestions = [
 
 const fileUploadFields = [QuestionBaseSettings.FileTypes]
 
-const radiosFieldQuestions = [QuestionAdvancedSettings.Countries]
+const radiosFieldQuestions = [
+  QuestionAdvancedSettings.Countries,
+  QuestionAdvancedSettings.TelephoneNumberFormat
+]
+
+const dateFieldQuestions = [
+  QuestionAdvancedSettings.EarliestDate,
+  QuestionAdvancedSettings.LatestDate
+]
+
+const monthYearFieldQuestions = [
+  QuestionAdvancedSettings.EarliestMonthYear,
+  QuestionAdvancedSettings.LatestMonthYear
+]
 
 /**
  * @param {GovukField} field
@@ -84,6 +98,13 @@ export function getFieldComponentType(field) {
 
   if (radiosFieldQuestions.includes(fieldName)) {
     return ComponentType.RadiosField
+  }
+
+  if (
+    dateFieldQuestions.includes(fieldName) ||
+    monthYearFieldQuestions.includes(fieldName)
+  ) {
+    return ComponentType.DatePartsField
   }
 
   throw new Error(

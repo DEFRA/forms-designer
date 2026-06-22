@@ -94,6 +94,7 @@ export const QuestionBaseSettings = {
   HintText: 'hintText',
   QuestionOptional: 'questionOptional',
   ShortDescription: 'shortDescription',
+  ErrorDescription: 'errorDescription',
   DeclarationText: 'declarationText',
   FileTypes: 'fileTypes',
   DocumentTypes: 'documentTypes',
@@ -125,6 +126,10 @@ export const QuestionAdvancedSettings =
     MaxLength: 'maxLength',
     MaxFuture: 'maxFuture',
     MaxPast: 'maxPast',
+    EarliestDate: 'earliestDate',
+    LatestDate: 'latestDate',
+    EarliestMonthYear: 'earliestMonthYear',
+    LatestMonthYear: 'latestMonthYear',
     Precision: 'precision',
     Prefix: 'prefix',
     Suffix: 'suffix',
@@ -139,7 +144,8 @@ export const QuestionAdvancedSettings =
     Countries: 'countries',
     MinFeatures: 'minFeatures',
     MaxFeatures: 'maxFeatures',
-    ExactFeatures: 'exactFeatures'
+    ExactFeatures: 'exactFeatures',
+    TelephoneNumberFormat: 'telephoneNumberFormat'
   }
 
 /**

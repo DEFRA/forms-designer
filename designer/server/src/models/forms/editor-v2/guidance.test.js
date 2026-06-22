@@ -83,6 +83,24 @@ describe('guidance model', () => {
       ])
     })
 
+    it('should use the "Add" verb when adding a new page', () => {
+      const definition = buildDefinition({
+        pages: [],
+        conditions: []
+      })
+
+      const result = guidanceViewModel(
+        metadata,
+        definition,
+        'new',
+        'new',
+        undefined,
+        undefined
+      )
+
+      expect(result.pageTitle).toBe('Content - Add page 1: guidance')
+    })
+
     it('should handle a new page which does not exist', () => {
       const definition = buildDefinition({
         pages: [],

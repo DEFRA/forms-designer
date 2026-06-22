@@ -166,6 +166,8 @@ describe('Form definition schema', () => {
           name: 'defaultname',
           title: 'Test Component',
           type: ComponentType.TextField,
+          shortDescription: 'Test',
+          errorDescription: 'Test error',
           options: {},
           schema: {}
         }
@@ -559,6 +561,24 @@ describe('Form definition schema', () => {
         expect(validated.error).toBeUndefined()
         expect(validated.value).toMatchObject({
           ...definition,
+          conditions: [
+            stringValueCondition,
+            relativeDateCondition,
+            {
+              ...listItemRefCondition,
+              items: [
+                {
+                  ...listItemRefData,
+                  // A single legacy string `itemId` is coerced to an array on save
+                  value: {
+                    ...listItemRefConditionData,
+                    itemId: ['a9dd35af-187e-4027-b8b1-e58a4aab3a82']
+                  }
+                }
+              ]
+            },
+            conditionRefCondition
+          ],
           pages: [
             {
               ...page,
@@ -644,11 +664,11 @@ describe('Form definition schema', () => {
         ]
       })
 
-      it('should accept a multi-select list condition (itemIds + itemsCoordinator)', () => {
+      it('should accept a multi-select list condition (itemId array + itemsCoordinator)', () => {
         const { error } = formDefinitionV2Schema.validate(
           buildWithListRefValue({
             listId: listRefListId,
-            itemIds: [
+            itemId: [
               'a9dd35af-187e-4027-b8b1-e58a4aab3a82',
               'b2c3d4e5-6f70-4123-8abc-1234567890ab'
             ],
@@ -659,11 +679,11 @@ describe('Form definition schema', () => {
         expect(error).toBeUndefined()
       })
 
-      it('should fail validation when an itemIds entry is not in the list', () => {
+      it('should fail validation when an itemId entry is not in the list', () => {
         const { error } = formDefinitionV2Schema.validate(
           buildWithListRefValue({
             listId: listRefListId,
-            itemIds: [
+            itemId: [
               'a9dd35af-187e-4027-b8b1-e58a4aab3a82',
               '00000000-0000-0000-0000-000000000000'
             ]
@@ -676,19 +696,15 @@ describe('Form definition schema', () => {
         )
       })
 
-      it('should fail validation when neither itemId nor itemIds is supplied', () => {
+      it('should fail validation when itemId is not supplied', () => {
         const { error } = formDefinitionV2Schema.validate(
-          buildWithListRefValue(
-            /** @type {ConditionListItemRefValueDataV2} */ {
-              listId: listRefListId
-            }
-          )
+          buildWithListRefValue({
+            listId: listRefListId
+          } as ConditionListItemRefValueDataV2)
         )
 
         expect(error).toBeDefined()
-        expect(error?.message).toContain(
-          'must contain at least one of [itemId, itemIds]'
-        )
+        expect(error?.message).toContain('value.itemId" is required')
       })
 
       it('should reject if there are duplicate list ids', () => {

@@ -116,7 +116,7 @@
   {% endfor %}
 
   {% set statusCheckBoxes = [] %}
-  {% for status in statuses %}
+  {% for status in statuses | sort %}
     {% set statusCheckBoxes = (statusCheckBoxes.push({
       text: status | capitalize,
       value: status,

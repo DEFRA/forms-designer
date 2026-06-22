@@ -84,6 +84,7 @@ export const baseSchema = Joi.object().keys({
       })
     }
   ),
+  errorDescription: questionDetailsFullSchema.errorDescriptionSchema,
   questionType: questionDetailsFullSchema.questionTypeFullSchema.messages({
     '*': 'The question type is missing'
   }),
@@ -305,6 +306,8 @@ function getFieldValueFromSwitch(fieldName, questionFields, definition) {
       return questionFields?.hint
     case 'shortDescription':
       return questionFields?.shortDescription
+    case 'errorDescription':
+      return questionFields?.errorDescription
     case 'declarationText': {
       const declaration = /** @type {DeclarationFieldComponent | undefined} */ (
         questionFields
@@ -401,7 +404,8 @@ export const baseQuestionFields =
     QuestionBaseSettings.Question,
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const autocompleteFields =
@@ -410,7 +414,8 @@ export const autocompleteFields =
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.AutoCompleteOptions,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
@@ -418,7 +423,8 @@ export const ukAddressFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
   QuestionBaseSettings.UsePostcodeLookup,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const declarationFields =
@@ -426,7 +432,8 @@ export const declarationFields =
     QuestionBaseSettings.Question,
     QuestionBaseSettings.DeclarationText,
     QuestionBaseSettings.QuestionOptional,
-    QuestionBaseSettings.ShortDescription
+    QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription
   ])
 
 export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
@@ -434,7 +441,8 @@ export const fileUploadFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
   QuestionBaseSettings.FileTypes,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const radiosOrCheckboxesFields =
@@ -443,6 +451,7 @@ export const radiosOrCheckboxesFields =
     QuestionBaseSettings.HintText,
     QuestionBaseSettings.QuestionOptional,
     QuestionBaseSettings.ShortDescription,
+    QuestionBaseSettings.ErrorDescription,
     QuestionBaseSettings.RadiosOrCheckboxes
   ])
 
@@ -450,7 +459,8 @@ export const locationFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question,
   QuestionBaseSettings.HintText,
   QuestionBaseSettings.QuestionOptional,
-  QuestionBaseSettings.ShortDescription
+  QuestionBaseSettings.ShortDescription,
+  QuestionBaseSettings.ErrorDescription
 ])
 
 export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([

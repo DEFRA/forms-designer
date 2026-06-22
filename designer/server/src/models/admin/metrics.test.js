@@ -23,7 +23,8 @@ function getExpectedTile(title, ariaPeriod, strapline) {
     changeValue: 0,
     count: 0,
     strapline,
-    title
+    title,
+    classes: ''
   }
 }
 
@@ -664,6 +665,11 @@ describe('metrics models', () => {
               slug: 'form-3',
               organisation: 'Org 2'
             }
+          },
+          {
+            formId: 'form-id-1',
+            formStatus: FormStatus.Live,
+            summaryMetrics: {}
           }
         ]
       }
@@ -680,6 +686,10 @@ describe('metrics models', () => {
           {
             formId: 'form-id-1',
             metricValue: 990
+          },
+          {
+            formId: 'form-id-unknown',
+            metricValue: 4
           }
         ]
         const res = createDrilldownHeaderAndRows(
@@ -726,6 +736,20 @@ describe('metrics models', () => {
                 },
                 text: '2'
               }
+            ],
+            [
+              {
+                html: '<a href="/library/not-found" class="govuk-link govuk-link--no-visited-state">Form not found</a>'
+              },
+              {
+                text: 'Unknown'
+              },
+              {
+                attributes: {
+                  'data-sort-value': 4
+                },
+                text: '4'
+              }
             ]
           ]
         })
@@ -739,6 +763,10 @@ describe('metrics models', () => {
           },
           {
             formId: 'form-id-3',
+            createdAt: new Date('2026-03-02T08:00:00.000Z')
+          },
+          {
+            formId: 'form-id-unknown',
             createdAt: new Date('2026-03-02T08:00:00.000Z')
           }
         ]
@@ -782,6 +810,20 @@ describe('metrics models', () => {
               },
               {
                 text: 'Org 2'
+              },
+              {
+                attributes: {
+                  'data-sort-value': '2026-03-02 08:00:00'
+                },
+                text: '02 Mar 2026 8:00 am'
+              }
+            ],
+            [
+              {
+                html: '<a href="/library/not-found" class="govuk-link govuk-link--no-visited-state">Form not found</a>'
+              },
+              {
+                text: 'Unknown'
               },
               {
                 attributes: {

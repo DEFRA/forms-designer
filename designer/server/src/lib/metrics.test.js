@@ -1,10 +1,17 @@
+import { FormMetricName } from '@defra/forms-model'
+
 import config from '~/src/config.js'
 import {
   createMockResponse,
   mockedGetJson,
   mockedPostJson
 } from '~/src/lib/__stubs__/editor.js'
-import { getMetrics, regenerateMetrics } from '~/src/lib/metrics.js'
+import {
+  getDrilldownMetrics,
+  getMetrics,
+  getMetricsForForm,
+  regenerateMetrics
+} from '~/src/lib/metrics.js'
 
 jest.mock('~/src/lib/fetch.js')
 
@@ -50,6 +57,27 @@ describe('metrics.js', () => {
     })
   })
 
+  describe('getDrilldownMetrics', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { drilldownRows: [] }
+      })
+      const expectedUrl = new URL(
+        '/report/last7Days/NewFormsCreated',
+        auditEndpoint
+      )
+      const result = await getDrilldownMetrics(
+        'last7Days',
+        FormMetricName.NewFormsCreated
+      )
+      expect(result).toEqual([])
+
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+  })
+
   describe('regenerateMetrics', () => {
     it('should call endpoint', async () => {
       mockedPostJson.mockResolvedValueOnce({
@@ -61,6 +89,18 @@ describe('metrics.js', () => {
       expect(mockedPostJson).toHaveBeenCalledWith(expectedUrl, {
         headers: { Authorization: 'Bearer token' }
       })
+    })
+  })
+
+  describe('getMetricsForForm', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      const expectedUrl = new URL('/report/form-id-1', auditEndpoint)
+      await getMetricsForForm('form-id-1')
+      expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl)
     })
   })
 })

@@ -241,6 +241,26 @@ describe('history model', () => {
       expect(result).toBe('Secret with name other-secret saved')
     })
 
+    it('returns correct friendly name for FORM_OFFLINE_UPDATED - taken offline', () => {
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_OFFLINE_UPDATED,
+          data: { changes: { new: { offline: true } } }
+        })
+      )
+      expect(result).toBe('Form taken offline')
+    })
+
+    it('returns correct friendly name for FORM_OFFLINE_UPDATED - published online', () => {
+      const result = getEventFriendlyName(
+        /** @type {AuditRecord} */ ({
+          type: AuditEventMessageType.FORM_OFFLINE_UPDATED,
+          data: { changes: { new: { offline: false } } }
+        })
+      )
+      expect(result).toBe('Form republished online')
+    })
+
     it('returns "Unknown event" for unrecognized event type', () => {
       // @ts-expect-error - invalid type for testing
       const result = getEventFriendlyName({ type: 'UNKNOWN_EVENT_TYPE' })

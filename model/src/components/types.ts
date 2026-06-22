@@ -23,6 +23,7 @@ interface FormFieldBase {
   id?: string
   type: FormComponentsDef['type']
   shortDescription?: string
+  errorDescription?: string
   name: string
   title: string
   hint?: string
@@ -65,13 +66,15 @@ interface ContentFieldBase {
 }
 
 interface DateFieldBase extends FormFieldBase {
-  type: ComponentType.DatePartsField | ComponentType.MonthYearField
+  type: ComponentType.DatePartsField
   name: string
   title: string
   hint?: string
   options: FormFieldBase['options'] & {
     maxDaysInPast?: number
     maxDaysInFuture?: number
+    earliestDate?: string
+    latestDate?: string
   }
 }
 
@@ -118,10 +121,13 @@ export interface NumberFieldComponent extends FormFieldBase {
   }
 }
 
+export type TelephoneNumberFieldOptionsFormat = 'international' | 'uk'
+
 export interface TelephoneNumberFieldComponent extends FormFieldBase {
   type: ComponentType.TelephoneNumberField
   options: FormFieldBase['options'] & {
     condition?: string
+    format?: TelephoneNumberFieldOptionsFormat
     customValidationMessage?: string
   }
 }
@@ -250,10 +256,12 @@ export interface DatePartsFieldComponent extends DateFieldBase {
   }
 }
 
-export interface MonthYearFieldComponent extends DateFieldBase {
+export interface MonthYearFieldComponent extends FormFieldBase {
   type: ComponentType.MonthYearField
-  options: DateFieldBase['options'] & {
+  options: FormFieldBase['options'] & {
     customValidationMessage?: string
+    earliestMonthYear?: string
+    latestMonthYear?: string
   }
 }
 

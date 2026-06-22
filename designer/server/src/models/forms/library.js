@@ -1,4 +1,9 @@
-import { SchemaVersion, buildPaginationPages } from '@defra/forms-model'
+import {
+  FormFilterStatus,
+  FormLibraryActions,
+  SchemaVersion,
+  buildPaginationPages
+} from '@defra/forms-model'
 
 import { buildEntry } from '~/src/common/nunjucks/context/build-navigation.js'
 import config from '~/src/config.js'
@@ -40,6 +45,23 @@ const FORM_METADATA_TAB = 'metadata'
  */
 
 /**
+ * Dynamically add 'Offline' as a status option as this sits as a separate param in the search (not in 'statuses')
+ * @param {SearchOptions | undefined} searchMeta
+ * @param {FilterOptions | undefined} filtersMeta
+ */
+export function handleOfflineAsStatus(searchMeta, filtersMeta) {
+  // @ts-expect-error - dynamic property
+  if (filtersMeta?.statuses) {
+    // @ts-expect-error - dynamic property
+    filtersMeta.statuses.push(FormFilterStatus.Offline)
+    if (searchMeta?.offline && searchMeta.status) {
+      // @ts-expect-error - dynamic property
+      searchMeta.status.push(FormFilterStatus.Offline)
+    }
+  }
+}
+
+/**
  * @param {string} token
  * @param {QueryOptions} listOptions
  * @param {string} [notification] - success notification to display
@@ -55,6 +77,8 @@ export async function listViewModel(token, listOptions, notification) {
   const sortingMeta = formResponse.meta.sorting ?? undefined
   const searchMeta = formResponse.meta.search ?? undefined
   const filtersMeta = formResponse.meta.filters ?? undefined
+
+  handleOfflineAsStatus(searchMeta, filtersMeta)
 
   let pagination
   if (paginationMeta) {
@@ -167,7 +191,7 @@ function overviewCTA(formPath, formDefinition) {
     {
       text: 'Make draft live',
       attributes: {
-        formaction: `${formPath}/make-draft-live`
+        formaction: `${formPath}/manage-form/make-draft-live`
       }
     }
   ]
@@ -180,7 +204,7 @@ function overviewCTA(formPath, formDefinition) {
     {
       text: 'Make draft live',
       attributes: {
-        formaction: `${formPath}/make-draft-live`
+        formaction: `${formPath}/manage-form/make-draft-live`
       }
     }
   ]
@@ -199,10 +223,27 @@ function overviewCTA(formPath, formDefinition) {
 export function overviewViewModel(metadata, formDef, notification) {
   const pageTitle = metadata.title
   const formPath = formOverviewPath(metadata.slug)
-
-  // prettier-ignore
-  const navigation = getFormSpecificNavigation(formPath, metadata, formDef, 'Overview')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    formDef,
+    'Overview'
+  )
   const { formAction, draftButtons } = overviewCTA(formPath, formDef)
+  const offlineButton = metadata.offline
+    ? {
+        text: 'Republish offline form',
+        classes: 'govuk-button--yellow',
+        attributes: {
+          formaction: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
+        }
+      }
+    : {
+        text: 'Take form offline',
+        classes: 'govuk-button--warning',
+        href: `${formPath}/manage-form/${FormLibraryActions.TAKE_OFFLINE}`
+      }
+  const extraButtons = metadata.live ? [offlineButton] : []
 
   return {
     backLink: formsLibraryBackLink,
@@ -223,7 +264,7 @@ export function overviewViewModel(metadata, formDef, notification) {
       // Adjust default action when draft is available
       ...(!metadata.draft
         ? {
-            action: `${formPath}/create-draft-from-live`,
+            action: `${formPath}/manage-form/${FormLibraryActions.CREATE_DRAFT_FROM_LIVE}`,
             method: 'POST'
           }
         : {
@@ -233,8 +274,13 @@ export function overviewViewModel(metadata, formDef, notification) {
 
       // Adjust buttons when draft is available
       buttons: !metadata.draft
-        ? [{ text: 'Create draft to edit' }]
-        : draftButtons,
+        ? [
+            {
+              text: 'Create draft to edit'
+            }
+          ].concat(extraButtons)
+        : // @ts-expect-error - dynamic button properties
+          draftButtons.concat(extraButtons),
       links: metadata.draft
         ? [
             {

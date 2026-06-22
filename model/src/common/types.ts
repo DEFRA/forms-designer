@@ -29,6 +29,11 @@ export interface FilterOptions {
    * Status values present in the results
    */
   status?: FormStatus[]
+
+  /**
+   * Offline value present in the results
+   */
+  offline?: boolean
 }
 
 /**

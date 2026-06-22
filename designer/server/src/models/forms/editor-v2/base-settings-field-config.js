@@ -43,7 +43,19 @@ export const allBaseSettingsFields = {
       classes: GOVUK_LABEL__M
     },
     hint: {
-      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page."
+      text: "Enter a short description for this question like 'Licence period'. Short descriptions are used in error messages and on the check your answers page. Or you can choose to enter a different description for error messages. Use the preview pane to see how the final page will look."
+    }
+  },
+  errorDescription: {
+    id: 'errorDescription',
+    name: 'errorDescription',
+    idPrefix: 'errorDescription',
+    label: {
+      text: 'Error description (optional)',
+      classes: GOVUK_LABEL__M
+    },
+    hint: {
+      text: 'If you enter an error description, it will appear in error messages instead of the short description. The short description will still be used on the check your answers page. Use the preview pane to see how the final page will look.'
     }
   },
   fileTypes: {
