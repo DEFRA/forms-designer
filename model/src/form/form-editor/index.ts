@@ -1,10 +1,12 @@
-import Joi, { type ArraySchema, type GetRuleOptions } from 'joi'
+import JoiDate from '@joi/date'
+import JoiBase, { type ArraySchema, type GetRuleOptions } from 'joi'
 
 import { rtrimOnly } from '~/src/common/rtrim-only.js'
 import {
   ComponentType,
   GeospatialFieldGeometryTypesEnum,
-  GeospatialFieldOptionsCountryEnum
+  GeospatialFieldOptionsCountryEnum,
+  TelephoneNumberFieldOptionsFormatEnum
 } from '~/src/components/enums.js'
 import {
   MAX_NUMBER_OF_REPEAT_ITEMS,
@@ -21,6 +23,8 @@ import {
   type GovukStringField
 } from '~/src/form/form-editor/types.js'
 import { preventUnicodeInEmail } from '~/src/form/utils/prevent-unicode.js'
+
+const Joi = JoiBase.extend(JoiDate) as JoiBase.Root
 
 export const emailAddressNoUnicodeSchema = Joi.string()
   .trim()
@@ -272,6 +276,12 @@ export const shortDescriptionSchema = Joi.string()
   .required()
   .description('Brief description of the question for internal use')
 
+export const errorDescriptionSchema = Joi.string()
+  .custom(rtrimOnly)
+  .allow('')
+  .optional()
+  .description('Description that will be displayed in error messages')
+
 export const pageHeadingAndGuidanceSchema = Joi.string()
   .trim()
   .optional()
@@ -484,12 +494,17 @@ export const geometryTypesSchema = Joi.array()
   .single()
   .description('The geometry types allowed in a geospatial field')
 
+export const telephoneNumberFormatSchema = Joi.string()
+  .valid(...Object.values(TelephoneNumberFieldOptionsFormatEnum), 'any')
+  .description('The format for the telephone number field')
+
 type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
 
-interface DSLSchema<TSchema = Record<string, unknown>[]>
-  extends ArraySchema<TSchema> {
+interface DSLSchema<
+  TSchema = Record<string, unknown>[]
+> extends ArraySchema<TSchema> {
   rowSeparator: (rowSep: string | RegExp) => DSLSchema<TSchema>
   row: (rowSep: string | RegExp) => DSLSchema<TSchema>
   colSeparator: (colSep: string | RegExp) => DSLSchema<TSchema>
@@ -497,11 +512,11 @@ interface DSLSchema<TSchema = Record<string, unknown>[]>
   keys: (keys: string[]) => DSLSchema<TSchema>
 }
 
-interface CustomValidator extends Joi.Root {
+interface CustomValidator extends JoiBase.Root {
   dsv<TSchema>(): DSLSchema<TSchema>
 }
 
-export const customValidator = Joi.extend((joi: Joi.Root) => {
+export const customValidator = Joi.extend((joi: JoiBase.Root) => {
   return {
     type: 'dsv',
     base: joi.array(),
@@ -670,6 +685,7 @@ export const questionDetailsFullSchema = {
   regexSchema,
   rowsSchema,
   shortDescriptionSchema,
+  errorDescriptionSchema,
   suffixSchema,
   tabularDataTypesSchema,
   usePostcodeLookupSchema,
@@ -680,7 +696,8 @@ export const questionDetailsFullSchema = {
   minFeaturesSchema,
   maxFeaturesSchema,
   exactFeaturesSchema,
-  geometryTypesSchema
+  geometryTypesSchema,
+  telephoneNumberFormatSchema
 }
 
 export const formEditorInputPageKeys = {
@@ -697,7 +714,7 @@ export const formEditorInputPageSchema = Joi.object<FormEditorInputPage>()
   .required()
   .description('Input schema for creating a new page in the form editor')
 
-export const formEditorInputheckAnswersSettingsKeys = {
+export const formEditorInputCheckAnswersSettingsKeys = {
   declarationText: shortDescriptionSchema
 }
 
@@ -707,13 +724,14 @@ export const formEditorInputheckAnswersSettingsKeys = {
  */
 export const formEditorInputCheckAnswersSettingSchema =
   Joi.object<FormEditorInputCheckAnswersSettings>()
-    .keys(formEditorInputheckAnswersSettingsKeys)
+    .keys(formEditorInputCheckAnswersSettingsKeys)
     .required()
     .description('Configuration for the check-answers page')
 
 export const formEditorInputQuestionKeys = {
   question: questionSchema,
   shortDescription: shortDescriptionSchema,
+  errorDescription: errorDescriptionSchema,
   hintText: hintTextSchema,
   questionOptional: questionOptionalSchema
 }
@@ -753,6 +771,7 @@ export function govukFieldValueIsString(
     'question',
     'hintText',
     'shortDescription',
+    'errorDescription',
     'autoCompleteOptions',
     'classes',
     'prefix',

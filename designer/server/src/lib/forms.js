@@ -1,4 +1,4 @@
-import { FormStatus } from '@defra/forms-engine-plugin/types'
+import { FormFilterStatus, FormStatus } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import { delJson, getJson, patchJson, postJson } from '~/src/lib/fetch.js'
@@ -39,10 +39,16 @@ export async function list(token, options) {
     )
   }
 
+  // Map status of 'Offline' to the 'offline' search query param
+  // Map other statuses (e.g 'draft' or 'live') to 'status' search query param
+  // @ts-expect-error - 'offline' is only valid for UI, not for backend search
+  if (options.status?.includes(FormFilterStatus.Offline)) {
+    requestUrl.searchParams.append('offline', 'true')
+  }
   if (options.status?.length) {
-    options.status.forEach((status) =>
-      requestUrl.searchParams.append('status', status)
-    )
+    options.status
+      .filter((x) => x.toString() !== FormFilterStatus.Offline.toString())
+      .forEach((status) => requestUrl.searchParams.append('status', status))
   }
 
   const { body } = await getJsonByType(requestUrl, getHeaders(token))
@@ -163,6 +169,7 @@ export async function getFormDefinitionVersion(id, versionNumber, token) {
  */
 export async function getFormDefinitionForSubmission(meta, token) {
   const { formId, versionMetadata } = meta
+  const status = /** @type {FormStatus} */ (meta.status)
 
   if (versionMetadata) {
     return getFormDefinitionVersion(
@@ -171,7 +178,7 @@ export async function getFormDefinitionForSubmission(meta, token) {
       token
     )
   } else {
-    return meta.status === FormStatus.Draft
+    return status === FormStatus.Draft
       ? getDraftFormDefinition(formId, token)
       : getLiveFormDefinition(formId, token)
   }
@@ -282,6 +289,24 @@ export async function createDraft(id, token) {
   })
 
   return response
+}
+
+/**
+ * Takes a form offline
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export function takeOffline(id, token) {
+  return updateMetadata(id, { offline: true }, token)
+}
+
+/**
+ * Makes an offline form online again
+ * @param {string} id - form ID
+ * @param {string} token - auth token
+ */
+export function makeOnline(id, token) {
+  return updateMetadata(id, { offline: false }, token)
 }
 
 /**

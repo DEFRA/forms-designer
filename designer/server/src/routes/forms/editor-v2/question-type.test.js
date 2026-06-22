@@ -99,7 +99,8 @@ describe('Editor v2 question routes', () => {
 
     const { container } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Test form')
+    const $mastheadHeading = container.getByRole('heading', { level: 1 })
+    const $mastheadCaption = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
     const $cardCaption = container.getByText('Page 1: question 1')
 
@@ -107,8 +108,10 @@ describe('Editor v2 question routes', () => {
 
     const $actions = container.getAllByRole('button')
 
-    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveTextContent('Edit question')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadCaption).toHaveTextContent('Test form')
+    expect($mastheadCaption).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
     expect($cardCaption).toHaveTextContent('Page 1: question 1')
@@ -167,7 +170,8 @@ describe('Editor v2 question routes', () => {
 
     const { container } = await renderResponse(server, options)
 
-    const $mastheadHeading = container.getByText('Test form')
+    const $mastheadHeading = container.getByRole('heading', { level: 1 })
+    const $mastheadCaption = container.getByText('Test form')
     const $cardTitle = container.getByText('Question 1')
     const $cardCaption = container.getByText('Page 1: question 1')
 
@@ -175,8 +179,10 @@ describe('Editor v2 question routes', () => {
 
     const $actions = container.getAllByRole('button')
 
-    expect($mastheadHeading).toHaveTextContent('Test form')
+    expect($mastheadHeading).toHaveTextContent('Edit question')
     expect($mastheadHeading).toHaveClass('govuk-heading-xl')
+    expect($mastheadCaption).toHaveTextContent('Test form')
+    expect($mastheadCaption).toHaveClass('govuk-caption-l')
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
     expect($cardCaption).toHaveTextContent('Page 1: question 1')

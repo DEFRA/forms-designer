@@ -152,10 +152,14 @@ export function checkAnswersSettingsBaseViewModel(
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
-
-  // prettier-ignore
   const previewModel = getPreviewModel(
-    page, definition, previewPageUrl, declarationText, needDeclaration, showConfirmationEmail, showReferenceNumber
+    page,
+    definition,
+    previewPageUrl,
+    declarationText,
+    needDeclaration,
+    showConfirmationEmail,
+    showReferenceNumber
   )
 
   return {

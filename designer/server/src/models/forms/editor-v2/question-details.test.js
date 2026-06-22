@@ -747,6 +747,102 @@ describe('editor-v2 - question details model', () => {
       expect(result).toBeDefined()
       expect(result.questionType).toBe(ComponentType.TextField)
     })
+
+    test('should use "Edit" verb in page heading for an existing page', async () => {
+      const metadata = {
+        id: '12345',
+        slug: 'test-form',
+        title: 'Test Form',
+        organisation: 'Defra',
+        teamName: 'Forms Team',
+        teamEmail: 'test@example.com',
+        draft: {
+          createdAt: new Date(),
+          createdBy: { id: '123', displayName: 'Test User' },
+          updatedAt: new Date(),
+          updatedBy: { id: '123', displayName: 'Test User' }
+        },
+        createdBy: { id: '123', displayName: 'Test User' },
+        createdAt: new Date(),
+        updatedBy: { id: '123', displayName: 'Test User' },
+        updatedAt: new Date()
+      }
+
+      const pageId = 'page-id'
+      const questionId = 'question-id'
+
+      const definition = buildDefinition({
+        name: 'Test Form',
+        pages: [
+          buildQuestionPage({
+            id: pageId,
+            title: 'Test Page',
+            path: '/test-page',
+            components: [
+              buildFileUploadComponent({
+                id: questionId,
+                name: 'upload',
+                title: 'Upload a file'
+              })
+            ]
+          })
+        ]
+      })
+
+      const result = await questionDetailsViewModel(
+        {
+          metadata,
+          definition,
+          pageId,
+          questionId
+        },
+        'state-id',
+        token,
+        {}
+      )
+
+      expect(result.pageHeading.text).toBe('Edit page 1: question 1')
+    })
+
+    test('should use "Add" verb in page heading when adding a new page', async () => {
+      const metadata = {
+        id: '12345',
+        slug: 'test-form',
+        title: 'Test Form',
+        organisation: 'Defra',
+        teamName: 'Forms Team',
+        teamEmail: 'test@example.com',
+        draft: {
+          createdAt: new Date(),
+          createdBy: { id: '123', displayName: 'Test User' },
+          updatedAt: new Date(),
+          updatedBy: { id: '123', displayName: 'Test User' }
+        },
+        createdBy: { id: '123', displayName: 'Test User' },
+        createdAt: new Date(),
+        updatedBy: { id: '123', displayName: 'Test User' },
+        updatedAt: new Date()
+      }
+
+      const definition = buildDefinition({
+        name: 'Test Form',
+        pages: []
+      })
+
+      const result = await questionDetailsViewModel(
+        {
+          metadata,
+          definition,
+          pageId: 'new',
+          questionId: 'new'
+        },
+        'state-id',
+        token,
+        {}
+      )
+
+      expect(result.pageHeading.text).toBe('Add page 1: question 1')
+    })
   })
 
   describe('handleAutocomplete', () => {

@@ -145,6 +145,14 @@
     "maxDaysInPastField": {
       "helpText": "Determines the earliest date users can enter",
       "title": "Max days in the past"
+    },
+    "earliestDate": {
+      "helpText": "Determines the earliest absolute date within a range that users can enter",
+      "title": "Earliest date"
+    },
+    "latestDate": {
+      "helpText": "Determines the latest absolute date within a range that users can enter",
+      "title": "Latest date"
     }
   },
   "delete": "Delete",

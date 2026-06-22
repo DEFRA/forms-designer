@@ -2,6 +2,8 @@ import {
   geospatialMap,
   map as mapImports
 } from '@defra/forms-engine-plugin/shared.js'
+// @ts-expect-error - no types
+import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
 
 const { createMap, defaultConfig: defaultMapConfig } = mapImports
 const {
@@ -75,9 +77,6 @@ function onMapReadyFactory(
  * @param {number} index
  */
 function processPreview(preview, index) {
-  // @ts-expect-error - Defra namespace currently comes from UMD support files
-  const defra = window.defra
-
   const mapId = `map_${index}`
   const geospatialInput = preview.querySelector('.govuk-textarea')
 
@@ -95,7 +94,7 @@ function processPreview(preview, index) {
    */
   const geojson = getGeoJSON(geospatialInput)
   const bounds = geojson.features.length ? getBoundingBox(geojson) : undefined
-  const drawPlugin = defra.drawMLPlugin()
+  const drawPlugin = createDrawMLPlugin()
 
   const initConfig = {
     ...defaultMapConfig,

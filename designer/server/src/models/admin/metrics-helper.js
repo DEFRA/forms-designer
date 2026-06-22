@@ -42,6 +42,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @property {string} title - title for the tile
  * @property {string} ariaLabel - text for aria label
  * @property {string} strapline - strapline text
+ * @property {string} classes - custom classes
  * @property {TileDrillDown} drillDown - drilldown config
  */
 
@@ -91,7 +92,7 @@ const formStructureMetricNames =
  * @property {boolean} grouped - true if drill down results are to be grouped per form
  * @property {string} displayName - display name for metric
  * @property {{ text: string, attributes?: Record<string, string> }} [headers] - custom headers for drill down
- * @property {(detail: FormTimelineMetric) => { text: string, attributes?: Record<string, string | number> }} [valueFunc] - function to return custom value
+ * @property {(detail: FormDrilldownMetric) => { text: string, attributes?: Record<string, string | number> }} [valueFunc] - function to return custom value
  */
 
 /**
@@ -450,7 +451,8 @@ export function collateSpecificTileCounts(
       url: drillDown.enabled
         ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}`
         : ''
-    }
+    },
+    classes: ''
   }
 }
 
@@ -603,5 +605,5 @@ export function numberCell(num) {
 }
 
 /**
- * @import { FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormDrilldownMetric, FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  */

@@ -45,6 +45,28 @@ const zeroIsValidForFields = [
   'max'
 ]
 
+const datePartsFields = ['earliestDate', 'latestDate']
+
+/**
+ * @param {GovukField} fieldObj
+ */
+function isNumericFieldPopulated(fieldObj) {
+  return (
+    zeroIsValidForFields.includes(fieldObj.name ?? 'unknown') &&
+    fieldObj.value !== undefined
+  )
+}
+
+/**
+ * @param {GovukField} fieldObj
+ */
+function isDatePartsFieldPopulated(fieldObj) {
+  return (
+    datePartsFields.includes(fieldObj.name ?? 'unknown') &&
+    fieldObj.items?.some((x) => x.value)
+  )
+}
+
 /**
  * Determines if the details section should be expanded i.e. if there is a validation error or some data populated
  * in the details section
@@ -70,10 +92,11 @@ export function hasDataOrErrorForDisplay(
     if (fieldObj.value) {
       return true
     }
-    if (
-      zeroIsValidForFields.includes(fieldObj.name ?? 'unknown') &&
-      fieldObj.value !== undefined
-    ) {
+    if (isNumericFieldPopulated(fieldObj)) {
+      return true
+    }
+
+    if (isDatePartsFieldPopulated(fieldObj)) {
       return true
     }
   }
@@ -388,7 +411,8 @@ export async function questionDetailsViewModel(
   const urlPageBase = editorv2Path(metadata.slug, `page/${pageId}`)
   const deleteUrl = `${urlPageBase}/delete/${questionId}`
   const changeTypeUrl = `${urlPageBase}/question/${questionId}/type/${stateId}`
-  const pageHeading = `Edit page ${details.pageNum}: question ${details.questionNum}`
+  const verb = pageId === 'new' ? 'Add' : 'Edit'
+  const pageHeading = `${verb} page ${details.pageNum}: question ${details.questionNum}`
   const pageTitle = `Edit question ${details.questionNum} - ${formTitle}`
   const errorTemplates = getErrorTemplates(questionType)
   await applyPaymentValues(

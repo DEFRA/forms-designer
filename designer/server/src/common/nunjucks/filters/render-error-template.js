@@ -15,7 +15,7 @@ import { determineLimit, insertTags } from '~/src/lib/error-preview-helper.js'
 
 const basePageFieldsFallback = /** @type {BasePageFields[]} */ ([])
 const extraFieldsFallback = /** @type {GovukField[]} */ ([])
-const SHORT_DESCRIPTION_PLACEHOLDER = '[short description]'
+const SHORT_DESCRIPTION_PLACEHOLDER = '[description]'
 
 /**
  * Check if component type is a location field
@@ -96,12 +96,14 @@ export function processTemplate(template, type, shouldMarkFixed) {
  * Determine the label text for an error message
  * @param {ComponentType} questionType
  * @param {boolean} baseError
+ * @param {BasePageFields | undefined} errorDescriptionField
  * @param {BasePageFields | undefined} shortDescriptionField
  * @returns {string}
  */
 export function determineLabelText(
   questionType,
   baseError,
+  errorDescriptionField,
   shortDescriptionField
 ) {
   // For all location fields' base errors only, always use the component-specific name (not the short description)
@@ -111,7 +113,9 @@ export function determineLabelText(
 
   // For all other cases (including location validation errors), use short description if provided, otherwise use default
   return (
-    shortDescriptionField?.value ?? getDefaultErrorLabel(questionType, false)
+    errorDescriptionField?.value ??
+    shortDescriptionField?.value ??
+    getDefaultErrorLabel(questionType, false)
   )
 }
 
@@ -124,6 +128,9 @@ export function renderErrorTemplate(template, viewModel, questionType) {
   const basePageFields = viewModel.basePageFields ?? basePageFieldsFallback
   const extraFields = viewModel.extraFields ?? extraFieldsFallback
 
+  const errorDescriptionField = basePageFields.find(
+    (x) => x.id === 'errorDescription'
+  )
   const shortDescriptionField = basePageFields.find(
     (x) => x.id === 'shortDescription'
   )
@@ -140,6 +147,7 @@ export function renderErrorTemplate(template, viewModel, questionType) {
   const labelText = determineLabelText(
     questionType,
     baseError,
+    errorDescriptionField,
     shortDescriptionField
   )
 

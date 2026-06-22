@@ -3,7 +3,8 @@ export {
   ComponentType,
   GeospatialFieldGeometryTypesEnum,
   GeospatialFieldOptionsCountryEnum,
-  PreviewTypeEnum
+  PreviewTypeEnum,
+  TelephoneNumberFieldOptionsFormatEnum
 } from '~/src/components/enums.js'
 export {
   allDocumentTypes,

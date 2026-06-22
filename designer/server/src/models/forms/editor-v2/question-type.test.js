@@ -25,7 +25,7 @@ const testQuestionTypeItems = /** @type {FormEditorCheckbox[]} */ ([
   {
     text: 'Phone number',
     hint: {
-      text: 'A UK phone number, for example, 07700 900 982 or +44 808 157 0192'
+      text: 'For example, 07700 900 982 or +33 123 456 7890'
     },
     value: ComponentType.TelephoneNumberField
   },
@@ -289,6 +289,42 @@ describe('editor-v2 - question type model', () => {
     )
 
     expect(res.fields.locationSub.items).toHaveLength(5)
+  })
+
+  test('should use "Add question" masthead heading when question is new', () => {
+    const metadata = /** @type {import('@defra/forms-model').FormMetadata} */ ({
+      id: 'form-id',
+      slug: 'my-form'
+    })
+    const definition = buildDefinition()
+
+    const res = questionTypeViewModel(
+      metadata,
+      definition,
+      'ffefd409-f3f4-49fe-882e-6e89f44631b1',
+      'new',
+      undefined
+    )
+
+    expect(res.pageHeading.text).toBe('Add question')
+  })
+
+  test('should use "Edit question" masthead heading when editing an existing question', () => {
+    const metadata = /** @type {import('@defra/forms-model').FormMetadata} */ ({
+      id: 'form-id',
+      slug: 'my-form'
+    })
+    const definition = buildDefinition()
+
+    const res = questionTypeViewModel(
+      metadata,
+      definition,
+      'ffefd409-f3f4-49fe-882e-6e89f44631b1',
+      '8ea12a71-83d0-43d9-9761-dcb3208a30d1',
+      undefined
+    )
+
+    expect(res.pageHeading.text).toBe('Edit question')
   })
 })
 

@@ -171,8 +171,12 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
 
   /**
    * @param { Element | null } movedItem - The list item that was moved.
+   * @param { boolean } [highlight] - Whether to apply the gold focus border.
+   *   The border is a keyboard affordance for the up/down move buttons; after a
+   *   pointer drag it would persist around the dropped item and look like a bug,
+   *   so the drag handler clears existing highlights but does not re-apply one.
    */
-  setItemFocus(movedItem) {
+  setItemFocus(movedItem, highlight = true) {
     if (movedItem instanceof HTMLElement) {
       const currentlyFocusedItems = this.sortableContainer.querySelectorAll(
         `.${panelFocusClass}`
@@ -181,7 +185,9 @@ export class ListSortableQuestionElements extends ListQuestionDomElements {
         item.classList.remove(panelFocusClass)
       })
       movedItem.setAttribute('tabindex', '-1')
-      movedItem.classList.add(panelFocusClass)
+      if (highlight) {
+        movedItem.classList.add(panelFocusClass)
+      }
     }
   }
 
@@ -327,7 +333,7 @@ export class ListSortableEventListeners extends ListEventListeners {
       (e) => {
         this._listQuestion.resyncPreviewAfterReorder()
         this._listSortableElements.updateMoveButtons()
-        this._listSortableElements.setItemFocus(e.item)
+        this._listSortableElements.setItemFocus(e.item, false)
         this._listSortableElements.announceReorder(e.item)
       }
     )

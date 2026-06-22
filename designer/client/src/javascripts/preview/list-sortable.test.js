@@ -104,6 +104,7 @@ describe('list-sortable', () => {
         shortDesc: 'your quest',
         largeTitle: true,
         content: '',
+        errorDesc: '',
         items: expectedList
       })
       const listText = /** @type {HTMLInputElement} */ (
@@ -451,6 +452,29 @@ describe('list-sortable', () => {
           listSortable.setItemFocus(downButtonFirstRow)
         ).not.toThrow()
       })
+
+      it('should not apply the highlight when highlight is false', () => {
+        document.body.innerHTML =
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const listSortable = new ListSortableQuestionElements(NunjucksRenderer)
+        const downButtonFirstRow = /** @type {HTMLElement} */ (
+          document.getElementById('first-row-down')
+        )
+        const upButtonLastRow = /** @type {HTMLElement} */ (
+          document.getElementById('row-3-up')
+        )
+        upButtonLastRow.classList.add('reorder-panel-focus')
+        listSortable.setItemFocus(downButtonFirstRow, false)
+        // Previous highlight cleared and tabindex still set...
+        expect(upButtonLastRow.classList).not.toContain('reorder-panel-focus')
+        expect(downButtonFirstRow.getAttribute('tabindex')).toBe('-1')
+        // ...but no new highlight applied
+        expect(downButtonFirstRow.classList).not.toContain(
+          'reorder-panel-focus'
+        )
+      })
     })
 
     describe('announceReorder', () => {
@@ -728,6 +752,45 @@ describe('list-sortable', () => {
           '80c4cb93-f079-4836-93f9-509e683e5004',
           'ade6652f-b67e-4665-bf07-66f03877b5c6'
         ])
+      })
+    })
+
+    describe('drag and drop onEnd', () => {
+      it('should resync, update buttons, focus without highlight and announce', () => {
+        document.body.innerHTML =
+          '<div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>' +
+          '<button id="edit-options-button">Re-order</button>' +
+          '<button id="add-option-button">Add item</button>' +
+          list1HTML
+        const elements = new ListSortableQuestionElements(NunjucksRenderer)
+        const preview = new ListSortableQuestion(elements, nunjucksRenderer)
+        const listeners = new ListSortableEventListeners(
+          preview,
+          elements,
+          elements.listElements
+        )
+        // Accessing customListeners wires up the Sortable instance
+        listeners.setupListeners()
+
+        const resyncSpy = jest.spyOn(preview, 'resyncPreviewAfterReorder')
+        const updateMoveButtonsSpy = jest.spyOn(elements, 'updateMoveButtons')
+        const setItemFocusSpy = jest.spyOn(elements, 'setItemFocus')
+        const announceReorderSpy = jest.spyOn(elements, 'announceReorder')
+
+        const movedItem = /** @type {HTMLElement} */ (
+          document.querySelector('.app-reorderable-list__item')
+        )
+        const onEnd = /** @type {(e: { item: HTMLElement }) => void} */ (
+          elements.sortableInstance?.options.onEnd
+        )
+        onEnd({ item: movedItem })
+
+        expect(resyncSpy).toHaveBeenCalled()
+        expect(updateMoveButtonsSpy).toHaveBeenCalled()
+        expect(setItemFocusSpy).toHaveBeenCalledWith(movedItem, false)
+        expect(announceReorderSpy).toHaveBeenCalledWith(movedItem)
+        // No gold focus border should be applied after a pointer drag
+        expect(movedItem.classList).not.toContain('reorder-panel-focus')
       })
     })
 

@@ -6,8 +6,7 @@ import { ListsEditorContextProvider } from '~/src/reducers/list/listsEditorReduc
 import { ListContextProvider } from '~/src/reducers/listReducer.jsx'
 import { RenderWithContext } from '~/test/helpers/renderers.jsx'
 
-export interface RenderListEditorWithContextProps
-  extends Partial<DataContextType> {
+export interface RenderListEditorWithContextProps extends Partial<DataContextType> {
   children: ReactElement
   initialName?: string
   initialItemText?: string

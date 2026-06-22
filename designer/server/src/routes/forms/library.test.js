@@ -626,10 +626,7 @@ describe('Forms library routes', () => {
           data: [formMetadata],
           meta: {
             search: {
-              status: /** @type {FormStatus[]} */ ([
-                FormStatus.Draft,
-                FormStatus.Live
-              ])
+              status: [FormStatus.Draft, FormStatus.Live]
             }
           }
         })
@@ -645,10 +642,7 @@ describe('Forms library routes', () => {
         expect(forms.list).toHaveBeenCalledWith(
           auth.credentials.token,
           expect.objectContaining({
-            status: /** @type {FormStatus[]} */ ([
-              FormStatus.Draft,
-              FormStatus.Live
-            ])
+            status: [FormStatus.Draft, FormStatus.Live]
           })
         )
       })
@@ -660,10 +654,7 @@ describe('Forms library routes', () => {
             search: {
               title: 'test',
               organisations: ['Defra', 'Marine Management Organisation – MMO'],
-              status: /** @type {FormStatus[]} */ ([
-                FormStatus.Draft,
-                FormStatus.Live
-              ]),
+              status: [FormStatus.Draft, FormStatus.Live],
               author: 'Enrique Chase'
             }
           }
@@ -682,10 +673,7 @@ describe('Forms library routes', () => {
           expect.objectContaining({
             title: 'test',
             organisations: ['Defra', 'Marine Management Organisation – MMO'],
-            status: /** @type {FormStatus[]} */ ([
-              FormStatus.Draft,
-              FormStatus.Live
-            ]),
+            status: [FormStatus.Draft, FormStatus.Live],
             author: 'Enrique Chase'
           })
         )
@@ -842,7 +830,7 @@ describe('Forms library routes', () => {
       })
     })
 
-    describe('Draft buttons in side bar', () => {
+    describe('Draft buttons and an offline button in side bar', () => {
       it('should show "Create draft to edit" when no draft exists', async () => {
         jest.mocked(forms.get).mockResolvedValueOnce({
           ...formMetadata,
@@ -861,8 +849,9 @@ describe('Forms library routes', () => {
         const $card = document.querySelector('.app-form-card')
         const $buttons = $card?.querySelectorAll('.govuk-button')
 
-        expect($buttons).toHaveLength(1)
+        expect($buttons).toHaveLength(2)
         expect($buttons?.[0]).toHaveTextContent('Create draft to edit')
+        expect($buttons?.[1]).toHaveTextContent('Take form offline')
       })
     })
 

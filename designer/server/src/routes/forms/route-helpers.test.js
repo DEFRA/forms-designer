@@ -116,7 +116,7 @@ describe('Route helpers', () => {
 
       const options = {
         method: 'get',
-        url: '/library/my-form/make-draft-live',
+        url: '/library/my-form/manage-form/make-draft-live',
         auth: authFormCreator
       }
 

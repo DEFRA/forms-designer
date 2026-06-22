@@ -1,6 +1,6 @@
 {
   "name": "@defra/forms-designer",
-  "version": "3.0.673",
+  "version": "3.0.683",
   "private": true,
   "description": "Defra forms designer",
   "homepage": "https://github.com/DEFRA/forms-designer/tree/main/designer#readme",
@@ -36,9 +36,10 @@
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.5",
-    "@defra/forms-engine-plugin": "^4.11.3",
-    "@defra/forms-model": "^3.0.673",
+    "@defra/forms-engine-plugin": "^4.19.1",
+    "@defra/forms-model": "^3.0.683",
     "@defra/hapi-tracing": "^1.28.0",
+    "@defra/interactive-map": "^0.0.22-alpha",
     "@elastic/ecs-pino-format": "^1.5.0",
     "@hapi/basic": "^7.0.2",
     "@hapi/bell": "^13.1.0",
@@ -80,7 +81,6 @@
     "date-fns": "^4.1.0",
     "date-fns-tz": "^3.2.0",
     "depth-first": "^4.0.0",
-    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz",
     "fastest-levenshtein": "^1.0.16",
     "focus-trap-react": "^11.0.3",
     "govuk-frontend": "^5.12.0",
@@ -103,7 +103,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "resolve": "^1.22.10",
-    "serialize-javascript": "^7.0.3"
+    "serialize-javascript": "^7.0.3",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   },
   "devDependencies": {
     "@testing-library/dom": "^10.4.0",

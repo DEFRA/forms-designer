@@ -42,6 +42,11 @@ export enum GeospatialFieldGeometryTypesEnum {
   Shape = 'shape'
 }
 
+export enum TelephoneNumberFieldOptionsFormatEnum {
+  UK = 'uk',
+  International = 'international'
+}
+
 export const PreviewTypeEnum = {
   ...ComponentType,
   Question: 'Question',

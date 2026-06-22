@@ -1,3 +1,5 @@
+import { format } from 'date-fns/format'
+
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import { isCheckboxSelected } from '~/src/lib/utils.js'
 import { locationInstructionDefaults } from '~/src/models/forms/editor-v2/location-instruction-defaults.js'
@@ -62,6 +64,34 @@ export function getAdditionalOptions(payload) {
       shouldInclude: () => payload.maxPast !== undefined
     },
     {
+      key: 'earliestDate',
+      getValue: () =>
+        payload.earliestDate ? format(payload.earliestDate, 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload.earliestDate !== undefined
+    },
+    {
+      key: 'latestDate',
+      getValue: () =>
+        payload.latestDate ? format(payload.latestDate, 'yyyy-MM-dd') : '',
+      shouldInclude: () => payload.latestDate !== undefined
+    },
+    {
+      key: 'earliestMonthYear',
+      getValue: () =>
+        payload.earliestMonthYear
+          ? format(payload.earliestMonthYear, 'yyyy-MM')
+          : '',
+      shouldInclude: () => payload.earliestMonthYear !== undefined
+    },
+    {
+      key: 'latestMonthYear',
+      getValue: () =>
+        payload.latestMonthYear
+          ? format(payload.latestMonthYear, 'yyyy-MM')
+          : '',
+      shouldInclude: () => payload.latestMonthYear !== undefined
+    },
+    {
       key: 'usePostcodeLookup',
       getValue: () => isCheckboxSelected(payload.usePostcodeLookup),
       shouldInclude: () => payload.usePostcodeLookup !== undefined
@@ -106,6 +136,12 @@ export function getAdditionalOptions(payload) {
         Array.isArray(payload.countries) &&
         payload.countries.length === 1 &&
         payload.countries[0] !== 'any'
+    },
+    {
+      key: 'format',
+      getValue: () => payload.telephoneNumberFormat,
+      shouldInclude: () =>
+        payload.telephoneNumberFormat && payload.telephoneNumberFormat !== 'any'
     }
   ]
 
@@ -213,6 +249,9 @@ export function mapExtraRootFields(payload) {
   }
   if (payload.declarationText) {
     rootFields.content = payload.declarationText
+  }
+  if (payload.errorDescription) {
+    rootFields.errorDescription = payload.errorDescription
   }
   return rootFields
 }

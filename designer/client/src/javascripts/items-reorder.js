@@ -191,6 +191,10 @@ export class ItemReorder {
         movedItem.setAttribute('tabindex', '-1')
         focusIfExists(movedItem)
 
+        // Clear any lingering keyboard-move highlight. We intentionally do not
+        // re-apply panelFocusClass here: the gold focus border is a keyboard
+        // affordance (see updatePanelFocus). After a pointer drag it would
+        // persist around the dropped item until focusout, which looks like a bug.
         if (this.container) {
           const currentlyFocusedItems = querySelectorAllHelper(
             this.container,
@@ -200,8 +204,6 @@ export class ItemReorder {
             item.classList.remove(this.panelFocusClass)
           })
         }
-
-        movedItem.classList.add(this.panelFocusClass)
       }
     } else {
       this.updateVisuals()
@@ -217,8 +219,6 @@ export class ItemReorder {
             .querySelectorAll(`.${this.panelFocusClass}`)
             .forEach((el) => el.classList.remove(this.panelFocusClass))
         }
-
-        movedItem.classList.add(this.panelFocusClass)
       }
     }
     this.triggerRerender()

@@ -449,19 +449,32 @@ export function questionsViewModel(
 ) {
   const { formValues, formErrors } = validation ?? {}
   const { pageIdx, page, components } = extractPageData(definition, pageId)
-  // prettier-ignore
-  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(page, components, formValues)
-  // prettier-ignore
-  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(page, formValues)
+  const { pageHeadingVal, guidanceTextVal } = extractHeadingAndGuidance(
+    page,
+    components,
+    formValues
+  )
+  const { minItems, maxItems, questionSetName } = extractRepeaterSettings(
+    page,
+    formValues
+  )
   const { baseUrl, pageHeading, cardTitle, formTitle, formPath } =
     buildViewModelData(metadata, pageIdx, pageId)
   const pageHeadingSettings = { pageHeadingVal, guidanceTextVal }
   const repeaterSettings = { minItems, maxItems, questionSetName }
-  // prettier-ignore
-  const navigation = getFormSpecificNavigation(formPath, metadata, definition, 'Editor')
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
   const conditionDetails = getPageConditionDetails(definition, pageId)
-  // prettier-ignore
-  const fields = questionsFields(page, pageHeadingSettings, repeaterSettings, validation)
+  const fields = questionsFields(
+    page,
+    pageHeadingSettings,
+    repeaterSettings,
+    validation
+  )
 
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page.path}?force`
   const itemOrder = getItemOrder(reorderDetails.questionOrder, components)
@@ -476,8 +489,15 @@ export function questionsViewModel(
       formTitle
     ),
     fields,
-    // prettier-ignore
-    previewModel: getPreviewModel(page, definition, previewPageUrl, previewErrorsUrl, fields.guidanceText.value, false, sectionInfo),
+    previewModel: getPreviewModel(
+      page,
+      definition,
+      previewPageUrl,
+      previewErrorsUrl,
+      fields.guidanceText.value,
+      false,
+      sectionInfo
+    ),
     preview: {
       pageId: page.id,
       definitionId: metadata.id

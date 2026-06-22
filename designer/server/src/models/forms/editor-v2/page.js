@@ -30,6 +30,7 @@ export function pageViewModel(metadata, formDefinition, editor, validation) {
     ...baseModelFields(
       metadata.slug,
       `${pageHeading} - ${formTitle}`,
+      'Add page',
       formTitle
     ),
     navigation,

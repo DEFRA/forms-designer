@@ -166,6 +166,8 @@ describe('Form definition schema', () => {
           name: 'defaultname',
           title: 'Test Component',
           type: ComponentType.TextField,
+          shortDescription: 'Test',
+          errorDescription: 'Test error',
           options: {},
           schema: {}
         }

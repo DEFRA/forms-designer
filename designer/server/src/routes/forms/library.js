@@ -1,7 +1,7 @@
 import {
   Scopes,
   paginationOptionFields,
-  searchOptionFields
+  searchOptionFieldsUI
 } from '@defra/forms-model'
 import Joi from 'joi'
 
@@ -92,7 +92,7 @@ export default [
       validate: {
         query: Joi.object({
           ...paginationOptionFields,
-          ...searchOptionFields,
+          ...searchOptionFieldsUI,
           sort: Joi.string()
             .valid('updatedDesc', 'updatedAsc', 'titleAsc', 'titleDesc')
             .optional()
