@@ -138,7 +138,6 @@ export const notificationEmailAddressSchema =
 
 export const offlineSchema = Joi.boolean()
   .optional()
-  .default(false)
   .description(
     'Whether the form has been taken offline and is unavailable to new sessions'
   )
