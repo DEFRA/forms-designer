@@ -49,7 +49,7 @@ describe('render-error-template', () => {
     it('should return correct label for EastingNorthingField validation errors', () => {
       expect(
         getDefaultErrorLabel(ComponentType.EastingNorthingField, false)
-      ).toBe('[short description]')
+      ).toBe('[description]')
     })
 
     it('should return correct label for LatLongField base errors', () => {
@@ -60,7 +60,7 @@ describe('render-error-template', () => {
 
     it('should return correct label for LatLongField validation errors', () => {
       expect(getDefaultErrorLabel(ComponentType.LatLongField, false)).toBe(
-        '[short description]'
+        '[description]'
       )
     })
 
@@ -72,7 +72,7 @@ describe('render-error-template', () => {
 
     it('should return correct label for OsGridRefField validation errors', () => {
       expect(getDefaultErrorLabel(ComponentType.OsGridRefField, false)).toBe(
-        '[short description]'
+        '[description]'
       )
     })
 
@@ -85,12 +85,12 @@ describe('render-error-template', () => {
     it('should return correct label for NationalGridFieldNumberField validation errors', () => {
       expect(
         getDefaultErrorLabel(ComponentType.NationalGridFieldNumberField, false)
-      ).toBe('[short description]')
+      ).toBe('[description]')
     })
 
     it('should return fallback for other field types', () => {
       expect(getDefaultErrorLabel(ComponentType.TextField)).toBe(
-        '[short description]'
+        '[description]'
       )
     })
   })
@@ -158,24 +158,48 @@ describe('render-error-template', () => {
       const result = determineLabelText(
         ComponentType.EastingNorthingField,
         true,
+        { id: 'errorDescription', value: 'custom error description' },
         { id: 'shortDescription', value: 'custom description' }
       )
       expect(result).toBe('easting and enter northing')
     })
 
-    it('should use custom short description for location field validation errors', () => {
-      const result = determineLabelText(ComponentType.LatLongField, false, {
-        id: 'shortDescription',
-        value: 'your location'
-      })
-      expect(result).toBe('your location')
+    it('should use custom error description for location field validation errors', () => {
+      const result = determineLabelText(
+        ComponentType.LatLongField,
+        false,
+        { id: 'errorDescription', value: 'custom error description' },
+        {
+          id: 'shortDescription',
+          value: 'your location'
+        }
+      )
+      expect(result).toBe('custom error description')
     })
 
-    it('should use custom short description for non-location fields', () => {
-      const result = determineLabelText(ComponentType.TextField, true, {
-        id: 'shortDescription',
-        value: 'your name'
-      })
+    it('should use custom error description for non-location fields', () => {
+      const result = determineLabelText(
+        ComponentType.TextField,
+        true,
+        { id: 'errorDescription', value: 'custom error description' },
+        {
+          id: 'shortDescription',
+          value: 'your name'
+        }
+      )
+      expect(result).toBe('custom error description')
+    })
+
+    it('should use short description when no error description provided', () => {
+      const result = determineLabelText(
+        ComponentType.TextField,
+        true,
+        undefined,
+        {
+          id: 'shortDescription',
+          value: 'your name'
+        }
+      )
       expect(result).toBe('your name')
     })
 
@@ -183,16 +207,22 @@ describe('render-error-template', () => {
       const result = determineLabelText(
         ComponentType.TextField,
         true,
+        undefined,
         undefined
       )
-      expect(result).toBe('[short description]')
+      expect(result).toBe('[description]')
     })
 
-    it('should use default when short description is empty', () => {
-      const result = determineLabelText(ComponentType.TextField, true, {
-        id: 'shortDescription',
-        value: ''
-      })
+    it('should use default when short and error description are empty', () => {
+      const result = determineLabelText(
+        ComponentType.TextField,
+        true,
+        { id: 'errorDescription', value: '' },
+        {
+          id: 'shortDescription',
+          value: ''
+        }
+      )
       // Empty string should use short description if provided
       expect(result).toBe('')
     })
@@ -309,7 +339,7 @@ describe('render-error-template', () => {
       expect(result).toBe('Enter National Grid reference')
     })
 
-    it('should use [short description] fallback for other field types', () => {
+    it('should use [description] fallback for other field types', () => {
       const template = {
         type: 'string.empty',
         template: 'Enter {#label}'
@@ -326,7 +356,7 @@ describe('render-error-template', () => {
         ComponentType.TextField
       )
 
-      expect(result).toBe('Enter [short description]')
+      expect(result).toBe('Enter [description]')
     })
 
     it('should ignore custom short description for location field base errors only', () => {
@@ -443,7 +473,7 @@ describe('render-error-template', () => {
         ComponentType.TextField
       )
 
-      expect(result).toBe('Enter [short description]')
+      expect(result).toBe('Enter [description]')
     })
   })
 })

@@ -54,7 +54,7 @@ describe('helpers', () => {
       const data = {
         itemId: 'b3a5030c-57f1-4d2e-8db9-6adeeba43c07',
         listId: '58dfa64d-7b14-4b48-b8b1-48128ecf1f60'
-      } as ConditionListItemRefValueDataV2
+      }
       expect(isConditionListItemRefValueData(data)).toBe(true)
     })
 

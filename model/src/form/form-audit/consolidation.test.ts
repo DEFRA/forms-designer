@@ -156,8 +156,8 @@ describe('consolidation', () => {
       expect(alwaysValidEvents.has(eventType)).toBe(true)
     })
 
-    it('should have exactly 12 always valid events', () => {
-      expect(alwaysValidEvents.size).toBe(12)
+    it('should have exactly 13 always valid events', () => {
+      expect(alwaysValidEvents.size).toBe(13)
     })
 
     it.each([

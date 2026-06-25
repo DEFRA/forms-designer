@@ -193,7 +193,8 @@ describe('Editor v2 question details routes', () => {
     expect($fields[0].id).toBe('question')
     expect($fields[1].id).toBe('hintText')
     expect($fields[2].id).toBe('shortDescription')
-    expect($fields[3].id).toBe('minLength')
+    expect($fields[3].id).toBe('errorDescription')
+    expect($fields[4].id).toBe('minLength')
 
     const $details = document.getElementsByClassName('govuk-details')
     expect($details[0].hasAttribute('open')).toBeFalsy()
@@ -243,7 +244,8 @@ describe('Editor v2 question details routes', () => {
     expect($fields[0].id).toBe('question')
     expect($fields[1].id).toBe('hintText')
     expect($fields[2].id).toBe('shortDescription')
-    expect($fields[3].id).toBe('minLength')
+    expect($fields[3].id).toBe('errorDescription')
+    expect($fields[4].id).toBe('minLength')
 
     const $details = document.getElementsByClassName('govuk-details')
     expect($details[0].hasAttribute('open')).toBeFalsy()
@@ -295,10 +297,11 @@ describe('Editor v2 question details routes', () => {
     expect($actions[4]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
-    expect($fields[3].id).toBe('minLength')
-    expect($fields[4].id).toBe('maxLength')
-    expect($fields[5].id).toBe('regex')
-    expect($fields[6].id).toBe('classes')
+    expect($fields[3].id).toBe('errorDescription')
+    expect($fields[4].id).toBe('minLength')
+    expect($fields[5].id).toBe('maxLength')
+    expect($fields[6].id).toBe('regex')
+    expect($fields[7].id).toBe('classes')
 
     const $details = document.getElementsByClassName('govuk-details')
     expect($details[0].hasAttribute('open')).toBeTruthy()
@@ -336,9 +339,9 @@ describe('Editor v2 question details routes', () => {
     expect($actions[4]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
-    expect($fields[3].id).toBe('minFiles')
-    expect($fields[4].id).toBe('maxFiles')
-    expect($fields[5].id).toBe('exactFiles')
+    expect($fields[4].id).toBe('minFiles')
+    expect($fields[5].id).toBe('maxFiles')
+    expect($fields[6].id).toBe('exactFiles')
 
     const $checkboxes = /** @type {HTMLInputElement[]} */ (
       container.getAllByRole('checkbox')

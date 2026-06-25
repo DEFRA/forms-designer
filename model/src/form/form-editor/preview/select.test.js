@@ -124,6 +124,7 @@ describe('SelectQuestion', () => {
         items: [],
         optional: false,
         shortDesc: 'list',
+        errorDesc: '',
         content: ''
       })
     )

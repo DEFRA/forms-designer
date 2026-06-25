@@ -6,6 +6,7 @@ import * as forms from '~/src/lib/forms.js'
 import {
   editorViewModel,
   getFormSpecificNavigation,
+  handleOfflineAsStatus,
   listViewModel,
   overviewViewModel
 } from '~/src/models/forms/library.js'
@@ -313,7 +314,7 @@ describe('Forms Library Models', () => {
               {
                 text: 'Make draft live',
                 attributes: {
-                  formaction: `${formPath}/make-draft-live`
+                  formaction: `${formPath}/manage-form/make-draft-live`
                 }
               }
             ],
@@ -361,7 +362,7 @@ describe('Forms Library Models', () => {
               {
                 text: 'Make draft live',
                 attributes: {
-                  formaction: `${formPath}/make-draft-live`
+                  formaction: `${formPath}/manage-form/make-draft-live`
                 }
               }
             ],
@@ -402,11 +403,16 @@ describe('Forms Library Models', () => {
           },
           notification: notificationMessage,
           formManage: {
-            action: `${formPath}/create-draft-from-live`,
+            action: `${formPath}/manage-form/create-draft-from-live`,
             method: 'POST',
             buttons: [
               {
                 text: 'Create draft to edit'
+              },
+              {
+                text: 'Take form offline',
+                href: '/library/test-form-slug/manage-form/take-offline',
+                classes: 'govuk-button--secondary'
               }
             ]
           }
@@ -1266,10 +1272,7 @@ describe('Forms Library Models', () => {
               totalItems: 30
             },
             search: {
-              status: /** @type {FormStatus[]} */ ([
-                FormStatus.Draft,
-                FormStatus.Live
-              ])
+              status: [FormStatus.Draft, FormStatus.Live]
             }
           }
         }
@@ -1300,6 +1303,60 @@ describe('Forms Library Models', () => {
           }
         ])
       })
+    })
+  })
+
+  describe('handleOfflineAsStatus', () => {
+    it('should ignore if no statuses', () => {
+      const searchMeta = {}
+      const filtersMeta = {
+        authors: [],
+        organisations: []
+      }
+      const expectedSearchMeta = {}
+      const expectedFiltersMeta = {
+        authors: [],
+        organisations: []
+      }
+      handleOfflineAsStatus(searchMeta, filtersMeta)
+      expect(searchMeta).toEqual(expectedSearchMeta)
+      expect(filtersMeta).toEqual(expectedFiltersMeta)
+    })
+
+    it('should add offline if statuses exist', () => {
+      const searchMeta = {}
+      const filtersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: []
+      }
+      const expectedSearchMeta = {}
+      const expectedFiltersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: ['offline']
+      }
+      handleOfflineAsStatus(searchMeta, filtersMeta)
+      expect(searchMeta).toEqual(expectedSearchMeta)
+      expect(filtersMeta).toEqual(expectedFiltersMeta)
+    })
+
+    it('should add offline to both filter and search meta', () => {
+      const searchMeta = { offline: true, status: [] }
+      const filtersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: []
+      }
+      const expectedSearchMeta = { offline: true, status: ['offline'] }
+      const expectedFiltersMeta = {
+        authors: [],
+        organisations: [],
+        statuses: ['offline']
+      }
+      handleOfflineAsStatus(searchMeta, filtersMeta)
+      expect(searchMeta).toEqual(expectedSearchMeta)
+      expect(filtersMeta).toEqual(expectedFiltersMeta)
     })
   })
 })

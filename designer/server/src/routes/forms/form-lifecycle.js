@@ -22,13 +22,51 @@ import { protectMetadataEditOfLiveForm } from '~/src/routes/forms/route-helpers.
 
 const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
+/**
+ * @param {Request} request
+ * @param {ResponseToolkit} h
+ * @param {(formId: string, token: string) => Promise<unknown>} operation
+ * @param {string} successMessage
+ * @param {string} failureMessage
+ * @param {string} notificationText
+ */
+async function genericFormAction(
+  request,
+  h,
+  operation,
+  successMessage,
+  failureMessage,
+  notificationText
+) {
+  const { token } = request.auth.credentials
+  const { yar } = request
+  const { slug } = request.params
+  const form = await forms.get(slug, token)
+
+  try {
+    await operation(form.id, token)
+
+    logger.info(`${successMessage} - form '${slug}' - formId: ${form.id}`)
+
+    yar.flash(sessionNames.successNotification, notificationText)
+
+    return h.redirect(formOverviewPath(slug))
+  } catch (err) {
+    logger.error(
+      err,
+      `${failureMessage} - form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
+    )
+    throw err
+  }
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
   ({
     method: 'GET',
-    path: '/library/{slug}/make-draft-live',
+    path: '/library/{slug}/manage-form/make-draft-live',
     async handler(request, h) {
       const { yar } = request
       const { token } = request.auth.credentials
@@ -62,7 +100,7 @@ export default [
    */
   ({
     method: 'POST',
-    path: '/library/{slug}/make-draft-live',
+    path: '/library/{slug}/manage-form/make-draft-live',
     async handler(request, h) {
       const { yar } = request
       const { token } = request.auth.credentials
@@ -102,7 +140,9 @@ export default [
 
           yar.flash(sessionNames.errorList, buildSimpleErrorList([err.message]))
 
-          return h.redirect(`${formOverviewPath(form.slug)}/make-draft-live`)
+          return h.redirect(
+            `${formOverviewPath(form.slug)}/manage-form/make-draft-live`
+          )
         }
 
         logger.error(
@@ -127,35 +167,100 @@ export default [
    * @satisfies {ServerRoute<{ Params: FormBySlugInput }>}
    */
   ({
-    method: 'POST',
-    path: '/library/{slug}/create-draft-from-live',
+    method: 'GET',
+    path: '/library/{slug}/manage-form/take-offline',
     async handler(request, h) {
-      const { yar } = request
       const { token } = request.auth.credentials
       const { slug } = request.params
-
       const form = await forms.get(slug, token)
+      const formDefinition = await forms.getLiveFormDefinition(form.id, token)
 
-      try {
-        await forms.createDraft(form.id, token)
-
-        logger.info(
-          `[draftCreated] Draft successfully created from live form '${slug}' - formId: ${form.id}`
+      return h.view(
+        CONFIRMATION_PAGE_VIEW,
+        formLifecycle.takeFormOfflineConfirmationPageViewModel(
+          form,
+          formDefinition,
+          []
         )
-
-        yar.flash(
-          sessionNames.successNotification,
-          notifications.FORM_DRAFT_CREATED
-        )
-
-        return h.redirect(formOverviewPath(slug))
-      } catch (err) {
-        logger.error(
-          err,
-          `[draftCreationFailed] Failed to create draft from live form '${slug}' - ${getErrorMessage(err)} - formId: ${form.id}`
-        )
-        throw err
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormPublish}`]
+        }
       }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: '/library/{slug}/manage-form/make-online',
+    handler(request, h) {
+      return genericFormAction(
+        request,
+        h,
+        forms.makeOnline,
+        '[makeOnlineAgain] Successfully made offline form online again',
+        '[makeOnlineAgainFailed] Failed to make offline form online again',
+        notifications.FORM_REPUBLISH_ONLINE
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormPublish}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'POST',
+    path: '/library/{slug}/manage-form/take-offline',
+    handler(request, h) {
+      return genericFormAction(
+        request,
+        h,
+        forms.takeOffline,
+        '[takeOffline] Successfully took form offline',
+        '[takeOfflineFailed] Failed to take form offline',
+        notifications.FORM_TAKEN_OFFLINE
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: {
+          entity: 'user',
+          scope: [`+${Scopes.FormPublish}`]
+        }
+      }
+    }
+  }),
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'POST',
+    path: '/library/{slug}/manage-form/create-draft-from-live',
+    async handler(request, h) {
+      return genericFormAction(
+        request,
+        h,
+        forms.createDraft,
+        '[draftCreated] Draft successfully created from live form',
+        '[draftCreationFailed] Failed to create draft from live form',
+        notifications.FORM_DRAFT_CREATED
+      )
     },
     options: {
       auth: {
@@ -280,6 +385,6 @@ export default [
 ]
 
 /**
- * @import { FormBySlugInput } from '@defra/forms-model'
- * @import { ServerRoute } from '@hapi/hapi'
+ * @import { FormBySlugInput, FormMetadata } from '@defra/forms-model'
+ * @import { Request, ResponseToolkit, ServerRoute } from '@hapi/hapi'
  */

@@ -182,8 +182,13 @@ export function guidanceViewModel(
   const sectionInfo = page
     ? getSectionForPage(definition, page, metadata.slug)
     : undefined
-  // prettier-ignore
-  const previewModel = getGuidancePreviewModel(page, previewPageUrl, guidanceTextVal, sectionInfo)
+  const previewModel = getGuidancePreviewModel(
+    page,
+    previewPageUrl,
+    guidanceTextVal,
+    sectionInfo
+  )
+
   return {
     ...baseModelFields(metadata.slug, pageTitle, formTitle, formCaptionTitle),
     fields: {

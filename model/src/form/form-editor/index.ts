@@ -276,6 +276,12 @@ export const shortDescriptionSchema = Joi.string()
   .required()
   .description('Brief description of the question for internal use')
 
+export const errorDescriptionSchema = Joi.string()
+  .custom(rtrimOnly)
+  .allow('')
+  .optional()
+  .description('Description that will be displayed in error messages')
+
 export const pageHeadingAndGuidanceSchema = Joi.string()
   .trim()
   .optional()
@@ -496,8 +502,9 @@ type GenericRuleOptions<K extends string, T> = Omit<GetRuleOptions, 'args'> & {
   args: Record<K, T>
 }
 
-interface DSLSchema<TSchema = Record<string, unknown>[]>
-  extends ArraySchema<TSchema> {
+interface DSLSchema<
+  TSchema = Record<string, unknown>[]
+> extends ArraySchema<TSchema> {
   rowSeparator: (rowSep: string | RegExp) => DSLSchema<TSchema>
   row: (rowSep: string | RegExp) => DSLSchema<TSchema>
   colSeparator: (colSep: string | RegExp) => DSLSchema<TSchema>
@@ -678,6 +685,7 @@ export const questionDetailsFullSchema = {
   regexSchema,
   rowsSchema,
   shortDescriptionSchema,
+  errorDescriptionSchema,
   suffixSchema,
   tabularDataTypesSchema,
   usePostcodeLookupSchema,
@@ -706,7 +714,7 @@ export const formEditorInputPageSchema = Joi.object<FormEditorInputPage>()
   .required()
   .description('Input schema for creating a new page in the form editor')
 
-export const formEditorInputheckAnswersSettingsKeys = {
+export const formEditorInputCheckAnswersSettingsKeys = {
   declarationText: shortDescriptionSchema
 }
 
@@ -716,13 +724,14 @@ export const formEditorInputheckAnswersSettingsKeys = {
  */
 export const formEditorInputCheckAnswersSettingSchema =
   Joi.object<FormEditorInputCheckAnswersSettings>()
-    .keys(formEditorInputheckAnswersSettingsKeys)
+    .keys(formEditorInputCheckAnswersSettingsKeys)
     .required()
     .description('Configuration for the check-answers page')
 
 export const formEditorInputQuestionKeys = {
   question: questionSchema,
   shortDescription: shortDescriptionSchema,
+  errorDescription: errorDescriptionSchema,
   hintText: hintTextSchema,
   questionOptional: questionOptionalSchema
 }
@@ -762,6 +771,7 @@ export function govukFieldValueIsString(
     'question',
     'hintText',
     'shortDescription',
+    'errorDescription',
     'autoCompleteOptions',
     'classes',
     'prefix',
