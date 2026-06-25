@@ -13,29 +13,32 @@
         {% endfor %}</ul>
       </div>
       {% endif %}
-      <div id="search-buttons--header-top" class="govuk-button-group govuk-!-margin-bottom-4">
-        {{ govukButton({
-          text: 'Apply filters'
-        }) }}
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-visually-hidden">Select conditions to filter pages by</legend>
+        <div id="search-buttons--header-top" class="govuk-button-group govuk-!-margin-bottom-4">
+          {{ govukButton({
+            text: 'Apply filters'
+          }) }}
 
-        <a href="?" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-govuk-button-init="">
-          Clear filters
-        </a>
-      </div>
-      <div>
-        {{ govukCheckboxes(conditions.available) }}
-      </div>
-      {% if conditions.available.items | length > 5 %}
-      <div id="search-buttons--header-bottom" class="govuk-button-group govuk-!-margin-bottom-4">
-        {{ govukButton({
-          text: 'Apply filters'
-        }) }}
+          <a href="?" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-govuk-button-init="">
+            Clear filters
+          </a>
+        </div>
+        <div>
+          {{ govukCheckboxes(conditions.available) }}
+        </div>
+        {% if conditions.available.items | length > 5 %}
+        <div id="search-buttons--header-bottom" class="govuk-button-group govuk-!-margin-bottom-4">
+          {{ govukButton({
+            text: 'Apply filters'
+          }) }}
 
-        <a href="?" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-govuk-button-init="">
-          Clear filters
-        </a>
-      </div>
-      {% endif %}
+          <a href="?" role="button" draggable="false" class="govuk-button govuk-button--secondary" data-module="govuk-button" data-govuk-button-init="">
+            Clear filters
+          </a>
+        </div>
+        {% endif %}
+      </fieldset>
       {% endif %}
 
       {% if conditions.notAvailable | length %}
