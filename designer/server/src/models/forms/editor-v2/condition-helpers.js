@@ -65,9 +65,22 @@ export function toPresentationHtmlV2(conditionWrapper, definition) {
  */
 export function getReferencedComponentNamesV2(conditionWrapper, definition) {
   const conditionAsV1 = getConditionAsV1(conditionWrapper, definition)
-  return conditionAsV1.value.conditions
-    .map((cond) => ('field' in cond ? cond.field.name : undefined))
-    .filter((elem) => elem !== undefined)
+
+  /**
+   * A single V2 condition can expand into a nested group (multi-select list
+   * conditions), so recurse to collect field names from grouped conditions too.
+   * @param {(ConditionData | ConditionRefData | ConditionGroupData)[]} conditions
+   * @returns {string[]}
+   */
+  const collectNames = (conditions) =>
+    conditions.flatMap((cond) => {
+      if ('conditions' in cond) {
+        return collectNames(cond.conditions)
+      }
+      return 'field' in cond ? [cond.field.name] : []
+    })
+
+  return collectNames(conditionAsV1.value.conditions)
 }
 
 /**
@@ -103,5 +116,5 @@ export function getPageConditionDetails(definition, pageId) {
 }
 
 /**
- * @import { ConditionDetails, ConditionWrapper, FormDefinition, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
+ * @import { ConditionData, ConditionDetails, ConditionGroupData, ConditionRefData, ConditionWrapper, FormDefinition, ConditionWrapperV2, RuntimeFormModel } from '@defra/forms-model'
  */

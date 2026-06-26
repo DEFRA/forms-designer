@@ -257,6 +257,81 @@ describe('editor-v2 - condition model', () => {
       )
       expect(res.operator?.value).toBeUndefined()
     })
+
+    test('should flag AND combination for a single-answer list with "is not"', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [{ id: 'comp1', type: ComponentType.RadiosField }],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1',
+        operator: OperatorName.IsNot
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.isAndCombination).toBe(true)
+    })
+
+    test('should not flag AND combination for a single-answer list with "is"', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [{ id: 'comp1', type: ComponentType.RadiosField }],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1',
+        operator: OperatorName.Is
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.isAndCombination).toBe(false)
+    })
+
+    test('should not flag AND combination for a checkbox list with "is not"', () => {
+      const definition = buildDefinition()
+      const componentItems = [
+        {
+          page: [],
+          number: 1,
+          components: [{ id: 'comp1', type: ComponentType.CheckboxesField }],
+          group: false
+        }
+      ]
+      const item = {
+        componentId: 'comp1',
+        operator: OperatorName.IsNot
+      }
+      const res = buildConditionsFields(
+        0,
+        // @ts-expect-error - complex type
+        componentItems,
+        item,
+        undefined,
+        definition
+      )
+      expect(res.isAndCombination).toBe(false)
+    })
   })
 })
 

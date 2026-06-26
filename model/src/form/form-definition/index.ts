@@ -15,7 +15,11 @@ import {
   type ContentComponentsDef,
   type FileUploadFieldComponent
 } from '~/src/components/types.js'
-import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
+import {
+  ConditionType,
+  Coordinator,
+  OperatorName
+} from '~/src/conditions/enums.js'
 import {
   type ConditionData,
   type ConditionDataV2,
@@ -112,7 +116,12 @@ export const listItemIdValidator = (
     return value
   }
 
-  const conditionValue = helpers.state.ancestors[0]
+  // `itemId` is normally an array, so the condition value is one level up from
+  // each entry being validated. For a legacy bare-string `itemId` it is the
+  // nearest ancestor instead, so locate it by shape rather than fixed position.
+  const conditionValue = helpers.state.ancestors.find(
+    isConditionListItemRefValueData
+  )
 
   if (!isConditionListItemRefValueData(conditionValue)) {
     return value
@@ -254,11 +263,17 @@ const conditionListItemRefDataSchemaV2 =
         })
         .description('The id of the list')
         .error(checkErrors(FormDefinitionError.RefConditionListId)),
-      itemId: Joi.string()
-        .trim()
+      itemId: Joi.array()
+        .single()
+        .items(Joi.string().trim().custom(listItemIdValidator))
+        .min(1)
         .required()
-        .description('The id of the list item')
-        .custom(listItemIdValidator)
+        .description('The ids of the selected list items.'),
+      itemsCoordinator: Joi.string()
+        .trim()
+        .valid(...Object.values(Coordinator))
+        .optional()
+        .description('How multiple checkbox selections are combined (and/or)')
     })
 
 const relativeDateValueDataSchemaV2 = Joi.object<RelativeDateValueDataV2>()

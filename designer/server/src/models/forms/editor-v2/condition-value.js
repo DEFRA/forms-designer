@@ -3,6 +3,7 @@ import {
   ConditionType,
   DateDirections,
   DateUnits,
+  getConditionListItemIds,
   getYesNoList,
   isConditionNumberValueDataV2,
   isConditionStringValueDataV2
@@ -17,6 +18,7 @@ import {
 const dateUnits = Object.values(DateUnits)
 const dateDirections = Object.values(DateDirections)
 const GOVUK_RADIOS_SMALL = 'govuk-radios--small'
+const GOVUK_CHECKBOXES_SMALL = 'govuk-checkboxes--small'
 const GOVUK_INPUT_WIDTH_10 = 'govuk-input--width-10'
 const GOVUK_LABEL_S = 'govuk-label--s'
 const GOVUK_FIELDSET_LEGEND_S = 'govuk-fieldset__legend--s'
@@ -217,6 +219,11 @@ function buildListItemValueField(
   const valueObj =
     /** @type { ConditionListItemRefValueDataV2 | undefined } */ (item.value)
 
+  // Reads the `itemId` value, which is an array for new multi-select
+  // conditions or a single string for legacy ones, so pre-existing conditions
+  // render with the correct options pre-checked.
+  const selectedItemIds = getConditionListItemIds(valueObj)
+
   return {
     id: `items[${idx}].value.itemId`,
     name: `items[${idx}][value][itemId]`,
@@ -226,14 +233,15 @@ function buildListItemValueField(
         classes: GOVUK_FIELDSET_LEGEND_S
       }
     },
-    classes: GOVUK_RADIOS_SMALL,
-    value: valueObj?.itemId,
+    classes: GOVUK_CHECKBOXES_SMALL,
     items: getListFromComponent(selectedComponent, definition)?.items.map(
       (itm, idx2) => {
+        const itemValue = itm.id ?? itm.value
         return {
           text: itm.text,
-          value: itm.id ?? itm.value,
-          id: createSequentialId('itemId', idx, idx2)
+          value: itemValue,
+          id: createSequentialId('itemId', idx, idx2),
+          checked: selectedItemIds.includes(`${itemValue}`)
         }
       }
     ),

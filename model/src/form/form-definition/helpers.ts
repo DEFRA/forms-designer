@@ -45,6 +45,23 @@ export function isConditionListItemRefValueData(
 }
 
 /**
+ * Normalises a list item ref condition value to an array of item ids. `itemId`
+ * is normally an array, but may be a bare string for legacy conditions saved
+ * before multi-select support.
+ * @param { ConditionListItemRefValueDataV2 | undefined } value
+ * @returns { string[] }
+ */
+export function getConditionListItemIds(
+  value: ConditionListItemRefValueDataV2 | undefined
+): string[] {
+  if (!value?.itemId) {
+    return []
+  }
+
+  return Array.isArray(value.itemId) ? value.itemId : [value.itemId]
+}
+
+/**
  * Returns an array of all hidden fields in a form
  * @param definition - form definition
  */

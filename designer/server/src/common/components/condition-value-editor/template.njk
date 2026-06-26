@@ -1,5 +1,6 @@
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/date-input/macro.njk" import govukDateInput %}
@@ -11,7 +12,14 @@
   {% case "NumberValue" %}
     {{ govukInput(params.value) }}
   {% case "ListItemRef" %}
-    {{ govukRadios(params.value) }}
+    {% if params.isCheckboxList %}
+      {{ govukRadios(params.itemsCoordinator) }}
+    {% elif params.isAndCombination %}
+      <p class="govuk-body">Multiple selections will result in all of them meeting the condition (AND).</p>
+    {% else %}
+      <p class="govuk-body">Multiple selections will result in any of them meeting the condition (OR).</p>
+    {% endif %}
+    {{ govukCheckboxes(params.value) }}
   {% case "BooleanValue" %}
     {{ govukRadios(params.value) }}
   {% case "DateValue" %}

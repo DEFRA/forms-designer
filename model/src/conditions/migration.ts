@@ -1,12 +1,15 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { isConditionalType } from '~/src/components/helpers.js'
+import { type ComponentDef } from '~/src/components/types.js'
 import {
-  type ComponentDef,
-  type ConditionalComponentType
-} from '~/src/components/types.js'
-import { ConditionType, type Coordinator } from '~/src/conditions/enums.js'
+  ConditionType,
+  Coordinator,
+  OperatorName
+} from '~/src/conditions/enums.js'
 import {
   type ConditionData,
   type ConditionDataV2,
+  type ConditionGroupData,
   type ConditionListItemRefValueDataV2,
   type ConditionRefData,
   type ConditionRefDataV2,
@@ -14,6 +17,7 @@ import {
   type RelativeDateValueData,
   type RelativeDateValueDataV2
 } from '~/src/conditions/types.js'
+import { getConditionListItemIds } from '~/src/form/form-definition/helpers.js'
 import {
   type ConditionWrapper,
   type ConditionWrapperV2,
@@ -57,29 +61,97 @@ function getListItem(model: RuntimeFormModel, listId: string, itemId: string) {
   const foundList = model.getListById(listId)
 
   if (!foundList) {
-    throw Error(`List ${listId} not found`)
+    throw new Error(`List ${listId} not found`)
   }
 
   const item = foundList.items.find((item) => item.id === itemId)
 
   if (!item) {
-    throw Error(`List item ${itemId} not found`)
+    throw new Error(`List item ${itemId} not found`)
   }
 
   return item
 }
 
-function createConditionValueDataFromListItemRefV2(
+function createConditionValueDataListFromListItemRefV2(
   condition: ConditionDataV2,
   model: RuntimeFormModel
-): ConditionValueData {
+): ConditionValueData[] {
   const value = condition.value as ConditionListItemRefValueDataV2
-  const refValue = getListItem(model, value.listId, value.itemId)
+  const itemIds = getConditionListItemIds(value)
+
+  return itemIds.map((itemId) => {
+    const refValue = getListItem(model, value.listId, itemId)
+
+    return {
+      display: refValue.text,
+      type: ConditionType.Value,
+      value: refValue.value.toString()
+    }
+  })
+}
+
+/**
+ * Determine how multiple selected list items are combined within a single
+ * V2 condition once expanded into individual V1 conditions.
+ * - Checkbox questions use the author-chosen coordinator (default OR).
+ * - Single-answer questions (radio/autocomplete/select) combine with OR for a
+ *   positive match and AND for a negative ("is not any of these") match.
+ */
+function getListItemsInnerCoordinator(
+  componentType: ComponentDef['type'],
+  operator: OperatorName,
+  itemsCoordinator: Coordinator | undefined
+): Coordinator {
+  if (componentType === ComponentType.CheckboxesField) {
+    return itemsCoordinator ?? Coordinator.OR
+  }
+
+  return operator === OperatorName.IsNot ? Coordinator.AND : Coordinator.OR
+}
+
+/**
+ * Convert a V2 list item ref condition to V1. A single selected item produces
+ * a single condition (unchanged from legacy behaviour); multiple selected
+ * items produce a nested condition group so they are correctly parenthesised
+ * relative to sibling conditions.
+ */
+function convertListItemRefConditionV2(
+  model: RuntimeFormModel,
+  condition: ConditionDataV2,
+  component: ComponentDef,
+  field: ConditionData['field'],
+  coordinator: Coordinator | undefined
+): ConditionData | ConditionGroupData {
+  const value = condition.value as ConditionListItemRefValueDataV2
+  const values = createConditionValueDataListFromListItemRefV2(condition, model)
+
+  if (!values.length) {
+    throw new Error('List item ref condition has no selected items')
+  }
+
+  if (values.length === 1) {
+    return {
+      field,
+      operator: condition.operator,
+      value: values[0],
+      coordinator
+    }
+  }
+
+  const innerCoordinator = getListItemsInnerCoordinator(
+    component.type,
+    condition.operator,
+    value.itemsCoordinator
+  )
 
   return {
-    display: refValue.text,
-    type: ConditionType.Value,
-    value: refValue.value.toString()
+    conditions: values.map((itemValue, index) => ({
+      field,
+      operator: condition.operator,
+      value: itemValue,
+      coordinator: index === 0 ? coordinator : innerCoordinator
+    }))
   }
 }
 
@@ -157,17 +229,35 @@ function convertConditionDataV2(
   model: RuntimeFormModel,
   condition: ConditionDataV2,
   coordinator: Coordinator | undefined
-): ConditionData {
+): ConditionData | ConditionGroupData {
   const component = model.getComponentById(condition.componentId)
 
   if (!component) {
-    throw Error('Component not found')
+    throw new Error('Component not found')
+  }
+
+  if (!isConditionalType(component.type)) {
+    throw new Error(`Component ${component.name} does not support conditions`)
+  }
+
+  const field = {
+    name: component.name,
+    type: component.type,
+    display: component.title
+  }
+
+  if (isConditionListItemRefValueDataV2(condition)) {
+    return convertListItemRefConditionV2(
+      model,
+      condition,
+      component,
+      field,
+      coordinator
+    )
   }
 
   let newValue
-  if (isConditionListItemRefValueDataV2(condition)) {
-    newValue = createConditionValueDataFromListItemRefV2(condition, model)
-  } else if (isConditionStringValueDataV2(condition)) {
+  if (isConditionStringValueDataV2(condition)) {
     newValue = createConditionValueDataFromStringValueDataV2(condition)
   } else if (isConditionBooleanValueDataV2(condition)) {
     newValue =
@@ -181,15 +271,11 @@ function convertConditionDataV2(
   } else if (isConditionRelativeDateValueDataV2(condition)) {
     newValue = createConditionValueDataFromRelativeDateValueDataV2(condition)
   } else {
-    throw Error('Unsupported condition type')
+    throw new Error('Unsupported condition type')
   }
 
   return {
-    field: {
-      name: component.name,
-      type: component.type as ConditionalComponentType /** @todo fix this */,
-      display: component.title
-    },
+    field,
     operator: condition.operator,
     value: newValue,
     coordinator
@@ -204,7 +290,7 @@ function convertConditionRefDataFromV2(
   const refCondition = model.getConditionById(condition.conditionId)
 
   if (!refCondition) {
-    throw Error('Component not found')
+    throw new Error('Component not found')
   }
 
   return {
@@ -244,7 +330,7 @@ export function convertConditionWrapperFromV2(
     value: {
       name: conditionWrapper.id,
       conditions: conditionWrapper.items.map((condition, index) => {
-        let newCondition: ConditionData | ConditionRefData
+        let newCondition: ConditionData | ConditionRefData | ConditionGroupData
 
         if (isConditionDataV2(condition)) {
           newCondition = convertConditionDataV2(
