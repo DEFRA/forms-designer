@@ -24,6 +24,10 @@ const GOVUK_LABEL_S = 'govuk-label--s'
 const GOVUK_FIELDSET_LEGEND_S = 'govuk-fieldset__legend--s'
 const SELECT_A_VALUE = 'Select a value'
 
+// Lists longer than this get a client-side filter box (progressive
+// enhancement). Smaller lists are easy to scan, so they're left unenhanced.
+const OPTIONS_FILTER_THRESHOLD = 10
+
 /**
  * @param { ErrorDetailsItem | undefined } formError
  */
@@ -224,6 +228,18 @@ function buildListItemValueField(
   // render with the correct options pre-checked.
   const selectedItemIds = getConditionListItemIds(valueObj)
 
+  const items = (
+    getListFromComponent(selectedComponent, definition)?.items ?? []
+  ).map((itm, idx2) => {
+    const itemValue = itm.id ?? itm.value
+    return {
+      text: itm.text,
+      value: itemValue,
+      id: createSequentialId('itemId', idx, idx2),
+      checked: selectedItemIds.includes(`${itemValue}`)
+    }
+  })
+
   return {
     id: `items[${idx}].value.itemId`,
     name: `items[${idx}][value][itemId]`,
@@ -234,17 +250,12 @@ function buildListItemValueField(
       }
     },
     classes: GOVUK_CHECKBOXES_SMALL,
-    items: getListFromComponent(selectedComponent, definition)?.items.map(
-      (itm, idx2) => {
-        const itemValue = itm.id ?? itm.value
-        return {
-          text: itm.text,
-          value: itemValue,
-          id: createSequentialId('itemId', idx, idx2),
-          checked: selectedItemIds.includes(`${itemValue}`)
-        }
-      }
-    ),
+    items,
+    // Flags large lists so the template renders a filter-box hook that the
+    // client-side enhancement targets. Short lists are left untouched.
+    ...(items.length > OPTIONS_FILTER_THRESHOLD
+      ? { enableOptionsFilter: true }
+      : {}),
     ...insertValidationErrors(validation?.formErrors[`items[${idx}].value`])
   }
 }
