@@ -434,7 +434,7 @@ describe('Form lifecycle route handlers', () => {
       expect($heading).toBeInTheDocument()
 
       const $warning = container.getByText(
-        'Contact details are shown on the service unavailable page, Changes will be visible to users.'
+        'Contact details are shown on the service unavailable page. Changes will be visible to users.'
       )
       expect($warning).toBeInTheDocument()
 
@@ -476,7 +476,7 @@ describe('Form lifecycle route handlers', () => {
       })
 
       const options = {
-        method: 'POST',
+        method: 'GET',
         url: '/library/my-form/manage-form/make-online',
         auth
       }
@@ -499,7 +499,7 @@ describe('Form lifecycle route handlers', () => {
         .mockRejectedValueOnce(Boom.badRequest('An example error message here'))
 
       const options = {
-        method: 'POST',
+        method: 'GET',
         url: '/library/my-form/manage-form/make-online',
         auth
       }

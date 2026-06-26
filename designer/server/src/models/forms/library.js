@@ -233,14 +233,12 @@ export function overviewViewModel(metadata, formDef, notification) {
   const offlineButton = metadata.offline
     ? {
         text: 'Republish offline form',
-        classes: 'govuk-button--yellow',
-        attributes: {
-          formaction: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
-        }
+        classes: 'govuk-button--secondary',
+        href: `${formPath}/manage-form/${FormLibraryActions.MAKE_ONLINE}`
       }
     : {
         text: 'Take form offline',
-        classes: 'govuk-button--warning',
+        classes: 'govuk-button--secondary',
         href: `${formPath}/manage-form/${FormLibraryActions.TAKE_OFFLINE}`
       }
   const extraButtons = metadata.live ? [offlineButton] : []
@@ -279,8 +277,7 @@ export function overviewViewModel(metadata, formDef, notification) {
               text: 'Create draft to edit'
             }
           ].concat(extraButtons)
-        : // @ts-expect-error - dynamic button properties
-          draftButtons.concat(extraButtons),
+        : draftButtons.concat(extraButtons),
       links: metadata.draft
         ? [
             {

@@ -70,6 +70,11 @@ export interface SubmitPayload {
   sessionId: string
 
   /**
+   * The reference number of the user session
+   */
+  referenceNumber?: string
+
+  /**
    * The main form anwsers
    */
   main: SubmitRecord[]
