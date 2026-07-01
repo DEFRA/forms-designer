@@ -184,10 +184,11 @@ describe('Editor v2 question details routes', () => {
     expect($previewHeading).toBeInstanceOf(HTMLLabelElement)
     expect($previewHeading.getAttribute('for')).toContain('inputField')
 
-    expect($actions).toHaveLength(5)
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')
     expect($actions[4]).toHaveTextContent('Save and continue')
+    expect($actions[5]).toHaveTextContent('Accept and send')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[0].id).toBe('question')
@@ -237,7 +238,7 @@ describe('Editor v2 question details routes', () => {
     expect($cardTitle).toHaveTextContent('Question 2')
     expect($cardTitle).toHaveClass('editor-card-title')
 
-    expect($actions).toHaveLength(3)
+    expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
@@ -291,10 +292,11 @@ describe('Editor v2 question details routes', () => {
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
 
-    expect($actions).toHaveLength(5)
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')
     expect($actions[4]).toHaveTextContent('Save and continue')
+    expect($actions[5]).toHaveTextContent('Accept and send')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[3].id).toBe('errorDescription')

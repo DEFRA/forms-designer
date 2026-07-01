@@ -134,6 +134,11 @@ export class ErrorPreviewDomElements {
           return
         }
 
+        // Override placeholder if needed
+        if (elem.dataset.overrideplaceholder) {
+          placeholder = elem.dataset.overrideplaceholder
+        }
+
         const sourceText = Array.isArray(source)
           ? (source.find((el) => el?.value)?.value ?? '')
           : (source?.value ?? '')

@@ -15,6 +15,11 @@
         <a class="govuk-tabs__tab" href="#tab-errors" id="tab-errors-link" role="tab" aria-controls="tab-errors">Error messages</a>
       </li>
       {% endif %}
+      {% if params.checkYourAnswers %}
+      <li class="govuk-tabs__list-item" role="presentation">
+        <a class="govuk-tabs__tab" href="#tab-cya" id="tab-cya-link" role="tab" aria-controls="tab-errors">Check your answers</a>
+      </li>
+      {% endif %}
     </ul>
 
     <div class="govuk-tabs__panel" id="tab-preview" role="tabpanel" aria-labelledby="tab-preview-link" tabindex="0">
@@ -71,6 +76,42 @@
           }) %}
           {% endcall %}
       </div>
+
+      <div class="govuk-button-group govuk-!-margin-top-3">
+        {{ govukSkipLink({
+          text: "Skip to page overview",
+          href: "#page-overview",
+          attributes: {
+            "data-module": "govuk-skip-link"
+          }
+        }) }}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if params.checkYourAnswers %}
+      <div class="govuk-tabs__panel" id="tab-cya" role="tabpanel" aria-labelledby="tab-cya-link" tabindex="0">
+
+      <!-- Check Your Answers Content -->
+      <p class="govuk-body-s govuk-!-margin-bottom-4">
+        Preview of how the short description appears on the check your answers page
+      </p>
+
+      <h2 class="govuk-heading-l">Check your answers before sending your form</h2>
+      <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+        <div class="govuk-summary-list__row">
+          <dt class="govuk-summary-list__key">
+            <span id="cya-short-description-preview1" class="error-preview-shortDescription" data-overrideplaceholder="[Short description]">{{ params.checkYourAnswers.shortDescription }}</span>
+          </dt>
+          <dd class="govuk-summary-list__value">Answer goes here</dd>
+          <dd class="govuk-summary-list__actions">
+            <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+                Change<span class="govuk-visually-hidden error-preview-shortDescription" id="cya-short-description-preview2" data-overrideplaceholder="[Short description]">{{ params.checkYourAnswers.shortDescription }}</span>
+              </a>
+          </dd>
+        </div>
+      </dl>
+      <button type="button" class="govuk-button" data-module="govuk-button" disabled="" data-govuk-button-init="">Accept and send</button>
 
       <div class="govuk-button-group govuk-!-margin-top-3">
         {{ govukSkipLink({
