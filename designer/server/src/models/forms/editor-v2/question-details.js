@@ -364,7 +364,7 @@ export async function applyPaymentValues(
  * @param { ComponentType | undefined } questionType
  * @param {GovukField[]} fields
  */
-function getCheckYourAnswers(questionType, fields) {
+export function getCheckYourAnswers(questionType, fields) {
   if (questionType === ComponentType.PaymentField) {
     return undefined
   }

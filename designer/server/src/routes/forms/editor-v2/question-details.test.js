@@ -44,6 +44,7 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
+import { getCheckYourAnswers } from '~/src/models/forms/editor-v2/question-details.js'
 import {
   buildListFromDetails,
   saveList
@@ -1692,6 +1693,32 @@ describe('Editor v2 question details routes', () => {
           savedDetails
         ).options?.conditionalAmounts ?? []
       expect(savedAmounts).toEqual([{ amount: 50, condition: 'cond-disk' }])
+    })
+  })
+
+  describe('getCheckYourAnswers', () => {
+    test('should ignore if payment question', () => {
+      expect(
+        getCheckYourAnswers(ComponentType.PaymentField, [])
+      ).toBeUndefined()
+    })
+
+    test('should used default placeholder if no shortDesc field found', () => {
+      expect(getCheckYourAnswers(ComponentType.TextField, [])).toEqual({
+        shortDescription: '[Short description]'
+      })
+    })
+
+    test('should used shortDesc value if exists', () => {
+      const fields = [
+        {
+          name: 'shortDescription',
+          value: 'my short desc value'
+        }
+      ]
+      expect(getCheckYourAnswers(ComponentType.TextField, fields)).toEqual({
+        shortDescription: 'my short desc value'
+      })
     })
   })
 })
