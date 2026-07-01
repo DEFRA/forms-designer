@@ -1,0 +1,57 @@
+{% extends "layouts/page.njk" %}
+
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    description: pageDescription,
+    caption: pageCaption,
+    useNewMasthead: useNewMasthead,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink,
+    errorList: badRequestErrorList
+  }) %}
+
+    {% if notification | length %}
+      {% call govukNotificationBanner({
+          type: "success"
+        }) %}
+      <p class="govuk-notification-banner__heading">{{ notification }}</p>
+      {% endcall %}
+    {% endif %}
+
+    <h2 class="editor-card-title">{{ cardTitle }}</h2>
+
+    <form method="post" action="#">
+      {% if (translationsTable.rows | length) %}
+        {{ govukTable(translationsTable) }}
+      {% endif %}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+        {{ govukButton({
+          text: 'Preview form in Welsh',
+          classes: 'govuk-button--secondary'
+        }) }}
+
+        <a href="#" class="govuk-link govuk-link--no-visited-state" id="delete-translations">Delete Welsh translations</a>
+      </div>
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

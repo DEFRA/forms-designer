@@ -346,6 +346,12 @@ function buildRightSideActions(slug) {
       href: `/library/${slug}/editor-v2/download`,
       classes: BUTTON_SECONDARY_CLASS,
       attributes: null
+    },
+    {
+      text: 'Welsh translation',
+      href: editorv2Path(slug, 'welsh'),
+      classes: BUTTON_SECONDARY_CLASS,
+      attributes: null
     }
   ]
 }

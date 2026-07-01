@@ -32,6 +32,7 @@ import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import editorResponses from '~/src/routes/forms/editor-v2/responses.js'
 import editorSectionsReorder from '~/src/routes/forms/editor-v2/sections-reorder.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
+import editorTranslations from '~/src/routes/forms/editor-v2/translations.js'
 import editorUpload from '~/src/routes/forms/editor-v2/upload.js'
 import formLifecycle from '~/src/routes/forms/form-lifecycle.js'
 import history from '~/src/routes/forms/history.js'
@@ -71,6 +72,7 @@ export default [
   editorUpload,
   editorDownload,
   editorEditListResolve,
+  editorTranslations,
   history,
   library,
   formLifecycle,
