@@ -28,9 +28,16 @@ export default [
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
 
-      // const { source } = h.view('forms/editor-v2/partials/markdown-help')
+      const markdownHelpHtml = await request.render(
+        'forms/editor-v2/partials/markdown-help'
+      )
 
-      const model = translationsViewModel(metadata, definition, validation)
+      const model = translationsViewModel(
+        metadata,
+        definition,
+        markdownHelpHtml,
+        validation
+      )
 
       return h.view('forms/editor-v2/translations', model)
     },

@@ -15,6 +15,15 @@ import {
 import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import { formOverviewPath } from '~/src/models/links.js'
 
+/**
+ * @typedef {object} Translation
+ * @property {string} name - html element name
+ * @property {string} contentType - for display
+ * @property {string | undefined} englishContent - English text
+ * @property {string | undefined} welshContent - Welsh text
+ * @property {string} label - label associated with Welsh edit field
+ */
+
 // List of fields that require more than question, hint and short description
 const COMPLEX_FIELDS = [
   ComponentType.AutocompleteField,
@@ -41,9 +50,10 @@ function lookupTranslation(key, translations) {
  */
 function buildPageSection(page, definition, translations) {
   const pageId = /** @type {string} */ (page.id)
+  const pageNum = getPageNum(definition, pageId)
   return {
-    title: `Page ${getPageNum(definition, pageId)}`,
-    table: buildPage(page, translations)
+    title: `Page ${pageNum}`,
+    table: buildPage(page, pageNum, translations)
   }
 }
 
@@ -56,17 +66,22 @@ function buildPageSection(page, definition, translations) {
 function buildComponentSection(page, component, definition, translations) {
   const pageId = /** @type {string} */ (page.id)
   const componentId = /** @type {string} */ (component.id)
+  const pageNum = getPageNum(definition, pageId)
+  const questionNum = getQuestionNum(definition, pageId, componentId)
+
   return {
-    title: `Page ${getPageNum(definition, pageId)}, question ${getQuestionNum(definition, pageId, componentId)}`,
-    table: buildComponent(component, translations)
+    title: `Page ${pageNum}, question ${questionNum}`,
+    table: buildComponent(component, pageNum, questionNum, translations)
   }
 }
 
 /**
  * @param {Page} page
+ * @param {number} pageNum
  * @param {Record<string, string>} translations
+ * @returns {Translation[]}
  */
-function buildPage(page, translations) {
+function buildPage(page, pageNum, translations) {
   if (
     page.controller &&
     page.controller !== ControllerType.Page &&
@@ -89,7 +104,8 @@ function buildPage(page, translations) {
       name: `pages.${page.id}.title`,
       contentType: 'Page heading',
       englishContent: page.title,
-      welshContent: lookupTranslation(`pages.${page.id}.title`, translations)
+      welshContent: lookupTranslation(`pages.${page.id}.title`, translations),
+      label: `Welsh page heading - page ${pageNum}`
     })
   }
 
@@ -105,7 +121,8 @@ function buildPage(page, translations) {
       welshContent: lookupTranslation(
         `components.${guidance.id}.content`,
         translations
-      )
+      ),
+      label: `Welsh guidance text (markdown) - page ${pageNum}`
     })
   }
 
@@ -114,9 +131,11 @@ function buildPage(page, translations) {
 
 /**
  * @param {ComponentDef} component
+ * @param {number} pageNum
+ * @param {number} questionNum
  * @param {Record<string, string>} translations
  */
-function buildComponent(component, translations) {
+function buildComponent(component, pageNum, questionNum, translations) {
   if (IGNORE_FIELDS.includes(component.type)) {
     return []
   }
@@ -133,7 +152,8 @@ function buildComponent(component, translations) {
         welshContent: lookupTranslation(
           `components.${component.id}.title`,
           translations
-        )
+        ),
+        label: `Welsh question text - page ${pageNum}, question ${questionNum}`
       })
     }
     if (typed.hint) {
@@ -144,7 +164,8 @@ function buildComponent(component, translations) {
         welshContent: lookupTranslation(
           `components.${component.id}.hint`,
           translations
-        )
+        ),
+        label: `Welsh hint - page ${pageNum}, question ${questionNum}`
       })
     }
     fields.push({
@@ -154,32 +175,40 @@ function buildComponent(component, translations) {
       welshContent: lookupTranslation(
         `components.${component.id}.shortDescription`,
         translations
-      )
+      ),
+      label: `Welsh short description - page ${pageNum}, question ${questionNum}`
     })
   }
   return fields
 }
 
 /**
- * @param {{ name: string, contentType: string, englishContent: string | undefined, welshContent: string }} translation
+ * @param {Translation} translation
+ * @param {string} markdownHelpHtml
  */
-function buildTranslationHtml(translation) {
+function buildTranslationHtml(translation, markdownHelpHtml) {
+  const label = `<label class="govuk-label govuk-visually-hidden" for="${translation.name}">${translation.label}</label>`
   if (translation.contentType === 'Hint') {
-    return `<textarea class="govuk-textarea" rows="3" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>`
+    return `${label}<textarea class="govuk-textarea" rows="3" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>`
   }
 
   if (translation.contentType === 'Guidance text') {
-    return `<textarea class="govuk-textarea" rows="6" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>`
+    return `${label}<textarea class="govuk-textarea" rows="6" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>${markdownHelpHtml}`
   }
 
-  return `<div class="govuk-form-group"><input type="text" lang="cy" class="govuk-input" name="${translation.name}" id="${translation.name}" value="${translation.welshContent}"/></div>`
+  return `<div class="govuk-form-group">${label}<input type="text" lang="cy" class="govuk-input" name="${translation.name}" id="${translation.name}" value="${translation.welshContent}"/></div>`
 }
 
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {string} markdownHelpHtml
  */
-export function buildTranslationsTables(metadata, definition) {
+export function buildTranslationsTables(
+  metadata,
+  definition,
+  markdownHelpHtml
+) {
   const translationsJSON = /** @type {Record<string, string>} */ (
     // @ts-expect-error - dynamic language definition
     definition.metadata?.translations?.cy
@@ -205,9 +234,16 @@ export function buildTranslationsTables(metadata, definition) {
     caption: section.title,
     firstCellIsHeader: false,
     head: section.table.length
-      ? [{ text: '' }, { text: 'English content' }, { text: 'Welsh content' }]
+      ? [
+          {
+            html: '<span class="govuk-visually-hidden">Field type</span>',
+            classes: 'app-translation-table__empty-header-cell'
+          },
+          { text: 'English content' },
+          { text: 'Welsh content' }
+        ]
       : {},
-    classes: 'app-translation-table',
+    classes: 'govuk-!-margin-bottom-0 app-translation-table',
     rows: section.table.map((translation) => {
       return [
         {
@@ -215,10 +251,11 @@ export function buildTranslationsTables(metadata, definition) {
           classes: 'govuk-table__header'
         },
         {
-          text: translation.englishContent
+          text: translation.englishContent,
+          classes: 'govuk-!-text-break-word'
         },
         {
-          html: buildTranslationHtml(translation)
+          html: buildTranslationHtml(translation, markdownHelpHtml)
         }
       ]
     })
@@ -228,12 +265,14 @@ export function buildTranslationsTables(metadata, definition) {
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {string} markdownHelpHtml
  * @param {ValidationFailure<any>} [validation]
  * @param {string[]} [notification]
  */
 export function translationsViewModel(
   metadata,
   definition,
+  markdownHelpHtml,
   validation,
   notification
 ) {
@@ -260,7 +299,7 @@ export function translationsViewModel(
     },
     errorList,
     notification,
-    fieldTables: buildTranslationsTables(metadata, definition)
+    fieldTables: buildTranslationsTables(metadata, definition, markdownHelpHtml)
   }
 }
 

@@ -28,12 +28,14 @@
       {% endcall %}
     {% endif %}
 
-    <h2 class="editor-card-title">{{ cardTitle }}</h2>
-
     <form method="post" action="#">
       {% if (fieldTables | length) %}
         {% for fieldTable in fieldTables %}
-          {{ govukTable(fieldTable) }}
+          <div class="govuk-!-margin-bottom-6">
+            <div class="app-scrolling-wrapper" role="region" tabindex="0" aria-label="{{ fieldTable.caption }}">
+              {{ govukTable(fieldTable) }}
+            </div>
+          </div>
         {% endfor %}
       {% endif %}
 
