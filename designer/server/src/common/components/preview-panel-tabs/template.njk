@@ -17,7 +17,7 @@
       {% endif %}
       {% if params.checkYourAnswers %}
       <li class="govuk-tabs__list-item" role="presentation">
-        <a class="govuk-tabs__tab" href="#tab-cya" id="tab-cya-link" role="tab" aria-controls="tab-errors">Check your answers</a>
+        <a class="govuk-tabs__tab" href="#tab-cya" id="tab-cya-link" role="tab" aria-controls="tab-cya">Check your answers</a>
       </li>
       {% endif %}
     </ul>
@@ -90,7 +90,7 @@
     {% endif %}
 
     {% if params.checkYourAnswers %}
-      <div class="govuk-tabs__panel" id="tab-cya" role="tabpanel" aria-labelledby="tab-cya-link" tabindex="0">
+      <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="tab-cya" role="tabpanel" aria-labelledby="tab-cya-link" tabindex="0">
 
       <!-- Check Your Answers Content -->
       <p class="govuk-body-s govuk-!-margin-bottom-4">

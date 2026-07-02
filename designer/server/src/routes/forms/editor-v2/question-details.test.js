@@ -1703,7 +1703,7 @@ describe('Editor v2 question details routes', () => {
       ).toBeUndefined()
     })
 
-    test('should used default placeholder if no shortDesc field found', () => {
+    test('should use default placeholder if no shortDesc field found', () => {
       expect(getCheckYourAnswers(ComponentType.TextField, [])).toEqual({
         shortDescription: '[Short description]'
       })
