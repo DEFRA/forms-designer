@@ -3,7 +3,10 @@ import { createComponent } from '@defra/forms-engine-plugin/engine/components/he
 import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
-import { QuestionTypeDescriptions } from '~/src/common/constants/editor.js'
+import {
+  QuestionBaseSettings,
+  QuestionTypeDescriptions
+} from '~/src/common/constants/editor.js'
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { MASKED_KEY, getPaymentSecretsMasked } from '~/src/lib/secrets.js'
@@ -358,6 +361,22 @@ export async function applyPaymentValues(
 }
 
 /**
+ * @param { ComponentType | undefined } questionType
+ * @param {GovukField[]} fields
+ */
+export function getCheckYourAnswers(questionType, fields) {
+  if (questionType === ComponentType.PaymentField) {
+    return undefined
+  }
+
+  return {
+    shortDescription:
+      fields.find((x) => x.name === QuestionBaseSettings.ShortDescription)
+        ?.value ?? '[Short description]'
+  }
+}
+
+/**
  * @param {{ metadata: FormMetadata, definition: FormDefinition, pageId: string, questionId: string }} formCriteria
  * @param {string} stateId
  * @param {string} token
@@ -428,6 +447,7 @@ export async function questionDetailsViewModel(
       ? getPaymentConditionalAmountsViewModel({ definition, state })
       : undefined
 
+  const checkYourAnswers = getCheckYourAnswers(questionType, basePageFields)
   return {
     listDetails: getListDetails(state, questionFieldsOverride),
     state,
@@ -441,6 +461,7 @@ export async function questionDetailsViewModel(
     extraFields,
 
     errorTemplates,
+    checkYourAnswers,
     ...getCardHeadings(details),
     navigation: details.navigation,
     errorList,

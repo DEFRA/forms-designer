@@ -44,6 +44,7 @@ import {
   getQuestionSessionState,
   setQuestionSessionState
 } from '~/src/lib/session-helper.js'
+import { getCheckYourAnswers } from '~/src/models/forms/editor-v2/question-details.js'
 import {
   buildListFromDetails,
   saveList
@@ -184,10 +185,11 @@ describe('Editor v2 question details routes', () => {
     expect($previewHeading).toBeInstanceOf(HTMLLabelElement)
     expect($previewHeading.getAttribute('for')).toContain('inputField')
 
-    expect($actions).toHaveLength(5)
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')
     expect($actions[4]).toHaveTextContent('Save and continue')
+    expect($actions[5]).toHaveTextContent('Accept and send')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[0].id).toBe('question')
@@ -237,7 +239,7 @@ describe('Editor v2 question details routes', () => {
     expect($cardTitle).toHaveTextContent('Question 2')
     expect($cardTitle).toHaveClass('editor-card-title')
 
-    expect($actions).toHaveLength(3)
+    expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save and continue')
 
     const $fields = container.getAllByRole('textbox')
@@ -291,10 +293,11 @@ describe('Editor v2 question details routes', () => {
     expect($cardTitle).toHaveTextContent('Question 1')
     expect($cardTitle).toHaveClass('editor-card-title')
 
-    expect($actions).toHaveLength(5)
+    expect($actions).toHaveLength(6)
     expect($actions[2]).toHaveTextContent('Preview error messages')
     expect($actions[3]).toHaveTextContent('Preview page')
     expect($actions[4]).toHaveTextContent('Save and continue')
+    expect($actions[5]).toHaveTextContent('Accept and send')
 
     const $fields = container.getAllByRole('textbox')
     expect($fields[3].id).toBe('errorDescription')
@@ -1690,6 +1693,32 @@ describe('Editor v2 question details routes', () => {
           savedDetails
         ).options?.conditionalAmounts ?? []
       expect(savedAmounts).toEqual([{ amount: 50, condition: 'cond-disk' }])
+    })
+  })
+
+  describe('getCheckYourAnswers', () => {
+    test('should ignore if payment question', () => {
+      expect(
+        getCheckYourAnswers(ComponentType.PaymentField, [])
+      ).toBeUndefined()
+    })
+
+    test('should use default placeholder if no shortDesc field found', () => {
+      expect(getCheckYourAnswers(ComponentType.TextField, [])).toEqual({
+        shortDescription: '[Short description]'
+      })
+    })
+
+    test('should used shortDesc value if exists', () => {
+      const fields = [
+        {
+          name: 'shortDescription',
+          value: 'my short desc value'
+        }
+      ]
+      expect(getCheckYourAnswers(ComponentType.TextField, fields)).toEqual({
+        shortDescription: 'my short desc value'
+      })
     })
   })
 })

@@ -123,9 +123,9 @@ export class ErrorPreviewDomElements {
   /**
    * @param { HTMLInputElement | null | (HTMLInputElement | null)[] } source
    * @param {HTMLElementOrNull[]} targets
-   * @param {string} placeholder
+   * @param {string} defaultPlaceholder
    */
-  updateText(source, targets, placeholder) {
+  updateText(source, targets, defaultPlaceholder) {
     targets.forEach((elem) => {
       if (elem) {
         // Skip elements marked as fixed (e.g., location field base errors like "Enter easting and northing")
@@ -133,6 +133,10 @@ export class ErrorPreviewDomElements {
         if (elem.dataset.fixed === 'true') {
           return
         }
+
+        // Allows override of default placeholder if needed
+        const placeholder =
+          elem.dataset.overrideplaceholder ?? defaultPlaceholder
 
         const sourceText = Array.isArray(source)
           ? (source.find((el) => el?.value)?.value ?? '')

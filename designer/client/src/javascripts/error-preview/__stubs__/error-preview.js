@@ -37,3 +37,28 @@ export const panelHTML = `
           </a>
 </div>
 `
+
+export const panelCheckYourAnswersHTML = `
+<div class="govuk-tabs__panel" id="tab-cya" role="tabpanel" aria-labelledby="tab_tab-cya" tabindex="0">
+  <!-- Check Your Answers Content -->
+  <p class="govuk-body-s govuk-!-margin-bottom-4">
+    Preview of how the short description appears on the check your answers page
+  </p>
+
+  <h2 class="govuk-heading-l">Check your answers before sending your form</h2>
+  <dl class="govuk-summary-list govuk-!-margin-bottom-9">
+    <div class="govuk-summary-list__row">
+      <dt class="govuk-summary-list__key">
+        <span id="cya-short-description-preview1" class="error-preview-shortDescription" data-overrideplaceholder="[Short description]">[Short description]</span>
+      </dt>
+      <dd class="govuk-summary-list__value">Answer goes here</dd>
+      <dd class="govuk-summary-list__actions">
+        <a class="govuk-link govuk-link--disabled" href="#" aria-disabled="true">
+            Change<span class="govuk-visually-hidden error-preview-shortDescription" id="cya-short-description-preview2" data-overrideplaceholder="[Short description]">[Short description]</span>
+          </a>
+      </dd>
+    </div>
+  </dl>
+  <button type="button" class="govuk-button" data-module="govuk-button" disabled="" data-govuk-button-init="">Accept and send</button>
+</div>
+`

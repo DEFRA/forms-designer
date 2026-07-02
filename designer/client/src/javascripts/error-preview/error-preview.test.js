@@ -1,6 +1,7 @@
 import { ComponentType } from '@defra/forms-model'
 
 import {
+  panelCheckYourAnswersHTML,
   panelHTML,
   shortDescInputHTML
 } from '~/src/javascripts/error-preview/__stubs__/error-preview'
@@ -93,6 +94,21 @@ describe('error-preview', () => {
       res.updateText(sourceElem, targets, '[placeholder]')
       expect(targets[0].textContent).toBe('[placeholder]')
       expect(targets[targets.length - 1].textContent).toBe('[placeholder]')
+    })
+
+    it('should updateText with override of placeholder if target has override placeholder value', () => {
+      document.body.innerHTML =
+        shortDescInputHTML + panelHTML + panelCheckYourAnswersHTML
+      const advancedFields = fieldMappings[ComponentType.TextField]
+      const res = new ErrorPreviewDomElements(advancedFields)
+      expect(res).toBeDefined()
+      const targets = /** @type {HTMLInputElement[]} */ (
+        Array.from(document.querySelectorAll('.error-preview-shortDescription'))
+      )
+      const sourceElem = document.createElement('input')
+      sourceElem.value = ''
+      res.updateText(sourceElem, targets, '[placeholder]')
+      expect(targets[5].textContent).toBe('[Short description]')
     })
 
     it('should updateText with placeholder if both sources have an empty text value', () => {
