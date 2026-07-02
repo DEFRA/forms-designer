@@ -399,3 +399,63 @@
 .moj-action-bar__filter::after {
   width: 0;
 }
+
+.app-scrolling-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+}
+
+.app-scrolling-wrapper:focus {
+  outline: 3px solid #fd0;
+  outline-offset: 0;
+}
+
+.app-translation-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 36rem;
+}
+
+.app-translation-table .govuk-table__header,
+.app-translation-table .govuk-table__cell {
+  vertical-align: top;
+}
+
+.app-translation-table__col-gutter {
+  width: 11rem;
+}
+
+.app-translation-table__empty-header-cell {
+  width: 11rem;
+}
+
+.app-welsh-page__questions {
+  margin-top: 1.5rem;
+}
+
+.app-welsh-markdown-help-details .govuk-details__text {
+  border-left: none;
+  padding-left: 0;
+}
+
+.app-welsh-markdown-help pre {
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.app-translation-table__markdown-preview {
+  white-space: pre-wrap;
+  font-family: inherit;
+  margin: 0;
+  font-size: inherit;
+}
+
+.app-translation-table .govuk-table__cell:has(.app-welsh-markdown-help-details) .govuk-form-group {
+  margin-bottom: 0;
+}
+
+.app-welsh-markdown-help-details {
+  margin-bottom: 0;
+}

@@ -4,7 +4,6 @@ import { StatusCodes } from 'http-status-codes'
 import { sessionNames } from '~/src/common/constants/session-names.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { translationsViewModel } from '~/src/models/forms/editor-v2/translations.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -28,6 +27,8 @@ export default [
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
       const validation = getValidationErrorsFromSession(yar, errorKey)
+
+      // const { source } = h.view('forms/editor-v2/partials/markdown-help')
 
       const model = translationsViewModel(metadata, definition, validation)
 
@@ -55,9 +56,7 @@ export default [
       const { slug } = params
 
       // Redirect POST to GET without resubmit on back button
-      return h
-        .redirect(editorv2Path(slug,'pages'))
-        .code(StatusCodes.SEE_OTHER)
+      return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
     },
     options: {
       auth: {

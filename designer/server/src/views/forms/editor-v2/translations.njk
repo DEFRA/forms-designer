@@ -15,7 +15,7 @@
     description: pageDescription,
     caption: pageCaption,
     useNewMasthead: useNewMasthead,
-    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    classes: "govuk-grid-column-full",
     backLink: backLink,
     errorList: badRequestErrorList
   }) %}
@@ -31,8 +31,10 @@
     <h2 class="editor-card-title">{{ cardTitle }}</h2>
 
     <form method="post" action="#">
-      {% if (translationsTable.rows | length) %}
-        {{ govukTable(translationsTable) }}
+      {% if (fieldTables | length) %}
+        {% for fieldTable in fieldTables %}
+          {{ govukTable(fieldTable) }}
+        {% endfor %}
       {% endif %}
 
       <div class="govuk-button-group">
