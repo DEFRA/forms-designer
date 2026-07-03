@@ -6,6 +6,7 @@ import {
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
+import { getListFromComponent } from '~/src/lib/utils.js'
 import {
   baseModelFields,
   getFormSpecificNavigation,
@@ -16,24 +17,72 @@ import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js
 import { formOverviewPath } from '~/src/models/links.js'
 
 /**
+ * @typedef {object} TranslationAttributes
+ * @property {boolean} [hideBorder] - true if border is to be hidden
+ * @property {boolean} [hideDescription] - true if description is to be hidden
+ * @property {boolean} [styleEnglishAsHint] - true if english content is to be styled as grey hint text
+ */
+
+/**
  * @typedef {object} Translation
  * @property {string} name - html element name
  * @property {string} contentType - for display
  * @property {string | undefined} englishContent - English text
  * @property {string | undefined} welshContent - Welsh text
  * @property {string} label - label associated with Welsh edit field
+ * @property {TranslationAttributes} [attributes] - attributes such as hideBorder or hideDescription
  */
 
-// List of fields that require more than question, hint and short description
-const COMPLEX_FIELDS = [
-  ComponentType.AutocompleteField,
+const questionTextKey = 'title'
+const shortDescriptionKey = 'shortDescription'
+const hintKey = 'hint'
+const listItemTextKey = 'listItemText'
+const listItemHintKey = 'listItemHint'
+
+/** @type {Record<string, { jsonPrefix: string, jsonSuffix: string, displayName: string, labelPart: string }>} */
+const keyConfig = {
+  [questionTextKey]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'title',
+    displayName: 'Question text',
+    labelPart: 'question text'
+  },
+  [hintKey]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'hint',
+    displayName: 'Hint',
+    labelPart: 'hint'
+  },
+  [shortDescriptionKey]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'shortDescription',
+    displayName: 'Short description',
+    labelPart: 'short description'
+  },
+  [listItemTextKey]: {
+    jsonPrefix: 'listItems',
+    jsonSuffix: 'text',
+    displayName: 'Option',
+    labelPart: 'option'
+  },
+  [listItemHintKey]: {
+    jsonPrefix: 'listItems',
+    jsonSuffix: 'hint',
+    displayName: 'Option',
+    labelPart: 'hint for option'
+  }
+}
+
+// List of fields that require translation of option values
+const FIELDS_WITH_SELECTION_OPTIONS = [
   ComponentType.CheckboxesField,
-  ComponentType.DeclarationField,
   ComponentType.RadiosField,
   ComponentType.YesNoField
 ]
 
 const IGNORE_FIELDS = [ComponentType.Details]
+
+const SAVE_ERROR_MESSAGE = 'You must finish translating the whole form into Welsh before making this form live'
 
 /**
  * @param {string} key
@@ -41,6 +90,17 @@ const IGNORE_FIELDS = [ComponentType.Details]
  */
 function lookupTranslation(key, translations) {
   return translations[key] ?? ''
+}
+
+/**
+ * @param {object | string} val
+ * @returns {string}
+ */
+function drillDown(val) {
+  if (typeof val === 'object') {
+    return 'text' in val ? /** @type {string} */ (val.text) : ''
+  }
+  return val
 }
 
 /**
@@ -71,7 +131,51 @@ function buildComponentSection(page, component, definition, translations) {
 
   return {
     title: `Page ${pageNum}, question ${questionNum}`,
-    table: buildComponent(component, pageNum, questionNum, translations)
+    table: buildComponent(
+      definition,
+      component,
+      pageNum,
+      questionNum,
+      translations
+    )
+  }
+}
+
+/**
+ * @param {ComponentDef | Page | Item} entity
+ * @param {string} keyType
+ * @param {{ pageNum: number, questionNum: number , translations: Record<string, string>}} options
+ * @param {number} [itemNum]
+ * @param {TranslationAttributes} [attributes]
+ */
+function createRow(
+  entity,
+  keyType,
+  { pageNum, questionNum, translations },
+  itemNum,
+  attributes
+) {
+  const keyProperties = keyConfig[keyType]
+  const innerEnglishContent =
+    keyProperties.jsonSuffix in entity
+      // @ts-expect-error - dynamic lookup
+      ? drillDown(entity[keyProperties.jsonSuffix])
+      : ''
+
+  return {
+    name: `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`,
+    contentType: itemNum
+      ? `${keyProperties.displayName} ${itemNum}`
+      : keyProperties.displayName,
+    englishContent: innerEnglishContent,
+    welshContent: lookupTranslation(
+      `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`,
+      translations
+    ),
+    label: itemNum
+      ? `${keyProperties.labelPart} ${itemNum} - page ${pageNum}, question ${questionNum}`
+      : `${keyProperties.labelPart} - page ${pageNum}, question ${questionNum}`,
+    attributes
   }
 }
 
@@ -105,7 +209,7 @@ function buildPage(page, pageNum, translations) {
       contentType: 'Page heading',
       englishContent: page.title,
       welshContent: lookupTranslation(`pages.${page.id}.title`, translations),
-      label: `Welsh page heading - page ${pageNum}`
+      label: `page heading - page ${pageNum}`
     })
   }
 
@@ -122,7 +226,7 @@ function buildPage(page, pageNum, translations) {
         `components.${guidance.id}.content`,
         translations
       ),
-      label: `Welsh guidance text (markdown) - page ${pageNum}`
+      label: `guidance text (markdown) - page ${pageNum}`
     })
   }
 
@@ -130,54 +234,59 @@ function buildPage(page, pageNum, translations) {
 }
 
 /**
+ * @param {FormDefinition} definition
  * @param {ComponentDef} component
  * @param {number} pageNum
  * @param {number} questionNum
  * @param {Record<string, string>} translations
  */
-function buildComponent(component, pageNum, questionNum, translations) {
+function buildComponent(
+  definition,
+  component,
+  pageNum,
+  questionNum,
+  translations
+) {
   if (IGNORE_FIELDS.includes(component.type)) {
     return []
   }
 
   const fields = []
 
-  if (!COMPLEX_FIELDS.includes(component.type)) {
-    const typed = /** @type {InputFieldsComponentsDef} */ (component)
-    if (typed.title) {
-      fields.push({
-        name: `components.${component.id}.title`,
-        contentType: 'Question text',
-        englishContent: typed.title,
-        welshContent: lookupTranslation(
-          `components.${component.id}.title`,
-          translations
-        ),
-        label: `Welsh question text - page ${pageNum}, question ${questionNum}`
-      })
+  const options = { pageNum, questionNum, translations }
+
+  const typed = /** @type {InputFieldsComponentsDef} */ (component)
+  if (typed.title) {
+    fields.push(createRow(component, questionTextKey, options))
+  }
+  if (typed.hint) {
+    fields.push(createRow(component, hintKey, options))
+  }
+  fields.push(createRow(component, shortDescriptionKey, options))
+
+  if (FIELDS_WITH_SELECTION_OPTIONS.includes(component.type)) {
+    const list = getListFromComponent(component, definition)
+    if (list?.items.length) {
+      let itemNum = 0
+      for (const item of list.items) {
+        itemNum++
+        if (item.hint) {
+          fields.push(
+            createRow(item, listItemTextKey, options, itemNum, {
+              hideBorder: true
+            })
+          )
+          fields.push(
+            createRow(item, listItemHintKey, options, itemNum, {
+              hideDescription: true,
+              styleEnglishAsHint: true
+            })
+          )
+        } else {
+          fields.push(createRow(item, listItemTextKey, options, itemNum))
+        }
+      }
     }
-    if (typed.hint) {
-      fields.push({
-        name: `components.${component.id}.hint`,
-        contentType: 'Hint',
-        englishContent: typed.hint,
-        welshContent: lookupTranslation(
-          `components.${component.id}.hint`,
-          translations
-        ),
-        label: `Welsh hint - page ${pageNum}, question ${questionNum}`
-      })
-    }
-    fields.push({
-      name: `components.${component.id}.shortDescription`,
-      contentType: 'Short description',
-      englishContent: typed.shortDescription,
-      welshContent: lookupTranslation(
-        `components.${component.id}.shortDescription`,
-        translations
-      ),
-      label: `Welsh short description - page ${pageNum}, question ${questionNum}`
-    })
   }
   return fields
 }
@@ -185,29 +294,33 @@ function buildComponent(component, pageNum, questionNum, translations) {
 /**
  * @param {Translation} translation
  * @param {string} markdownHelpHtml
+ * @param {boolean} hasError
  */
-function buildTranslationHtml(translation, markdownHelpHtml) {
-  const label = `<label class="govuk-label govuk-visually-hidden" for="${translation.name}">${translation.label}</label>`
+function buildTranslationHtml(translation, markdownHelpHtml, hasError) {
+  const errorClass = hasError ? ' govuk-input--error' : ''
+  const label = `<label class="govuk-label govuk-visually-hidden" for="${translation.name}">Welsh ${translation.label}</label>`
   if (translation.contentType === 'Hint') {
-    return `${label}<textarea class="govuk-textarea" rows="3" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>`
+    return `${label}<textarea class="govuk-textarea${errorClass}" rows="3" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>`
   }
 
   if (translation.contentType === 'Guidance text') {
-    return `${label}<textarea class="govuk-textarea" rows="6" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>${markdownHelpHtml}`
+    return `${label}<textarea class="govuk-textarea${errorClass}" rows="6" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>${markdownHelpHtml}`
   }
 
-  return `<div class="govuk-form-group">${label}<input type="text" lang="cy" class="govuk-input" name="${translation.name}" id="${translation.name}" value="${translation.welshContent}"/></div>`
+  return `${label}<input type="text" lang="cy" class="govuk-input${errorClass}" name="${translation.name}" id="${translation.name}" value="${translation.welshContent}"/>`
 }
 
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} markdownHelpHtml
+ * @param {ErrorDetailsItem[]} errorList
  */
 export function buildTranslationsTables(
   metadata,
   definition,
-  markdownHelpHtml
+  markdownHelpHtml,
+  errorList
 ) {
   const translationsJSON = /** @type {Record<string, string>} */ (
     // @ts-expect-error - dynamic language definition
@@ -230,7 +343,7 @@ export function buildTranslationsTables(
     }
   }
 
-  return allSections.map((section) => ({
+  const asHtml = allSections.map((section) => ({
     caption: section.title,
     firstCellIsHeader: false,
     head: section.table.length
@@ -245,21 +358,35 @@ export function buildTranslationsTables(
       : {},
     classes: 'govuk-!-margin-bottom-0 app-translation-table',
     rows: section.table.map((translation) => {
+      const hideBorderClass = translation.attributes?.hideBorder
+        ? ' app-no-border-bottom'
+        : ''
+      const hasError = errorList.some(err => err.href === `#${translation.name}`)
       return [
         {
-          text: translation.contentType,
-          classes: 'govuk-table__header'
+          text: translation.attributes?.hideDescription
+            ? ''
+            : translation.contentType,
+          classes: `govuk-table__header${hideBorderClass}`
         },
         {
-          text: translation.englishContent,
-          classes: 'govuk-!-text-break-word'
+          html: translation.attributes?.styleEnglishAsHint
+          ? `<p class="govuk-body-s govuk-hint govuk-!-margin-bottom-0">${translation.englishContent}</p>`
+          : translation.englishContent,
+          classes: `govuk-!-text-break-word${hideBorderClass}`
         },
         {
-          html: buildTranslationHtml(translation, markdownHelpHtml)
+          html: `<div class="govuk-form-group">${buildTranslationHtml(translation, markdownHelpHtml, hasError)}</div`,
+          classes: hideBorderClass
         }
       ]
     })
   }))
+
+  return {
+    asHtml,
+    raw: allSections
+  }
 }
 
 /**
@@ -288,6 +415,7 @@ export function translationsViewModel(
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const errorList = buildErrorList(validation?.formErrors)
+  const errorSummary = errorList.length ? [{ text: SAVE_ERROR_MESSAGE }] : undefined
 
   return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
@@ -297,13 +425,13 @@ export function translationsViewModel(
     pageCaption: {
       text: pageCaption
     },
-    errorList,
+    errorList: errorSummary,
     notification,
-    fieldTables: buildTranslationsTables(metadata, definition, markdownHelpHtml)
+    fieldTables: buildTranslationsTables(metadata, definition, markdownHelpHtml, errorList).asHtml
   }
 }
 
 /**
- * @import { ComponentDef, InputFieldsComponentsDef, FormMetadata, FormDefinition, Page, PageQuestion } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ComponentDef, InputFieldsComponentsDef, FormMetadata, FormDefinition, Item, Page } from '@defra/forms-model'
+ * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  */

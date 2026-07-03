@@ -52,6 +52,7 @@ export const sessionNames = {
     ),
     editorCondition: /** @type {const} */ ('conditionValidationFailure'),
     editorSections: /** @type {const} */ ('sectionsValidationFailure'),
+    editorTranslations: /** @type {const} */ ('translationsValidationFailure'),
     manageUsers: /** @type {const} */ ('manageUsersValidationFailure'),
     upload: /** @type {const} */ ('uploadValidationFailure'),
     adminResetSaveAndExit: /** @type {const} */ (

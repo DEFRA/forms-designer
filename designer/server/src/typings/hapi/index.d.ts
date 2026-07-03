@@ -199,6 +199,12 @@ declare module '@hapi/yar' {
       id: string
       slug: string
     }>
+    [sessionNames.validationFailure.editorTranslations]: {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formErrors?: any
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      formValues?: any
+    }
   }
 
   interface YarValues {

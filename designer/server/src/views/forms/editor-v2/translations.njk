@@ -17,7 +17,7 @@
     useNewMasthead: useNewMasthead,
     classes: "govuk-grid-column-full",
     backLink: backLink,
-    errorList: badRequestErrorList
+    errorList: errorList
   }) %}
 
     {% if notification | length %}
@@ -27,6 +27,15 @@
       <p class="govuk-notification-banner__heading">{{ notification }}</p>
       {% endcall %}
     {% endif %}
+
+    <div class="app-pages-header__actions govuk-button-group">
+      <a href="welsh/upload" draggable="false" class="govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0">
+        Upload
+      </a>
+      <a href="welsh/download" draggable="false" class="govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0">
+        Download
+      </a>
+    </div>
 
     <form method="post" action="#">
       {% if (fieldTables | length) %}
