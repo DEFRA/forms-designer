@@ -14,7 +14,7 @@ import {
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * @typedef {object} TranslationAttributes
@@ -80,15 +80,23 @@ const FIELDS_WITH_SELECTION_OPTIONS = [
   ComponentType.YesNoField
 ]
 
-const IGNORE_FIELDS = [ComponentType.Details]
+const IGNORE_FIELDS = [
+  ComponentType.Details,
+  ComponentType.Html,
+  ComponentType.InsetText,
+  ComponentType.HiddenField
+]
 
-const SAVE_ERROR_MESSAGE = 'You must finish translating the whole form into Welsh before making this form live'
+const SAVE_ERROR_MESSAGE = 'Some invalid data keys were found'
 
 /**
  * @param {string} key
- * @param {Record<string, string>} translations
+ * @param { Record<string, string> | undefined } translations
  */
 function lookupTranslation(key, translations) {
+  if (!translations) {
+    return ''
+  }
   return translations[key] ?? ''
 }
 
@@ -158,8 +166,8 @@ function createRow(
   const keyProperties = keyConfig[keyType]
   const innerEnglishContent =
     keyProperties.jsonSuffix in entity
-      // @ts-expect-error - dynamic lookup
-      ? drillDown(entity[keyProperties.jsonSuffix])
+      ? // @ts-expect-error - dynamic lookup
+        drillDown(entity[keyProperties.jsonSuffix])
       : ''
 
   return {
@@ -314,10 +322,7 @@ function buildTranslationHtml(translation, markdownHelpHtml, hasError) {
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  */
-export function buildTranslationRows(
-  metadata,
-  definition
-) {
+export function buildTranslationRows(metadata, definition) {
   const translationsJSON = /** @type {Record<string, string>} */ (
     // @ts-expect-error - dynamic language definition
     definition.metadata?.translations?.cy
@@ -368,7 +373,9 @@ export function translationsViewModel(
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const errorList = buildErrorList(validation?.formErrors)
-  const errorSummary = errorList.length ? [{ text: SAVE_ERROR_MESSAGE }] : undefined
+  const errorSummary = errorList.length
+    ? [{ text: SAVE_ERROR_MESSAGE }]
+    : undefined
 
   const rows = buildTranslationRows(metadata, definition)
 
@@ -390,7 +397,9 @@ export function translationsViewModel(
       const hideBorderClass = translation.attributes?.hideBorder
         ? ' app-no-border-bottom'
         : ''
-      const hasError = errorList.some(err => err.href === `#${translation.name}`)
+      const hasError = errorList.some(
+        (err) => err.href === `#${translation.name}`
+      )
       return [
         {
           text: translation.attributes?.hideDescription
@@ -400,8 +409,8 @@ export function translationsViewModel(
         },
         {
           html: translation.attributes?.styleEnglishAsHint
-          ? `<p class="govuk-body-s govuk-hint govuk-!-margin-bottom-0">${translation.englishContent}</p>`
-          : translation.englishContent,
+            ? `<p class="govuk-body-s govuk-hint govuk-!-margin-bottom-0">${translation.englishContent}</p>`
+            : translation.englishContent,
           classes: `govuk-!-text-break-word${hideBorderClass}`
         },
         {
@@ -427,6 +436,53 @@ export function translationsViewModel(
 }
 
 /**
+ * Model to represent confirmation page dialog
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ */
+export function deleteConfirmationPageViewModel(metadata, definition) {
+  const backOrCancelUrl = editorv2Path(metadata.slug, 'welsh')
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+
+  return {
+    navigation,
+    backLink: {
+      href: backOrCancelUrl,
+      text: 'Back to Welsh translations'
+    },
+    useNewMasthead: true,
+    pageHeading: {
+      text: 'Are you sure you want to delete your Welsh translations?'
+    },
+    pageCaption: {
+      text: definition.name
+    },
+    warning: {
+      text: 'You cannot undo this action. You would need to enter Welsh translations again if you change your mind.'
+    },
+    bodyText:
+      '<p class="govuk-body">This will delete all Welsh translations you have entered for this form.</p><p class="govuk-body">Your English form is not deleted.</p><p class="govuk-body">&nbsp;</p>',
+    buttons: [
+      {
+        text: 'Delete Welsh translations',
+        classes: 'govuk-button--warning'
+      },
+      {
+        href: backOrCancelUrl,
+        text: 'Cancel',
+        classes: 'govuk-button--secondary'
+      }
+    ]
+  }
+}
+
+/**
  * @import { ComponentDef, InputFieldsComponentsDef, FormMetadata, FormDefinition, Item, Page } from '@defra/forms-model'
- * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

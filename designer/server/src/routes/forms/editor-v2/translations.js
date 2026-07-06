@@ -1,4 +1,4 @@
-import { getErrorMessage, Scopes } from '@defra/forms-model'
+import { Scopes, getErrorMessage } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -10,29 +10,41 @@ import { logger } from '~/src/common/helpers/logging/logger.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { getTranslationsAsExcel, validateWorkbook } from '~/src/models/forms/editor-v2/translations-excel.js'
-import { translationsViewModel } from '~/src/models/forms/editor-v2/translations.js'
+import {
+  getTranslationsAsExcel,
+  validateWorkbook
+} from '~/src/models/forms/editor-v2/translations-excel.js'
+import {
+  deleteConfirmationPageViewModel,
+  translationsViewModel
+} from '~/src/models/forms/editor-v2/translations.js'
 import { uploadViewModel } from '~/src/models/forms/editor-v2/upload.js'
 import { editorv2Path } from '~/src/models/links.js'
 
 export const ROUTE_FULL_PATH_PAGE = '/library/{slug}/editor-v2/welsh'
 export const ROUTE_FULL_PATH_DOWNLOAD = `${ROUTE_FULL_PATH_PAGE}/download`
 export const ROUTE_FULL_PATH_UPLOAD = `${ROUTE_FULL_PATH_PAGE}/upload`
+export const ROUTE_FULL_PATH_DELETE = `${ROUTE_FULL_PATH_PAGE}/delete`
 
 const errorKey = sessionNames.validationFailure.editorTranslations
 
 const translationsSchema = Joi.object({
   // Deliberately empty as we're using the validating unrecognised dynamic keys with a regex
-}).pattern(/^(?:components|pages|listItems)\.[0-9a-fA-F-]{8,}\.(?:title|hint|shortDescription|text)$/, Joi.string().trim())
+}).pattern(
+  /^(?:components|pages|listItems)\.[0-9a-fA-F-]{8,}\.(?:title|hint|shortDescription|text|content)$/,
+  Joi.string().trim().allow('')
+)
 
 const ERROR_MESSAGES = {
   SELECT_FILE: 'Select a file to upload',
   INVALID_XLSX_FILE: 'The selected file is not a valid XLSX file',
-  INVALID_FORM_DEFINITION: 'The selected file is not a valid translation file. {{ #reason }}',
+  INVALID_FORM_DEFINITION:
+    'The selected file is not a valid translation file. {{ #reason }}',
   UPLOAD_FAILED: 'The selected file could not be uploaded'
 }
 
-const UPLOAD_SUCCESS_MESSAGE = 'Your translations file was successfully uploaded'
+const UPLOAD_SUCCESS_MESSAGE =
+  'Your translations file was successfully uploaded'
 
 /**
  * Custom Joi validator for file upload - ensures a file was selected and is valid XLSX
@@ -52,9 +64,11 @@ export function validateFileSelected(value, helpers) {
     const workbook = xlsx.read(value)
     try {
       return validateWorkbook(workbook)
-    } catch(err) {
+    } catch (err) {
       const error = /** @type {{ message?: string }} */ (err)
-      return helpers.error('custom.invalidTranslationWorkbook', { reason: error.message })
+      return helpers.error('custom.invalidTranslationWorkbook', {
+        reason: error.message
+      })
     }
   } catch {
     return helpers.error('custom.invalidXlsx')
@@ -136,15 +150,15 @@ export default [
         'Your Welsh translations have been saved to this session'
       )
 
-      return h.redirect(editorv2Path(slug, 'welsh')).code(StatusCodes.SEE_OTHER)
+      return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
     },
     options: {
-      // validate: {
-      //   payload: translationsSchema,
-      //   failAction: (request, h, error) => {
-      //     return redirectWithErrors(request, h, error, errorKey)
-      //   }
-      // },
+      validate: {
+        payload: translationsSchema,
+        failAction: (request, h, error) => {
+          return redirectWithErrors(request, h, error, errorKey)
+        }
+      },
       auth: {
         mode: 'required',
         access: {
@@ -168,7 +182,10 @@ export default [
 
       try {
         const metadata = await forms.get(slug, token)
-        const definition = await forms.getDraftFormDefinition(metadata.id, token)
+        const definition = await forms.getDraftFormDefinition(
+          metadata.id,
+          token
+        )
         const buffer = getTranslationsAsExcel(metadata, definition)
 
         const now = new Date()
@@ -214,13 +231,10 @@ export default [
 
       const validation = yar.flash(errorKey).at(0)
 
-      return h.view(
-        'forms/editor-v2/translations-upload',
-        {
-          ...uploadViewModel(metadata, definition, validation),
-          downloadAction: editorv2Path(slug, 'welsh/download')
-        }
-      )
+      return h.view('forms/editor-v2/translations-upload', {
+        ...uploadViewModel(metadata, definition, validation),
+        downloadAction: editorv2Path(slug, 'welsh/download')
+      })
     },
     options: {
       auth: {
@@ -254,9 +268,7 @@ export default [
 
       await forms.updateDraftFormDefinition(metadata.id, definition, token)
 
-      yar.flash(
-        sessionNames.successNotification,
-        UPLOAD_SUCCESS_MESSAGE)
+      yar.flash(sessionNames.successNotification, UPLOAD_SUCCESS_MESSAGE)
 
       return h.redirect(editorv2Path(slug, 'welsh')).code(StatusCodes.SEE_OTHER)
     },
@@ -276,7 +288,8 @@ export default [
             .messages({
               'any.required': ERROR_MESSAGES.SELECT_FILE,
               'custom.invalidXlsx': ERROR_MESSAGES.INVALID_XLSX_FILE,
-              'custom.invalidTranslationWorkbook': ERROR_MESSAGES.INVALID_FORM_DEFINITION
+              'custom.invalidTranslationWorkbook':
+                ERROR_MESSAGES.INVALID_FORM_DEFINITION
             })
         }),
         failAction: (request, h, error) => {
@@ -303,8 +316,71 @@ export default [
         }
       }
     }
-  })
+  }),
 
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_FULL_PATH_DELETE,
+    async handler(request, h) {
+      const { auth, params } = request
+      const { slug } = params
+      const { token } = auth.credentials
+
+      const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+
+      return h.view(
+        'forms/confirmation-page',
+        deleteConfirmationPageViewModel(metadata, definition)
+      )
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormEdit}`] }
+      }
+    }
+  }),
+
+  /**
+   * @satisfies {ServerRoute}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH_DELETE,
+    async handler(request, h) {
+      const { auth, params, yar } = request
+      const { slug } = params
+      const { token } = auth.credentials
+
+      const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
+
+      // @ts-expect-error - dynamic type
+      if (definition.metadata.translations.cy) {
+        // @ts-expect-error - dynamic type
+        delete definition.metadata.translations.cy
+      }
+
+      await forms.updateDraftFormDefinition(metadata.id, definition, token)
+
+      yar.flash(
+        sessionNames.successNotification,
+        'Your Welsh translations have been deleted'
+      )
+
+      return h.redirect(editorv2Path(slug, 'pages')).code(StatusCodes.SEE_OTHER)
+    },
+    options: {
+      auth: {
+        mode: 'required',
+        access: { entity: 'user', scope: [`+${Scopes.FormEdit}`] }
+      }
+    }
+  })
 ]
 
 /**

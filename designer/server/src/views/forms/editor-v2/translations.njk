@@ -55,10 +55,12 @@
 
         {{ govukButton({
           text: 'Preview form in Welsh',
-          classes: 'govuk-button--secondary'
+          classes: 'govuk-button--secondary',
+          href: previewBaseUrl,
+          attributes: { target: "_blank" }
         }) }}
 
-        <a href="#" class="govuk-link govuk-link--no-visited-state" id="delete-translations">Delete Welsh translations</a>
+        <a href="/library/{{ formSlug }}/editor-v2/welsh/delete" class="govuk-link govuk-link--no-visited-state" id="delete-translations">Delete Welsh translations</a>
       </div>
     </form>
 
