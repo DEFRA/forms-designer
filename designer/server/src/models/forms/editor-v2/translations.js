@@ -14,102 +14,22 @@ import {
   getQuestionNum
 } from '~/src/models/forms/editor-v2/common.js'
 import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
+import {
+  FIELDS_WITH_SELECTION_OPTIONS,
+  IGNORE_FIELDS,
+  drillDown,
+  hintKey,
+  keyConfig,
+  listItemHintKey,
+  listItemTextKey,
+  lookupTranslation,
+  pageGuidanceKey,
+  pageHeadingKey,
+  questionTextKey,
+  shortDescriptionKey
+} from '~/src/models/forms/editor-v2/translations-config.js'
+import { buildOverviewSection } from '~/src/models/forms/editor-v2/translations-overview.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
-
-/**
- * @typedef {object} TranslationAttributes
- * @property {boolean} [hideBorder] - true if border is to be hidden
- * @property {boolean} [hideDescription] - true if description is to be hidden
- * @property {boolean} [styleEnglishAsHint] - true if english content is to be styled as grey hint text
- */
-
-/**
- * @typedef {object} Translation
- * @property {string} name - html element name
- * @property {string} contentType - for display
- * @property {string | undefined} englishContent - English text
- * @property {string | undefined} welshContent - Welsh text
- * @property {string} label - label associated with Welsh edit field
- * @property {TranslationAttributes} [attributes] - attributes such as hideBorder or hideDescription
- */
-
-const questionTextKey = 'title'
-const shortDescriptionKey = 'shortDescription'
-const hintKey = 'hint'
-const listItemTextKey = 'listItemText'
-const listItemHintKey = 'listItemHint'
-
-/** @type {Record<string, { jsonPrefix: string, jsonSuffix: string, displayName: string, labelPart: string }>} */
-const keyConfig = {
-  [questionTextKey]: {
-    jsonPrefix: 'components',
-    jsonSuffix: 'title',
-    displayName: 'Question text',
-    labelPart: 'question text'
-  },
-  [hintKey]: {
-    jsonPrefix: 'components',
-    jsonSuffix: 'hint',
-    displayName: 'Hint',
-    labelPart: 'hint'
-  },
-  [shortDescriptionKey]: {
-    jsonPrefix: 'components',
-    jsonSuffix: 'shortDescription',
-    displayName: 'Short description',
-    labelPart: 'short description'
-  },
-  [listItemTextKey]: {
-    jsonPrefix: 'listItems',
-    jsonSuffix: 'text',
-    displayName: 'Option',
-    labelPart: 'option'
-  },
-  [listItemHintKey]: {
-    jsonPrefix: 'listItems',
-    jsonSuffix: 'hint',
-    displayName: 'Option',
-    labelPart: 'hint for option'
-  }
-}
-
-// List of fields that require translation of option values
-const FIELDS_WITH_SELECTION_OPTIONS = [
-  ComponentType.CheckboxesField,
-  ComponentType.RadiosField,
-  ComponentType.YesNoField
-]
-
-const IGNORE_FIELDS = [
-  ComponentType.Details,
-  ComponentType.Html,
-  ComponentType.InsetText,
-  ComponentType.HiddenField
-]
-
-const SAVE_ERROR_MESSAGE = 'Some invalid data keys were found'
-
-/**
- * @param {string} key
- * @param { Record<string, string> | undefined } translations
- */
-function lookupTranslation(key, translations) {
-  if (!translations) {
-    return ''
-  }
-  return translations[key] ?? ''
-}
-
-/**
- * @param {object | string} val
- * @returns {string}
- */
-function drillDown(val) {
-  if (typeof val === 'object') {
-    return 'text' in val ? /** @type {string} */ (val.text) : ''
-  }
-  return val
-}
 
 /**
  * @param {Page} page
@@ -152,7 +72,7 @@ function buildComponentSection(page, component, definition, translations) {
 /**
  * @param {ComponentDef | Page | Item} entity
  * @param {string} keyType
- * @param {{ pageNum: number, questionNum: number , translations: Record<string, string>}} options
+ * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>}} options
  * @param {number} [itemNum]
  * @param {TranslationAttributes} [attributes]
  */
@@ -170,6 +90,9 @@ function createRow(
         drillDown(entity[keyProperties.jsonSuffix])
       : ''
 
+  const pageAndQuestion = questionNum
+    ? `page ${pageNum}, question ${questionNum}`
+    : `page ${pageNum}`
   return {
     name: `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`,
     contentType: itemNum
@@ -181,9 +104,12 @@ function createRow(
       translations
     ),
     label: itemNum
-      ? `${keyProperties.labelPart} ${itemNum} - page ${pageNum}, question ${questionNum}`
-      : `${keyProperties.labelPart} - page ${pageNum}, question ${questionNum}`,
-    attributes
+      ? `${keyProperties.labelPart} ${itemNum} - ${pageAndQuestion}`
+      : `${keyProperties.labelPart} - ${pageAndQuestion}`,
+    attributes: {
+      ...keyProperties.attributes,
+      ...attributes
+    }
   }
 }
 
@@ -198,44 +124,26 @@ function buildPage(page, pageNum, translations) {
     page.controller &&
     page.controller !== ControllerType.Page &&
     page.controller !== ControllerType.Repeat &&
-    page.controller !== ControllerType.Start
-  ) {
-    return []
-  }
-
-  if (
-    page.components.filter((comp) => comp.type !== ComponentType.Markdown)
-      .length === 0
+    page.controller !== ControllerType.Start &&
+    page.controller !== ControllerType.FileUpload &&
+    page.controller !== ControllerType.Terminal
   ) {
     return []
   }
 
   const pageRows = []
   if (page.title) {
-    pageRows.push({
-      name: `pages.${page.id}.title`,
-      contentType: 'Page heading',
-      englishContent: page.title,
-      welshContent: lookupTranslation(`pages.${page.id}.title`, translations),
-      label: `page heading - page ${pageNum}`
-    })
+    pageRows.push(createRow(page, pageHeadingKey, { pageNum, translations }))
   }
 
   const guidance =
-    page.components[0].type === ComponentType.Markdown
+    page.components.length && page.components[0].type === ComponentType.Markdown
       ? page.components[0]
       : undefined
   if (guidance) {
-    pageRows.push({
-      name: `components.${guidance.id}.content`,
-      contentType: 'Guidance text',
-      englishContent: guidance.content,
-      welshContent: lookupTranslation(
-        `components.${guidance.id}.content`,
-        translations
-      ),
-      label: `guidance text (markdown) - page ${pageNum}`
-    })
+    pageRows.push(
+      createRow(guidance, pageGuidanceKey, { pageNum, translations })
+    )
   }
 
   return pageRows
@@ -247,6 +155,7 @@ function buildPage(page, pageNum, translations) {
  * @param {number} pageNum
  * @param {number} questionNum
  * @param {Record<string, string>} translations
+ * @returns {Translation[]}
  */
 function buildComponent(
   definition,
@@ -302,33 +211,44 @@ function buildComponent(
 /**
  * @param {Translation} translation
  * @param {string} markdownHelpHtml
- * @param {boolean} hasError
+ * @param {ErrorDetailsItem[]} errors
  */
-function buildTranslationHtml(translation, markdownHelpHtml, hasError) {
+function buildTranslationHtml(translation, markdownHelpHtml, errors) {
+  const hasError = errors.some((err) => err.href === `#${translation.name}`)
   const errorClass = hasError ? ' govuk-input--error' : ''
   const label = `<label class="govuk-label govuk-visually-hidden" for="${translation.name}">Welsh ${translation.label}</label>`
-  if (translation.contentType === 'Hint') {
-    return `${label}<textarea class="govuk-textarea${errorClass}" rows="3" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>`
+  const welsh = translation.welshContent
+  if (translation.attributes?.textareaHeight) {
+    const markdownHtml = translation.attributes.showMarkdownHelp
+      ? markdownHelpHtml
+      : ''
+    return `${label}<textarea class="govuk-textarea${errorClass}" rows="${translation.attributes.textareaHeight}" lang="cy" name="${translation.name}" id="${translation.name}">${welsh}</textarea>${markdownHtml}`
   }
 
-  if (translation.contentType === 'Guidance text') {
-    return `${label}<textarea class="govuk-textarea${errorClass}" rows="6" lang="cy" name="${translation.name}" id="${translation.name}">${translation.welshContent}</textarea>${markdownHelpHtml}`
-  }
-
-  return `${label}<input type="text" lang="cy" class="govuk-input${errorClass}" name="${translation.name}" id="${translation.name}" value="${translation.welshContent}"/>`
+  return `${label}<input type="text" lang="cy" class="govuk-input${errorClass}" name="${translation.name}" id="${translation.name}" value="${welsh}"/>`
 }
 
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {ValidationFailure<any>} [validation]
  */
-export function buildTranslationRows(metadata, definition) {
+export function buildTranslationRows(metadata, definition, validation) {
   const translationsJSON = /** @type {Record<string, string>} */ (
     // @ts-expect-error - dynamic language definition
     definition.metadata?.translations?.cy
   )
 
-  const allSections = []
+  const allSections = buildOverviewSection(
+    metadata,
+    definition,
+    translationsJSON,
+    validation
+  )
+
+  // Add separator
+  allSections.push({ title: '', table: [] })
+
   for (const page of definition.pages) {
     const components = hasComponents(page) ? page.components : []
     if (components.length) {
@@ -373,14 +293,13 @@ export function translationsViewModel(
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
   const errorList = buildErrorList(validation?.formErrors)
-  const errorSummary = errorList.length
-    ? [{ text: SAVE_ERROR_MESSAGE }]
-    : undefined
+  const errorSummary = errorList
 
-  const rows = buildTranslationRows(metadata, definition)
+  const rows = buildTranslationRows(metadata, definition, validation)
 
   const fieldTables = rows.map((section) => ({
     caption: section.title,
+    captionClasses: 'govuk-table__caption--m',
     firstCellIsHeader: false,
     head: section.table.length
       ? [
@@ -397,9 +316,6 @@ export function translationsViewModel(
       const hideBorderClass = translation.attributes?.hideBorder
         ? ' app-no-border-bottom'
         : ''
-      const hasError = errorList.some(
-        (err) => err.href === `#${translation.name}`
-      )
       return [
         {
           text: translation.attributes?.hideDescription
@@ -414,7 +330,7 @@ export function translationsViewModel(
           classes: `govuk-!-text-break-word${hideBorderClass}`
         },
         {
-          html: `<div class="govuk-form-group">${buildTranslationHtml(translation, markdownHelpHtml, hasError)}</div`,
+          html: `<div class="govuk-form-group">${buildTranslationHtml(translation, markdownHelpHtml, errorList)}</div`,
           classes: hideBorderClass
         }
       ]
@@ -484,5 +400,6 @@ export function deleteConfirmationPageViewModel(metadata, definition) {
 
 /**
  * @import { ComponentDef, InputFieldsComponentsDef, FormMetadata, FormDefinition, Item, Page } from '@defra/forms-model'
- * @import { ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
+ * @import { Translation, TranslationAttributes } from '~/src/models/forms/editor-v2/translations-config.js'
  */

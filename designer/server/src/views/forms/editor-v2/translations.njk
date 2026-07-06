@@ -40,11 +40,15 @@
     <form method="post" action="#">
       {% if (fieldTables | length) %}
         {% for fieldTable in fieldTables %}
-          <div class="govuk-!-margin-bottom-6">
-            <div class="app-scrolling-wrapper" role="region" tabindex="0" aria-label="{{ fieldTable.caption }}">
-              {{ govukTable(fieldTable) }}
+          {% if (fieldTable.caption) %}
+            <div class="govuk-!-margin-bottom-6">
+              <div class="app-scrolling-wrapper" role="region" tabindex="0" aria-label="{{ fieldTable.caption }}">
+                {{ govukTable(fieldTable) }}
+              </div>
             </div>
-          </div>
+            {% else %}
+              <p class="govuk-body govuk-!-margin-bottom-9">&nbsp;</p>
+            {% endif %}
         {% endfor %}
       {% endif %}
 

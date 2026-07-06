@@ -28,12 +28,30 @@ export const ROUTE_FULL_PATH_DELETE = `${ROUTE_FULL_PATH_PAGE}/delete`
 
 const errorKey = sessionNames.validationFailure.editorTranslations
 
-const translationsSchema = Joi.object({
-  // Deliberately empty as we're using the validating unrecognised dynamic keys with a regex
-}).pattern(
-  /^(?:components|pages|listItems)\.[0-9a-fA-F-]{8,}\.(?:title|hint|shortDescription|text|content)$/,
-  Joi.string().trim().allow('')
-)
+const translationsSchema = Joi.object()
+  .keys({
+    'metadata.formName': Joi.string().allow(''),
+    'metadata.submissionGuidance': Joi.string().allow(''),
+    'metadata.privacyNoticeText': Joi.string().allow(''),
+    'metadata.contact.email.address': Joi.string()
+      .email()
+      .allow('')
+      .messages({ 'string.email': 'The email format is invalid' }),
+    'metadata.contact.email.responseTime': Joi.string().allow(''),
+    'metadata.contact.phone': Joi.string().allow(''),
+    'metadata.contact.online.url': Joi.string()
+      .uri()
+      .allow('')
+      .messages({ 'string.uri': 'The link format is invalid' }),
+    'metadata.contact.online.text': Joi.string().allow('')
+  })
+  .pattern(
+    // Validate unrecognised dynamic keys with a regex
+    /^(?:(?:components|pages|listItems).[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}.(?:title|hint|shortDescription|text|content))$/,
+    Joi.string().trim().allow('')
+  )
+  .required()
+  .messages({ 'object.unknown': 'Some invalid data keys were detected' })
 
 const ERROR_MESSAGES = {
   SELECT_FILE: 'Select a file to upload',
