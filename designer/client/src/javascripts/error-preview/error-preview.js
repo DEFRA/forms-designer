@@ -29,6 +29,11 @@ export class ErrorPreviewDomElements {
         document.getElementsByClassName('error-preview-shortDescription')
       )
     )
+    const cyaDescTargetEls = /** @type {HTMLInputElement[]} */ (
+      Array.from(
+        document.getElementsByClassName('error-preview-cyaDescription')
+      )
+    )
 
     /**
      * @type {HTMLInputElement|null}
@@ -42,6 +47,11 @@ export class ErrorPreviewDomElements {
      * @type {HTMLInputElement[]}
      */
     this.shortDescTargets = shortDescTargetEls
+
+    /**
+     * @type {HTMLInputElement[]}
+     */
+    this.cyaDescTargets = cyaDescTargetEls
 
     const fieldEntries = advancedFieldDefs
       ? Object.entries(advancedFieldDefs)
@@ -287,6 +297,20 @@ export class ErrorPreviewEventListeners {
       },
       'input'
     ])
+    const cyaDesc = /** @type {ListenerRow} */ ([
+      this.baseElements.shortDesc,
+      /**
+       * @param {HTMLInputElement} _target
+       */
+      (_target) => {
+        this.baseElements.updateText(
+          [this.baseElements.shortDesc],
+          this.baseElements.cyaDescTargets,
+          this._getDefaultPlaceholder()
+        )
+      },
+      'input'
+    ])
 
     const advanced = /** @type {ListenerRow[]} */ (
       this.baseElements.advancedFields.map((field) => {
@@ -319,7 +343,13 @@ export class ErrorPreviewEventListeners {
       })
     )
 
-    return [...advanced, shortDesc, errorDesc, ...this.highlightListeners]
+    return [
+      ...advanced,
+      shortDesc,
+      errorDesc,
+      cyaDesc,
+      ...this.highlightListeners
+    ]
   }
 
   /**
