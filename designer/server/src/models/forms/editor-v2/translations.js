@@ -35,13 +35,14 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
  * @param {Page} page
  * @param {FormDefinition} definition
  * @param {Record<string, string>} translations
+ * @param {ValidationFailure<any>} [validation]
  */
-function buildPageSection(page, definition, translations) {
+function buildPageSection(page, definition, translations, validation) {
   const pageId = /** @type {string} */ (page.id)
   const pageNum = getPageNum(definition, pageId)
   return {
     title: `Page ${pageNum}`,
-    table: buildPage(page, pageNum, translations)
+    table: buildPage(page, pageNum, translations, validation)
   }
 }
 
@@ -50,8 +51,9 @@ function buildPageSection(page, definition, translations) {
  * @param {ComponentDef} component
  * @param {FormDefinition} definition
  * @param {Record<string, string>} translations
+ * @param {ValidationFailure<any>} [validation]
  */
-function buildComponentSection(page, component, definition, translations) {
+function buildComponentSection(page, component, definition, translations, validation) {
   const pageId = /** @type {string} */ (page.id)
   const componentId = /** @type {string} */ (component.id)
   const pageNum = getPageNum(definition, pageId)
@@ -64,7 +66,8 @@ function buildComponentSection(page, component, definition, translations) {
       component,
       pageNum,
       questionNum,
-      translations
+      translations,
+      validation
     )
   }
 }
@@ -72,14 +75,14 @@ function buildComponentSection(page, component, definition, translations) {
 /**
  * @param {ComponentDef | Page | Item} entity
  * @param {string} keyType
- * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>}} options
+ * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
  * @param {number} [itemNum]
  * @param {TranslationAttributes} [attributes]
  */
 function createRow(
   entity,
   keyType,
-  { pageNum, questionNum, translations },
+  { pageNum, questionNum, translations, validation },
   itemNum,
   attributes
 ) {
@@ -90,19 +93,18 @@ function createRow(
         drillDown(entity[keyProperties.jsonSuffix])
       : ''
 
+  const keyName = `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`
+
   const pageAndQuestion = questionNum
     ? `page ${pageNum}, question ${questionNum}`
     : `page ${pageNum}`
   return {
-    name: `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`,
+    name: keyName,
     contentType: itemNum
       ? `${keyProperties.displayName} ${itemNum}`
       : keyProperties.displayName,
     englishContent: innerEnglishContent,
-    welshContent: lookupTranslation(
-      `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`,
-      translations
-    ),
+    welshContent: validation?.formValues[keyName] ?? lookupTranslation(keyName, translations),
     label: itemNum
       ? `${keyProperties.labelPart} ${itemNum} - ${pageAndQuestion}`
       : `${keyProperties.labelPart} - ${pageAndQuestion}`,
@@ -117,9 +119,10 @@ function createRow(
  * @param {Page} page
  * @param {number} pageNum
  * @param {Record<string, string>} translations
+ * @param {ValidationFailure<any>} [validation]
  * @returns {Translation[]}
  */
-function buildPage(page, pageNum, translations) {
+function buildPage(page, pageNum, translations, validation) {
   if (
     page.controller &&
     page.controller !== ControllerType.Page &&
@@ -133,7 +136,7 @@ function buildPage(page, pageNum, translations) {
 
   const pageRows = []
   if (page.title) {
-    pageRows.push(createRow(page, pageHeadingKey, { pageNum, translations }))
+    pageRows.push(createRow(page, pageHeadingKey, { pageNum, translations, validation }))
   }
 
   const guidance =
@@ -142,7 +145,7 @@ function buildPage(page, pageNum, translations) {
       : undefined
   if (guidance) {
     pageRows.push(
-      createRow(guidance, pageGuidanceKey, { pageNum, translations })
+      createRow(guidance, pageGuidanceKey, { pageNum, translations, validation })
     )
   }
 
@@ -155,6 +158,7 @@ function buildPage(page, pageNum, translations) {
  * @param {number} pageNum
  * @param {number} questionNum
  * @param {Record<string, string>} translations
+ * @param {ValidationFailure<any>} [validation]
  * @returns {Translation[]}
  */
 function buildComponent(
@@ -162,7 +166,8 @@ function buildComponent(
   component,
   pageNum,
   questionNum,
-  translations
+  translations,
+  validation
 ) {
   if (IGNORE_FIELDS.includes(component.type)) {
     return []
@@ -170,7 +175,7 @@ function buildComponent(
 
   const fields = []
 
-  const options = { pageNum, questionNum, translations }
+  const options = { pageNum, questionNum, translations, validation }
 
   const typed = /** @type {InputFieldsComponentsDef} */ (component)
   if (typed.title) {
@@ -252,13 +257,13 @@ export function buildTranslationRows(metadata, definition, validation) {
   for (const page of definition.pages) {
     const components = hasComponents(page) ? page.components : []
     if (components.length) {
-      allSections.push(buildPageSection(page, definition, translationsJSON))
+      allSections.push(buildPageSection(page, definition, translationsJSON, validation))
       for (const component of components) {
         if (component.type === ComponentType.Markdown) {
           continue
         }
         allSections.push(
-          buildComponentSection(page, component, definition, translationsJSON)
+          buildComponentSection(page, component, definition, translationsJSON, validation)
         )
       }
     }
