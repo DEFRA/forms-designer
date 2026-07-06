@@ -124,7 +124,9 @@ export function validateWorkbook(workbook) {
   const translationHeaders = headers.map((h) => h.title)
 
   if (headerRow.length !== translationHeaders.length) {
-    throw new Error(`Wrong number of columns (expected ${translationHeaders.length}, got ${headerRow.length})`)
+    throw new Error(
+      `Wrong number of columns (expected ${translationHeaders.length}, got ${headerRow.length})`
+    )
   }
 
   for (let i = 0; i < translationHeaders.length; i += 1) {

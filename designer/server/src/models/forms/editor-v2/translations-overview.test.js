@@ -1,6 +1,9 @@
 import { testFormDefinitionWithNoPages } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
-import { buildOverviewSection } from '~/src/models/forms/editor-v2/translations-overview.js'
+import {
+  buildOverviewSection,
+  buildPrivacyNoticeSection
+} from '~/src/models/forms/editor-v2/translations-overview.js'
 
 const definition = {
   ...testFormDefinitionWithNoPages,
@@ -203,6 +206,50 @@ describe('Translations overview', () => {
       expect(res[3].table[0].welshContent).toBe('0111222333')
       expect(res[4].table[0].welshContent).toBe('new submission guidance')
       expect(res[5].table[0].welshContent).toBe('')
+    })
+  })
+
+  describe('buildPrivacyNoticeSection', () => {
+    it('should return privacy notice url info', () => {
+      const pnMetadata = {
+        ...populatedMetadata,
+        privacyNoticeType: 'url',
+        privacyNoticeUrl: 'https:/privacy-notice.com'
+      }
+      const translations = /** @type {Record<string, string>} */ ({
+        'metadata.privacyNoticeUrl': 'https:/privacy-notice2.com'
+      })
+      const validation = /** @type {ValidationFailure<any>} */ ({
+        formValues: {}
+      })
+      const res = buildPrivacyNoticeSection(
+        pnMetadata,
+        translations,
+        validation
+      )
+      expect(res.table[0].englishContent).toBe('https:/privacy-notice.com')
+      expect(res.table[0].welshContent).toBe('https:/privacy-notice2.com')
+    })
+
+    it('should return privacy notice content info', () => {
+      const pnMetadata = {
+        ...populatedMetadata,
+        privacyNoticeType: 'text',
+        privacyNoticeText: 'Privacy notice text content'
+      }
+      const translations = /** @type {Record<string, string>} */ ({
+        'metadata.privacyNoticeText': 'Changed privacy notice text'
+      })
+      const validation = /** @type {ValidationFailure<any>} */ ({
+        formValues: {}
+      })
+      const res = buildPrivacyNoticeSection(
+        pnMetadata,
+        translations,
+        validation
+      )
+      expect(res.table[0].englishContent).toBe('Privacy notice text content')
+      expect(res.table[0].welshContent).toBe('Changed privacy notice text')
     })
   })
 })

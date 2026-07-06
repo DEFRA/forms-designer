@@ -1,6 +1,10 @@
+import { StatusCodes } from 'http-status-codes'
+import Joi from 'joi'
+
 import { testFormDefinitionWithTwoQuestions } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
+import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { validateFileSelected } from '~/src/routes/forms/editor-v2/translations.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -74,6 +78,59 @@ describe('Translations routes', () => {
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
     expect($actions[3]).toHaveTextContent('Preview form in Welsh')
+  })
+
+  test('POST - should show validation errors', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh',
+      auth,
+      payload: {
+        'metadata.contact.email.address': 'invalid-email'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/welsh')
+    expect(addErrorsToSession).toHaveBeenCalledWith(
+      expect.anything(),
+      'translationsValidationFailure',
+      new Joi.ValidationError('The email format is invalid', [], undefined)
+    )
+  })
+
+  test('POST - should save successfully with valid payload', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh',
+      auth,
+      payload: {
+        'metadata.contact.email.address': 'my-email@server.com'
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+    expect(addErrorsToSession).not.toHaveBeenCalled()
+    expect(forms.updateDraftFormDefinition).toHaveBeenCalled()
   })
 
   test('validateFileSelected returns translation workbook error for invalid workbook bytes', () => {

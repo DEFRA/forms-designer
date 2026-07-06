@@ -122,7 +122,7 @@ export function buildOverviewSection(
  * @param {ValidationFailure<any>} [validation]
  * @returns {{ title: string, table: Translation[]}}
  */
-function buildPrivacyNoticeSection(metadata, translations, validation) {
+export function buildPrivacyNoticeSection(metadata, translations, validation) {
   const privacyNoticeUrlKey = 'metadata.privacyNoticeUrl'
   const privacyNoticeTextKey = 'metadata.privacyNoticeText'
 
