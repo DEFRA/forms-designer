@@ -28,7 +28,7 @@ const translationsSchema = Joi.object({
 const ERROR_MESSAGES = {
   SELECT_FILE: 'Select a file to upload',
   INVALID_XLSX_FILE: 'The selected file is not a valid XLSX file',
-  INVALID_FORM_DEFINITION: 'The selected file is not a valid translation file, conforming to the structure of the downloaded file',
+  INVALID_FORM_DEFINITION: 'The selected file is not a valid translation file. {{ #reason }}',
   UPLOAD_FAILED: 'The selected file could not be uploaded'
 }
 
@@ -48,16 +48,13 @@ export function validateFileSelected(value, helpers) {
     return helpers.error('any.required')
   }
 
-  if (typeof value === 'object' && !Buffer.isBuffer(value)) {
-    return value
-  }
-
   try {
     const workbook = xlsx.read(value)
     try {
       return validateWorkbook(workbook)
-    } catch {
-      return helpers.error('custom.invalidTranslationWorkbook')
+    } catch(err) {
+      const error = /** @type {{ message?: string }} */ (err)
+      return helpers.error('custom.invalidTranslationWorkbook', { reason: error.message })
     }
   } catch {
     return helpers.error('custom.invalidXlsx')

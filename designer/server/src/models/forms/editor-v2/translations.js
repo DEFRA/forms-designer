@@ -313,14 +313,10 @@ function buildTranslationHtml(translation, markdownHelpHtml, hasError) {
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
- * @param {string} markdownHelpHtml
- * @param {ErrorDetailsItem[]} errorList
  */
-export function buildTranslationsTables(
+export function buildTranslationRows(
   metadata,
-  definition,
-  markdownHelpHtml,
-  errorList
+  definition
 ) {
   const translationsJSON = /** @type {Record<string, string>} */ (
     // @ts-expect-error - dynamic language definition
@@ -343,7 +339,40 @@ export function buildTranslationsTables(
     }
   }
 
-  const asHtml = allSections.map((section) => ({
+  return allSections
+}
+
+/**
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ * @param {string} markdownHelpHtml
+ * @param {ValidationFailure<any>} [validation]
+ * @param {string[]} [notification]
+ */
+export function translationsViewModel(
+  metadata,
+  definition,
+  markdownHelpHtml,
+  validation,
+  notification
+) {
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+  const previewBaseUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}?language=cy`
+  const pageHeading = 'Add Welsh translations for your form'
+  const pageCaption = metadata.title
+  const pageTitle = `${pageHeading} - ${pageCaption}`
+  const errorList = buildErrorList(validation?.formErrors)
+  const errorSummary = errorList.length ? [{ text: SAVE_ERROR_MESSAGE }] : undefined
+
+  const rows = buildTranslationRows(metadata, definition)
+
+  const fieldTables = rows.map((section) => ({
     caption: section.title,
     firstCellIsHeader: false,
     head: section.table.length
@@ -384,40 +413,6 @@ export function buildTranslationsTables(
   }))
 
   return {
-    asHtml,
-    raw: allSections
-  }
-}
-
-/**
- * @param {FormMetadata} metadata
- * @param {FormDefinition} definition
- * @param {string} markdownHelpHtml
- * @param {ValidationFailure<any>} [validation]
- * @param {string[]} [notification]
- */
-export function translationsViewModel(
-  metadata,
-  definition,
-  markdownHelpHtml,
-  validation,
-  notification
-) {
-  const formPath = formOverviewPath(metadata.slug)
-  const navigation = getFormSpecificNavigation(
-    formPath,
-    metadata,
-    definition,
-    'Editor'
-  )
-  const previewBaseUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}?language=cy`
-  const pageHeading = 'Add Welsh translations for your form'
-  const pageCaption = metadata.title
-  const pageTitle = `${pageHeading} - ${pageCaption}`
-  const errorList = buildErrorList(validation?.formErrors)
-  const errorSummary = errorList.length ? [{ text: SAVE_ERROR_MESSAGE }] : undefined
-
-  return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     formSlug: metadata.slug,
     previewBaseUrl,
@@ -427,7 +422,7 @@ export function translationsViewModel(
     },
     errorList: errorSummary,
     notification,
-    fieldTables: buildTranslationsTables(metadata, definition, markdownHelpHtml, errorList).asHtml
+    fieldTables
   }
 }
 

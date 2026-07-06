@@ -1,6 +1,6 @@
 import xlsx from 'xlsx'
 
-import { buildTranslationsTables } from '~/src/models/forms/editor-v2/translations.js'
+import { buildTranslationRows } from '~/src/models/forms/editor-v2/translations.js'
 
 /**
  * @typedef {{ title: string, dataKey: string, attributes?: { wch?: number } }} WorksheetColumn
@@ -9,7 +9,7 @@ import { buildTranslationsTables } from '~/src/models/forms/editor-v2/translatio
 
 const headers = [
   {
-    title: 'Data reference',
+    title: 'Data reference (do not edit)',
     dataKey: 'dataReference',
     attributes: { wch: 70 }
   },
@@ -27,6 +27,11 @@ const headers = [
     title: 'Welsh content',
     dataKey: 'welshContent',
     attributes: { wch: 40 }
+  },
+  {
+    title: 'Notes',
+    dataKey: 'notes',
+    attributes: { wch: 40 }
   }
 ]
 
@@ -39,14 +44,9 @@ export function getTranslationsAsExcel(metadata, definition) {
   const workbook = xlsx.utils.book_new()
 
   const rows = []
-  const { raw: allTables } = buildTranslationsTables(
-    metadata,
-    definition,
-    '',
-    []
-  )
+  const allTableRows = buildTranslationRows(metadata, definition)
 
-  const tables = allTables.filter((tab) => tab.table.length)
+  const tables = allTableRows.filter((tab) => tab.table.length)
   for (const outerTable of tables) {
     for (const translation of outerTable.table) {
       rows.push([
@@ -101,12 +101,12 @@ export function validateWorkbook(workbook) {
     !Array.isArray(workbook.SheetNames) ||
     workbook.SheetNames.length === 0
   ) {
-    throw new Error('Invalid workbook')
+    throw new Error('Not a spreadsheet workbook')
   }
 
   const worksheet = workbook.Sheets[workbook.SheetNames[0]]
   if (typeof worksheet !== 'object') {
-    throw new Error('Invalid workbook')
+    throw new Error('First sheet is not a spreadsheet')
   }
 
   const rows = xlsx.utils.sheet_to_json(worksheet, {
@@ -115,7 +115,7 @@ export function validateWorkbook(workbook) {
   })
 
   if (!Array.isArray(rows) || rows.length === 0) {
-    throw new Error('Invalid workbook')
+    throw new Error('No rows found')
   }
 
   // @ts-expect-error - dynamic data type
@@ -124,12 +124,12 @@ export function validateWorkbook(workbook) {
   const translationHeaders = headers.map((h) => h.title)
 
   if (headerRow.length !== translationHeaders.length) {
-    throw new Error('Invalid workbook')
+    throw new Error(`Wrong number of columns (expected ${translationHeaders.length}, got ${headerRow.length})`)
   }
 
   for (let i = 0; i < translationHeaders.length; i += 1) {
     if (headerRow[i] !== translationHeaders[i]) {
-      throw new Error('Invalid workbook')
+      throw new Error(`Missing column '${translationHeaders[i]}'`)
     }
   }
 
@@ -145,7 +145,7 @@ export function validateWorkbook(workbook) {
   for (let rowIndex = 0; rowIndex <= lastDataRowIndex; rowIndex += 1) {
     const row = dataRows[rowIndex]
     if (!Array.isArray(row)) {
-      throw new Error('Invalid workbook')
+      throw new Error(`Invalid row ${rowIndex + 1}`)
     }
 
     const dataReference = String(row[0] ?? '').trim()
@@ -153,13 +153,19 @@ export function validateWorkbook(workbook) {
     const englishContent = String(row[2] ?? '').trim()
     const welshContent = String(row[3] ?? '')
 
-    if (!dataReference || !positionInForm || !englishContent) {
-      throw new Error('Invalid workbook')
+    if (!dataReference) {
+      throw new Error(`Missing value in column '${translationHeaders[0]}'`)
+    }
+    if (!positionInForm) {
+      throw new Error(`Missing value in column '${translationHeaders[1]}'`)
+    }
+    if (!englishContent) {
+      throw new Error(`Missing value in column '${translationHeaders[2]}'`)
     }
 
     for (let colIndex = 4; colIndex < row.length; colIndex += 1) {
       if (String(row[colIndex] ?? '').trim() !== '') {
-        throw new Error('Invalid workbook')
+        throw new Error('Extra values found')
       }
     }
     json[dataReference] = welshContent

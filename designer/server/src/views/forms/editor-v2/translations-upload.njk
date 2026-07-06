@@ -25,7 +25,7 @@
       iconFallbackText: "Warning"
     }) }}
 
-    <p class="govuk-body">Before you upload new translations, you should <a href="{{ downloadAction }}" class="govuk-link">download current translations</a> in case you need to compare or revert.</p>
+    <p class="govuk-body">Before you upload new translations, you should <a href="{{ downloadAction }}" class="govuk-link govuk-link--no-visited-state">download current translations</a> in case you need to compare or revert.</p>
 
     <form method="post" action="#" enctype="multipart/form-data" novalidate>
       {{ govukFileUpload({
