@@ -1,80 +1,86 @@
-import xlsx from 'xlsx'
-
-import { validateWorkbook } from '~/src/models/forms/editor-v2/translations-excel.js'
+import { testFormDefinitionWithTwoQuestions } from '~/src/__stubs__/form-definition.js'
+import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import { createServer } from '~/src/createServer.js'
+import * as forms from '~/src/lib/forms.js'
 import { validateFileSelected } from '~/src/routes/forms/editor-v2/translations.js'
+import { auth } from '~/test/fixtures/auth.js'
+import { renderResponse } from '~/test/helpers/component-helpers.js'
 
-const validHeaders = ['Data reference (do not edit)', 'Position in form', 'English content', 'Welsh content', 'Notes']
+jest.mock('~/src/lib/editor.js')
+jest.mock('~/src/lib/error-helper.js')
+jest.mock('~/src/lib/forms.js')
 
-describe('validateWorkbook', () => {
-  // @ts-expect-error - dynamic rows
-  function createWorkbook(rows) {
-    const workbook = xlsx.utils.book_new()
-    const worksheet = xlsx.utils.aoa_to_sheet(rows)
-    xlsx.utils.book_append_sheet(workbook, worksheet, 'Translations')
-    return workbook
-  }
+describe('Translations routes', () => {
+  /** @type {Server} */
+  let server
 
-  test('accepts a workbook with exact headers and non-empty required cells', () => {
-    const workbook = createWorkbook([
-      validHeaders,
-      ['components.123e4567-e89b-12d3-a456-426614174000.title', 'Page 1 title', 'Hello', 'Helo']
-    ])
-
-    expect(validateWorkbook(workbook)).toEqual({
-      'components.123e4567-e89b-12d3-a456-426614174000.title': 'Helo'
-    })
+  beforeAll(async () => {
+    server = await createServer()
+    await server.initialize()
   })
 
-  test('accepts a workbook with an empty Welsh content cell', () => {
-    const workbook = createWorkbook([
-      validHeaders,
-      ['components.123e4567-e89b-12d3-a456-426614174000.title', 'Page 1 title', 'Hello', '']
-    ])
-
-    expect(validateWorkbook(workbook)).toEqual({
-      'components.123e4567-e89b-12d3-a456-426614174000.title': ''
-    })
+  afterAll(async () => {
+    await server.stop()
   })
 
-  test('rejects a workbook with missing header columns', () => {
-    const workbook = createWorkbook([
-      ['Data reference (do not edit)', 'Position in form', 'English content'],
-      ['components.123e4567-e89b-12d3-a456-426614174000.title', 'Page 1 title', 'Hello']
-    ])
-
-    expect(() => validateWorkbook(workbook)).toThrow('Wrong number of columns (expected 5, got 3)')
+  beforeEach(() => {
+    jest.resetAllMocks()
   })
 
-  test('rejects a workbook with incorrect header titles', () => {
-    const workbook = createWorkbook([
-      ['Data reference (do not edit)', 'Position', 'English content', 'Welsh content'],
-      ['components.123e4567-e89b-12d3-a456-426614174000.title', 'Page 1 title', 'Hello', 'Helo']
-    ])
+  test('GET - should render english/welsh fields in the view', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
 
-    expect(() => validateWorkbook(workbook)).toThrow('Wrong number of columns (expected 5, got 4)')
-  })
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/welsh',
+      auth
+    }
 
-  test('rejects when required cells are empty', () => {
-    const workbook = createWorkbook([
-      validHeaders,
-      ['', 'Page 1 title', 'Hello', 'Helo']
-    ])
+    const { container, document } = await renderResponse(server, options)
 
-    expect(() => validateWorkbook(workbook)).toThrow('Missing value in column \'Data reference (do not edit)\'')
-  })
+    const $mastheadHeadings = container.getAllByText('Test form')
+    const $cardTitle = container.getByText(
+      'Add Welsh translations for your form'
+    )
+    const $captions = document.getElementsByClassName('govuk-table__caption')
 
-  test('rejects an extra non-empty column in a row', () => {
-    const workbook = createWorkbook([
-      validHeaders,
-      ['components.123e4567-e89b-12d3-a456-426614174000.title', 'Page 1 title', 'Hello', 'Helo', 'extra']
-    ])
+    const $actions = container.getAllByRole('button')
 
-    expect(() => validateWorkbook(workbook)).toThrow('Extra values found')
+    expect($mastheadHeadings[0]).toHaveTextContent('Test form')
+    expect($mastheadHeadings[0]).toHaveClass('govuk-caption-l')
+    expect($cardTitle).toHaveTextContent('Add Welsh translations for your form')
+    expect($cardTitle).toHaveClass('app-masthead__heading govuk-heading-xl')
+
+    expect($captions).toHaveLength(9)
+    expect($captions[0]).toHaveTextContent('Form name')
+    expect($captions[1]).toHaveTextContent(
+      'Contact details for support: email address and response time'
+    )
+    expect($captions[2]).toHaveTextContent('Contact link for support')
+    expect($captions[3]).toHaveTextContent('Phone number and opening times')
+    expect($captions[4]).toHaveTextContent(
+      'Information about what happens next'
+    )
+    expect($captions[5]).toHaveTextContent(
+      'Privacy information for this form (uses inline content)'
+    )
+    expect($captions[6]).toHaveTextContent('Page 1')
+    expect($captions[7]).toHaveTextContent('Page 1, question 1')
+    expect($captions[8]).toHaveTextContent('Page 1, question 2')
+
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Save changes')
+    expect($actions[3]).toHaveTextContent('Preview form in Welsh')
   })
 
   test('validateFileSelected returns translation workbook error for invalid workbook bytes', () => {
     const buffer = Buffer.from('invalid')
-    const mockHelpers = { error: jest.fn((type) => ({ type, isJoiError: true })) }
+    const mockHelpers = {
+      error: jest.fn((type) => ({ type, isJoiError: true }))
+    }
 
     const result = validateFileSelected(buffer, mockHelpers)
 
@@ -84,6 +90,13 @@ describe('validateWorkbook', () => {
         reason: 'Wrong number of columns (expected 5, got 1)'
       }
     )
-    expect(result).toEqual({ type: 'custom.invalidTranslationWorkbook', isJoiError: true })
+    expect(result).toEqual({
+      type: 'custom.invalidTranslationWorkbook',
+      isJoiError: true
+    })
   })
 })
+
+/**
+ * @import { Server } from '@hapi/hapi'
+ */
