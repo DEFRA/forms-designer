@@ -58,6 +58,17 @@ describe('translations-excel', () => {
       })
     })
 
+    test('rejects a workbook with invalid data', () => {
+      // @ts-expect-error - invalid data
+      expect(() => validateWorkbook({})).toThrow('Not a spreadsheet workbook')
+    })
+
+    test('rejects a workbook with no rows', () => {
+      const workbook = createWorkbook([])
+
+      expect(() => validateWorkbook(workbook)).toThrow('No rows found')
+    })
+
     test('rejects a workbook with missing header columns', () => {
       const workbook = createWorkbook([
         ['Data reference (do not edit)', 'Position in form', 'English content'],
@@ -79,18 +90,20 @@ describe('translations-excel', () => {
           'Data reference (do not edit)',
           'Position',
           'English content',
-          'Welsh content'
+          'Welsh content',
+          'Notes'
         ],
         [
           'components.123e4567-e89b-12d3-a456-426614174000.title',
           'Page 1 title',
           'Hello',
-          'Helo'
+          'Helo',
+          ''
         ]
       ])
 
       expect(() => validateWorkbook(workbook)).toThrow(
-        'Too few columns (expected 5, got 4)'
+        "Missing column 'Position in form'"
       )
     })
 
@@ -118,6 +131,40 @@ describe('translations-excel', () => {
       ])
 
       expect(() => validateWorkbook(workbook)).toThrow('Extra values found')
+    })
+
+    test('rejects a row with missing positionInForm value', () => {
+      const workbook = createWorkbook([
+        validHeaders,
+        [
+          'components.123e4567-e89b-12d3-a456-426614174000.title',
+          '',
+          'Hello',
+          'Helo',
+          'extra'
+        ]
+      ])
+
+      expect(() => validateWorkbook(workbook)).toThrow(
+        "Missing value in column 'Position in form'"
+      )
+    })
+
+    test('rejects a row with missing englishContent value', () => {
+      const workbook = createWorkbook([
+        validHeaders,
+        [
+          'components.123e4567-e89b-12d3-a456-426614174000.title',
+          'Page 1 title',
+          '',
+          'Helo',
+          'extra'
+        ]
+      ])
+
+      expect(() => validateWorkbook(workbook)).toThrow(
+        "Missing value in column 'English content'"
+      )
     })
   })
 

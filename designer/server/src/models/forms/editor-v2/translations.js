@@ -123,13 +123,13 @@ function createRow(
   }
 }
 
-const ALLOWED_CONTROLLER_TYPES = [
+const allowedControllerTypesSet = new Set([
   ControllerType.Page,
   ControllerType.Repeat,
   ControllerType.Start,
   ControllerType.FileUpload,
   ControllerType.Terminal
-]
+])
 
 /**
  * @param {Page} page
@@ -139,7 +139,7 @@ const ALLOWED_CONTROLLER_TYPES = [
  * @returns {Translation[]}
  */
 function buildPage(page, pageNum, translations, validation) {
-  if (page.controller && !ALLOWED_CONTROLLER_TYPES.includes(page.controller)) {
+  if (page.controller && !allowedControllerTypesSet.has(page.controller)) {
     return []
   }
 

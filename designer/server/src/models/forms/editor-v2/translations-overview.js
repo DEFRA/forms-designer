@@ -1,16 +1,57 @@
 import { lookupTranslation } from '~/src/models/forms/editor-v2/translations-config.js'
 
+const formNameKey = 'metadata.formName'
+const contactEmailAddressKey = 'metadata.contact.email.address'
+const contactEmailResponseKey = 'metadata.contact.email.responseTime'
+const contactOnlineUrlKey = 'metadata.contact.online.url'
+const contactOnlineTextKey = 'metadata.contact.online.text'
+const contactPhoneKey = 'metadata.contact.phone'
+const submissionGuidanceKey = 'metadata.submissionGuidance'
+const privacyNoticeUrlKey = 'metadata.privacyNoticeUrl'
+const privacyNoticeTextKey = 'metadata.privacyNoticeText'
+
+const fieldConfig =
+  /** @type {Record<string, { contentType: string, label: string, attributes?: object }>} */ ({
+    [formNameKey]: {
+      contentType: 'Form name',
+      label: 'form name'
+    },
+    [contactEmailAddressKey]: {
+      contentType: 'Email address',
+      label: 'support email address'
+    },
+    [contactEmailResponseKey]: {
+      contentType: 'Response time',
+      label: 'response time message'
+    },
+    [contactOnlineUrlKey]: {
+      contentType: 'Contact link',
+      label: 'contact link URL'
+    },
+    [contactOnlineTextKey]: {
+      contentType: 'Link text',
+      label: 'text for the contact link'
+    },
+    [contactPhoneKey]: {
+      contentType: 'Phone number and opening times',
+      label: 'phone number and opening times',
+      attributes: { textareaHeight: 5 }
+    },
+    [submissionGuidanceKey]: {
+      contentType: 'What happens next',
+      label: 'information about what happens next',
+      attributes: { textareaHeight: 5, showMarkdownHelp: true }
+    }
+  })
+
 /**
- * @param {string} formNameKey
+ * @param {string} key
  * @param {Record<string, string>} translations
  * @param {ValidationFailure<any>} [validation]
  * @returns { string | undefined }
  */
-function getTranslation(formNameKey, translations, validation) {
-  return (
-    validation?.formValues[formNameKey] ??
-    lookupTranslation(formNameKey, translations)
-  )
+function getTranslation(key, translations, validation) {
+  return validation?.formValues[key] ?? lookupTranslation(key, translations)
 }
 
 /**
@@ -26,59 +67,37 @@ export function buildOverviewSection(
   translations,
   validation
 ) {
-  const formNameKey = 'metadata.formName'
-  const contactEmailAddressKey = 'metadata.contact.email.address'
-  const contactEmailResponseKey = 'metadata.contact.email.responseTime'
-  const contactOnlineUrlKey = 'metadata.contact.online.url'
-  const contactOnlineTextKey = 'metadata.contact.online.text'
-  const contactPhoneKey = 'metadata.contact.phone'
-  const submissionGuidance = 'metadata.submissionGuidance'
-
   /**
-   * @param {string} formNameKey
-   * @param {string} contentType
+   * @param {string} name
    * @param { string | undefined } englishReference
-   * @param {string} label
-   * @param {object} [attributes]
    */
-  function buildTableRow(
-    formNameKey,
-    contentType,
-    englishReference,
-    label,
-    attributes
-  ) {
+  function buildTableRow(name, englishReference) {
+    const field = fieldConfig[name]
     return {
-      name: formNameKey,
-      contentType,
+      name,
+      contentType: field.contentType,
       englishContent: englishReference,
-      welshContent: getTranslation(formNameKey, translations, validation),
-      label,
-      attributes
+      welshContent: getTranslation(name, translations, validation),
+      label: field.label,
+      attributes: field.attributes
     }
   }
 
   return [
     {
       title: 'Form name',
-      table: [
-        buildTableRow(formNameKey, 'Form name', definition.name, 'form name')
-      ]
+      table: [buildTableRow(formNameKey, definition.name)]
     },
     {
       title: 'Contact details for support: email address and response time',
       table: [
         buildTableRow(
           contactEmailAddressKey,
-          'Email address',
-          metadata.contact?.email?.address ?? 'Not set',
-          'support email address'
+          metadata.contact?.email?.address ?? 'Not set'
         ),
         buildTableRow(
           contactEmailResponseKey,
-          'Response time',
-          metadata.contact?.email?.responseTime ?? '--',
-          'response time message'
+          metadata.contact?.email?.responseTime ?? '--'
         )
       ]
     },
@@ -87,39 +106,26 @@ export function buildOverviewSection(
       table: [
         buildTableRow(
           contactOnlineUrlKey,
-          'Contact link',
-          metadata.contact?.online?.url ?? 'Not set',
-          'contact link URL'
+          metadata.contact?.online?.url ?? 'Not set'
         ),
         buildTableRow(
           contactOnlineTextKey,
-          'Link text',
-          metadata.contact?.online?.text ?? '--',
-          'text for the contact link'
+          metadata.contact?.online?.text ?? '--'
         )
       ]
     },
     {
       title: 'Phone number and opening times',
       table: [
-        buildTableRow(
-          contactPhoneKey,
-          'Phone number and opening times',
-          metadata.contact?.phone ?? 'Not set',
-          'phone number and opening times',
-          { textareaHeight: 5 }
-        )
+        buildTableRow(contactPhoneKey, metadata.contact?.phone ?? 'Not set')
       ]
     },
     {
       title: 'Information about what happens next',
       table: [
         buildTableRow(
-          submissionGuidance,
-          'What happens next',
-          metadata.submissionGuidance ?? 'Not set',
-          'information about what happens next',
-          { textareaHeight: 5, showMarkdownHelp: true }
+          submissionGuidanceKey,
+          metadata.submissionGuidance ?? 'Not set'
         )
       ]
     },
@@ -134,9 +140,6 @@ export function buildOverviewSection(
  * @returns {{ title: string, table: Translation[]}}
  */
 export function buildPrivacyNoticeSection(metadata, translations, validation) {
-  const privacyNoticeUrlKey = 'metadata.privacyNoticeUrl'
-  const privacyNoticeTextKey = 'metadata.privacyNoticeText'
-
   if (metadata.privacyNoticeType === 'url') {
     return {
       title: 'Privacy information for this form (uses a link)',
