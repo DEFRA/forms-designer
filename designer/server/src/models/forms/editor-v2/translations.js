@@ -223,9 +223,7 @@ function addSelectionOptions(fields, component, definition, options) {
         fields.push(
           createRow(item, listItemTextKey, options, itemNum, {
             hideBorder: true
-          })
-        )
-        fields.push(
+          }),
           createRow(item, listItemHintKey, options, itemNum, {
             hideDescription: true,
             styleEnglishAsHint: true
