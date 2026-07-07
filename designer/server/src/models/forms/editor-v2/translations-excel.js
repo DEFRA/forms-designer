@@ -118,6 +118,8 @@ export function validateWorkbook(workbook) {
     throw new Error('No rows found')
   }
 
+  // Validate header row
+
   // @ts-expect-error - dynamic data type
   const headerRow = rows[0].map((value) => String(value).trim())
 
@@ -135,7 +137,18 @@ export function validateWorkbook(workbook) {
     }
   }
 
+  // Validate data rows
+  return validateDataRows(rows, translationHeaders)
+}
+
+/**
+ * @param {any[]} rows
+ * @param {string[]} translationHeaders
+ */
+function validateDataRows(rows, translationHeaders) {
+  // Get data rows (excluding header row)
   const dataRows = rows.slice(1)
+  // Determine last data row that has values
   const lastDataRowIndex = dataRows.reduce((lastIndex, row, index) => {
     // @ts-expect-error - dynamic data type
     const hasValue = row.some((cell) => String(cell).trim() !== '')

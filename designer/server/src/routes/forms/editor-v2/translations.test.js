@@ -133,6 +133,60 @@ describe('Translations routes', () => {
     expect(forms.updateDraftFormDefinition).toHaveBeenCalled()
   })
 
+  test('GET - should render confirmation page for delete operation', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/welsh/delete',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mastheadHeadings = container.getAllByText('Test form')
+    const $cardTitle = container.getByText(
+      'Are you sure you want to delete your Welsh translations?'
+    )
+    const $actions = container.getAllByRole('button')
+
+    expect($mastheadHeadings[0]).toHaveTextContent('Test form')
+    expect($mastheadHeadings[0]).toHaveClass('govuk-caption-l')
+    expect($cardTitle).toHaveTextContent(
+      'Are you sure you want to delete your Welsh translations?'
+    )
+    expect($cardTitle).toHaveClass('app-masthead__heading govuk-heading-xl')
+
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Delete Welsh translations')
+    expect($actions[3]).toHaveTextContent('Cancel')
+  })
+
+  test('POST - should delete translations successfully', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh/delete',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/pages')
+    expect(addErrorsToSession).not.toHaveBeenCalled()
+    expect(forms.updateDraftFormDefinition).toHaveBeenCalled()
+  })
+
   test('validateFileSelected returns translation workbook error for invalid workbook bytes', () => {
     const buffer = Buffer.from('invalid')
     const mockHelpers = {

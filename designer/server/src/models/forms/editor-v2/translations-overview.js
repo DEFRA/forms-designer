@@ -1,6 +1,19 @@
 import { lookupTranslation } from '~/src/models/forms/editor-v2/translations-config.js'
 
 /**
+ * @param {string} formNameKey
+ * @param {Record<string, string>} translations
+ * @param {ValidationFailure<any>} [validation]
+ * @returns { string | undefined }
+ */
+function getTranslation(formNameKey, translations, validation) {
+  return (
+    validation?.formValues[formNameKey] ??
+    lookupTranslation(formNameKey, translations)
+  )
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {Record<string, string>} translations
@@ -29,9 +42,7 @@ export function buildOverviewSection(
           name: formNameKey,
           contentType: 'Form name',
           englishContent: definition.name,
-          welshContent:
-            validation?.formValues[formNameKey] ??
-            lookupTranslation(formNameKey, translations),
+          welshContent: getTranslation(formNameKey, translations, validation),
           label: 'form name'
         }
       ]
@@ -43,18 +54,22 @@ export function buildOverviewSection(
           name: contactEmailAddressKey,
           contentType: 'Email address',
           englishContent: metadata.contact?.email?.address ?? 'Not set',
-          welshContent:
-            validation?.formValues[contactEmailAddressKey] ??
-            lookupTranslation(contactEmailAddressKey, translations),
+          welshContent: getTranslation(
+            contactEmailAddressKey,
+            translations,
+            validation
+          ),
           label: 'support email address'
         },
         {
           name: contactEmailResponseKey,
           contentType: 'Response time',
           englishContent: metadata.contact?.email?.responseTime ?? '--',
-          welshContent:
-            validation?.formValues[contactEmailResponseKey] ??
-            lookupTranslation(contactEmailResponseKey, translations),
+          welshContent: getTranslation(
+            contactEmailResponseKey,
+            translations,
+            validation
+          ),
           label: 'response time message'
         }
       ]
@@ -66,18 +81,22 @@ export function buildOverviewSection(
           name: contactOnlineUrlKey,
           contentType: 'Contact link',
           englishContent: metadata.contact?.online?.url ?? 'Not set',
-          welshContent:
-            validation?.formValues[contactOnlineUrlKey] ??
-            lookupTranslation(contactOnlineUrlKey, translations),
+          welshContent: getTranslation(
+            contactOnlineUrlKey,
+            translations,
+            validation
+          ),
           label: 'contact link URL'
         },
         {
           name: contactOnlineTextKey,
           contentType: 'Link text',
           englishContent: metadata.contact?.online?.text ?? '--',
-          welshContent:
-            validation?.formValues[contactOnlineTextKey] ??
-            lookupTranslation(contactOnlineTextKey, translations),
+          welshContent: getTranslation(
+            contactOnlineTextKey,
+            translations,
+            validation
+          ),
           label: 'text for the contact link'
         }
       ]
@@ -89,9 +108,11 @@ export function buildOverviewSection(
           name: contactPhoneKey,
           contentType: 'Phone number and opening times',
           englishContent: metadata.contact?.phone ?? 'Not set',
-          welshContent:
-            validation?.formValues[contactPhoneKey] ??
-            lookupTranslation(contactPhoneKey, translations),
+          welshContent: getTranslation(
+            contactPhoneKey,
+            translations,
+            validation
+          ),
           label: 'phone number and opening times',
           attributes: { textareaHeight: 5 }
         }
@@ -104,9 +125,11 @@ export function buildOverviewSection(
           name: submissionGuidance,
           contentType: 'What happens next',
           englishContent: metadata.submissionGuidance ?? 'Not set',
-          welshContent:
-            validation?.formValues[submissionGuidance] ??
-            lookupTranslation(submissionGuidance, translations),
+          welshContent: getTranslation(
+            submissionGuidance,
+            translations,
+            validation
+          ),
           label: 'information about what happens next',
           attributes: { textareaHeight: 5, showMarkdownHelp: true }
         }
@@ -134,9 +157,11 @@ export function buildPrivacyNoticeSection(metadata, translations, validation) {
           name: privacyNoticeUrlKey,
           contentType: 'Privacy notice link',
           englishContent: metadata.privacyNoticeUrl ?? 'Not set',
-          welshContent:
-            validation?.formValues[privacyNoticeUrlKey] ??
-            lookupTranslation(privacyNoticeUrlKey, translations),
+          welshContent: getTranslation(
+            privacyNoticeUrlKey,
+            translations,
+            validation
+          ),
           label: 'privacy notice URL'
         }
       ]
@@ -150,9 +175,11 @@ export function buildPrivacyNoticeSection(metadata, translations, validation) {
         name: privacyNoticeTextKey,
         contentType: 'Privacy notice content',
         englishContent: metadata.privacyNoticeText ?? 'Not set',
-        welshContent:
-          validation?.formValues[privacyNoticeTextKey] ??
-          lookupTranslation(privacyNoticeTextKey, translations),
+        welshContent: getTranslation(
+          privacyNoticeTextKey,
+          translations,
+          validation
+        ),
         label: 'privacy notice content',
         attributes: { textareaHeight: 5, showMarkdownHelp: true }
       }
