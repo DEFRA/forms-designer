@@ -34,105 +34,93 @@ export function buildOverviewSection(
   const contactPhoneKey = 'metadata.contact.phone'
   const submissionGuidance = 'metadata.submissionGuidance'
 
+  /**
+   * @param {string} formNameKey
+   * @param {string} contentType
+   * @param { string | undefined } englishReference
+   * @param {string} label
+   * @param {object} [attributes]
+   */
+  function buildTableRow(
+    formNameKey,
+    contentType,
+    englishReference,
+    label,
+    attributes
+  ) {
+    return {
+      name: formNameKey,
+      contentType,
+      englishContent: englishReference,
+      welshContent: getTranslation(formNameKey, translations, validation),
+      label,
+      attributes
+    }
+  }
+
   return [
     {
       title: 'Form name',
       table: [
-        {
-          name: formNameKey,
-          contentType: 'Form name',
-          englishContent: definition.name,
-          welshContent: getTranslation(formNameKey, translations, validation),
-          label: 'form name'
-        }
+        buildTableRow(formNameKey, 'Form name', definition.name, 'form name')
       ]
     },
     {
       title: 'Contact details for support: email address and response time',
       table: [
-        {
-          name: contactEmailAddressKey,
-          contentType: 'Email address',
-          englishContent: metadata.contact?.email?.address ?? 'Not set',
-          welshContent: getTranslation(
-            contactEmailAddressKey,
-            translations,
-            validation
-          ),
-          label: 'support email address'
-        },
-        {
-          name: contactEmailResponseKey,
-          contentType: 'Response time',
-          englishContent: metadata.contact?.email?.responseTime ?? '--',
-          welshContent: getTranslation(
-            contactEmailResponseKey,
-            translations,
-            validation
-          ),
-          label: 'response time message'
-        }
+        buildTableRow(
+          contactEmailAddressKey,
+          'Email address',
+          metadata.contact?.email?.address ?? 'Not set',
+          'support email address'
+        ),
+        buildTableRow(
+          contactEmailResponseKey,
+          'Response time',
+          metadata.contact?.email?.responseTime ?? '--',
+          'response time message'
+        )
       ]
     },
     {
       title: 'Contact link for support',
       table: [
-        {
-          name: contactOnlineUrlKey,
-          contentType: 'Contact link',
-          englishContent: metadata.contact?.online?.url ?? 'Not set',
-          welshContent: getTranslation(
-            contactOnlineUrlKey,
-            translations,
-            validation
-          ),
-          label: 'contact link URL'
-        },
-        {
-          name: contactOnlineTextKey,
-          contentType: 'Link text',
-          englishContent: metadata.contact?.online?.text ?? '--',
-          welshContent: getTranslation(
-            contactOnlineTextKey,
-            translations,
-            validation
-          ),
-          label: 'text for the contact link'
-        }
+        buildTableRow(
+          contactOnlineUrlKey,
+          'Contact link',
+          metadata.contact?.online?.url ?? 'Not set',
+          'contact link URL'
+        ),
+        buildTableRow(
+          contactOnlineTextKey,
+          'Link text',
+          metadata.contact?.online?.text ?? '--',
+          'text for the contact link'
+        )
       ]
     },
     {
       title: 'Phone number and opening times',
       table: [
-        {
-          name: contactPhoneKey,
-          contentType: 'Phone number and opening times',
-          englishContent: metadata.contact?.phone ?? 'Not set',
-          welshContent: getTranslation(
-            contactPhoneKey,
-            translations,
-            validation
-          ),
-          label: 'phone number and opening times',
-          attributes: { textareaHeight: 5 }
-        }
+        buildTableRow(
+          contactPhoneKey,
+          'Phone number and opening times',
+          metadata.contact?.phone ?? 'Not set',
+          'phone number and opening times',
+          { textareaHeight: 5 }
+        )
       ]
     },
     {
       title: 'Information about what happens next',
       table: [
-        {
-          name: submissionGuidance,
-          contentType: 'What happens next',
-          englishContent: metadata.submissionGuidance ?? 'Not set',
-          welshContent: getTranslation(
-            submissionGuidance,
-            translations,
-            validation
-          ),
-          label: 'information about what happens next',
-          attributes: { textareaHeight: 5, showMarkdownHelp: true }
-        }
+        buildTableRow(
+          submissionGuidance,
+          'What happens next',
+          metadata.submissionGuidance ?? 'Not set',
+          'information about what happens next',
+          { textareaHeight: 5, showMarkdownHelp: true }
+        )
       ]
     },
     buildPrivacyNoticeSection(metadata, translations, validation)
