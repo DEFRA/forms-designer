@@ -1,5 +1,6 @@
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
+import xlsx from 'xlsx'
 
 import { testFormDefinitionWithTwoQuestions } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
@@ -187,6 +188,191 @@ describe('Translations routes', () => {
     expect(forms.updateDraftFormDefinition).toHaveBeenCalled()
   })
 
+  test('GET - should perform download operation', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/welsh/download',
+      auth
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.OK)
+    expect(headers['content-type']).toBe(
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    )
+    const filename = headers['content-disposition']
+    expect(
+      filename?.startsWith('attachment; filename="translations-my-form-slug')
+    ).toBe(true)
+    expect(filename?.endsWith('.xlsx"')).toBe(true)
+  })
+
+  test('GET - should render upload page', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/welsh/upload',
+      auth
+    }
+
+    const { container } = await renderResponse(server, options)
+
+    const $mastheadHeadings = container.getAllByText('Test form')
+    const $cardTitle = container.getByText('Upload Welsh translations')
+    const $actions = container.getAllByRole('button')
+
+    expect($mastheadHeadings[0]).toHaveTextContent('Test form')
+    expect($mastheadHeadings[0]).toHaveClass('govuk-caption-l')
+    expect($cardTitle).toBeInTheDocument()
+
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Upload translations')
+    expect($actions[3]).toHaveTextContent('Cancel')
+  })
+
+  test('POST - upload should redirect with error when no file is selected (empty object)', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh/upload',
+      auth,
+      payload: {
+        translations: {} // Empty object when no file selected
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/welsh/upload'
+    )
+  })
+
+  test('POST - upload should redirect with error when no translations in payload', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh/upload',
+      auth,
+      payload: {} // Missing formDefinition entirely
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/welsh/upload'
+    )
+  })
+
+  test('POST - upload should redirect with error when file is invalid', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    const invalidFile = {
+      notAnXlsxFile: true,
+      someOtherData: 'value'
+    }
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh/upload',
+      auth,
+      payload: {
+        translations: invalidFile
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe(
+      '/library/my-form-slug/editor-v2/welsh/upload'
+    )
+  })
+
+  test('POST - upload should be successful and redirect when file is valid', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(testFormDefinitionWithTwoQuestions)
+
+    // @ts-expect-error - dynamic rows
+    function createWorkbook(rows) {
+      const workbook = xlsx.utils.book_new()
+      const worksheet = xlsx.utils.aoa_to_sheet(rows)
+      xlsx.utils.book_append_sheet(workbook, worksheet, 'Translations')
+      return workbook
+    }
+
+    const validWorkbook = createWorkbook([
+      [
+        'Data reference (do not edit)',
+        'Position in form',
+        'English content',
+        'Welsh content',
+        'Notes'
+      ],
+      [
+        'components.123e4567-e89b-12d3-a456-426614174000.title',
+        'Page 1 title',
+        'Hello',
+        'Helo',
+        ''
+      ]
+    ])
+
+    const validFile = xlsx.write(validWorkbook, {
+      bookType: 'xlsx',
+      type: 'base64'
+    })
+
+    const options = {
+      method: 'post',
+      url: '/library/my-form-slug/editor-v2/welsh/upload',
+      auth,
+      payload: {
+        translations: validFile
+      }
+    }
+
+    const {
+      response: { headers, statusCode }
+    } = await renderResponse(server, options)
+
+    expect(statusCode).toBe(StatusCodes.SEE_OTHER)
+    expect(headers.location).toBe('/library/my-form-slug/editor-v2/welsh')
+  })
+
   test('validateFileSelected returns translation workbook error for invalid workbook bytes', () => {
     const buffer = Buffer.from('invalid')
     const mockHelpers = {
@@ -198,7 +384,7 @@ describe('Translations routes', () => {
     expect(mockHelpers.error).toHaveBeenCalledWith(
       'custom.invalidTranslationWorkbook',
       {
-        reason: 'Wrong number of columns (expected 5, got 1)'
+        reason: 'Too few columns (expected 5, got 1)'
       }
     )
     expect(result).toEqual({

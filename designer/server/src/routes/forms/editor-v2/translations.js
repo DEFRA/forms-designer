@@ -251,7 +251,10 @@ export default [
 
       return h.view('forms/editor-v2/translations-upload', {
         ...uploadViewModel(metadata, definition, validation),
-        downloadAction: editorv2Path(slug, 'welsh/download')
+        downloadAction: editorv2Path(slug, 'welsh/download'),
+        pageHeading: {
+          text: 'Upload Welsh translations'
+        }
       })
     },
     options: {

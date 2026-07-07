@@ -7,7 +7,12 @@ import { buildTranslationRows } from '~/src/models/forms/editor-v2/translations.
  * @typedef {Buffer} XLSXBuffer
  */
 
-const headers = [
+const COLUMN_INDEX_DATA_REFERENCE = 0
+const COLUMN_INDEX_POSITION_IN_FORM = 1
+const COLUMN_INDEX_ENGLISH_CONTENT = 2
+const COLUMN_INDEX_WELSH_CONTENT = 3
+
+const COLUMN_HEADERS = [
   {
     title: 'Data reference (do not edit)',
     dataKey: 'dataReference',
@@ -53,12 +58,18 @@ export function getTranslationsAsExcel(metadata, definition) {
         translation.name,
         translation.label,
         translation.englishContent,
-        translation.welshContent
+        translation.welshContent,
+        ''
       ])
     }
   }
 
-  addWorksheet(workbook, headers, rows, definition.name ?? 'Translations')
+  addWorksheet(
+    workbook,
+    COLUMN_HEADERS,
+    rows,
+    definition.name ?? 'Translations'
+  )
 
   const buffer = /** @type {XLSXBuffer} */ (
     xlsx.write(workbook, {
@@ -118,16 +129,26 @@ export function validateWorkbook(workbook) {
     throw new Error('No rows found')
   }
 
-  // Validate header row
-
   // @ts-expect-error - dynamic data type
   const headerRow = rows[0].map((value) => String(value).trim())
 
-  const translationHeaders = headers.map((h) => h.title)
+  const translationHeaders = COLUMN_HEADERS.map((h) => h.title)
 
-  if (headerRow.length !== translationHeaders.length) {
+  // Validate header row
+  validateHeaderRow(headerRow, translationHeaders)
+
+  // Validate data rows
+  return validateDataRows(rows, translationHeaders)
+}
+
+/**
+ * @param {any[]} headerRow
+ * @param {string[]} translationHeaders
+ */
+function validateHeaderRow(headerRow, translationHeaders) {
+  if (headerRow.length < translationHeaders.length) {
     throw new Error(
-      `Wrong number of columns (expected ${translationHeaders.length}, got ${headerRow.length})`
+      `Too few columns (expected ${translationHeaders.length}, got ${headerRow.length})`
     )
   }
 
@@ -136,9 +157,14 @@ export function validateWorkbook(workbook) {
       throw new Error(`Missing column '${translationHeaders[i]}'`)
     }
   }
+}
 
-  // Validate data rows
-  return validateDataRows(rows, translationHeaders)
+/**
+ * @param {any[]} row
+ * @param {number} colIndex
+ */
+function getCellValue(row, colIndex) {
+  return String(row[colIndex] ?? '').trim()
 }
 
 /**
@@ -163,19 +189,25 @@ function validateDataRows(rows, translationHeaders) {
       throw new Error(`Invalid row ${rowIndex + 1}`)
     }
 
-    const dataReference = String(row[0] ?? '').trim()
-    const positionInForm = String(row[1] ?? '').trim()
-    const englishContent = String(row[2] ?? '').trim()
-    const welshContent = String(row[3] ?? '')
+    const dataReference = getCellValue(row, COLUMN_INDEX_DATA_REFERENCE)
+    const positionInForm = getCellValue(row, COLUMN_INDEX_POSITION_IN_FORM)
+    const englishContent = getCellValue(row, COLUMN_INDEX_ENGLISH_CONTENT)
+    const welshContent = getCellValue(row, COLUMN_INDEX_WELSH_CONTENT)
 
     if (!dataReference) {
-      throw new Error(`Missing value in column '${translationHeaders[0]}'`)
+      throw new Error(
+        `Missing value in column '${translationHeaders[COLUMN_INDEX_DATA_REFERENCE]}'`
+      )
     }
     if (!positionInForm) {
-      throw new Error(`Missing value in column '${translationHeaders[1]}'`)
+      throw new Error(
+        `Missing value in column '${translationHeaders[COLUMN_INDEX_POSITION_IN_FORM]}'`
+      )
     }
     if (!englishContent) {
-      throw new Error(`Missing value in column '${translationHeaders[2]}'`)
+      throw new Error(
+        `Missing value in column '${translationHeaders[COLUMN_INDEX_ENGLISH_CONTENT]}'`
+      )
     }
 
     for (let colIndex = 4; colIndex < row.length; colIndex += 1) {

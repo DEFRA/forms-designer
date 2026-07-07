@@ -69,7 +69,7 @@ describe('translations-excel', () => {
       ])
 
       expect(() => validateWorkbook(workbook)).toThrow(
-        'Wrong number of columns (expected 5, got 3)'
+        'Too few columns (expected 5, got 3)'
       )
     })
 
@@ -90,7 +90,7 @@ describe('translations-excel', () => {
       ])
 
       expect(() => validateWorkbook(workbook)).toThrow(
-        'Wrong number of columns (expected 5, got 4)'
+        'Too few columns (expected 5, got 4)'
       )
     })
 
