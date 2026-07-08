@@ -2,12 +2,19 @@ import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 import xlsx from 'xlsx'
 
-import { testFormDefinitionWithTwoQuestions } from '~/src/__stubs__/form-definition.js'
+import {
+  testFormDefinitionWithNoPages,
+  testFormDefinitionWithRadioQuestionAndList,
+  testFormDefinitionWithTwoQuestions
+} from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { validateFileSelected } from '~/src/routes/forms/editor-v2/translations.js'
+import {
+  extraPageTitles,
+  validateFileSelected
+} from '~/src/routes/forms/editor-v2/translations.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -390,6 +397,30 @@ describe('Translations routes', () => {
     expect(result).toEqual({
       type: 'custom.invalidTranslationWorkbook',
       isJoiError: true
+    })
+  })
+
+  describe('extraPageTitles', () => {
+    test('should leave payload unchanged', () => {
+      const payload = {
+        'components.abc-123.title': 'Only field on page'
+      }
+      const def = testFormDefinitionWithNoPages
+      const res = extraPageTitles(payload, def)
+      expect(res).toEqual(payload)
+    })
+
+    test('should add page title', () => {
+      const payload = {
+        'components.q1.title': 'Only field on page'
+      }
+      const def = testFormDefinitionWithRadioQuestionAndList
+      def.pages[0].title = ''
+      const res = extraPageTitles(payload, def)
+      expect(res).toEqual({
+        'components.q1.title': 'Only field on page',
+        'pages.p1.title': 'Only field on page'
+      })
     })
   })
 })
