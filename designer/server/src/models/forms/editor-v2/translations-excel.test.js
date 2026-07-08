@@ -216,7 +216,7 @@ describe('translations-excel', () => {
         'metadata.contact.online.text': '',
         'metadata.contact.online.url': '',
         'metadata.contact.phone': '0555777888',
-        'metadata.formName': '',
+        'metadata.title': '',
         'metadata.privacyNoticeText': '',
         'metadata.submissionGuidance': '',
         'pages.p1.title': ''

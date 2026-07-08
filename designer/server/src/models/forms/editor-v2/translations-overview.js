@@ -1,6 +1,6 @@
 import { lookupTranslation } from '~/src/models/forms/editor-v2/translations-config.js'
 
-const formNameKey = 'metadata.formName'
+const formNameKey = 'metadata.title'
 const contactEmailAddressKey = 'metadata.contact.email.address'
 const contactEmailResponseKey = 'metadata.contact.email.responseTime'
 const contactOnlineUrlKey = 'metadata.contact.online.url'

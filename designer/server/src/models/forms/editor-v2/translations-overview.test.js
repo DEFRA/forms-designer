@@ -46,7 +46,7 @@ describe('Translations overview', () => {
               contentType: 'Form name',
               englishContent: 'my form name',
               label: 'form name',
-              name: 'metadata.formName',
+              name: 'metadata.title',
               welshContent: ''
             }
           ],
@@ -153,7 +153,7 @@ describe('Translations overview', () => {
 
     it('should return overview based on translations of metadata (where they exist)', () => {
       const translations = /** @type {Record<string, string>} */ ({
-        'metadata.formName': 'new form name',
+        'metadata.title': 'new form name',
         'metadata.contact.email.address': 'new@server.com',
         'metadata.contact.email.responseTime': 'New response time',
         'metadata.contact.online.url': 'https://new-online.com',
@@ -180,7 +180,7 @@ describe('Translations overview', () => {
 
     it('should return overview based on translations and posted values', () => {
       const translations = /** @type {Record<string, string>} */ ({
-        'metadata.formName': 'new form name',
+        'metadata.title': 'new form name',
         'metadata.contact.email.address': 'new@server.com',
         'metadata.contact.phone': '0111222333',
         'metadata.submissionGuidance': 'new submission guidance'

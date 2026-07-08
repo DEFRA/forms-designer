@@ -30,7 +30,7 @@ const errorKey = sessionNames.validationFailure.editorTranslations
 
 const translationsSchema = Joi.object()
   .keys({
-    'metadata.formName': Joi.string().allow(''),
+    'metadata.title': Joi.string().allow(''),
     'metadata.submissionGuidance': Joi.string().allow(''),
     'metadata.privacyNoticeText': Joi.string().allow(''),
     'metadata.contact.email.address': Joi.string()
