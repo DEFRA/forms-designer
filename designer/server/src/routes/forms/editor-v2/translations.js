@@ -1,9 +1,4 @@
-import {
-  ComponentType,
-  Scopes,
-  getErrorMessage,
-  hasComponents
-} from '@defra/forms-model'
+import { Scopes, getErrorMessage } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
@@ -98,29 +93,6 @@ export function validateFileSelected(value, helpers) {
   }
 }
 
-/**
- * @param {Record<string, string>} payload
- * @param {FormDefinition} definition
- */
-export function extraPageTitles(payload, definition) {
-  const newPayload = { ...payload }
-
-  // Check each page for only one component (excluding guidance) where the page title is not yet set
-  // Override by adding a page title entry
-  definition.pages.forEach((page) => {
-    const components = hasComponents(page)
-      ? page.components.filter((comp) => comp.type !== ComponentType.Markdown)
-      : []
-    const existingTitle = newPayload[`pages.${page.id}.title`]
-    if (components.length === 1 && !page.title && !existingTitle) {
-      newPayload[`pages.${page.id}.title`] =
-        payload[`components.${components[0].id}.title`]
-    }
-  })
-
-  return newPayload
-}
-
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string, pageNum: string } }>}
@@ -187,10 +159,7 @@ export default [
       definition.metadata ??= {}
       definition.metadata.translations ??= {}
       // @ts-expect-error - dynamic language name
-      definition.metadata.translations.cy = extraPageTitles(
-        request.payload,
-        definition
-      )
+      definition.metadata.translations.cy = request.payload
 
       await forms.updateDraftFormDefinition(metadata.id, definition, token)
 
