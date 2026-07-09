@@ -192,7 +192,7 @@ describe('translations-excel', () => {
         translations: {
           cy: {
             'components.q1.shortDescription': 'welsh short desc',
-            'metadata.contact.phone': '0555777888',
+            'form.contact.phone': '0555777888',
             'listItems.option-1-guid.hint': 'welsh option 1 hint'
           }
         }
@@ -211,14 +211,14 @@ describe('translations-excel', () => {
         'listItems.option-1-guid.hint': 'welsh option 1 hint',
         'listItems.option-2-guid.text': '',
         'listItems.option-3-guid.text': '',
-        'metadata.contact.email.address': '',
-        'metadata.contact.email.responseTime': '',
-        'metadata.contact.online.text': '',
-        'metadata.contact.online.url': '',
-        'metadata.contact.phone': '0555777888',
-        'metadata.title': '',
-        'metadata.privacyNoticeText': '',
-        'metadata.submissionGuidance': '',
+        'form.contact.email.address': '',
+        'form.contact.email.responseTime': '',
+        'form.contact.online.text': '',
+        'form.contact.online.url': '',
+        'form.contact.phone': '0555777888',
+        'form.title': '',
+        'form.privacyNoticeText': '',
+        'form.submissionGuidance': '',
         'pages.p1.title': ''
       })
     })

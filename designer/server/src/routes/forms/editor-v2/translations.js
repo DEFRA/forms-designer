@@ -30,20 +30,20 @@ const errorKey = sessionNames.validationFailure.editorTranslations
 
 const translationsSchema = Joi.object()
   .keys({
-    'metadata.title': Joi.string().allow(''),
-    'metadata.submissionGuidance': Joi.string().allow(''),
-    'metadata.privacyNoticeText': Joi.string().allow(''),
-    'metadata.contact.email.address': Joi.string()
+    'form.title': Joi.string().allow(''),
+    'form.submissionGuidance': Joi.string().allow(''),
+    'form.privacyNoticeText': Joi.string().allow(''),
+    'form.contact.email.address': Joi.string()
       .email()
       .allow('')
       .messages({ 'string.email': 'The email format is invalid' }),
-    'metadata.contact.email.responseTime': Joi.string().allow(''),
-    'metadata.contact.phone': Joi.string().allow(''),
-    'metadata.contact.online.url': Joi.string()
+    'form.contact.email.responseTime': Joi.string().allow(''),
+    'form.contact.phone': Joi.string().allow(''),
+    'form.contact.online.url': Joi.string()
       .uri()
       .allow('')
       .messages({ 'string.uri': 'The link format is invalid' }),
-    'metadata.contact.online.text': Joi.string().allow('')
+    'form.contact.online.text': Joi.string().allow('')
   })
   .pattern(
     // Validate unrecognised dynamic keys with a regex

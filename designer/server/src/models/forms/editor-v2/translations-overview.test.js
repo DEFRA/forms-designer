@@ -46,7 +46,7 @@ describe('Translations overview', () => {
               contentType: 'Form name',
               englishContent: 'my form name',
               label: 'form name',
-              name: 'metadata.title',
+              name: 'form.title',
               welshContent: ''
             }
           ],
@@ -58,14 +58,14 @@ describe('Translations overview', () => {
               contentType: 'Email address',
               englishContent: 'Not set',
               label: 'support email address',
-              name: 'metadata.contact.email.address',
+              name: 'form.contact.email.address',
               welshContent: ''
             },
             {
               contentType: 'Response time',
               englishContent: '--',
               label: 'response time message',
-              name: 'metadata.contact.email.responseTime',
+              name: 'form.contact.email.responseTime',
               welshContent: ''
             }
           ],
@@ -77,14 +77,14 @@ describe('Translations overview', () => {
               contentType: 'Contact link',
               englishContent: 'Not set',
               label: 'contact link URL',
-              name: 'metadata.contact.online.url',
+              name: 'form.contact.online.url',
               welshContent: ''
             },
             {
               contentType: 'Link text',
               englishContent: '--',
               label: 'text for the contact link',
-              name: 'metadata.contact.online.text',
+              name: 'form.contact.online.text',
               welshContent: ''
             }
           ],
@@ -97,7 +97,7 @@ describe('Translations overview', () => {
               contentType: 'Phone number and opening times',
               englishContent: 'Not set',
               label: 'phone number and opening times',
-              name: 'metadata.contact.phone',
+              name: 'form.contact.phone',
               welshContent: ''
             }
           ],
@@ -110,7 +110,7 @@ describe('Translations overview', () => {
               contentType: 'What happens next',
               englishContent: 'Not set',
               label: 'information about what happens next',
-              name: 'metadata.submissionGuidance',
+              name: 'form.submissionGuidance',
               welshContent: ''
             }
           ],
@@ -123,7 +123,7 @@ describe('Translations overview', () => {
               contentType: 'Privacy notice content',
               englishContent: 'Not set',
               label: 'privacy notice content',
-              name: 'metadata.privacyNoticeText',
+              name: 'form.privacyNoticeText',
               welshContent: ''
             }
           ],
@@ -153,13 +153,13 @@ describe('Translations overview', () => {
 
     it('should return overview based on translations of metadata (where they exist)', () => {
       const translations = /** @type {Record<string, string>} */ ({
-        'metadata.title': 'new form name',
-        'metadata.contact.email.address': 'new@server.com',
-        'metadata.contact.email.responseTime': 'New response time',
-        'metadata.contact.online.url': 'https://new-online.com',
-        'metadata.contact.online.text': 'new online text',
-        'metadata.contact.phone': '0111222333',
-        'metadata.submissionGuidance': 'new submission guidance'
+        'form.title': 'new form name',
+        'form.contact.email.address': 'new@server.com',
+        'form.contact.email.responseTime': 'New response time',
+        'form.contact.online.url': 'https://new-online.com',
+        'form.contact.online.text': 'new online text',
+        'form.contact.phone': '0111222333',
+        'form.submissionGuidance': 'new submission guidance'
       })
       const validation = undefined
       const res = buildOverviewSection(
@@ -180,16 +180,16 @@ describe('Translations overview', () => {
 
     it('should return overview based on translations and posted values', () => {
       const translations = /** @type {Record<string, string>} */ ({
-        'metadata.title': 'new form name',
-        'metadata.contact.email.address': 'new@server.com',
-        'metadata.contact.phone': '0111222333',
-        'metadata.submissionGuidance': 'new submission guidance'
+        'form.title': 'new form name',
+        'form.contact.email.address': 'new@server.com',
+        'form.contact.phone': '0111222333',
+        'form.submissionGuidance': 'new submission guidance'
       })
       const validation = /** @type {ValidationFailure<any>} */ ({
         formValues: {
-          'metadata.contact.email.responseTime': 'Validation response time',
-          'metadata.contact.online.url': 'https://validation.com',
-          'metadata.contact.online.text': ''
+          'form.contact.email.responseTime': 'Validation response time',
+          'form.contact.online.url': 'https://validation.com',
+          'form.contact.online.text': ''
         }
       })
       const res = buildOverviewSection(
@@ -217,7 +217,7 @@ describe('Translations overview', () => {
         privacyNoticeUrl: 'https:/privacy-notice.com'
       }
       const translations = /** @type {Record<string, string>} */ ({
-        'metadata.privacyNoticeUrl': 'https:/privacy-notice2.com'
+        'form.privacyNoticeUrl': 'https:/privacy-notice2.com'
       })
       const validation = /** @type {ValidationFailure<any>} */ ({
         formValues: {}
@@ -238,7 +238,7 @@ describe('Translations overview', () => {
         privacyNoticeText: 'Privacy notice text content'
       }
       const translations = /** @type {Record<string, string>} */ ({
-        'metadata.privacyNoticeText': 'Changed privacy notice text'
+        'form.privacyNoticeText': 'Changed privacy notice text'
       })
       const validation = /** @type {ValidationFailure<any>} */ ({
         formValues: {}

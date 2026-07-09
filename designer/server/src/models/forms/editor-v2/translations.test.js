@@ -58,7 +58,7 @@ describe('Translations', () => {
             { classes: 'govuk-!-text-break-word', html: 'my form name' },
             {
               classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="metadata.title">Welsh form name</label><input type="text" lang="cy" class="govuk-input" name="metadata.title" id="metadata.title" value=""/></div'
+              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="form.title">Welsh form name</label><input type="text" lang="cy" class="govuk-input" name="form.title" id="form.title" value=""/></div'
             }
           ]
         ]

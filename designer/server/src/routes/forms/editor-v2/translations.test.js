@@ -92,7 +92,7 @@ describe('Translations routes', () => {
       url: '/library/my-form-slug/editor-v2/welsh',
       auth,
       payload: {
-        'metadata.contact.email.address': 'invalid-email'
+        'form.contact.email.address': 'invalid-email'
       }
     }
 
@@ -120,7 +120,7 @@ describe('Translations routes', () => {
       url: '/library/my-form-slug/editor-v2/welsh',
       auth,
       payload: {
-        'metadata.contact.email.address': 'my-email@server.com'
+        'form.contact.email.address': 'my-email@server.com'
       }
     }
 

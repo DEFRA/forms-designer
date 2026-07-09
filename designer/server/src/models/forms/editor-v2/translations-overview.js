@@ -1,14 +1,14 @@
 import { lookupTranslation } from '~/src/models/forms/editor-v2/translations-config.js'
 
-const formNameKey = 'metadata.title'
-const contactEmailAddressKey = 'metadata.contact.email.address'
-const contactEmailResponseKey = 'metadata.contact.email.responseTime'
-const contactOnlineUrlKey = 'metadata.contact.online.url'
-const contactOnlineTextKey = 'metadata.contact.online.text'
-const contactPhoneKey = 'metadata.contact.phone'
-const submissionGuidanceKey = 'metadata.submissionGuidance'
-const privacyNoticeUrlKey = 'metadata.privacyNoticeUrl'
-const privacyNoticeTextKey = 'metadata.privacyNoticeText'
+const formNameKey = 'form.title'
+const contactEmailAddressKey = 'form.contact.email.address'
+const contactEmailResponseKey = 'form.contact.email.responseTime'
+const contactOnlineUrlKey = 'form.contact.online.url'
+const contactOnlineTextKey = 'form.contact.online.text'
+const contactPhoneKey = 'form.contact.phone'
+const submissionGuidanceKey = 'form.submissionGuidance'
+const privacyNoticeUrlKey = 'form.privacyNoticeUrl'
+const privacyNoticeTextKey = 'form.privacyNoticeText'
 
 const fieldConfig =
   /** @type {Record<string, { contentType: string, label: string, attributes?: object }>} */ ({
