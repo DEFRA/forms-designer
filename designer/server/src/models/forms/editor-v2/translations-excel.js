@@ -210,7 +210,7 @@ function validateDataRows(rows, translationHeaders) {
       )
     }
 
-    for (let colIndex = 4; colIndex < row.length; colIndex += 1) {
+    for (let colIndex = 5; colIndex < row.length; colIndex += 1) {
       if (String(row[colIndex] ?? '').trim() !== '') {
         throw new Error('Extra values found')
       }

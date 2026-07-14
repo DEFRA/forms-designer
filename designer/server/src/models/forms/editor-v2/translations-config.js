@@ -80,8 +80,10 @@ export const keyConfig = {
 
 // List of fields that require translation of option values
 export const FIELDS_WITH_SELECTION_OPTIONS = [
+  ComponentType.AutocompleteField,
   ComponentType.CheckboxesField,
   ComponentType.RadiosField,
+  ComponentType.SelectField,
   ComponentType.YesNoField
 ]
 

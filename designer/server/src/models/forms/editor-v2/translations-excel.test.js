@@ -126,7 +126,8 @@ describe('translations-excel', () => {
           'Page 1 title',
           'Hello',
           'Helo',
-          'extra'
+          'extra allowed',
+          'extra not allowed'
         ]
       ])
 
