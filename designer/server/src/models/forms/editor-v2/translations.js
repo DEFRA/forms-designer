@@ -43,6 +43,17 @@ function mapRowData(title, row, validation, type) {
   }
 }
 
+const overviewRowNumbers = {
+  FormName: 0,
+  SupportEmail: 1,
+  SupportResponse: 2,
+  ContactLink: 3,
+  ContactText: 4,
+  Phone: 5,
+  WhatNext: 6,
+  PrivacyNotice: 7
+}
+
 /**
  * @param {TranslationRow[]} rows
  * @param { ValidationFailure<any> | undefined } validation
@@ -52,23 +63,41 @@ function mapOverviewRowsToViewModel(rows, validation) {
 
   overview.push({
     caption: 'Form name',
-    rowData: [mapRowData('Form name', rows[0], validation)]
+    rowData: [
+      mapRowData('Form name', rows[overviewRowNumbers.FormName], validation)
+    ]
   })
 
   overview.push({
     caption: 'Contact details for support',
     caption2: 'Email address and response time',
     rowData: [
-      mapRowData('Email address', rows[1], validation),
-      mapRowData('Response time', rows[2], validation)
+      mapRowData(
+        'Email address',
+        rows[overviewRowNumbers.SupportEmail],
+        validation
+      ),
+      mapRowData(
+        'Response time',
+        rows[overviewRowNumbers.SupportResponse],
+        validation
+      )
     ]
   })
 
   overview.push({
     caption: 'Contact link for support',
     rowData: [
-      mapRowData('Contact link', rows[3], validation),
-      mapRowData('Contact text', rows[4], validation)
+      mapRowData(
+        'Contact link',
+        rows[overviewRowNumbers.ContactLink],
+        validation
+      ),
+      mapRowData(
+        'Contact text',
+        rows[overviewRowNumbers.ContactText],
+        validation
+      )
     ]
   })
 
@@ -77,7 +106,7 @@ function mapOverviewRowsToViewModel(rows, validation) {
     rowData: [
       mapRowData(
         'Phone number and opening times',
-        rows[5],
+        rows[overviewRowNumbers.Phone],
         validation,
         TEXTAREA_5_ROWS
       )
@@ -89,20 +118,22 @@ function mapOverviewRowsToViewModel(rows, validation) {
     rowData: [
       mapRowData(
         'What happens next',
-        rows[6],
+        rows[overviewRowNumbers.WhatNext],
         validation,
         TEXTAREA_12_ROWS_WITH_MARKDOWN
       )
     ]
   })
 
-  if (rows[7].name === 'form.privacyNoticeText') {
+  if (
+    rows[overviewRowNumbers.PrivacyNotice].name === 'form.privacyNoticeText'
+  ) {
     overview.push({
       caption: 'Privacy information for this form (uses inline content)',
       rowData: [
         mapRowData(
           'Privacy notice text',
-          rows[7],
+          rows[overviewRowNumbers.PrivacyNotice],
           validation,
           TEXTAREA_12_ROWS_WITH_MARKDOWN
         )
@@ -112,7 +143,13 @@ function mapOverviewRowsToViewModel(rows, validation) {
     overview.push({
       caption: 'Privacy information for this form',
       subHeading: 'This form uses a link to a privacy notice.',
-      rowData: [mapRowData('Privacy notice link', rows[7], validation)]
+      rowData: [
+        mapRowData(
+          'Privacy notice link',
+          rows[overviewRowNumbers.PrivacyNotice],
+          validation
+        )
+      ]
     })
   }
 
@@ -230,31 +267,31 @@ function mapFormRowsToViewModel(rows) {
       const listItemHints = questionRows.filter(
         (row) => row.type === TranslationRowTypes.ListItemHint
       )
-      if (listItems.length) {
-        const optionRows = []
-        for (const item of listItems) {
-          const hint = listItemHints.find(
-            (hint) => hint.itemNum === item.itemNum
-          )
-          optionRows.push({
-            title: `Option ${item.itemNum}`,
-            row: item,
-            type: hint ? LIST_ITEM_WITH_HINT_FOLLOWING : undefined
-          })
-
-          if (hint) {
-            optionRows.push({
-              title: '',
-              row: hint,
-              type: LIST_ITEM_HINT
-            })
-          }
-        }
-
-        formRows.push({
-          rowData: optionRows
-        })
+      if (listItems.length === 0) {
+        continue
       }
+
+      const optionRows = []
+      for (const item of listItems) {
+        const hint = listItemHints.find((hint) => hint.itemNum === item.itemNum)
+        optionRows.push({
+          title: `Option ${item.itemNum}`,
+          row: item,
+          type: hint ? LIST_ITEM_WITH_HINT_FOLLOWING : undefined
+        })
+
+        if (hint) {
+          optionRows.push({
+            title: '',
+            row: hint,
+            type: LIST_ITEM_HINT
+          })
+        }
+      }
+
+      formRows.push({
+        rowData: optionRows
+      })
     }
   }
 

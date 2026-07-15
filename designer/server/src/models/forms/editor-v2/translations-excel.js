@@ -43,8 +43,13 @@ const COLUMN_HEADERS = [
  * @param { string | undefined } label
  */
 function stripLabel(label) {
-  if (label?.startsWith('Welsh ')) {
-    return label.substring(6, 7).toUpperCase() + label.substring(7)
+  const welshPrefix = 'Welsh '
+  const prefixLen = welshPrefix.length
+  if (label?.startsWith(welshPrefix)) {
+    return (
+      label.substring(prefixLen, prefixLen + 1).toUpperCase() +
+      label.substring(prefixLen)
+    )
   }
   return label
 }
