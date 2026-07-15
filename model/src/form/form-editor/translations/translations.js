@@ -25,10 +25,16 @@ function createRow(
   { pageNum, questionNum, itemNum, translations, validation }
 ) {
   const keyProperties = keyConfig[keyType]
+  const entityWithDynamicProperties = /** @type {Record<string, unknown>} */ (
+    /** @type {unknown} */ (entity)
+  )
   const innerEnglishContent =
-    keyProperties.jsonSuffix in entity
-      ? // @ts-expect-error - dynamic property
-        drillDown(entity[keyProperties.jsonSuffix])
+    keyProperties.jsonSuffix in entityWithDynamicProperties
+      ? drillDown(
+          /** @type {string | { text: string }} */ (
+            entityWithDynamicProperties[keyProperties.jsonSuffix]
+          )
+        )
       : ''
 
   const keyName = `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`
