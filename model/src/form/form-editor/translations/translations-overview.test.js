@@ -164,6 +164,39 @@ describe('Translations overview', () => {
       expect(res[6].welshContent).toBe('new submission guidance')
       expect(res[7].welshContent).toBe('')
     })
+
+    it('should return overview with alternate privacy notice', () => {
+      const translations = /** @type {Record<string, string>} */ ({
+        'form.title': 'new form name',
+        'form.contact.email.address': 'new@server.com',
+        'form.contact.phone': '0111222333',
+        'form.submissionGuidance': 'new submission guidance'
+      })
+      const validation = undefined
+      const metadata = structuredClone(testFormMetadata)
+      metadata.privacyNoticeText = undefined
+      metadata.privacyNoticeType = 'link'
+      metadata.privacyNoticeUrl = 'http://my-privacy-link'
+
+      const res = buildOverviewSection(
+        metadata,
+        definition,
+        translations,
+        validation
+      )
+      expect(res[0]).toEqual({
+        name: 'form.title',
+        englishContent: 'my form name',
+        welshContent: 'new form name',
+        label: 'Welsh form name'
+      })
+      expect(res[7]).toEqual({
+        name: 'form.privacyNoticeUrl',
+        englishContent: 'http://my-privacy-link',
+        welshContent: '',
+        label: 'Welsh privacy notice URL'
+      })
+    })
   })
 })
 
