@@ -82,13 +82,13 @@ export const formDefinitionWithTwoQuestionsAndGuidance = buildDefinition({
         buildTextFieldComponent({
           id: 'q1',
           name: 'textField',
-          title: 'This is your first question',
+          title: 'This is the first textfield question',
           hint: 'Help text'
         }),
         buildTextFieldComponent({
           id: 'q2',
           name: 'textField',
-          title: 'This is your second question',
+          title: 'This is the second textfield question',
           hint: 'Help text'
         })
       ],
@@ -123,7 +123,7 @@ export const formDefinitionWithRadioQuestion = buildDefinition({
         buildRadiosComponent({
           id: 'q1',
           name: 'radioField',
-          title: 'This is your first question',
+          title: 'This is a radio question',
           hint: 'Help text',
           list: 'my-list-id'
         })

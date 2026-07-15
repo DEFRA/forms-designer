@@ -273,7 +273,7 @@ function mapFormRowsToViewModel(rows) {
 
       const optionRows = []
       for (const item of listItems) {
-        const hint = listItemHints.find((hint) => hint.itemNum === item.itemNum)
+        const hint = listItemHints.find((ht) => ht.itemNum === item.itemNum)
         optionRows.push({
           title: `Option ${item.itemNum}`,
           row: item,
