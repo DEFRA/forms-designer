@@ -8,7 +8,7 @@ import {
   lookupTranslation
 } from '~/src/form/form-editor/translations/translations-config.js'
 import { buildOverviewSection } from '~/src/form/form-editor/translations/translations-overview.js'
-import { findDefinitionListFromComponent } from '~/src/form/utils/list.js'
+import { getListFromComponent } from '~/src/form/utils/list.js'
 import { getPageNum, getQuestionNum } from '~/src/form/utils/numbering.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
@@ -176,11 +176,8 @@ function buildComponent(
  * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
  */
 function addSelectionOptions(rows, component, definition, options) {
-  const list = findDefinitionListFromComponent(
-    /** @type {ListComponentsDef} */ (component),
-    definition
-  )
-  if (list.items.length) {
+  const list = getListFromComponent(component, definition)
+  if (list?.items.length) {
     let itemNum = 0
     for (const item of list.items) {
       itemNum++
