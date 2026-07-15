@@ -1,6 +1,6 @@
 import {
   formDefinitionWithRadioQuestion,
-  formDefinitionWithTwoQuestions
+  formDefinitionWithTwoQuestionsAndGuidance
 } from '~/src/form/form-definition/examples.js'
 import { buildTranslationDataRows } from '~/src/form/form-editor/translations/translations.js'
 import { buildMetaData } from '~/src/stubs.js'
@@ -25,11 +25,13 @@ describe('translations', () => {
 
   describe('buildTranslationsDataRows', () => {
     it('should return full list of data values with no welsh yet', () => {
-      const definition = structuredClone(formDefinitionWithTwoQuestions)
+      const definition = structuredClone(
+        formDefinitionWithTwoQuestionsAndGuidance
+      )
       const res = buildTranslationDataRows(metadata, definition)
 
       expect(res.overviewRows).toHaveLength(8)
-      expect(res.formRows).toHaveLength(7)
+      expect(res.formRows).toHaveLength(8)
 
       expect(res.overviewRows[0].englishContent).toBe('Test form')
       expect(res.overviewRows[0].welshContent).toBe('')
@@ -38,6 +40,10 @@ describe('translations', () => {
       expect(res.formRows[0].englishContent).toBe('Page One')
       expect(res.formRows[0].welshContent).toBe('')
       expect(res.formRows[0].name).toBe('pages.p1.title')
+
+      expect(res.formRows[1].englishContent).toBe('My markdown text')
+      expect(res.formRows[1].welshContent).toBe('')
+      expect(res.formRows[1].name).toBe('components.p1.content')
     })
 
     it('should return full list of data values with welsh translations', () => {

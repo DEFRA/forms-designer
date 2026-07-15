@@ -1,4 +1,5 @@
 import {
+  buildMarkdownComponent,
   buildRadiosComponent,
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
@@ -50,6 +51,34 @@ export const formDefinitionWithTwoQuestions = buildDefinition({
       id: 'p1',
       section: 'section',
       components: [
+        buildTextFieldComponent({
+          id: 'q1',
+          name: 'textField',
+          title: 'This is your first question',
+          hint: 'Help text'
+        }),
+        buildTextFieldComponent({
+          id: 'q2',
+          name: 'textField',
+          title: 'This is your second question',
+          hint: 'Help text'
+        })
+      ],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'p2'
+    })
+  ]
+})
+
+export const formDefinitionWithTwoQuestionsAndGuidance = buildDefinition({
+  pages: [
+    buildQuestionPage({
+      id: 'p1',
+      section: 'section',
+      components: [
+        buildMarkdownComponent({ content: 'My markdown text' }),
         buildTextFieldComponent({
           id: 'q1',
           name: 'textField',
