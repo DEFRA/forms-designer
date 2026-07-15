@@ -33,6 +33,11 @@ const translationsSchema = Joi.object()
     'form.title': Joi.string().allow(''),
     'form.submissionGuidance': Joi.string().allow(''),
     'form.privacyNoticeText': Joi.string().allow(''),
+    'form.privacyNoticeUrl': Joi.string()
+      .allow('')
+      .uri()
+      .allow('')
+      .messages({ 'string.uri': 'The link format is invalid' }),
     'form.contact.email.address': Joi.string()
       .email()
       .allow('')
@@ -115,17 +120,8 @@ export default [
         yar.flash(sessionNames.successNotification).at(0)
       )
 
-      const markdownHelpHtml = await request.render(
-        'forms/editor-v2/partials/markdown-help'
-      )
-
       const model = {
-        ...translationsViewModel(
-          metadata,
-          definition,
-          markdownHelpHtml,
-          validation
-        ),
+        ...translationsViewModel(metadata, definition, validation),
         notification
       }
 

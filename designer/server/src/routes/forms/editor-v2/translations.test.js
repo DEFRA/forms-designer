@@ -59,22 +59,18 @@ describe('Translations routes', () => {
     expect($cardTitle).toHaveTextContent('Add Welsh translations for your form')
     expect($cardTitle).toHaveClass('app-masthead__heading govuk-heading-xl')
 
-    expect($captions).toHaveLength(9)
+    expect($captions).toHaveLength(7)
     expect($captions[0]).toHaveTextContent('Form name')
-    expect($captions[1]).toHaveTextContent(
-      'Contact details for support: email address and response time'
-    )
-    expect($captions[2]).toHaveTextContent('Contact link for support')
-    expect($captions[3]).toHaveTextContent('Phone number and opening times')
-    expect($captions[4]).toHaveTextContent(
+    expect($captions[1]).toHaveTextContent('Contact details for support')
+    expect($captions[2]).toHaveTextContent('Email address and response time')
+    expect($captions[3]).toHaveTextContent('Contact link for support')
+    expect($captions[4]).toHaveTextContent('Phone number and opening times')
+    expect($captions[5]).toHaveTextContent(
       'Information about what happens next'
     )
-    expect($captions[5]).toHaveTextContent(
+    expect($captions[6]).toHaveTextContent(
       'Privacy information for this form (uses inline content)'
     )
-    expect($captions[6]).toHaveTextContent('Page 1')
-    expect($captions[7]).toHaveTextContent('Page 1, question 1')
-    expect($captions[8]).toHaveTextContent('Page 1, question 2')
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')

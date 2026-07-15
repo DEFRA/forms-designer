@@ -1,6 +1,5 @@
+import { buildTranslationDataRows } from '@defra/forms-model'
 import xlsx from 'xlsx'
-
-import { buildTranslationRows } from '~/src/models/forms/editor-v2/translations.js'
 
 /**
  * @typedef {{ title: string, dataKey: string, attributes?: { wch?: number } }} WorksheetColumn
@@ -41,6 +40,16 @@ const COLUMN_HEADERS = [
 ]
 
 /**
+ * @param { string | undefined } label
+ */
+function stripLabel(label) {
+  if (label?.startsWith('Welsh ')) {
+    return label.substring(6, 7).toUpperCase() + label.substring(7)
+  }
+  return label
+}
+
+/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  */
@@ -49,19 +58,20 @@ export function getTranslationsAsExcel(metadata, definition) {
   const workbook = xlsx.utils.book_new()
 
   const rows = []
-  const allTableRows = buildTranslationRows(metadata, definition)
+  const { overviewRows, formRows } = buildTranslationDataRows(
+    metadata,
+    definition
+  )
+  const allTableRows = overviewRows.concat(formRows)
 
-  const tables = allTableRows.filter((tab) => tab.table.length)
-  for (const outerTable of tables) {
-    for (const translation of outerTable.table) {
-      rows.push([
-        translation.name,
-        translation.label,
-        translation.englishContent,
-        translation.welshContent,
-        ''
-      ])
-    }
+  for (const translation of allTableRows) {
+    rows.push([
+      translation.name,
+      stripLabel(translation.label),
+      translation.englishContent,
+      translation.welshContent,
+      ''
+    ])
   }
 
   addWorksheet(

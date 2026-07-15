@@ -28,119 +28,47 @@ describe('Translations', () => {
         name: 'my form name'
       }
 
-      const res = translationsViewModel(
-        populatedMetadata,
-        definition,
-        '<p>markdown html</p>'
-      )
+      const res = translationsViewModel(populatedMetadata, definition)
 
       expect(res.backLink).toEqual({
         href: '/library/my-form-slug/editor-v2/pages',
         text: 'Back to add and edit pages'
       })
-      expect(res.fieldTables).toHaveLength(9)
-      expect(res.fieldTables[0]).toEqual({
+      expect(res.rowViewModel.overviewRows).toHaveLength(6)
+      expect(res.rowViewModel.overviewRows[0]).toEqual({
         caption: 'Form name',
-        captionClasses: 'govuk-table__caption--m',
-        classes: 'govuk-!-margin-bottom-0 app-translation-table',
-        firstCellIsHeader: false,
-        head: [
+        rowData: [
           {
-            classes: 'app-translation-table__empty-header-cell',
-            html: '<span class="govuk-visually-hidden">Field type</span>'
-          },
-          { text: 'English content' },
-          { text: 'Welsh content' }
-        ],
-        rows: [
-          [
-            { classes: 'govuk-table__header', text: 'Form name' },
-            { classes: 'govuk-!-text-break-word', html: 'my form name' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="form.title">Welsh form name</label><input type="text" lang="cy" class="govuk-input" name="form.title" id="form.title" value=""/></div'
-            }
-          ]
+            title: 'Form name',
+            row: {
+              englishContent: 'my form name',
+              label: 'Welsh form name',
+              name: 'form.title',
+              welshContent: ''
+            },
+            error: false,
+            type: undefined
+          }
         ]
       })
-      expect(res.fieldTables[7]).toEqual({
-        caption: 'Page 1',
-        captionClasses: 'govuk-table__caption--m',
-        classes: 'govuk-!-margin-bottom-0 app-translation-table',
-        firstCellIsHeader: false,
-        head: [
-          {
-            classes: 'app-translation-table__empty-header-cell',
-            html: '<span class="govuk-visually-hidden">Field type</span>'
-          },
-          { text: 'English content' },
-          { text: 'Welsh content' }
-        ],
-        rows: [
-          [
-            { classes: 'govuk-table__header', text: 'Page heading' },
-            { classes: 'govuk-!-text-break-word', html: 'Radio question' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="pages.p1.title">Welsh page heading - page 1</label><input type="text" lang="cy" class="govuk-input" name="pages.p1.title" id="pages.p1.title" value=""/></div'
-            }
-          ]
-        ]
+      expect(res.rowViewModel.formRows).toHaveLength(5)
+      expect(res.rowViewModel.formRows[0]).toEqual({
+        caption: 'Page 1'
       })
-      expect(res.fieldTables[8]).toEqual({
-        caption: 'Page 1, question 1',
-        captionClasses: 'govuk-table__caption--m',
-        classes: 'govuk-!-margin-bottom-0 app-translation-table',
-        firstCellIsHeader: false,
-        head: [
+      expect(res.rowViewModel.formRows[1]).toEqual({
+        rowData: [
           {
-            classes: 'app-translation-table__empty-header-cell',
-            html: '<span class="govuk-visually-hidden">Field type</span>'
-          },
-          { text: 'English content' },
-          { text: 'Welsh content' }
-        ],
-        rows: [
-          [
-            { classes: 'govuk-table__header', text: 'Question text' },
-            { classes: 'govuk-!-text-break-word', html: 'Select a colour' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="components.q1.title">Welsh question text - page 1, question 1</label><input type="text" lang="cy" class="govuk-input" name="components.q1.title" id="components.q1.title" value=""/></div'
-            }
-          ],
-          [
-            { classes: 'govuk-table__header', text: 'Short description' },
-            { classes: 'govuk-!-text-break-word', html: '' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="components.q1.shortDescription">Welsh short description - page 1, question 1</label><input type="text" lang="cy" class="govuk-input" name="components.q1.shortDescription" id="components.q1.shortDescription" value=""/></div'
-            }
-          ],
-          [
-            { classes: 'govuk-table__header', text: 'Option 1' },
-            { classes: 'govuk-!-text-break-word', html: 'Blue' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="listItems.undefined.text">Welsh option 1 - page 1, question 1</label><input type="text" lang="cy" class="govuk-input" name="listItems.undefined.text" id="listItems.undefined.text" value=""/></div'
-            }
-          ],
-          [
-            { classes: 'govuk-table__header', text: 'Option 2' },
-            { classes: 'govuk-!-text-break-word', html: 'Red' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="listItems.undefined.text">Welsh option 2 - page 1, question 1</label><input type="text" lang="cy" class="govuk-input" name="listItems.undefined.text" id="listItems.undefined.text" value=""/></div'
-            }
-          ],
-          [
-            { classes: 'govuk-table__header', text: 'Option 3' },
-            { classes: 'govuk-!-text-break-word', html: 'Green' },
-            {
-              classes: '',
-              html: '<div class="govuk-form-group"><label class="govuk-label govuk-visually-hidden" for="listItems.undefined.text">Welsh option 3 - page 1, question 1</label><input type="text" lang="cy" class="govuk-input" name="listItems.undefined.text" id="listItems.undefined.text" value=""/></div'
-            }
-          ]
+            title: 'Page heading',
+            row: {
+              englishContent: 'Radio question',
+              label: 'Welsh page heading - page 1',
+              name: 'pages.p1.title',
+              welshContent: '',
+              pageNum: 1,
+              type: 'PageHeading'
+            },
+            type: undefined
+          }
         ]
       })
     })

@@ -1,323 +1,275 @@
 import {
-  ComponentType,
-  ControllerType,
   FormStatus,
-  hasComponents
+  LIST_ITEM_HINT,
+  LIST_ITEM_WITH_HINT_FOLLOWING,
+  TEXTAREA_12_ROWS_WITH_MARKDOWN,
+  TEXTAREA_5_ROWS,
+  TranslationRowTypes,
+  buildTranslationDataRows
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { getListFromComponent } from '~/src/lib/utils.js'
 import {
   baseModelFields,
-  getFormSpecificNavigation,
-  getPageNum,
-  getQuestionNum
+  getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js'
-import {
-  FIELDS_WITH_SELECTION_OPTIONS,
-  IGNORE_FIELDS,
-  drillDown,
-  hintKey,
-  keyConfig,
-  listItemHintKey,
-  listItemTextKey,
-  lookupTranslation,
-  pageGuidanceKey,
-  pageHeadingKey,
-  questionTextKey,
-  shortDescriptionKey
-} from '~/src/models/forms/editor-v2/translations-config.js'
-import { buildOverviewSection } from '~/src/models/forms/editor-v2/translations-overview.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
- * @param {Page} page
- * @param {FormDefinition} definition
- * @param {Record<string, string>} translations
- * @param {ValidationFailure<any>} [validation]
+ * @param {string} key
+ * @param { ValidationFailure<any> | undefined } validation
  */
-function buildPageSection(page, definition, translations, validation) {
-  const pageId = /** @type {string} */ (page.id)
-  const pageNum = getPageNum(definition, pageId)
+function fieldHasError(key, validation) {
+  if (!validation?.formErrors) {
+    return false
+  }
+
+  return !!validation.formErrors[key]
+}
+
+/**
+ * @param {string} title
+ * @param {TranslationRow} row
+ * @param { ValidationFailure<any> | undefined } validation
+ * @param {string} [type]
+ */
+function mapRowData(title, row, validation, type) {
   return {
-    title: `Page ${pageNum}`,
-    table: buildPage(page, pageNum, translations, validation)
+    title,
+    row,
+    error: fieldHasError(row.name, validation),
+    type
   }
 }
 
 /**
- * @param {Page} page
- * @param {ComponentDef} component
- * @param {FormDefinition} definition
- * @param {Record<string, string>} translations
- * @param {ValidationFailure<any>} [validation]
+ * @param {TranslationRow[]} rows
+ * @param { ValidationFailure<any> | undefined } validation
  */
-function buildComponentSection(
-  page,
-  component,
-  definition,
-  translations,
-  validation
-) {
-  const pageId = /** @type {string} */ (page.id)
-  const componentId = /** @type {string} */ (component.id)
-  const pageNum = getPageNum(definition, pageId)
-  const questionNum = getQuestionNum(definition, pageId, componentId)
+function mapOverviewRowsToViewModel(rows, validation) {
+  const overview = []
 
-  return {
-    title: `Page ${pageNum}, question ${questionNum}`,
-    table: buildComponent(
-      definition,
-      component,
-      pageNum,
-      questionNum,
-      translations,
-      validation
-    )
-  }
-}
+  overview.push({
+    caption: 'Form name',
+    rowData: [mapRowData('Form name', rows[0], validation)]
+  })
 
-/**
- * @param {ComponentDef | Page | Item} entity
- * @param {string} keyType
- * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
- * @param {number} [itemNum]
- * @param {TranslationAttributes} [attributes]
- */
-function createRow(
-  entity,
-  keyType,
-  { pageNum, questionNum, translations, validation },
-  itemNum,
-  attributes
-) {
-  const keyProperties = keyConfig[keyType]
-  const innerEnglishContent =
-    keyProperties.jsonSuffix in entity
-      ? // @ts-expect-error - dynamic lookup
-        drillDown(entity[keyProperties.jsonSuffix])
-      : ''
+  overview.push({
+    caption: 'Contact details for support',
+    caption2: 'Email address and response time',
+    rowData: [
+      mapRowData('Email address', rows[1], validation),
+      mapRowData('Response time', rows[2], validation)
+    ]
+  })
 
-  const keyName = `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`
+  overview.push({
+    caption: 'Contact link for support',
+    rowData: [
+      mapRowData('Contact link', rows[3], validation),
+      mapRowData('Contact text', rows[4], validation)
+    ]
+  })
 
-  const pageAndQuestion = questionNum
-    ? `page ${pageNum}, question ${questionNum}`
-    : `page ${pageNum}`
-  return {
-    name: keyName,
-    contentType: itemNum
-      ? `${keyProperties.displayName} ${itemNum}`
-      : keyProperties.displayName,
-    englishContent: innerEnglishContent,
-    welshContent:
-      validation?.formValues[keyName] ??
-      lookupTranslation(keyName, translations),
-    label: itemNum
-      ? `${keyProperties.labelPart} ${itemNum} - ${pageAndQuestion}`
-      : `${keyProperties.labelPart} - ${pageAndQuestion}`,
-    attributes: {
-      ...keyProperties.attributes,
-      ...attributes
-    }
-  }
-}
-
-const allowedControllerTypesSet = new Set([
-  ControllerType.Page,
-  ControllerType.Repeat,
-  ControllerType.Start,
-  ControllerType.FileUpload,
-  ControllerType.Terminal
-])
-
-/**
- * @param {Page} page
- * @param {number} pageNum
- * @param {Record<string, string>} translations
- * @param {ValidationFailure<any>} [validation]
- * @returns {Translation[]}
- */
-function buildPage(page, pageNum, translations, validation) {
-  if (page.controller && !allowedControllerTypesSet.has(page.controller)) {
-    return []
-  }
-
-  const pageRows = []
-  if (page.title) {
-    pageRows.push(
-      createRow(page, pageHeadingKey, { pageNum, translations, validation })
-    )
-  }
-
-  const guidance =
-    hasComponents(page) && page.components[0].type === ComponentType.Markdown
-      ? page.components[0]
-      : undefined
-  if (guidance) {
-    pageRows.push(
-      createRow(guidance, pageGuidanceKey, {
-        pageNum,
-        translations,
-        validation
-      })
-    )
-  }
-
-  return pageRows
-}
-
-/**
- * @param {FormDefinition} definition
- * @param {ComponentDef} component
- * @param {number} pageNum
- * @param {number} questionNum
- * @param {Record<string, string>} translations
- * @param {ValidationFailure<any>} [validation]
- * @returns {Translation[]}
- */
-function buildComponent(
-  definition,
-  component,
-  pageNum,
-  questionNum,
-  translations,
-  validation
-) {
-  if (IGNORE_FIELDS.includes(component.type)) {
-    return []
-  }
-
-  const fields = []
-
-  const options = { pageNum, questionNum, translations, validation }
-
-  const typed = /** @type {InputFieldsComponentsDef} */ (component)
-  if (typed.title) {
-    fields.push(createRow(component, questionTextKey, options))
-  }
-  if (typed.hint) {
-    fields.push(createRow(component, hintKey, options))
-  }
-  fields.push(createRow(component, shortDescriptionKey, options))
-
-  if (FIELDS_WITH_SELECTION_OPTIONS.includes(component.type)) {
-    addSelectionOptions(fields, component, definition, options)
-  }
-  return fields
-}
-
-/**
- * @param {any[]} fields
- * @param {ComponentDef} component
- * @param {FormDefinition} definition
- * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
- */
-function addSelectionOptions(fields, component, definition, options) {
-  const list = getListFromComponent(component, definition)
-  if (list?.items.length) {
-    let itemNum = 0
-    for (const item of list.items) {
-      itemNum++
-      if (item.hint) {
-        fields.push(
-          createRow(item, listItemTextKey, options, itemNum, {
-            hideBorder: true
-          }),
-          createRow(item, listItemHintKey, options, itemNum, {
-            hideDescription: true,
-            styleEnglishAsHint: true
-          })
-        )
-      } else {
-        fields.push(createRow(item, listItemTextKey, options, itemNum))
-      }
-    }
-  }
-}
-
-/**
- * @param {Translation} translation
- * @param {string} markdownHelpHtml
- * @param {ErrorDetailsItem[]} errors
- */
-function buildTranslationHtml(translation, markdownHelpHtml, errors) {
-  const hasError = errors.some((err) => err.href === `#${translation.name}`)
-  const errorClass = hasError ? ' govuk-input--error' : ''
-  const label = `<label class="govuk-label govuk-visually-hidden" for="${translation.name}">Welsh ${translation.label}</label>`
-  const welsh = translation.welshContent
-  if (translation.attributes?.textareaHeight) {
-    const markdownHtml = translation.attributes.showMarkdownHelp
-      ? markdownHelpHtml
-      : ''
-    return `${label}<textarea class="govuk-textarea${errorClass}" rows="${translation.attributes.textareaHeight}" lang="cy" name="${translation.name}" id="${translation.name}">${welsh}</textarea>${markdownHtml}`
-  }
-
-  return `${label}<input type="text" lang="cy" class="govuk-input${errorClass}" name="${translation.name}" id="${translation.name}" value="${welsh}"/>`
-}
-
-/**
- * @param {FormMetadata} metadata
- * @param {FormDefinition} definition
- * @param {ValidationFailure<any>} [validation]
- */
-export function buildTranslationRows(metadata, definition, validation) {
-  const translationsJSON = /** @type {Record<string, string>} */ (
-    // @ts-expect-error - dynamic language definition
-    definition.metadata?.translations?.cy
-  )
-
-  const allSections = buildOverviewSection(
-    metadata,
-    definition,
-    translationsJSON,
-    validation
-  )
-
-  // Add separator
-  allSections.push({ title: '', table: [] })
-
-  for (const page of definition.pages) {
-    const components = hasComponents(page) ? page.components : []
-    if (components.length === 0) {
-      continue
-    }
-
-    allSections.push(
-      buildPageSection(page, definition, translationsJSON, validation)
-    )
-
-    for (const component of components) {
-      if (component.type === ComponentType.Markdown) {
-        continue
-      }
-
-      allSections.push(
-        buildComponentSection(
-          page,
-          component,
-          definition,
-          translationsJSON,
-          validation
-        )
+  overview.push({
+    caption: 'Phone number and opening times',
+    rowData: [
+      mapRowData(
+        'Phone number and opening times',
+        rows[5],
+        validation,
+        TEXTAREA_5_ROWS
       )
+    ]
+  })
+
+  overview.push({
+    caption: 'Information about what happens next',
+    rowData: [
+      mapRowData(
+        'What happens next',
+        rows[6],
+        validation,
+        TEXTAREA_12_ROWS_WITH_MARKDOWN
+      )
+    ]
+  })
+
+  if (rows[7].name === 'form.privacyNoticeText') {
+    overview.push({
+      caption: 'Privacy information for this form (uses inline content)',
+      rowData: [
+        mapRowData(
+          'Privacy notice text',
+          rows[7],
+          validation,
+          TEXTAREA_12_ROWS_WITH_MARKDOWN
+        )
+      ]
+    })
+  } else {
+    overview.push({
+      caption: 'Privacy information for this form',
+      subHeading: 'This form uses a link to a privacy notice.',
+      rowData: [mapRowData('Privacy notice link', rows[7], validation)]
+    })
+  }
+
+  return overview
+}
+
+/**
+ * @param {TranslationRow[]} rows
+ */
+function mapFormRowsToViewModel(rows) {
+  const formRows = []
+
+  const uniquePageNums = new Set(rows.map((row) => row.pageNum))
+
+  for (const pageNum of uniquePageNums.values()) {
+    formRows.push({
+      caption: `Page ${pageNum}`
+    })
+
+    const pageRows = rows.filter((row) => row.pageNum === pageNum)
+
+    const pageHeading = pageRows.find(
+      (row) => row.type === TranslationRowTypes.PageHeading
+    )
+    const pageGuidance = pageRows.find(
+      (row) => row.type === TranslationRowTypes.PageGuidance
+    )
+    const pageHeadingRow = pageHeading
+      ? [
+          {
+            title: 'Page heading',
+            row: pageHeading
+          }
+        ]
+      : []
+    const pageGuidanceRow = pageGuidance
+      ? [
+          {
+            title: 'Page guidance',
+            row: pageGuidance
+          }
+        ]
+      : []
+
+    if (pageHeadingRow.length || pageGuidanceRow.length) {
+      formRows.push({
+        rowData: [...pageHeadingRow, ...pageGuidanceRow]
+      })
+    }
+
+    const uniqueQuestionNums = new Set(
+      pageRows.map((row) => row.questionNum).filter((row) => row)
+    )
+    for (const questionNum of uniqueQuestionNums.values()) {
+      const questionRows = pageRows.filter(
+        (row) => row.questionNum === questionNum
+      )
+
+      const questionText = questionRows.find(
+        (row) => row.type === TranslationRowTypes.QuestionText
+      )
+      const questionHint = questionRows.find(
+        (row) => row.type === TranslationRowTypes.QuestionHint
+      )
+      const shortDescription = questionRows.find(
+        (row) => row.type === TranslationRowTypes.ShortDescription
+      )
+
+      const questionTextRow = questionText
+        ? [
+            {
+              title: 'Question text',
+              row: questionText
+            }
+          ]
+        : []
+      const questionHintRow = questionHint
+        ? [
+            {
+              title: 'Hint',
+              row: questionHint
+            }
+          ]
+        : []
+      const shortDescriptionRow = shortDescription
+        ? [
+            {
+              title: 'Short description',
+              row: shortDescription
+            }
+          ]
+        : []
+
+      if (
+        questionTextRow.length ||
+        questionHintRow.length ||
+        shortDescriptionRow.length
+      ) {
+        formRows.push({
+          caption: `Page ${pageNum}, question ${questionNum}`,
+          captionClasses: 'govuk-heading-s'
+        })
+        formRows.push({
+          rowData: [
+            ...questionTextRow,
+            ...questionHintRow,
+            ...shortDescriptionRow
+          ]
+        })
+      }
+
+      const listItems = questionRows.filter(
+        (row) => row.type === TranslationRowTypes.ListItemText
+      )
+      const listItemHints = questionRows.filter(
+        (row) => row.type === TranslationRowTypes.ListItemHint
+      )
+      if (listItems.length) {
+        const optionRows = []
+        for (const item of listItems) {
+          const hint = listItemHints.find(
+            (hint) => hint.itemNum === item.itemNum
+          )
+          optionRows.push({
+            title: `Option ${item.itemNum}`,
+            row: item,
+            type: hint ? LIST_ITEM_WITH_HINT_FOLLOWING : undefined
+          })
+
+          if (hint) {
+            optionRows.push({
+              title: '',
+              row: hint,
+              type: LIST_ITEM_HINT
+            })
+          }
+        }
+
+        formRows.push({
+          rowData: optionRows
+        })
+      }
     }
   }
 
-  return allSections
+  return formRows
 }
 
 /**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
- * @param {string} markdownHelpHtml
  * @param {ValidationFailure<any>} [validation]
  * @param {string[]} [notification]
  */
 export function translationsViewModel(
   metadata,
   definition,
-  markdownHelpHtml,
   validation,
   notification
 ) {
@@ -335,47 +287,10 @@ export function translationsViewModel(
   const errorList = buildErrorList(validation?.formErrors)
   const errorSummary = errorList
 
-  const rows = buildTranslationRows(metadata, definition, validation)
+  const rows = buildTranslationDataRows(metadata, definition, validation)
 
-  const fieldTables = rows.map((section) => ({
-    caption: section.title,
-    captionClasses: 'govuk-table__caption--m',
-    firstCellIsHeader: false,
-    head: section.table.length
-      ? [
-          {
-            html: '<span class="govuk-visually-hidden">Field type</span>',
-            classes: 'app-translation-table__empty-header-cell'
-          },
-          { text: 'English content' },
-          { text: 'Welsh content' }
-        ]
-      : {},
-    classes: 'govuk-!-margin-bottom-0 app-translation-table',
-    rows: section.table.map((translation) => {
-      const hideBorderClass = translation.attributes?.hideBorder
-        ? ' app-no-border-bottom'
-        : ''
-      return [
-        {
-          text: translation.attributes?.hideDescription
-            ? ''
-            : translation.contentType,
-          classes: `govuk-table__header${hideBorderClass}`
-        },
-        {
-          html: translation.attributes?.styleEnglishAsHint
-            ? `<p class="govuk-body-s govuk-hint govuk-!-margin-bottom-0">${translation.englishContent}</p>`
-            : translation.englishContent,
-          classes: `govuk-!-text-break-word${hideBorderClass}`
-        },
-        {
-          html: `<div class="govuk-form-group">${buildTranslationHtml(translation, markdownHelpHtml, errorList)}</div`,
-          classes: hideBorderClass
-        }
-      ]
-    })
-  }))
+  const overviewRows = mapOverviewRowsToViewModel(rows.overviewRows, validation)
+  const formRows = mapFormRowsToViewModel(rows.formRows)
 
   return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
@@ -387,7 +302,10 @@ export function translationsViewModel(
     },
     errorList: errorSummary,
     notification,
-    fieldTables
+    rowViewModel: {
+      overviewRows,
+      formRows
+    }
   }
 }
 
@@ -439,7 +357,6 @@ export function deleteConfirmationPageViewModel(metadata, definition) {
 }
 
 /**
- * @import { ComponentDef, InputFieldsComponentsDef, FormMetadata, FormDefinition, Item, Page } from '@defra/forms-model'
- * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
- * @import { Translation, TranslationAttributes } from '~/src/models/forms/editor-v2/translations-config.js'
+ * @import { FormMetadata, FormDefinition, TranslationRow } from '@defra/forms-model'
+ * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */
