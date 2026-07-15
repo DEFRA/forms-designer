@@ -61,69 +61,67 @@ const overviewRowNumbers = {
 function mapOverviewRowsToViewModel(rows, validation) {
   const overview = []
 
-  overview.push({
-    caption: 'Form name',
-    rowData: [
-      mapRowData('Form name', rows[overviewRowNumbers.FormName], validation)
-    ]
-  })
-
-  overview.push({
-    caption: 'Contact details for support',
-    caption2: 'Email address and response time',
-    rowData: [
-      mapRowData(
-        'Email address',
-        rows[overviewRowNumbers.SupportEmail],
-        validation
-      ),
-      mapRowData(
-        'Response time',
-        rows[overviewRowNumbers.SupportResponse],
-        validation
-      )
-    ]
-  })
-
-  overview.push({
-    caption: 'Contact link for support',
-    rowData: [
-      mapRowData(
-        'Contact link',
-        rows[overviewRowNumbers.ContactLink],
-        validation
-      ),
-      mapRowData(
-        'Contact text',
-        rows[overviewRowNumbers.ContactText],
-        validation
-      )
-    ]
-  })
-
-  overview.push({
-    caption: 'Phone number and opening times',
-    rowData: [
-      mapRowData(
-        'Phone number and opening times',
-        rows[overviewRowNumbers.Phone],
-        validation,
-        TEXTAREA_5_ROWS
-      )
-    ]
-  })
-
-  overview.push({
-    caption: 'Information about what happens next',
-    rowData: [
-      mapRowData(
-        'What happens next',
-        rows[overviewRowNumbers.WhatNext],
-        validation,
-        TEXTAREA_12_ROWS_WITH_MARKDOWN
-      )
-    ]
-  })
+  overview.push(
+    {
+      caption: 'Form name',
+      rowData: [
+        mapRowData('Form name', rows[overviewRowNumbers.FormName], validation)
+      ]
+    },
+    {
+      caption: 'Contact details for support',
+      caption2: 'Email address and response time',
+      rowData: [
+        mapRowData(
+          'Email address',
+          rows[overviewRowNumbers.SupportEmail],
+          validation
+        ),
+        mapRowData(
+          'Response time',
+          rows[overviewRowNumbers.SupportResponse],
+          validation
+        )
+      ]
+    },
+    {
+      caption: 'Contact link for support',
+      rowData: [
+        mapRowData(
+          'Contact link',
+          rows[overviewRowNumbers.ContactLink],
+          validation
+        ),
+        mapRowData(
+          'Contact text',
+          rows[overviewRowNumbers.ContactText],
+          validation
+        )
+      ]
+    },
+    {
+      caption: 'Phone number and opening times',
+      rowData: [
+        mapRowData(
+          'Phone number and opening times',
+          rows[overviewRowNumbers.Phone],
+          validation,
+          TEXTAREA_5_ROWS
+        )
+      ]
+    },
+    {
+      caption: 'Information about what happens next',
+      rowData: [
+        mapRowData(
+          'What happens next',
+          rows[overviewRowNumbers.WhatNext],
+          validation,
+          TEXTAREA_12_ROWS_WITH_MARKDOWN
+        )
+      ]
+    }
+  )
 
   if (
     rows[overviewRowNumbers.PrivacyNotice].name === 'form.privacyNoticeText'
@@ -248,17 +246,19 @@ function mapFormRowsToViewModel(rows) {
         questionHintRow.length ||
         shortDescriptionRow.length
       ) {
-        formRows.push({
-          caption: `Page ${pageNum}, question ${questionNum}`,
-          captionClasses: 'govuk-heading-s'
-        })
-        formRows.push({
-          rowData: [
-            ...questionTextRow,
-            ...questionHintRow,
-            ...shortDescriptionRow
-          ]
-        })
+        formRows.push(
+          {
+            caption: `Page ${pageNum}, question ${questionNum}`,
+            captionClasses: 'govuk-heading-s'
+          },
+          {
+            rowData: [
+              ...questionTextRow,
+              ...questionHintRow,
+              ...shortDescriptionRow
+            ]
+          }
+        )
       }
 
       const listItems = questionRows.filter(
