@@ -48,7 +48,7 @@ function stripLabel(label) {
   if (label?.startsWith(welshPrefix)) {
     return (
       label.substring(prefixLen, prefixLen + 1).toUpperCase() +
-      label.substring(prefixLen)
+      label.substring(prefixLen + 1)
     )
   }
   return label

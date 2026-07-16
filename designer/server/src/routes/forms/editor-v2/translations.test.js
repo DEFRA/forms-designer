@@ -4,6 +4,7 @@ import xlsx from 'xlsx'
 
 import { testFormDefinitionWithTwoQuestions } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import { formWithAllComponents } from '~/src/__stubs__/translations.js'
 import { createServer } from '~/src/createServer.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -71,6 +72,62 @@ describe('Translations routes', () => {
     expect($captions[6]).toHaveTextContent(
       'Privacy information for this form (uses inline content)'
     )
+
+    expect($actions).toHaveLength(4)
+    expect($actions[2]).toHaveTextContent('Save changes')
+    expect($actions[3]).toHaveTextContent('Preview form in Welsh')
+
+    expect(document).toMatchSnapshot()
+  })
+
+  test('GET - should render all possible components in the view', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest
+      .mocked(forms.getDraftFormDefinition)
+      .mockResolvedValueOnce(formWithAllComponents)
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/welsh',
+      auth
+    }
+
+    const { container, document } = await renderResponse(server, options)
+
+    const $mastheadHeadings = container.getAllByText('Test form')
+    const $cardTitle = container.getByText(
+      'Add Welsh translations for your form'
+    )
+    const $captions = document.getElementsByClassName('govuk-table__caption')
+
+    const $actions = container.getAllByRole('button')
+
+    expect($mastheadHeadings[0]).toHaveTextContent('Test form')
+    expect($mastheadHeadings[0]).toHaveClass('govuk-caption-l')
+    expect($cardTitle).toHaveTextContent('Add Welsh translations for your form')
+    expect($cardTitle).toHaveClass('app-masthead__heading govuk-heading-xl')
+
+    expect($captions).toHaveLength(7)
+    expect($captions[0]).toHaveTextContent('Form name')
+    expect($captions[1]).toHaveTextContent('Contact details for support')
+    expect($captions[2]).toHaveTextContent('Email address and response time')
+    expect($captions[3]).toHaveTextContent('Contact link for support')
+    expect($captions[4]).toHaveTextContent('Phone number and opening times')
+    expect($captions[5]).toHaveTextContent(
+      'Information about what happens next'
+    )
+    expect($captions[6]).toHaveTextContent(
+      'Privacy information for this form (uses inline content)'
+    )
+
+    const $rowTitles = document.getElementsByClassName('govuk-table__header')
+    expect($rowTitles).toHaveLength(182)
+
+    expect($rowTitles[3]).toHaveTextContent('Form name')
+    expect($rowTitles[7]).toHaveTextContent('Email address')
+    expect($rowTitles[8]).toHaveTextContent('Response time')
+    expect($rowTitles[12]).toHaveTextContent('Contact link')
+    expect($rowTitles[13]).toHaveTextContent('Contact text')
 
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')

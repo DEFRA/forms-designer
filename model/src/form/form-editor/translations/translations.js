@@ -1,5 +1,6 @@
 import { ComponentType } from '~/src/components/enums.js'
 import {
+  FIELDS_WITH_INSTRUCTIONS,
   FIELDS_WITH_SELECTION_OPTIONS,
   IGNORE_FIELDS,
   TranslationRowTypes,
@@ -25,17 +26,12 @@ function createRow(
   { pageNum, questionNum, itemNum, translations, validation }
 ) {
   const keyProperties = keyConfig[keyType]
-  const entityWithDynamicProperties = /** @type {Record<string, unknown>} */ (
-    /** @type {unknown} */ (entity)
+
+  const innerEnglishContent = drillDown(
+    keyType,
+    entity,
+    keyProperties.jsonSuffix
   )
-  const innerEnglishContent =
-    keyProperties.jsonSuffix in entityWithDynamicProperties
-      ? drillDown(
-          /** @type {string | { text: string }} */ (
-            entityWithDynamicProperties[keyProperties.jsonSuffix]
-          )
-        )
-      : ''
 
   const keyName = `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`
 
@@ -50,6 +46,10 @@ function createRow(
     label = `Welsh option ${itemNum} - Page ${pageNum}, question ${questionNum}`
   } else if (keyType === TranslationRowTypes.ListItemHint) {
     label = `Welsh hint for option ${itemNum} - Page ${pageNum}, question ${questionNum}`
+  } else if (keyType === TranslationRowTypes.InstructionText) {
+    label = `Welsh instruction text - Page ${pageNum}, question ${questionNum}`
+  } else if (keyType === TranslationRowTypes.DeclarationBody) {
+    label = `Welsh declaration body - Page ${pageNum}, question ${questionNum}`
   } else {
     label = ''
   }
@@ -161,7 +161,27 @@ function buildComponent(
   if (typed.hint) {
     rows.push(createRow(component, TranslationRowTypes.QuestionHint, options))
   }
-  rows.push(createRow(component, TranslationRowTypes.ShortDescription, options))
+
+  if (component.type !== ComponentType.PaymentField) {
+    rows.push(
+      createRow(component, TranslationRowTypes.ShortDescription, options)
+    )
+  }
+
+  if (component.type === ComponentType.DeclarationField) {
+    rows.push(
+      createRow(component, TranslationRowTypes.DeclarationBody, options)
+    )
+  }
+
+  if (
+    typed.options.instructionText &&
+    FIELDS_WITH_INSTRUCTIONS.includes(component.type)
+  ) {
+    rows.push(
+      createRow(component, TranslationRowTypes.InstructionText, options)
+    )
+  }
 
   if (FIELDS_WITH_SELECTION_OPTIONS.includes(component.type)) {
     addSelectionOptions(rows, component, definition, options)

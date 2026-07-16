@@ -32,9 +32,12 @@ export const TranslationRowTypes = {
   ShortDescription: 'ShortDescription',
   ErrorDescription: 'ErrorDescription',
   ListItemText: 'ListItemText',
-  ListItemHint: 'ListItemHint'
+  ListItemHint: 'ListItemHint',
+  InstructionText: 'InstructionText',
+  DeclarationBody: 'DeclarationBody'
 }
 
+export const TEXTAREA_3_ROWS = 'textarea3'
 export const TEXTAREA_5_ROWS = 'textarea5'
 export const TEXTAREA_12_ROWS_WITH_MARKDOWN = 'textarea12markdown'
 export const LIST_ITEM_HINT = 'listitemhint'
@@ -56,6 +59,16 @@ export const keyConfig = {
     jsonPrefix: 'components',
     jsonSuffix: 'shortDescription',
     displayName: 'Short description'
+  },
+  [TranslationRowTypes.InstructionText]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'instructionText',
+    displayName: 'Instruction text'
+  },
+  [TranslationRowTypes.DeclarationBody]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'content',
+    displayName: 'Declaration body'
   },
   [TranslationRowTypes.ListItemText]: {
     jsonPrefix: 'listItems',
@@ -88,6 +101,14 @@ export const FIELDS_WITH_SELECTION_OPTIONS = [
   ComponentType.YesNoField
 ]
 
+// Primarily Location field but those that can have user-supplied instructions
+export const FIELDS_WITH_INSTRUCTIONS = [
+  ComponentType.EastingNorthingField,
+  ComponentType.OsGridRefField,
+  ComponentType.NationalGridFieldNumberField,
+  ComponentType.LatLongField
+]
+
 export const IGNORE_FIELDS = [
   ComponentType.Details,
   ComponentType.Html,
@@ -107,12 +128,34 @@ export function lookupTranslation(key, translations) {
 }
 
 /**
- * @param {object | string} val
+ * @param {string} keyType
+ * @param {ComponentDef | Page | Item} entity
+ * @param {string} jsonSuffix
  * @returns {string}
  */
-export function drillDown(val) {
-  if (typeof val === 'object') {
-    return 'text' in val ? /** @type {string} */ (val.text) : ''
+export function drillDown(keyType, entity, jsonSuffix) {
+  if (keyType === TranslationRowTypes.InstructionText) {
+    // @ts-expect-error - dynamic lookup
+    return 'options' in entity ? entity.options?.instructionText : ''
+  } else if (keyType === TranslationRowTypes.ListItemHint) {
+    // @ts-expect-error - dynamic lookup
+    return 'hint' in entity ? entity.hint.text : ''
+  } else if (keyType === TranslationRowTypes.DeclarationBody) {
+    return 'content' in entity ? entity.content : ''
   }
-  return val
+
+  const entityWithDynamicProperties = /** @type {Record<string, unknown>} */ (
+    /** @type {unknown} */ (entity)
+  )
+  if (typeof entity === 'object') {
+    return jsonSuffix in entityWithDynamicProperties
+      ? /** @type {string} */ (entityWithDynamicProperties[jsonSuffix])
+      : ''
+  }
+  return entity
 }
+
+/**
+ * @import { ComponentDef } from '~/src/components/types.js'
+ * @import { Item, Page } from '~/src/form/form-definition/types.js'
+ */

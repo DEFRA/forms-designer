@@ -3,6 +3,7 @@ import {
   LIST_ITEM_HINT,
   LIST_ITEM_WITH_HINT_FOLLOWING,
   TEXTAREA_12_ROWS_WITH_MARKDOWN,
+  TEXTAREA_3_ROWS,
   TEXTAREA_5_ROWS,
   TranslationRowTypes,
   buildTranslationDataRows,
@@ -157,6 +158,23 @@ function mapOverviewRowsToViewModel(rows, validation) {
 
 /**
  * @param {TranslationRow[]} rows
+ * @param {string} type
+ */
+function getRowOfType(rows, type) {
+  return rows.find((row) => row.type === type)
+}
+
+/**
+ * @param { TranslationRow | undefined } row
+ * @param {string} title
+ * @param {string} [type]
+ */
+function addTitle(row, title, type) {
+  return row ? [{ title, row, type }] : []
+}
+
+/**
+ * @param {TranslationRow[]} rows
  */
 function mapFormRowsToViewModel(rows) {
   const formRows = []
@@ -170,28 +188,13 @@ function mapFormRowsToViewModel(rows) {
 
     const pageRows = rows.filter((row) => row.pageNum === pageNum)
 
-    const pageHeading = pageRows.find(
-      (row) => row.type === TranslationRowTypes.PageHeading
+    const pageHeading = getRowOfType(pageRows, TranslationRowTypes.PageHeading)
+    const pageGuidance = getRowOfType(
+      pageRows,
+      TranslationRowTypes.PageGuidance
     )
-    const pageGuidance = pageRows.find(
-      (row) => row.type === TranslationRowTypes.PageGuidance
-    )
-    const pageHeadingRow = pageHeading
-      ? [
-          {
-            title: 'Page heading',
-            row: pageHeading
-          }
-        ]
-      : []
-    const pageGuidanceRow = pageGuidance
-      ? [
-          {
-            title: 'Page guidance',
-            row: pageGuidance
-          }
-        ]
-      : []
+    const pageHeadingRow = addTitle(pageHeading, 'Page heading')
+    const pageGuidanceRow = addTitle(pageGuidance, 'Page guidance')
 
     if (pageHeadingRow.length || pageGuidanceRow.length) {
       formRows.push({
@@ -207,45 +210,50 @@ function mapFormRowsToViewModel(rows) {
         (row) => row.questionNum === questionNum
       )
 
-      const questionText = questionRows.find(
-        (row) => row.type === TranslationRowTypes.QuestionText
+      const questionText = getRowOfType(
+        questionRows,
+        TranslationRowTypes.QuestionText
       )
-      const questionHint = questionRows.find(
-        (row) => row.type === TranslationRowTypes.QuestionHint
+      const questionHint = getRowOfType(
+        questionRows,
+        TranslationRowTypes.QuestionHint
       )
-      const shortDescription = questionRows.find(
-        (row) => row.type === TranslationRowTypes.ShortDescription
+      const shortDescription = getRowOfType(
+        questionRows,
+        TranslationRowTypes.ShortDescription
+      )
+      const instructionText = getRowOfType(
+        questionRows,
+        TranslationRowTypes.InstructionText
+      )
+      const declarationBody = getRowOfType(
+        questionRows,
+        TranslationRowTypes.DeclarationBody
       )
 
-      const questionTextRow = questionText
-        ? [
-            {
-              title: 'Question text',
-              row: questionText
-            }
-          ]
-        : []
-      const questionHintRow = questionHint
-        ? [
-            {
-              title: 'Hint',
-              row: questionHint
-            }
-          ]
-        : []
-      const shortDescriptionRow = shortDescription
-        ? [
-            {
-              title: 'Short description',
-              row: shortDescription
-            }
-          ]
-        : []
+      const questionTextRow = addTitle(questionText, 'Question text')
+      const questionHintRow = addTitle(questionHint, 'Hint', TEXTAREA_3_ROWS)
+      const shortDescriptionRow = addTitle(
+        shortDescription,
+        'Short description'
+      )
+      const instructionTextRow = addTitle(
+        instructionText,
+        'Instruction text',
+        TEXTAREA_12_ROWS_WITH_MARKDOWN
+      )
+      const declarationBodyRow = addTitle(
+        declarationBody,
+        'Declaration body',
+        TEXTAREA_12_ROWS_WITH_MARKDOWN
+      )
 
       if (
         questionTextRow.length ||
         questionHintRow.length ||
-        shortDescriptionRow.length
+        shortDescriptionRow.length ||
+        instructionTextRow.length ||
+        declarationBodyRow.length
       ) {
         formRows.push(
           {
@@ -256,7 +264,9 @@ function mapFormRowsToViewModel(rows) {
             rowData: [
               ...questionTextRow,
               ...questionHintRow,
-              ...shortDescriptionRow
+              ...shortDescriptionRow,
+              ...instructionTextRow,
+              ...declarationBodyRow
             ]
           }
         )

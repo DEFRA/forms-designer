@@ -15,7 +15,9 @@
     <label class="govuk-label govuk-visually-hidden" for="{{ name }}">
       {{ label }}
     </label>
-    {% if type === 'textarea5' %}
+    {% if type === 'textarea3' %}
+      <textarea class="govuk-textarea{{ errorClass }}" id="{{ name }}" name="{{ name }}" rows="3" lang="cy">{{ value }}</textarea>
+    {% elif type === 'textarea5' %}
       <textarea class="govuk-textarea{{ errorClass }}" id="{{ name }}" name="{{ name }}" rows="5" lang="cy">{{ value }}</textarea>
     {% elif type === 'textarea12markdown' %}
       <textarea class="govuk-textarea{{ errorClass }}" id="{{ name }}" name="{{ name }}" rows="12" lang="cy">{{ value }}</textarea>
