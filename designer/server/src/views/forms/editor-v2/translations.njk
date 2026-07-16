@@ -109,6 +109,16 @@
     </div>
 
     <form method="post" action="#">
+
+      <div class="govuk-inset-text govuk-!-margin-top-0">
+       {% if formHasConditions %}
+          <h2 class="govuk-heading-m">Conditions</h2>
+          <p class="govuk-body"> Your form includes conditions. Most conditions will not need changes, but you should review any text conditions carefully to ensure they work in English and Welsh. Before publishing your form, check and update them in <a href="{{ conditionsManagerUrl }}" class="govuk-link govuk-link--no-visited-state">conditions manager</a> where needed.</p>
+       {% endif %}
+      <h2 class="govuk-heading-m">Some changes will only appear on the live form</h2>
+      <p class="govuk-body">If you make changes to the form name, support contact details, privacy wording, what happens next, or the payment link, your changes are saved as a draft. These changes will only appear on the live form once you make the form live.</p>
+      </div>
+
       {{ dataTable(rowViewModel.overviewRows) }}
 
       <div class="govuk-!-margin-bottom-9">&nbsp;</div>

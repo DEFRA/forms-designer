@@ -5,7 +5,8 @@ import {
   TEXTAREA_12_ROWS_WITH_MARKDOWN,
   TEXTAREA_5_ROWS,
   TranslationRowTypes,
-  buildTranslationDataRows
+  buildTranslationDataRows,
+  isConditionWrapperV2
 } from '@defra/forms-model'
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
@@ -329,6 +330,9 @@ export function translationsViewModel(
   const overviewRows = mapOverviewRowsToViewModel(rows.overviewRows, validation)
   const formRows = mapFormRowsToViewModel(rows.formRows)
 
+  const formHasConditions = definition.conditions.some(isConditionWrapperV2)
+  const conditionsManagerUrl = editorv2Path(metadata.slug, 'conditions')
+
   return {
     ...baseModelFields(metadata.slug, pageTitle, pageHeading),
     formSlug: metadata.slug,
@@ -342,7 +346,9 @@ export function translationsViewModel(
     rowViewModel: {
       overviewRows,
       formRows
-    }
+    },
+    formHasConditions,
+    conditionsManagerUrl
   }
 }
 

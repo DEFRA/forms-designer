@@ -75,6 +75,8 @@ describe('Translations routes', () => {
     expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Save changes')
     expect($actions[3]).toHaveTextContent('Preview form in Welsh')
+
+    expect(document).toMatchSnapshot()
   })
 
   test('POST - should show validation errors', async () => {
