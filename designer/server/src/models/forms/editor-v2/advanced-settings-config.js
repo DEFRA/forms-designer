@@ -76,11 +76,13 @@ export const advancedSettingsPerComponentType =
     EastingNorthingField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
     OsGridRefField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
     NationalGridFieldNumberField: [
@@ -91,12 +93,14 @@ export const advancedSettingsPerComponentType =
     LatLongField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
     HiddenField: [],
     GeospatialField: [
       QuestionAdvancedSettings.GeometryTypes,
       QuestionAdvancedSettings.Countries,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.MinFeatures,
       QuestionAdvancedSettings.MaxFeatures,
       QuestionAdvancedSettings.ExactFeatures
@@ -412,6 +416,24 @@ export const allAdvancedSettingsFields =
         value: typ,
         text: upperFirst(typ)
       }))
+    },
+    [QuestionAdvancedSettings.MapLayers]: {
+      name: 'mapLayers',
+      id: 'mapLayers',
+      classes: 'govuk-checkboxes--small',
+      fieldset: {
+        legend: {
+          text: 'Choose the map layers to display',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__M
+        }
+      },
+      items: [
+        {
+          value: 'sssi',
+          text: 'Sites of Special Scientific Interest'
+        }
+      ]
     },
     [QuestionAdvancedSettings.Countries]: {
       name: 'countries',

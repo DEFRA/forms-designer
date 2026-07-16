@@ -142,6 +142,7 @@ export const QuestionAdvancedSettings =
     ExactChecks: 'exactChecks',
     GeometryTypes: 'geometryTypes',
     Countries: 'countries',
+    MapLayers: 'mapLayers',
     MinFeatures: 'minFeatures',
     MaxFeatures: 'maxFeatures',
     ExactFeatures: 'exactFeatures',

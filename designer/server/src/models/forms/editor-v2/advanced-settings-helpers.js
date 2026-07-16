@@ -138,6 +138,13 @@ export function getAdditionalOptions(payload) {
         payload.countries[0] !== 'any'
     },
     {
+      key: 'mapLayers',
+      getValue: () => ({ sssi: payload.mapLayers?.includes('sssi') ?? false }),
+      shouldInclude: () => {
+        return Array.isArray(payload.mapLayers) && payload.mapLayers.length
+      }
+    },
+    {
       key: 'format',
       getValue: () => payload.telephoneNumberFormat,
       shouldInclude: () =>

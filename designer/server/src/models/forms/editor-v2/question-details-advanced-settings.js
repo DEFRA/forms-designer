@@ -76,6 +76,17 @@ export function addGeospatialFieldProperties(question) {
 }
 
 /**
+ * @param { GeospatialFieldComponent | EastingNorthingFieldComponent | LatLongFieldComponent | OsGridRefFieldComponent } question
+ */
+export function addMapLayersFieldProperties(question) {
+  return {
+    mapLayers: question.options.mapLayers
+      ? Object.keys(question.options.mapLayers)
+      : undefined
+  }
+}
+
+/**
  * @param { TelephoneNumberFieldComponent } question
  */
 export function addTelephoneFieldProperties(question) {
@@ -211,6 +222,14 @@ export function mapToQuestionOptions(question) {
       ? addTelephoneFieldProperties(question)
       : {}
 
+  const mapFieldExtras =
+    question.type === ComponentType.GeospatialField ||
+    question.type === ComponentType.EastingNorthingField ||
+    question.type === ComponentType.OsGridRefField ||
+    question.type === ComponentType.LatLongField
+      ? addMapLayersFieldProperties(question)
+      : {}
+
   return {
     classes: /** @type {FormComponentsDef} */ (question).options.classes,
     ...numberExtras,
@@ -221,7 +240,8 @@ export function mapToQuestionOptions(question) {
     ...regexExtras,
     ...locationExtras,
     ...geospatialExtras,
-    ...telephoneExtras
+    ...telephoneExtras,
+    ...mapFieldExtras
   }
 }
 
@@ -274,7 +294,10 @@ export function advancedSettingsFields(options, question, validation) {
       }
     }
 
-    if (fieldName === QuestionAdvancedSettings.GeometryTypes) {
+    if (
+      fieldName === QuestionAdvancedSettings.GeometryTypes ||
+      fieldName === QuestionAdvancedSettings.MapLayers
+    ) {
       // Re-apply checkbox values
       return {
         ...fieldSettings,

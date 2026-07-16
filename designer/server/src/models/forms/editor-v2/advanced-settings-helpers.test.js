@@ -172,6 +172,20 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({ geometryTypes: ['point', 'line'] })
     })
 
+    it('should map mapLayers with sssi present', () => {
+      const result = getAdditionalOptions({
+        mapLayers: ['sssi']
+      })
+      expect(result).toEqual({ mapLayers: { sssi: true } })
+    })
+
+    it('should map mapLayers without sssi present', () => {
+      const result = getAdditionalOptions({
+        mapLayers: []
+      })
+      expect(result).toEqual({})
+    })
+
     it('should combine multiple options', () => {
       const result = getAdditionalOptions({
         classes: 'custom-class',

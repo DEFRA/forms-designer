@@ -2,6 +2,7 @@ import { ComponentType } from '@defra/forms-model'
 
 import {
   addDateFieldProperties,
+  addMapLayersFieldProperties,
   addMinMaxFieldProperties,
   addMultiLineFieldProperties,
   addNumberFieldProperties,
@@ -69,6 +70,23 @@ describe('editor-v2 - question details advanced settings model', () => {
       })
       expect(res).toEqual({
         rows: 4
+      })
+    })
+  })
+
+  describe('addMapLayersFieldProperties', () => {
+    test('should return the correct construct', () => {
+      const res = addMapLayersFieldProperties({
+        type: ComponentType.GeospatialField,
+        name: 'geospatial',
+        title: 'geospatial',
+        options: {
+          mapLayers: { sssi: true }
+        },
+        schema: {}
+      })
+      expect(res).toEqual({
+        mapLayers: ['sssi']
       })
     })
   })
@@ -542,6 +560,41 @@ describe('editor-v2 - question details advanced settings model', () => {
       const result = advancedSettingsFields(['giveInstructions'], question)
       expect(result[0].items).toHaveLength(1)
       expect(result[0].items?.at(0)?.hint?.text).toBeUndefined()
+    })
+
+    test('should re-apply checkbox values for map fields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.GeospatialField,
+        name: 'geospatial',
+        title: 'geospatial title',
+        options: {
+          mapLayers: { sssi: true }
+        }
+      })
+      const result = advancedSettingsFields(['mapLayers'], question)
+      expect(result).toHaveLength(1)
+      expect(result[0].items).toHaveLength(1)
+      const items = result[0]?.items ?? []
+      expect(items[0]).toEqual({
+        text: 'Sites of Special Scientific Interest',
+        value: 'sssi',
+        checked: true
+      })
+    })
+
+    test('should set checkbox values for map layers fields', () => {
+      const question = /** @type {ComponentDef} */ ({
+        type: ComponentType.GeospatialField,
+        name: 'geospatial',
+        title: 'geospatial title',
+        options: {
+          mapLayers: { sssi: true }
+        }
+      })
+      const result = advancedSettingsFields(['mapLayers'], question)
+      expect(result).toHaveLength(1)
+      expect(result[0].values).toHaveLength(1)
+      expect(result[0].values?.at(0)).toBe('sssi')
     })
   })
 
