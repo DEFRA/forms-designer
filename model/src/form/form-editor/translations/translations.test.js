@@ -1,4 +1,5 @@
 import {
+  formDefinitionWithLocationAndDeclaration,
   formDefinitionWithRadioQuestion,
   formDefinitionWithTwoQuestionsAndGuidance
 } from '~/src/form/form-definition/examples.js'
@@ -44,6 +45,58 @@ describe('translations', () => {
       expect(res.formRows[1].englishContent).toBe('My markdown text')
       expect(res.formRows[1].welshContent).toBe('')
       expect(res.formRows[1].name).toBe('components.p1.content')
+    })
+
+    it('should return full list of data values for location components', () => {
+      const definition = structuredClone(
+        formDefinitionWithLocationAndDeclaration
+      )
+      const res = buildTranslationDataRows(metadata, definition)
+
+      expect(res.overviewRows).toHaveLength(8)
+      expect(res.formRows).toHaveLength(9)
+
+      expect(res.overviewRows[0].englishContent).toBe('Test form')
+      expect(res.overviewRows[0].welshContent).toBe('')
+      expect(res.overviewRows[0].name).toBe('form.title')
+
+      expect(res.formRows[0].englishContent).toBe('Page One')
+      expect(res.formRows[0].welshContent).toBe('')
+      expect(res.formRows[0].name).toBe('pages.p1.title')
+
+      expect(res.formRows[1].englishContent).toBe(
+        'This is the first lat long field question'
+      )
+      expect(res.formRows[1].welshContent).toBe('')
+      expect(res.formRows[1].name).toBe('components.q1.title')
+
+      expect(res.formRows[2].englishContent).toBe('Hint text')
+      expect(res.formRows[2].welshContent).toBe('')
+      expect(res.formRows[2].name).toBe('components.q1.hint')
+
+      expect(res.formRows[4].englishContent).toBe('Some instruction text')
+      expect(res.formRows[4].welshContent).toBe('')
+      expect(res.formRows[4].name).toBe('components.q1.instructionText')
+
+      expect(res.formRows[5].englishContent).toBe(
+        'This is a declaration question'
+      )
+      expect(res.formRows[5].welshContent).toBe('')
+      expect(res.formRows[5].name).toBe('components.q2.title')
+
+      expect(res.formRows[6].englishContent).toBe('Declaration hint text')
+      expect(res.formRows[6].welshContent).toBe('')
+      expect(res.formRows[6].name).toBe('components.q2.hint')
+
+      expect(res.formRows[7].englishContent).toBe('Declaration short desc')
+      expect(res.formRows[7].welshContent).toBe('')
+      expect(res.formRows[7].name).toBe('components.q2.shortDescription')
+
+      expect(res.formRows[8].englishContent).toBe(
+        'This is the declaration that needs agreeing to'
+      )
+      expect(res.formRows[8].welshContent).toBe('')
+      expect(res.formRows[8].name).toBe('components.q2.content')
     })
 
     it('should return full list of data values with welsh translations', () => {

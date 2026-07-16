@@ -1,4 +1,6 @@
 import {
+  buildDeclarationFieldComponent,
+  buildLatLongFieldComponent,
   buildMarkdownComponent,
   buildRadiosComponent,
   buildTextFieldComponent
@@ -90,6 +92,38 @@ export const formDefinitionWithTwoQuestionsAndGuidance = buildDefinition({
           name: 'textField',
           title: 'This is the second textfield question',
           hint: 'Help text'
+        })
+      ],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'p2'
+    })
+  ]
+})
+
+export const formDefinitionWithLocationAndDeclaration = buildDefinition({
+  pages: [
+    buildQuestionPage({
+      id: 'p1',
+      section: 'section',
+      components: [
+        buildLatLongFieldComponent({
+          id: 'q1',
+          name: 'latLongField',
+          title: 'This is the first lat long field question',
+          hint: 'Hint text',
+          options: {
+            instructionText: 'Some instruction text'
+          }
+        }),
+        buildDeclarationFieldComponent({
+          id: 'q2',
+          name: 'declarationField',
+          title: 'This is a declaration question',
+          hint: 'Declaration hint text',
+          content: 'This is the declaration that needs agreeing to',
+          shortDescription: 'Declaration short desc'
         })
       ],
       next: [{ path: '/summary' }]

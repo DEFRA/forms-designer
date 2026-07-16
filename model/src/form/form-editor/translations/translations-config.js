@@ -142,15 +142,15 @@ export function drillDown(keyType, entity, jsonSuffix) {
     return 'hint' in entity ? entity.hint.text : ''
   } else if (keyType === TranslationRowTypes.DeclarationBody) {
     return 'content' in entity ? entity.content : ''
-  }
-
-  const entityWithDynamicProperties = /** @type {Record<string, unknown>} */ (
-    /** @type {unknown} */ (entity)
-  )
-  if (typeof entity === 'object') {
-    return jsonSuffix in entityWithDynamicProperties
-      ? /** @type {string} */ (entityWithDynamicProperties[jsonSuffix])
-      : ''
+  } else {
+    const entityWithDynamicProperties = /** @type {Record<string, unknown>} */ (
+      /** @type {unknown} */ (entity)
+    )
+    if (typeof entity === 'object') {
+      return jsonSuffix in entityWithDynamicProperties
+        ? /** @type {string} */ (entityWithDynamicProperties[jsonSuffix])
+        : ''
+    }
   }
   return entity
 }
