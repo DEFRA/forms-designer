@@ -27,6 +27,7 @@ import { ComponentType } from '~/src/components/enums.js'
 export const TranslationRowTypes = {
   PageHeading: 'PageHeading',
   PageGuidance: 'PageGuidance',
+  RepeatTitle: 'RepeatTitle',
   QuestionText: 'QuestionText',
   QuestionHint: 'QuestionHint',
   ShortDescription: 'ShortDescription',
@@ -89,6 +90,11 @@ export const keyConfig = {
     jsonPrefix: 'pages',
     jsonSuffix: 'title',
     displayName: 'Page heading'
+  },
+  [TranslationRowTypes.RepeatTitle]: {
+    jsonPrefix: 'pages',
+    jsonSuffix: 'repeatTitle',
+    displayName: 'Repeat name'
   }
 }
 

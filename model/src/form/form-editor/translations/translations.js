@@ -112,7 +112,7 @@ function buildPage(page, pageNum, translations, validation) {
       : undefined
   if (guidance) {
     const keyProperties = keyConfig[TranslationRowTypes.PageGuidance]
-    const keyName = `${keyProperties.jsonPrefix}.${page.id}.${keyProperties.jsonSuffix}`
+    const keyName = `${keyProperties.jsonPrefix}.${guidance.id}.${keyProperties.jsonSuffix}`
 
     translationRows.push({
       name: keyName,
@@ -123,6 +123,22 @@ function buildPage(page, pageNum, translations, validation) {
         validation?.formValues[keyName] ??
         lookupTranslation(keyName, translations),
       label: `Welsh guidance text (markdown) - page ${pageNum}`
+    })
+  }
+
+  if (page.controller === ControllerType.Repeat) {
+    const keyProperties = keyConfig[TranslationRowTypes.RepeatTitle]
+    const keyName = `${keyProperties.jsonPrefix}.${page.id}.${keyProperties.jsonSuffix}`
+
+    translationRows.push({
+      name: keyName,
+      type: TranslationRowTypes.RepeatTitle,
+      pageNum,
+      englishContent: page.repeat.options.title,
+      welshContent:
+        validation?.formValues[keyName] ??
+        lookupTranslation(keyName, translations),
+      label: `Welsh repeat name - page ${pageNum}`
     })
   }
 

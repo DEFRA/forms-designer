@@ -52,7 +52,7 @@ const translationsSchema = Joi.object()
   })
   .pattern(
     // Validate unrecognised dynamic keys with a regex
-    /^(?:(?:components|pages|listItems).[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}.(?:title|hint|shortDescription|text|content|instructionText))$/,
+    /^(?:(?:components|pages|listItems).[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}.(?:title|hint|shortDescription|text|content|instructionText|repeatTitle))$/,
     Joi.string().trim().allow('')
   )
   .required()

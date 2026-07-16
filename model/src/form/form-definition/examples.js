@@ -6,7 +6,11 @@ import {
   buildTextFieldComponent
 } from '~/src/__stubs__/components.js'
 import { buildDefinition } from '~/src/__stubs__/form-definition.js'
-import { buildQuestionPage, buildSummaryPage } from '~/src/__stubs__/pages.js'
+import {
+  buildQuestionPage,
+  buildRepeaterPage,
+  buildSummaryPage
+} from '~/src/__stubs__/pages.js'
 
 export const formDefinitionWithSinglePage = buildDefinition({
   pages: [
@@ -124,6 +128,28 @@ export const formDefinitionWithLocationAndDeclaration = buildDefinition({
           hint: 'Declaration hint text',
           content: 'This is the declaration that needs agreeing to',
           shortDescription: 'Declaration short desc'
+        })
+      ],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'p2'
+    })
+  ]
+})
+
+export const formDefinitionWithRepeater = buildDefinition({
+  pages: [
+    buildRepeaterPage({
+      id: 'p1',
+      section: 'section',
+      components: [
+        buildTextFieldComponent({
+          id: 'q1',
+          name: 'TextField',
+          title: 'This is the first text field field question',
+          hint: 'Hint text',
+          shortDescription: 'Short desc'
         })
       ],
       next: [{ path: '/summary' }]
