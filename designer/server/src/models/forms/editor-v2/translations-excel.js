@@ -79,12 +79,7 @@ export function getTranslationsAsExcel(metadata, definition) {
     ])
   }
 
-  addWorksheet(
-    workbook,
-    COLUMN_HEADERS,
-    rows,
-    definition.name ?? 'Translations'
-  )
+  addWorksheet(workbook, COLUMN_HEADERS, rows, 'Translations')
 
   const buffer = /** @type {XLSXBuffer} */ (
     xlsx.write(workbook, {
