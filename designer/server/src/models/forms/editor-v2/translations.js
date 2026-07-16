@@ -200,7 +200,7 @@ function mapFormRowsToViewModel(rows) {
     }
 
     const uniqueQuestionNums = new Set(
-      pageRows.map((row) => row.questionNum).filter((row) => row)
+      pageRows.map((row) => row.questionNum).filter(Boolean)
     )
     for (const questionNum of uniqueQuestionNums.values()) {
       const questionRows = pageRows.filter(
