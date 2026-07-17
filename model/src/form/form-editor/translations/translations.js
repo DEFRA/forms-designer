@@ -212,6 +212,12 @@ function buildComponent(
  * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
  */
 function addSelectionOptions(rows, component, definition, options) {
+  // Temporary workaround - ignore for Yes/No and use defaults in the plugin,
+  // until we create a solution that allows users to override the Yes/No options
+  if (component.type === ComponentType.YesNoField) {
+    return
+  }
+
   const list = getListFromComponent(component, definition)
   if (list?.items.length) {
     let itemNum = 0

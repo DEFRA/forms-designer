@@ -121,7 +121,7 @@ describe('Translations routes', () => {
     )
 
     const $rowTitles = document.getElementsByClassName('govuk-table__header')
-    expect($rowTitles).toHaveLength(182)
+    expect($rowTitles).toHaveLength(177)
 
     expect($rowTitles[3]).toHaveTextContent('Form name')
     expect($rowTitles[7]).toHaveTextContent('Email address')
