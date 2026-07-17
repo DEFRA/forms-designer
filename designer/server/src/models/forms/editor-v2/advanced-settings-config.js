@@ -3,6 +3,7 @@ import upperFirst from 'lodash/upperFirst.js'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import {
+  GOVUK_CHECKBOXES_SMALL,
   GOVUK_FIELDSET_LEGEND__M,
   GOVUK_FIELDSET_LEGEND__S,
   GOVUK_INPUT_WIDTH_3,
@@ -338,7 +339,7 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.GiveInstructions]: {
       name: 'giveInstructions',
       id: 'giveInstructions',
-      classes: 'govuk-checkboxes--small',
+      classes: GOVUK_CHECKBOXES_SMALL,
       formGroup: { classes: 'app-settings-checkboxes' },
       items: [
         {
@@ -403,7 +404,7 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.GeometryTypes]: {
       name: 'geometryTypes',
       id: 'geometryTypes',
-      classes: 'govuk-checkboxes--small',
+      classes: GOVUK_CHECKBOXES_SMALL,
       fieldset: {
         legend: {
           text: 'Choose the geometry types you accept',
@@ -420,7 +421,7 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.MapLayers]: {
       name: 'mapLayers',
       id: 'mapLayers',
-      classes: 'govuk-checkboxes--small',
+      classes: GOVUK_CHECKBOXES_SMALL,
       fieldset: {
         legend: {
           text: 'Choose the map layers to display',
