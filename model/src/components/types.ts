@@ -188,12 +188,17 @@ export interface UkAddressFieldComponent extends FormFieldBase {
   }
 }
 
+export interface MapLayerOptions {
+  sssi?: boolean
+}
+
 // Precise Location Fields
 export interface EastingNorthingFieldComponent extends FormFieldBase {
   type: ComponentType.EastingNorthingField
   options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
+    mapLayers?: MapLayerOptions
   }
   schema?: {
     easting?: {
@@ -212,6 +217,7 @@ export interface OsGridRefFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
+    mapLayers?: MapLayerOptions
   }
 }
 
@@ -228,6 +234,7 @@ export interface LatLongFieldComponent extends FormFieldBase {
   options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
+    mapLayers?: MapLayerOptions
   }
   schema?: {
     latitude?: {
@@ -290,6 +297,7 @@ export interface GeospatialFieldComponent extends FormFieldBase {
     condition?: string
     countries?: GeospatialFieldOptionsCountry[]
     geometryTypes?: GeospatialFieldGeometryTypesEnum[]
+    mapLayers?: MapLayerOptions
   }
   schema?: {
     max?: number

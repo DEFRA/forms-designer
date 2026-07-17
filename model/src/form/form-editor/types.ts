@@ -424,6 +424,11 @@ export interface FormEditor {
   geometryTypes?: GeospatialFieldGeometryTypesEnum[]
 
   /**
+   * The layers to include for map-based geospatial questions
+   */
+  mapLayers?: string[]
+
+  /**
    * The format restriction for telephone number questions
    */
   telephoneNumberFormat?: TelephoneNumberFieldOptionsFormat | 'any'
@@ -519,6 +524,7 @@ export type FormEditorInputQuestion = Pick<
   | 'minFeatures'
   | 'maxFeatures'
   | 'telephoneNumberFormat'
+  | 'mapLayers'
 >
 
 export type FormEditorInputPageSettings = Pick<

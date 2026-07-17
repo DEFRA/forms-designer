@@ -471,6 +471,11 @@ export const countriesSchema = Joi.array()
   .single()
   .description('The country to be included in a geospatial field')
 
+export const mapLayersSchema = Joi.array()
+  .items(Joi.string().valid('sssi'))
+  .single()
+  .description('The map layers to be displayed')
+
 export const exactFeaturesSchema = Joi.number()
   .empty('')
   .integer()
@@ -693,6 +698,7 @@ export const questionDetailsFullSchema = {
   maxChecksSchema,
   exactChecksSchema,
   countriesSchema,
+  mapLayersSchema,
   minFeaturesSchema,
   maxFeaturesSchema,
   exactFeaturesSchema,

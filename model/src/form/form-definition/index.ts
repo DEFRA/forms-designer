@@ -680,6 +680,25 @@ export const componentSchema = Joi.object<ComponentDef>()
             'Geometry types for geospatial data - for GeospatialField only'
           )
       }).description('Geometry types - for GeospatialField only'),
+      mapLayers: Joi.when('type', {
+        is: Joi.string()
+          .trim()
+          .valid(
+            ComponentType.GeospatialField,
+            ComponentType.EastingNorthingField,
+            ComponentType.LatLongField,
+            ComponentType.OsGridRefField
+          )
+          .required(),
+        then: Joi.object()
+          .keys({
+            sssi: Joi.boolean()
+              .optional()
+              .description('Sites of Special Scientific Interest layer')
+          })
+          .optional()
+          .description('Supported map layers')
+      }).description('Map layers'),
       format: Joi.when('type', {
         is: Joi.string()
           .trim()
