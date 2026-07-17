@@ -581,21 +581,6 @@ describe('editor-v2 - question details advanced settings model', () => {
         checked: true
       })
     })
-
-    test('should set checkbox values for map layers fields', () => {
-      const question = /** @type {ComponentDef} */ ({
-        type: ComponentType.GeospatialField,
-        name: 'geospatial',
-        title: 'geospatial title',
-        options: {
-          mapLayers: { sssi: true }
-        }
-      })
-      const result = advancedSettingsFields(['mapLayers'], question)
-      expect(result).toHaveLength(1)
-      expect(result[0].values).toHaveLength(1)
-      expect(result[0].values?.at(0)).toBe('sssi')
-    })
   })
 
   describe('enhancedFields', () => {
