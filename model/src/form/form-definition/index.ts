@@ -697,10 +697,8 @@ export const componentSchema = Joi.object<ComponentDef>()
               .description('Sites of Special Scientific Interest layer')
           })
           .optional()
-          .description(
-            'Supported map layers - for GeospatialField, EastingNorthingField, LatLongField, and OsGridRefField only'
-          )
-      }).description('Map layers - for GeospatialField only'),
+          .description('Supported map layers')
+      }).description('Map layers'),
       format: Joi.when('type', {
         is: Joi.string()
           .trim()
