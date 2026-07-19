@@ -3,7 +3,7 @@ import {
   formDefinitionWithRadioQuestion,
   formDefinitionWithRepeater,
   formDefinitionWithTwoQuestionsAndGuidance
-} from '~/src/form/form-definition/examples.js'
+} from '~/src/__stubs__/examples.js'
 import { buildTranslationDataRows } from '~/src/form/form-editor/translations/translations.js'
 import { buildMetaData } from '~/src/stubs.js'
 

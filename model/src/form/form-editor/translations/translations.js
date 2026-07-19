@@ -1,7 +1,6 @@
 import { ComponentType } from '~/src/components/enums.js'
+import { isListType, isTypeWithInstructions } from '~/src/components/helpers.js'
 import {
-  FIELDS_WITH_INSTRUCTIONS,
-  FIELDS_WITH_SELECTION_OPTIONS,
   IGNORE_FIELDS,
   TranslationRowTypes,
   drillDown,
@@ -35,25 +34,6 @@ function createRow(
 
   const keyName = `${keyProperties.jsonPrefix}.${entity.id}.${keyProperties.jsonSuffix}`
 
-  let label
-  if (keyType === TranslationRowTypes.QuestionText) {
-    label = `Welsh question text - Page ${pageNum}, question ${questionNum}`
-  } else if (keyType === TranslationRowTypes.QuestionHint) {
-    label = `Welsh hint - Page ${pageNum}, question ${questionNum}`
-  } else if (keyType === TranslationRowTypes.ShortDescription) {
-    label = `Welsh short description - Page ${pageNum}, question ${questionNum}`
-  } else if (keyType === TranslationRowTypes.ListItemText) {
-    label = `Welsh option ${itemNum} - Page ${pageNum}, question ${questionNum}`
-  } else if (keyType === TranslationRowTypes.ListItemHint) {
-    label = `Welsh hint for option ${itemNum} - Page ${pageNum}, question ${questionNum}`
-  } else if (keyType === TranslationRowTypes.InstructionText) {
-    label = `Welsh instruction text - Page ${pageNum}, question ${questionNum}`
-  } else if (keyType === TranslationRowTypes.DeclarationBody) {
-    label = `Welsh declaration body - Page ${pageNum}, question ${questionNum}`
-  } else {
-    label = ''
-  }
-
   return {
     name: keyName,
     type: keyType,
@@ -64,7 +44,7 @@ function createRow(
     welshContent:
       validation?.formValues[keyName] ??
       lookupTranslation(keyName, translations),
-    label
+    label: keyProperties.getLabel(pageNum, questionNum, itemNum)
   }
 }
 
@@ -102,7 +82,7 @@ function buildPage(page, pageNum, translations, validation) {
       welshContent:
         validation?.formValues[keyName] ??
         lookupTranslation(keyName, translations),
-      label: `Welsh page heading - page ${pageNum}`
+      label: keyProperties.getLabel(pageNum)
     })
   }
 
@@ -122,7 +102,7 @@ function buildPage(page, pageNum, translations, validation) {
       welshContent:
         validation?.formValues[keyName] ??
         lookupTranslation(keyName, translations),
-      label: `Welsh guidance text (markdown) - page ${pageNum}`
+      label: keyProperties.getLabel(pageNum)
     })
   }
 
@@ -138,7 +118,7 @@ function buildPage(page, pageNum, translations, validation) {
       welshContent:
         validation?.formValues[keyName] ??
         lookupTranslation(keyName, translations),
-      label: `Welsh repeat name - page ${pageNum}`
+      label: keyProperties.getLabel(pageNum)
     })
   }
 
@@ -171,7 +151,7 @@ function buildComponent(
   const options = { pageNum, questionNum, translations, validation }
 
   const typed = /** @type {InputFieldsComponentsDef} */ (component)
-  if (typed.title) {
+  if (typed.title && component.type !== ComponentType.PaymentField) {
     rows.push(createRow(component, TranslationRowTypes.QuestionText, options))
   }
   if (typed.hint) {
@@ -182,6 +162,10 @@ function buildComponent(
     rows.push(
       createRow(component, TranslationRowTypes.ShortDescription, options)
     )
+  } else {
+    rows.push(
+      createRow(component, TranslationRowTypes.PaymentDescription, options)
+    )
   }
 
   if (component.type === ComponentType.DeclarationField) {
@@ -190,16 +174,19 @@ function buildComponent(
     )
   }
 
-  if (
-    typed.options.instructionText &&
-    FIELDS_WITH_INSTRUCTIONS.includes(component.type)
-  ) {
+  if (component.type === ComponentType.PaymentField) {
+    rows.push(
+      createRow(component, TranslationRowTypes.PaymentDescription, options)
+    )
+  }
+
+  if (typed.options.instructionText && isTypeWithInstructions(component.type)) {
     rows.push(
       createRow(component, TranslationRowTypes.InstructionText, options)
     )
   }
 
-  if (FIELDS_WITH_SELECTION_OPTIONS.includes(component.type)) {
+  if (isListType(component.type)) {
     addSelectionOptions(rows, component, definition, options)
   }
   return rows
@@ -297,7 +284,7 @@ export function buildTranslationDataRows(metadata, definition, validation) {
 }
 
 /**
- * @import { ComponentDef, InputFieldsComponentsDef, ListComponentsDef } from '~/src/components/types.js'
+ * @import { ComponentDef, InputFieldsComponentsDef } from '~/src/components/types.js'
  * @import { FormMetadata } from '~/src/form/form-metadata/types.js'
  * @import { FormDefinition, Item, Page } from '~/src/form/form-definition/types.js'
  * @import { TranslationRow, ValidationFailure } from '~/src/form/form-editor/translations/translations-config.js'

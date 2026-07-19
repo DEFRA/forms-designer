@@ -237,6 +237,10 @@ function mapFormRowsToViewModel(rows) {
         questionRows,
         TranslationRowTypes.DeclarationBody
       )
+      const paymentDescription = getRowOfType(
+        questionRows,
+        TranslationRowTypes.PaymentDescription
+      )
 
       const questionTextRow = addTitle(questionText, 'Question text')
       const questionHintRow = addTitle(questionHint, 'Hint', TEXTAREA_3_ROWS)
@@ -254,13 +258,18 @@ function mapFormRowsToViewModel(rows) {
         'Declaration body',
         TEXTAREA_12_ROWS_WITH_MARKDOWN
       )
+      const paymentDescriptionRow = addTitle(
+        paymentDescription,
+        'Payment description'
+      )
 
       if (
         questionTextRow.length ||
         questionHintRow.length ||
         shortDescriptionRow.length ||
         instructionTextRow.length ||
-        declarationBodyRow.length
+        declarationBodyRow.length ||
+        paymentDescriptionRow.length
       ) {
         formRows.push(
           {
@@ -273,7 +282,8 @@ function mapFormRowsToViewModel(rows) {
               ...questionHintRow,
               ...shortDescriptionRow,
               ...instructionTextRow,
-              ...declarationBodyRow
+              ...declarationBodyRow,
+              ...paymentDescriptionRow
             ]
           }
         )

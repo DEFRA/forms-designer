@@ -3,7 +3,7 @@ import {
   formDefinitionWithSinglePage,
   formDefinitionWithTwoQuestions,
   formDefinitionWithoutSummary
-} from '~/src/form/form-definition/examples.js'
+} from '~/src/__stubs__/examples.js'
 import {
   getPageNum,
   getQuestionNum,
