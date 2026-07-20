@@ -186,6 +186,13 @@ describe('advanced-settings-helpers', () => {
       expect(result).toEqual({})
     })
 
+    it('should map mapLayers without mapLayers present', () => {
+      const result = getAdditionalOptions({
+        mapLayers: undefined
+      })
+      expect(result).toEqual({})
+    })
+
     it('should combine multiple options', () => {
       const result = getAdditionalOptions({
         classes: 'custom-class',
