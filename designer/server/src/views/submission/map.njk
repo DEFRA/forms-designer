@@ -33,7 +33,7 @@
           {% endif %}
           <div class="app-geospatial-field--preview">
             <div id="map_{{loop.index0}}">
-              <textarea class="govuk-textarea" id="data_{{loop.index0}}" readonly>{{ item | dump | safe }}</textarea>
+              <textarea class="govuk-textarea" id="data_{{loop.index0}}" readonly data-maplayers="{{mapLayers}}">{{ item | dump | safe }}</textarea>
             </div>
             <div id="list_{{loop.index0}}">
             </div>

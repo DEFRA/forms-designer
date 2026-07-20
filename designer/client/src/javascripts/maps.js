@@ -1,11 +1,14 @@
 import {
   geospatialMap,
-  map as mapImports
+  map as mapImports,
+  sssiDataset
 } from '@defra/forms-engine-plugin/shared.js'
+// @ts-expect-error - no types
+import createDatasetsPlugin from '@defra/interactive-map/plugins/datasets'
 // @ts-expect-error - no types
 import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
 
-const { createMap, defaultConfig: defaultMapConfig } = mapImports
+const { createMap, defaultConfig: defaultMapConfig, getMapLayers } = mapImports
 const {
   addFeatureToMap,
   createFeaturesHTML,
@@ -95,11 +98,18 @@ function processPreview(preview, index) {
   const geojson = getGeoJSON(geospatialInput)
   const bounds = geojson.features.length ? getBoundingBox(geojson) : undefined
   const drawPlugin = createDrawMLPlugin()
+  const plugins = [drawPlugin]
+
+  const mapLayers = getMapLayers(geospatialInput.dataset.maplayers)
+
+  if (mapLayers.includes('sssi')) {
+    plugins.push(createDatasetsPlugin(sssiDataset.default))
+  }
 
   const initConfig = {
     ...defaultMapConfig,
     bounds,
-    plugins: [drawPlugin]
+    plugins
   }
 
   const { map } = createMap(mapId, initConfig, {
