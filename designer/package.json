@@ -36,7 +36,7 @@
     "@babel/plugin-syntax-import-attributes": "^7.25.6",
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.5",
-    "@defra/forms-engine-plugin": "^5.0.0-alpha.2",
+    "@defra/forms-engine-plugin": "^5.0.0-alpha.3",
     "@defra/forms-model": "^3.0.688",
     "@defra/hapi-tracing": "^1.28.0",
     "@defra/interactive-map": "^0.0.22-alpha",
