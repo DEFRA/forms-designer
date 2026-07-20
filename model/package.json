@@ -37,14 +37,14 @@
     "@joi/date": "^2.1.1",
     "marked": "^15.0.12",
     "nanoid": "^5.0.7",
-    "slug": "^11.0.0",
+    "slug": "^11.0.1",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@types/slug": "^5.0.9",
     "joi": "^17.13.3",
     "joi-to-json": "^4.3.2",
-    "tsc-alias": "^1.8.11"
+    "tsc-alias": "^1.8.17"
   },
   "peerDependencies": {
     "joi": "^17.0.0"
