@@ -131,8 +131,9 @@ export const IGNORE_FIELDS = [
 ]
 
 /**
- * @param {string} key
- * @param { Record<string, string> | undefined } translations
+ * Lookup a translation from a list of translation records.
+ * @param {string} key - The translation key to look up.
+ * @param {Record<string, string> | undefined} translations - The translation values to search.
  */
 export function lookupTranslation(key, translations) {
   if (!translations) {
@@ -142,23 +143,30 @@ export function lookupTranslation(key, translations) {
 }
 
 /**
- * @param {string} keyType
- * @param {ComponentDef | Page | Item} entity
- * @param {string} jsonSuffix
- * @returns {string}
+ * Resolve the underlying content for a translation row from an entity.
+ * Involves using the appropriate child properties if necessary.
+ * @param {string} keyType - The translation row type being resolved.
+ * @param {ComponentDef | Page | Item} entity - The entity that may contain the content to translate.
+ * @param {string} jsonSuffix - The property name to read from the entity.
  */
 export function drillDown(keyType, entity, jsonSuffix) {
-  if (keyType === TranslationRowTypes.InstructionText) {
-    // @ts-expect-error - dynamic lookup
-    return 'options' in entity ? entity.options?.instructionText : ''
-  } else if (keyType === TranslationRowTypes.ListItemHint) {
-    // @ts-expect-error - dynamic lookup
-    return 'hint' in entity ? entity.hint.text : ''
-  } else if (keyType === TranslationRowTypes.DeclarationBody) {
-    return 'content' in entity ? entity.content : ''
-  } else if (keyType === TranslationRowTypes.PaymentDescription) {
-    // @ts-expect-error - dynamic lookup
-    return 'options' in entity ? entity.options?.description : ''
+  /** @type {Partial<Record<string, (entity: ComponentDef | Page | Item) => string>>} */
+  const resolveData = {
+    // @ts-expect-error - dynamic property lookup
+    [TranslationRowTypes.InstructionText]: (entity) =>
+      'options' in entity ? entity.options?.instructionText : '',
+    // @ts-expect-error - dynamic property lookup
+    [TranslationRowTypes.ListItemHint]: (entity) =>
+      'hint' in entity ? entity.hint.text : '',
+    [TranslationRowTypes.DeclarationBody]: (entity) =>
+      'content' in entity ? entity.content : '',
+    // @ts-expect-error - dynamic property lookup
+    [TranslationRowTypes.PaymentDescription]: (entity) =>
+      'options' in entity ? entity.options?.description : ''
+  }
+  const func = resolveData[keyType]
+  if (func) {
+    return func(entity)
   } else {
     const entityWithDynamicProperties = /** @type {Record<string, unknown>} */ (
       /** @type {unknown} */ (entity)

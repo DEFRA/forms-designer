@@ -401,6 +401,5 @@ export default [
 ]
 
 /**
- * @import { FormDefinition } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

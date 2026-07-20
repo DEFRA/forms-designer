@@ -19,6 +19,7 @@ import { buildPreviewUrl } from '~/src/models/forms/editor-v2/preview-helpers.js
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
+ * Determines if the specified field has an error against it.
  * @param {string} key
  * @param { ValidationFailure<any> | undefined } validation
  */
@@ -31,6 +32,7 @@ function fieldHasError(key, validation) {
 }
 
 /**
+ * Utility method to construct a UI row for a single editable field.
  * @param {string} title
  * @param {TranslationRow} row
  * @param { ValidationFailure<any> | undefined } validation
@@ -57,6 +59,7 @@ const overviewRowNumbers = {
 }
 
 /**
+ * Map form overview section rows (from the 'overview' form page) into the view model.
  * @param {TranslationRow[]} rows
  * @param { ValidationFailure<any> | undefined } validation
  */
@@ -157,6 +160,7 @@ function mapOverviewRowsToViewModel(rows, validation) {
 }
 
 /**
+ * Utility method to extract a row of a specific type.
  * @param {TranslationRow[]} rows
  * @param {string} type
  */
@@ -165,6 +169,7 @@ function getRowOfType(rows, type) {
 }
 
 /**
+ * Utility method to set the title for a row datastructure.
  * @param { TranslationRow | undefined } row
  * @param {string} title
  * @param {string} [type]
@@ -174,6 +179,7 @@ function addTitle(row, title, type) {
 }
 
 /**
+ * Map form page/component/list rows into the view model.
  * @param {TranslationRow[]} rows
  */
 function mapFormRowsToViewModel(rows) {
@@ -327,6 +333,7 @@ function mapFormRowsToViewModel(rows) {
 }
 
 /**
+ * Build the full view model for the translations page.
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {ValidationFailure<any>} [validation]
@@ -380,7 +387,8 @@ export function translationsViewModel(
 }
 
 /**
- * Model to represent confirmation page dialog
+ * Model to represent confirmation page dialog,
+ * for confirming if the user wants to delete all translations.
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  */

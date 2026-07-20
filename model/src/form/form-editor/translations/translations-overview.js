@@ -11,6 +11,7 @@ const privacyNoticeUrlKey = 'form.privacyNoticeUrl'
 const privacyNoticeTextKey = 'form.privacyNoticeText'
 
 /**
+ * Determine a field value, either from the user-entered payload (validation) or from a translation lookup
  * @param {string} key
  * @param {Record<string, string>} translations
  * @param {ValidationFailure<any>} [validation]
@@ -21,6 +22,7 @@ function getTranslation(key, translations, validation) {
 }
 
 /**
+ * Build all translation rows in the form overview section (metatdata values).
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {Record<string, string>} translations

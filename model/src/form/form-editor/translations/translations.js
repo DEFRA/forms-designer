@@ -14,10 +14,11 @@ import { ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
 /**
- * @param {ComponentDef | Page | Item} entity
- * @param {string} keyType
- * @param {{ pageNum: number, questionNum?: number, itemNum?: number, translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
- * @returns {TranslationRow}
+ * Create a translation row for a single entity field.
+ * @param {ComponentDef | Page | Item} entity - The source entity that contains the English content.
+ * @param {string} keyType - The translation row type to build.
+ * @param {{ pageNum: number, questionNum?: number, itemNum?: number, translations: Record<string, string>, validation?: ValidationFailure<any> }} options - The row context including numbering and translation values.
+ * @returns {TranslationRow} The populated translation row for the entity field.
  */
 function createRow(
   entity,
@@ -57,11 +58,12 @@ const allowedControllerTypesSet = new Set([
 ])
 
 /**
- * @param {Page} page
- * @param {number} pageNum
- * @param {Record<string, string>} translations
- * @param {ValidationFailure<any>} [validation]
- * @returns {TranslationRow[]}
+ * Build the translation rows for a single page.
+ * @param {Page} page - The page definition to inspect for translatable content.
+ * @param {number} pageNum - The page number used in the generated labels.
+ * @param {Record<string, string>} translations - Existing Welsh translations keyed by translation name.
+ * @param {ValidationFailure<any>} [validation] - Optional validation context for posted form values.
+ * @returns {TranslationRow[]} The translation rows generated for the page.
  */
 function buildPage(page, pageNum, translations, validation) {
   if (page.controller && !allowedControllerTypesSet.has(page.controller)) {
@@ -126,13 +128,14 @@ function buildPage(page, pageNum, translations, validation) {
 }
 
 /**
- * @param {FormDefinition} definition
- * @param {ComponentDef} component
- * @param {number} pageNum
- * @param {number} questionNum
- * @param {Record<string, string>} translations
- * @param {ValidationFailure<any>} [validation]
- * @returns {TranslationRow[]}
+ * Build the translation rows for a single component.
+ * @param {FormDefinition} definition - The overall form definition used to resolve list-based content.
+ * @param {ComponentDef} component - The component to inspect for translatable fields.
+ * @param {number} pageNum - The page number used in the generated labels.
+ * @param {number} questionNum - The question number used in the generated labels.
+ * @param {Record<string, string>} translations - Existing Welsh translations keyed by translation name.
+ * @param {ValidationFailure<any>} [validation] - Optional validation context for posted form values.
+ * @returns {TranslationRow[]} The translation rows generated for the component.
  */
 function buildComponent(
   definition,
@@ -193,10 +196,11 @@ function buildComponent(
 }
 
 /**
- * @param {any[]} rows
- * @param {ComponentDef} component
- * @param {FormDefinition} definition
- * @param {{ pageNum: number, questionNum?: number , translations: Record<string, string>,  validation?: ValidationFailure<any> }} options
+ * Add translation rows for the select item options of a list-based component.
+ * @param {any[]} rows - The accumulator for translation rows.
+ * @param {ComponentDef} component - The list-based component to inspect.
+ * @param {FormDefinition} definition - The form definition that contains the option list data.
+ * @param {{ pageNum: number, questionNum?: number, translations: Record<string, string>, validation?: ValidationFailure<any> }} options - The row context including numbering and translation values.
  */
 function addSelectionOptions(rows, component, definition, options) {
   // Temporary workaround - ignore for Yes/No and use defaults in the plugin,
@@ -229,9 +233,11 @@ function addSelectionOptions(rows, component, definition, options) {
 }
 
 /**
- * @param {FormMetadata} metadata
- * @param {FormDefinition} definition
- * @param {ValidationFailure<any>} [validation]
+ * Build the overview and form translation rows for a form definition.
+ * @param {FormMetadata} metadata - The form metadata used to build the overview section.
+ * @param {FormDefinition} definition - The form definition containing pages and components.
+ * @param {ValidationFailure<any>} [validation] - Optional validation context for posted form values.
+ * @returns {{ overviewRows: TranslationRow[], formRows: TranslationRow[] }} The generated overview and form translation rows.
  */
 export function buildTranslationDataRows(metadata, definition, validation) {
   const translationsJSON = /** @type {Record<string, string>} */ (
