@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Translations routes GET - should render all possible components in the view 1`] = `
+Document {
+  "destroy": [Function],
+  "location": Location {
+    "assign": [Function],
+    "hash": "",
+    "host": "localhost:3000",
+    "hostname": "localhost",
+    "href": "http://localhost:3000/",
+    "origin": "http://localhost:3000",
+    "pathname": "/",
+    "port": "3000",
+    "protocol": "http:",
+    "reload": [Function],
+    "replace": [Function],
+    "search": "",
+    "toString": [Function],
+  },
+}
+`;
+
+exports[`Translations routes GET - should render english/welsh fields in the view 1`] = `
+Document {
+  "destroy": [Function],
+  "location": Location {
+    "assign": [Function],
+    "hash": "",
+    "host": "localhost:3000",
+    "hostname": "localhost",
+    "href": "http://localhost:3000/",
+    "origin": "http://localhost:3000",
+    "pathname": "/",
+    "port": "3000",
+    "protocol": "http:",
+    "reload": [Function],
+    "replace": [Function],
+    "search": "",
+    "toString": [Function],
+  },
+}
+`;

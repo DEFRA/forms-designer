@@ -443,6 +443,13 @@ export type SelectionComponentsDef =
   | SelectFieldComponent
   | YesNoFieldComponent
 
+// Components that have instruction fields
+export type ComponentsDefWithInstructions =
+  | EastingNorthingFieldComponent
+  | OsGridRefFieldComponent
+  | NationalGridFieldNumberFieldComponent
+  | LatLongFieldComponent
+
 // Components that have condition support
 export type ConditionalComponentsDef = Exclude<
   ComponentDef,

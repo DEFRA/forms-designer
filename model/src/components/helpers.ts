@@ -2,6 +2,7 @@ import { ComponentTypes } from '~/src/components/component-types.js'
 import { ComponentType } from '~/src/components/enums.js'
 import {
   type ComponentDef,
+  type ComponentsDefWithInstructions,
   type ConditionalComponentType,
   type ConditionalComponentsDef,
   type ContentComponentsDef,
@@ -140,6 +141,19 @@ export function isListType(
     ComponentType.RadiosField,
     ComponentType.SelectField,
     ComponentType.CheckboxesField
+  ]
+
+  return !!type && allowedTypes.includes(type)
+}
+
+export function isTypeWithInstructions(
+  type?: ComponentType
+): type is ComponentsDefWithInstructions['type'] {
+  const allowedTypes = [
+    ComponentType.EastingNorthingField,
+    ComponentType.OsGridRefField,
+    ComponentType.NationalGridFieldNumberField,
+    ComponentType.LatLongField
   ]
 
   return !!type && allowedTypes.includes(type)

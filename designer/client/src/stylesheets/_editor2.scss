@@ -399,3 +399,28 @@
 .moj-action-bar__filter::after {
   width: 0;
 }
+
+.app-scrolling-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  outline: none;
+}
+
+.app-translation-table {
+  table-layout: fixed;
+  width: 100%;
+  min-width: 36rem;
+}
+
+.app-translation-table .govuk-table__header,
+.app-translation-table .govuk-table__cell {
+  vertical-align: top;
+}
+
+.app-translation-table__empty-header-cell {
+  width: 11rem;
+}
+
+.app-translation-table .app-no-border-bottom {
+  border-bottom: 0;
+}

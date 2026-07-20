@@ -1,0 +1,151 @@
+{% extends "layouts/page.njk" %}
+
+{% from "editor-card/macro.njk" import appEditorCard %}
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/error-summary/macro.njk" import govukErrorSummary %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% macro dataField(name, value, label, isError, type='text') %}
+  {% set errorClass = " govuk-input--error" if isError else "" %}
+  <div class="govuk-form-group">
+    <label class="govuk-label govuk-visually-hidden" for="{{ name }}">
+      {{ label }}
+    </label>
+    {% if type === 'textarea3' %}
+      <textarea class="govuk-textarea{{ errorClass }}" id="{{ name }}" name="{{ name }}" rows="3" lang="cy">{{ value }}</textarea>
+    {% elif type === 'textarea5' %}
+      <textarea class="govuk-textarea{{ errorClass }}" id="{{ name }}" name="{{ name }}" rows="5" lang="cy">{{ value }}</textarea>
+    {% elif type === 'textarea12markdown' %}
+      <textarea class="govuk-textarea{{ errorClass }}" id="{{ name }}" name="{{ name }}" rows="12" lang="cy">{{ value }}</textarea>
+      {% include "forms/partials/markdown-guidance.njk" %}
+    {% else %}
+      <input class="govuk-input{{ errorClass }}" id="{{ name }}" name="{{ name }}" type="text" value="{{ value }}" lang="cy">
+    {% endif %}
+  </div>
+{% endmacro %}
+
+{% macro dataTable(rows) %}
+  {% if (rows | length) %}
+    {% for row in rows %}
+      {% if row.caption and not row.rowData %}
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-4  {{ row.captionClasses }}">{{ row.caption }}</h2>
+      {% else %}
+        <div class="govuk-!-margin-bottom-6">
+          <div class="app-scrolling-wrapper" role="region" tabindex="0" aria-label="{{ row.caption }}">
+            <table class="govuk-table govuk-!-margin-bottom-0 app-translation-table">
+              {% if row.subHeading %}
+              <p class="govuk-body-s govuk-!-margin-bottom-2">{{ row.subHeading }}</p>
+              {% endif %}
+              {% if (row.caption) %}
+                <caption class="govuk-table__caption govuk-table__caption--m">{{ row.caption }}</caption>
+              {% endif %}
+              {% if (row.caption2) %}
+                <caption class="govuk-table__caption govuk-table__caption--m">{{ row.caption2 }}</caption>
+              {% endif %}
+              <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                  <th scope="col" class="govuk-table__header app-translation-table__empty-header-cell"><span class="govuk-visually-hidden">Field type</span></th>
+                  <th scope="col" class="govuk-table__header">English content</th>
+                  <th scope="col" class="govuk-table__header">Welsh content</th>
+                </tr>
+              </thead>
+              <tbody class="govuk-table__body">
+                {% for dataRow in row.rowData %}
+                  {% set rowErrorClass = " govuk-form-group--error" if dataRow.error else "" %}
+                  <tr class="govuk-table__row{{ rowErrorClass }}">
+                    {% set borderBottom = " app-no-border-bottom" if dataRow.type === 'listoptionwithhintfollowing' else ""%}
+                    {% set hideClass = "" if dataRow.title else " govuk-visually-hidden app-translation-table__empty-header-cell" %}
+                    {% if dataRow.title %}
+                      <th scope="row" class="govuk-table__header{{ borderBottom }}">{{ dataRow.title }}</th>
+                    {% else %}
+                      <th scope="row" class="govuk-table__header{{ borderBottom }}"><span class="govuk-visually-hidden">Field type</span></th>
+                    {% endif %}
+                    </th>
+                    {% if dataRow.type === 'listitemhint' %}
+                      <td class="govuk-table__cell govuk-body-s govuk-hint govuk-!-margin-bottom-0{{ borderBottom }}">{{ dataRow.row.englishContent }}</td>
+                    {% else %}
+                      <td class="govuk-table__cell{{ borderBottom }}">{{ dataRow.row.englishContent }}</td>
+                    {% endif %}
+                    <td class="govuk-table__cell{{ borderBottom }}">{{ dataField(dataRow.row.name, dataRow.row.welshContent, dataRow.row.label, dataRow.error, dataRow.type) }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+{% endmacro %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    description: pageDescription,
+    caption: pageCaption,
+    useNewMasthead: useNewMasthead,
+    classes: "govuk-grid-column-full",
+    backLink: backLink,
+    errorList: errorList
+  }) %}
+
+    {% if notification | length %}
+      {% call govukNotificationBanner({
+          type: "success"
+        }) %}
+      <p class="govuk-notification-banner__heading">{{ notification }}</p>
+      {% endcall %}
+    {% endif %}
+
+    <div class="app-pages-header__actions govuk-button-group">
+      <a href="welsh/upload" draggable="false" class="govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0">
+        Upload
+      </a>
+      <a href="welsh/download" draggable="false" class="govuk-link govuk-link--no-visited-state govuk-!-margin-bottom-0">
+        Download
+      </a>
+    </div>
+
+    <form method="post" action="#">
+
+      <div class="govuk-inset-text govuk-!-margin-top-0">
+        {% if formHasConditions %}
+          <h2 class="govuk-heading-m">Conditions</h2>
+          <p class="govuk-body"> Your form includes conditions. Most conditions will not need changes, but you should review any text conditions carefully to ensure they work in English and Welsh. Before publishing your form, check and update them in <a href="{{ conditionsManagerUrl }}" class="govuk-link govuk-link--no-visited-state">conditions manager</a> where needed.</p>
+        {% endif %}
+      <h2 class="govuk-heading-m">Some changes will only appear on the live form</h2>
+      <p class="govuk-body">If you make changes to the form name, support contact details, privacy wording, what happens next, or the payment link, your changes are saved as a draft. These changes will only appear on the live form once you make the form live.</p>
+      </div>
+
+      {{ dataTable(rowViewModel.overviewRows) }}
+
+      <div class="govuk-!-margin-bottom-9">&nbsp;</div>
+
+      {{ dataTable(rowViewModel.formRows) }}
+
+      <div class="govuk-button-group">
+        {{ govukButton({
+          text: 'Save changes'
+        }) }}
+
+        {{ govukButton({
+          text: 'Preview form in Welsh',
+          classes: 'govuk-button--secondary',
+          href: previewBaseUrl,
+          attributes: { target: "_blank" }
+        }) }}
+
+        <a href="/library/{{ formSlug }}/editor-v2/welsh/delete" class="govuk-link govuk-link--no-visited-state" id="delete-translations">Delete Welsh translations</a>
+      </div>
+    </form>
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}

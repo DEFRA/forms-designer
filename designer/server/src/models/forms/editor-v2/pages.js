@@ -347,6 +347,13 @@ function buildRightSideActions(slug) {
       classes: BUTTON_SECONDARY_CLASS,
       attributes: null
     }
+    // Leave uncommented - until we want to go-live with Welsh translations
+    // {
+    //   text: 'Welsh translation',
+    //   href: editorv2Path(slug, 'welsh'),
+    //   classes: BUTTON_SECONDARY_CLASS,
+    //   attributes: null
+    // }
   ]
 }
 
