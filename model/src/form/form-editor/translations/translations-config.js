@@ -152,16 +152,16 @@ export function lookupTranslation(key, translations) {
 export function drillDown(keyType, entity, jsonSuffix) {
   /** @type {Partial<Record<string, (entity: ComponentDef | Page | Item) => string>>} */
   const resolveData = {
-    [TranslationRowTypes.InstructionText]: (entity) =>
-    // @ts-expect-error - dynamic property lookup
+    [TranslationRowTypes.InstructionText]: () =>
+      // @ts-expect-error - dynamic property lookup
       'options' in entity ? entity.options?.instructionText : '',
-    [TranslationRowTypes.ListItemHint]: (entity) =>
-    // @ts-expect-error - dynamic property lookup
+    [TranslationRowTypes.ListItemHint]: () =>
+      // @ts-expect-error - dynamic property lookup
       'hint' in entity ? entity.hint.text : '',
-    [TranslationRowTypes.DeclarationBody]: (entity) =>
+    [TranslationRowTypes.DeclarationBody]: () =>
       'content' in entity ? entity.content : '',
-    [TranslationRowTypes.PaymentDescription]: (entity) =>
-    // @ts-expect-error - dynamic property lookup
+    [TranslationRowTypes.PaymentDescription]: () =>
+      // @ts-expect-error - dynamic property lookup
       'options' in entity ? entity.options?.description : ''
   }
   const func = resolveData[keyType]
