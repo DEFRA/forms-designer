@@ -235,6 +235,10 @@ function mapFormRowsToViewModel(rows) {
         questionRows,
         TranslationRowTypes.ShortDescription
       )
+      const errorDescription = getRowOfType(
+        questionRows,
+        TranslationRowTypes.ErrorDescription
+      )
       const instructionText = getRowOfType(
         questionRows,
         TranslationRowTypes.InstructionText
@@ -253,6 +257,10 @@ function mapFormRowsToViewModel(rows) {
       const shortDescriptionRow = addTitle(
         shortDescription,
         'Short description'
+      )
+      const errorDescriptionRow = addTitle(
+        errorDescription,
+        'Error description'
       )
       const instructionTextRow = addTitle(
         instructionText,
@@ -273,6 +281,7 @@ function mapFormRowsToViewModel(rows) {
         questionTextRow.length ||
         questionHintRow.length ||
         shortDescriptionRow.length ||
+        errorDescriptionRow.length ||
         instructionTextRow.length ||
         declarationBodyRow.length ||
         paymentDescriptionRow.length
@@ -287,6 +296,7 @@ function mapFormRowsToViewModel(rows) {
               ...questionTextRow,
               ...questionHintRow,
               ...shortDescriptionRow,
+              ...errorDescriptionRow,
               ...instructionTextRow,
               ...declarationBodyRow,
               ...paymentDescriptionRow

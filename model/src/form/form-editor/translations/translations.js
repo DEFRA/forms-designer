@@ -165,6 +165,11 @@ function buildComponent(
     rows.push(
       createRow(component, TranslationRowTypes.ShortDescription, options)
     )
+    if (typed.errorDescription) {
+      rows.push(
+        createRow(component, TranslationRowTypes.ErrorDescription, options)
+      )
+    }
   } else {
     rows.push(
       createRow(component, TranslationRowTypes.PaymentDescription, options)

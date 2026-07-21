@@ -68,6 +68,13 @@ export const keyConfig = {
     getLabel: (pageNum, questionNum) =>
       `Welsh short description - Page ${pageNum}, question ${questionNum}`
   },
+  [TranslationRowTypes.ErrorDescription]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'errorDescription',
+    displayName: 'Error description',
+    getLabel: (pageNum, questionNum) =>
+      `Welsh error description - Page ${pageNum}, question ${questionNum}`
+  },
   [TranslationRowTypes.InstructionText]: {
     jsonPrefix: 'components',
     jsonSuffix: 'instructionText',
