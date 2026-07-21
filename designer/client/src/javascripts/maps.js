@@ -99,7 +99,6 @@ function processPreview(preview, index) {
   const bounds = geojson.features.length ? getBoundingBox(geojson) : undefined
   const drawPlugin = createDrawMLPlugin()
   const plugins = [drawPlugin]
-
   const mapLayers = getMapLayers(geospatialInput.dataset.maplayers)
 
   if (mapLayers.includes('sssi')) {

@@ -116,6 +116,23 @@ describe('Maps Client JS', () => {
         expect(listContainer).toBeDefined()
       })
 
+      test('processMapPreview with SSSI layer initializes without errors when DOM elements are present', () => {
+        const textarea = document.getElementById('data_0')
+        expect(textarea).toBeDefined()
+
+        if (textarea === null) {
+          throw new Error('Expected textarea')
+        }
+
+        textarea.dataset.maplayers = 'sssi'
+
+        const { listContainer } = initialiseGeospatialMapsPreview()
+        expect(listContainer).toBeDefined()
+
+        const keyButton = document.getElementById('map_0-datasets-key')
+        expect(keyButton).toBeDefined()
+      })
+
       test('click on show link focuses the correct feature', () => {
         const { listContainer } = initialiseGeospatialMapsPreview()
         expect(listContainer).toBeDefined()
