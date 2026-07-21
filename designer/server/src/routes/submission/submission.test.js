@@ -170,6 +170,28 @@ const submissionRecord = {
   expireAt: new Date('2026-12-17T13:35:34.303Z')
 }
 
+/** @type {GeospatialFieldComponent} */
+const firstComponent = {
+  type: ComponentType.GeospatialField,
+  title: 'Add site geospatial features',
+  name: 'DzDkCy',
+  shortDescription: 'Site features',
+  hint: '',
+  options: {
+    required: true
+  },
+  id: '6b4c5b0d-7a49-459e-b9dc-db0b18cbeaa7'
+}
+
+/** @type {Page} */
+const firstPage = {
+  title: '',
+  path: '/add-site-geospatial-features',
+  components: [firstComponent],
+  next: [],
+  id: '0b608f84-d2e2-4158-9737-37bd49305fd3'
+}
+
 /**
  * @type {import('@defra/forms-model').FormDefinition}
  */
@@ -179,25 +201,7 @@ const formDefinition = {
   schema: 2,
   startPage: '/summary',
   pages: [
-    {
-      title: '',
-      path: '/add-site-geospatial-features',
-      components: [
-        {
-          type: ComponentType.GeospatialField,
-          title: 'Add site geospatial features',
-          name: 'DzDkCy',
-          shortDescription: 'Site features',
-          hint: '',
-          options: {
-            required: true
-          },
-          id: '6b4c5b0d-7a49-459e-b9dc-db0b18cbeaa7'
-        }
-      ],
-      next: [],
-      id: '0b608f84-d2e2-4158-9737-37bd49305fd3'
-    },
+    firstPage,
     {
       title: 'Multisite Information',
       path: '/multisite-information',
@@ -353,10 +357,53 @@ describe('Submission routes', () => {
 
       expect(result.response.statusCode).toBe(StatusCodes.NOT_FOUND)
     })
+
+    test('should show view map page with SSSI layer', async () => {
+      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+
+      jest.mocked(getFormDefinitionVersion).mockResolvedValueOnce({
+        ...formDefinition,
+        pages: [
+          {
+            ...firstPage,
+            components: [
+              {
+                ...firstComponent,
+                options: {
+                  ...firstComponent.options,
+                  mapLayers: { sssi: true }
+                }
+              },
+              ...firstPage.components.slice(1)
+            ]
+          },
+          ...formDefinition.pages.slice(1)
+        ]
+      })
+
+      const options = {
+        method: 'GET',
+        url: mapReviewUrl,
+        auth
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        '\n  88J-TKL-AU8\n  Add site geospatial features\n'
+      )
+    })
   })
 })
 
 /**
  * @import { Server } from '@hapi/hapi'
+ * @import { Page, GeospatialFieldComponent } from '@defra/forms-model'
  * @import { FormSubmissionDocument } from '~/src/services/formSubmissionService.js'
  */
