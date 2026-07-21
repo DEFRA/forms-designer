@@ -358,7 +358,7 @@ describe('Submission routes', () => {
       expect(result.response.statusCode).toBe(StatusCodes.NOT_FOUND)
     })
 
-    test('should show view map page with SSSI layer', async () => {
+    test('should show view map page with SSSI layer enabled', async () => {
       jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
 
       jest.mocked(getFormDefinitionVersion).mockResolvedValueOnce({
@@ -372,6 +372,48 @@ describe('Submission routes', () => {
                 options: {
                   ...firstComponent.options,
                   mapLayers: { sssi: true }
+                }
+              },
+              ...firstPage.components.slice(1)
+            ]
+          },
+          ...formDefinition.pages.slice(1)
+        ]
+      })
+
+      const options = {
+        method: 'GET',
+        url: mapReviewUrl,
+        auth
+      }
+
+      const { container } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        '\n  88J-TKL-AU8\n  Add site geospatial features\n'
+      )
+    })
+
+    test('should show view map page with SSSI layer disabled', async () => {
+      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+
+      jest.mocked(getFormDefinitionVersion).mockResolvedValueOnce({
+        ...formDefinition,
+        pages: [
+          {
+            ...firstPage,
+            components: [
+              {
+                ...firstComponent,
+                options: {
+                  ...firstComponent.options,
+                  mapLayers: { sssi: false }
                 }
               },
               ...firstPage.components.slice(1)
