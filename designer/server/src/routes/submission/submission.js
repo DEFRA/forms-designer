@@ -56,7 +56,8 @@ export default [
 
       const caption = referenceNumber
       const pageTitle = `${component.title}${repeaterName ? ' (multiple responses)' : ''}`
-      const mapLayers = /** @type {GeospatialFieldComponent} */(component).options.mapLayers
+      const mapLayers = /** @type {GeospatialFieldComponent} */ (component)
+        .options.mapLayers
 
       return h.view('submission/map', {
         pageTitle,
