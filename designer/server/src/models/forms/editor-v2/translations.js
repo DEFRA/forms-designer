@@ -278,13 +278,14 @@ function mapFormRowsToViewModel(rows) {
       )
 
       if (
-        questionTextRow.length ||
-        questionHintRow.length ||
-        shortDescriptionRow.length ||
-        errorDescriptionRow.length ||
-        instructionTextRow.length ||
-        declarationBodyRow.length ||
-        paymentDescriptionRow.length
+        questionTextRow.length +
+          questionHintRow.length +
+          shortDescriptionRow.length +
+          errorDescriptionRow.length +
+          instructionTextRow.length +
+          declarationBodyRow.length +
+          paymentDescriptionRow.length >
+        0
       ) {
         formRows.push(
           {
