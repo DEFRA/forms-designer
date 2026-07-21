@@ -56,6 +56,8 @@ export default [
 
       const caption = referenceNumber
       const pageTitle = `${component.title}${repeaterName ? ' (multiple responses)' : ''}`
+      const mapLayers = /** @type {GeospatialFieldComponent} */ (component)
+        .options.mapLayers
 
       return h.view('submission/map', {
         pageTitle,
@@ -64,7 +66,8 @@ export default [
         referenceNumber,
         repeaterName,
         component,
-        geojson
+        geojson,
+        mapLayers: mapLayers?.sssi ? 'sssi' : ''
       })
     },
     options: {
@@ -88,9 +91,7 @@ export default [
 ]
 
 /**
- * @import { FeatureCollection } from '@defra/forms-engine-plugin/engine/types.js'
- */
-
-/**
  * @import { ServerRoute } from '@hapi/hapi'
+ * @import { GeospatialFieldComponent } from '@defra/forms-model'
+ * @import { FeatureCollection } from '@defra/forms-engine-plugin/engine/types.js'
  */

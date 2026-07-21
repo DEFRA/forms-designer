@@ -36,6 +36,12 @@ const interactiveMapPath = dirname(
   })
 )
 
+const pluginPath = dirname(
+  resolvePkg.sync('@defra/forms-engine-plugin/package.json', {
+    basedir: appDir
+  })
+)
+
 export default /** @type {Configuration} */ ({
   context: join(import.meta.dirname, 'client/src'),
   devtool: NODE_ENV === 'production' ? 'source-map' : 'inline-source-map',
@@ -284,32 +290,12 @@ export default /** @type {Configuration} */ ({
           to: 'assets/translations'
         },
         {
-          from: join(interactiveMapPath, 'dist/css'),
-          to: 'assets/interactive-map/css'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/beta/map-styles/dist/css'),
-          to: 'assets/interactive-map/plugins/map-styles/dist/css'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/beta/scale-bar/dist/css'),
-          to: 'assets/interactive-map/plugins/scale-bar/dist/css'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/interact/dist/css'),
-          to: 'assets/interactive-map/plugins/interact/dist/css'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/search/dist/css'),
-          to: 'assets/interactive-map/plugins/search/dist/css'
-        },
-        {
-          from: join(interactiveMapPath, 'plugins/beta/draw-ml/dist/css'),
-          to: 'assets/interactive-map/plugins/draw-ml/dist/css'
-        },
-        {
           from: join(interactiveMapPath, 'assets'),
           to: 'assets/interactive-map/assets'
+        },
+        {
+          from: join(pluginPath, './.server/client/images/esri-logo.png'),
+          to: 'assets/interactive-map/assets/images'
         }
       ]
     })

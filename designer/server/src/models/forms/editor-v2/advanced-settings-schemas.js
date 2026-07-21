@@ -200,6 +200,7 @@ export const allSpecificSchemas = Joi.object()
     }),
     otherwise: Joi.array().optional(),
     countries: questionDetailsFullSchema.countriesSchema,
+    mapLayers: questionDetailsFullSchema.mapLayersSchema,
     exactFeatures: questionDetailsFullSchema.exactFeaturesSchema
       .when('minFeatures', {
         is: Joi.exist(),

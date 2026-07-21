@@ -3,6 +3,7 @@ import upperFirst from 'lodash/upperFirst.js'
 
 import { QuestionAdvancedSettings } from '~/src/common/constants/editor.js'
 import {
+  GOVUK_CHECKBOXES_SMALL,
   GOVUK_FIELDSET_LEGEND__M,
   GOVUK_FIELDSET_LEGEND__S,
   GOVUK_INPUT_WIDTH_3,
@@ -76,11 +77,13 @@ export const advancedSettingsPerComponentType =
     EastingNorthingField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
     OsGridRefField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
     NationalGridFieldNumberField: [
@@ -91,12 +94,14 @@ export const advancedSettingsPerComponentType =
     LatLongField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
     HiddenField: [],
     GeospatialField: [
       QuestionAdvancedSettings.GeometryTypes,
       QuestionAdvancedSettings.Countries,
+      QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.MinFeatures,
       QuestionAdvancedSettings.MaxFeatures,
       QuestionAdvancedSettings.ExactFeatures
@@ -334,7 +339,7 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.GiveInstructions]: {
       name: 'giveInstructions',
       id: 'giveInstructions',
-      classes: 'govuk-checkboxes--small',
+      classes: GOVUK_CHECKBOXES_SMALL,
       formGroup: { classes: 'app-settings-checkboxes' },
       items: [
         {
@@ -399,7 +404,7 @@ export const allAdvancedSettingsFields =
     [QuestionAdvancedSettings.GeometryTypes]: {
       name: 'geometryTypes',
       id: 'geometryTypes',
-      classes: 'govuk-checkboxes--small',
+      classes: GOVUK_CHECKBOXES_SMALL,
       fieldset: {
         legend: {
           text: 'Choose the geometry types you accept',
@@ -412,6 +417,24 @@ export const allAdvancedSettingsFields =
         value: typ,
         text: upperFirst(typ)
       }))
+    },
+    [QuestionAdvancedSettings.MapLayers]: {
+      name: 'mapLayers',
+      id: 'mapLayers',
+      classes: GOVUK_CHECKBOXES_SMALL,
+      fieldset: {
+        legend: {
+          text: 'Choose the map layers to display',
+          isPageHeading: false,
+          classes: GOVUK_FIELDSET_LEGEND__M
+        }
+      },
+      items: [
+        {
+          value: 'sssi',
+          text: 'Sites of Special Scientific Interest'
+        }
+      ]
     },
     [QuestionAdvancedSettings.Countries]: {
       name: 'countries',
