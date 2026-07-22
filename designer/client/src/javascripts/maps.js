@@ -102,7 +102,7 @@ function processPreview(preview, index) {
   const mapLayers = getMapLayers(geospatialInput.dataset.maplayers)
 
   if (mapLayers.includes('sssi')) {
-    plugins.push(createDatasetsPlugin(sssiDataset.default))
+    plugins.push(createDatasetsPlugin({ datasets: sssiDataset.default }))
   }
 
   const initConfig = {
