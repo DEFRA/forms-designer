@@ -78,6 +78,13 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
       .optional()
       .allow('')
       .description('Reference number for the form submission'),
+    language: Joi.string()
+      // TODO - make this required in later releases - optional for now to avoid release glitches
+      .optional()
+      .allow('')
+      .description(
+        'The currently-selected language at point of form submission'
+      ),
     main: Joi.array<SubmitRecord>()
       .items(formSubmitRecordSchema)
       .required()

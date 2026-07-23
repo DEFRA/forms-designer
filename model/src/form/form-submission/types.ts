@@ -75,6 +75,11 @@ export interface SubmitPayload {
   referenceNumber?: string
 
   /**
+   * The currently-selected language at the point of submission
+   */
+  language?: string
+
+  /**
    * The main form anwsers
    */
   main: SubmitRecord[]
