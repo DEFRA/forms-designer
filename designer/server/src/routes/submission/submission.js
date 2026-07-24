@@ -7,9 +7,51 @@ import {
   getLiveFormDefinition
 } from '~/src/lib/forms.js'
 import { getComponentFromDefinition } from '~/src/lib/utils.js'
+import { submissionViewModel } from '~/src/models/submission/index.js'
 import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
 
 export default [
+  /**
+   * @satisfies {ServerRoute<{ Params: { referenceNumber: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: '/submission/{referenceNumber}',
+    async handler(request, h) {
+      const { params, auth } = request
+      const { referenceNumber } = params
+      const { token } = auth.credentials
+
+      const record = await getSubmissionRecord(referenceNumber, token)
+      const { formId, versionMetadata } = record.meta
+      const definition = versionMetadata
+        ? await getFormDefinitionVersion(
+            formId,
+            versionMetadata.versionNumber,
+            token
+          )
+        : await getLiveFormDefinition(formId, token)
+
+      const model = submissionViewModel(record, definition)
+
+      return h.view('submission/index', model)
+    },
+    options: {
+      auth: {
+        access: {
+          entity: 'user',
+          scope: false
+        }
+      },
+      validate: {
+        params: Joi.object()
+          .keys({
+            referenceNumber: Joi.string().required()
+          })
+          .required()
+      }
+    }
+  }),
   /**
    * @satisfies {ServerRoute<{ Params: { referenceNumber: string, pageId: string, componentId: string } }>}
    */

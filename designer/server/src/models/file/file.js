@@ -79,7 +79,8 @@ export function downloadAllViewModel(
     pageTitle,
     pageHeading: {
       text: pageTitle,
-      size: 'large'
+      size: 'large',
+      caption: referenceNumber
     },
     email,
     referenceNumber,
