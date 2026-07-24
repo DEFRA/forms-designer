@@ -400,6 +400,33 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       
         <div class="govuk-summary-card__content">
           <dl class="govuk-summary-list govuk-summary-list--no-border">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+              <dt class="govuk-summary-list__key">
+                Text field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                Dad Chase
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+              <dt class="govuk-summary-list__key">
+                Date parts field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                1 January 2001
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Geospatial field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                Added 3 locations
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/98b46e3f-02fb-44d3-807a-0e0ee90d0722/4e50b4a2-a443-4e0b-a2e0-49008605b34c#answer_0">Review map<span class="govuk-visually-hidden"> Review map (Thing 1)</span></a>
+              </dd>
+            </div>
           </dl>
         </div>
       </div>
@@ -412,6 +439,33 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       
         <div class="govuk-summary-card__content">
           <dl class="govuk-summary-list govuk-summary-list--no-border">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+              <dt class="govuk-summary-list__key">
+                Text field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                Mum Chase
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+              <dt class="govuk-summary-list__key">
+                Date parts field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                1 January 2001
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Geospatial field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                Added 3 locations
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/98b46e3f-02fb-44d3-807a-0e0ee90d0722/4e50b4a2-a443-4e0b-a2e0-49008605b34c#answer_1">Review map<span class="govuk-visually-hidden"> Review map (Thing 2)</span></a>
+              </dd>
+            </div>
           </dl>
         </div>
       </div>
@@ -424,78 +478,33 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       
         <div class="govuk-summary-card__content">
           <dl class="govuk-summary-list govuk-summary-list--no-border">
-          </dl>
-        </div>
-      </div>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">
-            Thing 4
-          </h2>
-        </div>
-      
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list govuk-summary-list--no-border">
-          </dl>
-        </div>
-      </div>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">
-            Thing 5
-          </h2>
-        </div>
-      
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list govuk-summary-list--no-border">
-          </dl>
-        </div>
-      </div>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">
-            Thing 6
-          </h2>
-        </div>
-      
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list govuk-summary-list--no-border">
-          </dl>
-        </div>
-      </div>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">
-            Thing 7
-          </h2>
-        </div>
-      
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list govuk-summary-list--no-border">
-          </dl>
-        </div>
-      </div>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">
-            Thing 8
-          </h2>
-        </div>
-      
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list govuk-summary-list--no-border">
-          </dl>
-        </div>
-      </div>
-      <div class="govuk-summary-card">
-        <div class="govuk-summary-card__title-wrapper">
-          <h2 class="govuk-summary-card__title">
-            Thing 9
-          </h2>
-        </div>
-      
-        <div class="govuk-summary-card__content">
-          <dl class="govuk-summary-list govuk-summary-list--no-border">
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+              <dt class="govuk-summary-list__key">
+                Text field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                Child Chase
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
+              <dt class="govuk-summary-list__key">
+                Date parts field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                1 January 2001
+              </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+              <dt class="govuk-summary-list__key">
+                Geospatial field
+              </dt>
+              <dd class="govuk-summary-list__value">
+                Added 3 locations
+              </dd>
+              <dd class="govuk-summary-list__actions">
+                <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/98b46e3f-02fb-44d3-807a-0e0ee90d0722/4e50b4a2-a443-4e0b-a2e0-49008605b34c#answer_2">Review map<span class="govuk-visually-hidden"> Review map (Thing 3)</span></a>
+              </dd>
+            </div>
           </dl>
         </div>
       </div>

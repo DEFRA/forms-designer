@@ -117,7 +117,7 @@ export function submissionViewModel(submission, definition) {
       /** @type {SummaryRowRepeaterValue} */
       const value = {
         repeatTitle: title,
-        rows: items.flatMap((item, index) =>
+        rows: items.map((item, index) =>
           page.components
             .map((c) => processSectionComponent(c, page, { item, index }))
             .filter((v) => v !== undefined)
