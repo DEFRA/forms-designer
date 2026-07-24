@@ -137,7 +137,7 @@ function buildPage(page, pageNum, translations, validation) {
  * @param {ValidationFailure<any>} [validation] - Optional validation context for posted form values.
  * @returns {TranslationRow[]} The translation rows generated for the component.
  */
-function buildComponent(
+export function buildComponent(
   definition,
   component,
   pageNum,
@@ -165,6 +165,11 @@ function buildComponent(
     rows.push(
       createRow(component, TranslationRowTypes.ShortDescription, options)
     )
+    if (typed.errorDescription) {
+      rows.push(
+        createRow(component, TranslationRowTypes.ErrorDescription, options)
+      )
+    }
   } else {
     rows.push(
       createRow(component, TranslationRowTypes.PaymentDescription, options)
@@ -174,12 +179,6 @@ function buildComponent(
   if (component.type === ComponentType.DeclarationField) {
     rows.push(
       createRow(component, TranslationRowTypes.DeclarationBody, options)
-    )
-  }
-
-  if (component.type === ComponentType.PaymentField) {
-    rows.push(
-      createRow(component, TranslationRowTypes.PaymentDescription, options)
     )
   }
 

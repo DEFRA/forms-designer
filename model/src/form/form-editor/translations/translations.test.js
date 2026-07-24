@@ -4,8 +4,16 @@ import {
   formDefinitionWithRepeater,
   formDefinitionWithTwoQuestionsAndGuidance
 } from '~/src/__stubs__/examples.js'
-import { buildTranslationDataRows } from '~/src/form/form-editor/translations/translations.js'
-import { buildMetaData } from '~/src/stubs.js'
+import {
+  buildComponent,
+  buildTranslationDataRows
+} from '~/src/form/form-editor/translations/translations.js'
+import {
+  buildHtmlComponent,
+  buildMetaData,
+  buildPaymentComponent,
+  buildTextFieldComponent
+} from '~/src/stubs.js'
 
 describe('translations', () => {
   const metadata = buildMetaData({
@@ -189,4 +197,94 @@ describe('translations', () => {
       expect(res.formRows[9].name).toBe('listItems.option-3.hint')
     })
   })
+
+  describe('buildComponent', () => {
+    it('should return empty array if not an included field', () => {
+      const definition = structuredClone(
+        formDefinitionWithTwoQuestionsAndGuidance
+      )
+      const res = buildComponent(
+        definition,
+        buildHtmlComponent(),
+        1,
+        1,
+        {},
+        undefined
+      )
+      expect(res).toHaveLength(0)
+    })
+
+    it('should build payment field', () => {
+      const definition = structuredClone(
+        formDefinitionWithTwoQuestionsAndGuidance
+      )
+      const res = buildComponent(
+        definition,
+        buildPaymentComponent(),
+        1,
+        1,
+        {},
+        undefined
+      )
+      expect(res).toHaveLength(1)
+      expect(res[0]).toEqual({
+        englishContent: 'Payment description',
+        itemNum: undefined,
+        label: 'Welsh payment description - Page 1, question 1',
+        name: 'components.undefined.paymentDescription',
+        pageNum: 1,
+        questionNum: 1,
+        type: 'PaymentDescription',
+        welshContent: ''
+      })
+    })
+
+    it('should add error description', () => {
+      const definition = structuredClone(
+        formDefinitionWithTwoQuestionsAndGuidance
+      )
+      const component = buildTextFieldComponent({
+        id: 'comp-id-1',
+        shortDescription: 'My short desc',
+        errorDescription: 'My error desc'
+      })
+
+      const res = buildComponent(definition, component, 1, 1, {}, undefined)
+      expect(res).toHaveLength(3)
+      expect(res[0]).toEqual({
+        englishContent: 'Text field',
+        itemNum: undefined,
+        label: 'Welsh question text - Page 1, question 1',
+        name: 'components.comp-id-1.title',
+        pageNum: 1,
+        questionNum: 1,
+        type: 'QuestionText',
+        welshContent: ''
+      })
+      expect(res[1]).toEqual({
+        englishContent: 'My short desc',
+        itemNum: undefined,
+        label: 'Welsh short description - Page 1, question 1',
+        name: 'components.comp-id-1.shortDescription',
+        pageNum: 1,
+        questionNum: 1,
+        type: 'ShortDescription',
+        welshContent: ''
+      })
+      expect(res[2]).toEqual({
+        englishContent: 'My error desc',
+        itemNum: undefined,
+        label: 'Welsh error description - Page 1, question 1',
+        name: 'components.comp-id-1.errorDescription',
+        pageNum: 1,
+        questionNum: 1,
+        type: 'ErrorDescription',
+        welshContent: ''
+      })
+    })
+  })
 })
+
+/**
+ * @import { TextFieldComponent } from '~/src/components/types.js'
+ */
