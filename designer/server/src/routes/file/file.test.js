@@ -269,12 +269,14 @@ describe('File routes', () => {
       const { container } = await renderResponse(server, options)
 
       const $heading = container.getByRole('heading', {
-        name: 'Download attached files',
         level: 1
       })
 
       expect($heading).toBeInTheDocument()
       expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        `\n  PDT-UC2-M3A\n  Download attached files\n`
+      )
     })
 
     test('should redirect to the email entry page when not stored in state', async () => {
