@@ -19,7 +19,7 @@ import { format } from '~/src/models/forms/history-date-utils.js'
 function processSectionComponent(component, page, context, repeat) {
   let value = ''
   let actions
-  const { formModel, data, translator, referenceNumber } = context
+  const { formModel, submission, translator, referenceNumber } = context
   const field = formModel.componentMap.get(component.name)
 
   if (!(field instanceof FormComponent)) {
@@ -27,11 +27,14 @@ function processSectionComponent(component, page, context, repeat) {
   }
 
   if (component.type === ComponentType.FileUploadField) {
-    if (component.name in data.files) {
-      const files = /** @type {any} */ (data.files[component.name])
+    if (component.name in submission.data.files) {
+      const files = submission.data.files[component.name]
 
       if (Array.isArray(files) && files.length) {
-        value = field.getDisplayStringFromFormValue(files, translator)
+        value = field.getDisplayStringFromFormValue(
+          /** @type {any} */ (files),
+          translator
+        )
         actions = [
           {
             href: `/files-download/${referenceNumber}`,
@@ -48,7 +51,7 @@ function processSectionComponent(component, page, context, repeat) {
       }
     }
   } else {
-    const source = repeat?.item ?? data.main
+    const source = repeat?.item ?? submission.data.main
 
     if (component.name in source) {
       value = field.getDisplayStringFromFormValue(
@@ -90,7 +93,7 @@ function processSectionPage(page, context) {
 
   if (hasRepeater(page)) {
     const { name, title } = page.repeat.options
-    const items = context.data.repeaters[name] ?? []
+    const items = context.submission.data.repeaters[name] ?? []
 
     /** @type {SummaryRowKey} */
     const key = { text: title }
@@ -98,12 +101,17 @@ function processSectionPage(page, context) {
     /** @type {SummaryRowRepeaterValue} */
     const value = {
       repeatTitle: title,
-      rows: items.map((item, index) =>
-        page.components
-          .map((c) =>
-            processSectionComponent(c, page, context, { item, index })
-          )
-          .filter((v) => v !== undefined)
+      rows: items.map(
+        /**
+         * @param {any} item
+         * @param {number} index
+         */
+        (item, index) =>
+          page.components
+            .map((c) =>
+              processSectionComponent(c, page, context, { item, index })
+            )
+            .filter((v) => v !== undefined)
       )
     }
 
@@ -145,7 +153,7 @@ function processSection(section, context) {
  * @param {FormDefinition} definition - the form definition
  */
 export function submissionViewModel(submission, definition) {
-  const { data, meta } = submission
+  const { meta } = submission
   const { referenceNumber } = meta
   const fixedDefinition = replaceCustomControllers(definition)
   const formModel = new FormModel(fixedDefinition, { basePath: '' })
@@ -163,7 +171,7 @@ export function submissionViewModel(submission, definition) {
     summaries,
     pages,
     translator,
-    data,
+    submission,
     formModel,
     referenceNumber
   }
@@ -190,7 +198,7 @@ export function submissionViewModel(submission, definition) {
  * @typedef {{ items: { href: string, text: string, visuallyHiddenText: string }[]}} SummaryRowActions
  * @typedef {{ key: SummaryRowKey, value: SummaryRowTextValue | SummaryRowRepeaterValue, actions?: SummaryRowActions | undefined}} SummaryRow
  * @typedef {SummaryRow[]} SummaryRows
- * @typedef {{ summaries: { section: string | undefined, rows: SummaryRows }[], pages: Page[], translator: any, data: FormAdapterSubmissionMessagePayload, formModel: FormModel, referenceNumber: string }} Context
+ * @typedef {{ summaries: { section: string | undefined, rows: SummaryRows }[], pages: Page[], translator: any, submission: FormAdapterSubmissionMessagePayload, formModel: FormModel, referenceNumber: string }} Context
  */
 
 /**
