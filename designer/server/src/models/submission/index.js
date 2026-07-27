@@ -12,6 +12,44 @@ import { format } from '~/src/models/forms/history-date-utils.js'
 /**
  * Process a page component
  * @param {ComponentDef} component
+ * @param {FormComponent} field
+ * @param {Context} context
+ */
+function processFileUploadComponent(component, field, context) {
+  let value = ''
+  let actions
+  const { submission, translator, referenceNumber } = context
+
+  if (component.name in submission.data.files) {
+    const files = submission.data.files[component.name]
+
+    if (Array.isArray(files) && files.length) {
+      value = field.getDisplayStringFromFormValue(
+        /** @type {any} */ (files),
+        translator
+      )
+      actions = [
+        {
+          href: `/files-download/${referenceNumber}`,
+          text: 'Download files',
+          visuallyHiddenText: 'Download files'
+        }
+      ]
+
+      return {
+        key: { text: component.title },
+        value: { text: value },
+        actions: { items: actions }
+      }
+    }
+  }
+
+  return undefined
+}
+
+/**
+ * Process a page component
+ * @param {ComponentDef} component
  * @param {Page} page
  * @param {Context} context
  * @param {{ item: Record<string, any>, index: number}} [repeat]
@@ -27,29 +65,7 @@ function processSectionComponent(component, page, context, repeat) {
   }
 
   if (component.type === ComponentType.FileUploadField) {
-    if (component.name in submission.data.files) {
-      const files = submission.data.files[component.name]
-
-      if (Array.isArray(files) && files.length) {
-        value = field.getDisplayStringFromFormValue(
-          /** @type {any} */ (files),
-          translator
-        )
-        actions = [
-          {
-            href: `/files-download/${referenceNumber}`,
-            text: 'Download files',
-            visuallyHiddenText: 'Download files'
-          }
-        ]
-
-        return {
-          key: { text: component.title },
-          value: { text: value },
-          actions: { items: actions }
-        }
-      }
-    }
+    return processFileUploadComponent(component, field, context)
   } else {
     const source = repeat?.item ?? submission.data.main
 
