@@ -13,7 +13,7 @@ import {
   getLiveFormDefinition
 } from '~/src/lib/forms.js'
 import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
-import { auth } from '~/test/fixtures/auth.js'
+import { auth, authSuperAdmin } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
@@ -26,6 +26,10 @@ describe('Submission routes', () => {
   beforeAll(async () => {
     server = await createServer()
     await server.initialize()
+  })
+
+  afterEach(() => {
+    jest.resetAllMocks()
   })
 
   afterAll(async () => {
@@ -900,7 +904,7 @@ describe('Submission routes', () => {
       const options = {
         method: 'GET',
         url: reviewUrl,
-        auth
+        auth: authSuperAdmin
       }
 
       const { container, response } = await renderResponse(server, options)
@@ -914,6 +918,25 @@ describe('Submission routes', () => {
       expect($heading.textContent).toBe(`\n  Components\n  RWU-DPB-HZE\n`)
 
       expect(response.result).toMatchSnapshot()
+    })
+
+    test('should not show view submission page without the correct scope', async () => {
+      jest
+        .mocked(getSubmissionRecord)
+        .mockResolvedValueOnce(/** @type {any} */ (submissionRecord))
+      jest
+        .mocked(getFormDefinitionVersion)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: reviewUrl,
+        auth
+      }
+
+      const { response } = await renderResponse(server, options)
+
+      expect(response.statusCode).toBe(StatusCodes.FORBIDDEN)
     })
   })
 

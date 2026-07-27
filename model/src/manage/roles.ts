@@ -20,7 +20,8 @@ export enum Scopes {
   DeadLetterQueues = 'dead-letter-queues',
   FormsInspect = 'forms-inspect',
   FormsReport = 'forms-report',
-  RegenerateMetrics = 'regenerate-metrics'
+  RegenerateMetrics = 'regenerate-metrics',
+  SubmissionRead = 'submission-read'
 }
 
 export const RoleScopes = {
