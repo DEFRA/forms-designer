@@ -19,7 +19,7 @@
       caption: caption
     }
   }) %}
-    <p class="govuk-body">{{ lede }}</p>
+    <p class="govuk-body">{{ formattedTimestamp }}</p>
     {% for summary in summaries %}
       {% if summary.section %}
         <h2 class="govuk-heading-m">{{ summary.section }}</h2>
