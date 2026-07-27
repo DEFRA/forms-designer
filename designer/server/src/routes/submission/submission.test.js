@@ -52,7 +52,7 @@ describe('Submission routes', () => {
       },
       data: {
         main: {
-          SBdibf: 'Yo',
+          unsectionedPageField: 'Yo',
           textField: 'Enrique Chase',
           multilineTextField:
             'I’m well and truly stumped. My PR is running through fine (linting, unit tests etc) but the Sonar step reports ‘too many parameters’ on a call that I have updated in forms-model (with a new npm version in my PR).',
@@ -364,27 +364,6 @@ describe('Submission routes', () => {
       startPage: '/all-components',
       pages: [
         {
-          title: '',
-          path: '/unsectioned-page',
-          components: [
-            {
-              type: ComponentType.TextField,
-              title: 'Unsectioned page',
-              name: 'SBdibf',
-              shortDescription: 'Unsectioned page',
-              hint: '',
-              options: {
-                required: true,
-                classes: ''
-              },
-              schema: {},
-              id: '25c98cf9-cf20-440d-94ce-2e7389e87bc3'
-            }
-          ],
-          next: [],
-          id: '6512a1ad-4819-48c3-b7f9-4e6c930a0457'
-        },
-        {
           path: '/all-components',
           title: 'All Components',
           components: [
@@ -624,8 +603,8 @@ describe('Submission routes', () => {
           section: '8bbc5859-ca64-42ed-8a32-6882ed3fe6c9'
         },
         {
-          title: 'Page title',
-          path: '/page-title',
+          title: 'Repeater page title',
+          path: '/repeater-page',
           components: [
             {
               type: ComponentType.TextField,
@@ -683,6 +662,48 @@ describe('Submission routes', () => {
               max: 5
             }
           }
+        },
+        {
+          title: '',
+          path: '/unsectioned-page',
+          components: [
+            {
+              type: ComponentType.TextField,
+              title: 'Unsectioned page',
+              name: 'unsectionedPageField',
+              shortDescription: 'Unsectioned page',
+              hint: '',
+              options: {
+                required: true,
+                classes: ''
+              },
+              schema: {},
+              id: '25c98cf9-cf20-440d-94ce-2e7389e87bc3'
+            }
+          ],
+          next: [],
+          id: '6512a1ad-4819-48c3-b7f9-4e6c930a0457'
+        },
+        {
+          title: '',
+          path: '/optional-page',
+          components: [
+            {
+              type: ComponentType.TextField,
+              title: 'Optional page',
+              name: 'optionalPageField',
+              shortDescription: 'Optional page',
+              hint: '',
+              options: {
+                required: false,
+                classes: ''
+              },
+              schema: {},
+              id: '146ee593-7c88-4f27-92bd-cafe6f2fa106'
+            }
+          ],
+          next: [],
+          id: '2cb5d8b2-ec52-4d59-ad8c-88b483a095e5'
         },
         {
           title: 'Check your answers',

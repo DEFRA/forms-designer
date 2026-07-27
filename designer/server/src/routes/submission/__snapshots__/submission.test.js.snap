@@ -380,14 +380,6 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       <dl class="govuk-summary-list">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Unsectioned page
-    </dt>
-    <dd class="govuk-summary-list__value">
-      Yo
-    </dd>
-  </div>
-  <div class="govuk-summary-list__row">
-    <dt class="govuk-summary-list__key">
       Thing
     </dt>
     <dd class="govuk-summary-list__value">
@@ -508,6 +500,14 @@ exports[`Submission routes GET / should show view submission page 1`] = `
           </dl>
         </div>
       </div>
+    </dd>
+  </div>
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      Unsectioned page
+    </dt>
+    <dd class="govuk-summary-list__value">
+      Yo
     </dd>
   </div>
 </dl>
