@@ -167,7 +167,7 @@ export function submissionViewModel(submission, definition) {
 /**
  * @typedef {{ text: string }} SummaryRowKey
  * @typedef {{ text: string }} SummaryRowTextValue
- * @typedef {{ repeatTitle: string, rows: SummaryRow[] }} SummaryRowRepeaterValue
+ * @typedef {{ repeatTitle: string, rows: SummaryRow[][] }} SummaryRowRepeaterValue
  * @typedef {{ items: { href: string, text: string, visuallyHiddenText: string }[]}} SummaryRowActions
  * @typedef {{ key: SummaryRowKey, value: SummaryRowTextValue | SummaryRowRepeaterValue, actions?: SummaryRowActions | undefined}} SummaryRow
  * @typedef {SummaryRow[]} SummaryRows
