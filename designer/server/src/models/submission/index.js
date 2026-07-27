@@ -6,7 +6,8 @@ import {
   hasRepeater,
   replaceCustomControllers
 } from '@defra/forms-model'
-import { format } from 'date-fns'
+
+import { format } from '~/src/models/forms/history-date-utils.js'
 
 /**
  * @param {FormAdapterSubmissionMessagePayload} submission - the form submission record
