@@ -36,14 +36,16 @@ export const RoleScopes = {
     Scopes.UserEdit,
     Scopes.FormsFeedback,
     Scopes.FormsFeedbackAllForms,
-    Scopes.FormsReport
+    Scopes.FormsReport,
+    Scopes.SubmissionRead
   ],
   [Roles.FormPublisher]: [
     Scopes.FormDelete,
     Scopes.FormEdit,
     Scopes.FormRead,
     Scopes.FormPublish,
-    Scopes.FormsFeedback
+    Scopes.FormsFeedback,
+    Scopes.SubmissionRead
   ],
   [Roles.FormCreator]: [
     Scopes.FormRead,

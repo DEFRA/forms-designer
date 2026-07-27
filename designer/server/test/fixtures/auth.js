@@ -162,7 +162,8 @@ export const authFormPublisher = {
       Scopes.FormRead,
       Scopes.FormDelete,
       Scopes.FormPublish,
-      Scopes.FormsFeedback
+      Scopes.FormsFeedback,
+      Scopes.SubmissionRead
     ]
   })
 }
