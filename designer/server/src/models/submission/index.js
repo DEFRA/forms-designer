@@ -96,6 +96,8 @@ export function submissionViewModel(submission, definition) {
         }
       }
     }
+
+    return undefined
   }
 
   /**
