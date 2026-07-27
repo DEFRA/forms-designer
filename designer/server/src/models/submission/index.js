@@ -16,19 +16,17 @@ import { format } from '~/src/models/forms/history-date-utils.js'
  * @param {Context} context
  */
 function processFileUploadComponent(component, field, context) {
-  let value = ''
-  let actions
   const { submission, translator, referenceNumber } = context
 
   if (component.name in submission.data.files) {
     const files = submission.data.files[component.name]
 
     if (Array.isArray(files) && files.length) {
-      value = field.getDisplayStringFromFormValue(
+      const value = field.getDisplayStringFromFormValue(
         /** @type {any} */ (files),
         translator
       )
-      actions = [
+      const actions = [
         {
           href: `/files-download/${referenceNumber}`,
           text: 'Download files',
@@ -55,8 +53,6 @@ function processFileUploadComponent(component, field, context) {
  * @param {{ item: Record<string, any>, index: number}} [repeat]
  */
 function processSectionComponent(component, page, context, repeat) {
-  let value = ''
-  let actions
   const { formModel, submission, translator, referenceNumber } = context
   const field = formModel.componentMap.get(component.name)
 
@@ -70,11 +66,12 @@ function processSectionComponent(component, page, context, repeat) {
     const source = repeat?.item ?? submission.data.main
 
     if (component.name in source) {
-      value = field.getDisplayStringFromFormValue(
+      const value = field.getDisplayStringFromFormValue(
         /** @type {any} */ (source[component.name]),
         translator
       )
 
+      let actions
       if (component.type === ComponentType.GeospatialField) {
         actions = [
           {
