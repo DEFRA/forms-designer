@@ -19,7 +19,7 @@ export function toDate(date) {
  * @param {string} formatStr
  * @returns {string}
  */
-function format(date, formatStr) {
+export function format(date, formatStr) {
   return formatInTimeZone(date, UK_TIMEZONE, formatStr, {
     locale: enGB
   })

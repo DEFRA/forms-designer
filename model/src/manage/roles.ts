@@ -20,7 +20,8 @@ export enum Scopes {
   DeadLetterQueues = 'dead-letter-queues',
   FormsInspect = 'forms-inspect',
   FormsReport = 'forms-report',
-  RegenerateMetrics = 'regenerate-metrics'
+  RegenerateMetrics = 'regenerate-metrics',
+  SubmissionRead = 'submission-read'
 }
 
 export const RoleScopes = {
@@ -35,14 +36,16 @@ export const RoleScopes = {
     Scopes.UserEdit,
     Scopes.FormsFeedback,
     Scopes.FormsFeedbackAllForms,
-    Scopes.FormsReport
+    Scopes.FormsReport,
+    Scopes.SubmissionRead
   ],
   [Roles.FormPublisher]: [
     Scopes.FormDelete,
     Scopes.FormEdit,
     Scopes.FormRead,
     Scopes.FormPublish,
-    Scopes.FormsFeedback
+    Scopes.FormsFeedback,
+    Scopes.SubmissionRead
   ],
   [Roles.FormCreator]: [
     Scopes.FormRead,

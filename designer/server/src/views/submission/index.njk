@@ -1,0 +1,51 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "grid-layout/macro.njk" import appGridLayout %}
+{% from "page-body/macro.njk" import appPageBody %}
+
+{% set mainClasses = "govuk-main-wrapper--editor" %}
+
+{% block head %}
+  {{ super() }}
+{% endblock %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: {
+      text: pageHeading,
+      size: "large",
+      caption: caption
+    }
+  }) %}
+    <p class="govuk-body">{{ formattedTimestamp }}</p>
+    {% for summary in summaries %}
+      {% if summary.section %}
+        <h2 class="govuk-heading-m">{{ summary.section }}</h2>
+      {% endif %}
+
+      {# Preprocess #}
+        {% set rows = [] %}
+        {% for row in summary.rows %}
+          {% if row.value.repeatTitle %}
+            {% set childSummaries = '' %}
+            {% for childRows in row.value.rows %}
+              {% set childSummary = govukSummaryList({ card: { title: { text: row.value.repeatTitle + " " + loop.index } }, rows: childRows, classes: "govuk-summary-list--no-border" }) %}
+              {% set childSummaries = childSummaries + childSummary %}
+            {% endfor %}
+            {% set rows = rows.concat({ key: row.key, value: { html: childSummaries } }) %}
+          {% else %}
+            {% set rows = rows.concat(row) %}
+          {% endif %}
+        {% endfor %}
+      {# End preprocess #}
+
+      {{ govukSummaryList({ rows: rows }) }}
+    {% endfor %}
+  {% endcall %}
+{% endblock %}
+
+{% block bodyEnd %}
+  {{ super() }}
+{% endblock %}

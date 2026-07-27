@@ -29,7 +29,7 @@
       <div class="govuk-grid-column-two-thirds">
         {% for item in geojson %}
           {% if repeaterName %}
-            <h2 class="govuk-heading-m">Answer {{loop.index}}</h2>
+            <h2 class="govuk-heading-m" id="answer_{{loop.index0}}">Answer {{loop.index}}</h2>
           {% endif %}
           <div class="app-geospatial-field--preview">
             <div id="map_{{loop.index0}}">

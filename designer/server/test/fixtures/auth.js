@@ -116,7 +116,8 @@ export const authSuperAdmin = {
       Scopes.DeadLetterQueues,
       Scopes.FormsInspect,
       Scopes.FormsReport,
-      Scopes.RegenerateMetrics
+      Scopes.RegenerateMetrics,
+      Scopes.SubmissionRead
     ]
   })
 }
@@ -161,7 +162,8 @@ export const authFormPublisher = {
       Scopes.FormRead,
       Scopes.FormDelete,
       Scopes.FormPublish,
-      Scopes.FormsFeedback
+      Scopes.FormsFeedback,
+      Scopes.SubmissionRead
     ]
   })
 }
