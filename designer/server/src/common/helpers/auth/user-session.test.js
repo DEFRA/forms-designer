@@ -132,7 +132,8 @@ describe('user-session', () => {
             Scopes.UserEdit,
             Scopes.FormsFeedback,
             Scopes.FormsFeedbackAllForms,
-            Scopes.FormsReport
+            Scopes.FormsReport,
+            Scopes.SubmissionRead
           ],
           token: "{ name: 'my-name'}",
           user: {
