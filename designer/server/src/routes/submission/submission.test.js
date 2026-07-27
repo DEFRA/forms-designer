@@ -2,7 +2,8 @@ import {
   ComponentType,
   ControllerType,
   Engine,
-  FormStatus
+  FormStatus,
+  GeospatialFieldGeometryTypesEnum
 } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
@@ -41,7 +42,7 @@ describe('Submission routes', () => {
         formName: 'Components',
         formId: '6a61e01bb001f0de83297a2f',
         formSlug: 'components',
-        status: 'draft',
+        status: FormStatus.Draft,
         isPreview: true,
         notificationEmail: 'david.stone1@defra.gov.uk',
         versionMetadata: {
@@ -355,6 +356,9 @@ describe('Submission routes', () => {
       expireAt: new Date('2027-04-24T11:55:07.210Z')
     }
 
+    /**
+     * @type {import('@defra/forms-model').FormDefinition}
+     */
     const formDefinition = {
       conditions: [],
       startPage: '/all-components',
@@ -418,7 +422,6 @@ describe('Submission routes', () => {
               name: 'datePartsField',
               title: 'Date parts field',
               options: {},
-              schema: {},
               shortDescription: 'Date parts field',
               id: 'd4e39dff-abb1-475b-be0d-b895034408bc'
             },
@@ -427,7 +430,6 @@ describe('Submission routes', () => {
               name: 'yesNoField',
               title: 'Yes/No field',
               options: {},
-              schema: {},
               shortDescription: 'Yes/No field',
               id: '19d6cbeb-62cc-455d-a6d0-b77435b964d7'
             },
@@ -436,7 +438,6 @@ describe('Submission routes', () => {
               name: 'emailAddressField',
               title: 'Email address field',
               options: {},
-              schema: {},
               shortDescription: 'Email address field',
               id: 'a572e007-d200-41d3-8557-184d1f8defe1'
             },
@@ -445,7 +446,6 @@ describe('Submission routes', () => {
               name: 'telephoneNumberField',
               title: 'Telephone number field',
               options: {},
-              schema: {},
               shortDescription: 'Telephone number field',
               id: 'fb74ca96-25c5-458b-997e-4e125e76ecfc'
             },
@@ -454,7 +454,6 @@ describe('Submission routes', () => {
               name: 'addressField',
               title: 'UK address field',
               options: {},
-              schema: {},
               shortDescription: 'UK address field',
               id: '6913b48c-f82c-42bc-8e37-9c2e18e2f352'
             },
@@ -464,7 +463,6 @@ describe('Submission routes', () => {
               title: 'Radios field',
               list: '15e990b5-cff4-46fd-8e97-ede57e4cb788',
               options: {},
-              schema: {},
               shortDescription: 'Radios field',
               id: '735f845d-65cb-491f-a019-c5af15f9cd94'
             },
@@ -474,7 +472,6 @@ describe('Submission routes', () => {
               title: 'Select field',
               list: '3bb5ec21-9881-4b31-acd7-6beb08aff14b',
               options: {},
-              schema: {},
               shortDescription: 'Select field',
               id: 'b10086db-b92b-4752-bc23-a4d93979cb10'
             },
@@ -495,7 +492,6 @@ describe('Submission routes', () => {
               title: 'Html',
               content: '<p class="govuk-body">Paragraph...</p>',
               options: {},
-              schema: {},
               id: 'ef109bf5-d62f-474d-b460-54781d157a1e'
             },
             {
@@ -507,7 +503,6 @@ describe('Submission routes', () => {
               options: {
                 required: true
               },
-              schema: {},
               id: '09b2227f-623f-4ae1-a0a4-5ddaa589b070'
             },
             {
@@ -519,7 +514,6 @@ describe('Submission routes', () => {
               options: {
                 required: true
               },
-              schema: {},
               list: 'fb0bc8b4-c5c6-4ece-8950-15f978cdbba8',
               id: '6af3b857-2b60-4b0a-902f-d7f339554e36'
             },
@@ -536,8 +530,8 @@ describe('Submission routes', () => {
                   sssi: true
                 }
               },
-              id: 'c3c34170-3063-49bb-b66c-436e5d3e0158',
-              schema: {}
+              schema: {},
+              id: 'c3c34170-3063-49bb-b66c-436e5d3e0158'
             },
             {
               type: ComponentType.LatLongField,
@@ -562,7 +556,6 @@ describe('Submission routes', () => {
                 required: true,
                 classes: ''
               },
-              schema: {},
               id: 'c1cc4b5e-f493-4d9b-9f86-eb6754329634'
             },
             {
@@ -575,7 +568,6 @@ describe('Submission routes', () => {
                 required: true,
                 classes: ''
               },
-              schema: {},
               id: '54ad6535-75e8-4ee3-ad2a-4c854f1d3ab2'
             }
           ],
@@ -595,7 +587,11 @@ describe('Submission routes', () => {
               hint: '',
               options: {
                 required: true,
-                geometryTypes: ['point', 'line', 'shape']
+                geometryTypes: [
+                  GeospatialFieldGeometryTypesEnum.Point,
+                  GeospatialFieldGeometryTypesEnum.Line,
+                  GeospatialFieldGeometryTypesEnum.Shape
+                ]
               },
               schema: {},
               id: '9b99f349-4891-492f-b669-10abc5ed1cf1'
@@ -606,7 +602,7 @@ describe('Submission routes', () => {
           section: '8bbc5859-ca64-42ed-8a32-6882ed3fe6c9'
         },
         {
-          controller: 'FileUploadPageController',
+          controller: ControllerType.FileUpload,
           title: '',
           path: '/file-upload-field',
           components: [
@@ -654,7 +650,6 @@ describe('Submission routes', () => {
                 required: true,
                 classes: ''
               },
-              schema: {},
               id: 'd5e7d4e5-b39f-4d3f-a2d8-c39b392c52fe'
             },
             {
@@ -665,7 +660,11 @@ describe('Submission routes', () => {
               hint: '',
               options: {
                 required: true,
-                geometryTypes: ['point', 'line', 'shape']
+                geometryTypes: [
+                  GeospatialFieldGeometryTypesEnum.Point,
+                  GeospatialFieldGeometryTypesEnum.Line,
+                  GeospatialFieldGeometryTypesEnum.Shape
+                ]
               },
               schema: {},
               id: '4e50b4a2-a443-4e0b-a2e0-49008605b34c'
@@ -673,7 +672,7 @@ describe('Submission routes', () => {
           ],
           next: [],
           id: '98b46e3f-02fb-44d3-807a-0e0ee90d0722',
-          controller: 'RepeatPageController',
+          controller: ControllerType.Repeat,
           repeat: {
             options: {
               name: 'bRpVOv',
@@ -687,10 +686,9 @@ describe('Submission routes', () => {
         },
         {
           title: 'Check your answers',
-          controller: 'SummaryPageController',
+          controller: ControllerType.Summary,
           path: '/summary',
           components: [],
-          next: [],
           id: 'dba9d1c1-cd8b-4cca-b5dd-e5e9aa9519c9'
         }
       ],
@@ -871,7 +869,9 @@ describe('Submission routes', () => {
     const reviewUrl = '/submission/RWU-DPB-HZE'
 
     test('should show view submission page', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecord)
+        .mockResolvedValueOnce(/** @type {any} */ (submissionRecord))
       jest
         .mocked(getFormDefinitionVersion)
         .mockResolvedValueOnce(formDefinition)
