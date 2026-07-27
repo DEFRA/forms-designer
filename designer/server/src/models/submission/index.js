@@ -13,8 +13,8 @@ import { format } from '~/src/models/forms/history-date-utils.js'
  * Process a page component
  * @param {ComponentDef} component
  * @param {Page} page
- * @param {{ item: Record<string, any>, index: number}} [repeat]
  * @param {Context} context
+ * @param {{ item: Record<string, any>, index: number}} [repeat]
  */
 function processSectionComponent(component, page, context, repeat) {
   let value = ''
@@ -22,54 +22,54 @@ function processSectionComponent(component, page, context, repeat) {
   const { formModel, data, translator, referenceNumber } = context
   const field = formModel.componentMap.get(component.name)
 
-  if (field instanceof FormComponent) {
-    if (component.type === ComponentType.FileUploadField) {
-      if (component.name in data.files) {
-        const files = /** @type {any} */ (data.files[component.name])
-        if (Array.isArray(files) && files.length) {
-          value = field.getDisplayStringFromFormValue(
-            /** @type {any} */ (files),
-            translator
-          )
-          actions = [
-            {
-              href: `/files-download/${referenceNumber}`,
-              text: 'Download files',
-              visuallyHiddenText: 'Download files'
-            }
-          ]
+  if (!(field instanceof FormComponent)) {
+    return undefined
+  }
 
-          return {
-            key: { text: component.title },
-            value: { text: value },
-            actions: { items: actions }
+  if (component.type === ComponentType.FileUploadField) {
+    if (component.name in data.files) {
+      const files = /** @type {any} */ (data.files[component.name])
+
+      if (Array.isArray(files) && files.length) {
+        value = field.getDisplayStringFromFormValue(files, translator)
+        actions = [
+          {
+            href: `/files-download/${referenceNumber}`,
+            text: 'Download files',
+            visuallyHiddenText: 'Download files'
           }
-        }
-      }
-    } else {
-      const source = repeat?.item ?? data.main
-
-      if (component.name in source) {
-        value = field.getDisplayStringFromFormValue(
-          /** @type {any} */ (source[component.name]),
-          translator
-        )
-
-        if (component.type === ComponentType.GeospatialField) {
-          actions = [
-            {
-              text: 'Review map',
-              href: `/submission/${referenceNumber}/map-review/${page.id}/${component.id}${repeat ? '#answer_' + repeat.index.toString() : ''}`,
-              visuallyHiddenText: 'Review map'
-            }
-          ]
-        }
+        ]
 
         return {
           key: { text: component.title },
           value: { text: value },
-          actions: actions ? { items: actions } : undefined
+          actions: { items: actions }
         }
+      }
+    }
+  } else {
+    const source = repeat?.item ?? data.main
+
+    if (component.name in source) {
+      value = field.getDisplayStringFromFormValue(
+        /** @type {any} */ (source[component.name]),
+        translator
+      )
+
+      if (component.type === ComponentType.GeospatialField) {
+        actions = [
+          {
+            text: 'Review map',
+            href: `/submission/${referenceNumber}/map-review/${page.id}/${component.id}${repeat ? '#answer_' + repeat.index.toString() : ''}`,
+            visuallyHiddenText: 'Review map'
+          }
+        ]
+      }
+
+      return {
+        key: { text: component.title },
+        value: { text: value },
+        actions: actions ? { items: actions } : undefined
       }
     }
   }
