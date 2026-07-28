@@ -366,7 +366,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       File upload field
     </dt>
     <dd class="govuk-summary-list__value">
-      2 files uploaded
+      Uploaded 2 files
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="/files-download/RWU-DPB-HZE">Download files<span class="govuk-visually-hidden"> Download files</span></a>
