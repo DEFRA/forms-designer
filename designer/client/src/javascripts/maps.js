@@ -2,7 +2,7 @@ import {
   geospatialMap,
   map as mapImports,
   sssiDataset
-} from '@defra/forms-engine-plugin/shared.js'
+} from '@defra/forms-engine-plugin/maps'
 // @ts-expect-error - no types
 import createDatasetsPlugin from '@defra/interactive-map/plugins/datasets'
 // @ts-expect-error - no types
@@ -100,9 +100,14 @@ function processPreview(preview, index) {
   const drawPlugin = createDrawMLPlugin()
   const plugins = [drawPlugin]
   const mapLayers = getMapLayers(geospatialInput.dataset.maplayers)
+  const datasets = []
 
   if (mapLayers.includes('sssi')) {
-    plugins.push(createDatasetsPlugin(sssiDataset.default))
+    datasets.push(...sssiDataset.default)
+  }
+
+  if (datasets.length) {
+    plugins.push(createDatasetsPlugin({ datasets }))
   }
 
   const initConfig = {
