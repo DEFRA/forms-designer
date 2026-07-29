@@ -78,7 +78,7 @@ export default /** @type {Configuration} */ ({
       import: ['./javascripts/sections-manager.js']
     },
     maps: {
-      import: ['./javascripts/maps.js']
+      import: ['./javascripts/maps.js', './stylesheets/maps.scss']
     },
     utilities: {
       import: ['./javascripts/utilities.js']

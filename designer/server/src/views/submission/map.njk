@@ -8,12 +8,7 @@
 
 {% block head %}
   {{ super() }}
-  <link href="{{assetPath}}/interactive-map/css/index.css" rel="stylesheet" type="text/css">
-  <link href="{{assetPath}}/interactive-map/plugins/map-styles/dist/css/index.css" rel="stylesheet" type="text/css">
-  <link href="{{assetPath}}/interactive-map/plugins/search/dist/css/index.css" rel="stylesheet" type="text/css">
-  <link href="{{assetPath}}/interactive-map/plugins/scale-bar/dist/css/index.css" rel="stylesheet" type="text/css">
-  <link href="{{assetPath}}/interactive-map/plugins/interact/dist/css/index.css" rel="stylesheet" type="text/css">
-  <link href="{{assetPath}}/interactive-map/plugins/draw-ml/dist/css/index.css" rel="stylesheet" type="text/css">
+  <link href="{{ getAssetPath("stylesheets/maps.scss") }}" rel="stylesheet">
   <style type="text/css">.govuk-form-group { margin-bottom: 0 }</style>
 {% endblock %}
 
