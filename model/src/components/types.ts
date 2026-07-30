@@ -151,6 +151,7 @@ export interface YesNoFieldComponent extends FormFieldBase {
   type: ComponentType.YesNoField
   options: FormFieldBase['options'] & {
     condition?: string
+    customValidationMessage?: string
   }
 }
 
