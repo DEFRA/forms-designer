@@ -355,7 +355,8 @@ describe('editor-v2 - question details advanced settings model', () => {
       expect(res).toEqual({
         classes: 'location-class',
         giveInstructions: 'true',
-        instructionText: 'Follow these instructions'
+        instructionText: 'Follow these instructions',
+        countries: ['any']
       })
     })
 

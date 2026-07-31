@@ -77,6 +77,7 @@ export const advancedSettingsPerComponentType =
     EastingNorthingField: [
       QuestionAdvancedSettings.GiveInstructions,
       QuestionAdvancedSettings.InstructionText,
+      QuestionAdvancedSettings.Countries,
       QuestionAdvancedSettings.MapLayers,
       QuestionAdvancedSettings.Classes
     ],
@@ -442,7 +443,7 @@ export const allAdvancedSettingsFields =
       classes: 'govuk-radios--small',
       fieldset: {
         legend: {
-          text: 'Which country must the features be in?',
+          text: 'Choose the country you accept',
           isPageHeading: false,
           classes: GOVUK_FIELDSET_LEGEND__M
         }

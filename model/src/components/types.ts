@@ -194,12 +194,19 @@ export interface MapLayerOptions {
 }
 
 // Precise Location Fields
+export type GeospatialFieldOptionsCountry =
+  | 'england'
+  | 'wales'
+  | 'northern-ireland'
+  | 'scotland'
+
 export interface EastingNorthingFieldComponent extends FormFieldBase {
   type: ComponentType.EastingNorthingField
   options: FormFieldBase['options'] & {
     condition?: string
     customValidationMessage?: string
     mapLayers?: MapLayerOptions
+    countries?: GeospatialFieldOptionsCountry[]
   }
   schema?: {
     easting?: {
@@ -285,12 +292,6 @@ export interface PaymentFieldComponent extends FormFieldBase {
     emailField?: string
   }
 }
-
-export type GeospatialFieldOptionsCountry =
-  | 'england'
-  | 'wales'
-  | 'northern-ireland'
-  | 'scotland'
 
 export interface GeospatialFieldComponent extends FormFieldBase {
   type: ComponentType.GeospatialField
