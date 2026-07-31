@@ -59,7 +59,11 @@ export function addMonthYearFieldProperties(question) {
 export function addLocationFieldProperties(question) {
   return {
     giveInstructions: question.options.instructionText ? 'true' : undefined,
-    instructionText: question.options.instructionText
+    instructionText: question.options.instructionText,
+    countries:
+      question.type === ComponentType.EastingNorthingField
+        ? (question.options.countries ?? ['any'])
+        : undefined
   }
 }
 
