@@ -346,6 +346,13 @@ describe('Submission routes', () => {
                 'http://localhost:3000/file-download/639c5495-add8-4df5-b94c-de9088688a3f'
             }
           ]
+        },
+        payment: {
+          paymentId: 'v0l2k3j2b4vu35at84s685666i',
+          reference: 'RWU-DPB-HZE',
+          amount: 5,
+          description: 'Licence',
+          createdAt: new Date('2026-07-24T11:55:06.031Z')
         }
       },
       result: {
@@ -708,6 +715,25 @@ describe('Submission routes', () => {
           ],
           next: [],
           id: '2cb5d8b2-ec52-4d59-ad8c-88b483a095e5'
+        },
+        {
+          title: '',
+          path: '/payment-required',
+          components: [
+            {
+              type: ComponentType.PaymentField,
+              title: 'Payment required',
+              name: 'MOfzGz',
+              options: {
+                required: true,
+                amount: 5,
+                description: 'Licence'
+              },
+              id: 'fbb71485-a092-4c04-bd73-112b96cb3cfa'
+            }
+          ],
+          next: [],
+          id: '3185b5a6-d9c1-4885-bc8d-4f111b342fff'
         },
         {
           title: 'Check your answers',
