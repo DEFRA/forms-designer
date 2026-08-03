@@ -7,6 +7,7 @@ import {
   replaceCustomControllers
 } from '@defra/forms-model'
 
+import { formatCurrency } from '~/src/common/nunjucks/filters/index.js'
 import { format } from '~/src/models/forms/history-date-utils.js'
 
 /**
@@ -47,23 +48,18 @@ function processFileUploadComponent(component, field, context) {
 
 /**
  * Process a payment field component
- * @param {ComponentDef} component
- * @param {FormComponent} field
  * @param {Context} context
  */
-function processPaymentFieldComponent(component, field, context) {
-  const { submission, translator } = context
+function processPaymentFieldComponent(context) {
+  const { submission } = context
 
-  if ('payment' in submission.data) {
-    const payment = submission.data.payment
-    const value = field.getDisplayStringFromState(
-      /** @type {any} */ ({ [component.name]: payment }),
-      translator
-    )
+  const payment = submission.data.payment
+  if (payment) {
+    const formattedAmount = formatCurrency(payment.amount)
 
     return {
-      key: { text: component.title },
-      value: { text: value }
+      key: { text: payment.description },
+      value: { text: formattedAmount }
     }
   }
 
@@ -88,7 +84,7 @@ function processSectionComponent(component, page, context, repeat) {
   if (component.type === ComponentType.FileUploadField) {
     return processFileUploadComponent(component, field, context)
   } else if (component.type === ComponentType.PaymentField) {
-    return processPaymentFieldComponent(component, field, context)
+    return processPaymentFieldComponent(context)
   } else {
     const source = repeat?.item ?? submission.data.main
 
