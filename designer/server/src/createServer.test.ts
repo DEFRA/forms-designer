@@ -35,7 +35,7 @@ describe('Server tests', () => {
     const { container } = await renderResponse(server, options)
 
     const $heading = container.getByRole('heading', {
-      name: 'Accessibility statement for [website name]',
+      name: 'Accessibility statement',
       level: 1
     })
 
