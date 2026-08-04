@@ -946,6 +946,41 @@ describe('Submission routes', () => {
       expect(response.result).toMatchSnapshot()
     })
 
+    test('should not show payment section when missing', async () => {
+      const record = {
+        ...submissionRecord,
+        data: {
+          ...submissionRecord.data,
+          payment: undefined
+        }
+      }
+
+      jest
+        .mocked(getSubmissionRecord)
+        .mockResolvedValueOnce(/** @type {any} */ (record))
+      jest
+        .mocked(getFormDefinitionVersion)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: reviewUrl,
+        auth: authSuperAdmin
+      }
+
+      const { container, response } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(`\n  Components\n  RWU-DPB-HZE\n`)
+
+      expect(response.result).toMatchSnapshot()
+    })
+
     test('should not show view submission page without the correct scope', async () => {
       jest
         .mocked(getSubmissionRecord)
