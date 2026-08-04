@@ -512,10 +512,10 @@ exports[`Submission routes GET / should show view submission page 1`] = `
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Payment required
+      Licence
     </dt>
     <dd class="govuk-summary-list__value">
-      £5.00 - Licence
+      £5.00
     </dd>
   </div>
 </dl>
