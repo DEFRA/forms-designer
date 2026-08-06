@@ -103,6 +103,27 @@ describe('Form definition schema', () => {
     })
   })
 
+  describe('Outputs', () => {
+    it('should reject an output condition, which is V2 only', () => {
+      definition.outputs = [
+        {
+          emailAddress: 'good-email1@test.co.uk',
+          audience: 'human',
+          version: '1',
+          condition: 'ab1bbaae-bf0e-4577-8416-8a8c83da1fb9'
+        }
+      ]
+
+      const result = formDefinitionSchema.validate(definition, {
+        abortEarly: false
+      })
+
+      expect(result.error?.message).toContain(
+        '"outputs[0].condition" is not allowed'
+      )
+    })
+  })
+
   describe('Summary', () => {
     it("should remove legacy 'skipSummary' flag", () => {
       // @ts-expect-error - Allow invalid property for test
@@ -771,6 +792,58 @@ describe('Form definition schema', () => {
         })
 
         expect(validated.error).toBeUndefined()
+      })
+
+      it('should allow outputs with a missing, empty or valid condition', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'human',
+              version: '1'
+            },
+            {
+              emailAddress: 'good-email2@test.co.uk',
+              audience: 'machine',
+              version: '1',
+              condition: ''
+            },
+            {
+              emailAddress: 'good-email3@test.co.uk',
+              audience: 'machine',
+              version: '2',
+              condition: stringValueCondition.id
+            }
+          ]
+        })
+
+        expect(validated.error).toBeUndefined()
+      })
+
+      it('should reject if an outputs condition is not a known condition', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'human',
+              version: '1',
+              condition: 'e4bdbd7c-5d8c-4b62-a7dc-9d4a8d1e1a4f'
+            }
+          ]
+        })
+
+        expect(validated.error).toBeDefined()
+        expect(validated.error?.message).toContain('outputs[0].condition')
+        expect(validated.error?.details[0].context?.errorType).toBe(
+          FormDefinitionErrorType.Ref
+        )
+        expect(validated.error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.RefOutputCondition
+        )
       })
 
       it('should reject if question type does not support conditions', () => {

@@ -188,6 +188,11 @@ export interface Output {
   audience: OutputAudience
   version: string
   emailAddress: string
+  /**
+   * Id of the condition determining whether submissions are sent to this
+   * output. V2 only - rejected by the V1 schema.
+   */
+  condition?: string
 }
 
 export interface FormOptions {

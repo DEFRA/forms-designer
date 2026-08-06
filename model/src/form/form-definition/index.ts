@@ -53,6 +53,7 @@ import {
   type Item,
   type Link,
   type List,
+  type Output,
   type Page,
   type PhaseBanner,
   type Repeat,
@@ -1197,6 +1198,50 @@ const outputSchema = Joi.object<FormDefinition['output']>()
       .description('Version identifier for the output format')
   })
 
+const outputsItemSchema = Joi.object<Output>()
+  .description('Configuration for a single submission email target')
+  .keys({
+    emailAddress: emailAddressNoUnicodeSchema
+      .email({ tlds: { allow: ['uk'] } })
+      .description('Email address where form submissions are sent'),
+    audience: Joi.string()
+      .trim()
+      .valid('human', 'machine')
+      .required()
+      .description(
+        'Target audience for the output (human readable or machine processable)'
+      ),
+    version: Joi.string()
+      .trim()
+      .required()
+      .description('Version identifier for the output format')
+  })
+
+const outputsItemSchemaV2 = outputsItemSchema.keys({
+  condition: Joi.string()
+    .trim()
+    .allow('')
+    .optional()
+    .when('/conditions', {
+      is: Joi.exist(),
+      then: Joi.valid('', conditionIdRef)
+    })
+    .description(
+      'Optional condition that determines if submissions are sent to this output'
+    )
+    .error(checkErrors(FormDefinitionError.RefOutputCondition))
+})
+
+const outputsSchema = Joi.array<Output>()
+  .items(outputsItemSchema)
+  .optional()
+  .description('One or more email targets/types for submission emails')
+
+const outputsSchemaV2 = Joi.array<Output>()
+  .items(outputsItemSchemaV2)
+  .optional()
+  .description('Outputs schema for V2 forms')
+
 /**
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
@@ -1277,25 +1322,7 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
     output: outputSchema
       .optional()
       .description('Configuration for submission output format'),
-    outputs: Joi.array()
-      .items({
-        emailAddress: emailAddressNoUnicodeSchema
-          .email({ tlds: { allow: ['uk'] } })
-          .description('Email address where form submissions are sent'),
-        audience: Joi.string()
-          .trim()
-          .valid('human', 'machine')
-          .required()
-          .description(
-            'Target audience for the output (human readable or machine processable)'
-          ),
-        version: Joi.string()
-          .trim()
-          .required()
-          .description('Version identifier for the output format')
-      })
-      .optional()
-      .description('One or more email targets/types for submission emails')
+    outputs: outputsSchema
   })
 
 export const formDefinitionV2Schema = formDefinitionSchema
@@ -1353,7 +1380,8 @@ export const formDefinitionV2Schema = formDefinitionSchema
           FormDefinitionError.UniqueSectionName,
           FormDefinitionError.UniqueSectionTitle
         ])
-      )
+      ),
+    outputs: outputsSchemaV2
   })
   .description('Form definition schema for V2')
 

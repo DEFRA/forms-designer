@@ -51,6 +51,8 @@ export const formErrorsToMessages = {
     'A condition is using another condition. Remove the reference before making changes.',
   [FormDefinitionError.RefPageComponentList]:
     'A question on this page is using a list. Remove the reference before making changes to the list.',
+  [FormDefinitionError.RefOutputCondition]:
+    'A submission email is using a condition that does not exist in this form. Select an existing condition or remove it.',
   [FormDefinitionError.IncompatibleConditionComponentType]:
     'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
   [FormDefinitionError.IncompatibleQuestionRegex]:

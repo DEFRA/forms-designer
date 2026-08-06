@@ -51,6 +51,7 @@ export enum FormDefinitionError {
   RefConditionItemId = 'ref_condition_item_id',
   RefConditionConditionId = 'ref_condition_condition_id',
   RefPageComponentList = 'ref_page_component_list',
+  RefOutputCondition = 'ref_output_condition',
   IncompatibleConditionComponentType = 'incompatible_condition_component_type',
   IncompatibleQuestionRegex = 'incompatible_question_regex',
   Other = 'other'
@@ -147,6 +148,10 @@ export const formDefinitionErrors: FormDefinitionErrors = {
   },
   [FormDefinitionError.RefPageComponentList]: {
     key: 'list',
+    type: FormDefinitionErrorType.Ref
+  },
+  [FormDefinitionError.RefOutputCondition]: {
+    key: 'condition',
     type: FormDefinitionErrorType.Ref
   },
   [FormDefinitionError.IncompatibleConditionComponentType]: {
