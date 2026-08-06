@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { FormStatus } from '~/src/common/enums.js'
 import {
+  ConditionEvaluationOutcome,
   SecurityQuestionsEnum,
   SubmissionEventMessageCategory,
   SubmissionEventMessageSchemaVersion,
@@ -11,6 +12,8 @@ import {
 import {
   type SaveAndExitMessage,
   type SaveAndExitMessageData,
+  type SubmitConditionEvaluation,
+  type SubmitConditionReference,
   type SubmitPayload,
   type SubmitRecord,
   type SubmitRecordset
@@ -62,6 +65,52 @@ export const formSubmitRecordsetSchema = Joi.object<SubmitRecordset>({
   .description('Collection of repeated field values from a repeatable section')
 
 /**
+ * Joi schema for `SubmitConditionReference` interface
+ * @see {@link SubmitConditionReference}
+ */
+export const formSubmitConditionReferenceSchema =
+  Joi.object<SubmitConditionReference>({
+    componentId: Joi.string()
+      .required()
+      .description('Identifier of the component the condition depends on'),
+    componentName: Joi.string()
+      .required()
+      .description(
+        'Name of the component the condition depends on, matching the submitted record name'
+      ),
+    answered: Joi.boolean()
+      .required()
+      .description(
+        'Whether the component held an answer when the condition was evaluated'
+      )
+  })
+    .label('FormSubmitConditionReference')
+    .description('A component a condition depends on, and its answered state')
+
+/**
+ * Joi schema for `SubmitConditionEvaluation` interface
+ * @see {@link SubmitConditionEvaluation}
+ */
+export const formSubmitConditionEvaluationSchema =
+  Joi.object<SubmitConditionEvaluation>({
+    conditionId: Joi.string()
+      .required()
+      .description('Identifier of the condition in the V2 form definition'),
+    outcome: Joi.string()
+      .valid(...Object.values(ConditionEvaluationOutcome))
+      .required()
+      .description('Result of evaluating the condition'),
+    references: Joi.array<SubmitConditionReference>()
+      .items(formSubmitConditionReferenceSchema)
+      .required()
+      .description(
+        'Components the condition depends on, including those reached through nested condition references'
+      )
+  })
+    .label('FormSubmitConditionEvaluation')
+    .description('Recorded outcome of a single condition at submission')
+
+/**
  * Joi schema for `SubmitPayload` interface
  * @see {@link SubmitPayload}
  */
@@ -92,7 +141,15 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
     repeaters: Joi.array<SubmitRecordset>()
       .items(formSubmitRecordsetSchema)
       .required()
-      .description('Repeatable section values from the form')
+      .description('Repeatable section values from the form'),
+    conditionEvaluations: Joi.array<SubmitConditionEvaluation>()
+      .items(formSubmitConditionEvaluationSchema)
+      // Optional - only sent for V2 forms, and absent from runner versions
+      // released before this field existed
+      .optional()
+      .description(
+        'Outcome of every condition in the form definition, evaluated against the final answers'
+      )
   })
   .required()
   .label('FormSubmitPayload')
