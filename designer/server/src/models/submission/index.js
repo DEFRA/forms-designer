@@ -7,10 +7,11 @@ import {
   replaceCustomControllers
 } from '@defra/forms-model'
 
+import { formatCurrency } from '~/src/common/nunjucks/filters/index.js'
 import { format } from '~/src/models/forms/history-date-utils.js'
 
 /**
- * Process a page component
+ * Process a file upload page component
  * @param {ComponentDef} component
  * @param {FormComponent} field
  * @param {Context} context
@@ -46,6 +47,26 @@ function processFileUploadComponent(component, field, context) {
 }
 
 /**
+ * Process a payment field component
+ * @param {Context} context
+ */
+function processPaymentFieldComponent(context) {
+  const { submission } = context
+
+  const payment = submission.data.payment
+  if (payment) {
+    const formattedAmount = formatCurrency(payment.amount)
+
+    return {
+      key: { text: payment.description },
+      value: { text: formattedAmount }
+    }
+  }
+
+  return undefined
+}
+
+/**
  * Process a page component
  * @param {ComponentDef} component
  * @param {Page} page
@@ -62,6 +83,8 @@ function processSectionComponent(component, page, context, repeat) {
 
   if (component.type === ComponentType.FileUploadField) {
     return processFileUploadComponent(component, field, context)
+  } else if (component.type === ComponentType.PaymentField) {
+    return processPaymentFieldComponent(context)
   } else {
     const source = repeat?.item ?? submission.data.main
 
