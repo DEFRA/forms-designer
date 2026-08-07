@@ -56,18 +56,24 @@ describe('Editor v2 pages routes', () => {
     const $mainHeading = container.getByRole('heading', { level: 1 })
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
     const $actions = container.getAllByRole('button')
+    const $menuLinks = container.getAllByRole('link', {
+      name: /Advanced settings|Manage conditions|Upload a form|Download this form/
+    })
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
     expect($pageTitles[0]).toHaveTextContent('')
     expect($pageTitles[1]).toHaveTextContent('End pages')
 
-    expect($actions).toHaveLength(6)
-    // expect($actions).toHaveLength(7)
+    expect($actions).toHaveLength(3)
     expect($actions[2]).toHaveTextContent('Add new page')
-    expect($actions[3]).toHaveTextContent('Manage conditions')
-    expect($actions[4]).toHaveTextContent('Upload a form')
-    expect($actions[5]).toHaveTextContent('Download this form')
-    // expect($actions[6]).toHaveTextContent('Welsh translation')
+
+    // Rendered as links, not buttons, so they are announced as the links they are
+    expect($menuLinks).toHaveLength(4)
+    expect($menuLinks[0]).toHaveTextContent('Advanced settings')
+    expect($menuLinks[1]).toHaveTextContent('Manage conditions')
+    expect($menuLinks[2]).toHaveTextContent('Upload a form')
+    expect($menuLinks[3]).toHaveTextContent('Download this form')
+    // expect($menuLinks[4]).toHaveTextContent('Welsh translation')
   })
 
   test('GET - should check correct formData is rendered in the view with multiple pages', async () => {
@@ -149,14 +155,20 @@ describe('Editor v2 pages routes', () => {
     expect($cardTitles[0]).toHaveTextContent('Page 1: Page one')
     expect($cardTitles[1]).toHaveTextContent('Page 2: Page two')
 
-    expect($actions).toHaveLength(7)
-    // expect($actions).toHaveLength(8)
+    expect($actions).toHaveLength(4)
     expect($actions[2]).toHaveTextContent('Add new page')
     expect($actions[3]).toHaveTextContent('Re-order pages')
-    expect($actions[4]).toHaveTextContent('Manage conditions')
-    expect($actions[5]).toHaveTextContent('Upload a form')
-    expect($actions[6]).toHaveTextContent('Download this form')
-    // expect($actions[7]).toHaveTextContent('Welsh translation')
+
+    const $menuLinks = container.getAllByRole('link', {
+      name: /Advanced settings|Manage conditions|Upload a form|Download this form/
+    })
+
+    expect($menuLinks).toHaveLength(4)
+    expect($menuLinks[0]).toHaveTextContent('Advanced settings')
+    expect($menuLinks[1]).toHaveTextContent('Manage conditions')
+    expect($menuLinks[2]).toHaveTextContent('Upload a form')
+    expect($menuLinks[3]).toHaveTextContent('Download this form')
+    // expect($menuLinks[4]).toHaveTextContent('Welsh translation')
   })
 
   test('GET - should redirect to migration to v2 if draft definition schema is v1', async () => {

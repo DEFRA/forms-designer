@@ -1,4 +1,5 @@
 /* istanbul ignore file */
+import { LinkMenu } from '@defra/forms-designer/server/src/common/components/link-menu/link-menu.js'
 import { ServiceHeader } from '@defra/forms-designer/server/src/common/components/service-header/service-header.js'
 import * as MOJ from '@ministryofjustice/frontend'
 import {
@@ -26,6 +27,7 @@ createAll(SkipLink)
 createAll(Tabs)
 createAll(NotificationBanner)
 createAll(ServiceHeader)
+createAll(LinkMenu)
 
 MOJ.initAll()
 

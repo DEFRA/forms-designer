@@ -1,0 +1,19 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: pageCaption,
+    classes: "govuk-grid-column-two-thirds",
+    backLink: backLink,
+    useNewMasthead: true
+  }) %}
+
+    <p class="govuk-body">There are no advanced settings to change yet.</p>
+
+  {% endcall %}
+{% endblock %}
