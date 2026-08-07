@@ -138,6 +138,41 @@ export const formDefinitionWithLocationAndDeclaration = buildDefinition({
   ]
 })
 
+export const formDefinitionWithFormLevelDeclaration = buildDefinition({
+  pages: [
+    buildQuestionPage({
+      id: 'p1',
+      section: 'section',
+      components: [
+        buildTextFieldComponent({
+          id: 'q1',
+          name: 'textField',
+          title: 'This is the first textfield question',
+          hint: 'Hint text 1',
+          shortDescription: 'Short desc 1'
+        }),
+        buildTextFieldComponent({
+          id: 'q2',
+          name: 'textField',
+          title: 'This is the second textfield question',
+          hint: 'Hint text 2',
+          shortDescription: 'Short desc 2'
+        })
+      ],
+      next: [{ path: '/summary' }]
+    }),
+    buildSummaryPage({
+      id: 'p2',
+      components: [
+        buildMarkdownComponent({
+          id: 'q10',
+          content: 'This is a final declaration for the summary page'
+        })
+      ]
+    })
+  ]
+})
+
 export const formDefinitionWithRepeater = buildDefinition({
   pages: [
     buildRepeaterPage({

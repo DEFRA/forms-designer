@@ -11,7 +11,11 @@ import { buildOverviewSection } from '~/src/form/form-editor/translations/transl
 import { getListFromComponent } from '~/src/form/utils/list.js'
 import { getPageNum, getQuestionNum } from '~/src/form/utils/numbering.js'
 import { ControllerType } from '~/src/pages/enums.js'
-import { hasComponents } from '~/src/pages/helpers.js'
+import {
+  hasComponents,
+  hasComponentsEvenIfNoNext,
+  isSummaryPage
+} from '~/src/pages/helpers.js'
 
 /**
  * Create a translation row for a single entity field.
@@ -54,7 +58,9 @@ const allowedControllerTypesSet = new Set([
   ControllerType.Repeat,
   ControllerType.Start,
   ControllerType.FileUpload,
-  ControllerType.Terminal
+  ControllerType.Terminal,
+  ControllerType.Summary,
+  ControllerType.SummaryWithConfirmationEmail
 ])
 
 /**
@@ -71,6 +77,34 @@ function buildPage(page, pageNum, translations, validation) {
   }
 
   const translationRows = []
+
+  // The only possible element for translation on a summary page is the end-of-form declaration,
+  // so we don't proceed further in this case
+  if (isSummaryPage(page)) {
+    const endOfFormDeclaration =
+      hasComponentsEvenIfNoNext(page) &&
+      page.components[0].type === ComponentType.Markdown
+        ? page.components[0]
+        : undefined
+    if (endOfFormDeclaration) {
+      const keyProperties =
+        keyConfig[TranslationRowTypes.EndOfFormDeclarationBody]
+      const keyName = `${keyProperties.jsonPrefix}.${endOfFormDeclaration.id}.${keyProperties.jsonSuffix}`
+
+      translationRows.push({
+        name: keyName,
+        type: TranslationRowTypes.EndOfFormDeclarationBody,
+        pageNum,
+        englishContent: endOfFormDeclaration.content,
+        welshContent:
+          validation?.formValues[keyName] ??
+          lookupTranslation(keyName, translations),
+        label: keyProperties.getLabel(pageNum)
+      })
+    }
+    return translationRows
+  }
+
   if (page.title) {
     const keyProperties = keyConfig[TranslationRowTypes.PageHeading]
 
@@ -255,7 +289,7 @@ export function buildTranslationDataRows(metadata, definition, validation) {
   for (const page of definition.pages) {
     const pageId = /** @type {string} */ (page.id)
     const pageNum = getPageNum(definition, pageId)
-    const components = hasComponents(page) ? page.components : []
+    const components = hasComponentsEvenIfNoNext(page) ? page.components : []
     if (components.length === 0) {
       continue
     }
