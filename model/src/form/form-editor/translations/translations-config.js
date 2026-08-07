@@ -36,6 +36,7 @@ export const TranslationRowTypes = {
   ListItemHint: 'ListItemHint',
   InstructionText: 'InstructionText',
   DeclarationBody: 'DeclarationBody',
+  EndOfFormDeclarationBody: 'EndOfFormDeclarationBody',
   PaymentDescription: 'PaymentDescription'
 }
 
@@ -88,6 +89,13 @@ export const keyConfig = {
     displayName: 'Declaration body',
     getLabel: (pageNum, questionNum) =>
       `Welsh declaration body - Page ${pageNum}, question ${questionNum}`
+  },
+  [TranslationRowTypes.EndOfFormDeclarationBody]: {
+    jsonPrefix: 'components',
+    jsonSuffix: 'content',
+    displayName: 'Declaration body',
+    getLabel: (pageNum, _questionNum) =>
+      `Welsh declaration body - Page ${pageNum}`
   },
   [TranslationRowTypes.PaymentDescription]: {
     jsonPrefix: 'components',
@@ -166,6 +174,8 @@ export function drillDown(keyType, entity, jsonSuffix) {
       // @ts-expect-error - dynamic property lookup
       'hint' in entity ? entity.hint.text : '',
     [TranslationRowTypes.DeclarationBody]: () =>
+      'content' in entity ? entity.content : '',
+    [TranslationRowTypes.EndOfFormDeclarationBody]: () =>
       'content' in entity ? entity.content : '',
     [TranslationRowTypes.PaymentDescription]: () =>
       // @ts-expect-error - dynamic property lookup
