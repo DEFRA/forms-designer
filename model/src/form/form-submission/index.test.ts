@@ -94,4 +94,127 @@ describe('formSubmitPayloadSchema', () => {
 
     expect(error).toBeDefined()
   })
+
+  it('should accept a payload with notification targets', () => {
+    const notificationTargets = [
+      {
+        emailAddress: 'enrique.chase@defra.gov.uk',
+        audience: 'human' as const,
+        version: '1'
+      },
+      {
+        emailAddress: 'casework@defra.gov.uk',
+        audience: 'machine' as const,
+        version: '2'
+      }
+    ]
+
+    const { error, value } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets
+    } satisfies SubmitPayload)
+
+    expect(error).toBeUndefined()
+    expect(value.notificationTargets).toEqual(notificationTargets)
+  })
+
+  it('should accept the same address twice in different output formats', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: [
+        {
+          emailAddress: 'casework@defra.gov.uk',
+          audience: 'human' as const,
+          version: '1'
+        },
+        {
+          emailAddress: 'casework@defra.gov.uk',
+          audience: 'machine' as const,
+          version: '1'
+        }
+      ]
+    } satisfies SubmitPayload)
+
+    expect(error).toBeUndefined()
+  })
+
+  it('should accept a payload with no notification targets', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: []
+    } satisfies SubmitPayload)
+
+    expect(error).toBeUndefined()
+  })
+
+  it('should reject a notification target with no audience', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: [
+        { emailAddress: 'enrique.chase@defra.gov.uk', version: '1' }
+      ]
+    })
+
+    expect(error).toBeDefined()
+    expect(error?.message).toContain('audience')
+  })
+
+  it('should reject an unknown audience', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: [
+        {
+          emailAddress: 'enrique.chase@defra.gov.uk',
+          audience: 'robot',
+          version: '1'
+        }
+      ]
+    })
+
+    expect(error).toBeDefined()
+    expect(error?.message).toContain('audience')
+  })
+
+  it.each([
+    'enrique.chase@defra.gov.uk',
+    'casework@example.com',
+    'someone@example.io',
+    'someone@sub.domain.museum',
+    'someone@example.internal'
+  ])('should accept the email address %s', (emailAddress) => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: [
+        { emailAddress, audience: 'human' as const, version: '1' }
+      ]
+    } satisfies SubmitPayload)
+
+    expect(error).toBeUndefined()
+  })
+
+  it('should reject a malformed email address', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: [
+        {
+          emailAddress: 'not-an-email',
+          audience: 'human' as const,
+          version: '1'
+        }
+      ]
+    } satisfies SubmitPayload)
+
+    expect(error).toBeDefined()
+    expect(error?.message).toContain('emailAddress')
+  })
+
+  it('should reject a bare email address', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      notificationTargets: ['enrique.chase@defra.gov.uk']
+    })
+
+    expect(error).toBeDefined()
+    expect(error?.message).toContain('must be of type object')
+  })
 })
