@@ -56,6 +56,7 @@ import {
 } from '~/src/form/form-definition/index.js'
 import {
   Engine,
+  SchemaVersion,
   type ConditionWrapperV2,
   type FormDefinition,
   type List,
@@ -283,9 +284,12 @@ describe('Form definition schema', () => {
         testComponent1.schema.regex = '[A-Z]'
         page.components = [testComponent1]
 
-        const result = formDefinitionV2Schema.validate(definition, {
-          abortEarly: false
-        })
+        const result = formDefinitionV2Schema.validate(
+          { ...definition, schema: SchemaVersion.V2 },
+          {
+            abortEarly: false
+          }
+        )
 
         expect(result.error).toBeUndefined()
       })
@@ -296,9 +300,12 @@ describe('Form definition schema', () => {
         testComponent1.schema.regex = '*'
         page.components = [testComponent1]
 
-        const result = formDefinitionV2Schema.validate(definition, {
-          abortEarly: false
-        })
+        const result = formDefinitionV2Schema.validate(
+          { ...definition, schema: SchemaVersion.V2 },
+          {
+            abortEarly: false
+          }
+        )
 
         expect(result.error).toBeDefined()
         expect(result.error?.details[0].message).toContain(
@@ -565,6 +572,7 @@ describe('Form definition schema', () => {
       }
 
       const definition: FormDefinition = {
+        schema: SchemaVersion.V2,
         conditions: [
           stringValueCondition,
           relativeDateCondition,
@@ -768,6 +776,23 @@ describe('Form definition schema', () => {
         )
       })
 
+      it('should allow outputs emails on any top-level domain', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputEmail: 'good-email1@test.com',
+          outputs: [
+            {
+              emailAddress: 'good-email2@test.com',
+              audience: 'human',
+              version: '1'
+            }
+          ]
+        })
+
+        expect(validated.error).toBeUndefined()
+      })
+
       it('should allow many outputs configured', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,
@@ -822,6 +847,96 @@ describe('Form definition schema', () => {
         expect(validated.error).toBeUndefined()
       })
 
+      it('should reject outputs repeating an address, condition, audience and version', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            {
+              emailAddress: 'Good-Email1@test.co.uk',
+              audience: 'machine',
+              version: '2',
+              condition: stringValueCondition.id
+            },
+            {
+              emailAddress: 'good-email1@TEST.co.uk',
+              audience: 'machine',
+              version: '2',
+              condition: stringValueCondition.id
+            }
+          ]
+        })
+
+        expect(validated.error).toBeDefined()
+        expect(validated.error?.message).toBe(
+          'Email address good-email1@TEST.co.uk is already receiving the same submissions'
+        )
+        expect(validated.error?.details[0].context?.errorType).toBe(
+          FormDefinitionErrorType.Unique
+        )
+        expect(validated.error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.UniqueOutput
+        )
+        expect(validated.error?.details[0].context?.pos).toBe(1)
+        expect(validated.error?.details[0].context?.dupePos).toBe(0)
+      })
+
+      it('should reject outputs repeating an address with no condition on either', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'human',
+              version: '1'
+            },
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'human',
+              version: '1',
+              condition: ''
+            }
+          ]
+        })
+
+        expect(validated.error?.details[0].context?.errorCode).toBe(
+          FormDefinitionError.UniqueOutput
+        )
+      })
+
+      it('should allow the same address when the condition, audience or version differ', () => {
+        const validated = formDefinitionV2Schema.validate({
+          ...definition,
+          lists: [list],
+          outputs: [
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'human',
+              version: '1'
+            },
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'machine',
+              version: '1'
+            },
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'machine',
+              version: '2'
+            },
+            {
+              emailAddress: 'good-email1@test.co.uk',
+              audience: 'machine',
+              version: '2',
+              condition: stringValueCondition.id
+            }
+          ]
+        })
+
+        expect(validated.error).toBeUndefined()
+      })
+
       it('should reject if an outputs condition is not a known condition', () => {
         const validated = formDefinitionV2Schema.validate({
           ...definition,
@@ -864,6 +979,7 @@ describe('Form definition schema', () => {
 
       it('should fail validation when the list for a condition is not found', () => {
         const definition1 = buildDefinition({
+          schema: SchemaVersion.V2,
           name: 'Conditional Reference Check',
           startPage: '/which-option',
           pages: [
@@ -989,6 +1105,7 @@ describe('Form definition schema', () => {
 
       it('should fail validation when condition list itemId is not found in any list', () => {
         const definition1 = buildDefinition({
+          schema: SchemaVersion.V2,
           name: 'Conditional Reference Check',
           startPage: '/which-option',
           pages: [
@@ -1113,6 +1230,7 @@ describe('Form definition schema', () => {
 
       it('should fail validation when condition list itemId is not found in the correct list', () => {
         const definition1 = buildDefinition({
+          schema: SchemaVersion.V2,
           name: 'Conditional Reference Check',
           startPage: '/which-option',
           pages: [
@@ -1524,6 +1642,7 @@ describe('Form definition schema', () => {
         })
 
         const definition = buildDefinition({
+          schema: SchemaVersion.V2,
           engine: Engine.V2,
           name: 'Geospatial definition',
           startPage: '/geospatial-page',
@@ -1537,6 +1656,7 @@ describe('Form definition schema', () => {
         expect(error).toBeUndefined()
         expect(value).toEqual({
           engine: 'V2',
+          schema: SchemaVersion.V2,
           name: 'Geospatial definition',
           pages: [
             {

@@ -45,6 +45,7 @@ export enum FormDefinitionError {
   UniqueListItemId = 'unique_list_item_id',
   UniqueListItemText = 'unique_list_item_text',
   UniqueListItemValue = 'unique_list_item_value',
+  UniqueOutput = 'unique_output',
   RefPageCondition = 'ref_page_condition',
   RefConditionComponentId = 'ref_condition_component_id',
   RefConditionListId = 'ref_condition_list_id',
@@ -124,6 +125,13 @@ export const formDefinitionErrors: FormDefinitionErrors = {
   },
   [FormDefinitionError.UniqueListItemValue]: {
     key: 'value',
+    type: FormDefinitionErrorType.Unique
+  },
+  [FormDefinitionError.UniqueOutput]: {
+    // Outputs are compared on a composite of their address, condition,
+    // audience and version, so there is no single key to match on. An empty
+    // key matches any unique constraint on the schema it is attached to.
+    key: '',
     type: FormDefinitionErrorType.Unique
   },
   [FormDefinitionError.RefPageCondition]: {

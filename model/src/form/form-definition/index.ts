@@ -40,6 +40,7 @@ import {
 } from '~/src/form/form-definition/constants.js'
 import {
   isConditionListItemRefValueData,
+  isDuplicateOutput,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import {
@@ -1201,9 +1202,9 @@ const outputSchema = Joi.object<FormDefinition['output']>()
 const outputsItemSchema = Joi.object<Output>()
   .description('Configuration for a single submission email target')
   .keys({
-    emailAddress: emailAddressNoUnicodeSchema
-      .email({ tlds: { allow: ['uk'] } })
-      .description('Email address where form submissions are sent'),
+    emailAddress: emailAddressNoUnicodeSchema.description(
+      'Email address where form submissions are sent'
+    ),
     audience: Joi.string()
       .trim()
       .valid('human', 'machine')
@@ -1234,13 +1235,29 @@ const outputsItemSchemaV2 = outputsItemSchema.keys({
 
 const outputsSchema = Joi.array<Output>()
   .items(outputsItemSchema)
+  .unique(isDuplicateOutput)
+  // Without this the raw Joi message names the array index, eg `"outputs[4]"
+  // contains a duplicate value`, which means nothing to a form author
+  .messages({
+    'array.unique':
+      'Email address {{#value.emailAddress}} is already receiving the same submissions'
+  })
   .optional()
   .description('One or more email targets/types for submission emails')
+  .error(checkErrors(FormDefinitionError.UniqueOutput))
 
 const outputsSchemaV2 = Joi.array<Output>()
   .items(outputsItemSchemaV2)
+  .unique(isDuplicateOutput)
+  // Without this the raw Joi message names the array index, eg `"outputs[4]"
+  // contains a duplicate value`, which means nothing to a form author
+  .messages({
+    'array.unique':
+      'Email address {{#value.emailAddress}} is already receiving the same submissions'
+  })
   .optional()
   .description('Outputs schema for V2 forms')
+  .error(checkErrors(FormDefinitionError.UniqueOutput))
 
 /**
  * Joi schema for `FormDefinition` interface
@@ -1316,7 +1333,6 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Phase banner configuration'),
     options: optionsSchema.optional().description('Options for the form'),
     outputEmail: emailAddressNoUnicodeSchema
-      .email({ tlds: { allow: ['uk'] } })
       .optional()
       .description('Email address where form submissions are sent'),
     output: outputSchema
@@ -1330,6 +1346,7 @@ export const formDefinitionV2Schema = formDefinitionSchema
     schema: Joi.number()
       .integer()
       .valid(SchemaVersion.V2)
+      .required()
       .description('Form schema version to use (2)'),
     pages: Joi.array<Page>()
       .items(pageSchemaV2)

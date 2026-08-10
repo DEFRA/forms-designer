@@ -39,6 +39,8 @@ export const formErrorsToMessages = {
     'Each item in a list must have unique text. Change the item text to one that is not already used.',
   [FormDefinitionError.UniqueListItemValue]:
     'Each item in a list must have a unique value. Change the item value to one that is not already used.',
+  [FormDefinitionError.UniqueOutput]:
+    'This email address is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.',
   [FormDefinitionError.RefPageCondition]:
     'This page is referenced by a condition. Remove the condition before making changes to this page.',
   [FormDefinitionError.RefConditionComponentId]:

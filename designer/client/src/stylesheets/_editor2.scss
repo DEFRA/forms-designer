@@ -29,6 +29,11 @@
   white-space: nowrap;
 }
 
+// Lets a single-button form sit alongside links in a table's actions cell
+.app-inline-form {
+  display: inline;
+}
+
 .app-condition-applied {
   background-color: govuk-colour("white");
   border-left: 4px solid #00703c;

@@ -44,6 +44,27 @@ describe('Editor v2 advanced settings routes', () => {
         '/library/my-form-slug/editor-v2/pages'
       )
     })
+
+    test('should show the email actions row linking to the email actions page', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
+
+      const { container, document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/advanced-settings',
+        auth
+      })
+
+      expect(document.body).toHaveTextContent('Email actions')
+      expect(document.body).toHaveTextContent(
+        'Configure email recipients of this submitted form'
+      )
+      expect(
+        container.getByRole('link', { name: /Change.*email actions/ })
+      ).toHaveAttribute('href', '/library/my-form-slug/editor-v2/email-actions')
+    })
   })
 })
 

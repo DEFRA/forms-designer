@@ -19,6 +19,7 @@ import editorConditionsJoin from '~/src/routes/forms/editor-v2/conditions-join.j
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
 import editorEditListResolve from '~/src/routes/forms/editor-v2/edit-list-resolve.js'
+import editorEmailActions from '~/src/routes/forms/editor-v2/email-actions.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
@@ -74,6 +75,7 @@ export default [
   editorUpload,
   editorDownload,
   editorEditListResolve,
+  editorEmailActions,
   editorTranslations,
   history,
   library,

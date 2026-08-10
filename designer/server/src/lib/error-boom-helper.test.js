@@ -6,6 +6,7 @@ import Boom from '@hapi/boom'
 import Joi from 'joi'
 
 import {
+  buildDefinition,
   testFormDefinitionWithMultipleV2Conditions,
   testFormDefinitionWithNoPages
 } from '~/src/__stubs__/form-definition.js'
@@ -18,6 +19,26 @@ import {
   isInvalidFormErrorType,
   unpackErrorToken
 } from '~/src/lib/error-boom-helper.js'
+
+/**
+ * Mirrors the cause forms-manager sends back when the outputs array fails its
+ * uniqueness rule, where pos is the offending entry and dupePos its twin.
+ */
+function buildUniqueOutputBoom() {
+  const cause = [
+    {
+      id: FormDefinitionError.UniqueOutput,
+      detail: { path: ['outputs', 1], pos: 1, dupePos: 0 },
+      message: '"outputs[1]" contains a duplicate value',
+      type: FormDefinitionErrorType.Unique
+    }
+  ]
+
+  return Boom.boomify(
+    new Error('"outputs[1]" contains a duplicate value', { cause }),
+    { data: { error: 'InvalidFormDefinitionError' } }
+  )
+}
 
 describe('Boom error helper', () => {
   describe('checkBoomError', () => {
@@ -234,6 +255,44 @@ describe('Boom error helper', () => {
       )
       expect(res?.message).toBe(
         "A list item used by condition 'isFaveColourRedV2' has been deleted from the list."
+      )
+    })
+
+    test('should name the duplicated address for UniqueOutput', () => {
+      const boomErr = buildUniqueOutputBoom()
+
+      const res = handleInvalidFormErrors(
+        boomErr,
+        buildDefinition({
+          outputs: [
+            {
+              emailAddress: 'inbox@defra.gov.uk',
+              audience: 'human',
+              version: '1'
+            },
+            {
+              emailAddress: 'INBOX@defra.gov.uk',
+              audience: 'human',
+              version: '1'
+            }
+          ]
+        })
+      )
+
+      expect(res?.details[0].path).toEqual(['emailAddress'])
+      expect(res?.message).toBe(
+        'Email address INBOX@defra.gov.uk is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.'
+      )
+    })
+
+    test('should fall back to the generic message when the output is missing', () => {
+      const res = handleInvalidFormErrors(
+        buildUniqueOutputBoom(),
+        buildDefinition({ outputs: [] })
+      )
+
+      expect(res?.message).toBe(
+        'This email address is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.'
       )
     })
 

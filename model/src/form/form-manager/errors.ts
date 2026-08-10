@@ -30,10 +30,12 @@ export const checkErrors = (
         const keyMatch =
           typeof err.local.key === 'number' ? err.local.path : err.local.key
 
+        // An empty key matches any unique constraint for schemas whose
+        // uniqueness is a composite of several keys rather than a single one
         if (
           errorDetails.type === FormDefinitionErrorType.Unique &&
           err.code === 'array.unique' &&
-          keyMatch === errorDetails.key
+          (errorDetails.key === '' || keyMatch === errorDetails.key)
         ) {
           err.local.errorCode = formError
           err.local.errorType = FormDefinitionErrorType.Unique

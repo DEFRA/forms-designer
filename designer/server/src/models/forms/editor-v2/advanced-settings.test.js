@@ -21,7 +21,28 @@ describe('advanced settings view model', () => {
       },
       pageCaption: {
         text: 'Test form'
-      }
+      },
+      settingsTable: expect.any(Object)
     })
+  })
+
+  test('should show a single email actions row linking to the email actions page', () => {
+    const { settingsTable } = advancedSettingsViewModel(
+      testFormMetadata,
+      testFormDefinitionWithSummaryOnly
+    )
+
+    expect(settingsTable.rows).toHaveLength(1)
+
+    const [setting, description, actions] = settingsTable.rows[0]
+
+    expect(setting.html).toContain('Email actions')
+    expect(description.text).toBe(
+      'Configure email recipients of this submitted form'
+    )
+    expect(actions.html).toContain(
+      'href="/library/my-form-slug/editor-v2/email-actions"'
+    )
+    expect(actions.html).toContain('>Change<')
   })
 })
