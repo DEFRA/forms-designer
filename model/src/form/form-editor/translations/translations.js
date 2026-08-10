@@ -53,16 +53,6 @@ function createRow(
   }
 }
 
-const allowedControllerTypesSet = new Set([
-  ControllerType.Page,
-  ControllerType.Repeat,
-  ControllerType.Start,
-  ControllerType.FileUpload,
-  ControllerType.Terminal,
-  ControllerType.Summary,
-  ControllerType.SummaryWithConfirmationEmail
-])
-
 /**
  * Constructs a page row
  * @param {string} rowType
@@ -104,10 +94,6 @@ function buildPageRow(
  * @returns {TranslationRow[]} The translation rows generated for the page.
  */
 function buildPage(page, pageNum, translations, validation) {
-  if (page.controller && !allowedControllerTypesSet.has(page.controller)) {
-    return []
-  }
-
   const translationRows = []
 
   // The only possible element for translation on a summary page is the end-of-form declaration,
