@@ -85,7 +85,7 @@ function buildPageRow(
 
   return {
     name: keyName,
-    type: TranslationRowTypes.EndOfFormDeclarationBody,
+    type: rowType,
     pageNum,
     englishContent,
     welshContent:
