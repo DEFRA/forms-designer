@@ -64,6 +64,38 @@ const allowedControllerTypesSet = new Set([
 ])
 
 /**
+ * Constructs a page row
+ * @param {string} rowType
+ * @param { string | undefined } id
+ * @param {number} pageNum
+ * @param {string} englishContent
+ * @param {Record<string, string>} translations - Existing Welsh translations keyed by translation name.
+ * @param {ValidationFailure<any>} [validation] - Optional validation context for posted form values.
+ */
+function buildPageRow(
+  rowType,
+  id,
+  pageNum,
+  englishContent,
+  translations,
+  validation
+) {
+  const keyProperties = keyConfig[rowType]
+  const keyName = `${keyProperties.jsonPrefix}.${id}.${keyProperties.jsonSuffix}`
+
+  return {
+    name: keyName,
+    type: TranslationRowTypes.EndOfFormDeclarationBody,
+    pageNum,
+    englishContent,
+    welshContent:
+      validation?.formValues[keyName] ??
+      lookupTranslation(keyName, translations),
+    label: keyProperties.getLabel(pageNum)
+  }
+}
+
+/**
  * Build the translation rows for a single page.
  * @param {Page} page - The page definition to inspect for translatable content.
  * @param {number} pageNum - The page number used in the generated labels.
@@ -87,39 +119,31 @@ function buildPage(page, pageNum, translations, validation) {
         ? page.components[0]
         : undefined
     if (endOfFormDeclaration) {
-      const keyProperties =
-        keyConfig[TranslationRowTypes.EndOfFormDeclarationBody]
-      const keyName = `${keyProperties.jsonPrefix}.${endOfFormDeclaration.id}.${keyProperties.jsonSuffix}`
-
-      translationRows.push({
-        name: keyName,
-        type: TranslationRowTypes.EndOfFormDeclarationBody,
-        pageNum,
-        englishContent: endOfFormDeclaration.content,
-        welshContent:
-          validation?.formValues[keyName] ??
-          lookupTranslation(keyName, translations),
-        label: keyProperties.getLabel(pageNum)
-      })
+      translationRows.push(
+        buildPageRow(
+          TranslationRowTypes.EndOfFormDeclarationBody,
+          endOfFormDeclaration.id,
+          pageNum,
+          endOfFormDeclaration.content,
+          translations,
+          validation
+        )
+      )
     }
     return translationRows
   }
 
   if (page.title) {
-    const keyProperties = keyConfig[TranslationRowTypes.PageHeading]
-
-    const keyName = `${keyProperties.jsonPrefix}.${page.id}.${keyProperties.jsonSuffix}`
-
-    translationRows.push({
-      name: keyName,
-      type: TranslationRowTypes.PageHeading,
-      pageNum,
-      englishContent: page.title,
-      welshContent:
-        validation?.formValues[keyName] ??
-        lookupTranslation(keyName, translations),
-      label: keyProperties.getLabel(pageNum)
-    })
+    translationRows.push(
+      buildPageRow(
+        TranslationRowTypes.PageHeading,
+        page.id,
+        pageNum,
+        page.title,
+        translations,
+        validation
+      )
+    )
   }
 
   const guidance =
@@ -127,35 +151,29 @@ function buildPage(page, pageNum, translations, validation) {
       ? page.components[0]
       : undefined
   if (guidance) {
-    const keyProperties = keyConfig[TranslationRowTypes.PageGuidance]
-    const keyName = `${keyProperties.jsonPrefix}.${guidance.id}.${keyProperties.jsonSuffix}`
-
-    translationRows.push({
-      name: keyName,
-      type: TranslationRowTypes.PageGuidance,
-      pageNum,
-      englishContent: guidance.content,
-      welshContent:
-        validation?.formValues[keyName] ??
-        lookupTranslation(keyName, translations),
-      label: keyProperties.getLabel(pageNum)
-    })
+    translationRows.push(
+      buildPageRow(
+        TranslationRowTypes.PageGuidance,
+        guidance.id,
+        pageNum,
+        guidance.content,
+        translations,
+        validation
+      )
+    )
   }
 
   if (page.controller === ControllerType.Repeat) {
-    const keyProperties = keyConfig[TranslationRowTypes.RepeatTitle]
-    const keyName = `${keyProperties.jsonPrefix}.${page.id}.${keyProperties.jsonSuffix}`
-
-    translationRows.push({
-      name: keyName,
-      type: TranslationRowTypes.RepeatTitle,
-      pageNum,
-      englishContent: page.repeat.options.title,
-      welshContent:
-        validation?.formValues[keyName] ??
-        lookupTranslation(keyName, translations),
-      label: keyProperties.getLabel(pageNum)
-    })
+    translationRows.push(
+      buildPageRow(
+        TranslationRowTypes.RepeatTitle,
+        page.id,
+        pageNum,
+        page.repeat.options.title,
+        translations,
+        validation
+      )
+    )
   }
 
   return translationRows

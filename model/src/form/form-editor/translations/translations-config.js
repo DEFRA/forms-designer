@@ -175,8 +175,6 @@ export function drillDown(keyType, entity, jsonSuffix) {
       'hint' in entity ? entity.hint.text : '',
     [TranslationRowTypes.DeclarationBody]: () =>
       'content' in entity ? entity.content : '',
-    [TranslationRowTypes.EndOfFormDeclarationBody]: () =>
-      'content' in entity ? entity.content : '',
     [TranslationRowTypes.PaymentDescription]: () =>
       // @ts-expect-error - dynamic property lookup
       'options' in entity ? entity.options?.description : ''

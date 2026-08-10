@@ -11,6 +11,7 @@ import {
   buildRepeaterPage,
   buildSummaryPage
 } from '~/src/__stubs__/pages.js'
+import { ControllerType } from '~/src/pages/enums.js'
 
 export const formDefinitionWithSinglePage = buildDefinition({
   pages: [
@@ -161,6 +162,14 @@ export const formDefinitionWithFormLevelDeclaration = buildDefinition({
       ],
       next: [{ path: '/summary' }]
     }),
+    {
+      id: '11efd409-f3f4-49fe-882e-6e89f44631b1',
+      title: 'Dummy exit page',
+      path: '/page-exit',
+      next: [],
+      components: [],
+      controller: ControllerType.Terminal
+    },
     buildSummaryPage({
       id: 'p2',
       components: [
