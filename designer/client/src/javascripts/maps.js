@@ -9,7 +9,12 @@ import createDatasetsPlugin from '@defra/interactive-map/plugins/datasets'
 // @ts-expect-error - no types
 import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
 
-const { createMap, defaultConfig: defaultMapConfig, getMapLayers, getMapCountryLayers } = mapImports
+const {
+  createMap,
+  defaultConfig: defaultMapConfig,
+  getMapLayers,
+  getMapCountryLayers
+} = mapImports
 const {
   addFeatureToMap,
   createFeaturesHTML,
@@ -17,9 +22,7 @@ const {
   getGeoJSON,
   focusFeature
 } = geospatialMap
-const {
-  getInitMapConfig
-} = locationMap
+const { getInitMapConfig } = locationMap
 
 const mapsEnvConfig = {
   assetPath: '/assets',
@@ -184,7 +187,9 @@ export function processMapPreview() {
   /**
    * @type {NodeListOf<HTMLDivElement>} - the location field previews
    */
-  const locationPreviews = document.querySelectorAll('.app-location-field--preview')
+  const locationPreviews = document.querySelectorAll(
+    '.app-location-field--preview'
+  )
   locationPreviews.forEach(processLocationPreview)
 }
 

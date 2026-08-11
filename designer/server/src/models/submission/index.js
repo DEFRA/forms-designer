@@ -71,7 +71,12 @@ function processPaymentFieldComponent(context) {
  * @param {ComponentDef} component
  */
 export function isMapTypeComponent(component) {
-  return component.type === ComponentType.GeospatialField || component.type === ComponentType.EastingNorthingField || component.type === ComponentType.LatLongField || component.type === ComponentType.OsGridRefField
+  return (
+    component.type === ComponentType.GeospatialField ||
+    component.type === ComponentType.EastingNorthingField ||
+    component.type === ComponentType.LatLongField ||
+    component.type === ComponentType.OsGridRefField
+  )
 }
 
 /**
