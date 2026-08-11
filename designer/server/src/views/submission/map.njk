@@ -9,7 +9,10 @@
 {% block head %}
   {{ super() }}
   <link href="{{ getAssetPath("stylesheets/maps.scss") }}" rel="stylesheet">
-  <style type="text/css">.govuk-form-group { margin-bottom: 0 }</style>
+  <style type="text/css">
+    .govuk-form-group { margin-bottom: 0 }
+    .app-location-field--preview, .app-geospatial-field--preview { margin-bottom: 40px }
+  </style>
 {% endblock %}
 
 {% block content %}
@@ -26,13 +29,41 @@
           {% if repeaterName %}
             <h2 class="govuk-heading-m" id="answer_{{loop.index0}}">Answer {{loop.index}}</h2>
           {% endif %}
-          <div class="app-geospatial-field--preview">
-            <div id="map_{{loop.index0}}">
-              <textarea class="govuk-textarea" id="data_{{loop.index0}}" readonly data-maplayers="{{mapLayers}}">{{ item | dump | safe }}</textarea>
+          {% if component.type === 'GeospatialField' %}
+            <div class="app-geospatial-field--preview">
+              <div id="map_{{loop.index0}}">
+                <textarea class="govuk-textarea" readonly data-maplayers="{{mapLayers}}">{{ item | dump | safe }}</textarea>
+              </div>
+              <div id="list_{{loop.index0}}">
+              </div>
             </div>
-            <div id="list_{{loop.index0}}">
+          {% elif component.type === 'EastingNorthingField' %}
+            <div class="app-location-field--preview" data-locationtype="{{ component.type | lower }}" data-maplayers="{{mapLayers}}">
+              <div id="map_{{loop.index0}}">
+                <div class="app-location-field-inputs" hidden>
+                  <input class="govuk-input" readonly value="{{ item.easting }}">
+                  <input class="govuk-input" readonly value="{{ item.northing }}">
+                </div>
+              </div>
             </div>
-          </div>
+          {% elif component.type === 'LatLongField' %}
+            <div class="app-location-field--preview" data-locationtype="{{ component.type | lower }}" data-maplayers="{{mapLayers}}">
+              <div id="map_{{loop.index0}}">
+                <div class="app-location-field-inputs" hidden>
+                  <input class="govuk-input" readonly value="{{ item.latitude }}">
+                  <input class="govuk-input" readonly value="{{ item.longitude }}">
+                </div>
+              </div>
+            </div>
+          {% elif component.type === 'OsGridRefField' %}
+            <div class="app-location-field--preview" data-locationtype="{{ component.type | lower }}" data-maplayers="{{mapLayers}}">
+              <div id="map_{{loop.index0}}">
+                <div class="app-location-field-inputs" hidden>
+                  <input class="govuk-input" readonly value="{{ item }}">
+                </div>
+              </div>
+            </div>
+          {% endif %}
         {% endfor %}
       </div>
     </div>

@@ -1,5 +1,6 @@
 import {
   geospatialMap,
+  locationMap,
   map as mapImports,
   sssiDataset
 } from '@defra/forms-engine-plugin/maps'
@@ -8,7 +9,7 @@ import createDatasetsPlugin from '@defra/interactive-map/plugins/datasets'
 // @ts-expect-error - no types
 import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
 
-const { createMap, defaultConfig: defaultMapConfig, getMapLayers } = mapImports
+const { createMap, defaultConfig: defaultMapConfig, getMapLayers, getMapCountryLayers } = mapImports
 const {
   addFeatureToMap,
   createFeaturesHTML,
@@ -16,6 +17,21 @@ const {
   getGeoJSON,
   focusFeature
 } = geospatialMap
+const {
+  getInitMapConfig
+} = locationMap
+
+const mapsEnvConfig = {
+  assetPath: '/assets',
+  apiPath: '/maps/api',
+  data: {
+    VTS_OUTDOOR_URL: '/maps/api/maps/vts/OS_VTS_3857_Outdoor.json',
+    VTS_DARK_URL: '/maps/api/maps/vts/OS_VTS_3857_Dark.json',
+    VTS_BLACK_AND_WHITE_URL:
+      '/maps/api/maps/vts/OS_VTS_3857_Black_and_White.json',
+    VTS_AERIAL_URL: '/maps/api/maps/vts/esri-aerial.json'
+  }
+}
 
 /**
  * Factory clousure to create the map ready callback with access to the map provider, geojson and list element
@@ -79,7 +95,7 @@ function onMapReadyFactory(
  * @param {Element} preview
  * @param {number} index
  */
-function processPreview(preview, index) {
+function processGeospatialPreview(preview, index) {
   const mapId = `map_${index}`
   const geospatialInput = preview.querySelector('.govuk-textarea')
 
@@ -116,17 +132,7 @@ function processPreview(preview, index) {
     plugins
   }
 
-  const { map } = createMap(mapId, initConfig, {
-    assetPath: '/assets',
-    apiPath: '/maps/api',
-    data: {
-      VTS_OUTDOOR_URL: '/maps/api/maps/vts/OS_VTS_3857_Outdoor.json',
-      VTS_DARK_URL: '/maps/api/maps/vts/OS_VTS_3857_Dark.json',
-      VTS_BLACK_AND_WHITE_URL:
-        '/maps/api/maps/vts/OS_VTS_3857_Black_and_White.json',
-      VTS_AERIAL_URL: '/maps/api/maps/vts/esri-aerial.json'
-    }
-  })
+  const { map } = createMap(mapId, initConfig, mapsEnvConfig)
 
   map.on(
     'map:ready',
@@ -145,12 +151,41 @@ function processPreview(preview, index) {
 }
 
 /**
+ * Process a location component preview by rendering the map
+ * @param {HTMLDivElement} preview
+ * @param {number} index
+ */
+function processLocationPreview(preview, index) {
+  const mapId = `map_${index}`
+  const initConfig = getInitMapConfig(preview) ?? defaultMapConfig
+  const country = preview.dataset.country
+  const mapLayers = getMapLayers(preview.dataset.maplayers)
+  const datasets = getMapCountryLayers('/maps/api', country)
+
+  if (mapLayers.includes('sssi')) {
+    datasets.push(...sssiDataset.default)
+  }
+
+  // Create a map dataset plugin if there are any present
+  if (datasets.length) {
+    initConfig.plugins = [createDatasetsPlugin({ datasets })]
+  }
+
+  createMap(mapId, initConfig, mapsEnvConfig)
+}
+
+/**
  * Processes all geospatial component previews on the page by rendering maps and features, and setting up event listeners
  */
 export function processMapPreview() {
   const previews = document.querySelectorAll('.app-geospatial-field--preview')
+  previews.forEach(processGeospatialPreview)
 
-  previews.forEach(processPreview)
+  /**
+   * @type {NodeListOf<HTMLDivElement>} - the location field previews
+   */
+  const locationPreviews = document.querySelectorAll('.app-location-field--preview')
+  locationPreviews.forEach(processLocationPreview)
 }
 
 processMapPreview()

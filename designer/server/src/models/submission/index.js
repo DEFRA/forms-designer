@@ -69,6 +69,14 @@ function processPaymentFieldComponent(context) {
 /**
  * Process a page component
  * @param {ComponentDef} component
+ */
+export function isMapTypeComponent(component) {
+  return component.type === ComponentType.GeospatialField || component.type === ComponentType.EastingNorthingField || component.type === ComponentType.LatLongField || component.type === ComponentType.OsGridRefField
+}
+
+/**
+ * Process a page component
+ * @param {ComponentDef} component
  * @param {Page} page
  * @param {Context} context
  * @param {{ item: Record<string, any>, index: number}} [repeat]
@@ -95,7 +103,7 @@ function processSectionComponent(component, page, context, repeat) {
       )
 
       let actions
-      if (component.type === ComponentType.GeospatialField) {
+      if (isMapTypeComponent(component)) {
         actions = [
           {
             text: 'Review map',
