@@ -207,7 +207,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       
 
       <dl class="govuk-summary-list">
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Text field
     </dt>
@@ -215,7 +215,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Enrique Chase
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Multiline text field
     </dt>
@@ -223,7 +223,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       I’m well and truly stumped. My PR is running through fine (linting, unit tests etc) but the Sonar step reports ‘too many parameters’ on a call that I have updated in forms-model (with a new npm version in my PR).
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Number field
     </dt>
@@ -231,7 +231,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       3
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Date parts field
     </dt>
@@ -239,7 +239,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       1 January 2001
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Yes/No field
     </dt>
@@ -247,7 +247,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Yes
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Email address field
     </dt>
@@ -255,7 +255,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       enrique.chase@defra.gov.uk
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Telephone number field
     </dt>
@@ -263,7 +263,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       01234 567890
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       UK address field
     </dt>
@@ -271,7 +271,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       131 Chester Road, Chester Road, NORTHWICH, Cheshire, CW8 4AA
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Radios field
     </dt>
@@ -279,7 +279,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Sole trader
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Select field
     </dt>
@@ -287,7 +287,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Andorra
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Checkboxes field
     </dt>
@@ -295,7 +295,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Arabian, Patomine, Shetland
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Month year field
     </dt>
@@ -303,7 +303,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       January 2001
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Autocomplete field
     </dt>
@@ -318,6 +318,9 @@ exports[`Submission routes GET / should not show payment section when missing 1`
     <dd class="govuk-summary-list__value">
       466777, 481411
     </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/c3c34170-3063-49bb-b66c-436e5d3e0158">Review map<span class="govuk-visually-hidden"> Review map</span></a>
+    </dd>
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
@@ -325,6 +328,9 @@ exports[`Submission routes GET / should not show payment section when missing 1`
     </dt>
     <dd class="govuk-summary-list__value">
       54.3971307, -3.3722924
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/43a8959c-7255-4174-91d5-6bf03980aefe">Review map<span class="govuk-visually-hidden"> Review map</span></a>
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -334,8 +340,11 @@ exports[`Submission routes GET / should not show payment section when missing 1`
     <dd class="govuk-summary-list__value">
       NY 77436 20124
     </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/c1cc4b5e-f493-4d9b-9f86-eb6754329634">Review map<span class="govuk-visually-hidden"> Review map</span></a>
+    </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       National Grid field number field
     </dt>
@@ -785,7 +794,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       
 
       <dl class="govuk-summary-list">
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Text field
     </dt>
@@ -793,7 +802,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Enrique Chase
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Multiline text field
     </dt>
@@ -801,7 +810,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       I’m well and truly stumped. My PR is running through fine (linting, unit tests etc) but the Sonar step reports ‘too many parameters’ on a call that I have updated in forms-model (with a new npm version in my PR).
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Number field
     </dt>
@@ -809,7 +818,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       3
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Date parts field
     </dt>
@@ -817,7 +826,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       1 January 2001
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Yes/No field
     </dt>
@@ -825,7 +834,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Yes
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Email address field
     </dt>
@@ -833,7 +842,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       enrique.chase@defra.gov.uk
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Telephone number field
     </dt>
@@ -841,7 +850,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       01234 567890
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       UK address field
     </dt>
@@ -849,7 +858,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       131 Chester Road, Chester Road, NORTHWICH, Cheshire, CW8 4AA
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Radios field
     </dt>
@@ -857,7 +866,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Sole trader
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Select field
     </dt>
@@ -865,7 +874,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Andorra
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Checkboxes field
     </dt>
@@ -873,7 +882,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Arabian, Patomine, Shetland
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Month year field
     </dt>
@@ -881,7 +890,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       January 2001
     </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       Autocomplete field
     </dt>
@@ -896,6 +905,9 @@ exports[`Submission routes GET / should show view submission page 1`] = `
     <dd class="govuk-summary-list__value">
       466777, 481411
     </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/c3c34170-3063-49bb-b66c-436e5d3e0158">Review map<span class="govuk-visually-hidden"> Review map</span></a>
+    </dd>
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
@@ -903,6 +915,9 @@ exports[`Submission routes GET / should show view submission page 1`] = `
     </dt>
     <dd class="govuk-summary-list__value">
       54.3971307, -3.3722924
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/43a8959c-7255-4174-91d5-6bf03980aefe">Review map<span class="govuk-visually-hidden"> Review map</span></a>
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -912,8 +927,11 @@ exports[`Submission routes GET / should show view submission page 1`] = `
     <dd class="govuk-summary-list__value">
       NY 77436 20124
     </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/c1cc4b5e-f493-4d9b-9f86-eb6754329634">Review map<span class="govuk-visually-hidden"> Review map</span></a>
+    </dd>
   </div>
-  <div class="govuk-summary-list__row">
+  <div class="govuk-summary-list__row govuk-summary-list__row--no-actions">
     <dt class="govuk-summary-list__key">
       National Grid field number field
     </dt>
