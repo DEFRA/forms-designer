@@ -316,7 +316,8 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Easting Northing field
     </dt>
     <dd class="govuk-summary-list__value">
-      466777, 481411
+      Easting: 466777
+Northing: 481411
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/c3c34170-3063-49bb-b66c-436e5d3e0158">Review map<span class="govuk-visually-hidden"> Review map</span></a>
@@ -327,7 +328,8 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Latitude longitude field
     </dt>
     <dd class="govuk-summary-list__value">
-      54.3971307, -3.3722924
+      Latitude: 54.3971307
+Longitude: -3.3722924
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/43a8959c-7255-4174-91d5-6bf03980aefe">Review map<span class="govuk-visually-hidden"> Review map</span></a>
@@ -903,7 +905,8 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Easting Northing field
     </dt>
     <dd class="govuk-summary-list__value">
-      466777, 481411
+      Easting: 466777
+Northing: 481411
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/c3c34170-3063-49bb-b66c-436e5d3e0158">Review map<span class="govuk-visually-hidden"> Review map</span></a>
@@ -914,7 +917,8 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Latitude longitude field
     </dt>
     <dd class="govuk-summary-list__value">
-      54.3971307, -3.3722924
+      Latitude: 54.3971307
+Longitude: -3.3722924
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="/submission/RWU-DPB-HZE/map-review/7dcdd33a-4c30-4548-83bb-edc11731107c/43a8959c-7255-4174-91d5-6bf03980aefe">Review map<span class="govuk-visually-hidden"> Review map</span></a>
