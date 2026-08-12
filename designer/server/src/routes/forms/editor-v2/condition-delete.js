@@ -2,7 +2,6 @@ import { FormDefinitionError, Scopes } from '@defra/forms-model'
 import { StatusCodes } from 'http-status-codes'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
-import { buildSimpleErrorList } from '~/src/common/helpers/build-error-details.js'
 import { findConditionReferences } from '~/src/lib/condition-references.js'
 import { deleteCondition } from '~/src/lib/editor.js'
 import { isInvalidFormErrorType } from '~/src/lib/error-boom-helper.js'
@@ -65,24 +64,34 @@ export default [
 
       try {
         const definition = await forms.getDraftFormDefinition(formId, token)
-        const { paymentFields } = findConditionReferences(
-          definition,
-          conditionId
-        )
+        const references = findConditionReferences(definition, conditionId)
 
-        if (paymentFields.length > 0) {
-          const errorList = buildSimpleErrorList([
-            'This condition cannot be deleted because it is used for a conditional payment amount. Remove the conditional payment amount that uses it before deleting it.'
-          ])
-
-          return h.view(CONFIRMATION_PAGE_VIEW, {
-            ...viewModel.deleteConditionConfirmationPageViewModel(
+        // The confirmation page offers no delete button in this state, so this
+        // only catches a definition that changed since it was rendered
+        if (viewModel.getDeletionBlockedMessage(references)) {
+          return h.view(
+            CONFIRMATION_PAGE_VIEW,
+            viewModel.deleteConditionConfirmationPageViewModel(
               metadata,
               definition,
               conditionId
-            ),
-            errorList
-          })
+            )
+          )
+        }
+
+        const { outputs } = references
+
+        // The author was warned these email actions go with the condition. They
+        // are removed first because the definition schema rejects an output
+        // pointing at a condition that no longer exists.
+        if (outputs.length > 0) {
+          const removedIndexes = new Set(outputs.map((output) => output.index))
+
+          definition.outputs = (definition.outputs ?? []).filter(
+            (_output, index) => !removedIndexes.has(index)
+          )
+
+          await forms.updateDraftFormDefinition(formId, definition, token)
         }
 
         await deleteCondition(formId, token, conditionId)
@@ -99,20 +108,19 @@ export default [
             FormDefinitionError.RefConditionConditionId
           )
         ) {
+          // Race condition backstop - if the form was updated in forms-manager whilst this
+          // function was running.
           const definition = await forms.getDraftFormDefinition(formId, token)
 
-          const errorList = buildSimpleErrorList([
-            'This condition cannot be deleted because it is referenced by other conditions. Remove all references to this condition before deleting it.'
-          ])
-
-          return h.view(CONFIRMATION_PAGE_VIEW, {
-            ...viewModel.deleteConditionConfirmationPageViewModel(
+          return h.view(
+            CONFIRMATION_PAGE_VIEW,
+            viewModel.deleteConditionConfirmationPageViewModel(
               metadata,
               definition,
-              conditionId
-            ),
-            errorList
-          })
+              conditionId,
+              viewModel.CONDITION_REFERENCE_MESSAGE
+            )
+          )
         }
 
         throw err

@@ -332,7 +332,7 @@ function buildRightSideMenu(slug) {
     id: 'pages-menu',
     alignMenu: 'right',
     button: {
-      text: 'Manage form',
+      text: 'Tools',
       classes: BUTTON_SECONDARY_CLASS
     },
     items: [
