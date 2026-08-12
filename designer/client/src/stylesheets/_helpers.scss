@@ -33,3 +33,7 @@
     display: initial;
   }
 }
+
+.js-enabled .hide-when-js-enabled {
+  display: none;
+}

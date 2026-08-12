@@ -5,6 +5,7 @@
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
 {%- from "moj/components/filter/macro.njk" import mojFilter -%}
 {%- from "govuk/components/checkboxes/macro.njk" import govukCheckboxes -%}
+{%- from "govuk/components/radios/macro.njk" import govukRadios -%}
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
@@ -44,6 +45,11 @@
       </div>
     </nav>
   </div>
+
+  <form action="#" method="post">
+    {{ govukRadios(model.formActivityToggle) }}
+    <input type="hidden" name="restoreFilter" value="Y" />
+  </form>
 
   {{ govukTabs({
     items: [

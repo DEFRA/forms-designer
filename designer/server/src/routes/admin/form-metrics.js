@@ -21,16 +21,22 @@ import {
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
 
-const ROUTE_FULL_PATH = '/admin/form-metrics/{tab?}'
+const ROUTE_FULL_PATH = '/admin/form-metrics/{tab}/{activityType?}'
 const ROUTE_BASE_PATH = '/admin/form-metrics'
 const ROUTE_ADMIN_INDEX = '/admin/index'
 const ROUTE_DRILLDOWN_PATH =
-  '/admin/form-metrics/drilldown/{period}/{metricName}'
+  '/admin/form-metrics/drilldown/{period}/{metricName}/{language?}'
 
 const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
 
 const SHOW_FILTER = 'showFilter'
+
+const COMPONENT_USAGE_TAB = 'component-usage'
+const FORM_ACTIVITY_TAB = 'form-activity'
+
+export const FORM_ACTIVITY_OPTION_ALL = 'all'
+export const FORM_ACTIVITY_OPTION_WELSH = 'cy'
 
 const filterAndSortSchema = Joi.object({
   // Sorting
@@ -44,14 +50,19 @@ const filterAndSortSchema = Joi.object({
     .optional(),
   org: Joi.array().items(Joi.string()).single().optional(),
   action: Joi.string().valid('clear').optional().allow(''),
-  showFilter: Joi.string().valid('Y', 'N').allow('')
+  showFilter: Joi.string().valid('Y', 'N').allow(''),
+  activityType: Joi.string()
+    .valid(FORM_ACTIVITY_OPTION_ALL, FORM_ACTIVITY_OPTION_WELSH)
+    .optional(),
+  restoreFilter: Joi.string().valid('Y').optional()
 })
 
 const drilldownParamSchema = Joi.object({
   period: Joi.string().required(),
   metricName: Joi.string()
     .valid(...Object.values(FormMetricName))
-    .required()
+    .required(),
+  language: Joi.string().optional()
 })
 
 /**
@@ -85,28 +96,64 @@ export function buildQueryFromPayload(payload) {
   return params.size ? `?${params.toString()}` : ''
 }
 
+/**
+ * @param {string} activityType
+ */
+function getSessionKey(activityType) {
+  return `metrics-filter-${activityType}`
+}
+
 export default [
   /**
-   * @satisfies {ServerRoute< { Params: { tab?: string }, Query: FilterAndSortCriteria } >}
+   * @satisfies {ServerRoute< { Params: { tab: string, activityType?: string }, Query: FilterAndSortCriteria } >}
    */
   ({
     method: 'GET',
     path: ROUTE_FULL_PATH,
     async handler(request, h) {
       const { params, query } = request
-      const { tab } = params
+      const { tab, activityType } = params
+
+      if (!activityType) {
+        return h.redirect(`${ROUTE_BASE_PATH}/${tab}/all`)
+      }
+
+      if (tab === FORM_ACTIVITY_TAB) {
+        if (query.restoreFilter) {
+          const savedFilter =
+            /** @type {string} */ (
+              request.yar.get(getSessionKey(activityType))
+            ) ?? ''
+          return h.redirect(
+            `${ROUTE_BASE_PATH}/${tab}/${activityType}${savedFilter}`
+          )
+        }
+
+        // Save filter in case user switches tabs and returns
+        request.yar.set(getSessionKey(activityType), request.url.search)
+      }
+
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
-      const isComponentUsage = tab === 'component-usage'
+      const filter =
+        activityType && activityType !== 'all'
+          ? {
+              ...query,
+              language: activityType
+            }
+          : query
 
-      const metrics = await getMetrics(query)
-      const model = isComponentUsage
-        ? metricsComponentUsageViewModel(metrics)
-        : metricsFormActivityViewModel(metrics, query)
+      const metrics = await getMetrics(filter)
 
-      const viewName = isComponentUsage
-        ? 'admin/form-metrics-component-usage'
-        : 'admin/form-metrics-form-activity'
+      let model
+      let viewName
+      if (tab === COMPONENT_USAGE_TAB) {
+        model = metricsComponentUsageViewModel(metrics)
+        viewName = 'admin/form-metrics-component-usage'
+      } else {
+        model = metricsFormActivityViewModel(metrics, filter, activityType)
+        viewName = 'admin/form-metrics-form-activity'
+      }
 
       return h.view(viewName, {
         pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
@@ -131,15 +178,36 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute< { Payload: FilterAndSortCriteria } >}
+   * @satisfies {ServerRoute< { Payload: FilterAndSortCriteria, Params: { tab: string, activityType?: string } } >}
    */
   ({
     method: 'POST',
-    path: ROUTE_BASE_PATH,
+    path: `${ROUTE_BASE_PATH}/{tab}/{activityType?}`,
     handler(request, h) {
-      const { payload } = request
+      const { payload, params } = request
+      const { activityType, tab } = params
+
+      // User has switched views using the radio options
+      // Restore their previous filter criteria
+      if (payload.restoreFilter) {
+        // Toggle activityType
+        const toggled =
+          activityType === FORM_ACTIVITY_OPTION_ALL
+            ? FORM_ACTIVITY_OPTION_WELSH
+            : FORM_ACTIVITY_OPTION_ALL
+        const savedFilter =
+          /** @type {string} */ (request.yar.get(getSessionKey(toggled))) ?? ''
+        return h.redirect(`${ROUTE_BASE_PATH}/${tab}/${toggled}${savedFilter}`)
+      }
+
       const queryStr = buildQueryFromPayload(payload)
-      return h.redirect(`${ROUTE_BASE_PATH}${queryStr}`)
+      const resolvedActivityType = payload.activityType ?? activityType
+      const subPath =
+        tab === FORM_ACTIVITY_TAB &&
+        resolvedActivityType !== FORM_ACTIVITY_OPTION_ALL
+          ? `/${resolvedActivityType}`
+          : `/${FORM_ACTIVITY_OPTION_ALL}`
+      return h.redirect(`${ROUTE_BASE_PATH}/${tab}${subPath}${queryStr}`)
     },
     options: {
       auth: {
@@ -209,9 +277,12 @@ export default [
       const { auth } = request
 
       try {
-        // Live metrics only
+        // Live metrics only - for all forms
         const metrics = await getMetrics()
-        const buffer = getMetricsAsExcel(metrics)
+        // Live metrics only - for Elsh forms
+        const metricsWelsh = await getMetrics({ language: 'cy' })
+
+        const buffer = getMetricsAsExcel(metrics, metricsWelsh)
 
         const now = new Date()
         const filename = `form-metrics-${format(now, 'yyyy-MM-dd')}.xlsx`
@@ -243,28 +314,33 @@ export default [
   }),
 
   /**
-   * @satisfies {ServerRoute< { Params: { period: string, metricName: FormMetricName } } >}
+   * @satisfies {ServerRoute< { Params: { period: string, metricName: FormMetricName, language?: string } } >}
    */
   ({
     method: 'GET',
     path: ROUTE_DRILLDOWN_PATH,
     async handler(request, h) {
       const { params } = request
-      const { period, metricName } = params
+      const { language, period, metricName } = params
       const navigation = buildAdminNavigation(ADMIN_TOOLS)
 
       const periodName = getPeriodNameFromSlug(period)
 
       // Get tile metrics, for period ranges and form details lookups
-      const tileMetrics = await getMetrics()
+      const tileMetrics = await getMetrics(language ? { language } : {})
 
-      const drilldownMetrics = await getDrilldownMetrics(periodName, metricName)
+      const drilldownMetrics = await getDrilldownMetrics(
+        periodName,
+        metricName,
+        language
+      )
 
       const model = metricsDrilldownViewModel(
         tileMetrics,
         drilldownMetrics,
         period,
-        metricName
+        metricName,
+        language
       )
 
       return h.view('admin/form-metrics-drilldown', {
@@ -272,7 +348,7 @@ export default [
         pageHeading: { text: METRICS_TITLE },
         backLink: {
           text: 'Back to overview metrics',
-          href: `/admin/form-metrics/#${period}`
+          href: `/admin/form-metrics/form-activity/${language ?? FORM_ACTIVITY_OPTION_ALL}?restoreFilter=Y#${period}`
         },
         navigation,
         model

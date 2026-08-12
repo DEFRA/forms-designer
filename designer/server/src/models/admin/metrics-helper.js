@@ -16,6 +16,8 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @property {string} [searchText] - text to look for
  * @property {string[]} [status] - allowable statuses
  * @property {string[]} [org] - list of organisations
+ * @property {string} [language] - only process records fro the specified language
+ * @property {string} [activityType] - radio option for whether to show all forms, or forms with a Welsh translation
  */
 
 /**
@@ -25,7 +27,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  */
 
 /**
- * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string }} FilterAndSortCriteria
+ * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string, restoreFilter?: string }} FilterAndSortCriteria
  */
 
 /**
@@ -399,6 +401,7 @@ export function oneDecimalPlace(num) {
  * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {FormMetricName} metricName
  * @param {PeriodName} periodNames
+ * @param { string | undefined } language
  * @param { string | undefined } [units]
  */
 export function collateSpecificTileCounts(
@@ -406,6 +409,7 @@ export function collateSpecificTileCounts(
   prevPeriod,
   metricName,
   periodNames,
+  language,
   units
 ) {
   const currPeriodCount =
@@ -437,6 +441,8 @@ export function collateSpecificTileCounts(
 
   const nounCombined = noun ? `${noun}${nounPlural}` : ''
 
+  const languageParam = language ? `/${language}` : ''
+
   return {
     ...counts,
     ariaLabel: buildAriaLabel(
@@ -449,7 +455,7 @@ export function collateSpecificTileCounts(
     drillDown: {
       enabled: drillDown.enabled,
       url: drillDown.enabled
-        ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}`
+        ? `/admin/form-metrics/drilldown/${periodNames.slug}/${metricName}${languageParam}`
         : ''
     },
     classes: ''
@@ -459,7 +465,7 @@ export function collateSpecificTileCounts(
 /**
  * @param {string} title
  * @param {FormMetricName} metricName
- * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: PeriodName }} commonParams
+ * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: PeriodName, language: string | undefined }} commonParams
  * @param {string} [units]
  */
 function createTile(title, metricName, commonParams, units) {
@@ -470,35 +476,41 @@ function createTile(title, metricName, commonParams, units) {
       commonParams.prevPeriod,
       metricName,
       commonParams.periodNames,
+      commonParams.language,
       units
     )
   })
 }
 
 /**
- * @param { Date | undefined } fromDate
- * @param { Date | undefined } toDate
+ * @param {{ fromDate: Date | undefined, toDate: Date | undefined }} dateRange
  * @param {string} title
  * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
  * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
  * @param {PeriodName} periodNames
+ * @param { string | undefined } language
  */
 export function mapOverviewTiles(
-  fromDate,
-  toDate,
+  dateRange,
   title,
   currPeriod,
   prevPeriod,
-  periodNames
+  periodNames,
+  language
 ) {
   const commonParams = {
     currPeriod,
     prevPeriod,
-    periodNames
+    periodNames,
+    language
   }
   return /** @type {FormTilesView} */ ({
-    fromDate: fromDate ? format(fromDate, FULL_DATE_MASK) : undefined,
-    toDate: toDate ? format(toDate, FULL_DATE_MASK) : undefined,
+    fromDate: dateRange.fromDate
+      ? format(dateRange.fromDate, FULL_DATE_MASK)
+      : undefined,
+    toDate: dateRange.toDate
+      ? format(dateRange.toDate, FULL_DATE_MASK)
+      : undefined,
     title,
     tiles: {
       [FormMetricName.NewFormsCreated]: createTile(
@@ -539,37 +551,38 @@ export function mapOverviewTiles(
 /**
  * @param {FormTotalsMetric} totals
  * @param {{ last7Days: PeriodName, last30Days: PeriodName, allTime: PeriodName }} tilePeriodNames
+ * @param { string | undefined } language
  */
-export function mapTotalMetrics(totals, tilePeriodNames) {
+export function mapTotalMetrics(totals, tilePeriodNames, language) {
   const reportMorning = startOfDay(totals.updatedAt)
   const sevenDaysAgo = subDays(reportMorning, 7)
   const thirtyDaysAgo = subDays(reportMorning, 30)
 
   const last7Days = mapOverviewTiles(
-    sevenDaysAgo,
-    reportMorning,
+    { fromDate: sevenDaysAgo, toDate: reportMorning },
     'Last 7 days',
     totals.last7Days,
     totals.prev7Days,
-    tilePeriodNames.last7Days
+    tilePeriodNames.last7Days,
+    language
   )
 
   const last30Days = mapOverviewTiles(
-    thirtyDaysAgo,
-    reportMorning,
+    { fromDate: thirtyDaysAgo, toDate: reportMorning },
     'Last 30 days',
     totals.last30Days,
     totals.prev30Days,
-    tilePeriodNames.last30Days
+    tilePeriodNames.last30Days,
+    language
   )
 
   const allTime = mapOverviewTiles(
-    totals.earliestDate,
-    reportMorning,
+    { fromDate: totals.earliestDate, toDate: reportMorning },
     'All time',
     totals.allTime,
     totals.prevYear,
-    tilePeriodNames.allTime
+    tilePeriodNames.allTime,
+    language
   )
 
   return /** @type {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView }} */ ({

@@ -14,3 +14,7 @@ export enum ApiErrorCode {
   DuplicatePagePathPage = 'DuplicatePagePathPage',
   DuplicatePagePathComponent = 'DuplicatePagePathComponent'
 }
+
+export enum AdditionalLanguagesAllowed {
+  Welsh = 'cy'
+}

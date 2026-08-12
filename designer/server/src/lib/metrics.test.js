@@ -69,7 +69,8 @@ describe('metrics.js', () => {
       )
       const result = await getDrilldownMetrics(
         'last7Days',
-        FormMetricName.NewFormsCreated
+        FormMetricName.NewFormsCreated,
+        undefined
       )
       expect(result).toEqual([])
 

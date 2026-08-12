@@ -53,7 +53,7 @@ describe('Form metrics routes', () => {
 
         const options = {
           method: 'get',
-          url: '/admin/form-metrics',
+          url: '/admin/form-metrics/form-activity/all',
           auth
         }
 
@@ -99,7 +99,7 @@ describe('Form metrics routes', () => {
 
         const options = {
           method: 'get',
-          url: '/admin/form-metrics/component-usage',
+          url: '/admin/form-metrics/component-usage/all',
           auth
         }
 
@@ -182,7 +182,7 @@ describe('Form metrics routes', () => {
       test('should filter and redirect with query', async () => {
         const options = {
           method: 'post',
-          url: '/admin/form-metrics',
+          url: '/admin/form-metrics/form-activity/all',
           auth,
           payload: {
             searchText: 'test search'
@@ -195,7 +195,7 @@ describe('Form metrics routes', () => {
 
         expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
         expect(headers.location).toBe(
-          '/admin/form-metrics?searchText=test+search&showFilter=Y'
+          '/admin/form-metrics/form-activity/all?searchText=test+search&showFilter=Y'
         )
       })
     })

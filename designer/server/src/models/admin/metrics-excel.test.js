@@ -249,8 +249,195 @@ describe('metrics-excel', () => {
           type: FormMetricType.TotalsMetric
         }
       }
+
+      const metricsWelsh = {
+        overview: [
+          {
+            featureMetrics: {
+              questionTypes: {
+                YesNoField: 1,
+                Markdown: 9,
+                TextField: 7,
+                RadiosField: 3,
+                EmailAddressField: 2,
+                TelephoneNumberField: 2,
+                NumberField: 7,
+                MultilineTextField: 7,
+                FileUploadField: 2,
+                DeclarationInCYA: 1
+              },
+              features: {
+                'File upload': 1,
+                'Email confirmation': 1,
+                'Declaration in CYA': 1,
+                'Conditional logic': 1,
+                'Welsh translation': 1
+              },
+              formStructure: {
+                pages: 14,
+                questions: 41,
+                sections: 0,
+                conditions: 2,
+                questionTypes: 10
+              }
+            },
+            summaryMetrics: {
+              name: 'Exporter test ofrm',
+              slug: 'exporter-test-form',
+              organisation: 'Environment Agency',
+              status: 'draft',
+              pages: 14,
+              questionTypes: 9,
+              conditions: 2,
+              sections: 0,
+              features: [
+                'File upload',
+                'Email confirmation',
+                'Declaration in CYA',
+                'Welsh translation'
+              ]
+            },
+            formId: '6a0c7073789bf5cdcc66eaf9',
+            formStatus: 'draft',
+            submissionsCount: 1
+          }
+        ],
+        totals: {
+          last7Days: {
+            NewFormsCreated: {
+              count: 0,
+              details: []
+            },
+            Submissions: {
+              count: 1,
+              details: [
+                {
+                  formId: '6a0c7073789bf5cdcc66eaf9',
+                  metricValue: 1,
+                  createdAt: '2026-05-19T09:54:46.000Z'
+                }
+              ]
+            },
+            FormsFirstPublished: {
+              count: 0,
+              details: []
+            },
+            TimeToPublish: {
+              count: 0
+            },
+            FormsInDraft: {
+              count: 1
+            }
+          },
+          prev7Days: {},
+          last30Days: {
+            Submissions: {
+              count: 1,
+              details: [
+                {
+                  formId: '6a0c7073789bf5cdcc66eaf9',
+                  metricValue: 1,
+                  createdAt: '2026-04-27T09:54:46.000Z'
+                }
+              ]
+            },
+            NewFormsCreated: {
+              count: 0,
+              details: []
+            },
+            FormsFirstPublished: {
+              count: 0,
+              details: []
+            },
+            TimeToPublish: {
+              count: 1
+            },
+            FormsInDraft: {
+              count: 1
+            }
+          },
+          prev30Days: {},
+          lastYear: {
+            Submissions: {
+              count: 0,
+              details: []
+            },
+            NewFormsCreated: {
+              count: 0,
+              details: []
+            },
+            FormsFirstPublished: {
+              count: 0,
+              details: []
+            },
+            TimeToPublish: {
+              count: 0
+            },
+            FormsRePublished: {
+              count: 0,
+              details: []
+            },
+            FormsInDraft: {
+              count: 1
+            }
+          },
+          prevYear: {},
+          allTime: {
+            Submissions: {
+              count: 2,
+              details: [
+                {
+                  formId: '6a0c7073789bf5cdcc66eaf9',
+                  metricValue: 2,
+                  createdAt: '2026-03-11T10:54:46.000Z'
+                }
+              ]
+            },
+            NewFormsCreated: {
+              count: 1,
+              details: [
+                {
+                  formId: '6a0c7073789bf5cdcc66eaf9',
+                  metricValue: 1,
+                  createdAt: '2026-02-24T08:50:24.866Z'
+                }
+              ]
+            },
+            FormsFirstPublished: {
+              count: 0,
+              details: []
+            },
+            TimeToPublish: {
+              count: 0
+            },
+            FormsRePublished: {
+              count: 0,
+              details: []
+            },
+            FormsInDraft: {
+              count: 1
+            }
+          },
+          liveSubmissions: {
+            '6a0c7073789bf5cdcc66eaf9': 2
+          },
+          draftSubmissions: {
+            '6a0c7073789bf5cdcc66eaf9': 1
+          },
+          daysToPublish: {
+            '6a0c7073789bf5cdcc66eaf9': 15
+          },
+          republished: {
+            '6a0c7073789bf5cdcc66eaf9': 1
+          },
+          earliestDate: '2026-02-24T10:54:46.000Z',
+          updatedAt: '2026-05-25T08:54:54.297Z',
+          type: FormMetricType.TotalsMetric
+        }
+      }
+
       // @ts-expect-error - partial mock of data
-      const res = getMetricsAsExcel(metrics)
+      const res = getMetricsAsExcel(metrics, metricsWelsh)
       expect(res.toString('hex')).toEqual(excelSnapshot)
     })
   })

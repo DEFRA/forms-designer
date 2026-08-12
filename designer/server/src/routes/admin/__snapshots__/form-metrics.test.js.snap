@@ -184,7 +184,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-full">
-      <a href="/admin/form-metrics/#last-7-days" class="govuk-back-link govuk-back-link--inverse govuk-!-margin-bottom-0">Back to overview metrics</a>
+      <a href="/admin/form-metrics/form-activity/all?restoreFilter=Y#last-7-days" class="govuk-back-link govuk-back-link--inverse govuk-!-margin-bottom-0">Back to overview metrics</a>
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible back-link-hr">
       </div>
       <div class="govuk-grid-column-two-thirds-from-desktop">
@@ -493,7 +493,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <nav class="app-page-navigation" aria-label="Form activity">
       <div class="app-page-navigation__list">
         <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics">
+          <a class="app-page-navigation__link" href="/admin/form-metrics/form-activity/all?restoreFilter=Y">
             Form activity
           </a>
         </div>
@@ -875,6 +875,33 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
       </div>
     </nav>
   </div>
+
+  <form action="#" method="post">
+    <div class="govuk-form-group">
+  <fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+    Show metrics for
+  </legend>
+  <div class="govuk-radios govuk-radios--inline" data-module="govuk-radios">
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="activityType" name="activityType" type="radio" value="all" checked onchange="this.form.submit()">
+      <label class="govuk-label govuk-radios__label" for="activityType">
+        All forms
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="activityType-2" name="activityType" type="radio" value="cy" onchange="this.form.submit()">
+      <label class="govuk-label govuk-radios__label" for="activityType-2">
+        Forms with a Welsh translation
+      </label>
+    </div>
+    <button type="submit" class="govuk-button hide-when-js-enabled" data-module="govuk-button" data-govuk-button-init="">Submit</button>
+  </div>
+</fieldset>
+</div>
+
+    <input type="hidden" name="restoreFilter" value="Y" />
+  </form>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
   <h2 class="govuk-tabs__title">
