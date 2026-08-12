@@ -100,16 +100,12 @@ function onMapReadyFactory(
  */
 function processGeospatialPreview(preview, index) {
   const mapId = `map_${index}`
-  const geospatialInput = preview.querySelector('.govuk-textarea')
-
-  if (!(geospatialInput instanceof HTMLTextAreaElement)) {
-    throw new Error('Expected a textarea element for geospatial input')
-  }
-
-  const listEl = preview.querySelector(`#list_${index}`)
-  if (!(listEl instanceof HTMLDivElement)) {
-    throw new Error('Expected a div element for feature list')
-  }
+  const geospatialInput = /** @type {HTMLTextAreaElement} */ (
+    preview.querySelector('.govuk-textarea')
+  )
+  const listEl = /** @type {HTMLDivElement} */ (
+    preview.querySelector(`#list_${index}`)
+  )
 
   /**
    * @type {GeoJSON}
