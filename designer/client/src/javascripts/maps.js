@@ -95,7 +95,7 @@ function onMapReadyFactory(
 
 /**
  * Process a geospatial component preview by rendering the map and features, and setting up event listeners
- * @param {Element} preview
+ * @param {HTMLDivElement} preview
  * @param {number} index
  */
 function processGeospatialPreview(preview, index) {
@@ -174,15 +174,20 @@ function processLocationPreview(preview, index) {
     initConfig.plugins = [createDatasetsPlugin({ datasets })]
   }
 
-  createMap(mapId, initConfig, mapsEnvConfig)
+  return createMap(mapId, initConfig, mapsEnvConfig)
 }
 
 /**
  * Processes all geospatial component previews on the page by rendering maps and features, and setting up event listeners
  */
 export function processMapPreview() {
-  const previews = document.querySelectorAll('.app-geospatial-field--preview')
-  previews.forEach(processGeospatialPreview)
+  /**
+   * @type {NodeListOf<HTMLDivElement>} - the geospatial field previews
+   */
+  const geospatialPreviews = document.querySelectorAll(
+    '.app-geospatial-field--preview'
+  )
+  geospatialPreviews.forEach(processGeospatialPreview)
 
   /**
    * @type {NodeListOf<HTMLDivElement>} - the location field previews
@@ -191,6 +196,11 @@ export function processMapPreview() {
     '.app-location-field--preview'
   )
   locationPreviews.forEach(processLocationPreview)
+
+  return {
+    geospatialPreviews,
+    locationPreviews
+  }
 }
 
 processMapPreview()

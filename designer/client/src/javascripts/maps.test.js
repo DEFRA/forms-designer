@@ -149,4 +149,27 @@ describe('Maps Client JS', () => {
       })
     })
   })
+
+  describe('Location components', () => {
+    beforeEach(() => {
+      document.body.innerHTML = `
+        <div class="app-location-field--preview" data-locationtype="eastingnorthingfield" data-maplayers="sssi">
+          <div id="map_0">
+            <div class="app-location-field-inputs" hidden="">
+              <input class="govuk-input" readonly value="337408">
+              <input class="govuk-input" readonly value="552984">
+            </div>
+          </div>
+        </div>
+      `
+    })
+
+    describe('Map preview initialisation', () => {
+      test('processMapPreview initializes without errors when DOM elements are present', () => {
+        const result = processMapPreview()
+        expect(result.geospatialPreviews).toHaveLength(0)
+        expect(result.locationPreviews).toHaveLength(1)
+      })
+    })
+  })
 })
