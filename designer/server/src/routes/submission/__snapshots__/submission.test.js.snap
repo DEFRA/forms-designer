@@ -316,8 +316,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
       Easting Northing field
     </dt>
     <dd class="govuk-summary-list__value">
-      Easting: 466777
-Northing: 481411
+      466777, 481411
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -325,8 +324,7 @@ Northing: 481411
       Latitude longitude field
     </dt>
     <dd class="govuk-summary-list__value">
-      Latitude: 54.3971307
-Longitude: -3.3722924
+      54.3971307, -3.3722924
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -896,8 +894,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
       Easting Northing field
     </dt>
     <dd class="govuk-summary-list__value">
-      Easting: 466777
-Northing: 481411
+      466777, 481411
     </dd>
   </div>
   <div class="govuk-summary-list__row">
@@ -905,8 +902,7 @@ Northing: 481411
       Latitude longitude field
     </dt>
     <dd class="govuk-summary-list__value">
-      Latitude: 54.3971307
-Longitude: -3.3722924
+      54.3971307, -3.3722924
     </dd>
   </div>
   <div class="govuk-summary-list__row">
