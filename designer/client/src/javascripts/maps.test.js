@@ -167,8 +167,8 @@ describe('Maps Client JS', () => {
     describe('Map preview initialisation', () => {
       test('processMapPreview initializes without errors when DOM elements are present', () => {
         const result = processMapPreview()
-        expect(result.geospatialPreviews).toHaveLength(0)
-        expect(result.locationPreviews).toHaveLength(1)
+        expect(result.geospatial.geospatialPreviews).toHaveLength(0)
+        expect(result.location.locationPreviews).toHaveLength(1)
       })
     })
   })

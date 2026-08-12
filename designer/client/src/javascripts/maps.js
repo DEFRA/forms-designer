@@ -103,12 +103,12 @@ function processGeospatialPreview(preview, index) {
   const geospatialInput = preview.querySelector('.govuk-textarea')
 
   if (!(geospatialInput instanceof HTMLTextAreaElement)) {
-    return
+    throw new Error('Expected a textarea element for geospatial input')
   }
 
   const listEl = preview.querySelector(`#list_${index}`)
   if (!(listEl instanceof HTMLDivElement)) {
-    return
+    throw new Error('Expected a div element for feature list')
   }
 
   /**
@@ -135,7 +135,8 @@ function processGeospatialPreview(preview, index) {
     plugins
   }
 
-  const { map } = createMap(mapId, initConfig, mapsEnvConfig)
+  const result = createMap(mapId, initConfig, mapsEnvConfig)
+  const { map } = result
 
   map.on(
     'map:ready',
@@ -151,6 +152,8 @@ function processGeospatialPreview(preview, index) {
       )
     }
   )
+
+  return result
 }
 
 /**
@@ -187,7 +190,13 @@ export function processMapPreview() {
   const geospatialPreviews = document.querySelectorAll(
     '.app-geospatial-field--preview'
   )
-  geospatialPreviews.forEach(processGeospatialPreview)
+  /**
+   * @type {{ map: mapImports.InteractiveMap; interactPlugin: any }[]} - the geospatial field preview results
+   */
+  const geospatialResults = []
+  geospatialPreviews.forEach((preview, index) => {
+    geospatialResults.push(processGeospatialPreview(preview, index))
+  })
 
   /**
    * @type {NodeListOf<HTMLDivElement>} - the location field previews
@@ -195,11 +204,17 @@ export function processMapPreview() {
   const locationPreviews = document.querySelectorAll(
     '.app-location-field--preview'
   )
-  locationPreviews.forEach(processLocationPreview)
+  /**
+   * @type {{ map: mapImports.InteractiveMap; interactPlugin: any }[]} - the location field preview results
+   */
+  const locationResults = []
+  locationPreviews.forEach((preview, index) => {
+    locationResults.push(processLocationPreview(preview, index))
+  })
 
   return {
-    geospatialPreviews,
-    locationPreviews
+    geospatial: { geospatialPreviews, geospatialResults },
+    location: { locationPreviews, locationResults }
   }
 }
 
