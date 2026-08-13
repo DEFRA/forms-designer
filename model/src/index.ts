@@ -32,6 +32,7 @@ export * from '~/src/utils/markdown.js'
 export * from '~/src/form/form-audit/index.js'
 export * from '~/src/form/form-audit/enums.js'
 export * from '~/src/form/form-audit/consolidation.js'
+export * from '~/src/form/form-audit/output-changes.js'
 
 export type * from '~/src/common/types.js'
 export type * from '~/src/common/pagination/types.js'

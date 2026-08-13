@@ -5,6 +5,7 @@ import {
   type AuditEventMessageType,
   type FormDefinitionRequestType
 } from '~/src/form/form-audit/enums.js'
+import { type Output } from '~/src/form/form-definition/types.js'
 import { type FormMetadataContact } from '~/src/form/form-metadata/types.js'
 
 export interface FormMessageDataBase {
@@ -165,9 +166,48 @@ export interface FormDefinitionS3Meta {
   s3Key: string
 }
 
+/**
+ * What a single form update did to the form's submission email targets (the
+ * `outputs` on the definition, surfaced to authors as "email actions").
+ *
+ * A `REPLACE_DRAFT` update carries the whole definition, so the audit message
+ * would otherwise say nothing about which email address was added, amended or
+ * removed. Collections that are empty are omitted, and the object as a whole is
+ * absent from an update that left the outputs untouched.
+ *
+ * Validated by `formOutputChangesMessageData`.
+ */
+export interface FormOutputChanges {
+  /**
+   * Email targets the update introduced
+   */
+  added?: Output[]
+
+  /**
+   * Email targets the update amended, with the values either side of the change
+   */
+  updated?: ChangesMessageData<Output>[]
+
+  /**
+   * Email targets the update took away - either deleted directly by the author,
+   * or removed as a consequence of deleting the condition they depended on
+   */
+  removed?: Output[]
+}
+
 export interface FormUpdatedMessageData extends FormMessageDataBase {
   requestType: FormDefinitionRequestType
   s3Meta?: FormDefinitionS3Meta
+
+  /**
+   * What this update did to the form's submission email targets. Absent when
+   * the update did not touch them.
+   *
+   * A `DELETE_CONDITION` update reports the outputs that went with the
+   * condition, so the removal is recorded against the action that caused it
+   * rather than being left to be inferred from a neighbouring event.
+   */
+  outputChanges?: FormOutputChanges
 }
 
 export type FormMessageChangesData =

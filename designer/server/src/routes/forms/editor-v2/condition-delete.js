@@ -79,21 +79,8 @@ export default [
           )
         }
 
-        const { outputs } = references
-
-        // The author was warned these email actions go with the condition. They
-        // are removed first because the definition schema rejects an output
-        // pointing at a condition that no longer exists.
-        if (outputs.length > 0) {
-          const removedIndexes = new Set(outputs.map((output) => output.index))
-
-          definition.outputs = (definition.outputs ?? []).filter(
-            (_output, index) => !removedIndexes.has(index)
-          )
-
-          await forms.updateDraftFormDefinition(formId, definition, token)
-        }
-
+        // The author was warned that any email actions using the condition are
+        // deleted with it. forms-manager removes them as part of the same request.
         await deleteCondition(formId, token, conditionId)
 
         yar.flash(sessionNames.successNotification, CHANGES_SAVED_SUCCESSFULLY)

@@ -300,7 +300,7 @@ describe('Editor v2 condition delete routes', () => {
       )
     })
 
-    test('should delete the email actions that use the condition before deleting it', async () => {
+    test('should leave the email actions that use the condition to forms-manager', async () => {
       const definitionWithOutputs = buildDeletableDefinition({
         outputs: [
           {
@@ -327,9 +327,6 @@ describe('Editor v2 condition delete routes', () => {
       jest
         .mocked(forms.getDraftFormDefinition)
         .mockResolvedValueOnce(definitionWithOutputs)
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWithOutputs)
       jest.mocked(editor.deleteCondition).mockResolvedValueOnce()
 
       const options = {
@@ -341,50 +338,15 @@ describe('Editor v2 condition delete routes', () => {
       const { response } = await renderResponse(server, options)
 
       expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledWith(
-        testFormMetadata.id,
-        expect.objectContaining({
-          outputs: [
-            {
-              emailAddress: 'unconditional@example.com',
-              audience: 'human',
-              version: '2'
-            },
-            {
-              emailAddress: 'other@example.com',
-              audience: 'machine',
-              version: '1',
-              condition: 'cond2'
-            }
-          ]
-        }),
-        auth.credentials.token
-      )
+
+      // The cascade happens in the same transaction as the delete, so a partly
+      // applied definition can never be saved from here
+      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
       expect(editor.deleteCondition).toHaveBeenCalledWith(
         testFormMetadata.id,
         auth.credentials.token,
         'cond1'
       )
-    })
-
-    test('should not save the definition when no email action uses the condition', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(testDefinition)
-      jest.mocked(editor.deleteCondition).mockResolvedValueOnce()
-
-      const options = {
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/condition/cond2/delete',
-        auth
-      }
-
-      const { response } = await renderResponse(server, options)
-
-      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
-      expect(editor.deleteCondition).toHaveBeenCalled()
     })
 
     test('blocks deletion when the condition is referenced by a PaymentField', async () => {

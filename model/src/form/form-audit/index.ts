@@ -28,6 +28,7 @@ import {
   type FormOfflineUpdatedMessageData,
   type FormOrganisationChanges,
   type FormOrganisationUpdatedMessageData,
+  type FormOutputChanges,
   type FormPrivacyNoticeChanges,
   type FormPrivacyNoticeUpdatedMessageData,
   type FormSecretBaseMessageData,
@@ -54,6 +55,7 @@ import {
   type FormUploadedMessageData,
   type FormsBackupRequestedMessageData
 } from '~/src/form/form-audit/types.js'
+import { type Output } from '~/src/form/form-definition/types.js'
 import { emailAddressNoUnicodeSchema } from '~/src/form/form-editor/index.js'
 import {
   contactSchema,
@@ -102,12 +104,62 @@ export const formDefinitionS3Meta = Joi.object<FormDefinitionS3Meta>()
   })
   .description('Schema for form data S3 object in message')
 
+/**
+ * Stands apart from the definition's own output schema, which resolves a
+ * condition against the sibling `conditions` array - a lookup that has no
+ * meaning on an audit message carrying the output on its own.
+ */
+export const formOutputMessageData = Joi.object<Output>()
+  .keys({
+    emailAddress: emailAddressNoUnicodeSchema
+      .required()
+      .description('Email address the submission is sent to'),
+    audience: Joi.string()
+      .trim()
+      .valid('human', 'machine')
+      .required()
+      .description(
+        'Whether the submission is sent human readable or machine processable'
+      ),
+    version: Joi.string()
+      .trim()
+      .required()
+      .description('Version identifier of the output format'),
+    condition: Joi.string()
+      .trim()
+      .allow('')
+      .optional()
+      .description(
+        'Id of the condition determining whether the submission is sent to this address'
+      )
+  })
+  .description('A submission email target as recorded on an audit event')
+
+export const formOutputChangesMessageData = Joi.object<FormOutputChanges>()
+  .keys({
+    added: Joi.array().items(formOutputMessageData).optional(),
+    updated: Joi.array()
+      .items(
+        Joi.object<ChangesMessageData<Output>>().keys({
+          previous: formOutputMessageData.required(),
+          new: formOutputMessageData.required()
+        })
+      )
+      .optional(),
+    removed: Joi.array().items(formOutputMessageData).optional()
+  })
+  .or('added', 'updated', 'removed')
+  .description(
+    "Changes an update made to the form's submission email targets (outputs)"
+  )
+
 export const formUpdatedMessageData = formMessageDataBase
   .append<FormUpdatedMessageData>({
     requestType: Joi.string()
       .valid(...Object.values(FormDefinitionRequestType))
       .required(),
-    s3Meta: formDefinitionS3Meta.optional()
+    s3Meta: formDefinitionS3Meta.optional(),
+    outputChanges: formOutputChangesMessageData.optional()
   })
   .required()
 
