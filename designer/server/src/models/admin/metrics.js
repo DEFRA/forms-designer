@@ -117,6 +117,7 @@ export function metricsFormActivityViewModel(
   const rows = mapOverviewMetrics(metrics.overview)
 
   const formActivityToggle = getFormActivityToggle(activityType)
+
   return /** @type {FormActivityModel} */ ({
     overviewMetrics: mapTotalMetrics(
       metrics.totals,

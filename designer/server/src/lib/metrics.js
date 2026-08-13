@@ -7,8 +7,7 @@ const metricsEndpoint = new URL('/report/', config.auditUrl)
 export const MetricsFilterFields = {
   SearchText: 'searchText',
   Status: 'status',
-  Org: 'org',
-  Features: 'features'
+  Org: 'org'
 }
 
 /**
