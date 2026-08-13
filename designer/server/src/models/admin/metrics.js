@@ -56,27 +56,10 @@ const FORM_NOT_FOUND = {
 }
 
 /**
- * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
- * @param {FilterAndSortCriteria} filterAndSort
  * @param { string | undefined } activityType
  */
-export function metricsFormActivityViewModel(
-  metrics,
-  filterAndSort,
-  activityType
-) {
-  const organisationMap = /** @type {Map<string, number>} */ (new Map())
-  organisations.forEach((org) => {
-    organisationMap.set(org, 0)
-  })
-  metrics.overview.forEach((row) => {
-    const org = /** @type {string} */ (row.summaryMetrics.organisation)
-    organisationMap.set(org, (organisationMap.get(org) ?? 0) + 1)
-  })
-
-  const rows = mapOverviewMetrics(metrics.overview)
-
-  const formActivityToggle = {
+function getFormActivityToggle(activityType) {
+  return {
     name: 'activityType',
     fieldset: {
       legend: {
@@ -110,7 +93,30 @@ export function metricsFormActivityViewModel(
       }
     ]
   }
+}
 
+/**
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {FilterAndSortCriteria} filterAndSort
+ * @param { string | undefined } activityType
+ */
+export function metricsFormActivityViewModel(
+  metrics,
+  filterAndSort,
+  activityType
+) {
+  const organisationMap = /** @type {Map<string, number>} */ (new Map())
+  organisations.forEach((org) => {
+    organisationMap.set(org, 0)
+  })
+  metrics.overview.forEach((row) => {
+    const org = /** @type {string} */ (row.summaryMetrics.organisation)
+    organisationMap.set(org, (organisationMap.get(org) ?? 0) + 1)
+  })
+
+  const rows = mapOverviewMetrics(metrics.overview)
+
+  const formActivityToggle = getFormActivityToggle(activityType)
   return /** @type {FormActivityModel} */ ({
     overviewMetrics: mapTotalMetrics(
       metrics.totals,
