@@ -42,13 +42,14 @@ describe('metrics.js', () => {
         body: { overview: [] }
       })
       const expectedUrl = new URL(
-        '/report/?searchText=some+search+text&status=draft&status=live&org=Org1&org=Org2',
+        '/report/?searchText=some+search+text&status=draft&status=live&org=Org1&org=Org2&language=cy',
         auditEndpoint
       )
       const result = await getMetrics({
         searchText: 'some search text',
         status: ['draft', 'live'],
-        org: ['Org1', 'Org2']
+        org: ['Org1', 'Org2'],
+        language: 'cy'
       })
       expect(result.overview).toEqual([])
 
