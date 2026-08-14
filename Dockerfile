@@ -71,7 +71,7 @@ COPY --from=productionBuild --chown=node:node /home/node/app/designer/server/dis
 RUN touch ./designer/precompile-govuk-components.js
 
 
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --allow-remote=root
 
 ARG PORT
 ENV PORT ${PORT}
