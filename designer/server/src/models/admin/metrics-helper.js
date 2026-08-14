@@ -16,7 +16,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @property {string} [searchText] - text to look for
  * @property {string[]} [status] - allowable statuses
  * @property {string[]} [org] - list of organisations
- * @property {string} [language] - only process records fro the specified language
+ * @property {string} [language] - only process records for the specified language
  * @property {string} [activityType] - radio option for whether to show all forms, or forms with a Welsh translation
  */
 

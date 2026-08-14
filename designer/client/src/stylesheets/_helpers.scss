@@ -34,6 +34,9 @@
   }
 }
 
-.js-enabled .hide-when-js-enabled {
-  display: none;
+.js-enabled {
+  .js-hidden {
+    display: none;
+    visibility: hidden;
+  }
 }

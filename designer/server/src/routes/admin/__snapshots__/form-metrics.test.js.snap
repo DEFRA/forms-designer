@@ -895,7 +895,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         Forms with a Welsh translation
       </label>
     </div>
-    <button type="submit" class="govuk-button hide-when-js-enabled" data-module="govuk-button" data-govuk-button-init="">Submit</button>
+    <button type="submit" class="govuk-button js-hidden" data-module="govuk-button" data-govuk-button-init="">Submit</button>
   </div>
 </fieldset>
 </div>

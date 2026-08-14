@@ -71,7 +71,7 @@ function getFormActivityToggle(activityType) {
     classes: 'govuk-radios--inline',
     formGroup: {
       afterInputs: {
-        html: '<button type="submit" class="govuk-button hide-when-js-enabled" data-module="govuk-button" data-govuk-button-init="">Submit</button>'
+        html: '<button type="submit" class="govuk-button js-hidden" data-module="govuk-button" data-govuk-button-init="">Submit</button>'
       }
     },
     items: [

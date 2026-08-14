@@ -279,7 +279,7 @@ export default [
       try {
         // Live metrics only - for all forms
         const metrics = await getMetrics()
-        // Live metrics only - for Elsh forms
+        // Live metrics only - for Welsh forms
         const metricsWelsh = await getMetrics({ language: 'cy' })
 
         const buffer = getMetricsAsExcel(metrics, metricsWelsh)
