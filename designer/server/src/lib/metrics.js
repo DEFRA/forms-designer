@@ -41,6 +41,10 @@ export async function getMetrics(filter = {}) {
     })
   }
 
+  if (filter.language) {
+    requestUrl.searchParams.set('language', filter.language)
+  }
+
   const { body } = await getJsonByType(requestUrl)
 
   return body
@@ -50,14 +54,20 @@ export async function getMetrics(filter = {}) {
  * Get drilldown metrics (details within a tile)
  * @param {string} period
  * @param {FormMetricName} metricName
+ * @param { string | undefined } language
  */
-export async function getDrilldownMetrics(period, metricName) {
+export async function getDrilldownMetrics(period, metricName, language) {
   const getJsonByType =
     /** @type {typeof getJson<{ drilldownRows: FormDrilldownMetric[] }>} */ (
       getJson
     )
 
-  const requestUrl = new URL(`${period}/${metricName}`, metricsEndpoint)
+  const languageParam = language ? `/${language}` : ''
+
+  const requestUrl = new URL(
+    `${period}/${metricName}${languageParam}`,
+    metricsEndpoint
+  )
 
   const { body } = await getJsonByType(requestUrl)
 

@@ -32,4 +32,9 @@
   .js-show {
     display: initial;
   }
+
+  .js-hidden {
+    display: none;
+    visibility: hidden;
+  }
 }

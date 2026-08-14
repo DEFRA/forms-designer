@@ -26,6 +26,7 @@ export interface FormTotalsMetric {
   draftSubmissions?: Record<string, number>
   daysToPublish?: Record<string, number>
   republished?: Record<string, number>
+  language?: string
   updatedAt: Date
   earliestDate: Date
 }
@@ -38,6 +39,7 @@ export interface FormOverviewMetric {
   featureMetrics: Record<string, Map<string, number>>
   submissionsCount: number
   updatedAt: Date
+  language?: string
 }
 
 export interface FormTimelineMetric {
@@ -45,6 +47,7 @@ export interface FormTimelineMetric {
   formId: string
   formStatus: FormStatus
   metricName: FormMetricName
+  language?: string
   metricValue: number
   createdAt: Date
 }
@@ -56,6 +59,7 @@ export interface FormDrilldownMetric {
   metricValue: number
   periodName: string
   createdAt: Date
+  language?: string
 }
 
 export type FormMetric =

@@ -98,7 +98,7 @@ export default [
 
       const formId = metadata.id
 
-      const metricsModel = await getMetricTilesForForm(formId)
+      const metricsModel = await getMetricTilesForForm(formId, undefined)
 
       const errorList = generateErrorList(metadata)
 
@@ -211,12 +211,17 @@ export default [
 
 /**
  * @param {string} formId
+ * @param { string | undefined } language
  */
-async function getMetricTilesForForm(formId) {
+async function getMetricTilesForForm(formId, language) {
   const classes =
     'govuk-grid-column-one-third govuk-grid-column-one-third-from-tablet govuk-grid-column-one-third-from-desktop'
   const metrics = await getMetricsForForm(formId)
-  const metricsModel = mapTotalMetrics(metrics.totals, tilePeriodNames)
+  const metricsModel = mapTotalMetrics(
+    metrics.totals,
+    tilePeriodNames,
+    language
+  )
 
   // Override submissions tiles titling/styling
   const submissionsTiles = {
