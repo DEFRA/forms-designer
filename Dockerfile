@@ -25,9 +25,8 @@ COPY --chown=node:node ./model/package.json ./model/
 
 RUN mkdir -p ./designer/client/src/assets/nunjucks
 
-# Temporary fix to allow installation of xlsx package
-RUN npm config set allow-remote-fetch true
-RUN npm ci
+# Workaround to allow installation of xlsx package
+RUN npm ci --allow-remote=root
 
 COPY --chown=node:node ./ ./
 
