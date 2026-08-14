@@ -351,12 +351,11 @@ function buildRightSideMenu(slug) {
       {
         text: 'Download this form',
         href: `/library/${slug}/editor-v2/download`
+      },
+      {
+        text: 'Welsh translation',
+        href: editorv2Path(slug, 'welsh')
       }
-      // Leave uncommented - until we want to go-live with Welsh translations
-      // {
-      //   text: 'Welsh translation',
-      //   href: editorv2Path(slug, 'welsh')
-      // }
     ]
   }
 }

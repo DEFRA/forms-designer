@@ -346,6 +346,13 @@ describe('Submission routes', () => {
                 'http://localhost:3000/file-download/639c5495-add8-4df5-b94c-de9088688a3f'
             }
           ]
+        },
+        payment: {
+          paymentId: 'v0l2k3j2b4vu35at84s685666i',
+          reference: 'RWU-DPB-HZE',
+          amount: 5,
+          description: 'Licence',
+          createdAt: new Date('2026-07-24T11:55:06.031Z')
         }
       },
       result: {
@@ -710,6 +717,25 @@ describe('Submission routes', () => {
           id: '2cb5d8b2-ec52-4d59-ad8c-88b483a095e5'
         },
         {
+          title: '',
+          path: '/payment-required',
+          components: [
+            {
+              type: ComponentType.PaymentField,
+              title: 'Payment required',
+              name: 'MOfzGz',
+              options: {
+                required: true,
+                amount: 5,
+                description: 'Licence'
+              },
+              id: 'fbb71485-a092-4c04-bd73-112b96cb3cfa'
+            }
+          ],
+          next: [],
+          id: '3185b5a6-d9c1-4885-bc8d-4f111b342fff'
+        },
+        {
           title: 'Check your answers',
           controller: ControllerType.Summary,
           path: '/summary',
@@ -920,6 +946,41 @@ describe('Submission routes', () => {
       expect(response.result).toMatchSnapshot()
     })
 
+    test('should not show payment section when missing', async () => {
+      const record = {
+        ...submissionRecord,
+        data: {
+          ...submissionRecord.data,
+          payment: undefined
+        }
+      }
+
+      jest
+        .mocked(getSubmissionRecord)
+        .mockResolvedValueOnce(/** @type {any} */ (record))
+      jest
+        .mocked(getFormDefinitionVersion)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url: reviewUrl,
+        auth: authSuperAdmin
+      }
+
+      const { container, response } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(`\n  Components\n  RWU-DPB-HZE\n`)
+
+      expect(response.result).toMatchSnapshot()
+    })
+
     test('should not show view submission page without the correct scope', async () => {
       jest
         .mocked(getSubmissionRecord)
@@ -1011,7 +1072,11 @@ describe('Submission routes', () => {
                 type: 'LineString'
               }
             }
-          ]
+          ],
+          fRsghu: {
+            easting: 337408,
+            northing: 552984
+          }
         },
         repeaters: {
           gAZbPt: [
@@ -1106,11 +1171,24 @@ describe('Submission routes', () => {
       id: '6b4c5b0d-7a49-459e-b9dc-db0b18cbeaa7'
     }
 
+    /** @type {EastingNorthingFieldComponent} */
+    const secondComponent = {
+      type: ComponentType.EastingNorthingField,
+      title: 'What is your Easting and Northing?',
+      name: 'fRsghu',
+      shortDescription: 'Easting and Northing',
+      hint: '',
+      options: {
+        required: true
+      },
+      id: '0ace95f0-b7bf-4c65-8cc7-74a890a2670b'
+    }
+
     /** @type {Page} */
     const firstPage = {
       title: '',
       path: '/add-site-geospatial-features',
-      components: [firstComponent],
+      components: [firstComponent, secondComponent],
       next: [],
       id: '0b608f84-d2e2-4158-9737-37bd49305fd3'
     }
@@ -1172,7 +1250,7 @@ describe('Submission routes', () => {
     const mapRepeaterReviewUrl =
       '/submission/88J-TKL-AU8/map-review/6963d67f-9f15-497d-ac3b-385542ca3dff/0109c4d4-bbcc-4aae-a1ee-86418ed33395'
 
-    test('should show view map page', async () => {
+    test('should show view map page for geospatial features', async () => {
       jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionVersion)
@@ -1184,7 +1262,7 @@ describe('Submission routes', () => {
         auth
       }
 
-      const { container } = await renderResponse(server, options)
+      const { response, container } = await renderResponse(server, options)
 
       const $heading = container.getByRole('heading', {
         level: 1
@@ -1195,6 +1273,7 @@ describe('Submission routes', () => {
       expect($heading.textContent).toBe(
         '\n  88J-TKL-AU8\n  Add site geospatial features\n'
       )
+      expect(response.result).toMatchSnapshot()
     })
 
     test('should show view map page (no version)', async () => {
@@ -1351,11 +1430,40 @@ describe('Submission routes', () => {
         '\n  88J-TKL-AU8\n  Add site geospatial features\n'
       )
     })
+
+    test('should show view map page for location component', async () => {
+      const url =
+        '/submission/88J-TKL-AU8/map-review/0b608f84-d2e2-4158-9737-37bd49305fd3/0ace95f0-b7bf-4c65-8cc7-74a890a2670b'
+
+      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getFormDefinitionVersion)
+        .mockResolvedValueOnce(formDefinition)
+
+      const options = {
+        method: 'GET',
+        url,
+        auth
+      }
+
+      const { response, container } = await renderResponse(server, options)
+
+      const $heading = container.getByRole('heading', {
+        level: 1
+      })
+
+      expect($heading).toBeInTheDocument()
+      expect($heading).toHaveClass('govuk-heading-l')
+      expect($heading.textContent).toBe(
+        '\n  88J-TKL-AU8\n  What is your Easting and Northing?\n'
+      )
+      expect(response.result).toMatchSnapshot()
+    })
   })
 })
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { Page, GeospatialFieldComponent } from '@defra/forms-model'
+ * @import { Page, GeospatialFieldComponent, EastingNorthingFieldComponent } from '@defra/forms-model'
  * @import { FormSubmissionDocument } from '~/src/services/formSubmissionService.js'
  */

@@ -137,3 +137,63 @@ export function getErrors(
     }) ?? []
   )
 }
+
+/**
+ * Human-readable messages for each {@link FormDefinitionError} code, shared
+ * by services that surface definition-validation failures (designer editor
+ * flows, runner preview error pages).
+ */
+export const formErrorsToMessages: Record<FormDefinitionError, string> = {
+  [FormDefinitionError.UniquePageId]:
+    'Each page must have a unique ID. Change the page ID to one that is not already used.',
+  [FormDefinitionError.UniquePagePath]:
+    'Each page must have a unique path. Change the page path to one that is not already used.',
+  [FormDefinitionError.UniquePageComponentId]:
+    'Each question on a page must have a unique ID. Change the question ID to one that is not already used.',
+  [FormDefinitionError.UniquePageComponentName]:
+    'Each question on a page must have a unique name. Change the question name to one that is not already used.',
+  [FormDefinitionError.UniqueSectionId]:
+    'Each section must have a unique ID. Change the section ID to one that is not already used.',
+  [FormDefinitionError.UniqueSectionName]:
+    'Each section must have a unique name. Change the section name to one that is not already used.',
+  [FormDefinitionError.UniqueSectionTitle]:
+    'Each section must have a unique title. Change the section title to one that is not already used.',
+  [FormDefinitionError.UniqueListId]:
+    'Each list must have a unique ID. Change the list ID to one that is not already used.',
+  [FormDefinitionError.UniqueListTitle]:
+    'Each list must have a unique title. Change the list title to one that is not already used.',
+  [FormDefinitionError.UniqueListName]:
+    'Each list must have a unique name. Change the list name to one that is not already used.',
+  [FormDefinitionError.UniqueConditionId]:
+    'Each condition must have a unique ID. Change the condition ID to one that is not already used.',
+  [FormDefinitionError.UniqueConditionDisplayName]:
+    'Each condition must have a unique display name. Change the display name to one that is not already used.',
+  [FormDefinitionError.UniqueListItemId]:
+    'Each item in a list must have a unique ID. Change the item ID to one that is not already used.',
+  [FormDefinitionError.UniqueListItemText]:
+    'Each item in a list must have unique text. Change the item text to one that is not already used.',
+  [FormDefinitionError.UniqueListItemValue]:
+    'Each item in a list must have a unique value. Change the item value to one that is not already used.',
+  [FormDefinitionError.UniqueOutput]:
+    'This email address is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.',
+  [FormDefinitionError.RefPageCondition]:
+    'This page is referenced by a condition. Remove the condition before making changes to this page.',
+  [FormDefinitionError.RefConditionComponentId]:
+    'Remove the condition before deleting this page',
+  [FormDefinitionError.RefConditionListId]:
+    'A condition is using a list in this form. Remove the condition before making changes to the list.',
+  [FormDefinitionError.RefConditionItemId]:
+    'A condition is using an item in this list. Remove the condition before making changes to the item.',
+  [FormDefinitionError.RefConditionConditionId]:
+    'A condition is using another condition. Remove the reference before making changes.',
+  [FormDefinitionError.RefPageComponentList]:
+    'A question on this page is using a list. Remove the reference before making changes to the list.',
+  [FormDefinitionError.RefOutputCondition]:
+    'A submission email is using a condition that does not exist in this form. Select an existing condition or remove it.',
+  [FormDefinitionError.IncompatibleConditionComponentType]:
+    'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
+  [FormDefinitionError.IncompatibleQuestionRegex]:
+    'The regex expression is invalid',
+  [FormDefinitionError.Other]:
+    'There is a problem with the form definition. Check your changes and try again.'
+}

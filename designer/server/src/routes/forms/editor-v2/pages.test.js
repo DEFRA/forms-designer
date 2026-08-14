@@ -73,7 +73,7 @@ describe('Editor v2 pages routes', () => {
     expect($menuLinks[1]).toHaveTextContent('Manage conditions')
     expect($menuLinks[2]).toHaveTextContent('Upload a form')
     expect($menuLinks[3]).toHaveTextContent('Download this form')
-    // expect($menuLinks[4]).toHaveTextContent('Welsh translation')
+    expect($menuLinks[4]).toHaveTextContent('Welsh translation')
   })
 
   test('GET - should check correct formData is rendered in the view with multiple pages', async () => {
@@ -168,7 +168,7 @@ describe('Editor v2 pages routes', () => {
     expect($menuLinks[1]).toHaveTextContent('Manage conditions')
     expect($menuLinks[2]).toHaveTextContent('Upload a form')
     expect($menuLinks[3]).toHaveTextContent('Download this form')
-    // expect($menuLinks[4]).toHaveTextContent('Welsh translation')
+    expect($menuLinks[4]).toHaveTextContent('Welsh translation')
   })
 
   test('GET - should redirect to migration to v2 if draft definition schema is v1', async () => {
