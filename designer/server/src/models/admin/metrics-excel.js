@@ -4,6 +4,10 @@ import {
   metricsComponentUsageViewModel,
   metricsFormActivityViewModel
 } from '~/src/models/admin/metrics.js'
+import {
+  FORM_ACTIVITY_OPTION_ALL,
+  FORM_ACTIVITY_OPTION_WELSH
+} from '~/src/routes/admin/form-metrics.js'
 
 /**
  * @typedef {string | number | Date | undefined} ExcelCellValue
@@ -169,17 +173,38 @@ const formStructureColumns = [
 
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metricsWelsh
  */
-export function getMetricsAsExcel(metrics) {
+export function getMetricsAsExcel(metrics, metricsWelsh) {
   // Create an excel file - one workbook with multiple worksheets
   const workbook = xlsx.utils.book_new()
 
-  // Form Activity
-  const { formMetricRows } = metricsFormActivityViewModel(metrics, {
-    sortCol: 'formName',
-    sortDir: 'ascending'
-  })
-  addWorksheet(workbook, activityColumns, formMetricRows, 'Form activity')
+  // Form Activity - all
+  const { formMetricRows } = metricsFormActivityViewModel(
+    metrics,
+    {
+      sortCol: 'formName',
+      sortDir: 'ascending'
+    },
+    FORM_ACTIVITY_OPTION_ALL
+  )
+  addWorksheet(workbook, activityColumns, formMetricRows, 'All form activity')
+
+  // Form Activity - Welsh forms only
+  const { formMetricRows: formMetricRowsWelsh } = metricsFormActivityViewModel(
+    metricsWelsh,
+    {
+      sortCol: 'formName',
+      sortDir: 'ascending'
+    },
+    FORM_ACTIVITY_OPTION_WELSH
+  )
+  addWorksheet(
+    workbook,
+    activityColumns,
+    formMetricRowsWelsh,
+    'Welsh form activity'
+  )
 
   // Component usage - question types
   const componentUsage = metricsComponentUsageViewModel(metrics)
