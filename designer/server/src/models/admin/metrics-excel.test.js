@@ -438,6 +438,8 @@ describe('metrics-excel', () => {
 
       // @ts-expect-error - partial mock of data
       const res = getMetricsAsExcel(metrics, metricsWelsh)
+      // Check the generated XLSX file against an example we know is correct
+      // The snapshot is stored in hex
       expect(res.toString('hex')).toEqual(excelSnapshot)
     })
   })
