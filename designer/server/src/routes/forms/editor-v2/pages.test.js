@@ -57,7 +57,7 @@ describe('Editor v2 pages routes', () => {
     const $pageTitles = container.getAllByRole('heading', { level: 2 })
     const $actions = container.getAllByRole('button')
     const $menuLinks = container.getAllByRole('link', {
-      name: /Advanced settings|Manage conditions|Upload a form|Download this form/
+      name: /Advanced settings|Manage conditions|Upload a form|Download this form|Welsh translation/
     })
 
     expect($mainHeading).toHaveTextContent('Add and edit pages')
@@ -68,7 +68,7 @@ describe('Editor v2 pages routes', () => {
     expect($actions[2]).toHaveTextContent('Add new page')
 
     // Rendered as links, not buttons, so they are announced as the links they are
-    expect($menuLinks).toHaveLength(4)
+    expect($menuLinks).toHaveLength(5)
     expect($menuLinks[0]).toHaveTextContent('Advanced settings')
     expect($menuLinks[1]).toHaveTextContent('Manage conditions')
     expect($menuLinks[2]).toHaveTextContent('Upload a form')
@@ -160,10 +160,10 @@ describe('Editor v2 pages routes', () => {
     expect($actions[3]).toHaveTextContent('Re-order pages')
 
     const $menuLinks = container.getAllByRole('link', {
-      name: /Advanced settings|Manage conditions|Upload a form|Download this form/
+      name: /Advanced settings|Manage conditions|Upload a form|Download this form|Welsh translation/
     })
 
-    expect($menuLinks).toHaveLength(4)
+    expect($menuLinks).toHaveLength(5)
     expect($menuLinks[0]).toHaveTextContent('Advanced settings')
     expect($menuLinks[1]).toHaveTextContent('Manage conditions')
     expect($menuLinks[2]).toHaveTextContent('Upload a form')
