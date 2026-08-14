@@ -25,7 +25,8 @@ COPY --chown=node:node ./model/package.json ./model/
 
 RUN mkdir -p ./designer/client/src/assets/nunjucks
 
-RUN npm ci
+# Workaround to allow installation of xlsx package
+RUN npm ci --allow-remote=root
 
 COPY --chown=node:node ./ ./
 
@@ -70,7 +71,7 @@ COPY --from=productionBuild --chown=node:node /home/node/app/designer/server/dis
 RUN touch ./designer/precompile-govuk-components.js
 
 
-RUN npm ci --omit=dev
+RUN npm ci --omit=dev --allow-remote=root
 
 ARG PORT
 ENV PORT ${PORT}

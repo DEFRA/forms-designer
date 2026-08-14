@@ -199,19 +199,30 @@ function mapFormRowsToViewModel(rows) {
       pageRows,
       TranslationRowTypes.PageGuidance
     )
+    const formDeclaration = getRowOfType(
+      pageRows,
+      TranslationRowTypes.EndOfFormDeclarationBody
+    )
     const repeatTitle = getRowOfType(pageRows, TranslationRowTypes.RepeatTitle)
 
     const pageHeadingRow = addTitle(pageHeading, 'Page heading')
+    const formDeclarationRow = addTitle(formDeclaration, 'Declaration body')
     const pageGuidanceRow = addTitle(pageGuidance, 'Page guidance')
     const repeatTitleRow = addTitle(repeatTitle, 'Repeat name')
 
     if (
       pageHeadingRow.length ||
+      formDeclarationRow.length ||
       pageGuidanceRow.length ||
       repeatTitleRow.length
     ) {
       formRows.push({
-        rowData: [...pageHeadingRow, ...pageGuidanceRow, ...repeatTitleRow]
+        rowData: [
+          ...pageHeadingRow,
+          ...formDeclarationRow,
+          ...pageGuidanceRow,
+          ...repeatTitleRow
+        ]
       })
     }
 
