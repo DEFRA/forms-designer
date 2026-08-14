@@ -26,6 +26,9 @@
         type: "success"
       }) %}
         <p class="govuk-notification-banner__heading">{{ notification }}</p>
+        {% if notificationDetail | length %}
+          <p class="govuk-body app-notification-banner__detail">{{ notificationDetail }}</p>
+        {% endif %}
       {% endcall %}
     {% endif %}
 

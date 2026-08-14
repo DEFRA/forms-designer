@@ -10,6 +10,14 @@ export const NO_CONDITION_VALUE = ''
 export const NO_CONDITION_TEXT = 'Every submission (no condition)'
 
 /**
+ * Anchor of the add/change form, used to bring it into view when the author
+ * opens an address for amending or is sent back to correct an error.
+ */
+export const EMAIL_FORM_ANCHOR = '#email-address-form'
+
+export const REMOVED_EMAIL_PREFIX = 'Removed email:'
+
+/**
  * Maximum number of additional email addresses a form can have.
  */
 export const MAX_ADDITIONAL_EMAILS = 20
@@ -86,6 +94,21 @@ export function getConditionName(definition, conditionId) {
 }
 
 /**
+ * The address that has just been removed, written out in full. It repeats the
+ * three details the table held, so the author can see exactly what has gone -
+ * the same address can appear more than once under different formats and
+ * conditions.
+ * @param {FormDefinition} definition
+ * @param {Output} output
+ */
+export function describeRemovedOutput(definition, output) {
+  const format = formatDescription(output.audience, output.version)
+  const condition = getConditionName(definition, output.condition)
+
+  return `${REMOVED_EMAIL_PREFIX} ${output.emailAddress} in ${format} format, sent: ${condition}.`
+}
+
+/**
  * Options for the 'when should submissions be sent' select
  * @param {FormDefinition} definition
  * @param {string} [selectedConditionId]
@@ -115,7 +138,9 @@ export function buildOutputRows(slug, definition) {
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
 
   return (definition.outputs ?? []).map((output, index) => {
-    const changeLink = `<a class="${linkClasses}" href="${baseUrl}/${index}">Change<span class="govuk-visually-hidden"> ${output.emailAddress}</span></a>`
+    // The anchor drops the author at the form holding the address they picked,
+    // which sits below the table
+    const changeLink = `<a class="${linkClasses}" href="${baseUrl}/${index}${EMAIL_FORM_ANCHOR}">Change<span class="govuk-visually-hidden"> ${output.emailAddress}</span></a>`
     const removeButton = `<form method="post" action="${baseUrl}/${index}/remove" class="app-inline-form"><button type="submit" class="govuk-link">Remove<span class="govuk-visually-hidden"> ${output.emailAddress}</span></button></form>`
 
     return [
@@ -215,7 +240,7 @@ export function buildFormatItems(values) {
  * @param {EmailActionsViewModelOptions} [options]
  */
 export function emailActionsViewModel(metadata, definition, options = {}) {
-  const { editIndex, validation, notification } = options
+  const { editIndex, validation, notification, notificationDetail } = options
 
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
@@ -253,6 +278,7 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
     },
     useNewMasthead: true,
     notification,
+    notificationDetail,
     errorList: buildErrorList(validation?.formErrors),
     formErrors: validation?.formErrors,
     formValues: values,
@@ -296,10 +322,11 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
  * @typedef {object} EmailActionsViewModelOptions
  * @property {number} [editIndex] - index of the output being amended, if any
  * @property {ValidationFailure<EmailActionFormValues>} [validation] - validation failure to replay
- * @property {string[]} [notification] - success banner content
+ * @property {string} [notification] - success banner heading
+ * @property {string} [notificationDetail] - line shown under the success banner heading
  */
 
 /**
- * @import { FormMetadata, FormDefinition, OutputAudience } from '@defra/forms-model'
+ * @import { FormMetadata, FormDefinition, Output, OutputAudience } from '@defra/forms-model'
  * @import { ValidationFailure } from '~/src/common/helpers/types.js'
  */

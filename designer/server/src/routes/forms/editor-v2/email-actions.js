@@ -171,8 +171,8 @@ async function buildEmailActionsView(slug, token, yar, index) {
 
   const validation = getValidationErrorsFromSession(yar, errorKey)
 
-  const notification = /** @type {string[] | undefined} */ (
-    yar.flash(notificationKey).at(0)
+  const [notification, notificationDetail] = /** @type {string[]} */ (
+    yar.flash(notificationKey)
   )
 
   return viewModel.emailActionsViewModel(metadata, definition, {
@@ -181,7 +181,8 @@ async function buildEmailActionsView(slug, token, yar, index) {
       /** @type {ValidationFailure<EmailActionFormValues> | undefined} */ (
         validation
       ),
-    notification
+    notification,
+    notificationDetail
   })
 }
 
@@ -384,9 +385,18 @@ export default [
       const removeIndex = resolveIndex(definition, index)
 
       if (removeIndex !== undefined) {
-        definition.outputs = /** @type {Output[]} */ (
-          definition.outputs
-        ).filter((_output, idx) => idx !== removeIndex)
+        const outputs = /** @type {Output[]} */ (definition.outputs)
+
+        // Described before the save, whilst the conditions it names are still
+        // to hand
+        const removed = viewModel.describeRemovedOutput(
+          definition,
+          outputs[removeIndex]
+        )
+
+        definition.outputs = outputs.filter(
+          (_output, idx) => idx !== removeIndex
+        )
 
         try {
           await saveForm(metadata.id, definition, token)
@@ -399,7 +409,10 @@ export default [
           )
         }
 
+        // The second entry is shown under the banner heading, so the author can
+        // see which address has gone
         yar.flash(notificationKey, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(notificationKey, removed)
       }
 
       return h

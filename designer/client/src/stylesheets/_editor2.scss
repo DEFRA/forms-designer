@@ -34,6 +34,13 @@
   display: inline;
 }
 
+// Notification banner content is capped at 605px by govuk-frontend, which wraps
+// a line naming an email address, its format and its condition well before the
+// edge of the banner. Only the lines given this class opt out.
+.govuk-notification-banner__content > .app-notification-banner__detail {
+  max-width: none;
+}
+
 .app-condition-applied {
   background-color: govuk-colour("white");
   border-left: 4px solid #00703c;

@@ -8,6 +8,7 @@ import {
   buildConditionItems,
   buildDefaultEmail,
   buildOutputRows,
+  describeRemovedOutput,
   emailActionsViewModel,
   formatDescription,
   getConditionName,
@@ -125,7 +126,7 @@ describe('email actions view model', () => {
       expect(rows[0][1]).toEqual({ text: NO_CONDITION_TEXT })
       expect(rows[0][2]).toEqual({ text: 'Human-readable' })
       expect(rows[0][3].html).toContain(
-        'href="/library/my-form-slug/editor-v2/email-actions/0"'
+        'href="/library/my-form-slug/editor-v2/email-actions/0#email-address-form"'
       )
       expect(rows[0][3].html).toContain(
         'action="/library/my-form-slug/editor-v2/email-actions/0/remove"'
@@ -133,6 +134,24 @@ describe('email actions view model', () => {
 
       expect(rows[1][1]).toEqual({ text: 'isBobV2' })
       expect(rows[1][2]).toEqual({ text: 'Machine-readable (version 1)' })
+    })
+  })
+
+  describe('describeRemovedOutput', () => {
+    test('should describe an unconditional address', () => {
+      const [output] = /** @type {Output[]} */ (definitionWithOutputs.outputs)
+
+      expect(describeRemovedOutput(definitionWithOutputs, output)).toBe(
+        'Removed email: unconditional@defra.gov.uk in Human-readable format, sent: Every submission (no condition).'
+      )
+    })
+
+    test('should describe a conditional machine-readable address', () => {
+      const output = /** @type {Output[]} */ (definitionWithOutputs.outputs)[1]
+
+      expect(describeRemovedOutput(definitionWithOutputs, output)).toBe(
+        'Removed email: conditional@defra.gov.uk in Machine-readable (version 1) format, sent: isBobV2.'
+      )
     })
   })
 
@@ -273,3 +292,7 @@ describe('email actions view model', () => {
     })
   })
 })
+
+/**
+ * @import { Output } from '@defra/forms-model'
+ */

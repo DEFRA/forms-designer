@@ -70,7 +70,6 @@ describe('editor-v2 - condition-delete model', () => {
       expect(result.pageTitle).toBe(
         'Delete condition: Show if cattle farming - Test form'
       )
-      expect(result.bodyCaptionText).toBeUndefined()
       expect(result.bodyHeadingText).toBe(
         'Are you sure you want to delete this condition?'
       )

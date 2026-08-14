@@ -44,6 +44,17 @@ function buildBoomError(message) {
   })
 }
 
+/**
+ * The session cookie set by the response, so a follow-up request picks up the
+ * same session and with it anything flashed to the banner
+ * @param {ServerInjectResponse} response
+ */
+function getCookie(response) {
+  const cookies = /** @type {string[]} */ (response.headers['set-cookie'] ?? [])
+
+  return cookies.map((cookie) => cookie.split(';')[0]).join('; ')
+}
+
 const metadataWithEmail = {
   ...testFormMetadata,
   notificationEmail: 'notify@defra.gov.uk'
@@ -622,6 +633,42 @@ describe('Editor v2 email actions routes', () => {
       expect(definition.outputs).toEqual([conditionalOutput])
     })
 
+    test('should report what was removed on the page it returns to', async () => {
+      jest
+        .mocked(forms.get)
+        .mockResolvedValueOnce(metadataWithEmail)
+        .mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(
+          definitionWith([unconditionalOutput, conditionalOutput])
+        )
+        .mockResolvedValueOnce(definitionWith([unconditionalOutput]))
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/email-actions/1/remove',
+        auth
+      })
+
+      // The banner is shown on the page the removal redirects to
+      const { document } = await renderResponse(server, {
+        method: 'get',
+        url: /** @type {string} */ (response.headers.location),
+        auth,
+        headers: { cookie: getCookie(response) }
+      })
+
+      const $banner = /** @type {HTMLElement} */ (
+        document.querySelector('.govuk-notification-banner')
+      )
+
+      expect($banner).toHaveTextContent('Changes saved successfully')
+      expect($banner).toHaveTextContent(
+        'Removed email: conditional@defra.gov.uk in Machine-readable (version 1) format, sent: isBobV2.'
+      )
+    })
+
     test('should ignore a remove of an address that does not exist', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
       jest
@@ -642,5 +689,5 @@ describe('Editor v2 email actions routes', () => {
 
 /**
  * @import { Output } from '@defra/forms-model'
- * @import { Server } from '@hapi/hapi'
+ * @import { Server, ServerInjectResponse } from '@hapi/hapi'
  */
