@@ -1,4 +1,5 @@
 import {
+  formDefinitionWithFormLevelDeclaration,
   formDefinitionWithLocationAndDeclaration,
   formDefinitionWithRadioQuestion,
   formDefinitionWithRepeater,
@@ -108,6 +109,56 @@ describe('translations', () => {
       )
       expect(res.formRows[8].welshContent).toBe('')
       expect(res.formRows[8].name).toBe('components.q2.content')
+    })
+
+    it('should handle a form-level declaration', () => {
+      const definition = structuredClone(formDefinitionWithFormLevelDeclaration)
+      const res = buildTranslationDataRows(metadata, definition)
+
+      expect(res.overviewRows).toHaveLength(8)
+      expect(res.formRows).toHaveLength(8)
+
+      expect(res.overviewRows[0].englishContent).toBe('Test form')
+      expect(res.overviewRows[0].welshContent).toBe('')
+      expect(res.overviewRows[0].name).toBe('form.title')
+
+      expect(res.formRows[0].englishContent).toBe('Page One')
+      expect(res.formRows[0].welshContent).toBe('')
+      expect(res.formRows[0].name).toBe('pages.p1.title')
+
+      expect(res.formRows[1].englishContent).toBe(
+        'This is the first textfield question'
+      )
+      expect(res.formRows[1].welshContent).toBe('')
+      expect(res.formRows[1].name).toBe('components.q1.title')
+
+      expect(res.formRows[2].englishContent).toBe('Hint text 1')
+      expect(res.formRows[2].welshContent).toBe('')
+      expect(res.formRows[2].name).toBe('components.q1.hint')
+
+      expect(res.formRows[3].englishContent).toBe('Short desc 1')
+      expect(res.formRows[3].welshContent).toBe('')
+      expect(res.formRows[3].name).toBe('components.q1.shortDescription')
+
+      expect(res.formRows[4].englishContent).toBe(
+        'This is the second textfield question'
+      )
+      expect(res.formRows[4].welshContent).toBe('')
+      expect(res.formRows[4].name).toBe('components.q2.title')
+
+      expect(res.formRows[5].englishContent).toBe('Hint text 2')
+      expect(res.formRows[5].welshContent).toBe('')
+      expect(res.formRows[5].name).toBe('components.q2.hint')
+
+      expect(res.formRows[6].englishContent).toBe('Short desc 2')
+      expect(res.formRows[6].welshContent).toBe('')
+      expect(res.formRows[6].name).toBe('components.q2.shortDescription')
+
+      expect(res.formRows[7].englishContent).toBe(
+        'This is a final declaration for the summary page'
+      )
+      expect(res.formRows[7].welshContent).toBe('')
+      expect(res.formRows[7].name).toBe('components.q10.content')
     })
 
     it('should handle repeater page', () => {
