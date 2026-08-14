@@ -86,18 +86,17 @@
 
   {% set authorsRadios = [] %}
   {% for a in authors %}
-    {% if params.displayName and a == params.displayName %}
-      {% set authorsRadios = (authorsRadios.push({
-        text: "Me (" + a + ")",
-        value: a,
-        checked: params.search.author == a
-      }), authorsRadios) %}
+    {% set isCurrentUser = params.displayName and a == params.displayName %}
+    {% set authorEntry = {
+      text: "Me (" + a + ")" if isCurrentUser else a,
+      value: a,
+      checked: params.search.author == a
+    } %}
+    {% if isCurrentUser %}
+      {# always show the current user's entry first #}
+      {% set authorsRadios = (authorsRadios.unshift(authorEntry), authorsRadios) %}
     {% else %}
-      {% set authorsRadios = (authorsRadios.push({
-        text: a,
-        value: a,
-        checked: params.search.author == a
-      }), authorsRadios) %}
+      {% set authorsRadios = (authorsRadios.push(authorEntry), authorsRadios) %}
     {% endif %}
   {% endfor %}
   {% set authorsRadios = (authorsRadios.push({
