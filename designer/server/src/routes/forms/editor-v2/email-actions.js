@@ -13,7 +13,10 @@ import {
   createJoiError,
   handleInvalidFormErrors
 } from '~/src/lib/error-boom-helper.js'
-import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
+import {
+  addErrorsToSession,
+  getValidationErrorsFromSession
+} from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
 import { withRetry } from '~/src/lib/retry.js'
@@ -31,6 +34,10 @@ export const ROUTE_FULL_PATH_EMAIL_ACTION =
   '/library/{slug}/editor-v2/email-actions/{index}'
 export const ROUTE_FULL_PATH_EMAIL_ACTION_REMOVE =
   '/library/{slug}/editor-v2/email-actions/{index}/remove'
+export const ROUTE_FULL_PATH_EMAIL_ACTIONS_REMOVE_ALL =
+  '/library/{slug}/editor-v2/email-actions/remove-all'
+
+const CONFIRMATION_PAGE_VIEW = 'forms/confirmation-page'
 
 export const EMPTY_MESSAGE = 'Enter an email address'
 export const INCORRECT_FORMAT_MESSAGE =
@@ -413,6 +420,86 @@ export default [
         // see which address has gone
         yar.flash(notificationKey, CHANGES_SAVED_SUCCESSFULLY)
         yar.flash(notificationKey, removed)
+      }
+
+      return h
+        .redirect(editorv2Path(slug, 'email-actions'))
+        .code(StatusCodes.SEE_OTHER)
+    },
+    options: { auth: authOptions }
+  }),
+
+  /**
+   * Confirm removal of every additional email address
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
+   */
+  ({
+    method: 'GET',
+    path: ROUTE_FULL_PATH_EMAIL_ACTIONS_REMOVE_ALL,
+    async handler(request, h) {
+      const { params, auth } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      const { metadata, definition } = await loadForm(slug, token)
+
+      // Nothing to confirm, eg the page was opened from a stale link
+      if (!(definition.outputs ?? []).length) {
+        return h
+          .redirect(editorv2Path(slug, 'email-actions'))
+          .code(StatusCodes.SEE_OTHER)
+      }
+
+      return h.view(
+        CONFIRMATION_PAGE_VIEW,
+        viewModel.removeAllEmailsViewModel(metadata, definition)
+      )
+    },
+    options: { auth: authOptions }
+  }),
+
+  /**
+   * Remove every additional email address
+   * @satisfies {ServerRoute<{ Params: { slug: string } }>}
+   */
+  ({
+    method: 'POST',
+    path: ROUTE_FULL_PATH_EMAIL_ACTIONS_REMOVE_ALL,
+    async handler(request, h) {
+      const { params, auth, yar } = request
+      const { token } = auth.credentials
+      const { slug } = params
+
+      const { metadata, definition } = await loadForm(slug, token)
+
+      const removedCount = (definition.outputs ?? []).length
+
+      if (removedCount) {
+        definition.outputs = []
+
+        try {
+          await saveForm(metadata.id, definition, token)
+        } catch (err) {
+          // The confirmation page has no error summary of its own, so the
+          // failure is reported back on the list
+          addErrorsToSession(
+            request,
+            errorKey,
+            toValidationError(err, definition)
+          )
+
+          return h
+            .redirect(editorv2Path(slug, 'email-actions'))
+            .code(StatusCodes.SEE_OTHER)
+        }
+
+        // The second entry is shown under the banner heading, so the author can
+        // see how many addresses have gone
+        yar.flash(notificationKey, CHANGES_SAVED_SUCCESSFULLY)
+        yar.flash(
+          notificationKey,
+          viewModel.describeRemovedAllOutputs(removedCount)
+        )
       }
 
       return h

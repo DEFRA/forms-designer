@@ -8,10 +8,12 @@ import {
   buildConditionItems,
   buildDefaultEmail,
   buildOutputRows,
+  describeRemovedAllOutputs,
   describeRemovedOutput,
   emailActionsViewModel,
   formatDescription,
   getConditionName,
+  removeAllEmailsViewModel,
   resolveFormValues
 } from '~/src/models/forms/editor-v2/email-actions.js'
 
@@ -155,6 +157,84 @@ describe('email actions view model', () => {
     })
   })
 
+  describe('describeRemovedAllOutputs', () => {
+    test('should describe a single address removed', () => {
+      expect(describeRemovedAllOutputs(1)).toBe(
+        'Removed the only additional email address.'
+      )
+    })
+
+    test('should describe several addresses removed', () => {
+      expect(describeRemovedAllOutputs(3)).toBe(
+        'Removed all 3 additional email addresses.'
+      )
+    })
+  })
+
+  describe('removeAllEmailsViewModel', () => {
+    test('should warn about every address being removed', () => {
+      const model = removeAllEmailsViewModel(
+        testFormMetadata,
+        definitionWithOutputs
+      )
+
+      expect(model.pageTitle).toBe(
+        'Remove all additional email addresses - Test form'
+      )
+      expect(model.backLink).toEqual({
+        href: '/library/my-form-slug/editor-v2/email-actions',
+        text: 'Back to email actions'
+      })
+      expect(model.bodyHeadingText).toBe(
+        'Are you sure you want to remove all additional email addresses?'
+      )
+      expect(model.bodyText).toBe(
+        'All 2 additional email addresses below will be removed. This does not affect the default email address.'
+      )
+      expect(model.bodyWarning.html).toContain('You cannot undo this action.')
+      expect(model.bodyWarning.html).toContain(
+        '<li>unconditional@defra.gov.uk in Human-readable format, sent: Every submission (no condition)</li>'
+      )
+      expect(model.bodyWarning.html).toContain(
+        '<li>conditional@defra.gov.uk in Machine-readable (version 1) format, sent: isBobV2</li>'
+      )
+    })
+
+    test('should word the warning for a single address', () => {
+      const model = removeAllEmailsViewModel(
+        testFormMetadata,
+        buildDefinition({
+          ...definitionWithOutputs,
+          outputs: [/** @type {Output[]} */ (definitionWithOutputs.outputs)[0]]
+        })
+      )
+
+      expect(model.bodyText).toBe(
+        'The additional email address below will be removed. This does not affect the default email address.'
+      )
+    })
+
+    test('should offer the removal and a way back', () => {
+      const model = removeAllEmailsViewModel(
+        testFormMetadata,
+        definitionWithOutputs
+      )
+
+      expect(model.buttons).toEqual([
+        {
+          text: 'Remove all email addresses',
+          classes: 'govuk-button--warning',
+          preventDoubleClick: true
+        },
+        {
+          href: '/library/my-form-slug/editor-v2/email-actions',
+          text: 'Cancel',
+          classes: 'govuk-button--secondary'
+        }
+      ])
+    })
+  })
+
   describe('resolveFormValues', () => {
     test('should return empty defaults when adding', () => {
       expect(resolveFormValues(definitionWithOutputs)).toEqual({
@@ -211,7 +291,40 @@ describe('email actions view model', () => {
       expect(model.conditionsManagerHref).toBe(
         '/library/my-form-slug/editor-v2/conditions'
       )
-      expect(model.outputsTable.rows).toHaveLength(2)
+    })
+
+    test('should end the table with a remove all row', () => {
+      const model = emailActionsViewModel(
+        testFormMetadata,
+        definitionWithOutputs
+      )
+
+      // Two addresses, then the row holding the action on all of them
+      expect(model.outputsTable.rows).toHaveLength(3)
+
+      const lastRow = model.outputsTable.rows[2]
+
+      expect(lastRow.slice(0, 3)).toEqual([
+        { text: '' },
+        { text: '' },
+        { text: '' }
+      ])
+      expect(lastRow[3].html).toContain(
+        'href="/library/my-form-slug/editor-v2/email-actions/remove-all"'
+      )
+      expect(lastRow[3].html).toContain(
+        'class="govuk-link govuk-link--no-visited-state"'
+      )
+      expect(lastRow[3].html).toContain('Remove all')
+      expect(lastRow[3].html).toContain(
+        '<span class="govuk-visually-hidden"> additional email addresses</span>'
+      )
+    })
+
+    test('should not offer a remove all when there are no addresses', () => {
+      const model = emailActionsViewModel(testFormMetadata, buildDefinition({}))
+
+      expect(model.outputsTable.rows).toEqual([])
     })
 
     test('should build the amend state', () => {

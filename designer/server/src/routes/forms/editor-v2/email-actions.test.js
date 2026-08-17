@@ -685,6 +685,206 @@ describe('Editor v2 email actions routes', () => {
       expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
     })
   })
+
+  describe('GET /library/{slug}/editor-v2/email-actions/remove-all', () => {
+    test('should ask for confirmation and list the addresses', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(
+          definitionWith([unconditionalOutput, conditionalOutput])
+        )
+
+      const { container, document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/email-actions/remove-all',
+        auth
+      })
+
+      expect(container.getByRole('heading', { level: 1 })).toHaveTextContent(
+        'Remove all additional email addresses'
+      )
+      expect(document.body).toHaveTextContent(
+        'Are you sure you want to remove all additional email addresses?'
+      )
+      expect(document.body).toHaveTextContent('You cannot undo this action.')
+      expect(document.body).toHaveTextContent('unconditional@defra.gov.uk')
+      expect(document.body).toHaveTextContent('conditional@defra.gov.uk')
+
+      expect(
+        container.getByRole('button', { name: 'Remove all email addresses' })
+      ).toBeInTheDocument()
+      expect(container.getByRole('button', { name: 'Cancel' })).toHaveAttribute(
+        'href',
+        '/library/my-form-slug/editor-v2/email-actions'
+      )
+    })
+
+    test('should redirect to the list when there is nothing to remove', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWith())
+
+      const response = await server.inject({
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/email-actions/remove-all',
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        '/library/my-form-slug/editor-v2/email-actions'
+      )
+    })
+  })
+
+  describe('POST /library/{slug}/editor-v2/email-actions/remove-all', () => {
+    test('should remove every address', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(
+          definitionWith([unconditionalOutput, conditionalOutput])
+        )
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/email-actions/remove-all',
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        '/library/my-form-slug/editor-v2/email-actions'
+      )
+
+      const [, definition] = jest.mocked(forms.updateDraftFormDefinition).mock
+        .calls[0]
+
+      expect(definition.outputs).toEqual([])
+    })
+
+    test('should report how many were removed on the page it returns to', async () => {
+      jest
+        .mocked(forms.get)
+        .mockResolvedValueOnce(metadataWithEmail)
+        .mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(
+          definitionWith([unconditionalOutput, conditionalOutput])
+        )
+        .mockResolvedValueOnce(definitionWith())
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/email-actions/remove-all',
+        auth
+      })
+
+      const { document } = await renderResponse(server, {
+        method: 'get',
+        url: /** @type {string} */ (response.headers.location),
+        auth,
+        headers: { cookie: getCookie(response) }
+      })
+
+      const $banner = /** @type {HTMLElement} */ (
+        document.querySelector('.govuk-notification-banner')
+      )
+
+      expect($banner).toHaveTextContent('Changes saved successfully')
+      expect($banner).toHaveTextContent(
+        'Removed all 2 additional email addresses.'
+      )
+    })
+
+    test('should do nothing when there are no addresses', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWith())
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/email-actions/remove-all',
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
+    })
+
+    test('should surface a failure from the service', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWith([unconditionalOutput]))
+      jest
+        .mocked(forms.updateDraftFormDefinition)
+        .mockRejectedValue(buildBoomError(SERVICE_MESSAGE))
+
+      const response = await server.inject({
+        method: 'post',
+        url: '/library/my-form-slug/editor-v2/email-actions/remove-all',
+        auth
+      })
+
+      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+      expect(response.headers.location).toBe(
+        '/library/my-form-slug/editor-v2/email-actions'
+      )
+      expect(addErrorsToSession).toHaveBeenCalledWith(
+        expect.anything(),
+        'emailActionsValidationFailure',
+        createJoiError('emailAddress', SERVICE_MESSAGE)
+      )
+    })
+  })
+
+  describe('remove all link', () => {
+    test('should be offered once there is an address to remove', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWith([unconditionalOutput]))
+
+      const { container } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/email-actions',
+        auth
+      })
+
+      expect(
+        container.getByRole('link', {
+          name: 'Remove all additional email addresses'
+        })
+      ).toHaveAttribute(
+        'href',
+        '/library/my-form-slug/editor-v2/email-actions/remove-all'
+      )
+    })
+
+    test('should not be offered when there are no addresses', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(definitionWith())
+
+      const { container } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/email-actions',
+        auth
+      })
+
+      expect(
+        container.queryByRole('link', {
+          name: 'Remove all additional email addresses'
+        })
+      ).toBeNull()
+    })
+  })
 })
 
 /**

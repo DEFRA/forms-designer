@@ -6,6 +6,7 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 export const EMAIL_ACTIONS_HEADING = 'Email actions'
 export const BACK_TO_ADVANCED_SETTINGS = 'Back to advanced settings'
+export const BACK_TO_EMAIL_ACTIONS = 'Back to email actions'
 export const NO_CONDITION_VALUE = ''
 export const NO_CONDITION_TEXT = 'Every submission (no condition)'
 
@@ -16,6 +17,14 @@ export const NO_CONDITION_TEXT = 'Every submission (no condition)'
 export const EMAIL_FORM_ANCHOR = '#email-address-form'
 
 export const REMOVED_EMAIL_PREFIX = 'Removed email:'
+
+export const REMOVE_ALL_LINK_TEXT = 'Remove all'
+export const REMOVE_ALL_HEADING = 'Remove all additional email addresses'
+export const REMOVE_ALL_CONFIRM_TEXT =
+  'Are you sure you want to remove all additional email addresses?'
+export const REMOVE_ALL_WARNING_TEXT =
+  'You cannot undo this action. These email addresses will be removed:'
+export const REMOVE_ALL_BUTTON_TEXT = 'Remove all email addresses'
 
 /**
  * Maximum number of additional email addresses a form can have.
@@ -94,18 +103,37 @@ export function getConditionName(definition, conditionId) {
 }
 
 /**
- * The address that has just been removed, written out in full. It repeats the
- * three details the table held, so the author can see exactly what has gone -
- * the same address can appear more than once under different formats and
- * conditions.
+ * An address written out in full. It repeats the three details the table held,
+ * so the author can see exactly which entry is meant - the same address can
+ * appear more than once under different formats and conditions.
+ * @param {FormDefinition} definition
+ * @param {Output} output
+ */
+export function describeOutput(definition, output) {
+  const format = formatDescription(output.audience, output.version)
+  const condition = getConditionName(definition, output.condition)
+
+  return `${output.emailAddress} in ${format} format, sent: ${condition}`
+}
+
+/**
+ * The address that has just been removed, for the success banner.
  * @param {FormDefinition} definition
  * @param {Output} output
  */
 export function describeRemovedOutput(definition, output) {
-  const format = formatDescription(output.audience, output.version)
-  const condition = getConditionName(definition, output.condition)
+  return `${REMOVED_EMAIL_PREFIX} ${describeOutput(definition, output)}.`
+}
 
-  return `${REMOVED_EMAIL_PREFIX} ${output.emailAddress} in ${format} format, sent: ${condition}.`
+/**
+ * The wholesale removal, for the success banner. The addresses themselves are
+ * not repeated - there can be up to the maximum of them.
+ * @param {number} count
+ */
+export function describeRemovedAllOutputs(count) {
+  return count === 1
+    ? 'Removed the only additional email address.'
+    : `Removed all ${count} additional email addresses.`
 }
 
 /**
@@ -152,6 +180,25 @@ export function buildOutputRows(slug, definition) {
       }
     ]
   })
+}
+
+/**
+ * A trailing row holding the action on the whole table. Sitting at the end of
+ * the table makes it read as applying to everything above it.
+ * @param {string} slug
+ */
+export function buildRemoveAllRow(slug) {
+  const href = `${editorv2Path(slug, 'email-actions')}/remove-all`
+  const linkClasses = 'govuk-link govuk-link--no-visited-state'
+
+  return [
+    { text: '' },
+    { text: '' },
+    { text: '' },
+    {
+      html: `<a class="${linkClasses}" href="${href}">${REMOVE_ALL_LINK_TEXT}<span class="govuk-visually-hidden"> additional email addresses</span></a>`
+    }
+  ]
 }
 
 /**
@@ -291,7 +338,11 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
         { text: 'Format' },
         { text: 'Actions' }
       ],
-      rows: outputRows
+      // The last row carries the action on the whole table, so it is only
+      // worth adding once there is something to remove
+      rows: outputRows.length
+        ? [...outputRows, buildRemoveAllRow(metadata.slug)]
+        : outputRows
     },
     isEditing,
     // Only the add form is capped - an existing address can always be amended
@@ -307,6 +358,73 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
     buttonText: isEditing ? 'Save changes' : 'Save new email address',
     conditionItems: buildConditionItems(definition, values.condition),
     formatItems: buildFormatItems(values)
+  }
+}
+
+/**
+ * Confirmation page shown before every additional email address is removed at
+ * once. The default email address lives on the metadata and is untouched, so
+ * the page says so - the heading alone could read as removing everything.
+ * @param {FormMetadata} metadata
+ * @param {FormDefinition} definition
+ */
+export function removeAllEmailsViewModel(metadata, definition) {
+  const outputs = definition.outputs ?? []
+
+  const formPath = formOverviewPath(metadata.slug)
+  const navigation = getFormSpecificNavigation(
+    formPath,
+    metadata,
+    definition,
+    'Editor'
+  )
+
+  const pageHeading = REMOVE_ALL_HEADING
+  const pageCaption = metadata.title
+  const pageTitle = `${pageHeading} - ${pageCaption}`
+  const listHref = editorv2Path(metadata.slug, 'email-actions')
+
+  const items = outputs
+    .map((output) => `<li>${describeOutput(definition, output)}</li>`)
+    .join('')
+
+  return {
+    backLink: {
+      href: listHref,
+      text: BACK_TO_EMAIL_ACTIONS
+    },
+    navigation,
+    pageTitle,
+    pageHeading: {
+      text: pageHeading,
+      size: 'large'
+    },
+    pageCaption: {
+      text: pageCaption
+    },
+    useNewMasthead: true,
+    bodyHeadingText: REMOVE_ALL_CONFIRM_TEXT,
+    bodyText:
+      outputs.length === 1
+        ? 'The additional email address below will be removed. This does not affect the default email address.'
+        : `All ${outputs.length} additional email addresses below will be removed. This does not affect the default email address.`,
+    bodyWarning: {
+      html: `${REMOVE_ALL_WARNING_TEXT}<ul class="govuk-list govuk-list--bullet">
+        ${items}
+      </ul>`
+    },
+    buttons: [
+      {
+        text: REMOVE_ALL_BUTTON_TEXT,
+        classes: 'govuk-button--warning',
+        preventDoubleClick: true
+      },
+      {
+        href: listHref,
+        text: 'Cancel',
+        classes: 'govuk-button--secondary'
+      }
+    ]
   }
 }
 
