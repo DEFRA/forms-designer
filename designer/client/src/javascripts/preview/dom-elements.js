@@ -1,4 +1,4 @@
-import { CharacterCount } from 'govuk-frontend'
+import { CharacterCount, FileUpload } from 'govuk-frontend'
 
 /**
  * @implements {DomElementsBase}
@@ -55,6 +55,15 @@ export class DomElements {
       characterCountElements.forEach((element) => {
         // eslint-disable-next-line no-new
         new CharacterCount(element) // NOSONAR: javascript:S1848 - Constructor has side effects
+      })
+      // Reinitialize GOV.UK FileUpload components after DOM update, otherwise
+      // the drag-and-drop enhancement is lost and the plain input is shown
+      const fileUploadElements = this.preview.querySelectorAll(
+        '[data-module="govuk-file-upload"]'
+      )
+      fileUploadElements.forEach((element) => {
+        // eslint-disable-next-line no-new
+        new FileUpload(element) // NOSONAR: javascript:S1848 - Constructor has side effects
       })
     }
   }
