@@ -55,7 +55,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.npm-install-model-cache.outputs.cache-hit != 'true'
-        run: npm ci --workspace model --include-workspace-root
+        run: npm ci --workspace model --include-workspace-root --allow-remote=root
 
       - name: Run build
         run: npm run build --workspace model
