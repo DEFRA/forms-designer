@@ -901,6 +901,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
 </div>
 
     <input type="hidden" name="restoreFilter" value="Y" />
+    <input type="hidden" name="currentTab" id="currentTab" value="" />
   </form>
 
   <div class="govuk-tabs" data-module="govuk-tabs">
@@ -1515,6 +1516,31 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
   </div>
 
     
+    <script>
+      // Handle retention of current tab after switch of radios
+      function setCurrentTab(tab) {
+        const target = document.getElementById('currentTab')
+        if (target) {
+          target.value = tab.id
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function(event) {
+        const tabs = document.getElementsByClassName('govuk-tabs__tab')
+        if (tabs) {
+          for (const tab of tabs) {
+            setTimeout(() => {
+              if (tab.ariaSelected === 'true') {
+                setCurrentTab(tab)
+              }
+            }, 0)
+
+            tab.addEventListener('click', () => {
+              setCurrentTab(tab)
+            })
+          }
+        }
+    });
+    </script>
   </main>
 
 
