@@ -1,6 +1,6 @@
 {
   "name": "forms-designer",
-  "version": "3.0.696",
+  "version": "3.0.700",
   "private": true,
   "description": "Defra forms designer repository",
   "repository": {
@@ -78,8 +78,8 @@
     "serialize-javascript": ">=7.0.3"
   },
   "engines": {
-    "node": "^22.12.0",
-    "npm": ">=10.9.0 <=12"
+    "node": "^24.19.0",
+    "npm": "^11.17.0 || >=12.0.2"
   },
   "allowScripts": {
     "@defra/forms-engine-plugin": true,
