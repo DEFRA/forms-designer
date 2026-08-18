@@ -170,22 +170,6 @@ export interface SubmitPayload {
    * The repeaters form answers
    */
   repeaters: SubmitRecordset[]
-
-  /**
-   * The outcome of every condition in the form definition, evaluated against
-   * the final answers at the point of submission. V2 forms only.
-   */
-  conditionEvaluations?: SubmitConditionEvaluation[]
-
-  /**
-   * Where this submission should be sent, resolved at the point of submission.
-   *
-   * Comprises the form's `notificationEmail` ("Submitted forms sent to")
-   * followed by every output whose condition passed - an output with no
-   * condition always qualifies. Deduplicated on all three properties together,
-   * so one address can still appear twice in different output formats.
-   */
-  notificationTargets?: SubmitNotificationTarget[]
 }
 
 /**

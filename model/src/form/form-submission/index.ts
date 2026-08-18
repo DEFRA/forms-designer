@@ -167,23 +167,7 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
     repeaters: Joi.array<SubmitRecordset>()
       .items(formSubmitRecordsetSchema)
       .required()
-      .description('Repeatable section values from the form'),
-    conditionEvaluations: Joi.array<SubmitConditionEvaluation>()
-      .items(formSubmitConditionEvaluationSchema)
-      // Optional - only sent for V2 forms, and absent from runner versions
-      // released before this field existed
-      .optional()
-      .description(
-        'Outcome of every condition in the form definition, evaluated against the final answers'
-      ),
-    notificationTargets: Joi.array<SubmitNotificationTarget>()
-      .items(formSubmitNotificationTargetSchema)
-      // Optional - absent from runner versions released before this field
-      // existed
-      .optional()
-      .description(
-        'Where the submission should be sent, being the form notification email plus every output whose condition passed'
-      )
+      .description('Repeatable section values from the form')
   })
   .required()
   .label('FormSubmitPayload')
