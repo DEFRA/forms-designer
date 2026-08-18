@@ -56,10 +56,55 @@ const FORM_NOT_FOUND = {
 }
 
 /**
+ * @param { string | undefined } activityType
+ */
+function getFormActivityToggle(activityType) {
+  return {
+    name: 'activityType',
+    fieldset: {
+      legend: {
+        text: 'Show metrics for',
+        isPageHeading: false,
+        classes: 'govuk-fieldset__legend--m'
+      }
+    },
+    classes: 'govuk-radios--inline',
+    formGroup: {
+      afterInputs: {
+        html: '<button type="submit" class="govuk-button js-hidden" data-module="govuk-button" data-govuk-button-init="">Submit</button>'
+      }
+    },
+    items: [
+      {
+        value: 'all',
+        text: 'All forms',
+        checked: (activityType ?? 'all') === 'all',
+        attributes: {
+          onchange: 'this.form.submit()'
+        }
+      },
+      {
+        value: 'cy',
+        text: 'Forms with a Welsh translation',
+        checked: activityType === 'cy',
+        attributes: {
+          onchange: 'this.form.submit()'
+        }
+      }
+    ]
+  }
+}
+
+/**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {FilterAndSortCriteria} filterAndSort
+ * @param { string | undefined } activityType
  */
-export function metricsFormActivityViewModel(metrics, filterAndSort) {
+export function metricsFormActivityViewModel(
+  metrics,
+  filterAndSort,
+  activityType
+) {
   const organisationMap = /** @type {Map<string, number>} */ (new Map())
   organisations.forEach((org) => {
     organisationMap.set(org, 0)
@@ -70,9 +115,17 @@ export function metricsFormActivityViewModel(metrics, filterAndSort) {
   })
 
   const rows = mapOverviewMetrics(metrics.overview)
+
+  const formActivityToggle = getFormActivityToggle(activityType)
+
   return /** @type {FormActivityModel} */ ({
-    overviewMetrics: mapTotalMetrics(metrics.totals, tilePeriodNames),
+    overviewMetrics: mapTotalMetrics(
+      metrics.totals,
+      tilePeriodNames,
+      filterAndSort.language
+    ),
     formMetricRows: sortMetricRows(rows, filterAndSort),
+    formActivityToggle,
     sort: {
       sortCol: filterAndSort.sortCol,
       sortDir: filterAndSort.sortDir
@@ -134,15 +187,17 @@ export function getPeriodNameFromSlug(periodSlug) {
  * @param {FormDrilldownMetric[]} drilldownMetrics
  * @param {string} period
  * @param {FormMetricName} metricName
+ * @param { string | undefined } language
  */
 export function metricsDrilldownViewModel(
   tileMetrics,
   drilldownMetrics,
   period,
-  metricName
+  metricName,
+  language
 ) {
   const overviewMetrics = /** @type {Record<string, any>} */ (
-    mapTotalMetrics(tileMetrics.totals, tilePeriodNames)
+    mapTotalMetrics(tileMetrics.totals, tilePeriodNames, language)
   )
   const periodSelector = getPeriodNameFromSlug(period)
   const periodDetails = overviewMetrics[periodSelector]

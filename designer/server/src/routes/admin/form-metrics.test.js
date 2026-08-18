@@ -18,8 +18,20 @@ describe('Form metrics routes', () => {
   /** @type {Server} */
   let server
 
+  /** @type {jest.Mock | undefined} */
+  let yarGetMock
+
   beforeAll(async () => {
     server = await createServer()
+
+    // Allow individual tests to stub request.yar.get without touching real session storage
+    server.ext('onPreHandler', (request, h) => {
+      if (yarGetMock) {
+        request.yar.get = yarGetMock
+      }
+      return h.continue
+    })
+
     await server.initialize()
   })
 
@@ -29,10 +41,48 @@ describe('Form metrics routes', () => {
 
   beforeEach(() => {
     jest.clearAllMocks()
+    yarGetMock = undefined
   })
 
   describe('form-metrics', () => {
     describe('display and filter form metrics', () => {
+      test('should redirect if no radio option supplied', async () => {
+        const options = {
+          method: 'get',
+          url: '/admin/form-metrics/form-activity',
+          auth
+        }
+
+        const {
+          response: { statusCode, headers }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(headers.location).toBe('/admin/form-metrics/form-activity/all')
+      })
+
+      test('should restore user filter', async () => {
+        yarGetMock = jest
+          .fn()
+          .mockReturnValue('?searchText=test+search&showFilter=Y')
+
+        const options = {
+          method: 'get',
+          url: '/admin/form-metrics/form-activity/all?restoreFilter=Y',
+          auth
+        }
+
+        const {
+          response: { statusCode, headers }
+        } = await renderResponse(server, options)
+
+        expect(yarGetMock).toHaveBeenCalledWith('metrics-filter-all')
+        expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(headers.location).toBe(
+          '/admin/form-metrics/form-activity/all?searchText=test+search&showFilter=Y'
+        )
+      })
+
       test('should render report form with form activity', async () => {
         const mockMetrics = {
           overview: [],
@@ -53,7 +103,7 @@ describe('Form metrics routes', () => {
 
         const options = {
           method: 'get',
-          url: '/admin/form-metrics',
+          url: '/admin/form-metrics/form-activity/all',
           auth
         }
 
@@ -99,7 +149,7 @@ describe('Form metrics routes', () => {
 
         const options = {
           method: 'get',
-          url: '/admin/form-metrics/component-usage',
+          url: '/admin/form-metrics/component-usage/all',
           auth
         }
 
@@ -182,7 +232,7 @@ describe('Form metrics routes', () => {
       test('should filter and redirect with query', async () => {
         const options = {
           method: 'post',
-          url: '/admin/form-metrics',
+          url: '/admin/form-metrics/form-activity/all',
           auth,
           payload: {
             searchText: 'test search'
@@ -195,7 +245,29 @@ describe('Form metrics routes', () => {
 
         expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
         expect(headers.location).toBe(
-          '/admin/form-metrics?searchText=test+search&showFilter=Y'
+          '/admin/form-metrics/form-activity/all?searchText=test+search&showFilter=Y'
+        )
+      })
+
+      test('should restore filter on switch of radio options', async () => {
+        const options = {
+          method: 'post',
+          url: '/admin/form-metrics/form-activity/all',
+          auth,
+          payload: {
+            restoreFilter: 'Y'
+          }
+        }
+
+        yarGetMock = jest.fn().mockReturnValue('?searchText=test2&showFilter=Y')
+
+        const {
+          response: { statusCode, headers }
+        } = await renderResponse(server, options)
+
+        expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(headers.location).toBe(
+          '/admin/form-metrics/form-activity/cy?searchText=test2&showFilter=Y'
         )
       })
     })
