@@ -10,6 +10,7 @@ export {
   getPageDefaults,
   getPageFromDefinition,
   getPageTitle,
+  getQuestionHeadingForCYA,
   hasComponents,
   hasComponentsEvenIfNoNext,
   hasFormComponents,
