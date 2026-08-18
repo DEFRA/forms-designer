@@ -2,12 +2,14 @@
 
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/radios/macro.njk" import govukRadios %}
 {% from "govuk/components/select/macro.njk" import govukSelect %}
 {% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
 {% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -32,6 +34,12 @@
       {% endcall %}
     {% endif %}
 
+    {% set defaultEmailWarningHtml %}
+      {{ govukWarningText({
+        html: 'This email address receives all submissions until you add another email address. After that, it only receives submissions that do not match any additional email address conditions. To continue receiving all submissions, <a class="govuk-link govuk-link--no-visited-state" href="#email-address-form">add it as an additional email address</a>.'
+      }) }}
+    {% endset %}
+
     {{ govukSummaryList({
       card: {
         title: {
@@ -54,9 +62,19 @@
         {
           key: { text: "Submission format" },
           value: { text: defaultEmail.format }
+        },
+        {
+          classes: "govuk-summary-list__row--full-width",
+          value: { html: defaultEmailWarningHtml }
         }
       ]
     }) }}
+
+    {% call govukDetails({
+      summaryText: "How additional email addresses work"
+    }) %}
+      Additional email addresses receive submissions that meet their conditions. If a submission matches multiple conditions, we'll send it to each matching email address. If it doesn't match any conditions, we'll send it to the default email address.
+    {% endcall %}
 
     <h2 class="govuk-heading-l">Additional email addresses</h2>
 

@@ -217,6 +217,25 @@
   width: 15%;
 }
 
+// Summary list rows that span the full width of the list, rather than being
+// confined to the value column. CSS tables have no colspan, so the row is
+// rendered as a table caption - which does stretch the full table width.
+.govuk-summary-list__row--full-width {
+  @include govuk-media-query($from: tablet) {
+    display: table-caption;
+    caption-side: bottom;
+
+    .govuk-summary-list__key {
+      display: none;
+    }
+
+    .govuk-summary-list__value {
+      display: block;
+      padding-right: 0;
+    }
+  }
+}
+
 .full-width-banner .govuk-notification-banner__heading {
   max-width: 100%;
 }
