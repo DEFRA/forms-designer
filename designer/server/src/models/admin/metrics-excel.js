@@ -1,3 +1,4 @@
+import { format } from 'date-fns'
 import xlsx from 'xlsx'
 
 import {
@@ -174,8 +175,9 @@ const formStructureColumns = [
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metricsWelsh
+ * @param {Record<string, Record<string, number>>} submissionsPerMonth
  */
-export function getMetricsAsExcel(metrics, metricsWelsh) {
+export function getMetricsAsExcel(metrics, metricsWelsh, submissionsPerMonth) {
   // Create an excel file - one workbook with multiple worksheets
   const workbook = xlsx.utils.book_new()
 
@@ -230,6 +232,11 @@ export function getMetricsAsExcel(metrics, metricsWelsh) {
     componentUsage.formUsageFormStructures,
     'Usage - Form structure'
   )
+
+  // Submissions per month
+  const { columns, data } = getSubmissionSheetData(submissionsPerMonth, metrics)
+
+  addWorksheet(workbook, columns, data, 'Form submissions')
 
   const buffer = /** @type {XLSXBuffer} */ (
     xlsx.write(workbook, {
@@ -292,6 +299,75 @@ function constructRowKeyMap(metricRow) {
     }
   }
   return rowMap
+}
+
+/**
+ * Create data to show form submissions per month, per form
+ * @param {Record<string, Record<string, number>>} submissionsPerMonth
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ */
+export function getSubmissionSheetData(submissionsPerMonth, metrics) {
+  // Map of formId -> formName
+  const formNameMap = getFormNameMap(metrics)
+
+  // Add first column
+  /** @type {{ title: string, dataKey:string, attributes?: { wch: number }}[]} */
+  const columns = [
+    {
+      title: 'Form name',
+      dataKey: 'formName',
+      attributes: { wch: 50 }
+    }
+  ]
+
+  // Determine a unique set of forms so we know which rows to add in the worksheet,
+  // and build up the list of 'month' column headers
+  const uniqueFormIds = /** @type {Set<string>} */ (new Set())
+  for (const [month, forms] of Object.entries(submissionsPerMonth)) {
+    columns.push({
+      title: format(new Date(`${month}-01`), 'MMM-yy'),
+      dataKey: month
+    })
+    Object.keys(forms).forEach((id) => uniqueFormIds.add(id))
+  }
+
+  // Build up data rows
+  const dataRows = []
+  for (const formId of uniqueFormIds.keys()) {
+    // Add form name
+    const dataCells = /** @type {Record<string, string | number>} */ ({
+      formName: formNameMap.get(formId) ?? 'Form not found'
+    })
+    // Add each submission count per month (for each form)
+    for (const [month, forms] of Object.entries(submissionsPerMonth)) {
+      dataCells[month] = forms[formId] ?? 0
+    }
+    dataRows.push(dataCells)
+  }
+
+  return {
+    columns,
+    // Sort by form name
+    data: dataRows.toSorted((rowA, rowB) =>
+      `${rowA.formName}`.localeCompare(`${rowB.formName}`)
+    )
+  }
+}
+
+/**
+ * Generate a map of formId -> formName
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ */
+function getFormNameMap(metrics) {
+  /** @type {Map<string, string>} */
+  const formNameMap = new Map()
+  metrics.overview.forEach((metric) =>
+    formNameMap.set(
+      metric.formId,
+      /** @type {string} */ (metric.summaryMetrics.name)
+    )
+  )
+  return formNameMap
 }
 
 /**

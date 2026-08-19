@@ -10,6 +10,7 @@ import {
   getDrilldownMetrics,
   getMetrics,
   getMetricsForForm,
+  getSubmissionsPerMonth,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 
@@ -102,6 +103,18 @@ describe('metrics.js', () => {
       })
       const expectedUrl = new URL('/report/form-id-1', auditEndpoint)
       await getMetricsForForm('form-id-1')
+      expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl)
+    })
+  })
+
+  describe('getSubmissionsPerMonth', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      const expectedUrl = new URL('/report-submissions', auditEndpoint)
+      await getSubmissionsPerMonth(new Date(2026, 0, 1))
       expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl)
     })
   })
