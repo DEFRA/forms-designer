@@ -54,7 +54,8 @@ const filterAndSortSchema = Joi.object({
   activityType: Joi.string()
     .valid(FORM_ACTIVITY_OPTION_ALL, FORM_ACTIVITY_OPTION_WELSH)
     .optional(),
-  restoreFilter: Joi.string().valid('Y').optional()
+  restoreFilter: Joi.string().valid('Y').optional(),
+  currentTab: Joi.string().optional()
 })
 
 const drilldownParamSchema = Joi.object({
@@ -187,6 +188,11 @@ export default [
       const { payload, params } = request
       const { activityType, tab } = params
 
+      // Retain tab selection if passed in payload
+      const tabAnchor = payload.currentTab
+        ? payload.currentTab.replace('tab_', '#')
+        : ''
+
       // User has switched views using the radio options
       // Restore their previous filter criteria
       if (payload.restoreFilter) {
@@ -197,7 +203,9 @@ export default [
             : FORM_ACTIVITY_OPTION_ALL
         const savedFilter =
           /** @type {string} */ (request.yar.get(getSessionKey(toggled))) ?? ''
-        return h.redirect(`${ROUTE_BASE_PATH}/${tab}/${toggled}${savedFilter}`)
+        return h.redirect(
+          `${ROUTE_BASE_PATH}/${tab}/${toggled}${tabAnchor}${savedFilter}`
+        )
       }
 
       const queryStr = buildQueryFromPayload(payload)
@@ -207,7 +215,9 @@ export default [
         resolvedActivityType !== FORM_ACTIVITY_OPTION_ALL
           ? `/${resolvedActivityType}`
           : `/${FORM_ACTIVITY_OPTION_ALL}`
-      return h.redirect(`${ROUTE_BASE_PATH}/${tab}${subPath}${queryStr}`)
+      return h.redirect(
+        `${ROUTE_BASE_PATH}/${tab}${subPath}${tabAnchor}${queryStr}`
+      )
     },
     options: {
       auth: {
