@@ -348,7 +348,7 @@ export function getSubmissionSheetData(submissionsPerMonth, metrics) {
   return {
     columns,
     // Sort by form name
-    data: dataRows.sort((rowA, rowB) =>
+    data: dataRows.toSorted((rowA, rowB) =>
       `${rowA.formName}`.localeCompare(`${rowB.formName}`)
     )
   }
