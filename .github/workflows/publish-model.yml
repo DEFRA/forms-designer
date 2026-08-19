@@ -55,7 +55,7 @@ jobs:
 
       - name: Install dependencies
         if: steps.npm-install-model-cache.outputs.cache-hit != 'true'
-        run: npm ci --workspace model --include-workspace-root
+        run: npm ci --workspace model --include-workspace-root --allow-remote=root
 
       - name: Run build
         run: npm run build --workspace model
@@ -102,7 +102,7 @@ jobs:
         run: npm install -g "npm@$(node -p 'require("./package.json").engines.npm')"
 
       - name: Update package versions
-        run: npm version patch --workspaces --include-workspace-root --git-tag-version false --save
+        run: npm version patch --workspaces --include-workspace-root --git-tag-version false --save --allow-remote=root
 
       - name: Commit and push updates
         run: |

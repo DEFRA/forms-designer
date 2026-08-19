@@ -49,6 +49,7 @@
   <form action="#" method="post">
     {{ govukRadios(model.formActivityToggle) }}
     <input type="hidden" name="restoreFilter" value="Y" />
+    <input type="hidden" name="currentTab" id="currentTab" value="" />
   </form>
 
   {{ govukTabs({
@@ -199,4 +200,29 @@
 
   {% block mainEnd %}
     {{ super() }}
+    <script>
+      // Handle retention of current tab after switch of radios
+      function setCurrentTab(tab) {
+        const target = document.getElementById('currentTab')
+        if (target) {
+          target.value = tab.id
+        }
+      }
+      document.addEventListener('DOMContentLoaded', function(event) {
+        const tabs = document.getElementsByClassName('govuk-tabs__tab')
+        if (tabs) {
+          for (const tab of tabs) {
+            setTimeout(() => {
+              if (tab.ariaSelected === 'true') {
+                setCurrentTab(tab)
+              }
+            }, 0)
+
+            tab.addEventListener('click', () => {
+              setCurrentTab(tab)
+            })
+          }
+        }
+    });
+    </script>
   {% endblock %}

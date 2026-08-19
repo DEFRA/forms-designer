@@ -38,7 +38,10 @@
         errorMessage: {
           text: formErrors.formDefinition.text
         } if formErrors.formDefinition,
-        accept: ".json"
+        attributes: {
+          accept: ".json"
+        },
+        javascript: true
       }) }}
 
       <div class="govuk-button-group">

@@ -4,7 +4,7 @@ import * as njk from 'nunjucks/browser/nunjucks-slim'
 // @ts-expect-error
 import * as path from 'path-webpack'
 
-import { markdownToHtml as markdown } from '@defra/forms-model'
+import { markdownToHtml as markdown, setProperty } from '@defra/forms-model'
 
 // @ts-expect-error
 njk.PrecompiledLoader.prototype.resolve = function patchedResolve(from, to) {
@@ -14,6 +14,7 @@ njk.PrecompiledLoader.prototype.resolve = function patchedResolve(from, to) {
 // Add any filters required by client-side Nunjucks templates i.e. JS component previews
 const env = new njk.Environment()
 env.addFilter('markdown', markdown)
+env.addFilter('setProperty', setProperty)
 
 // @ts-expect-error
 window.nunjucks = env

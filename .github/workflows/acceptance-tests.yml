@@ -61,7 +61,7 @@ jobs:
       - name: Build forms-designer
         shell: bash
         run: |
-          npm ci
+          npm ci --allow-remote=root
           cp designer/.automated-tests.env designer/.env
           echo "=== Configuration ===" > test-logs.txt
           cat designer/.env >> test-logs.txt
