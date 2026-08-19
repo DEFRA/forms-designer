@@ -8,16 +8,17 @@ import {
 
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import { getPageFromDefinition } from '~/src/lib/utils.js'
+import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
 import {
   baseModelFields,
   getFormSpecificNavigation
 } from '~/src/models/forms/editor-v2/common.js'
 import { isGuidancePage } from '~/src/models/forms/editor-v2/pages.js'
 import {
+  SUMMARY_CONTROLLER_TEMPLATE,
   buildPreviewUrl,
-  buildSectionsForPreview,
-  getDeclarationInfo,
-  getPaymentInfo
+  enrichPreviewModel,
+  getDeclarationInfo
 } from '~/src/models/forms/editor-v2/preview-helpers.js'
 import {
   CHECK_ANSWERS_TAB_SECTIONS,
@@ -93,16 +94,6 @@ function getUnassignedPages(definition) {
 }
 
 /**
- * Get unassigned pages for preview, excluding guidance pages
- * Guidance pages can be assigned to sections but won't appear on the check answers page
- * @param {FormDefinition} definition
- * @returns {Array<PageSummary>}
- */
-function getUnassignedPagesForPreview(definition) {
-  return getUnassignedPages(definition).filter((page) => !page.isGuidance)
-}
-
-/**
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
  * @param {string} pageId
@@ -128,15 +119,30 @@ export function sectionsViewModel(
 
   const sectionsWithPages = buildSectionsWithPages(definition)
   const unassignedPages = getUnassignedPages(definition)
-  const previewSections = buildSectionsForPreview(definition)
-  const previewUnassignedPages = getUnassignedPagesForPreview(definition)
 
   const currentPath = `/library/${slug}/editor-v2/page/${pageId}/check-answers-settings/sections`
 
   const page = getPageFromDefinition(definition, pageId)
   const previewPageUrl = `${buildPreviewUrl(slug, FormStatus.Draft)}${page?.path}?force`
+
   const declarationInfo = getDeclarationInfo(page)
+  const declarationText = declarationInfo.declarationText
+  const needDeclaration = declarationInfo.hasDeclaration
+
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
+  const showReferenceNumber = definition.options?.showReferenceNumber ?? false
+
+  const basePreviewModel = getPreviewModel(
+    page,
+    definition,
+    previewPageUrl,
+    declarationText,
+    needDeclaration,
+    showConfirmationEmail,
+    showReferenceNumber
+  )
+
+  const previewModel = enrichPreviewModel(basePreviewModel, definition)
 
   return {
     ...baseModelFields(
@@ -160,12 +166,11 @@ export function sectionsViewModel(
     errorList: buildErrorList(validation?.formErrors),
     formErrors: validation?.formErrors,
     formValues: validation?.formValues,
-    previewModel: {
-      sections: previewSections,
-      unassignedPages: previewUnassignedPages,
-      declaration: declarationInfo,
-      showConfirmationEmail,
-      payment: getPaymentInfo(definition)
+    previewModel,
+    preview: {
+      pageId: page?.id,
+      definitionId: metadata.id,
+      pageTemplate: SUMMARY_CONTROLLER_TEMPLATE
     },
     previewPageUrl,
     notification,

@@ -26,6 +26,7 @@ import {
   getPageDefaults,
   getPageFromDefinition,
   getPageTitle,
+  getQuestionHeadingForCYA,
   hasComponents,
   hasComponentsEvenIfNoNext,
   hasFormComponents,
@@ -473,6 +474,103 @@ describe('helpers', () => {
         id: '0f711e08-3801-444d-8e37-a88867c48f04'
       }
       expect(getPageTitle(page)).toBe('Page title unknown')
+    })
+  })
+
+  describe('getQuestionHeadingForCYA', () => {
+    const components = /** @type {ComponentDef[]} */ [
+      buildTextFieldComponent({
+        id: 'comp1',
+        name: 'comp1',
+        title: 'My first component',
+        shortDescription: 'My first short desc'
+      }),
+      buildTextFieldComponent({
+        id: 'comp2',
+        name: 'comp2',
+        title: 'My second component',
+        shortDescription: 'My second short desc'
+      })
+    ]
+
+    const componentsWithGuidance = /** @type {ComponentDef[]} */ [
+      buildMarkdownComponent(),
+      buildTextFieldComponent({
+        id: 'comp1',
+        name: 'comp1',
+        title: 'My first component',
+        shortDescription: 'My first short desc'
+      }),
+      buildTextFieldComponent({
+        id: 'comp2',
+        name: 'comp2',
+        title: 'My second component',
+        shortDescription: 'My second short desc'
+      })
+    ]
+    it('should return page title if set on page', () => {
+      const page: PageQuestion = {
+        title: 'My page title',
+        path: '/empty-page',
+        components,
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getQuestionHeadingForCYA(page)).toBe('My page title')
+    })
+
+    it('should return short desc from first component if not set on page', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components,
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getQuestionHeadingForCYA(page)).toBe('My first short desc')
+    })
+
+    it('should return short desc from first non-markdown component if not set on page', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components: componentsWithGuidance,
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getQuestionHeadingForCYA(page)).toBe('My first short desc')
+    })
+
+    it('should return unknown title if no components and no page title set', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components: [],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getQuestionHeadingForCYA(page)).toBe('Unknown')
+    })
+
+    it('should return unknown title if components missing and no page title set', () => {
+      const page: PageSummary = {
+        title: '',
+        path: '/empty-page',
+        id: '0f711e08-3801-444d-8e37-a88867c48f04',
+        controller: ControllerType.Summary
+      }
+      expect(getQuestionHeadingForCYA(page)).toBe('Unknown')
+    })
+
+    it('should return unknown title if no non-guidance component and no page title set', () => {
+      const page: PageQuestion = {
+        title: '',
+        path: '/empty-page',
+        components: [buildMarkdownComponent()],
+        next: [],
+        id: '0f711e08-3801-444d-8e37-a88867c48f04'
+      }
+      expect(getQuestionHeadingForCYA(page)).toBe('Unknown')
     })
   })
 

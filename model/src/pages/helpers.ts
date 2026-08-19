@@ -237,6 +237,27 @@ export function getPageTitle(page: Page) {
 }
 
 /**
+ * Gets page title, or short desc of first question (if no page title set)
+ * @param {Page} page
+ * @returns {string}
+ */
+export function getQuestionHeadingForCYA(page: Page) {
+  if (page.title !== '') {
+    return page.title
+  }
+
+  if (hasComponentsEvenIfNoNext(page)) {
+    const firstComp = page.components.find(hasFormField)
+    if (firstComp) {
+      return firstComp.shortDescription && firstComp.shortDescription !== ''
+        ? firstComp.shortDescription
+        : firstComp.title
+    }
+  }
+  return 'Unknown'
+}
+
+/**
  *
  * @param {FormDefinition} definition
  * @param {string} pageId
