@@ -38,7 +38,10 @@
         errorMessage: {
           text: formErrors.translations.text
         } if formErrors.translations,
-        accept: ".json"
+        attributes: {
+          accept: ".xlsx"
+        },
+        javascript: true
       }) }}
 
       <div class="govuk-button-group">

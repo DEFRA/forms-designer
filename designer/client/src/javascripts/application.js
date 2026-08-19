@@ -7,6 +7,7 @@ import {
   CharacterCount,
   Checkboxes,
   ErrorSummary,
+  FileUpload,
   NotificationBanner,
   Radios,
   SkipLink,
@@ -21,6 +22,7 @@ createAll(Button)
 createAll(CharacterCount)
 createAll(Checkboxes)
 createAll(ErrorSummary)
+createAll(FileUpload)
 createAll(Radios)
 createAll(SkipLink)
 createAll(Tabs)
