@@ -1,5 +1,4 @@
 import { type FormStatus } from '~/src/common/enums.js'
-import { type OutputAudience } from '~/src/form/form-definition/types.js'
 import {
   type ConditionEvaluationOutcome,
   type SecurityQuestionsEnum,
@@ -11,7 +10,6 @@ import {
 import {
   formSubmitConditionEvaluationSchema,
   formSubmitConditionReferenceSchema,
-  formSubmitNotificationTargetSchema,
   formSubmitPayloadSchema,
   formSubmitRecordSchema,
   formSubmitRecordsetSchema
@@ -108,32 +106,6 @@ export interface SubmitConditionEvaluation {
    * nested condition references, and whether each was answered
    */
   references: SubmitConditionReference[]
-}
-
-/**
- * An email address the submission should be sent to, in a given format.
- *
- * The same address can appear more than once with a different `audience` or
- * `version` - a recipient may want both the human-readable email and the
- * machine-processable one.
- * @see {@link formSubmitNotificationTargetSchema}
- */
-export interface SubmitNotificationTarget {
-  /**
-   * The address to send to
-   */
-  emailAddress: string
-
-  /**
-   * Whether the submission should be sent in its human-readable or
-   * machine-processable form
-   */
-  audience: OutputAudience
-
-  /**
-   * The version of the output format to send
-   */
-  version: string
 }
 
 /**

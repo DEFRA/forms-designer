@@ -14,7 +14,6 @@ import {
   type SaveAndExitMessageData,
   type SubmitConditionEvaluation,
   type SubmitConditionReference,
-  type SubmitNotificationTarget,
   type SubmitPayload,
   type SubmitRecord,
   type SubmitRecordset
@@ -110,31 +109,6 @@ export const formSubmitConditionEvaluationSchema =
   })
     .label('FormSubmitConditionEvaluation')
     .description('Recorded outcome of a single condition at submission')
-
-/**
- * Joi schema for `SubmitNotificationTarget` interface
- * @see {@link SubmitNotificationTarget}
- */
-export const formSubmitNotificationTargetSchema =
-  Joi.object<SubmitNotificationTarget>({
-    emailAddress: Joi.string()
-      // No TLD restriction - any valid email address is accepted here
-      // as the real validation happens when the form definition is created
-      .email({ tlds: { allow: false } })
-      .required()
-      .description('Address the submission should be sent to'),
-    audience: Joi.string()
-      .valid('human', 'machine')
-      .required()
-      .description(
-        'Whether to send the human-readable or machine-processable output'
-      ),
-    version: Joi.string()
-      .required()
-      .description('Version of the output format to send')
-  })
-    .label('FormSubmitNotificationTarget')
-    .description('An email address to send the submission to, and in what form')
 
 /**
  * Joi schema for `SubmitPayload` interface

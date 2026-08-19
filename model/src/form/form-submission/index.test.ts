@@ -1,7 +1,6 @@
 import { ConditionEvaluationOutcome } from '~/src/form/form-submission/enums.js'
 import {
   formSubmitConditionEvaluationSchema,
-  formSubmitNotificationTargetSchema,
   formSubmitPayloadSchema
 } from '~/src/form/form-submission/index.js'
 import { type SubmitPayload } from '~/src/form/form-submission/types.js'
@@ -63,71 +62,6 @@ describe('formSubmitConditionEvaluationSchema', () => {
   })
 })
 
-describe('formSubmitNotificationTargetSchema', () => {
-  it('should accept a fully populated target', () => {
-    const { error, value } = formSubmitNotificationTargetSchema.validate({
-      emailAddress: 'casework@defra.gov.uk',
-      audience: 'machine',
-      version: '2'
-    })
-
-    expect(error).toBeUndefined()
-    expect(value).toEqual({
-      emailAddress: 'casework@defra.gov.uk',
-      audience: 'machine',
-      version: '2'
-    })
-  })
-
-  it('should reject a target with no audience', () => {
-    const { error } = formSubmitNotificationTargetSchema.validate({
-      emailAddress: 'enrique.chase@defra.gov.uk',
-      version: '1'
-    })
-
-    expect(error).toBeDefined()
-    expect(error?.message).toContain('audience')
-  })
-
-  it('should reject an unknown audience', () => {
-    const { error } = formSubmitNotificationTargetSchema.validate({
-      emailAddress: 'enrique.chase@defra.gov.uk',
-      audience: 'robot',
-      version: '1'
-    })
-
-    expect(error).toBeDefined()
-    expect(error?.message).toContain('audience')
-  })
-
-  it.each([
-    'enrique.chase@defra.gov.uk',
-    'casework@example.com',
-    'someone@example.io',
-    'someone@sub.domain.museum',
-    'someone@example.internal'
-  ])('should accept the email address %s', (emailAddress) => {
-    const { error } = formSubmitNotificationTargetSchema.validate({
-      emailAddress,
-      audience: 'human',
-      version: '1'
-    })
-
-    expect(error).toBeUndefined()
-  })
-
-  it('should reject a malformed email address', () => {
-    const { error } = formSubmitNotificationTargetSchema.validate({
-      emailAddress: 'not-an-email',
-      audience: 'human',
-      version: '1'
-    })
-
-    expect(error).toBeDefined()
-    expect(error?.message).toContain('emailAddress')
-  })
-})
-
 describe('formSubmitPayloadSchema', () => {
   it('should accept a payload of form answers', () => {
     const { error } = formSubmitPayloadSchema.validate(basePayload)
@@ -136,19 +70,16 @@ describe('formSubmitPayloadSchema', () => {
   })
 
   // The submission-api `/submit` payload carries form answers only. Condition
-  // outcomes and notification targets travel on the adapter submission
-  // message instead (see forms-engine-plugin), which is what gets stored
-  // against the submission and read by forms-notify-listener.
-  it.each(['conditionEvaluations', 'notificationTargets'])(
-    'should reject a payload carrying %s',
-    (key) => {
-      const { error } = formSubmitPayloadSchema.validate({
-        ...basePayload,
-        [key]: []
-      })
+  // outcomes travel on the adapter submission message instead (see
+  // forms-engine-plugin), which is what gets stored against the submission and
+  // read by forms-notify-listener.
+  it('should reject a payload carrying conditionEvaluations', () => {
+    const { error } = formSubmitPayloadSchema.validate({
+      ...basePayload,
+      conditionEvaluations: []
+    })
 
-      expect(error).toBeDefined()
-      expect(error?.message).toContain('not allowed')
-    }
-  )
+    expect(error).toBeDefined()
+    expect(error?.message).toContain('not allowed')
+  })
 })
