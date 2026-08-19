@@ -90,6 +90,26 @@ export async function getMetricsForForm(formId) {
 }
 
 /**
+ * Get details of submissions per month, split by form
+ * @param {Date} earliestDate
+ */
+export async function getSubmissionsPerMonth(earliestDate) {
+  const getJsonByType =
+    /** @type {typeof getJson<Record<string, Record<string, number>>>} */ (
+      getJson
+    )
+
+  const requestUrl = new URL(
+    `/report-submissions?earliestDate=${earliestDate.toISOString()}`,
+    config.auditUrl
+  )
+
+  const { body } = await getJsonByType(requestUrl)
+
+  return body
+}
+
+/**
  * Regenerate the full set of metrics afresh (clears the 'mertics' DB and repopulates)
  * @param {string} token
  */

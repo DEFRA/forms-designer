@@ -10,6 +10,7 @@ import {
   MetricsFilterFields,
   getDrilldownMetrics,
   getMetrics,
+  getSubmissionsPerMonth,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
@@ -292,7 +293,15 @@ export default [
         // Live metrics only - for Welsh forms
         const metricsWelsh = await getMetrics({ language: 'cy' })
 
-        const buffer = getMetricsAsExcel(metrics, metricsWelsh)
+        const submissionsPerMonth = await getSubmissionsPerMonth(
+          new Date(metrics.totals.earliestDate)
+        )
+
+        const buffer = getMetricsAsExcel(
+          metrics,
+          metricsWelsh,
+          submissionsPerMonth
+        )
 
         const now = new Date()
         const filename = `form-metrics-${format(now, 'yyyy-MM-dd')}.xlsx`
