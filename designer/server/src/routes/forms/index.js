@@ -4,6 +4,7 @@ import contactOnline from '~/src/routes/forms/contact/online.js'
 import contactPhone from '~/src/routes/forms/contact/phone.js'
 import create from '~/src/routes/forms/create.js'
 import edit from '~/src/routes/forms/edit.js'
+import editorAdvancedSettings from '~/src/routes/forms/editor-v2/advanced-settings.js'
 import editorCheckAnswersOverview from '~/src/routes/forms/editor-v2/check-answers-settings/check-answers-overview.js'
 import confirmationEmailSettings from '~/src/routes/forms/editor-v2/check-answers-settings/confirmation-email-settings.js'
 import editorCheckAnswersSettings from '~/src/routes/forms/editor-v2/check-answers-settings/declaration-settings.js'
@@ -18,6 +19,7 @@ import editorConditionsJoin from '~/src/routes/forms/editor-v2/conditions-join.j
 import editorConditions from '~/src/routes/forms/editor-v2/conditions.js'
 import editorDownload from '~/src/routes/forms/editor-v2/download.js'
 import editorEditListResolve from '~/src/routes/forms/editor-v2/edit-list-resolve.js'
+import editorEmailActions from '~/src/routes/forms/editor-v2/email-actions.js'
 import editorError from '~/src/routes/forms/editor-v2/error.js'
 import editorGuidance from '~/src/routes/forms/editor-v2/guidance.js'
 import editorListItemDelete from '~/src/routes/forms/editor-v2/list-item-delete.js'
@@ -50,6 +52,7 @@ export default [
   editorGuidance,
   editorPages,
   editorPagesReorder,
+  editorAdvancedSettings,
   editorPage,
   editorQuestion,
   editorQuestionDelete,
@@ -72,6 +75,7 @@ export default [
   editorUpload,
   editorDownload,
   editorEditListResolve,
+  editorEmailActions,
   editorTranslations,
   history,
   library,

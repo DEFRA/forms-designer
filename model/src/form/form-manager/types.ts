@@ -45,12 +45,14 @@ export enum FormDefinitionError {
   UniqueListItemId = 'unique_list_item_id',
   UniqueListItemText = 'unique_list_item_text',
   UniqueListItemValue = 'unique_list_item_value',
+  UniqueOutput = 'unique_output',
   RefPageCondition = 'ref_page_condition',
   RefConditionComponentId = 'ref_condition_component_id',
   RefConditionListId = 'ref_condition_list_id',
   RefConditionItemId = 'ref_condition_item_id',
   RefConditionConditionId = 'ref_condition_condition_id',
   RefPageComponentList = 'ref_page_component_list',
+  RefOutputCondition = 'ref_output_condition',
   IncompatibleConditionComponentType = 'incompatible_condition_component_type',
   IncompatibleQuestionRegex = 'incompatible_question_regex',
   Other = 'other'
@@ -125,6 +127,13 @@ export const formDefinitionErrors: FormDefinitionErrors = {
     key: 'value',
     type: FormDefinitionErrorType.Unique
   },
+  [FormDefinitionError.UniqueOutput]: {
+    // Outputs are compared on a composite of their address, condition,
+    // audience and version, so there is no single key to match on. An empty
+    // key matches any unique constraint on the schema it is attached to.
+    key: '',
+    type: FormDefinitionErrorType.Unique
+  },
   [FormDefinitionError.RefPageCondition]: {
     key: 'condition',
     type: FormDefinitionErrorType.Ref
@@ -147,6 +156,10 @@ export const formDefinitionErrors: FormDefinitionErrors = {
   },
   [FormDefinitionError.RefPageComponentList]: {
     key: 'list',
+    type: FormDefinitionErrorType.Ref
+  },
+  [FormDefinitionError.RefOutputCondition]: {
+    key: 'condition',
     type: FormDefinitionErrorType.Ref
   },
   [FormDefinitionError.IncompatibleConditionComponentType]: {

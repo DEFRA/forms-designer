@@ -35,10 +35,17 @@ export function buildConditionsTable(slug, definition) {
       for (const ref of [...refs.pages, ...refs.paymentFields]) {
         seen.add(ref.pageNumber)
       }
-      const usedIn = Array.from(seen)
+      const pagesUsedIn = Array.from(seen)
         .sort((a, b) => a - b)
         .map((number) => `Page ${number}`)
         .join(', ')
+
+      // Email actions sit on their own line beneath any pages, so it is clear
+      // the condition drives where submissions are sent as well as page routing
+      const usedIn = [
+        pagesUsedIn,
+        refs.outputs.length ? 'Email actions' : ''
+      ].filter(Boolean)
 
       const linkClasses = 'govuk-link govuk-link--no-visited-state'
 
@@ -53,7 +60,7 @@ export function buildConditionsTable(slug, definition) {
           html: `<span class="govuk-!-font-weight-bold">${condition.displayName}</span><p>${toPresentationHtmlV2(condition, definition)}</p>`
         },
         {
-          text: usedIn,
+          html: usedIn.join('<br>'),
           classes: 'govuk-!-width-one-quarter'
         },
         {

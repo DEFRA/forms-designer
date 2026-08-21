@@ -1,10 +1,10 @@
 import { ComponentType, isConditionWrapperV2 } from '@defra/forms-model'
 
 /**
- * Find all pages that reference a condition
+ * Find all pages, conditions, payment fields and outputs that reference a condition
  * @param {FormDefinition} definition
  * @param {string} conditionId
- * @returns {{ pages: Array<{ pageId: string, pageNumber: number, pageTitle: string }>, conditions: Array<{ conditionId: string, conditionName: string }>, paymentFields: Array<{ pageId: string, pageNumber: number, pageTitle: string, componentId: string }> }}
+ * @returns {{ pages: Array<{ pageId: string, pageNumber: number, pageTitle: string }>, conditions: Array<{ conditionId: string, conditionName: string }>, paymentFields: Array<{ pageId: string, pageNumber: number, pageTitle: string, componentId: string }>, outputs: Array<{ index: number, emailAddress: string, audience: OutputAudience, version: string }> }}
  */
 export function findConditionReferences(definition, conditionId) {
   const { pages, conditions } = definition
@@ -55,13 +55,26 @@ export function findConditionReferences(definition, conditionId) {
       }))
   })
 
+  // Email actions (`outputs`) hold the condition deciding whether submissions
+  // are sent to that address. The index identifies the entry for removal.
+  const outputsUsingCondition = (definition.outputs ?? [])
+    .map((output, index) => ({ output, index }))
+    .filter(({ output }) => output.condition === conditionId)
+    .map(({ output, index }) => ({
+      index,
+      emailAddress: output.emailAddress,
+      audience: output.audience,
+      version: output.version
+    }))
+
   return {
     pages: pagesUsingCondition,
     conditions: conditionsReferencingThis,
-    paymentFields
+    paymentFields,
+    outputs: outputsUsingCondition
   }
 }
 
 /**
- * @import { FormDefinition } from '@defra/forms-model'
+ * @import { FormDefinition, OutputAudience } from '@defra/forms-model'
  */

@@ -324,36 +324,40 @@ function buildReorderAction(slug) {
 }
 
 /**
- * Build right side actions (manage conditions, upload/download)
+ * Build the right side menu (advanced settings, manage conditions, upload/download)
  * @param {string} slug
  */
-function buildRightSideActions(slug) {
-  return [
-    {
-      text: 'Manage conditions',
-      href: editorv2Path(slug, 'conditions'),
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
+function buildRightSideMenu(slug) {
+  return {
+    id: 'pages-menu',
+    alignMenu: 'right',
+    button: {
+      text: 'Tools',
+      classes: BUTTON_SECONDARY_CLASS
     },
-    {
-      text: 'Upload a form',
-      href: editorv2Path(slug, 'upload'),
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
-    },
-    {
-      text: 'Download this form',
-      href: `/library/${slug}/editor-v2/download`,
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
-    },
-    {
-      text: 'Welsh translation',
-      href: editorv2Path(slug, 'welsh'),
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
-    }
-  ]
+    items: [
+      {
+        text: 'Advanced settings',
+        href: editorv2Path(slug, 'advanced-settings')
+      },
+      {
+        text: 'Manage conditions',
+        href: editorv2Path(slug, 'conditions')
+      },
+      {
+        text: 'Upload a form',
+        href: editorv2Path(slug, 'upload')
+      },
+      {
+        text: 'Download this form',
+        href: `/library/${slug}/editor-v2/download`
+      },
+      {
+        text: 'Welsh translation',
+        href: editorv2Path(slug, 'welsh')
+      }
+    ]
+  }
 }
 
 /**
@@ -486,7 +490,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
 
   const pageActions = buildPageActions(metadata.slug)
-  const rightSideActions = buildRightSideActions(metadata.slug)
+  const rightSideMenu = buildRightSideMenu(metadata.slug)
   const conditions = buildConditionsFilter(definition, filter)
 
   const numOfNonEndPages = definition.pages.filter(
@@ -519,7 +523,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
     pageHeading,
     pageCaption,
     pageActions,
-    rightSideActions,
+    rightSideMenu,
     conditions,
     notification,
     paymentInfo

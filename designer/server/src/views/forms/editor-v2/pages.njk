@@ -5,6 +5,7 @@
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -47,17 +48,9 @@
               {{ standardPageCount }} page{{ 's' if standardPageCount > 1 else '' }}
             {% endif %}
           </h2>
-          {% if rightSideActions %}
-            <div class="app-pages-header__actions govuk-button-group">
-              {% for action in rightSideActions %}
-                {{ govukButton({
-                  text: action.text,
-                  href: action.href,
-                  classes: action.classes + " govuk-!-margin-bottom-0 app-pages-header__action-button",
-                  attributes: action.attributes,
-                  element: "a"
-                }) }}
-              {% endfor %}
+          {% if rightSideMenu %}
+            <div class="app-pages-header__actions">
+              {{ mojButtonMenu(rightSideMenu) }}
             </div>
           {% endif %}
         </div>

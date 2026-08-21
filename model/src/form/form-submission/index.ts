@@ -2,6 +2,7 @@ import Joi from 'joi'
 
 import { FormStatus } from '~/src/common/enums.js'
 import {
+  ConditionEvaluationOutcome,
   SecurityQuestionsEnum,
   SubmissionEventMessageCategory,
   SubmissionEventMessageSchemaVersion,
@@ -11,6 +12,9 @@ import {
 import {
   type SaveAndExitMessage,
   type SaveAndExitMessageData,
+  type SubmitConditionEvaluation,
+  type SubmitConditionReference,
+  type SubmitNotificationTarget,
   type SubmitPayload,
   type SubmitRecord,
   type SubmitRecordset
@@ -60,6 +64,77 @@ export const formSubmitRecordsetSchema = Joi.object<SubmitRecordset>({
 })
   .label('FormSubmitRecordset')
   .description('Collection of repeated field values from a repeatable section')
+
+/**
+ * Joi schema for `SubmitConditionReference` interface
+ * @see {@link SubmitConditionReference}
+ */
+export const formSubmitConditionReferenceSchema =
+  Joi.object<SubmitConditionReference>({
+    componentId: Joi.string()
+      .required()
+      .description('Identifier of the component the condition depends on'),
+    componentName: Joi.string()
+      .required()
+      .description(
+        'Name of the component the condition depends on, matching the submitted record name'
+      ),
+    answered: Joi.boolean()
+      .required()
+      .description(
+        'Whether the component held an answer when the condition was evaluated'
+      )
+  })
+    .label('FormSubmitConditionReference')
+    .description('A component a condition depends on, and its answered state')
+
+/**
+ * Joi schema for `SubmitConditionEvaluation` interface
+ * @see {@link SubmitConditionEvaluation}
+ */
+export const formSubmitConditionEvaluationSchema =
+  Joi.object<SubmitConditionEvaluation>({
+    conditionId: Joi.string()
+      .required()
+      .description('Identifier of the condition in the V2 form definition'),
+    outcome: Joi.string()
+      .valid(...Object.values(ConditionEvaluationOutcome))
+      .required()
+      .description('Result of evaluating the condition'),
+    references: Joi.array<SubmitConditionReference>()
+      .items(formSubmitConditionReferenceSchema)
+      .required()
+      .description(
+        'Components the condition depends on, including those reached through nested condition references'
+      )
+  })
+    .label('FormSubmitConditionEvaluation')
+    .description('Recorded outcome of a single condition at submission')
+
+/**
+ * Joi schema for `SubmitNotificationTarget` interface
+ * @see {@link SubmitNotificationTarget}
+ */
+export const formSubmitNotificationTargetSchema =
+  Joi.object<SubmitNotificationTarget>({
+    emailAddress: Joi.string()
+      // No TLD restriction - any valid email address is accepted here
+      // as the real validation happens when the form definition is created
+      .email({ tlds: { allow: false } })
+      .required()
+      .description('Address the submission should be sent to'),
+    audience: Joi.string()
+      .valid('human', 'machine')
+      .required()
+      .description(
+        'Whether to send the human-readable or machine-processable output'
+      ),
+    version: Joi.string()
+      .required()
+      .description('Version of the output format to send')
+  })
+    .label('FormSubmitNotificationTarget')
+    .description('An email address to send the submission to, and in what form')
 
 /**
  * Joi schema for `SubmitPayload` interface

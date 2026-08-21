@@ -1,0 +1,157 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/select/macro.njk" import govukSelect %}
+{% from "govuk/components/summary-list/macro.njk" import govukSummaryList %}
+{% from "govuk/components/table/macro.njk" import govukTable %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: pageCaption,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink,
+    useNewMasthead: useNewMasthead,
+    errorList: errorList
+  }) %}
+
+    {% if notification | length %}
+      {% call govukNotificationBanner({
+        type: "success"
+      }) %}
+        <p class="govuk-notification-banner__heading">{{ notification }}</p>
+        {% if notificationDetail | length %}
+          <p class="govuk-body app-notification-banner__detail">{{ notificationDetail }}</p>
+        {% endif %}
+      {% endcall %}
+    {% endif %}
+
+    {% set defaultEmailWarningHtml %}
+      {{ govukWarningText({
+        html: 'This email address receives all submissions until you add another email address. After that, it only receives submissions that do not match any additional email address conditions. To continue receiving all submissions, <a class="govuk-link govuk-link--no-visited-state" href="#email-address-form">add it as an additional email address</a>.'
+      }) }}
+    {% endset %}
+
+    {{ govukSummaryList({
+      card: {
+        title: {
+          text: "Default email address"
+        },
+        actions: {
+          items: [
+            {
+              href: defaultEmail.changeHref,
+              text: "Change"
+            }
+          ]
+        }
+      },
+      rows: [
+        {
+          key: { text: "Email address" },
+          value: { text: defaultEmail.emailAddress if defaultEmail.emailAddress else "Not set" }
+        },
+        {
+          key: { text: "Submission format" },
+          value: { text: defaultEmail.format }
+        },
+        {
+          classes: "govuk-summary-list__row--full-width",
+          value: { html: defaultEmailWarningHtml }
+        }
+      ]
+    }) }}
+
+    {% call govukDetails({
+      summaryText: "How additional email addresses work"
+    }) %}
+      Additional email addresses receive submissions that meet their conditions. If a submission matches multiple conditions, we'll send it to each matching email address. If it doesn't match any conditions, we'll send it to the default email address.
+    {% endcall %}
+
+    <h2 class="govuk-heading-l">Additional email addresses</h2>
+
+    <p class="govuk-body">To send submissions based on answers, create and manage conditions in the <a class="govuk-link govuk-link--no-visited-state" href="{{ conditionsManagerHref }}">conditions manager</a>.</p>
+
+    {% if outputsTable.rows | length %}
+      {{ govukTable(outputsTable) }}
+    {% else %}
+      <p class="govuk-body">No additional email addresses added.</p>
+      <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
+    {% endif %}
+
+    {% if atLimit %}
+      <p class="govuk-body">You have reached the maximum of {{ maxAdditionalEmails }} additional email addresses. Remove one before adding another.</p>
+    {% else %}
+      <h2 class="govuk-heading-m" id="email-address-form">{{ addFormHeading }}</h2>
+
+      <form method="post" action="{{ formAction }}" novalidate>
+
+        {{ govukSelect({
+          id: "condition",
+          name: "condition",
+          label: {
+            text: "When should submissions be sent to this email address? (optional)"
+          },
+          hint: {
+            text: "Choose a condition, or leave as every submission to send all submissions to this address."
+          },
+          items: conditionItems,
+          errorMessage: formErrors.condition
+        }) }}
+
+        {{ govukInput({
+          id: "emailAddress",
+          name: "emailAddress",
+          type: "email",
+          spellcheck: false,
+          autocomplete: "email",
+          label: {
+            text: "What is the email address?"
+          },
+          value: formValues.emailAddress,
+          errorMessage: formErrors.emailAddress
+        }) }}
+
+        {{ govukRadios({
+          idPrefix: "audience",
+          name: "audience",
+          fieldset: {
+            legend: {
+              text: "How should submissions be formatted?"
+            }
+          },
+          hint: {
+            text: "Choose how submissions are sent to this email address."
+          },
+          items: formatItems,
+          errorMessage: formErrors.audience
+        }) }}
+
+        <div class="govuk-button-group">
+          {{ govukButton({
+            text: buttonText,
+            preventDoubleClick: true
+          }) }}
+
+          {% if isEditing %}
+            <a class="govuk-link govuk-link--no-visited-state" href="{{ cancelHref }}">Cancel</a>
+          {% endif %}
+        </div>
+
+      </form>
+    {% endif %}
+
+  {% endcall %}
+{% endblock %}
+
+{% block mainEnd %}
+  {{ super() }}
+{% endblock %}
