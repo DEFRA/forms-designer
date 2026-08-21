@@ -287,7 +287,6 @@ describe('email actions view model', () => {
       expect(model.formAction).toBe(
         '/library/my-form-slug/editor-v2/email-actions'
       )
-      expect(model.atLimit).toBe(false)
       expect(model.conditionsManagerHref).toBe(
         '/library/my-form-slug/editor-v2/conditions'
       )

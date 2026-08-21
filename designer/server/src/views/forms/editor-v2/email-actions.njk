@@ -23,6 +23,14 @@
     errorList: errorList
   }) %}
 
+    {% if atLimit %}
+      {% call govukNotificationBanner({
+        classes: "full-width-banner"
+      }) %}
+        <p class="govuk-notification-banner__heading">You have reached the maximum of {{ maxAdditionalEmails }} additional email addresses. Remove one before adding another.</p>
+      {% endcall %}
+    {% endif %}
+    
     {% if notification | length %}
       {% call govukNotificationBanner({
         type: "success"
@@ -87,9 +95,8 @@
       <hr class="govuk-section-break govuk-section-break--m govuk-section-break--visible">
     {% endif %}
 
-    {% if atLimit %}
-      <p class="govuk-body">You have reached the maximum of {{ maxAdditionalEmails }} additional email addresses. Remove one before adding another.</p>
-    {% else %}
+    {% if not atLimit %}
+
       <h2 class="govuk-heading-m" id="email-address-form">{{ addFormHeading }}</h2>
 
       <form method="post" action="{{ formAction }}" novalidate>
