@@ -3,10 +3,14 @@ import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
 import {
   getHiddenFields,
   isConditionListItemRefValueData,
+  isDuplicateOutput,
   isFeedbackForm,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
-import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import {
+  type FormDefinition,
+  type Output
+} from '~/src/form/form-definition/types.js'
 import { ControllerType } from '~/src/pages/enums.js'
 import {
   buildCheckboxComponent,
@@ -289,6 +293,61 @@ describe('helpers', () => {
     test('returns false when undefined', () => {
       const def = {} as unknown as FormDefinition
       expect(isFeedbackForm(def)).toBe(false)
+    })
+  })
+
+  describe('isDuplicateOutput', () => {
+    const output: Output = {
+      emailAddress: 'someone@example.gov.uk',
+      audience: 'machine',
+      version: '2',
+      condition: 'ab6a10cd-2a9e-4b8f-9e5c-3f2f2c9e94a1'
+    }
+
+    it('should return true when every value matches', () => {
+      expect(isDuplicateOutput(output, { ...output })).toBe(true)
+    })
+
+    it('should ignore the case and surrounding space of the address', () => {
+      expect(
+        isDuplicateOutput(output, {
+          ...output,
+          emailAddress: ' SOMEONE@Example.Gov.UK '
+        })
+      ).toBe(true)
+    })
+
+    it('should treat a missing condition as an empty one', () => {
+      const unconditional = { ...output, condition: undefined }
+
+      expect(
+        isDuplicateOutput(unconditional, { ...output, condition: '' })
+      ).toBe(true)
+    })
+
+    it('should return false when the condition differs', () => {
+      expect(isDuplicateOutput(output, { ...output, condition: '' })).toBe(
+        false
+      )
+    })
+
+    it('should return false when the audience differs', () => {
+      expect(isDuplicateOutput(output, { ...output, audience: 'human' })).toBe(
+        false
+      )
+    })
+
+    it('should return false when the version differs', () => {
+      expect(isDuplicateOutput(output, { ...output, version: '1' })).toBe(false)
+    })
+
+    it('should return false when the address differs', () => {
+      expect(
+        isDuplicateOutput(output, {
+          ...output,
+          emailAddress: 'someone-else@example.gov.uk'
+        })
+      ).toBe(false)
     })
   })
 })

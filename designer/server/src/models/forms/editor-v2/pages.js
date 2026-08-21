@@ -11,6 +11,7 @@ import {
 } from '@defra/forms-model'
 
 import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
+import config from '~/src/config.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
@@ -324,36 +325,46 @@ function buildReorderAction(slug) {
 }
 
 /**
- * Build right side actions (manage conditions, upload/download)
+ * Build the right side menu (advanced settings, manage conditions, upload/download)
  * @param {string} slug
  */
-function buildRightSideActions(slug) {
-  return [
+function buildRightSideMenu(slug) {
+  const menuItems = []
+  // Feature flag - includes in menu if enabled
+  if (config.featureFlagAllowConditionalEmails) {
+    menuItems.push({
+      text: 'Advanced settings',
+      href: editorv2Path(slug, 'advanced-settings')
+    })
+  }
+  menuItems.push(
     {
       text: 'Manage conditions',
-      href: editorv2Path(slug, 'conditions'),
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
+      href: editorv2Path(slug, 'conditions')
     },
     {
       text: 'Upload a form',
-      href: editorv2Path(slug, 'upload'),
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
+      href: editorv2Path(slug, 'upload')
     },
     {
       text: 'Download this form',
-      href: `/library/${slug}/editor-v2/download`,
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
+      href: `/library/${slug}/editor-v2/download`
     },
     {
       text: 'Welsh translation',
-      href: editorv2Path(slug, 'welsh'),
-      classes: BUTTON_SECONDARY_CLASS,
-      attributes: null
+      href: editorv2Path(slug, 'welsh')
     }
-  ]
+  )
+
+  return {
+    id: 'pages-menu',
+    alignMenu: 'right',
+    button: {
+      text: 'Tools',
+      classes: BUTTON_SECONDARY_CLASS
+    },
+    items: menuItems
+  }
 }
 
 /**
@@ -486,7 +497,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
   const previewBaseUrl = buildPreviewUrl(metadata.slug, FormStatus.Draft)
 
   const pageActions = buildPageActions(metadata.slug)
-  const rightSideActions = buildRightSideActions(metadata.slug)
+  const rightSideMenu = buildRightSideMenu(metadata.slug)
   const conditions = buildConditionsFilter(definition, filter)
 
   const numOfNonEndPages = definition.pages.filter(
@@ -519,7 +530,7 @@ export function pagesViewModel(metadata, definition, filter, notification) {
     pageHeading,
     pageCaption,
     pageActions,
-    rightSideActions,
+    rightSideMenu,
     conditions,
     notification,
     paymentInfo

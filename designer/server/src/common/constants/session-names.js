@@ -51,6 +51,7 @@ export const sessionNames = {
       'renameSectionValidationFailure'
     ),
     editorCondition: /** @type {const} */ ('conditionValidationFailure'),
+    editorEmailActions: /** @type {const} */ ('emailActionsValidationFailure'),
     editorSections: /** @type {const} */ ('sectionsValidationFailure'),
     editorTranslations: /** @type {const} */ ('translationsValidationFailure'),
     manageUsers: /** @type {const} */ ('manageUsersValidationFailure'),

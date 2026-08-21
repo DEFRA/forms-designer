@@ -29,6 +29,18 @@
   white-space: nowrap;
 }
 
+// Lets a single-button form sit alongside links in a table's actions cell
+.app-inline-form {
+  display: inline;
+}
+
+// Notification banner content is capped at 605px by govuk-frontend, which wraps
+// a line naming an email address, its format and its condition well before the
+// edge of the banner. Only the lines given this class opt out.
+.govuk-notification-banner__content > .app-notification-banner__detail {
+  max-width: none;
+}
+
 .app-condition-applied {
   background-color: govuk-colour("white");
   border-left: 4px solid #00703c;
@@ -167,14 +179,6 @@
     justify-content: flex-end;
     margin-bottom: 10px;
   }
-
-  &__action-button {
-    white-space: nowrap;
-    padding: 12px 18px;
-    font-size: 18px;
-    min-width: auto;
-    margin-bottom: 0;
-  }
 }
 
 // Manage conditions
@@ -211,6 +215,25 @@
 
 .govuk-summary-list__actions.govuk-summary-list__width15 {
   width: 15%;
+}
+
+// Summary list rows that span the full width of the list, rather than being
+// confined to the value column. CSS tables have no colspan, so the row is
+// rendered as a table caption - which does stretch the full table width.
+.govuk-summary-list__row--full-width {
+  @include govuk-media-query($from: tablet) {
+    display: table-caption;
+    caption-side: bottom;
+
+    .govuk-summary-list__key {
+      display: none;
+    }
+
+    .govuk-summary-list__value {
+      display: block;
+      padding-right: 0;
+    }
+  }
 }
 
 .full-width-banner .govuk-notification-banner__heading {

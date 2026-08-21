@@ -40,6 +40,7 @@ import {
 } from '~/src/form/form-definition/constants.js'
 import {
   isConditionListItemRefValueData,
+  isDuplicateOutput,
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import {
@@ -53,6 +54,7 @@ import {
   type Item,
   type Link,
   type List,
+  type Output,
   type Page,
   type PhaseBanner,
   type Repeat,
@@ -1197,6 +1199,66 @@ const outputSchema = Joi.object<FormDefinition['output']>()
       .description('Version identifier for the output format')
   })
 
+const outputsItemSchema = Joi.object<Output>()
+  .description('Configuration for a single submission email target')
+  .keys({
+    emailAddress: emailAddressNoUnicodeSchema.description(
+      'Email address where form submissions are sent'
+    ),
+    audience: Joi.string()
+      .trim()
+      .valid('human', 'machine')
+      .required()
+      .description(
+        'Target audience for the output (human readable or machine processable)'
+      ),
+    version: Joi.string()
+      .trim()
+      .required()
+      .description('Version identifier for the output format')
+  })
+
+const outputsItemSchemaV2 = outputsItemSchema.keys({
+  condition: Joi.string()
+    .trim()
+    .allow('')
+    .optional()
+    .when('/conditions', {
+      is: Joi.exist(),
+      then: Joi.valid('', conditionIdRef)
+    })
+    .description(
+      'Optional condition that determines if submissions are sent to this output'
+    )
+    .error(checkErrors(FormDefinitionError.RefOutputCondition))
+})
+
+const outputsSchema = Joi.array<Output>()
+  .items(outputsItemSchema)
+  .unique(isDuplicateOutput)
+  // Without this the raw Joi message names the array index, eg `"outputs[4]"
+  // contains a duplicate value`, which means nothing to a form author
+  .messages({
+    'array.unique':
+      'Email address {{#value.emailAddress}} is already receiving the same submissions'
+  })
+  .optional()
+  .description('One or more email targets/types for submission emails')
+  .error(checkErrors(FormDefinitionError.UniqueOutput))
+
+const outputsSchemaV2 = Joi.array<Output>()
+  .items(outputsItemSchemaV2)
+  .unique(isDuplicateOutput)
+  // Without this the raw Joi message names the array index, eg `"outputs[4]"
+  // contains a duplicate value`, which means nothing to a form author
+  .messages({
+    'array.unique':
+      'Email address {{#value.emailAddress}} is already receiving the same submissions'
+  })
+  .optional()
+  .description('Outputs schema for V2 forms')
+  .error(checkErrors(FormDefinitionError.UniqueOutput))
+
 /**
  * Joi schema for `FormDefinition` interface
  * @see {@link FormDefinition}
@@ -1271,31 +1333,12 @@ export const formDefinitionSchema = Joi.object<FormDefinition>()
       .description('Phase banner configuration'),
     options: optionsSchema.optional().description('Options for the form'),
     outputEmail: emailAddressNoUnicodeSchema
-      .email({ tlds: { allow: ['uk'] } })
       .optional()
       .description('Email address where form submissions are sent'),
     output: outputSchema
       .optional()
       .description('Configuration for submission output format'),
-    outputs: Joi.array()
-      .items({
-        emailAddress: emailAddressNoUnicodeSchema
-          .email({ tlds: { allow: ['uk'] } })
-          .description('Email address where form submissions are sent'),
-        audience: Joi.string()
-          .trim()
-          .valid('human', 'machine')
-          .required()
-          .description(
-            'Target audience for the output (human readable or machine processable)'
-          ),
-        version: Joi.string()
-          .trim()
-          .required()
-          .description('Version identifier for the output format')
-      })
-      .optional()
-      .description('One or more email targets/types for submission emails')
+    outputs: outputsSchema
   })
 
 export const formDefinitionV2Schema = formDefinitionSchema
@@ -1303,6 +1346,7 @@ export const formDefinitionV2Schema = formDefinitionSchema
     schema: Joi.number()
       .integer()
       .valid(SchemaVersion.V2)
+      .required()
       .description('Form schema version to use (2)'),
     pages: Joi.array<Page>()
       .items(pageSchemaV2)
@@ -1353,7 +1397,8 @@ export const formDefinitionV2Schema = formDefinitionSchema
           FormDefinitionError.UniqueSectionName,
           FormDefinitionError.UniqueSectionTitle
         ])
-      )
+      ),
+    outputs: outputsSchemaV2
   })
   .description('Form definition schema for V2')
 

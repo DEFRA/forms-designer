@@ -1,7 +1,10 @@
 import { ComponentType } from '~/src/components/enums.js'
 import { type ComponentDef } from '~/src/components/types.js'
 import { type ConditionListItemRefValueDataV2 } from '~/src/conditions/types.js'
-import { type FormDefinition } from '~/src/form/form-definition/types.js'
+import {
+  type FormDefinition,
+  type Output
+} from '~/src/form/form-definition/types.js'
 import { type ControllerType } from '~/src/pages/enums.js'
 import { hasComponents } from '~/src/pages/helpers.js'
 
@@ -79,6 +82,34 @@ export function getHiddenFields(definition: FormDefinition) {
     totalHiddenFields.push(...hiddenFields)
   }
   return totalHiddenFields
+}
+
+/**
+ * Builds the key identifying a submission email target. Two outputs sharing a
+ * key would send the same format of the same submission to the same inbox in
+ * the same circumstances, so one of them is redundant. Addresses are compared
+ * case-insensitively and a missing condition is treated as an empty one.
+ * @param output - submission email target
+ */
+export function getOutputKey(output: Partial<Output>): string {
+  return [
+    output.emailAddress?.trim().toLowerCase() ?? '',
+    output.condition?.trim() ?? '',
+    output.audience ?? '',
+    output.version?.trim() ?? ''
+  ].join('|')
+}
+
+/**
+ * Whether two submission email targets are duplicates of one another
+ * @param output - submission email target
+ * @param otherOutput - submission email target to compare against
+ */
+export function isDuplicateOutput(
+  output: Partial<Output>,
+  otherOutput: Partial<Output>
+): boolean {
+  return getOutputKey(output) === getOutputKey(otherOutput)
 }
 
 /**

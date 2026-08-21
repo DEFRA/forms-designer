@@ -1,5 +1,6 @@
 import { type FormStatus } from '~/src/common/enums.js'
 import {
+  type ConditionEvaluationOutcome,
   type SecurityQuestionsEnum,
   type SubmissionEventMessageCategory,
   type SubmissionEventMessageSchemaVersion,
@@ -7,6 +8,8 @@ import {
   type SubmissionEventMessageType
 } from '~/src/form/form-submission/enums.js'
 import {
+  formSubmitConditionEvaluationSchema,
+  formSubmitConditionReferenceSchema,
   formSubmitPayloadSchema,
   formSubmitRecordSchema,
   formSubmitRecordsetSchema
@@ -52,6 +55,57 @@ export interface SubmitRecordset {
    * The record items
    */
   value: SubmitRecord[][]
+}
+
+/**
+ * A component referenced by a condition, and whether the user had answered it
+ * when the condition was evaluated.
+ *
+ * An unanswered question is not absent from the runner's evaluation context -
+ * it is present as `null` - so conditions still return a boolean for questions
+ * that were skipped or never reached. Negative operators ("is not", "is shorter
+ * than") return `true` in that case. Without knowing which referenced questions
+ * were answered, a consumer cannot tell a real match from a vacuous one.
+ * @see {@link formSubmitConditionReferenceSchema}
+ */
+export interface SubmitConditionReference {
+  /**
+   * The id of the referenced component
+   */
+  componentId: string
+
+  /**
+   * The name of the referenced component, as used in the submitted records
+   */
+  componentName: string
+
+  /**
+   * Whether the referenced component held an answer at the point of evaluation
+   */
+  answered: boolean
+}
+
+/**
+ * The recorded outcome of a single condition at the point of submission.
+ * V2 forms only - V1 conditions are not captured.
+ * @see {@link formSubmitConditionEvaluationSchema}
+ */
+export interface SubmitConditionEvaluation {
+  /**
+   * The id of the condition, as authored in the V2 form definition
+   */
+  conditionId: string
+
+  /**
+   * The result of evaluating the condition
+   */
+  outcome: ConditionEvaluationOutcome
+
+  /**
+   * Every component the condition depends on, including those reached through
+   * nested condition references, and whether each was answered
+   */
+  references: SubmitConditionReference[]
 }
 
 /**
