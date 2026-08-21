@@ -10,24 +10,12 @@ import { createServer } from '~/src/createServer.js'
 import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
-import { MAX_ATTEMPTS } from '~/src/lib/retry.js'
 import { DUPLICATE_MESSAGE } from '~/src/routes/forms/editor-v2/email-actions.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/forms.js')
 jest.mock('~/src/lib/error-helper.js')
-
-// The retry back-off is not worth waiting on in tests
-jest.mock('~/src/lib/retry.js', () => {
-  const actual = jest.requireActual('~/src/lib/retry.js')
-
-  return {
-    ...actual,
-    withRetry: (/** @type {() => Promise<unknown>} */ operation) =>
-      actual.withRetry(operation, { initialDelayMs: 0 })
-  }
-})
 
 const conditionId = 'd5e9f931-e151-4dd6-a2b9-68a03f3537e2'
 
@@ -312,64 +300,7 @@ describe('Editor v2 email actions routes', () => {
       expect(forms.updateDraftFormDefinition).not.toHaveBeenCalled()
     })
 
-    test('should retry a transient forms-manager failure', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWith())
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockRejectedValueOnce(Boom.badGateway('Bad gateway'))
-        .mockResolvedValueOnce(definitionWith())
-
-      const response = await server.inject({
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/email-actions',
-        auth,
-        payload: {
-          condition: '',
-          emailAddress: 'new.inbox@defra.gov.uk',
-          audience: 'human'
-        }
-      })
-
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledTimes(2)
-      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(response.headers.location).toBe(
-        '/library/my-form-slug/editor-v2/email-actions'
-      )
-    })
-
-    test('should give up after the maximum number of attempts', async () => {
-      jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
-      jest
-        .mocked(forms.getDraftFormDefinition)
-        .mockResolvedValueOnce(definitionWith())
-      jest
-        .mocked(forms.updateDraftFormDefinition)
-        .mockRejectedValue(Boom.badGateway('Bad gateway'))
-
-      const response = await server.inject({
-        method: 'post',
-        url: '/library/my-form-slug/editor-v2/email-actions',
-        auth,
-        payload: {
-          condition: '',
-          emailAddress: 'new.inbox@defra.gov.uk',
-          audience: 'human'
-        }
-      })
-
-      expect(forms.updateDraftFormDefinition).toHaveBeenCalledTimes(
-        MAX_ATTEMPTS
-      )
-      expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
-      expect(response.headers.location).toBe(
-        '/library/my-form-slug/editor-v2/email-actions#email-address-form'
-      )
-    })
-
-    test('should surface a validation error from the service without retrying', async () => {
+    test('should surface a validation error from the service', async () => {
       jest.mocked(forms.get).mockResolvedValueOnce(metadataWithEmail)
       jest
         .mocked(forms.getDraftFormDefinition)

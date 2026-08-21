@@ -59,6 +59,82 @@ export function formatOutputDescription(audience, version) {
 }
 
 /**
+ * @param {ReturnType<typeof getFormSpecificNavigation>} navigation
+ * @param {{ slug: string, pageTitle: string, pageHeading: string, formTitle: string }} fields
+ * @param {string} blockedMessage
+ * @param {string[]} blockerItems
+ * @param {string} conditionsListHref
+ */
+function blockedViewModel(
+  navigation,
+  { slug, pageTitle, pageHeading, formTitle },
+  blockedMessage,
+  blockerItems,
+  conditionsListHref
+) {
+  return {
+    ...baseModelFields(slug, pageTitle, pageHeading, formTitle),
+    navigation,
+    bodyHeadingText: BLOCKED_HEADING_TEXT,
+    errorList: buildSimpleErrorList([blockedMessage]),
+    bodyWarning: blockerItems.length
+      ? {
+          html: `${BLOCKERS_INTRO_TEXT}<ul class="govuk-list govuk-list--bullet">
+      ${blockerItems.join('')}
+    </ul>`
+        }
+      : null,
+    buttons: [
+      {
+        href: conditionsListHref,
+        text: 'Back to conditions',
+        classes: 'govuk-button--secondary'
+      }
+    ]
+  }
+}
+
+/**
+ * @param {ReturnType<typeof getFormSpecificNavigation>} navigation
+ * @param {{ slug: string, pageTitle: string, pageHeading: string, formTitle: string }} fields
+ * @param {string} bodyHeadingText
+ * @param {string[]} affectedItems
+ * @param {string} conditionsListHref
+ */
+function pageViewModel(
+  navigation,
+  { slug, pageTitle, pageHeading, formTitle },
+  bodyHeadingText,
+  affectedItems,
+  conditionsListHref
+) {
+  return {
+    ...baseModelFields(slug, pageTitle, pageHeading, formTitle),
+    navigation,
+    bodyHeadingText,
+    errorList: [],
+    bodyWarning: affectedItems.length
+      ? {
+          html: `${REFERENCES_WARNING_TEXT}<ul class="govuk-list govuk-list--bullet">
+        ${affectedItems.join('')}
+      </ul>`
+        }
+      : null,
+    buttons: [
+      {
+        text: 'Delete condition',
+        classes: 'govuk-button--warning'
+      },
+      {
+        href: conditionsListHref,
+        text: 'Cancel',
+        classes: 'govuk-button--secondary'
+      }
+    ]
+  }
+}
+
+/**
  * Model to represent delete condition confirmation page
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
@@ -110,26 +186,13 @@ export function deleteConditionConfirmationPageViewModel(
       )
     ]
 
-    return {
-      ...baseModelFields(metadata.slug, pageTitle, pageHeading, formTitle),
+    return blockedViewModel(
       navigation,
-      bodyHeadingText: BLOCKED_HEADING_TEXT,
-      errorList: buildSimpleErrorList([blockedMessage]),
-      bodyWarning: blockerItems.length
-        ? {
-            html: `${BLOCKERS_INTRO_TEXT}<ul class="govuk-list govuk-list--bullet">
-        ${blockerItems.join('')}
-      </ul>`
-          }
-        : null,
-      buttons: [
-        {
-          href: conditionsListHref,
-          text: 'Back to conditions',
-          classes: 'govuk-button--secondary'
-        }
-      ]
-    }
+      { slug: metadata.slug, pageTitle, pageHeading, formTitle },
+      blockedMessage,
+      blockerItems,
+      conditionsListHref
+    )
   }
 
   // Payment and condition references are blockers handled above, so the pages
@@ -144,30 +207,13 @@ export function deleteConditionConfirmationPageViewModel(
     )
   ]
 
-  return {
-    ...baseModelFields(metadata.slug, pageTitle, pageHeading, formTitle),
+  return pageViewModel(
     navigation,
+    { slug: metadata.slug, pageTitle, pageHeading, formTitle },
     bodyHeadingText,
-    errorList: [],
-    bodyWarning: affectedItems.length
-      ? {
-          html: `${REFERENCES_WARNING_TEXT}<ul class="govuk-list govuk-list--bullet">
-        ${affectedItems.join('')}
-      </ul>`
-        }
-      : null,
-    buttons: [
-      {
-        text: 'Delete condition',
-        classes: 'govuk-button--warning'
-      },
-      {
-        href: conditionsListHref,
-        text: 'Cancel',
-        classes: 'govuk-button--secondary'
-      }
-    ]
-  }
+    affectedItems,
+    conditionsListHref
+  )
 }
 
 /**

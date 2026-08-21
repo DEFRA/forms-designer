@@ -19,7 +19,6 @@ import {
 } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
-import { withRetry } from '~/src/lib/retry.js'
 import { CHANGES_SAVED_SUCCESSFULLY } from '~/src/models/forms/editor-v2/common.js'
 import {
   MAX_ADDITIONAL_EMAILS,
@@ -108,35 +107,25 @@ export function resolveIndex(definition, index) {
 }
 
 /**
- * Reads the form metadata and draft definition, retrying transient
- * forms-manager failures.
+ * Reads the form metadata and draft definition
  * @param {string} slug
  * @param {string} token
  */
 async function loadForm(slug, token) {
-  const metadata = await withRetry(() => forms.get(slug, token), {
-    description: `Get form metadata for '${slug}'`
-  })
-
-  const definition = await withRetry(
-    () => forms.getDraftFormDefinition(metadata.id, token),
-    { description: `Get draft form definition for '${slug}'` }
-  )
+  const metadata = await forms.get(slug, token)
+  const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
   return { metadata, definition }
 }
 
 /**
- * Saves the draft definition, retrying transient forms-manager failures.
+ * Saves the draft definition
  * @param {string} id
  * @param {FormDefinition} definition
  * @param {string} token
  */
 function saveForm(id, definition, token) {
-  return withRetry(
-    () => forms.updateDraftFormDefinition(id, definition, token),
-    { description: `Update draft form definition for '${id}'` }
-  )
+  return forms.updateDraftFormDefinition(id, definition, token)
 }
 
 /**
