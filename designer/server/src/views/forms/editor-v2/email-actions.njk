@@ -30,7 +30,7 @@
         <p class="govuk-notification-banner__heading">You have reached the maximum of {{ maxAdditionalEmails }} additional email addresses. Remove one before adding another.</p>
       {% endcall %}
     {% endif %}
-    
+
     {% if notification | length %}
       {% call govukNotificationBanner({
         type: "success"
