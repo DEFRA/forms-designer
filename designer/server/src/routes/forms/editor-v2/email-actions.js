@@ -46,6 +46,9 @@ export const EMAIL_ADDED = 'Email address added'
 export const DUPLICATE_MESSAGE =
   'This email address is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.'
 
+const EMAIL_ADDRESS_ANCHOR = '#email-address-form'
+const EMAIL_ACTIONS_PATH = 'email-actions'
+
 const errorKey = sessionNames.validationFailure.editorEmailActions
 const notificationKey = sessionNames.successNotification
 
@@ -212,7 +215,7 @@ function isDuplicate(definition, output, editIndex) {
  * @param {Error} [error]
  */
 function failAction(request, h, error) {
-  return redirectWithErrors(request, h, error, errorKey, '#email-address-form')
+  return redirectWithErrors(request, h, error, errorKey, EMAIL_ADDRESS_ANCHOR)
 }
 
 export default [
@@ -248,7 +251,7 @@ export default [
 
       if (!model) {
         return h
-          .redirect(editorv2Path(slug, 'email-actions'))
+          .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
           .code(StatusCodes.SEE_OTHER)
       }
 
@@ -275,7 +278,7 @@ export default [
 
       if (outputs.length >= MAX_ADDITIONAL_EMAILS) {
         return h
-          .redirect(editorv2Path(slug, 'email-actions'))
+          .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
           .code(StatusCodes.SEE_OTHER)
       }
 
@@ -287,7 +290,7 @@ export default [
           h,
           createJoiError('emailAddress', DUPLICATE_MESSAGE),
           errorKey,
-          '#email-address-form'
+          EMAIL_ADDRESS_ANCHOR
         )
       }
 
@@ -301,14 +304,14 @@ export default [
           h,
           toValidationError(err, definition, 'emailAddress'),
           errorKey,
-          '#email-address-form'
+          EMAIL_ADDRESS_ANCHOR
         )
       }
 
       yar.flash(notificationKey, EMAIL_ADDED)
 
       return h
-        .redirect(editorv2Path(slug, 'email-actions'))
+        .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -342,7 +345,7 @@ export default [
             h,
             createJoiError('emailAddress', DUPLICATE_MESSAGE),
             errorKey,
-            '#email-address-form'
+            EMAIL_ADDRESS_ANCHOR
           )
         }
 
@@ -358,7 +361,7 @@ export default [
             h,
             toValidationError(err, definition, 'emailAddress'),
             errorKey,
-            '#email-address-form'
+            EMAIL_ADDRESS_ANCHOR
           )
         }
 
@@ -366,7 +369,7 @@ export default [
       }
 
       return h
-        .redirect(editorv2Path(slug, 'email-actions'))
+        .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
         .code(StatusCodes.SEE_OTHER)
     },
     options: {
@@ -423,7 +426,7 @@ export default [
       }
 
       return h
-        .redirect(editorv2Path(slug, 'email-actions'))
+        .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
         .code(StatusCodes.SEE_OTHER)
     },
     options: { auth: authOptions }
@@ -446,7 +449,7 @@ export default [
       // Nothing to confirm, eg the page was opened from a stale link
       if (!(definition.outputs ?? []).length) {
         return h
-          .redirect(editorv2Path(slug, 'email-actions'))
+          .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
           .code(StatusCodes.SEE_OTHER)
       }
 
@@ -489,7 +492,7 @@ export default [
           )
 
           return h
-            .redirect(editorv2Path(slug, 'email-actions'))
+            .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
             .code(StatusCodes.SEE_OTHER)
         }
 
@@ -503,7 +506,7 @@ export default [
       }
 
       return h
-        .redirect(editorv2Path(slug, 'email-actions'))
+        .redirect(editorv2Path(slug, EMAIL_ACTIONS_PATH))
         .code(StatusCodes.SEE_OTHER)
     },
     options: { auth: authOptions }

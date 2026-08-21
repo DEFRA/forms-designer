@@ -9,6 +9,7 @@ export const BACK_TO_ADVANCED_SETTINGS = 'Back to advanced settings'
 export const BACK_TO_EMAIL_ACTIONS = 'Back to email actions'
 export const NO_CONDITION_VALUE = ''
 export const NO_CONDITION_TEXT = 'Every submission (no condition)'
+const EMAIL_ACTIONS_PATH = 'email-actions'
 
 /**
  * Anchor of the add/change form, used to bring it into view when the author
@@ -162,7 +163,7 @@ export function buildConditionItems(definition, selectedConditionId) {
  * @param {FormDefinition} definition
  */
 export function buildOutputRows(slug, definition) {
-  const baseUrl = editorv2Path(slug, 'email-actions')
+  const baseUrl = editorv2Path(slug, EMAIL_ACTIONS_PATH)
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
 
   return (definition.outputs ?? []).map((output, index) => {
@@ -188,7 +189,7 @@ export function buildOutputRows(slug, definition) {
  * @param {string} slug
  */
 export function buildRemoveAllRow(slug) {
-  const href = `${editorv2Path(slug, 'email-actions')}/remove-all`
+  const href = `${editorv2Path(slug, EMAIL_ACTIONS_PATH)}/remove-all`
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
 
   return [
@@ -349,9 +350,9 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
     atLimit: !isEditing && outputRows.length >= MAX_ADDITIONAL_EMAILS,
     maxAdditionalEmails: MAX_ADDITIONAL_EMAILS,
     formAction: isEditing
-      ? `${editorv2Path(metadata.slug, 'email-actions')}/${editIndex}`
-      : editorv2Path(metadata.slug, 'email-actions'),
-    cancelHref: editorv2Path(metadata.slug, 'email-actions'),
+      ? `${editorv2Path(metadata.slug, EMAIL_ACTIONS_PATH)}/${editIndex}`
+      : editorv2Path(metadata.slug, EMAIL_ACTIONS_PATH),
+    cancelHref: editorv2Path(metadata.slug, EMAIL_ACTIONS_PATH),
     addFormHeading: isEditing
       ? 'Change email address'
       : 'Add a new email address',
@@ -382,7 +383,7 @@ export function removeAllEmailsViewModel(metadata, definition) {
   const pageHeading = REMOVE_ALL_HEADING
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
-  const listHref = editorv2Path(metadata.slug, 'email-actions')
+  const listHref = editorv2Path(metadata.slug, EMAIL_ACTIONS_PATH)
 
   const items = outputs
     .map((output) => `<li>${describeOutput(definition, output)}</li>`)
