@@ -11,6 +11,7 @@ import {
 } from '@defra/forms-model'
 
 import { formatCurrency } from '~/src/common/nunjucks/filters/format-currency.js'
+import config from '~/src/config.js'
 import {
   getFormSpecificNavigation,
   getSectionForPage
@@ -328,6 +329,33 @@ function buildReorderAction(slug) {
  * @param {string} slug
  */
 function buildRightSideMenu(slug) {
+  const menuItems = []
+  // Feature flag - includes in menu if enabled
+  if (config.featureFlagAllowConditionalEmails) {
+    menuItems.push({
+      text: 'Advanced settings',
+      href: editorv2Path(slug, 'advanced-settings')
+    })
+  }
+  menuItems.push(
+    {
+      text: 'Manage conditions',
+      href: editorv2Path(slug, 'conditions')
+    },
+    {
+      text: 'Upload a form',
+      href: editorv2Path(slug, 'upload')
+    },
+    {
+      text: 'Download this form',
+      href: `/library/${slug}/editor-v2/download`
+    },
+    {
+      text: 'Welsh translation',
+      href: editorv2Path(slug, 'welsh')
+    }
+  )
+
   return {
     id: 'pages-menu',
     alignMenu: 'right',
@@ -335,28 +363,7 @@ function buildRightSideMenu(slug) {
       text: 'Tools',
       classes: BUTTON_SECONDARY_CLASS
     },
-    items: [
-      {
-        text: 'Advanced settings',
-        href: editorv2Path(slug, 'advanced-settings')
-      },
-      {
-        text: 'Manage conditions',
-        href: editorv2Path(slug, 'conditions')
-      },
-      {
-        text: 'Upload a form',
-        href: editorv2Path(slug, 'upload')
-      },
-      {
-        text: 'Download this form',
-        href: `/library/${slug}/editor-v2/download`
-      },
-      {
-        text: 'Welsh translation',
-        href: editorv2Path(slug, 'welsh')
-      }
-    ]
+    items: menuItems
   }
 }
 
