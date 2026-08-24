@@ -1,4 +1,3 @@
-import { formatInTimeZone } from 'date-fns-tz'
 import xlsx from 'xlsx'
 
 import {
@@ -322,15 +321,12 @@ export function getSubmissionSheetData(submissionsPerMonth, metrics) {
     }
   ]
 
-  // Determine a unique set of forms so we know which rows to add in the worksheet,
-  // and build up the list of 'month' column headers
-  const uniqueFormIds = /** @type {Set<string>} */ (new Set())
-  for (const [month, forms] of Object.entries(submissionsPerMonth)) {
+  // Build up the list of 'month' column headers
+  for (const [month] of Object.entries(submissionsPerMonth)) {
     columns.push({
-      title: formatInTimeZone(new Date(`${month}-01`), 'UTC', 'MMM-yy'),
+      title: formatYearMonthInWords(month),
       dataKey: month
     })
-    Object.keys(forms).forEach((id) => uniqueFormIds.add(id))
   }
 
   // Build up data rows for all forms (irrespective of whether they have counts listed)
@@ -372,6 +368,31 @@ function getFormNameMap(metrics) {
   return formNameMap
 }
 
+const monthShortNames = /** @type {Record<string, string>} */ ({
+  '01': 'Jan',
+  '02': 'Feb',
+  '03': 'Mar',
+  '04': 'Apr',
+  '05': 'May',
+  '06': 'Jun',
+  '07': 'Jul',
+  '08': 'Aug',
+  '09': 'Sep',
+  10: 'Oct',
+  11: 'Nov',
+  12: 'Dec'
+})
+
+/**
+ * Convert a year/month e.g. '2026-02' into a word date format e.g. 'Feb-26'
+ * @param {string} monthYear
+ */
+export function formatYearMonthInWords(monthYear) {
+  const [year, monthNum] = monthYear.split('-')
+  const yearShort = year.substring(2)
+  const monthShort = monthShortNames[monthNum]
+  return `${monthShort}-${yearShort}`
+}
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { TableRowMetric } from '~/src/models/admin/metrics-helper.js'

@@ -2,6 +2,7 @@ import { FormMetricType } from '@defra/forms-model'
 
 import { excelSnapshot } from '~/src/models/admin/metrics-excel-snapshot.js'
 import {
+  formatYearMonthInWords,
   getMetricsAsExcel,
   getSubmissionSheetData
 } from '~/src/models/admin/metrics-excel.js'
@@ -508,6 +509,25 @@ describe('metrics-excel', () => {
         { '2026-04': 0, '2026-05': 2, formName: 'Form 3' },
         { '2026-04': 0, '2026-05': 0, formName: 'Form 4' }
       ])
+    })
+  })
+
+  describe('formatYearMonthInWords', () => {
+    it('should convert year-month to correct format', () => {
+      expect(formatYearMonthInWords('2025-01')).toBe('Jan-25')
+      expect(formatYearMonthInWords('2025-02')).toBe('Feb-25')
+      expect(formatYearMonthInWords('2025-03')).toBe('Mar-25')
+      expect(formatYearMonthInWords('2025-04')).toBe('Apr-25')
+      expect(formatYearMonthInWords('2025-05')).toBe('May-25')
+      expect(formatYearMonthInWords('2025-06')).toBe('Jun-25')
+      expect(formatYearMonthInWords('2025-07')).toBe('Jul-25')
+      expect(formatYearMonthInWords('2025-08')).toBe('Aug-25')
+      expect(formatYearMonthInWords('2025-09')).toBe('Sep-25')
+      expect(formatYearMonthInWords('2025-10')).toBe('Oct-25')
+      expect(formatYearMonthInWords('2025-11')).toBe('Nov-25')
+      expect(formatYearMonthInWords('2025-12')).toBe('Dec-25')
+      expect(formatYearMonthInWords('2026-01')).toBe('Jan-26')
+      expect(formatYearMonthInWords('2026-02')).toBe('Feb-26')
     })
   })
 })
