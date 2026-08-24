@@ -5,7 +5,7 @@
 
   <form method="post" action="#" novalidate="" onsubmit="return false;">
     {# Add 'javascript' attribute to model to enable drag-and-drop file uploader #}
-    {% set model = model | setProperty('javascript', true) %}
+    {% set model = model | setProperty('javascript', true) | setProperty('disabled', true) %}
     {{ govukFileUpload(model) }}
   </form>
 
