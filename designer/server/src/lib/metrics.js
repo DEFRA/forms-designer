@@ -99,10 +99,8 @@ export async function getSubmissionsPerMonth(earliestDate) {
       getJson
     )
 
-  const requestUrl = new URL(
-    `/report-submissions?earliestDate=${earliestDate.toISOString()}`,
-    config.auditUrl
-  )
+  const requestUrl = new URL(`/report-submissions`, config.auditUrl)
+  requestUrl.searchParams.set('earliestDate', earliestDate.toISOString())
 
   const { body } = await getJsonByType(requestUrl)
 

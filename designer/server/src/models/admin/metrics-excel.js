@@ -1,4 +1,4 @@
-import { format } from 'date-fns'
+import { formatInTimeZone } from 'date-fns-tz'
 import xlsx from 'xlsx'
 
 import {
@@ -310,6 +310,8 @@ export function getSubmissionSheetData(submissionsPerMonth, metrics) {
   // Map of formId -> formName
   const formNameMap = getFormNameMap(metrics)
 
+  const allFormIds = formNameMap.keys().toArray()
+
   // Add first column
   /** @type {{ title: string, dataKey:string, attributes?: { wch: number }}[]} */
   const columns = [
@@ -325,15 +327,15 @@ export function getSubmissionSheetData(submissionsPerMonth, metrics) {
   const uniqueFormIds = /** @type {Set<string>} */ (new Set())
   for (const [month, forms] of Object.entries(submissionsPerMonth)) {
     columns.push({
-      title: format(new Date(`${month}-01`), 'MMM-yy'),
+      title: formatInTimeZone(new Date(`${month}-01`), 'UTC', 'MMM-yy'),
       dataKey: month
     })
     Object.keys(forms).forEach((id) => uniqueFormIds.add(id))
   }
 
-  // Build up data rows
+  // Build up data rows for all forms (irrespective of whether they have counts listed)
   const dataRows = []
-  for (const formId of uniqueFormIds.keys()) {
+  for (const formId of allFormIds) {
     // Add form name
     const dataCells = /** @type {Record<string, string | number>} */ ({
       formName: formNameMap.get(formId) ?? 'Form not found'

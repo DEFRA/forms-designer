@@ -482,6 +482,12 @@ describe('metrics-excel', () => {
             }
           },
           {
+            formId: 'form-id-4',
+            summaryMetrics: {
+              name: 'Form 4'
+            }
+          },
+          {
             formId: 'form-id-3',
             summaryMetrics: {
               name: 'Form 3'
@@ -499,7 +505,8 @@ describe('metrics-excel', () => {
       expect(res.data).toEqual([
         { '2026-04': 3, '2026-05': 0, formName: 'Form 1' },
         { '2026-04': 5, '2026-05': 1, formName: 'Form 2' },
-        { '2026-04': 0, '2026-05': 2, formName: 'Form 3' }
+        { '2026-04': 0, '2026-05': 2, formName: 'Form 3' },
+        { '2026-04': 0, '2026-05': 0, formName: 'Form 4' }
       ])
     })
   })
