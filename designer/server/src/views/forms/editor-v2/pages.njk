@@ -1,11 +1,11 @@
 {% extends "layouts/page.njk" %}
 
+{% from "link-menu/macro.njk" import appLinkMenu %}
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "pages-panel-left/macro.njk" import appPagesPanelLeft %}
 {% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
-{%- from "moj/components/button-menu/macro.njk" import mojButtonMenu -%}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -50,7 +50,7 @@
           </h2>
           {% if rightSideMenu %}
             <div class="app-pages-header__actions">
-              {{ mojButtonMenu(rightSideMenu) }}
+              {{ appLinkMenu(rightSideMenu) }}
             </div>
           {% endif %}
         </div>
