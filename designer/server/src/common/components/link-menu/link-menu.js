@@ -65,7 +65,9 @@ export class LinkMenu extends Component {
     const $list = this.$root.querySelector('.app-link-menu__list')
 
     if (!($list instanceof HTMLElement)) {
-      throw new Error('Link menu is missing its .app-link-menu__list element')
+      throw new TypeError(
+        'Link menu is missing its .app-link-menu__list element'
+      )
     }
 
     if (!$list.id) {
