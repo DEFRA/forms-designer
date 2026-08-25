@@ -1,5 +1,7 @@
 import { Component } from 'govuk-frontend'
 
+const ARIA_EXPANDED = 'aria-expanded'
+const SHORT_TIMEOUT = 50
 const ARROW_SVG =
   '<svg class="app-link-menu__toggle-arrow" width="11" height="5" viewBox="0 0 11 5" focusable="false" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><path d="M5.5 0L11 5L0 5L5.5 0Z" fill="currentColor"/></svg>'
 
@@ -97,7 +99,7 @@ export class LinkMenu extends Component {
 
       // Let the browser start navigating before the menu disappears
       $item.addEventListener('click', () => {
-        setTimeout(() => this.closeMenu(false), 50)
+        setTimeout(() => this.closeMenu(false), SHORT_TIMEOUT)
       })
     }
 
@@ -139,7 +141,7 @@ export class LinkMenu extends Component {
       $toggle.classList.add(...extraClasses)
     }
 
-    $toggle.setAttribute('aria-expanded', 'false')
+    $toggle.setAttribute(ARIA_EXPANDED, 'false')
     $toggle.setAttribute('aria-controls', this.$list.id)
 
     const $label = document.createElement('span')
@@ -156,7 +158,7 @@ export class LinkMenu extends Component {
    * @returns {boolean}
    */
   isOpen() {
-    return this.$toggle.getAttribute('aria-expanded') === 'true'
+    return this.$toggle.getAttribute(ARIA_EXPANDED) === 'true'
   }
 
   /**
@@ -165,7 +167,7 @@ export class LinkMenu extends Component {
    */
   openMenu(focusIndex) {
     this.$list.hidden = false
-    this.$toggle.setAttribute('aria-expanded', 'true')
+    this.$toggle.setAttribute(ARIA_EXPANDED, 'true')
 
     if (focusIndex !== undefined) {
       this.focusItem(focusIndex)
@@ -178,7 +180,7 @@ export class LinkMenu extends Component {
    */
   closeMenu(moveFocus = true) {
     this.$list.hidden = true
-    this.$toggle.setAttribute('aria-expanded', 'false')
+    this.$toggle.setAttribute(ARIA_EXPANDED, 'false')
 
     if (moveFocus) {
       this.$toggle.focus()
