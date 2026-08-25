@@ -10,6 +10,7 @@ import {
   getDrilldownMetrics,
   getMetrics,
   getMetricsForForm,
+  getSubmissionsPerMonth,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 
@@ -88,7 +89,10 @@ describe('metrics.js', () => {
       })
       const expectedUrl = new URL('/report/regenerate', auditEndpoint)
       await regenerateMetrics('token')
-      expect(mockedPostJson).toHaveBeenCalledWith(expectedUrl, {
+      const calledUrl = mockedPostJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+      const calledParams = mockedPostJson.mock.calls[0][1]
+      expect(calledParams).toEqual({
         headers: { Authorization: 'Bearer token' }
       })
     })
@@ -102,7 +106,26 @@ describe('metrics.js', () => {
       })
       const expectedUrl = new URL('/report/form-id-1', auditEndpoint)
       await getMetricsForForm('form-id-1')
-      expect(mockedGetJson).toHaveBeenCalledWith(expectedUrl)
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+  })
+
+  describe('getSubmissionsPerMonth', () => {
+    it('should call endpoint', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: {}
+      })
+      const expectedUrl = new URL('/report-submissions', auditEndpoint)
+      expectedUrl.searchParams.append(
+        'earliestDate',
+        '2026-01-01T00:00:00.000Z'
+      )
+
+      await getSubmissionsPerMonth(new Date(2026, 0, 1))
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
     })
   })
 })

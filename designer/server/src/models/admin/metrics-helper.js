@@ -27,7 +27,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  */
 
 /**
- * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string, restoreFilter?: string }} FilterAndSortCriteria
+ * @typedef {FilterCriteria & SortCriteria & { action?: string, showFilter?: string, restoreFilter?: string, currentTab?: string }} FilterAndSortCriteria
  */
 
 /**

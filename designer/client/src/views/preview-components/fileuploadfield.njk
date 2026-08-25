@@ -4,14 +4,9 @@
 <div class="govuk-error-summary-container"></div>
 
   <form method="post" action="#" novalidate="" onsubmit="return false;">
+    {# Add 'javascript' attribute to model to enable drag-and-drop file uploader #}
+    {% set model = model | setProperty('javascript', true) | setProperty('disabled', true) %}
     {{ govukFileUpload(model) }}
-
-    {{ govukButton({
-      text: "Upload file",
-      classes: "govuk-button--secondary upload-file-button",
-      preventDoubleClick: true,
-      disabled: true
-    }) }}
   </form>
 
   <p class="govuk-body" aria-live="polite">1 of 2 files uploaded</p>

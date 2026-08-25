@@ -1,4 +1,4 @@
-import { markdownToHtml as markdown } from '@defra/forms-model'
+import { markdownToHtml as markdown, setProperty } from '@defra/forms-model'
 import nunjucks from 'nunjucks'
 import fs from 'fs'
 import { join } from 'node:path'
@@ -26,6 +26,7 @@ const paths = [
 
 const env = new Environment([])
 env.addFilter('markdown', markdown)
+env.addFilter('setProperty', setProperty)
 
 for (const { cmdpath, output } of paths) {
   const compiled = precompile(cmdpath, {

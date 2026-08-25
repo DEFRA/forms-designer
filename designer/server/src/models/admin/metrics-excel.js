@@ -174,8 +174,9 @@ const formStructureColumns = [
 /**
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metricsWelsh
+ * @param {Record<string, Record<string, number>>} submissionsPerMonth
  */
-export function getMetricsAsExcel(metrics, metricsWelsh) {
+export function getMetricsAsExcel(metrics, metricsWelsh, submissionsPerMonth) {
   // Create an excel file - one workbook with multiple worksheets
   const workbook = xlsx.utils.book_new()
 
@@ -230,6 +231,11 @@ export function getMetricsAsExcel(metrics, metricsWelsh) {
     componentUsage.formUsageFormStructures,
     'Usage - Form structure'
   )
+
+  // Submissions per month
+  const { columns, data } = getSubmissionSheetData(submissionsPerMonth, metrics)
+
+  addWorksheet(workbook, columns, data, 'Form submissions')
 
   const buffer = /** @type {XLSXBuffer} */ (
     xlsx.write(workbook, {
@@ -294,6 +300,99 @@ function constructRowKeyMap(metricRow) {
   return rowMap
 }
 
+/**
+ * Create data to show form submissions per month, per form
+ * @param {Record<string, Record<string, number>>} submissionsPerMonth
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ */
+export function getSubmissionSheetData(submissionsPerMonth, metrics) {
+  // Map of formId -> formName
+  const formNameMap = getFormNameMap(metrics)
+
+  const allFormIds = formNameMap.keys().toArray()
+
+  // Add first column
+  /** @type {{ title: string, dataKey:string, attributes?: { wch: number }}[]} */
+  const columns = [
+    {
+      title: 'Form name',
+      dataKey: 'formName',
+      attributes: { wch: 50 }
+    }
+  ]
+
+  // Build up the list of 'month' column headers
+  for (const [month] of Object.entries(submissionsPerMonth)) {
+    columns.push({
+      title: formatYearMonthInWords(month),
+      dataKey: month
+    })
+  }
+
+  // Build up data rows for all forms (irrespective of whether they have counts listed)
+  const dataRows = []
+  for (const formId of allFormIds) {
+    // Add form name
+    const dataCells = /** @type {Record<string, string | number>} */ ({
+      formName: formNameMap.get(formId) ?? 'Form not found'
+    })
+    // Add each submission count per month (for each form)
+    for (const [month, forms] of Object.entries(submissionsPerMonth)) {
+      dataCells[month] = forms[formId] ?? 0
+    }
+    dataRows.push(dataCells)
+  }
+
+  return {
+    columns,
+    // Sort by form name
+    data: dataRows.toSorted((rowA, rowB) =>
+      `${rowA.formName}`.localeCompare(`${rowB.formName}`)
+    )
+  }
+}
+
+/**
+ * Generate a map of formId -> formName
+ * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
+ */
+function getFormNameMap(metrics) {
+  /** @type {Map<string, string>} */
+  const formNameMap = new Map()
+  metrics.overview.forEach((metric) =>
+    formNameMap.set(
+      metric.formId,
+      /** @type {string} */ (metric.summaryMetrics.name)
+    )
+  )
+  return formNameMap
+}
+
+const monthShortNames = /** @type {Record<string, string>} */ ({
+  '01': 'Jan',
+  '02': 'Feb',
+  '03': 'Mar',
+  '04': 'Apr',
+  '05': 'May',
+  '06': 'Jun',
+  '07': 'Jul',
+  '08': 'Aug',
+  '09': 'Sep',
+  10: 'Oct',
+  11: 'Nov',
+  12: 'Dec'
+})
+
+/**
+ * Convert a year/month e.g. '2026-02' into a word date format e.g. 'Feb-26'
+ * @param {string} monthYear
+ */
+export function formatYearMonthInWords(monthYear) {
+  const [year, monthNum] = monthYear.split('-')
+  const yearShort = year.substring(2)
+  const monthShort = monthShortNames[monthNum]
+  return `${monthShort}-${yearShort}`
+}
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
  * @import { TableRowMetric } from '~/src/models/admin/metrics-helper.js'

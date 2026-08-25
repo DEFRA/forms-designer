@@ -1,7 +1,7 @@
 import {
   ComponentType,
   ControllerType,
-  getPageTitle,
+  getQuestionHeadingForCYA,
   hasComponentsEvenIfNoNext,
   isPaymentPage,
   isSummaryPage
@@ -89,7 +89,7 @@ export function buildSectionsForPreview(definition) {
     pages: pages
       .filter((page) => page.section === section.id && !isGuidancePage(page))
       .map((page) => ({
-        title: getPageTitle(page)
+        title: getQuestionHeadingForCYA(page)
       }))
   }))
 }
@@ -112,7 +112,7 @@ export function getUnassignedPageTitlesForPreview(definition) {
         !isPaymentPage(page)
     )
     .map((page) => ({
-      title: getPageTitle(page)
+      title: getQuestionHeadingForCYA(page)
     }))
 }
 
