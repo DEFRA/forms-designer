@@ -38,6 +38,7 @@ Base URLs should should include protocol, hostname, port number, e.g. `http://lo
 | AZURE_CLIENT_SECRET               | Client secret of the Azure app registration.                                                                              | yes      |         |                             |
 | LOG_LEVEL                         | Log level                                                                                                                 | yes      | info    | trace,debug,info,error      |
 | MANAGER_URL                       | Base URL of the forms-manager API.                                                                                        | yes      |         |                             |
+| NEWLS_CWT_LISTENER_URL            | Base URL of the forms-newls-cwt-listener                                                                                  | yes      |         |                             |
 | NOTIFY_URL                        | Base URL of the forms-notify-listener                                                                                     | yes      |         |                             |
 | SHAREPOINT_URL                    | Base URL of the forms-sharepoint-listener                                                                                 | yes      |         |                             |
 | NODE_ENV                          | Node environment                                                                                                          | yes      |         | development,test,production |

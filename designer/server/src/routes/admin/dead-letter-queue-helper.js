@@ -12,6 +12,8 @@ const queueToSchema =
     [DeadLetterQueues.SubmissionsApiSaveAndExit]: submissionMessageSchema,
     [DeadLetterQueues.SubmissionsApiFormSubmissions]: submissionMessageSchema,
     [DeadLetterQueues.AuditApi]: messageSchema,
+    [DeadLetterQueues.NewlsCwtListener]:
+      formAdapterSubmissionMessagePayloadSchema,
     [DeadLetterQueues.NotifyListener]:
       formAdapterSubmissionMessagePayloadSchema,
     [DeadLetterQueues.SharepointListener]:

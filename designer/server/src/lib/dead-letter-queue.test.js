@@ -19,6 +19,10 @@ describe('dead-letter queue lib functions', () => {
         endpoint: 'http://localhost:3003',
         qualifier: ''
       })
+      expect(getEndpoint(DeadLetterQueues.NewlsCwtListener)).toEqual({
+        endpoint: 'http://localhost:3008',
+        qualifier: ''
+      })
       expect(getEndpoint(DeadLetterQueues.NotifyListener)).toEqual({
         endpoint: 'http://localhost:3004',
         qualifier: ''

@@ -23,6 +23,7 @@ export interface Config {
   entitlementUrl: string
   previewUrl: string
   managerUrl: string
+  newlsCwtListenerUrl: string
   notifyUrl: string
   sharepointUrl: string
   submissionUrl: string
@@ -102,6 +103,7 @@ const schema = joi.object<Config>({
   auditUrl: joi.string().required(),
   entitlementUrl: joi.string().required(),
   managerUrl: joi.string().required(),
+  newlsCwtListenerUrl: joi.string().required(),
   notifyUrl: joi.string().required(),
   sharepointUrl: joi.string().required(),
   submissionUrl: joi.string().required(),
@@ -188,6 +190,7 @@ const result = schema.validate(
     auditUrl: process.env.AUDIT_URL,
     entitlementUrl: process.env.ENTITLEMENT_URL,
     managerUrl: process.env.MANAGER_URL,
+    newlsCwtListenerUrl: process.env.NEWLS_CWT_LISTENER_URL,
     notifyUrl: process.env.NOTIFY_URL,
     sharepointUrl: process.env.SHAREPOINT_URL,
     submissionUrl: process.env.SUBMISSION_URL,
