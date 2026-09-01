@@ -14,6 +14,9 @@ export function getEndpoint(dlq) {
     case DeadLetterQueues.AuditApi:
       endpoint = config.auditUrl
       break
+    case DeadLetterQueues.NewlsCwtListener:
+      endpoint = config.newlsCwtListenerUrl
+      break
     case DeadLetterQueues.NotifyListener:
       endpoint = config.notifyUrl
       break
