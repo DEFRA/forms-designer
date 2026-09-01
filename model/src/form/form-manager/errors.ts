@@ -30,10 +30,12 @@ export const checkErrors = (
         const keyMatch =
           typeof err.local.key === 'number' ? err.local.path : err.local.key
 
+        // An empty key matches any unique constraint for schemas whose
+        // uniqueness is a composite of several keys rather than a single one
         if (
           errorDetails.type === FormDefinitionErrorType.Unique &&
           err.code === 'array.unique' &&
-          keyMatch === errorDetails.key
+          (errorDetails.key === '' || keyMatch === errorDetails.key)
         ) {
           err.local.errorCode = formError
           err.local.errorType = FormDefinitionErrorType.Unique
@@ -172,6 +174,8 @@ export const formErrorsToMessages: Record<FormDefinitionError, string> = {
     'Each item in a list must have unique text. Change the item text to one that is not already used.',
   [FormDefinitionError.UniqueListItemValue]:
     'Each item in a list must have a unique value. Change the item value to one that is not already used.',
+  [FormDefinitionError.UniqueOutput]:
+    'This email address is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.',
   [FormDefinitionError.RefPageCondition]:
     'This page is referenced by a condition. Remove the condition before making changes to this page.',
   [FormDefinitionError.RefConditionComponentId]:
@@ -184,6 +188,8 @@ export const formErrorsToMessages: Record<FormDefinitionError, string> = {
     'A condition is using another condition. Remove the reference before making changes.',
   [FormDefinitionError.RefPageComponentList]:
     'A question on this page is using a list. Remove the reference before making changes to the list.',
+  [FormDefinitionError.RefOutputCondition]:
+    'A submission email is using a condition that does not exist in this form. Select an existing condition or remove it.',
   [FormDefinitionError.IncompatibleConditionComponentType]:
     'You cannot change to this question type because this question is used in a condition. Remove the condition or select a different question type.',
   [FormDefinitionError.IncompatibleQuestionRegex]:

@@ -7,7 +7,7 @@ import { createJoiError } from '~/src/lib/error-boom-helper.js'
 
 /**
  * @template T, S
- * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
+ * @param { Request | Request<{ Params: S }> | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {ValidationSessionKey} flashKey
  * @param {Error} [error]
  */
@@ -19,7 +19,7 @@ export function addErrorsToSession(request, flashKey, error) {
 
 /**
  * @template T, S
- * @param { Request | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
+ * @param { Request | Request<{ Params: S }> | Request<{ Payload: T }> | Request<{ Params: S, Payload: T }> } request
  * @param {unknown} formValues
  * @param {ValidationSessionKey} flashKey
  * @param {Error} [error]

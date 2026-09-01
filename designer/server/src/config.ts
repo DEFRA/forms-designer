@@ -59,6 +59,7 @@ export interface Config {
   awsRegion: string
   snsEndpoint: string
   snsTopicArn: string
+  featureFlagAllowConditionalEmails: boolean
   featureFlagAllowPayments: boolean
   featureFlagAllowGeospatial: boolean
   ordnanceSurveyApiKey: string
@@ -175,6 +176,7 @@ const schema = joi.object<Config>({
   awsRegion: joi.string().required(),
   snsEndpoint: joi.string().required(),
   snsTopicArn: joi.string().required(),
+  featureFlagAllowConditionalEmails: joi.boolean().required(),
   featureFlagAllowPayments: joi.boolean().required(),
   featureFlagAllowGeospatial: joi.boolean().required(),
   ordnanceSurveyApiKey: joi.string().required(),
@@ -230,6 +232,8 @@ const result = schema.validate(
     awsRegion: process.env.AWS_REGION,
     snsEndpoint: process.env.SNS_ENDPOINT,
     snsTopicArn: process.env.SNS_TOPIC_ARN,
+    featureFlagAllowConditionalEmails:
+      process.env.FEATURE_FLAG_ALLOW_CONDITIONAL_EMAILS,
     featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS,
     featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL,
     ordnanceSurveyApiKey: process.env.ORDNANCE_SURVEY_API_KEY,

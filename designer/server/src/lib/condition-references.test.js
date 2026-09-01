@@ -491,5 +491,94 @@ describe('condition-references', () => {
         expect(result.paymentFields[0].pageId).toBe('page2')
       })
     })
+
+    describe('output email addresses', () => {
+      /** @param {Output[]} outputs */
+      const buildDefinitionWithOutputs = (outputs) =>
+        buildDefinition({
+          pages: [
+            buildQuestionPage({
+              id: 'page1',
+              components: [testComponent]
+            })
+          ],
+          conditions: [baseCondition],
+          outputs
+        })
+
+      it('returns the outputs that use the condition, with their index', () => {
+        const definition = buildDefinitionWithOutputs([
+          {
+            emailAddress: 'unconditional@example.com',
+            audience: 'human',
+            version: '2'
+          },
+          {
+            emailAddress: 'cattle@example.com',
+            audience: 'human',
+            version: '2',
+            condition: conditionId
+          },
+          {
+            emailAddress: 'cattle-data@example.com',
+            audience: 'machine',
+            version: '1',
+            condition: conditionId
+          },
+          {
+            emailAddress: 'other@example.com',
+            audience: 'human',
+            version: '2',
+            condition: 'other-condition'
+          }
+        ])
+
+        const result = findConditionReferences(definition, conditionId)
+
+        expect(result.outputs).toEqual([
+          {
+            index: 1,
+            emailAddress: 'cattle@example.com',
+            audience: 'human',
+            version: '2'
+          },
+          {
+            index: 2,
+            emailAddress: 'cattle-data@example.com',
+            audience: 'machine',
+            version: '1'
+          }
+        ])
+      })
+
+      it('returns an empty array when no output uses the condition', () => {
+        const definition = buildDefinitionWithOutputs([
+          {
+            emailAddress: 'unconditional@example.com',
+            audience: 'human',
+            version: '2'
+          }
+        ])
+
+        const result = findConditionReferences(definition, conditionId)
+
+        expect(result.outputs).toEqual([])
+      })
+
+      it('handles a definition with no outputs', () => {
+        const definition = buildDefinition({
+          pages: [],
+          conditions: [baseCondition]
+        })
+
+        const result = findConditionReferences(definition, conditionId)
+
+        expect(result.outputs).toEqual([])
+      })
+    })
   })
 })
+
+/**
+ * @import { Output } from '@defra/forms-model'
+ */

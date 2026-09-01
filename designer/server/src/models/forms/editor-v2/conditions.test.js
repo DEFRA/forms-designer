@@ -331,8 +331,8 @@ describe('editor-v2 - conditions model', () => {
       const result = buildConditionsTable(metadata.slug, definition)
 
       expect(result.rows).toHaveLength(1)
-      const usageText = result.rows[0][1].text
-      expect(usageText).toBe('Page 1, Page 2')
+      const usageHtml = result.rows[0][1].html
+      expect(usageHtml).toBe('Page 1, Page 2')
     })
 
     it('should show empty usage when condition is not used on any pages', () => {
@@ -348,8 +348,66 @@ describe('editor-v2 - conditions model', () => {
       const result = buildConditionsTable(metadata.slug, definition)
 
       expect(result.rows).toHaveLength(1)
-      const usageText = result.rows[0][1].text
-      expect(usageText).toBe('')
+      const usageHtml = result.rows[0][1].html
+      expect(usageHtml).toBe('')
+    })
+
+    it('should show email actions on a new line beneath the pages', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({
+            id: 'page1',
+            title: 'Page One',
+            condition: 'regular-condition',
+            components: [testComponent]
+          }),
+          buildSummaryPage()
+        ],
+        conditions: [regularCondition],
+        outputs: [
+          {
+            emailAddress: 'unconditional@example.com',
+            audience: 'human',
+            version: '2'
+          },
+          {
+            emailAddress: 'cattle@example.com',
+            audience: 'human',
+            version: '2',
+            condition: 'regular-condition'
+          }
+        ],
+        engine: Engine.V2
+      })
+
+      const result = buildConditionsTable(metadata.slug, definition)
+
+      expect(result.rows).toHaveLength(1)
+      expect(result.rows[0][1].html).toBe('Page 1<br>Email actions')
+    })
+
+    it('should show email actions alone when no pages use the condition', () => {
+      const definition = buildDefinition({
+        pages: [
+          buildQuestionPage({ id: 'page1', components: [testComponent] }),
+          buildSummaryPage()
+        ],
+        conditions: [regularCondition],
+        outputs: [
+          {
+            emailAddress: 'cattle@example.com',
+            audience: 'human',
+            version: '2',
+            condition: 'regular-condition'
+          }
+        ],
+        engine: Engine.V2
+      })
+
+      const result = buildConditionsTable(metadata.slug, definition)
+
+      expect(result.rows).toHaveLength(1)
+      expect(result.rows[0][1].html).toBe('Email actions')
     })
 
     it('should include condition display name and presentation HTML', () => {

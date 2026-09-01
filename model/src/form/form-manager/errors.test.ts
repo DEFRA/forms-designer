@@ -2,13 +2,17 @@ import { type ErrorReport } from 'joi'
 
 import { ConditionType, OperatorName } from '~/src/conditions/enums.js'
 import * as schema from '~/src/form/form-definition/index.js'
+import {
+  SchemaVersion,
+  type FormDefinition
+} from '~/src/form/form-definition/types.js'
 import { checkErrors, getErrors } from '~/src/form/form-manager/errors.js'
 import {
   FormDefinitionError,
   FormDefinitionErrorType
 } from '~/src/form/form-manager/types.js'
 import {
-  buildDefinition,
+  buildDefinition as buildBaseDefinition,
   buildList,
   buildListItem,
   buildQuestionPage,
@@ -18,6 +22,13 @@ import {
 } from '~/src/stubs.js'
 
 const formDefinitionV2Schema = schema.formDefinitionV2Schema
+
+/**
+ * Every definition in this file is validated against the V2 schema, which
+ * requires the `schema` property.
+ */
+const buildDefinition = (definitionPartial: Partial<FormDefinition> = {}) =>
+  buildBaseDefinition({ schema: SchemaVersion.V2, ...definitionPartial })
 
 const pageId1 = '73cf34ee-f53a-4159-9eef-b0286fd81934'
 const pageId2 = '5262b5a2-ace3-4297-9a29-0e100b42e24c'

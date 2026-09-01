@@ -162,11 +162,40 @@ export function unpackErrorToken(err, tokenName, lookup) {
 }
 
 /**
+ * Names the output the error refers to, so the author can find it in a list
+ * of addresses rather than being told an array index is duplicated.
+ * @param {unknown} err
+ * @param {FormDefinition} definition
+ */
+function unpackDuplicateOutput(err, definition) {
+  const cause = /** @type {FormDefinitionErrorCause[]} */ (
+    /** @type {Boom.Boom} */ (err).cause
+  )
+
+  const detail = /** @type {FormDefinitionErrorCauseDetailUnique} */ (
+    cause[0].detail
+  )
+
+  return definition.outputs?.at(detail.pos)?.emailAddress
+}
+
+/**
  * @param {unknown} err
  * @param {FormDefinition} definition
  * @returns { Joi.ValidationError | undefined }
  */
 export function handleInvalidFormErrors(err, definition) {
+  if (isInvalidFormErrorType(err, FormDefinitionError.UniqueOutput)) {
+    const emailAddress = unpackDuplicateOutput(err, definition)
+
+    return createJoiError(
+      'emailAddress',
+      emailAddress
+        ? `Email address ${emailAddress} is already receiving the same submissions. Change the address, condition or format, or remove the duplicate.`
+        : formErrorsToMessages[FormDefinitionError.UniqueOutput]
+    )
+  }
+
   if (isInvalidFormErrorType(err, FormDefinitionError.UniqueListItemValue)) {
     return createJoiError(
       DEFAULT_FIELD_NAME,
@@ -214,5 +243,5 @@ export function handleInvalidFormErrors(err, definition) {
 
 /**
  * @import { ValidationSessionKey } from '@hapi/yar'
- * @import { FormDefinition } from '@defra/forms-model'
+ * @import { FormDefinition, FormDefinitionErrorCause, FormDefinitionErrorCauseDetailUnique } from '@defra/forms-model'
  */
