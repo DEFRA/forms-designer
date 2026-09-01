@@ -29,6 +29,9 @@ describe('dead-letter-queue-helper', () => {
       expect(
         getCorrectMessageSchema(DeadLetterQueues.NotifyListener.toString())
       ).toEqual(formAdapterSubmissionMessagePayloadSchema)
+      expect(
+        getCorrectMessageSchema(DeadLetterQueues.NewlsCwtListener.toString())
+      ).toEqual(formAdapterSubmissionMessagePayloadSchema)
     })
 
     it('should throw if schema not known', () => {

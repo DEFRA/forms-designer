@@ -1,6 +1,6 @@
 {
   "name": "forms-designer",
-  "version": "3.0.702",
+  "version": "3.0.703",
   "private": true,
   "description": "Defra forms designer repository",
   "repository": {
@@ -73,7 +73,6 @@
     "typescript-eslint": "^8.56.1"
   },
   "overrides": {
-    "@defra/interactive-map": "0.0.22-alpha",
     "react-router-dom": "^6.30.3",
     "serialize-javascript": ">=7.0.3"
   },

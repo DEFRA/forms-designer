@@ -78,6 +78,7 @@ describe('Dead-letter queues routes', () => {
       jest
         .mocked(getDeadLetterQueueMessages)
         .mockResolvedValueOnce([])
+        .mockResolvedValueOnce([{}])
         // @ts-expect-error - invalid response to throw error
         .mockResolvedValueOnce(undefined)
         .mockResolvedValueOnce([{}, {}])
@@ -108,25 +109,27 @@ describe('Dead-letter queues routes', () => {
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')
 
-      expect($radios).toHaveLength(5)
+      expect($radios).toHaveLength(6)
       expect($radios[0].outerHTML).toContain('value="audit-api"')
       expect($radios[0]).toHaveAccessibleName('audit-api - 0 messages')
-      expect($radios[1].outerHTML).toContain('value="notify-listener"')
-      expect($radios[1]).toHaveAccessibleName('notify-listener - error')
-      expect($radios[2].outerHTML).toContain('value="sharepoint-listener"')
-      expect($radios[2]).toHaveAccessibleName(
+      expect($radios[1].outerHTML).toContain('value="newls-cwt-listener"')
+      expect($radios[1]).toHaveAccessibleName('newls-cwt-listener - 1 message')
+      expect($radios[2].outerHTML).toContain('value="notify-listener"')
+      expect($radios[2]).toHaveAccessibleName('notify-listener - error')
+      expect($radios[3].outerHTML).toContain('value="sharepoint-listener"')
+      expect($radios[3]).toHaveAccessibleName(
         'sharepoint-listener - 2 messages'
       )
-      expect($radios[3].outerHTML).toContain(
+      expect($radios[4].outerHTML).toContain(
         'value="submissions-api (form submissions)"'
       )
-      expect($radios[3]).toHaveAccessibleName(
+      expect($radios[4]).toHaveAccessibleName(
         'submissions-api (form submissions) - 3 messages'
       )
-      expect($radios[4].outerHTML).toContain(
+      expect($radios[5].outerHTML).toContain(
         'value="submissions-api (save-and-exit)"'
       )
-      expect($radios[4]).toHaveAccessibleName(
+      expect($radios[5]).toHaveAccessibleName(
         'submissions-api (save-and-exit) - 4 messages'
       )
       expect(response.result).toMatchSnapshot()

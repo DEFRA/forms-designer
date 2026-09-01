@@ -537,26 +537,32 @@ exports[`Dead-letter queues routes Journey should render form with radio options
       </label>
     </div>
     <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="dlq-2" name="dlq" type="radio" value="notify-listener">
+      <input class="govuk-radios__input" id="dlq-2" name="dlq" type="radio" value="newls-cwt-listener">
       <label class="govuk-label govuk-radios__label" for="dlq-2">
+        newls-cwt-listener - 1 message
+      </label>
+    </div>
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="dlq-3" name="dlq" type="radio" value="notify-listener">
+      <label class="govuk-label govuk-radios__label" for="dlq-3">
         notify-listener - error
       </label>
     </div>
     <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="dlq-3" name="dlq" type="radio" value="sharepoint-listener">
-      <label class="govuk-label govuk-radios__label" for="dlq-3">
+      <input class="govuk-radios__input" id="dlq-4" name="dlq" type="radio" value="sharepoint-listener">
+      <label class="govuk-label govuk-radios__label" for="dlq-4">
         sharepoint-listener - 2 messages
       </label>
     </div>
     <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="dlq-4" name="dlq" type="radio" value="submissions-api (form submissions)">
-      <label class="govuk-label govuk-radios__label" for="dlq-4">
+      <input class="govuk-radios__input" id="dlq-5" name="dlq" type="radio" value="submissions-api (form submissions)">
+      <label class="govuk-label govuk-radios__label" for="dlq-5">
         submissions-api (form submissions) - 3 messages
       </label>
     </div>
     <div class="govuk-radios__item">
-      <input class="govuk-radios__input" id="dlq-5" name="dlq" type="radio" value="submissions-api (save-and-exit)">
-      <label class="govuk-label govuk-radios__label" for="dlq-5">
+      <input class="govuk-radios__input" id="dlq-6" name="dlq" type="radio" value="submissions-api (save-and-exit)">
+      <label class="govuk-label govuk-radios__label" for="dlq-6">
         submissions-api (save-and-exit) - 4 messages
       </label>
     </div>
