@@ -1,1 +1,3 @@
+[ -f "$HOME/.huskyrc" ] && . "$HOME/.huskyrc"
+
 lint-staged
