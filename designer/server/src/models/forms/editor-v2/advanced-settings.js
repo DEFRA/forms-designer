@@ -10,7 +10,6 @@ export function buildSettingsTable(slug) {
 
   return {
     firstCellIsHeader: false,
-    // head: [{ text: 'Setting' }, { text: 'Description' }, { text: 'Actions' }],
     rows: [
       [
         {
