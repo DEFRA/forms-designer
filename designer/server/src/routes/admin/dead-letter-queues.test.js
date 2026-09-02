@@ -81,6 +81,7 @@ describe('Dead-letter queues routes', () => {
         .mockResolvedValueOnce([{}])
         // @ts-expect-error - invalid response to throw error
         .mockResolvedValueOnce(undefined)
+        .mockResolvedValueOnce([{}])
         .mockResolvedValueOnce([{}, {}])
         .mockResolvedValueOnce([{}, {}, {}])
         .mockResolvedValueOnce([{}, {}, {}, {}])
@@ -109,27 +110,33 @@ describe('Dead-letter queues routes', () => {
       expect(response.statusCode).toEqual(StatusCodes.OK)
       expect(response.headers['content-type']).toContain('text/html')
 
-      expect($radios).toHaveLength(6)
+      expect($radios).toHaveLength(7)
       expect($radios[0].outerHTML).toContain('value="audit-api"')
       expect($radios[0]).toHaveAccessibleName('audit-api - 0 messages')
       expect($radios[1].outerHTML).toContain('value="newls-cwt-listener"')
       expect($radios[1]).toHaveAccessibleName('newls-cwt-listener - 1 message')
-      expect($radios[2].outerHTML).toContain('value="notify-listener"')
-      expect($radios[2]).toHaveAccessibleName('notify-listener - error')
-      expect($radios[3].outerHTML).toContain('value="sharepoint-listener"')
+      expect($radios[2].outerHTML).toContain('value="notify-email-listener"')
+      expect($radios[2]).toHaveAccessibleName('notify-email-listener - error')
+      expect($radios[3].outerHTML).toContain(
+        'value="notify-submission-listener"'
+      )
       expect($radios[3]).toHaveAccessibleName(
+        'notify-submission-listener - 1 message'
+      )
+      expect($radios[4].outerHTML).toContain('value="sharepoint-listener"')
+      expect($radios[4]).toHaveAccessibleName(
         'sharepoint-listener - 2 messages'
       )
-      expect($radios[4].outerHTML).toContain(
+      expect($radios[5].outerHTML).toContain(
         'value="submissions-api (form submissions)"'
       )
-      expect($radios[4]).toHaveAccessibleName(
+      expect($radios[5]).toHaveAccessibleName(
         'submissions-api (form submissions) - 3 messages'
       )
-      expect($radios[5].outerHTML).toContain(
+      expect($radios[6].outerHTML).toContain(
         'value="submissions-api (save-and-exit)"'
       )
-      expect($radios[5]).toHaveAccessibleName(
+      expect($radios[6]).toHaveAccessibleName(
         'submissions-api (save-and-exit) - 4 messages'
       )
       expect(response.result).toMatchSnapshot()
@@ -415,7 +422,7 @@ describe('Dead-letter queues routes', () => {
 
       const options = {
         method: 'post',
-        url: '/admin/dead-letter-queues/notify-listener/modify/message-id',
+        url: '/admin/dead-letter-queues/notify-submission-listener/modify/message-id',
         auth,
         payload: {
           messageJson: JSON.stringify(validJsonMessage)
@@ -428,7 +435,7 @@ describe('Dead-letter queues routes', () => {
 
       expect(statusCode).toBe(StatusCodes.SEE_OTHER)
       expect(resubmitDeadLetterQueueMessage).toHaveBeenCalledWith(
-        'notify-listener',
+        'notify-submission-listener',
         'message-id',
         validJsonMessage.Body,
         expect.any(String)

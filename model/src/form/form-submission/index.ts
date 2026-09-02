@@ -196,3 +196,17 @@ export const submissionMessageSchema = Joi.object<SaveAndExitMessage>().keys({
     .description('ISO timestamp when the message was published'),
   data: saveAndExitMessageData
 })
+
+export const notifyEmailMessageSchema = Joi.object()
+  .keys({
+    source: Joi.string().required(),
+    reason: Joi.string().required(),
+    templateId: Joi.string().required(),
+    emailAddress: Joi.string().email().required(),
+    personalisation: Joi.object({
+      subject: Joi.string().required(),
+      body: Joi.string().required()
+    }),
+    notifyReplyToId: Joi.string().optional()
+  })
+  .label('NotifyEmailData')

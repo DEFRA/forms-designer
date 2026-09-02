@@ -2,6 +2,7 @@ import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-p
 import {
   DeadLetterQueues,
   messageSchema,
+  notifyEmailMessageSchema,
   submissionMessageSchema
 } from '@defra/forms-model'
 
@@ -14,7 +15,8 @@ const queueToSchema =
     [DeadLetterQueues.AuditApi]: messageSchema,
     [DeadLetterQueues.NewlsCwtListener]:
       formAdapterSubmissionMessagePayloadSchema,
-    [DeadLetterQueues.NotifyListener]:
+    [DeadLetterQueues.NotifyEmailListener]: notifyEmailMessageSchema,
+    [DeadLetterQueues.NotifySubmissionListener]:
       formAdapterSubmissionMessagePayloadSchema,
     [DeadLetterQueues.SharepointListener]:
       formAdapterSubmissionMessagePayloadSchema

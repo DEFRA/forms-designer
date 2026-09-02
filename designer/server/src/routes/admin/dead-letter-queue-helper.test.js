@@ -2,6 +2,7 @@ import { formAdapterSubmissionMessagePayloadSchema } from '@defra/forms-engine-p
 import {
   DeadLetterQueues,
   messageSchema,
+  notifyEmailMessageSchema,
   submissionMessageSchema
 } from '@defra/forms-model'
 
@@ -27,7 +28,12 @@ describe('dead-letter-queue-helper', () => {
         getCorrectMessageSchema(DeadLetterQueues.SharepointListener.toString())
       ).toEqual(formAdapterSubmissionMessagePayloadSchema)
       expect(
-        getCorrectMessageSchema(DeadLetterQueues.NotifyListener.toString())
+        getCorrectMessageSchema(DeadLetterQueues.NotifyEmailListener.toString())
+      ).toEqual(notifyEmailMessageSchema)
+      expect(
+        getCorrectMessageSchema(
+          DeadLetterQueues.NotifySubmissionListener.toString()
+        )
       ).toEqual(formAdapterSubmissionMessagePayloadSchema)
       expect(
         getCorrectMessageSchema(DeadLetterQueues.NewlsCwtListener.toString())

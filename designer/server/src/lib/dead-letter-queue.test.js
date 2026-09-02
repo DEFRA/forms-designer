@@ -23,9 +23,13 @@ describe('dead-letter queue lib functions', () => {
         endpoint: 'http://localhost:3008',
         qualifier: ''
       })
-      expect(getEndpoint(DeadLetterQueues.NotifyListener)).toEqual({
+      expect(getEndpoint(DeadLetterQueues.NotifyEmailListener)).toEqual({
         endpoint: 'http://localhost:3004',
-        qualifier: ''
+        qualifier: '/emails'
+      })
+      expect(getEndpoint(DeadLetterQueues.NotifySubmissionListener)).toEqual({
+        endpoint: 'http://localhost:3004',
+        qualifier: '/submissions'
       })
       expect(getEndpoint(DeadLetterQueues.SharepointListener)).toEqual({
         endpoint: 'http://localhost:3007',
