@@ -101,6 +101,7 @@ jobs:
         run: |
           cd forms-acceptance-tests
           npm ci
+          npx playwright install chrome
           npm run test:playwright
 
       - name: Generate report
