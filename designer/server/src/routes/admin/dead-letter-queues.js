@@ -101,26 +101,26 @@ export function generateTitling() {
  * @param {string} token
  */
 export async function getMessageCounts(token) {
-  const radioItems = []
-  for (const dlq of Object.values(DeadLetterQueues)) {
-    try {
-      const messages = await getDeadLetterQueueMessages(dlq, token, {
-        visibilityTimeout: 0,
-        waitTimeSeconds: 0
-      })
-      const countSuffix = messages.length === 1 ? 'message' : 'messages'
-      radioItems.push({
-        value: dlq,
-        text: `${dlq} - ${messages.length} ${countSuffix}`
-      })
-    } catch {
-      radioItems.push({
-        value: dlq,
-        text: `${dlq} - error`
-      })
-    }
-  }
-  return radioItems
+  return Promise.all(
+    Object.values(DeadLetterQueues).map(async (dlq) => {
+      try {
+        const messages = await getDeadLetterQueueMessages(dlq, token, {
+          visibilityTimeout: 0,
+          waitTimeSeconds: 0
+        })
+        const countSuffix = messages.length === 1 ? 'message' : 'messages'
+        return {
+          value: dlq,
+          text: `${dlq} - ${messages.length} ${countSuffix}`
+        }
+      } catch {
+        return {
+          value: dlq,
+          text: `${dlq} - error`
+        }
+      }
+    })
+  )
 }
 
 export default [

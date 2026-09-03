@@ -101,6 +101,7 @@ jobs:
         run: |
           cd forms-acceptance-tests
           npm ci
+          npx playwright install
           npm run test:playwright
 
       - name: Generate report

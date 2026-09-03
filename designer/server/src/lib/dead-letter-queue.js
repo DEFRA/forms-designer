@@ -17,8 +17,13 @@ export function getEndpoint(dlq) {
     case DeadLetterQueues.NewlsCwtListener:
       endpoint = config.newlsCwtListenerUrl
       break
-    case DeadLetterQueues.NotifyListener:
+    case DeadLetterQueues.NotifyEmailListener:
       endpoint = config.notifyUrl
+      qualifier = '/emails'
+      break
+    case DeadLetterQueues.NotifySubmissionListener:
+      endpoint = config.notifyUrl
+      qualifier = '/submissions'
       break
     case DeadLetterQueues.SharepointListener:
       endpoint = config.sharepointUrl
