@@ -42,51 +42,15 @@
       {% endcall %}
     {% endif %}
 
-    {% set defaultEmailWarningHtml %}
-      {{ govukWarningText({
-        html: 'This email address receives all submissions until you add another email address. After that, it only receives submissions that do not match any additional email address conditions. To continue receiving all submissions, <a class="govuk-link govuk-link--no-visited-state" href="#email-address-form">add it as an additional email address</a>.'
-      }) }}
-    {% endset %}
+    <h2 class="govuk-heading-l">Email addresses</h2>
 
-    {{ govukSummaryList({
-      card: {
-        title: {
-          text: "Default email address"
-        },
-        actions: {
-          items: [
-            {
-              href: defaultEmail.changeHref,
-              text: "Change"
-            }
-          ]
-        }
-      },
-      rows: [
-        {
-          key: { text: "Email address" },
-          value: { text: defaultEmail.emailAddress if defaultEmail.emailAddress else "Not set" }
-        },
-        {
-          key: { text: "Submission format" },
-          value: { text: defaultEmail.format }
-        },
-        {
-          classes: "govuk-summary-list__row--full-width",
-          value: { html: defaultEmailWarningHtml }
-        }
-      ]
-    }) }}
+    <p class="govuk-body">To send submissions based on answers, create and manage conditions in the <a class="govuk-link govuk-link--no-visited-state" href="{{ conditionsManagerHref }}">conditions manager</a>.</p>
 
     {% call govukDetails({
       summaryText: "How additional email addresses work"
     }) %}
       Additional email addresses receive submissions that meet their conditions. If a submission matches multiple conditions, we'll send it to each matching email address. If it doesn't match any conditions, we'll send it to the default email address.
     {% endcall %}
-
-    <h2 class="govuk-heading-l">Additional email addresses</h2>
-
-    <p class="govuk-body">To send submissions based on answers, create and manage conditions in the <a class="govuk-link govuk-link--no-visited-state" href="{{ conditionsManagerHref }}">conditions manager</a>.</p>
 
     {% if outputsTable.rows | length %}
       {{ govukTable(outputsTable) }}

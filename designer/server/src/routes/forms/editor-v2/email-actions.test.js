@@ -114,7 +114,7 @@ describe('Editor v2 email actions routes', () => {
       expect(document.body).toHaveTextContent('notify@defra.gov.uk')
       expect(document.body).toHaveTextContent('Human-readable')
       expect(document.body).toHaveTextContent(
-        'No additional email addresses added.'
+        'If a submission is not delivered to another email address'
       )
 
       expect(
