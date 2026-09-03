@@ -201,6 +201,8 @@ export const notifyEmailMessageSchema = Joi.object()
   .keys({
     source: Joi.string().required(),
     reason: Joi.string().required(),
+    formId: Joi.string().allow(''),
+    referenceNumber: Joi.string().allow(''),
     templateId: Joi.string().required(),
     emailAddress: Joi.string().email().required(),
     personalisation: Joi.object({
