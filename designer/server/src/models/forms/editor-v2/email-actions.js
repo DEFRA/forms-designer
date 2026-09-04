@@ -72,7 +72,8 @@ export function buildDefaultEmail(metadata, definition) {
   const version = definition.output?.version ?? latestVersion(audience)
 
   return {
-    emailAddress: metadata.notificationEmail,
+    // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+    emailAddress: metadata.notificationEmail || 'Not set',
     format: formatDescription(audience, version),
     changeHref: `/library/${metadata.slug}/edit/notification-email`
   }
@@ -161,12 +162,13 @@ export function buildConditionItems(definition, selectedConditionId) {
  * The additional email addresses held in `outputs`, listed for display.
  * @param {string} slug
  * @param {FormDefinition} definition
+ * @param {FormMetadata} metadata
  */
-export function buildOutputRows(slug, definition) {
+export function buildOutputRows(slug, definition, metadata) {
   const baseUrl = editorv2Path(slug, EMAIL_ACTIONS_PATH)
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
 
-  return (definition.outputs ?? []).map((output, index) => {
+  const rows = (definition.outputs ?? []).map((output, index) => {
     // The anchor drops the author at the form holding the address they picked,
     // which sits below the table
     const changeLink = `<a class="${linkClasses}" href="${baseUrl}/${index}${EMAIL_FORM_ANCHOR}">Change<span class="govuk-visually-hidden"> ${output.emailAddress}</span></a>`
@@ -181,6 +183,19 @@ export function buildOutputRows(slug, definition) {
       }
     ]
   })
+
+  // Add default email row as the last row
+  const defaultRow = buildDefaultEmail(metadata, definition)
+  rows.push([
+    { text: defaultRow.emailAddress },
+    { text: 'If a submission is not delivered to another email address' },
+    { text: defaultRow.format },
+    {
+      html: `<div class="app-table-actions"><a class="${linkClasses}" href="${defaultRow.changeHref}">Change<span class="govuk-visually-hidden"> (Default email address) </span></a></div>`
+    }
+  ])
+
+  return rows
 }
 
 /**
@@ -308,7 +323,7 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
     editIndex,
     validation?.formValues
   )
-  const outputRows = buildOutputRows(metadata.slug, definition)
+  const outputRows = buildOutputRows(metadata.slug, definition, metadata)
 
   return {
     backLink: {
@@ -330,7 +345,6 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
     errorList: buildErrorList(validation?.formErrors),
     formErrors: validation?.formErrors,
     formValues: values,
-    defaultEmail: buildDefaultEmail(metadata, definition),
     conditionsManagerHref: editorv2Path(metadata.slug, 'conditions'),
     outputsTable: {
       head: [
@@ -340,10 +354,11 @@ export function emailActionsViewModel(metadata, definition, options = {}) {
         { text: 'Actions' }
       ],
       // The last row carries the action on the whole table, so it is only
-      // worth adding once there is something to remove
-      rows: outputRows.length
-        ? [...outputRows, buildRemoveAllRow(metadata.slug)]
-        : outputRows
+      // worth adding once there is something to remove (excluding the default email row)
+      rows:
+        outputRows.length > 1
+          ? [...outputRows, buildRemoveAllRow(metadata.slug)]
+          : outputRows
     },
     isEditing,
     // Only the add form is capped - an existing address can always be amended

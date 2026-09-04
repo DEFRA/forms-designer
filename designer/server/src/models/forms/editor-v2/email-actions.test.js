@@ -52,7 +52,7 @@ describe('email actions view model', () => {
   describe('buildDefaultEmail', () => {
     test('should default to human-readable when the definition has no output', () => {
       expect(buildDefaultEmail(testFormMetadata, buildDefinition({}))).toEqual({
-        emailAddress: undefined,
+        emailAddress: 'Not set',
         format: 'Human-readable',
         changeHref: '/library/my-form-slug/edit/notification-email'
       })
@@ -115,14 +115,31 @@ describe('email actions view model', () => {
   })
 
   describe('buildOutputRows', () => {
-    test('should return no rows when there are no outputs', () => {
-      expect(buildOutputRows('my-form-slug', buildDefinition({}))).toEqual([])
+    test('should return only default row when there are no outputs', () => {
+      const rows = buildOutputRows(
+        'my-form-slug',
+        buildDefinition({}),
+        testFormMetadata
+      )
+      expect(rows).toHaveLength(1)
+
+      expect(rows[0][0]).toEqual({ text: 'Not set' })
+      expect(rows[0][1]).toEqual({
+        text: 'If a submission is not delivered to another email address'
+      })
+      expect(rows[0][2]).toEqual({ text: 'Human-readable' })
+      expect(rows[0][3].html).toContain(
+        'href="/library/my-form-slug/edit/notification-email"'
+      )
     })
 
     test('should list each output with its condition, format and actions', () => {
-      const rows = buildOutputRows('my-form-slug', definitionWithOutputs)
+      const rows = buildOutputRows('my-form-slug', definitionWithOutputs, {
+        ...testFormMetadata,
+        notificationEmail: 'notify@test.com'
+      })
 
-      expect(rows).toHaveLength(2)
+      expect(rows).toHaveLength(3)
 
       expect(rows[0][0]).toEqual({ text: 'unconditional@defra.gov.uk' })
       expect(rows[0][1]).toEqual({ text: NO_CONDITION_TEXT })
@@ -136,6 +153,11 @@ describe('email actions view model', () => {
 
       expect(rows[1][1]).toEqual({ text: 'isBobV2' })
       expect(rows[1][2]).toEqual({ text: 'Machine-readable (version 1)' })
+
+      expect(rows[2][0]).toEqual({ text: 'notify@test.com' })
+      expect(rows[2][1]).toEqual({
+        text: 'If a submission is not delivered to another email address'
+      })
     })
   })
 
@@ -299,9 +321,9 @@ describe('email actions view model', () => {
       )
 
       // Two addresses, then the row holding the action on all of them
-      expect(model.outputsTable.rows).toHaveLength(3)
+      expect(model.outputsTable.rows).toHaveLength(4)
 
-      const lastRow = model.outputsTable.rows[2]
+      const lastRow = model.outputsTable.rows[3]
 
       expect(lastRow.slice(0, 3)).toEqual([
         { text: '' },
@@ -323,7 +345,13 @@ describe('email actions view model', () => {
     test('should not offer a remove all when there are no addresses', () => {
       const model = emailActionsViewModel(testFormMetadata, buildDefinition({}))
 
-      expect(model.outputsTable.rows).toEqual([])
+      const lastRow =
+        model.outputsTable.rows[model.outputsTable.rows.length - 1]
+      expect(lastRow[0].text).toBe('Not set')
+      expect(lastRow[1].text).toBe(
+        'If a submission is not delivered to another email address'
+      )
+      expect(lastRow[2].text).toBe('Human-readable')
     })
 
     test('should build the amend state', () => {
