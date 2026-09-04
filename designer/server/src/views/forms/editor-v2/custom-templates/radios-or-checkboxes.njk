@@ -6,6 +6,13 @@
 {% set radioTextIdx = 1 %}
 {% set radioHintIdx = 2 %}
 {% set radioValueIdx = 3 %}
+{# Checkboxes only - see enhancedFieldsPerComponentType #}
+{% set radioExclusiveIdx = 4 %}
+{% set radioAdditionalTitleIdx = 5 %}
+{% set radioAdditionalHintIdx = 6 %}
+{% set radioAdditionalMaxLengthIdx = 7 %}
+{% set radioAdditionalOptionalIdx = 8 %}
+{% set hasExclusiveFields = (enhancedFields | length) > 4 %}
 
 <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
@@ -37,7 +44,7 @@
         {% set isFocus = state.lastMovedId == item.id %}
         {% set focusClass = " reorder-panel-focus" if isFocus else "" %}
 
-        <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
+        <li class="app-reorderable-list__item reorder-panel{{ focusClass }}" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}" data-extensions="{{ item.extensions | dump if item.extensions else "" }}">
           <div class="app-reorderable-list__wrapper list-item">
             <div class="app-reorderable-list__content">
               <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
@@ -91,7 +98,7 @@
         {% set isLast = loop.last %}
         {% set isFocus = state.lastMovedId == item.id %}
         {% set focusClass = " reorder-panel-focus" if isFocus else "" %}
-        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
+        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}" data-extensions="{{ item.extensions | dump if item.extensions else "" }}">
           <div class="app-reorderable-list__wrapper list-item">
             {% if loop.index == listDetails.rowNumBeingEdited %}
               <div class="app-reorderable-list__content">
@@ -139,7 +146,7 @@
 
     {% if state.editRow.expanded %}
       {% if listDetails.rowNumBeingEdited == state.listItems.length + 1 %}
-        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}">
+        <li class="app-reorderable-list__item" data-index="{{ loop.index }}" data-id="{{ item.id }}" data-val="{{ item.value }}" data-text="{{ item.text }}" data-hint="{{ item.hint.text }}" data-extensions="{{ item.extensions | dump if item.extensions else "" }}">
           <div class="app-reorderable-list__wrapper list-item">
             <div class="app-reorderable-list__content">
               {%- include "../../../../views/forms/editor-v2/custom-templates/radio-or-checkbox-edit.njk" -%}

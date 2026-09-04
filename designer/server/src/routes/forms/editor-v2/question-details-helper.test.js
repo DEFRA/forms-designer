@@ -1,8 +1,12 @@
+import { ExtensionType } from '@defra/forms-model'
+
 import { getQuestionSessionState } from '~/src/lib/session-helper.js'
 import {
+  buildItemExtensions,
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
+  isValidExclusivePosition,
   repositionListItem,
   setEditRowState
 } from '~/src/routes/forms/editor-v2/question-details-helper.js'
@@ -59,6 +63,33 @@ const sessionWithListWithThreeItems = {
   listItems: listWithThreeItems.listItems
 }
 
+/** @type {Exclusive} */
+const exclusiveExtension = { type: ExtensionType.Exclusive }
+
+/** @type {AdditionalQuestion} */
+const additionalQuestionExtension = {
+  type: ExtensionType.AdditionalQuestion,
+  id: '4d7c8e2a-1f3b-4a5c-9d6e-7f8a9b0c1d2e',
+  name: 'abcdef',
+  title: 'Give a reason',
+  options: { required: true },
+  schema: {}
+}
+
+const sessionWithExclusiveLastItem = {
+  questionType: 'CheckboxesField',
+  listItems: [
+    { id: '1', text: 'text1', value: 'value1' },
+    { id: '2', text: 'text2', value: 'value2' },
+    {
+      id: '3',
+      text: 'None of the above',
+      value: 'none',
+      extensions: [exclusiveExtension]
+    }
+  ]
+}
+
 describe('Editor v2 question-details route helper', () => {
   describe('getQuestionSessionState', () => {
     test('should get value from session', () => {
@@ -100,6 +131,157 @@ describe('Editor v2 question-details route helper', () => {
         radioValue: '',
         expanded: true
       })
+    })
+
+    test('should flag an exclusive item with no follow-up question', () => {
+      expect(
+        setEditRowState(
+          {
+            id: '3',
+            text: 'None of the above',
+            value: 'none',
+            extensions: [exclusiveExtension]
+          },
+          false
+        )
+      ).toEqual({
+        radioId: '3',
+        radioText: 'None of the above',
+        radioHint: '',
+        radioValue: 'none',
+        radioExclusive: true,
+        expanded: false
+      })
+    })
+
+    test('should populate the follow-up question fields', () => {
+      expect(
+        setEditRowState(
+          {
+            id: '3',
+            text: 'None of the above',
+            value: 'none',
+            extensions: [
+              exclusiveExtension,
+              {
+                ...additionalQuestionExtension,
+                hint: 'Tell us why',
+                options: { required: false },
+                schema: { max: 200 }
+              }
+            ]
+          },
+          true
+        )
+      ).toEqual({
+        radioId: '3',
+        radioText: 'None of the above',
+        radioHint: '',
+        radioValue: 'none',
+        radioExclusive: true,
+        radioAdditionalTitle: 'Give a reason',
+        radioAdditionalHint: 'Tell us why',
+        radioAdditionalMaxLength: 200,
+        radioAdditionalOptional: true,
+        expanded: true
+      })
+    })
+  })
+
+  describe('buildItemExtensions', () => {
+    test('should return no extensions when the item is not exclusive', () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        radioText: 'text',
+        radioAdditionalTitle: 'Give a reason'
+      })
+
+      expect(buildItemExtensions(payload, undefined)).toEqual([])
+    })
+
+    test('should return only the exclusive extension when there is no follow-up question', () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        radioText: 'None of the above',
+        radioExclusive: true
+      })
+
+      expect(buildItemExtensions(payload, undefined)).toEqual([
+        exclusiveExtension
+      ])
+    })
+
+    test('should ignore a follow-up question of only whitespace', () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        radioText: 'None of the above',
+        radioExclusive: true,
+        radioAdditionalTitle: '   '
+      })
+
+      expect(buildItemExtensions(payload, undefined)).toEqual([
+        exclusiveExtension
+      ])
+    })
+
+    test('should build a follow-up question with a new id and name', () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        radioText: 'None of the above',
+        radioExclusive: true,
+        radioAdditionalTitle: '  Give a reason  ',
+        radioAdditionalHint: 'Tell us why',
+        radioAdditionalMaxLength: 200
+      })
+
+      expect(buildItemExtensions(payload, undefined)).toEqual([
+        exclusiveExtension,
+        {
+          type: ExtensionType.AdditionalQuestion,
+          id: expect.any(String),
+          name: expect.any(String),
+          title: 'Give a reason',
+          hint: 'Tell us why',
+          options: { required: true },
+          schema: { max: 200 }
+        }
+      ])
+    })
+
+    test('should keep the id and name of an existing follow-up question', () => {
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        radioText: 'None of the above',
+        radioExclusive: true,
+        radioAdditionalTitle: 'A different question',
+        radioAdditionalOptional: true
+      })
+
+      const existingItem = {
+        id: '3',
+        text: 'None of the above',
+        value: 'none',
+        extensions: [exclusiveExtension, additionalQuestionExtension]
+      }
+
+      expect(buildItemExtensions(payload, existingItem)).toEqual([
+        exclusiveExtension,
+        {
+          type: ExtensionType.AdditionalQuestion,
+          id: additionalQuestionExtension.id,
+          name: additionalQuestionExtension.name,
+          title: 'A different question',
+          options: { required: false },
+          schema: {}
+        }
+      ])
+    })
+  })
+
+  describe('isValidExclusivePosition', () => {
+    const items = [{ id: '1' }, { id: '2' }, { id: '3' }]
+
+    test.each([
+      [0, true],
+      [1, false],
+      [2, true]
+    ])('index %i should be %s', (idx, expected) => {
+      expect(isValidExclusivePosition(items, idx)).toBe(expected)
     })
   })
 
@@ -557,6 +739,150 @@ describe('Editor v2 question-details route helper', () => {
         }
       )
     })
+
+    test('save-item should store the exclusive extension', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '3',
+        radioText: 'None of the above',
+        radioValue: 'none',
+        radioExclusive: true,
+        radioAdditionalTitle: 'Give a reason',
+        radioAdditionalMaxLength: 200
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockSet).toHaveBeenCalledWith(
+        'questionSessionState-123',
+        expect.objectContaining({
+          listItems: [
+            { id: '1', text: 'text1', value: 'value1' },
+            {
+              id: '2',
+              text: 'text2',
+              hint: { text: 'hint2' },
+              value: 'value2'
+            },
+            {
+              id: '3',
+              text: 'None of the above',
+              hint: undefined,
+              value: 'none',
+              extensions: [
+                exclusiveExtension,
+                {
+                  type: ExtensionType.AdditionalQuestion,
+                  id: expect.any(String),
+                  name: expect.any(String),
+                  title: 'Give a reason',
+                  options: { required: true },
+                  schema: { max: 200 }
+                }
+              ]
+            }
+          ]
+        })
+      )
+    })
+
+    test('save-item should reject an exclusive item in the middle of the list', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '2',
+        radioText: 'None of the above',
+        radioValue: 'none',
+        radioExclusive: true
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe('#')
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(mockFlash).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          formErrors: {
+            radioExclusive: expect.objectContaining({
+              text: 'A ‘none of the above’ item must be the first or the last item in the list'
+            })
+          }
+        })
+      )
+    })
+
+    test('save-item should drop the extensions of the item that was exclusive', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithExclusiveLastItem))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '1',
+        radioText: 'Prefer not to say',
+        radioValue: 'prefer-not-to-say',
+        radioExclusive: true
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockSet).toHaveBeenCalledWith(
+        'questionSessionState-123',
+        expect.objectContaining({
+          listItems: [
+            {
+              id: '1',
+              text: 'Prefer not to say',
+              hint: undefined,
+              value: 'prefer-not-to-say',
+              extensions: [exclusiveExtension]
+            },
+            { id: '2', text: 'text2', value: 'value2' },
+            { id: '3', text: 'None of the above', value: 'none' }
+          ]
+        })
+      )
+    })
+
+    test('save-item should remove the extensions when the exclusive box is cleared', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithExclusiveLastItem))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '3',
+        radioText: 'None of the above',
+        radioValue: 'none'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockSet).toHaveBeenCalledWith(
+        'questionSessionState-123',
+        expect.objectContaining({
+          listItems: [
+            { id: '1', text: 'text1', value: 'value1' },
+            { id: '2', text: 'text2', value: 'value2' },
+            {
+              id: '3',
+              text: 'None of the above',
+              hint: undefined,
+              value: 'none'
+            }
+          ]
+        })
+      )
+    })
   })
 
   test('done-reordering post should clear isReordering flag', () => {
@@ -587,6 +913,44 @@ describe('Editor v2 question-details route helper', () => {
   describe('repositionListItem', () => {
     test('should handle zero items in list', () => {
       expect(repositionListItem([], 'up', 'itemId')).toEqual([])
+    })
+
+    test('should refuse a move that strands the exclusive item mid-list', () => {
+      const listItems = structuredClone(sessionWithExclusiveLastItem.listItems)
+
+      expect(repositionListItem(listItems, 'up', '3')).toBe(listItems)
+    })
+
+    test('should allow the exclusive item to move from one end to the other', () => {
+      const listItems = [
+        {
+          id: '1',
+          text: 'None of the above',
+          value: 'none',
+          extensions: [exclusiveExtension]
+        },
+        { id: '2', text: 'text2', value: 'value2' }
+      ]
+
+      expect(repositionListItem(listItems, 'down', '1')).toEqual([
+        { id: '2', text: 'text2', value: 'value2' },
+        {
+          id: '1',
+          text: 'None of the above',
+          value: 'none',
+          extensions: [exclusiveExtension]
+        }
+      ])
+    })
+
+    test('should allow a move that leaves the exclusive item at the end', () => {
+      const listItems = structuredClone(sessionWithExclusiveLastItem.listItems)
+
+      expect(repositionListItem(listItems, 'down', '1')).toEqual([
+        listItems[1],
+        listItems[0],
+        listItems[2]
+      ])
     })
   })
 
@@ -654,7 +1018,7 @@ describe('Editor v2 question-details route helper', () => {
 })
 
 /**
- * @import { FormEditorInputQuestionDetails, FormEditorInputQuestion } from '@defra/forms-model'
+ * @import { AdditionalQuestion, Exclusive, FormEditorInputQuestionDetails, FormEditorInputQuestion } from '@defra/forms-model'
  * @import { Request } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

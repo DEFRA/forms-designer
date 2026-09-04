@@ -157,12 +157,18 @@ export function matchLists(definition, listRef, listItems) {
       listItems.find((i) => i.id === item.id) ?? // for when we are editing individual items
       listItems.find((i) => i.value === item.value) ?? // for when no IDs present in submitted data (see note on method)
       listItems.find((i) => i.text === item.text) // for when no IDs present in submitted data (see note on method)
+    // Extensions are edited alongside the item, so the incoming value wins.
+    // Falling back to the saved item keeps them when the caller is working
+    // from a list that predates extensions, or from a text/value pair only.
+    const extensions = item.extensions ?? found?.extensions
+
     return {
       id: found?.id,
       text: item.text,
       value: item.value,
       hint: item.hint,
-      condition: found?.condition
+      condition: found?.condition,
+      ...(extensions?.length ? { extensions } : {})
     }
   }
 

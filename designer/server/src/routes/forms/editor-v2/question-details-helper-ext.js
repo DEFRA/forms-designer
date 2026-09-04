@@ -38,7 +38,8 @@ export function buildListFromDetails(questionDetails, listItems, definition) {
         text: item.text,
         hint: item.hint,
         condition: existingList?.items.find((x) => x.id === item.id)?.condition,
-        value: stringHasValue(`${item.value}`) ? item.value : item.text
+        value: stringHasValue(`${item.value}`) ? item.value : item.text,
+        ...(item.extensions?.length ? { extensions: item.extensions } : {})
       }
     })
   }

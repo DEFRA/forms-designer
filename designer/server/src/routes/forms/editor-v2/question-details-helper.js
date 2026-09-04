@@ -1,6 +1,13 @@
 import { randomUUID } from 'node:crypto'
 
-import { ComponentType } from '@defra/forms-model'
+import {
+  ComponentType,
+  ExtensionType,
+  findExclusiveItemIndex,
+  getAdditionalQuestion,
+  isExclusiveItem,
+  randomId
+} from '@defra/forms-model'
 import Joi from 'joi'
 
 import {
@@ -9,6 +16,7 @@ import {
   ListAction
 } from '~/src/common/constants/editor.js'
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import { createJoiError } from '~/src/lib/error-boom-helper.js'
 import { addErrorsToSession } from '~/src/lib/error-helper.js'
 import {
   getQuestionSessionState,
@@ -37,11 +45,25 @@ const listUniquenessSchema = Joi.object({
  * @param {boolean} expanded
  */
 export function setEditRowState(itemForEdit, expanded) {
+  const additionalQuestion = getAdditionalQuestion(itemForEdit)
+
+  // The exclusive keys are only added when the item uses them, so that the
+  // edit row of a list without an exclusive item looks as it always has
   return {
     radioId: itemForEdit?.id ?? '',
     radioText: itemForEdit?.text ?? '',
     radioHint: itemForEdit?.hint?.text ?? '',
     radioValue: itemForEdit?.value ?? '',
+    ...(isExclusiveItem(itemForEdit) ? { radioExclusive: true } : {}),
+    ...(additionalQuestion
+      ? {
+          radioAdditionalTitle: additionalQuestion.title,
+          radioAdditionalHint: additionalQuestion.hint ?? '',
+          radioAdditionalMaxLength: additionalQuestion.schema.max,
+          radioAdditionalOptional:
+            additionalQuestion.options?.required === false
+        }
+      : {}),
     expanded
   }
 }
@@ -74,6 +96,13 @@ export function repositionListItem(listItems, direction, itemId) {
   const itemToMove = newListItems[itemIdx]
   newListItems.splice(itemIdx, 1)
   newListItems.splice(positionIndex, 0, itemToMove)
+
+  // A move that would leave the exclusive item stranded in the middle of the
+  // list is refused, since the list could not then be saved
+  const exclusiveIdx = findExclusiveItemIndex(newListItems)
+  if (exclusiveIdx > 0 && exclusiveIdx < newListItems.length - 1) {
+    return listItems
+  }
 
   return newListItems
 }
@@ -240,6 +269,60 @@ export function handleEnhancedActionOnGet(yar, stateId, query) {
 }
 
 /**
+ * Builds the extensions to store against the item being edited.
+ *
+ * Only the exclusive item may carry a follow-up question, so clearing the
+ * exclusive box drops both. The follow-up question keeps the id and name it
+ * was first given, so that renaming its title does not move the answer to a
+ * different key in form state.
+ * @param {FormEditorInputQuestionDetails} payload
+ * @param { ListItem | undefined } existingItem
+ * @returns {Extension[]}
+ */
+export function buildItemExtensions(payload, existingItem) {
+  if (!payload.radioExclusive) {
+    return []
+  }
+
+  /** @type {Extension[]} */
+  const extensions = [{ type: ExtensionType.Exclusive }]
+
+  const title = payload.radioAdditionalTitle?.trim()
+
+  if (!title) {
+    return extensions
+  }
+
+  const existing = getAdditionalQuestion(existingItem)
+  const maxLength = payload.radioAdditionalMaxLength
+
+  extensions.push({
+    type: ExtensionType.AdditionalQuestion,
+    id: existing?.id ?? randomUUID(),
+    name: existing?.name ?? randomId(),
+    title,
+    ...(payload.radioAdditionalHint
+      ? { hint: payload.radioAdditionalHint }
+      : {}),
+    options: { required: !payload.radioAdditionalOptional },
+    schema: maxLength ? { max: maxLength } : {}
+  })
+
+  return extensions
+}
+
+/**
+ * The exclusive item has to sit at one end of the list, so that the "or"
+ * divider can be rendered against it.
+ * @param {ListItem[]} listItems
+ * @param {number} itemIdx
+ * @returns {boolean}
+ */
+export function isValidExclusivePosition(listItems, itemIdx) {
+  return itemIdx === 0 || itemIdx === listItems.length - 1
+}
+
+/**
  *
  * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {QuestionSessionState} state
@@ -254,6 +337,8 @@ export function handleSaveItem(request, state, stateId) {
     }) ?? []
 
   const foundRow = listItemsSnapshot.find((x) => x.id === payload.radioId)
+  const extensions = buildItemExtensions(payload, foundRow)
+
   if (foundRow) {
     // Update
     foundRow.text = payload.radioText
@@ -265,6 +350,11 @@ export function handleSaveItem(request, state, stateId) {
     foundRow.value = stringHasValue(payload.radioValue)
       ? payload.radioValue
       : payload.radioText
+    if (extensions.length) {
+      foundRow.extensions = extensions
+    } else {
+      delete foundRow.extensions
+    }
   } else {
     // Insert
     listItemsSnapshot.push({
@@ -277,7 +367,8 @@ export function handleSaveItem(request, state, stateId) {
       value: stringHasValue(payload.radioValue)
         ? payload.radioValue
         : payload.radioText,
-      id: randomUUID()
+      id: randomUUID(),
+      ...(extensions.length ? { extensions } : {})
     })
   }
   const fullItemTexts = listItemsSnapshot.map((x) => x.text)
@@ -289,6 +380,33 @@ export function handleSaveItem(request, state, stateId) {
   if (error) {
     addErrorsToSession(request, errorKey, error)
     return '#'
+  }
+
+  const savedItemIdx = foundRow
+    ? listItemsSnapshot.indexOf(foundRow)
+    : listItemsSnapshot.length - 1
+
+  if (extensions.length) {
+    if (!isValidExclusivePosition(listItemsSnapshot, savedItemIdx)) {
+      addErrorsToSession(
+        request,
+        errorKey,
+        createJoiError(
+          'radioExclusive',
+          'A ‘none of the above’ item must be the first or the last item in the list'
+        )
+      )
+      return '#'
+    }
+
+    // Only one item in a list can be the exclusive one. The exclusive and
+    // follow-up question extensions are the only ones there are, so an item
+    // that is no longer exclusive has nothing left to keep.
+    for (const [idx, item] of listItemsSnapshot.entries()) {
+      if (idx !== savedItemIdx && isExclusiveItem(item)) {
+        delete item.extensions
+      }
+    }
   }
 
   setQuestionSessionState(yar, stateId, {
@@ -438,7 +556,7 @@ export function enforceFileUploadFieldExclusivity(payload) {
 }
 
 /**
- * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, FormEditorInputQuestion, QuestionSessionState, ListItem } from '@defra/forms-model'
+ * @import { ComponentDef, FormDefinition, FormEditorInputQuestionDetails, FormEditorInputQuestion, QuestionSessionState, ListItem, Extension } from '@defra/forms-model'
  * @import { Request, RequestQuery } from '@hapi/hapi'
  * @import { Yar } from '@hapi/yar'
  */

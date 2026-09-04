@@ -271,6 +271,41 @@ export const radioValueSchema = Joi.string()
     'Array of allowed tabular data types. Can be provided as a single value or an array.'
   )
 
+export const radioExclusiveSchema = Joi.boolean()
+  .truthy('true', 'Y', 'on')
+  .falsy('false', 'N', '')
+  .optional()
+  .description(
+    'Whether the list item is the exclusive ("none of the above") option'
+  )
+
+export const radioAdditionalTitleSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('')
+  .description(
+    'Question shown when the exclusive list item is selected. Leave blank for no additional question'
+  )
+
+export const radioAdditionalHintSchema = Joi.string()
+  .trim()
+  .optional()
+  .allow('')
+  .description('Optional hint text for the additional question')
+
+export const radioAdditionalMaxLengthSchema = Joi.number()
+  .integer()
+  .min(1)
+  .empty('')
+  .optional()
+  .description('Maximum number of characters allowed in the additional answer')
+
+export const radioAdditionalOptionalSchema = Joi.boolean()
+  .truthy('true', 'Y', 'on')
+  .falsy('false', 'N', '')
+  .optional()
+  .description('Whether an answer to the additional question is optional')
+
 export const shortDescriptionSchema = Joi.string()
   .custom(rtrimOnly)
   .required()
@@ -683,6 +718,11 @@ export const questionDetailsFullSchema = {
   questionOptionalSchema,
   questionSchema,
   questionTypeFullSchema,
+  radioAdditionalHintSchema,
+  radioAdditionalMaxLengthSchema,
+  radioAdditionalOptionalSchema,
+  radioAdditionalTitleSchema,
+  radioExclusiveSchema,
   radioHintSchema,
   radioIdSchema,
   radioTextSchema,

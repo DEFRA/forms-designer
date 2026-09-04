@@ -1,4 +1,16 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+{% from "govuk/components/input/macro.njk" import govukInput %}
+
+{# An exclusive item may reveal a short answer question. The checkboxes macro
+    takes it as pre-rendered HTML on the item, so render it here and attach it. #}
+{% for item in model.items %}
+  {% if item.additionalQuestion %}
+    {% set additionalQuestionHtml %}
+      {{ govukInput(item.additionalQuestion) }}
+    {% endset %}
+    {% set unusedConditional = item | setProperty("conditional", { html: additionalQuestionHtml }) %}
+  {% endif %}
+{% endfor %}
 
 <div id="radio-list" class="{{ model.previewClasses }}">
 

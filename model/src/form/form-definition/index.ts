@@ -44,12 +44,16 @@ import {
   isFormDefinition
 } from '~/src/form/form-definition/helpers.js'
 import {
+  ExtensionType,
   SchemaVersion,
+  type AdditionalQuestion,
   type ConditionWrapper,
   type ConditionWrapperV2,
   type Event,
   type EventOptions,
   type Events,
+  type Exclusive,
+  type Extension,
   type FormDefinition,
   type Item,
   type Link,
@@ -1034,6 +1038,154 @@ export const pagePayloadSchemaV2 = pageSchemaV2
   })
   .description('Payload Page schema for V2 forms')
 
+const exclusiveExtensionSchema = Joi.object<Exclusive>()
+  .description(
+    'Marks the item as the "none of the above" option for its list. Selecting it clears every other option.'
+  )
+  .keys({
+    type: Joi.string()
+      .trim()
+      .required()
+      .valid(ExtensionType.Exclusive)
+      .description('Discriminator for the exclusive extension')
+  })
+
+const additionalQuestionExtensionSchema = Joi.object<AdditionalQuestion>()
+  .description(
+    'A short answer question revealed when the item it is attached to is selected'
+  )
+  .keys({
+    type: Joi.string()
+      .trim()
+      .required()
+      .valid(ExtensionType.AdditionalQuestion)
+      .description('Discriminator for the additional question extension'),
+    id: idSchema.description('Unique identifier for the additional question'),
+    name: Joi.string()
+      .trim()
+      .required()
+      .pattern(/^[a-zA-Z][a-zA-Z0-9_]*$/)
+      .description(
+        'Suffix for the form state key holding the answer, unique within the component'
+      )
+      .messages({
+        'string.pattern.base':
+          'Additional question name must start with a letter and contain only letters, numbers and underscores'
+      }),
+    title: Joi.string()
+      .trim()
+      .required()
+      .description('Question shown above the revealed input'),
+    hint: Joi.string()
+      .trim()
+      .allow('')
+      .optional()
+      .description('Optional hint text shown above the revealed input'),
+    options: Joi.object<AdditionalQuestion['options']>()
+      .optional()
+      .keys({
+        required: Joi.boolean()
+          .optional()
+          .description(
+            'Whether an answer is required once the exclusive option is selected'
+          )
+      })
+      .description('Options for the revealed input'),
+    schema: Joi.object<AdditionalQuestion['schema']>()
+      .default({})
+      .keys({
+        min: Joi.number().empty('').optional(),
+        max: Joi.number().empty('').optional(),
+        length: Joi.number().empty('').optional(),
+        regex: Joi.string().optional().allow('')
+      })
+      .description('Validation applied to the revealed input')
+  })
+
+const listItemExtensionSchema = Joi.alternatives()
+  .conditional('.type', {
+    switch: [
+      {
+        is: ExtensionType.Exclusive,
+        then: exclusiveExtensionSchema
+      },
+      {
+        is: ExtensionType.AdditionalQuestion,
+        then: additionalQuestionExtensionSchema
+      }
+    ]
+  })
+  .description('Optional behaviour attached to a single list item')
+
+const listItemExtensionsSchema = Joi.array<Extension[]>()
+  .items(listItemExtensionSchema)
+  .unique('type')
+  .optional()
+  .custom((extensions: Extension[], helpers) => {
+    const hasExclusive = extensions.some(
+      (extension) => extension.type === ExtensionType.Exclusive
+    )
+    const hasQuestion = extensions.some(
+      (extension) => extension.type === ExtensionType.AdditionalQuestion
+    )
+
+    if (hasQuestion && !hasExclusive) {
+      return helpers.error('list.additionalQuestionWithoutExclusive')
+    }
+
+    return extensions
+  })
+  .messages({
+    'list.additionalQuestionWithoutExclusive':
+      'Only the exclusive item can have an additional question'
+  })
+  .description('Optional behaviours attached to this list item')
+
+/**
+ * Rules that span the whole list rather than a single item. Kept out of the
+ * item schema so the messages point at the list rather than at an item that
+ * may itself be valid.
+ * @param {Item[]} items
+ * @param {CustomHelpers<Item[]>} helpers
+ */
+function validateListItemExtensions(
+  items: Item[],
+  helpers: CustomHelpers<Item[]>
+) {
+  const exclusiveIndexes = items.reduce<number[]>(
+    (indexes, item, index) =>
+      item.extensions?.some(
+        (extension) => extension.type === ExtensionType.Exclusive
+      )
+        ? [...indexes, index]
+        : indexes,
+    []
+  )
+
+  if (!exclusiveIndexes.length) {
+    return items
+  }
+
+  if (exclusiveIndexes.length > 1) {
+    return helpers.error('list.multipleExclusiveItems')
+  }
+
+  const [index] = exclusiveIndexes
+
+  if (index !== 0 && index !== items.length - 1) {
+    return helpers.error('list.exclusiveItemPosition')
+  }
+
+  return items
+}
+
+const listItemExtensionMessages: LanguageMessages = {
+  'list.multipleExclusiveItems':
+    'Only one item in a list can be the exclusive option',
+  'list.exclusiveItemPosition':
+    'The exclusive option must be the first or the last item in the list'
+}
+
 const baseListItemSchema = Joi.object<Item>()
   .description('Base schema for list items with common properties')
   .keys({
@@ -1068,7 +1220,8 @@ const baseListItemSchema = Joi.object<Item>()
         id: idSchema,
         text: Joi.string().trim()
       })
-      .description('Optional hint text to be shown on list item')
+      .description('Optional hint text to be shown on list item'),
+    extensions: listItemExtensionsSchema
   })
 
 const stringListItemSchema = baseListItemSchema
@@ -1112,6 +1265,8 @@ export const listSchema = Joi.object<List>()
         .unique('id')
         .unique('text')
         .unique('value')
+        .custom(validateListItemExtensions)
+        .messages(listItemExtensionMessages)
         .description('Array of items with string values')
         .error(
           checkErrors([
@@ -1125,6 +1280,8 @@ export const listSchema = Joi.object<List>()
         .unique('id')
         .unique('text')
         .unique('value')
+        .custom(validateListItemExtensions)
+        .messages(listItemExtensionMessages)
         .description('Array of items with numeric values')
         .error(
           checkErrors([

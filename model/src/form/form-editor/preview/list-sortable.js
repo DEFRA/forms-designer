@@ -27,7 +27,8 @@ export class ListSortableQuestion extends ListQuestion {
       id: value.id,
       text: value.text,
       hint: value.hint?.text ? { text: value.hint.text } : undefined,
-      value: value.value
+      value: value.value,
+      extensions: value.extensions?.length ? value.extensions : undefined
     }))
   }
 }

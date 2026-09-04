@@ -1,4 +1,8 @@
-import { ListQuestion, PreviewTypeEnum } from '@defra/forms-model'
+import {
+  ExtensionType,
+  ListQuestion,
+  PreviewTypeEnum
+} from '@defra/forms-model'
 
 import { list1HTML } from '~/src/javascripts/preview/__stubs__/list'
 import { questionDetailsStubPanels } from '~/src/javascripts/preview/__stubs__/question.js'
@@ -184,6 +188,50 @@ describe('list', () => {
           text: 'A custom adventure'
         },
         value: 'A custom adventure'
+      })
+    })
+  })
+
+  describe('getExtensions', () => {
+    it('should return nothing when the item carries no extensions', () => {
+      const element = document.createElement('li')
+
+      expect(ListQuestionDomElements.getExtensions(element)).toEqual({})
+    })
+
+    it('should read the extensions from the data attribute', () => {
+      const extensions = [{ type: ExtensionType.Exclusive }]
+      const element = document.createElement('li')
+      element.dataset.extensions = JSON.stringify(extensions)
+
+      expect(ListQuestionDomElements.getExtensions(element)).toEqual({
+        extensions
+      })
+    })
+
+    it('should ignore an unparseable data attribute', () => {
+      const element = document.createElement('li')
+      element.dataset.extensions = 'not json'
+
+      expect(ListQuestionDomElements.getExtensions(element)).toEqual({})
+    })
+
+    it('should include the extensions in the list element values', () => {
+      const extensions = [{ type: ExtensionType.Exclusive }]
+      const element = document.createElement('li')
+      element.dataset.text = 'None of the above'
+      element.dataset.val = 'none'
+      element.dataset.extensions = JSON.stringify(extensions)
+
+      expect(ListQuestionDomElements.getListElementValues(element)).toEqual({
+        id: 'new',
+        text: 'None of the above',
+        label: {
+          classes: '',
+          text: 'None of the above'
+        },
+        value: 'none',
+        extensions
       })
     })
   })

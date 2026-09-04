@@ -1,0 +1,31 @@
+/*
+  CSS-only conditional reveal for checkbox options.
+
+  GOV.UK Frontend hides conditional content with
+
+    .govuk-frontend-supported .govuk-checkboxes__conditional--hidden { display: none }
+
+  Both halves of that selector depend on JavaScript: the inline script in the
+  page template adds `govuk-frontend-supported`, and only the Checkboxes
+  component adds and removes `--hidden`. With JavaScript switched off neither
+  happens, so the conditional question is always visible.
+
+  The rules below hide and show the same element from the checkbox's own
+  `:checked` state, which needs no JavaScript. The `@supports` guard means a
+  browser without `:has()` falls back to the GOV.UK Frontend behaviour rather
+  than hiding the question for good.
+
+  With JavaScript the two mechanisms agree, because the checkbox is checked
+  exactly when the component has removed `--hidden`. The `:has()` rule is the
+  more specific of the two, so it wins where they overlap, and the component
+  still keeps `aria-expanded` in step.
+*/
+@supports selector(:has(*)) {
+  .govuk-checkboxes__conditional {
+    display: none;
+  }
+
+  .govuk-checkboxes__item:has(> .govuk-checkboxes__input:checked) + .govuk-checkboxes__conditional {
+    display: block;
+  }
+}

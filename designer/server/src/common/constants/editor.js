@@ -158,7 +158,12 @@ export const QuestionEnhancedFields =
     RadioId: 'radioId',
     RadioText: 'radioText',
     RadioHint: 'radioHint',
-    RadioValue: 'radioValue'
+    RadioValue: 'radioValue',
+    RadioExclusive: 'radioExclusive',
+    RadioAdditionalTitle: 'radioAdditionalTitle',
+    RadioAdditionalHint: 'radioAdditionalHint',
+    RadioAdditionalMaxLength: 'radioAdditionalMaxLength',
+    RadioAdditionalOptional: 'radioAdditionalOptional'
   }
 
 /**

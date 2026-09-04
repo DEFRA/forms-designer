@@ -32,11 +32,37 @@ export const schema = Joi.object().keys({
         value: Joi.string()
           .trim()
           .optional()
-          .description('Option value for the list item')
+          .description('Option value for the list item'),
+        extensions: Joi.array()
+          .items(Joi.object({ type: Joi.string().trim().required() }).unknown())
+          .optional()
+          .description('Behaviours attached to the list item')
       })
     )
     .required()
 })
+
+/**
+ * Reorder and inline edit post the item fields the DOM holds. Extensions are
+ * carried in a data attribute, but an older page in a still open tab will not
+ * send them, so fall back to the copy already in session state.
+ * @param { ListItem[] | undefined } existingItems
+ * @param {ListItem[]} incomingItems
+ * @returns {ListItem[]}
+ */
+export function mergeExtensions(existingItems, incomingItems) {
+  return incomingItems.map((item) => {
+    if (item.extensions) {
+      return item
+    }
+
+    const existing = existingItems?.find((x) => x.id && x.id === item.id)
+
+    return existing?.extensions
+      ? { ...item, extensions: existing.extensions }
+      : item
+  })
+}
 
 // Updates session state - used in JS edit/reorder of radios/checkboxes for example
 export default [
@@ -59,7 +85,7 @@ export default [
 
       const newState = /** @type {QuestionSessionState} */ ({
         ...state,
-        listItems: payload.listItems ?? []
+        listItems: mergeExtensions(state.listItems, payload.listItems ?? [])
       })
 
       setQuestionSessionState(yar, stateId, newState)
@@ -92,6 +118,6 @@ export default [
 ]
 
 /**
- * @import { QuestionSessionState } from '@defra/forms-model'
+ * @import { ListItem, QuestionSessionState } from '@defra/forms-model'
  * @import { ServerRoute } from '@hapi/hapi'
  */

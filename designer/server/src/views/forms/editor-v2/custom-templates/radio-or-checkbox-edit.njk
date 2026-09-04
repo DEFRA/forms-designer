@@ -1,3 +1,5 @@
+{% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
+
 {% set hasStateWithinDetailsSection = enhancedFields[radioValueIdx].value %}
 
 {% set showOrHide = "display:block" if state.editRow.expanded else "display:none"%}
@@ -8,6 +10,51 @@
   {{ govukInput(enhancedFields[radioHintIdx]) }}
 
   <input type="hidden" id="radioId" name="radioId" value="{{ enhancedFields[radioIdIdx].value }}" />
+
+  {% if hasExclusiveFields %}
+    {% set exclusiveField = enhancedFields[radioExclusiveIdx] %}
+    {% set additionalTitleField = enhancedFields[radioAdditionalTitleIdx] %}
+    {% set additionalHintField = enhancedFields[radioAdditionalHintIdx] %}
+    {% set additionalMaxLengthField = enhancedFields[radioAdditionalMaxLengthIdx] %}
+    {% set additionalOptionalField = enhancedFields[radioAdditionalOptionalIdx] %}
+
+    {% set isExclusive = exclusiveField.value == true or exclusiveField.value == "true" %}
+    {% set isAdditionalOptional = additionalOptionalField.value == true or additionalOptionalField.value == "true" %}
+
+    {#
+      The follow-up question only applies to the exclusive item, so it is
+      revealed by the exclusive checkbox rather than shown alongside it.
+    #}
+    {% set exclusiveConditionalHtml %}
+      {{ govukInput(additionalTitleField) }}
+      {{ govukInput(additionalHintField) }}
+      {{ govukInput(additionalMaxLengthField) }}
+      {{ govukCheckboxes({
+        name: additionalOptionalField.name,
+        idPrefix: additionalOptionalField.id,
+        errorMessage: additionalOptionalField.errorMessage,
+        items: [{
+          value: "true",
+          text: additionalOptionalField.items[0].text,
+          checked: isAdditionalOptional
+        }]
+      }) }}
+    {% endset %}
+
+    {{ govukCheckboxes({
+      name: exclusiveField.name,
+      idPrefix: exclusiveField.id,
+      errorMessage: exclusiveField.errorMessage,
+      items: [{
+        value: "true",
+        text: exclusiveField.items[0].text,
+        hint: exclusiveField.items[0].hint,
+        checked: isExclusive,
+        conditional: { html: exclusiveConditionalHtml }
+      }]
+    }) }}
+  {% endif %}
+
   <!-- Advanced Features Section -->
   <details class="govuk-details" data-module="govuk-details" {% if hasStateWithinDetailsSection %}open{% endif %}>
     <summary class="govuk-details__summary">

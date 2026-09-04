@@ -147,6 +147,16 @@ export const baseSchema = Joi.object().keys({
   }),
   radioHint: questionDetailsFullSchema.radioHintSchema,
   radioValue: questionDetailsFullSchema.radioValueSchema,
+  radioExclusive: questionDetailsFullSchema.radioExclusiveSchema,
+  radioAdditionalTitle: questionDetailsFullSchema.radioAdditionalTitleSchema,
+  radioAdditionalHint: questionDetailsFullSchema.radioAdditionalHintSchema,
+  radioAdditionalMaxLength:
+    questionDetailsFullSchema.radioAdditionalMaxLengthSchema.messages({
+      'number.base': 'Maximum number of characters must be a number',
+      'number.min': 'Maximum number of characters must be 1 or more'
+    }),
+  radioAdditionalOptional:
+    questionDetailsFullSchema.radioAdditionalOptionalSchema,
   listItemsData: questionDetailsFullSchema.listItemsDataSchema,
   autoCompleteOptions: questionDetailsFullSchema.autoCompleteOptionsSchema.when(
     'questionType',

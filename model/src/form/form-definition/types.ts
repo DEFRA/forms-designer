@@ -146,6 +146,69 @@ export interface Item {
     id?: string
     text: string
   }
+  extensions?: Extension[]
+}
+
+/**
+ * Optional behaviours that can be attached to a single list item.
+ *
+ * Extensions are additive - a definition written before they existed has no
+ * `extensions` property and behaves exactly as before.
+ */
+export enum ExtensionType {
+  Exclusive = 'exclusive',
+  AdditionalQuestion = 'additional-question'
+}
+
+export interface ExtensionBase {
+  type: ExtensionType
+}
+
+export type Extension = Exclusive | AdditionalQuestion
+
+/**
+ * Marks an item as the "none of the above" style option. Selecting it clears
+ * every other option (with JavaScript) and, whether or not JavaScript ran,
+ * selecting it alongside another option is a validation error.
+ *
+ * At most one item in a list may carry this extension, and it must be either
+ * the first or the last item.
+ */
+export interface Exclusive extends ExtensionBase {
+  type: ExtensionType.Exclusive
+}
+
+/**
+ * A short answer question revealed when the item it is attached to is
+ * selected. Only an item that also carries the {@link Exclusive} extension
+ * may carry this one.
+ *
+ * The answer is held in form state under `<componentName>__<name>` and is
+ * discarded whenever the exclusive option is not selected.
+ */
+export interface AdditionalQuestion extends ExtensionBase {
+  type: ExtensionType.AdditionalQuestion
+  id: string
+  /**
+   * Suffix for the state key, unique within the component. Must be a valid
+   * identifier so it can be used as an HTML input name.
+   */
+  name: string
+  title: string
+  hint?: string
+  options?: {
+    /**
+     * Whether an answer is required once the exclusive option is selected.
+     * Defaults to true.
+     */
+    required?: boolean
+  }
+  schema: {
+    max?: number
+    min?: number
+    length?: number
+    regex?: string
+  }
 }
 
 export interface List {

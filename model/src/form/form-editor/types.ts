@@ -10,6 +10,7 @@ import {
 import { type DateDirections, type DateUnits } from '~/src/conditions/enums.js'
 import {
   type ConditionWrapperV2,
+  type Extension,
   type Item
 } from '~/src/form/form-definition/types.js'
 
@@ -293,6 +294,33 @@ export interface FormEditor {
   radioValue?: string
 
   /**
+   * Whether the item is the exclusive ("none of the above") option. Checkboxes
+   * only, and at most one item in a list may be marked
+   */
+  radioExclusive?: boolean
+
+  /**
+   * The question asked when the exclusive item is selected. Blank for no
+   * additional question
+   */
+  radioAdditionalTitle?: string
+
+  /**
+   * The hint of the additional question
+   */
+  radioAdditionalHint?: string
+
+  /**
+   * The maximum number of characters allowed in the additional answer
+   */
+  radioAdditionalMaxLength?: number
+
+  /**
+   * Whether an answer to the additional question is optional
+   */
+  radioAdditionalOptional?: boolean
+
+  /**
    * The list name to be applied to a field (if applicable)
    */
   list: string
@@ -503,6 +531,11 @@ export type FormEditorInputQuestion = Pick<
   | 'radioText'
   | 'radioHint'
   | 'radioValue'
+  | 'radioExclusive'
+  | 'radioAdditionalTitle'
+  | 'radioAdditionalHint'
+  | 'radioAdditionalMaxLength'
+  | 'radioAdditionalOptional'
   | 'list'
   | 'listItemsData'
   | 'exactChecks'
@@ -562,6 +595,11 @@ export type FormEditorInputQuestionDetails = Pick<
   | 'radioText'
   | 'radioHint'
   | 'radioValue'
+  | 'radioExclusive'
+  | 'radioAdditionalTitle'
+  | 'radioAdditionalHint'
+  | 'radioAdditionalMaxLength'
+  | 'radioAdditionalOptional'
   | 'listItemsData'
   | 'jsEnabled'
   | 'paymentAmount'
@@ -581,6 +619,44 @@ export interface ListItem {
     text: string
   }
   value?: ListValue
+  /**
+   * Optional behaviours attached to this item, such as marking it the
+   * exclusive ("none of the above") option
+   */
+  extensions?: Extension[]
+}
+
+/**
+ * The govuk-frontend checkbox parameters the preview adds for an exclusive
+ * item, plus the additional question the preview has to render inside it
+ */
+export interface ListItemPreviewExtras {
+  behaviour?: string
+  additionalQuestion?: AdditionalQuestionPreview
+}
+
+/**
+ * Parameters for the short answer input revealed by the exclusive option
+ */
+export interface AdditionalQuestionPreview {
+  id: string
+  name: string
+  label: {
+    text: string
+    classes: string
+  }
+  hint?: {
+    text: string
+    classes: string
+  }
+  classes: string
+}
+
+/**
+ * A divider rendered between the ordinary options and the exclusive one
+ */
+export interface ListDivider {
+  divider: string
 }
 
 export interface ListLabel {
@@ -599,12 +675,17 @@ export interface ReadonlyHint {
   readonly text: string
 }
 
-export interface ListItemReadonly extends ListElement {
+export interface ListItemReadonly extends ListElement, ListItemPreviewExtras {
   readonly text: string
   readonly hint?: ReadonlyHint
   readonly value: ListValue
   readonly label?: ListLabel
 }
+
+/**
+ * Entries passed to the govukCheckboxes macro - either an option or a divider
+ */
+export type ListItemOrDivider = ListItemReadonly | ListDivider
 
 export interface DateItem {
   name: string
@@ -637,6 +718,11 @@ export interface QuestionSessionState {
     radioText?: string
     radioHint?: string
     radioValue?: ListValue
+    radioExclusive?: boolean
+    radioAdditionalTitle?: string
+    radioAdditionalHint?: string
+    radioAdditionalMaxLength?: number
+    radioAdditionalOptional?: boolean
     expanded?: boolean
   }
   listItems?: ListItem[]

@@ -37,6 +37,10 @@ export function listsElementToMap(listElements) {
  * @returns {ListElement}
  */
 export function listItemToListElement(item) {
+  const extensions = item.extensions?.length
+    ? { extensions: item.extensions }
+    : {}
+
   return {
     text: item.text,
     label: {
@@ -45,7 +49,8 @@ export function listItemToListElement(item) {
     },
     value: item.value,
     id: item.id ?? '',
-    hint: item.hint
+    hint: item.hint,
+    ...extensions
   }
 }
 

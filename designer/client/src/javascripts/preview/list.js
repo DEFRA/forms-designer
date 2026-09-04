@@ -164,8 +164,27 @@ export class ListQuestionDomElements extends QuestionDomElements {
         classes: '',
         text: el.dataset.text
       },
-      value: el.dataset.val
+      value: el.dataset.val,
+      ...ListQuestionDomElements.getExtensions(el)
     })
+  }
+
+  /**
+   * Extensions are carried in a data attribute as JSON so the preview can show
+   * the exclusive option without asking the server for the list again.
+   * @param {HTMLElement} el
+   * @returns {{ extensions?: Extension[] }}
+   */
+  static getExtensions(el) {
+    if (!el.dataset.extensions) {
+      return {}
+    }
+
+    try {
+      return { extensions: JSON.parse(el.dataset.extensions) }
+    } catch {
+      return {}
+    }
   }
 
   constructValues() {
@@ -383,5 +402,5 @@ export function listsElementToMap(listElements) {
 }
 
 /**
- * @import { ListenerRow, ListQuestion, ListElement, ListItemReadonly, ListElements, QuestionRenderer, HTMLBuilder } from '@defra/forms-model'
+ * @import { ListenerRow, ListQuestion, ListElement, ListItemReadonly, ListElements, QuestionRenderer, HTMLBuilder, Extension } from '@defra/forms-model'
  */
