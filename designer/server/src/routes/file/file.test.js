@@ -1,4 +1,7 @@
-import { FormStatus } from '@defra/forms-engine-plugin/types'
+import {
+  FormAdapterSubmissionSchemaVersion,
+  FormStatus
+} from '@defra/forms-engine-plugin/types'
 import { ComponentType, ControllerType, Engine } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { within } from '@testing-library/dom'
@@ -27,7 +30,7 @@ describe('File routes', () => {
   const email = 'new.email@gov.uk'
   const submissionRecord = {
     meta: {
-      schemaVersion: 1,
+      schemaVersion: FormAdapterSubmissionSchemaVersion.V1,
       timestamp: new Date('2026-05-18T11:24:20.592Z'),
       referenceNumber,
       formName: 'File upload',
