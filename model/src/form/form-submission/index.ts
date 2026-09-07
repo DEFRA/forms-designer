@@ -12,6 +12,7 @@ import {
 import {
   type SaveAndExitMessage,
   type SaveAndExitMessageData,
+  type SaveAndExitV2MessageData,
   type SubmitConditionEvaluation,
   type SubmitConditionReference,
   type SubmitPayload,
@@ -168,6 +169,20 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>()
   })
   .label('SaveAndExitMessageData')
 
+export const saveAndExitV2MessageData = Joi.object<SaveAndExitV2MessageData>()
+  .keys({
+    form: Joi.object({
+      id: Joi.string().required(),
+      title: Joi.string().required(),
+      status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
+      isPreview: Joi.boolean().required(),
+      baseUrl: Joi.string().required()
+    }).label('SaveAndExitForm'),
+    email: Joi.string().required(),
+    state: Joi.object().required()
+  })
+  .label('SaveAndExitV2MessageData')
+
 export const submissionMessageSchema = Joi.object<SaveAndExitMessage>().keys({
   schemaVersion: Joi.string()
     .valid(...Object.values(SubmissionEventMessageSchemaVersion))
@@ -194,7 +209,11 @@ export const submissionMessageSchema = Joi.object<SaveAndExitMessage>().keys({
   messageCreatedAt: Joi.date()
     .required()
     .description('ISO timestamp when the message was published'),
-  data: saveAndExitMessageData
+  data: Joi.when('type', {
+    is: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT,
+    then: saveAndExitMessageData,
+    otherwise: saveAndExitV2MessageData
+  })
 })
 
 export const notifyEmailMessageSchema = Joi.object()

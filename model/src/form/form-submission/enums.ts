@@ -17,7 +17,8 @@ export enum SubmissionEventMessageSource {
 }
 
 export enum SubmissionEventMessageType {
-  RUNNER_SAVE_AND_EXIT = 'RUNNER_SAVE_AND_EXIT'
+  RUNNER_SAVE_AND_EXIT = 'RUNNER_SAVE_AND_EXIT',
+  RUNNER_SAVE_AND_EXIT_V2 = 'RUNNER_SAVE_AND_EXIT_V2'
 }
 
 /**
