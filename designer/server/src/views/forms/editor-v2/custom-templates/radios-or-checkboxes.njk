@@ -1,6 +1,7 @@
 {% from "govuk/components/input/macro.njk" import govukInput %}
 {% from "editor-card/macro.njk" import appEditorCard %}
 {% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 
 {% set radioIdIdx = 0 %}
 {% set radioTextIdx = 1 %}
@@ -12,7 +13,9 @@
 {% set radioAdditionalHintIdx = 6 %}
 {% set radioAdditionalMaxLengthIdx = 7 %}
 {% set radioAdditionalOptionalIdx = 8 %}
-{% set hasExclusiveFields = (enhancedFields | length) > 4 %}
+{# The exclusive item has to sit at one end of the list, so the setting is
+  not offered on the rows in between - see canSetExclusiveItem #}
+{% set hasExclusiveFields = (enhancedFields | length) > 4 and listDetails.canSetExclusive %}
 
 <div class="govuk-visually-hidden" id="reorder-announcement" aria-live="polite" aria-atomic="true"></div>
 
@@ -23,6 +26,12 @@
 {% endif %}
 
 <div class="govuk-form-group" id="list-items">
+  {% if warningNotification | length %}
+    {% call govukNotificationBanner({ titleText: "Important" }) %}
+      <p class="govuk-notification-banner__heading">{{ warningNotification }}</p>
+    {% endcall %}
+  {% endif %}
+
   <h2 class="govuk-heading-m" tabindex="-1">
     <svg class="govuk-!-margin-right-1" style="position: relative; top: -1px; vertical-align: middle;" width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <circle cx="12" cy="12" r="11" fill="currentColor"></circle>
@@ -49,6 +58,9 @@
             <div class="app-reorderable-list__content">
               <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
                 {{ item.text }}
+                {% if item | isExclusiveItem %}
+                  <strong class="govuk-tag govuk-tag--grey govuk-!-margin-left-1">None of the above</strong>
+                {% endif %}
               </p>
               {% if item.hint.text %}
               <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>
@@ -108,6 +120,9 @@
               <div class="app-reorderable-list__content">
                 <p class="govuk-body fauxlabel option-label-display" id="option-{{ loop.index }}-label-display">
                   {{ item.text }}
+                  {% if item | isExclusiveItem %}
+                    <strong class="govuk-tag govuk-tag--grey govuk-!-margin-left-1">None of the above</strong>
+                  {% endif %}
                 </p>
                 {% if item.hint.text %}
                 <p class="govuk-hint govuk-!-margin-top-0 govuk-!-margin-bottom-0">{{ item.hint.text }}</p>

@@ -3,6 +3,7 @@ import { randomUUID } from 'node:crypto'
 import {
   ComponentType,
   ExtensionType,
+  findExclusiveItem,
   findExclusiveItemIndex,
   getAdditionalQuestion,
   isExclusiveItem,
@@ -323,6 +324,46 @@ export function isValidExclusivePosition(listItems, itemIdx) {
 }
 
 /**
+ * Whether appending a new item would strand the exclusive item in the middle
+ * of the list. A new item that is itself exclusive takes the setting over, so
+ * it leaves nothing stranded.
+ * @param { ListItem[] | undefined } listItems - the list as it stands
+ * @param {boolean} newItemIsExclusive
+ * @returns {boolean}
+ */
+export function appendWouldStrandExclusiveItem(listItems, newItemIsExclusive) {
+  if (newItemIsExclusive || !listItems?.length) {
+    return false
+  }
+
+  return findExclusiveItemIndex(listItems) === listItems.length - 1
+}
+
+/**
+ * Takes the exclusive setting off every item bar the one just saved, and
+ * returns the text of the item it was taken from so the author can be told.
+ *
+ * The exclusive and follow-up question extensions are the only ones there are,
+ * so an item that is no longer exclusive has nothing left to keep.
+ * @param {ListItem[]} listItems
+ * @param {number} savedItemIdx
+ * @returns { string | undefined }
+ */
+export function clearOtherExclusiveItems(listItems, savedItemIdx) {
+  /** @type { string | undefined } */
+  let displacedText
+
+  for (const [idx, item] of listItems.entries()) {
+    if (idx !== savedItemIdx && isExclusiveItem(item)) {
+      displacedText = item.text
+      delete item.extensions
+    }
+  }
+
+  return displacedText
+}
+
+/**
  *
  * @param {Request<{ Payload: FormEditorInputQuestionDetails }>} request
  * @param {QuestionSessionState} state
@@ -338,6 +379,23 @@ export function handleSaveItem(request, state, stateId) {
 
   const foundRow = listItemsSnapshot.find((x) => x.id === payload.radioId)
   const extensions = buildItemExtensions(payload, foundRow)
+
+  if (
+    !foundRow &&
+    appendWouldStrandExclusiveItem(state.listItems, !!extensions.length)
+  ) {
+    const exclusiveItem = findExclusiveItem(state.listItems)
+
+    addErrorsToSession(
+      request,
+      errorKey,
+      createJoiError(
+        'radioText',
+        `You cannot add an item below ‘${exclusiveItem?.text}’. Move it to the top of the list, or clear its ‘none of the above’ setting, first.`
+      )
+    )
+    return '#'
+  }
 
   if (foundRow) {
     // Update
@@ -399,13 +457,18 @@ export function handleSaveItem(request, state, stateId) {
       return '#'
     }
 
-    // Only one item in a list can be the exclusive one. The exclusive and
-    // follow-up question extensions are the only ones there are, so an item
-    // that is no longer exclusive has nothing left to keep.
-    for (const [idx, item] of listItemsSnapshot.entries()) {
-      if (idx !== savedItemIdx && isExclusiveItem(item)) {
-        delete item.extensions
-      }
+    // Only one item in a list can be the exclusive one, so the author is told
+    // which item the setting was taken off rather than left to spot it
+    const displacedText = clearOtherExclusiveItems(
+      listItemsSnapshot,
+      savedItemIdx
+    )
+
+    if (displacedText) {
+      yar.flash(
+        sessionNames.warningNotification,
+        `‘${displacedText}’ is no longer the ‘none of the above’ item. Only one item in a list can have that setting.`
+      )
     }
   }
 

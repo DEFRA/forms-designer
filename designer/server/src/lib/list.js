@@ -157,10 +157,10 @@ export function matchLists(definition, listRef, listItems) {
       listItems.find((i) => i.id === item.id) ?? // for when we are editing individual items
       listItems.find((i) => i.value === item.value) ?? // for when no IDs present in submitted data (see note on method)
       listItems.find((i) => i.text === item.text) // for when no IDs present in submitted data (see note on method)
-    // Extensions are edited alongside the item, so the incoming value wins.
-    // Falling back to the saved item keeps them when the caller is working
-    // from a list that predates extensions, or from a text/value pair only.
-    const extensions = item.extensions ?? found?.extensions
+    // Callers send the whole list, so an item that arrives without extensions
+    // has had them removed. Falling back to the saved item here would put the
+    // exclusive extension back on the item the author just moved it off.
+    const { extensions } = item
 
     return {
       id: found?.id,

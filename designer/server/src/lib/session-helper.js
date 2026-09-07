@@ -161,11 +161,14 @@ export function buildQuestionSessionState(
   const baseState = /** @type { QuestionSessionState} */ ({
     questionType: state?.questionType ?? component?.type,
     editRow: state?.editRow ?? {},
+    // Extensions carry the 'none of the above' setting, so they have to come
+    // back with the item or editing a saved question would clear it
     listItems: items.map((item) => ({
       id: item.id ?? randomUUID(),
       text: item.text,
       hint: item.hint,
-      value: item.value
+      value: item.value,
+      ...(item.extensions?.length ? { extensions: item.extensions } : {})
     })),
     questionDetails: state?.questionDetails
   })

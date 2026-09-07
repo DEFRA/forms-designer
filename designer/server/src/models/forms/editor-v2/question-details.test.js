@@ -1,4 +1,4 @@
-import { ComponentType, Engine } from '@defra/forms-model'
+import { ComponentType, Engine, ExtensionType } from '@defra/forms-model'
 import {
   buildDefinition,
   buildFileUploadComponent,
@@ -531,7 +531,8 @@ describe('editor-v2 - question details model', () => {
         getListDetails(undefined, /** @type {ComponentDef} */ ({}))
       ).toEqual({
         list: '',
-        rowNumBeingEdited: 1
+        rowNumBeingEdited: 1,
+        canSetExclusive: true
       })
     })
 
@@ -551,7 +552,55 @@ describe('editor-v2 - question details model', () => {
         )
       ).toEqual({
         list: 'listname',
-        rowNumBeingEdited: 4
+        rowNumBeingEdited: 4,
+        canSetExclusive: true
+      })
+    })
+
+    test('should allow the exclusive option on the last row', () => {
+      expect(
+        getListDetails(
+          {
+            editRow: { radioId: '3' },
+            questionDetails: {},
+            listItems: [
+              { id: '1', text: '1', value: '1' },
+              { id: '2', text: '2', value: '2' },
+              { id: '3', text: '3', value: '3' }
+            ]
+          },
+          /** @type {ComponentDef} */ ({ list: 'listname' })
+        )
+      ).toEqual({
+        list: 'listname',
+        rowNumBeingEdited: 3,
+        canSetExclusive: true
+      })
+    })
+
+    test('should allow the exclusive option on a middle row that already has it', () => {
+      expect(
+        getListDetails(
+          {
+            editRow: { radioId: '2' },
+            questionDetails: {},
+            listItems: [
+              { id: '1', text: '1', value: '1' },
+              {
+                id: '2',
+                text: '2',
+                value: '2',
+                extensions: [{ type: ExtensionType.Exclusive }]
+              },
+              { id: '3', text: '3', value: '3' }
+            ]
+          },
+          /** @type {ComponentDef} */ ({ list: 'listname' })
+        )
+      ).toEqual({
+        list: 'listname',
+        rowNumBeingEdited: 2,
+        canSetExclusive: true
       })
     })
 
@@ -572,7 +621,8 @@ describe('editor-v2 - question details model', () => {
         )
       ).toEqual({
         list: 'listname',
-        rowNumBeingEdited: 2
+        rowNumBeingEdited: 2,
+        canSetExclusive: false
       })
     })
   })

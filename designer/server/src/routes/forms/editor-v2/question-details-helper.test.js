@@ -2,7 +2,9 @@ import { ExtensionType } from '@defra/forms-model'
 
 import { getQuestionSessionState } from '~/src/lib/session-helper.js'
 import {
+  appendWouldStrandExclusiveItem,
   buildItemExtensions,
+  clearOtherExclusiveItems,
   enforceFileUploadFieldExclusivity,
   handleEnhancedActionOnGet,
   handleEnhancedActionOnPost,
@@ -87,6 +89,20 @@ const sessionWithExclusiveLastItem = {
       value: 'none',
       extensions: [exclusiveExtension]
     }
+  ]
+}
+
+const sessionWithExclusiveFirstItem = {
+  questionType: 'CheckboxesField',
+  listItems: [
+    {
+      id: '1',
+      text: 'None of the above',
+      value: 'none',
+      extensions: [exclusiveExtension]
+    },
+    { id: '2', text: 'text2', value: 'value2' },
+    { id: '3', text: 'text3', value: 'value3' }
   ]
 }
 
@@ -282,6 +298,63 @@ describe('Editor v2 question-details route helper', () => {
       [2, true]
     ])('index %i should be %s', (idx, expected) => {
       expect(isValidExclusivePosition(items, idx)).toBe(expected)
+    })
+  })
+
+  describe('appendWouldStrandExclusiveItem', () => {
+    test('should be true when the exclusive item is last', () => {
+      expect(
+        appendWouldStrandExclusiveItem(
+          sessionWithExclusiveLastItem.listItems,
+          false
+        )
+      ).toBe(true)
+    })
+
+    test('should be false when the exclusive item is first', () => {
+      expect(
+        appendWouldStrandExclusiveItem(
+          sessionWithExclusiveFirstItem.listItems,
+          false
+        )
+      ).toBe(false)
+    })
+
+    test('should be false when the new item takes the setting over', () => {
+      expect(
+        appendWouldStrandExclusiveItem(
+          sessionWithExclusiveLastItem.listItems,
+          true
+        )
+      ).toBe(false)
+    })
+
+    test.each([[undefined], [[]]])(
+      'should be false for an empty list (%p)',
+      (listItems) => {
+        expect(appendWouldStrandExclusiveItem(listItems, false)).toBe(false)
+      }
+    )
+  })
+
+  describe('clearOtherExclusiveItems', () => {
+    test('should strip the extensions and return the displaced text', () => {
+      const listItems = structuredClone(
+        sessionWithExclusiveLastItem.listItems
+      ).map((item, idx) =>
+        idx === 0 ? { ...item, extensions: [exclusiveExtension] } : item
+      )
+
+      expect(clearOtherExclusiveItems(listItems, 0)).toBe('None of the above')
+      expect(listItems[2].extensions).toBeUndefined()
+      expect(listItems[0].extensions).toEqual([exclusiveExtension])
+    })
+
+    test('should return undefined when no other item was exclusive', () => {
+      const listItems = structuredClone(sessionWithExclusiveLastItem.listItems)
+
+      expect(clearOtherExclusiveItems(listItems, 2)).toBeUndefined()
+      expect(listItems[2].extensions).toEqual([exclusiveExtension])
     })
   })
 
@@ -847,6 +920,125 @@ describe('Editor v2 question-details route helper', () => {
             },
             { id: '2', text: 'text2', value: 'value2' },
             { id: '3', text: 'None of the above', value: 'none' }
+          ]
+        })
+      )
+    })
+
+    test('save-item should warn about the item the exclusive setting came off', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithExclusiveLastItem))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '1',
+        radioText: 'Prefer not to say',
+        radioValue: 'prefer-not-to-say',
+        radioExclusive: true
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockFlash).toHaveBeenCalledWith(
+        'warningNotification',
+        '‘None of the above’ is no longer the ‘none of the above’ item. Only one item in a list can have that setting.'
+      )
+    })
+
+    test('save-item should not warn when no other item was exclusive', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithListWithThreeItems))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '1',
+        radioText: 'text1',
+        radioValue: 'value1',
+        radioExclusive: true
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockFlash).not.toHaveBeenCalledWith(
+        'warningNotification',
+        expect.anything()
+      )
+    })
+
+    test('save-item should reject a new item added below the exclusive item', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithExclusiveLastItem))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '',
+        radioText: 'text4',
+        radioValue: 'value4'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe('#')
+      expect(mockSet).not.toHaveBeenCalled()
+      expect(mockFlash).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          formErrors: {
+            radioText: expect.objectContaining({
+              text: 'You cannot add an item below ‘None of the above’. Move it to the top of the list, or clear its ‘none of the above’ setting, first.'
+            })
+          }
+        })
+      )
+    })
+
+    test('save-item should allow a new item when the exclusive item is first', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithExclusiveFirstItem))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '',
+        radioText: 'text4',
+        radioValue: 'value4'
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+    })
+
+    test('save-item should allow a new item that takes the exclusive setting over', () => {
+      mockGet.mockReturnValue(structuredClone(sessionWithExclusiveLastItem))
+
+      const payload = /** @type {FormEditorInputQuestionDetails} */ ({
+        enhancedAction: 'save-item',
+        radioId: '',
+        radioText: 'Prefer not to say',
+        radioValue: 'prefer-not-to-say',
+        radioExclusive: true
+      })
+
+      const { mockRequest } = buildMockRequest(payload)
+
+      expect(handleEnhancedActionOnPost(mockRequest, '123', {})).toBe(
+        '#list-items'
+      )
+      expect(mockSet).toHaveBeenCalledWith(
+        'questionSessionState-123',
+        expect.objectContaining({
+          listItems: [
+            { id: '1', text: 'text1', value: 'value1' },
+            { id: '2', text: 'text2', value: 'value2' },
+            { id: '3', text: 'None of the above', value: 'none' },
+            expect.objectContaining({
+              text: 'Prefer not to say',
+              extensions: [exclusiveExtension]
+            })
           ]
         })
       )

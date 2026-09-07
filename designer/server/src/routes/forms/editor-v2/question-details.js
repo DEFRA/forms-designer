@@ -389,9 +389,14 @@ export default [
         )
       }
 
-      return h.view(
-        'forms/editor-v2/question-details',
-        await viewModel.questionDetailsViewModel(
+      // Banner explaining a change made on the author's behalf, e.g. the
+      // 'none of the above' setting being taken off the item that had it
+      const warningNotification = /** @type { string | undefined } */ (
+        yar.flash(sessionNames.warningNotification).at(0)
+      )
+
+      return h.view('forms/editor-v2/question-details', {
+        ...(await viewModel.questionDetailsViewModel(
           {
             metadata,
             definition,
@@ -403,8 +408,9 @@ export default [
           query,
           validation,
           state
-        )
-      )
+        )),
+        warningNotification
+      })
     },
     options: {
       auth: {

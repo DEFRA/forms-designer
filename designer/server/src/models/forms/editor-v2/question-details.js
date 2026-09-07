@@ -1,6 +1,11 @@
 import { YesNoField } from '@defra/forms-engine-plugin/engine/components/YesNoField.js'
 import { createComponent } from '@defra/forms-engine-plugin/engine/components/helpers/components.js'
-import { ComponentType, FormStatus, randomId } from '@defra/forms-model'
+import {
+  ComponentType,
+  FormStatus,
+  isExclusiveItem,
+  randomId
+} from '@defra/forms-model'
 
 import { isLocationFieldType } from '~/src/common/constants/component-types.js'
 import {
@@ -262,6 +267,23 @@ export function overrideFormValuesForEnhancedAction(validation, state) {
 }
 
 /**
+ * Whether the 'none of the above' option should be offered for the row being
+ * edited. It has to sit at one end of the list, so the setting is only offered
+ * for the first row, the last row, and the new row appended below them. An item
+ * that already carries the setting keeps the option, so it can be cleared.
+ * @param { ListItem[] } listItems
+ * @param {number} rowNum - 1-based position of the row being edited
+ * @returns {boolean}
+ */
+export function canSetExclusiveItem(listItems, rowNum) {
+  if (rowNum === 1 || rowNum >= listItems.length) {
+    return true
+  }
+
+  return isExclusiveItem(listItems[rowNum - 1])
+}
+
+/**
  * @param { QuestionSessionState | undefined } state
  * @param {ComponentDef} questionFields
  */
@@ -272,7 +294,8 @@ export function getListDetails(state, questionFields) {
   const listName = 'list' in questionFields ? questionFields.list : ''
   return {
     rowNumBeingEdited: rowNum,
-    list: listName
+    list: listName,
+    canSetExclusive: canSetExclusiveItem(listItems, rowNum)
   }
 }
 
@@ -492,7 +515,7 @@ export async function questionDetailsViewModel(
 }
 
 /**
- * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, TextFieldComponent } from '@defra/forms-model'
+ * @import { ComponentDef, QuestionSessionState, FormMetadata, FormDefinition, FormEditor, GovukField, InputFieldsComponentsDef, Item, ListItem, TextFieldComponent } from '@defra/forms-model'
  * @import { ErrorDetailsItem, ValidationFailure } from '~/src/common/helpers/types.js'
  * @import { RequestQuery } from '@hapi/hapi'
  * @import { ComponentBase } from '@defra/forms-engine-plugin/engine/components/ComponentBase.js'

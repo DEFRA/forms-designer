@@ -1,4 +1,4 @@
-import { ComponentType } from '@defra/forms-model'
+import { ComponentType, ExtensionType } from '@defra/forms-model'
 
 import {
   testFormDefinitionWithRadioQuestionAndList,
@@ -210,6 +210,32 @@ describe('Session functions', () => {
         expect(res).toEqual(expectedState)
       })
 
+      test('should keep the extensions of a saved list item', () => {
+        mockGet.mockReturnValue({ questionType: ComponentType.CheckboxesField })
+
+        const definition = structuredClone(
+          testFormDefinitionWithRadioQuestionAndList
+        )
+        const extensions = /** @type {Extension[]} */ ([
+          { type: ExtensionType.Exclusive }
+        ])
+        definition.lists[0].items[2].extensions = extensions
+
+        const res = buildQuestionSessionState(
+          mockYar,
+          '123',
+          definition,
+          'p1',
+          'q1'
+        )
+
+        expect(res?.listItems).toEqual([
+          { id: expect.any(String), text: 'Blue', value: 'blue' },
+          { id: expect.any(String), text: 'Red', value: 'red' },
+          { id: expect.any(String), text: 'Green', value: 'green', extensions }
+        ])
+      })
+
       test('should handle mis-linked list', () => {
         mockGet.mockReturnValue({ questionType: ComponentType.RadiosField })
         const res = buildQuestionSessionState(
@@ -268,6 +294,6 @@ describe('Session functions', () => {
 })
 
 /**
- * @import { ConditionSessionState } from '@defra/forms-model'
+ * @import { ConditionSessionState, Extension } from '@defra/forms-model'
  * @import { Yar } from '@hapi/yar'
  */

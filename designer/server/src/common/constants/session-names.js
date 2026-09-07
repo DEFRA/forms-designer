@@ -65,6 +65,7 @@ export const sessionNames = {
     formInspect: /** @type {const} */ ('formInspectValidationFailure')
   },
   successNotification: /** @type {const} */ ('successNotification'),
+  warningNotification: /** @type {const} */ ('warningNotification'),
   errorList: /** @type {const} */ ('errorList'),
   logoutHint: /** @type {const} */ ('logoutHint'),
   badRequestErrorList: /** @type {const} */ ('badRequestErrorList')

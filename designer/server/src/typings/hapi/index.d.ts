@@ -124,6 +124,7 @@ declare module '@hapi/yar' {
   type CreateKey = (typeof sessionNames)['create']
   type RedirectToKey = (typeof sessionNames)['redirectTo']
   type SuccessNotification = (typeof sessionNames)['successNotification']
+  type WarningNotification = (typeof sessionNames)['warningNotification']
   type ErrorListKey = (typeof sessionNames)['errorList']
   type LogoutHintKey = (typeof sessionNames)['logoutHint']
   type QuestionType = (typeof sessionNames)['questionType']
@@ -139,6 +140,7 @@ declare module '@hapi/yar' {
     // String flash types using actual constants
     [sessionNames.redirectTo]: string
     [sessionNames.successNotification]: string
+    [sessionNames.warningNotification]: string
     [sessionNames.questionType]: string
     [sessionNames.logoutHint]: string
     [sessionNames.reorderPages]: string

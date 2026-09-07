@@ -1,3 +1,5 @@
+import { ExtensionType } from '@defra/forms-model'
+
 import {
   buildDefinition,
   buildList,
@@ -291,6 +293,41 @@ describe('list.js', () => {
       ])
     })
 
+    test('should move the exclusive extension off the item that lost it', () => {
+      const { definition: original, listIdWithItemIds } =
+        listStubs.exampleWithListItemIds
+      const definition = structuredClone(original)
+      const list = /** @type {List} */ (
+        definition.lists.find((x) => x.id === listIdWithItemIds)
+      )
+      list.items[2].extensions = [{ type: ExtensionType.Exclusive }]
+
+      const populated = matchLists(definition, listIdWithItemIds, [
+        {
+          id: 'id1',
+          text: 'England',
+          value: 'england',
+          extensions: [{ type: ExtensionType.Exclusive }]
+        },
+        { id: 'id2', text: 'Scotland', value: 'scotland' },
+        { id: 'id3', text: 'Wales', value: 'wales' }
+      ])
+
+      expect(populated.listItemsWithIds).toEqual([
+        expect.objectContaining({
+          id: 'id1',
+          extensions: [{ type: ExtensionType.Exclusive }]
+        }),
+        {
+          id: 'id2',
+          text: 'Scotland',
+          value: 'scotland',
+          condition: undefined
+        },
+        { id: 'id3', text: 'Wales', value: 'wales', condition: undefined }
+      ])
+    })
+
     test('should populate known ids using existing ids', () => {
       const { definition, listIdWithItemIds } = listStubs.exampleWithListItemIds
       const populated = matchLists(definition, listIdWithItemIds, [
@@ -396,3 +433,7 @@ describe('list.js', () => {
     })
   })
 })
+
+/**
+ * @import { List } from '@defra/forms-model'
+ */
