@@ -183,6 +183,7 @@ export interface SaveAndExitV2MessageData {
     isPreview: boolean
     baseUrl: string
   }
+  email: string
   auth: {
     sub: string
     issuer: string
@@ -214,7 +215,7 @@ export interface SaveAndExitV2Message {
 
 export interface SaveAndExitRecord {
   magicLinkId: string
-  magicLinkGroupId: string
+  magicLinkGroupId?: string
   form: {
     id: string
     status: FormStatus
@@ -232,6 +233,8 @@ export interface SaveAndExitRecord {
 }
 
 export interface SaveAndExitV2Record {
+  magicLinkId: string
+  magicLinkGroupId?: string
   form: {
     id: string
     status: FormStatus
@@ -239,6 +242,10 @@ export interface SaveAndExitV2Record {
     baseUrl: string
   }
   email: string
+  auth: {
+    sub: string
+    issuer: string
+  }
   state: object
   createdAt: Date
 }
