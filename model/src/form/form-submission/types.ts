@@ -175,6 +175,7 @@ export interface SaveAndExitMessageData {
 }
 
 export interface SaveAndExitV2MessageData {
+  magicLinkGroupId?: string
   form: {
     id: string
     title: string
@@ -182,7 +183,10 @@ export interface SaveAndExitV2MessageData {
     isPreview: boolean
     baseUrl: string
   }
-  email: string
+  auth: {
+    sub: string
+    issuer: string
+  }
   state: object
 }
 
