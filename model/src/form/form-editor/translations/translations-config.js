@@ -142,7 +142,8 @@ export const IGNORE_FIELDS = [
   ComponentType.Details,
   ComponentType.Html,
   ComponentType.InsetText,
-  ComponentType.HiddenField
+  ComponentType.HiddenField,
+  ComponentType.TrackingField
 ]
 
 /**

@@ -263,6 +263,10 @@ export interface HiddenFieldComponent extends FormFieldBase {
   }
 }
 
+export interface TrackingFieldComponent extends FormFieldBase {
+  type: ComponentType.TrackingField
+}
+
 // Date Fields
 export interface DatePartsFieldComponent extends DateFieldBase {
   type: ComponentType.DatePartsField
@@ -402,6 +406,7 @@ export type ComponentDef = FormComponentsDef | ContentComponentsDef
 export type FormComponentsDef =
   | InputFieldsComponentsDef
   | SelectionComponentsDef
+  | TrackingFieldComponent
 
 // Components that render inputs
 export type InputFieldsComponentsDef =

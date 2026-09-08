@@ -90,7 +90,8 @@ export const customOperators: CustomOperators = {
   [ComponentType.OsGridRefField]: defaultOperators,
   [ComponentType.NationalGridFieldNumberField]: defaultOperators,
   [ComponentType.LatLongField]: defaultOperators,
-  [ComponentType.HiddenField]: undefined
+  [ComponentType.HiddenField]: undefined,
+  [ComponentType.TrackingField]: undefined
 }
 
 export function getOperatorNames(fieldType?: ConditionalComponentType) {
