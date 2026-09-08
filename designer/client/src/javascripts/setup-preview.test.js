@@ -259,6 +259,14 @@ Helium:2
     })
   })
 
+  describe('TrackingField', () => {
+    it('should create Question instance', () => {
+      const result = SetupPreview(ComponentType.TrackingField)
+      expect(result).toBeInstanceOf(Question)
+      expect(result).toBeDefined()
+    })
+  })
+
   describe('GeospatialField', () => {
     it('should create Question instance', () => {
       const result = SetupPreview(ComponentType.GeospatialField)

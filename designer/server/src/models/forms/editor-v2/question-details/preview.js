@@ -18,6 +18,7 @@ import {
   SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
+  TrackingQuestion,
   UkAddressQuestion,
   UnsupportedQuestion,
   YesNoQuestion,
@@ -481,6 +482,13 @@ export const ModelFactory =
      */
     HiddenField: (questionElements) => {
       return new HiddenQuestion(questionElements, emptyRender)
+    },
+    /**
+     * @param {QuestionElements} questionElements
+     * @returns {Question}
+     */
+    TrackingField: (questionElements) => {
+      return new TrackingQuestion(questionElements, emptyRender)
     },
     /**
      * @param {PaymentElements} questionElements

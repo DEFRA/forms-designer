@@ -426,6 +426,9 @@ export const SetupPreviewPartial =
     HiddenField: () => {
       return SetupPreviewDefaultQuestion()
     },
+    TrackingField: () => {
+      return SetupPreviewDefaultQuestion()
+    },
     /**
      * @returns {PaymentQuestion}
      */

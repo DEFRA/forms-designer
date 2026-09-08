@@ -20,6 +20,7 @@ import {
   SelectSortableQuestion,
   ShortAnswerQuestion,
   SupportingEvidenceQuestion,
+  TrackingQuestion,
   UkAddressQuestion,
   UnsupportedQuestion,
   YesNoQuestion
@@ -608,6 +609,15 @@ describe('preview', () => {
       )
 
       expect(previewModel).toBeInstanceOf(HiddenQuestion)
+    })
+
+    it('should get TrackingField', () => {
+      const previewModel = getPreviewConstructor(
+        ComponentType.TrackingField,
+        previewElements
+      )
+
+      expect(previewModel).toBeInstanceOf(TrackingQuestion)
     })
 
     it('should get PaymentField', () => {

@@ -228,6 +228,8 @@
     "LatLongField_info": "Allows users to enter latitude and longitude coordinates",
     "HiddenField": "Hidden field",
     "HiddenField_info": "For internal processing",
+    "TrackingField": "Tracking field",
+    "TrackingField_info": "For internal tracking purposes",
     "PaymentField": "Payment",
     "PaymentField_info": "Allows users to make a payment",
     "GeospatialField": "Geospatial",

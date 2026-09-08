@@ -467,6 +467,10 @@ export const hiddenFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.Question
 ])
 
+export const trackingFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
+  QuestionBaseSettings.Question
+])
+
 export const paymentFields = /** @type {FormEditorGovukFieldBaseKeys[]} */ ([
   QuestionBaseSettings.PaymentAmount,
   QuestionBaseSettings.PaymentConditionalAmounts,
@@ -492,6 +496,7 @@ const COMPONENT_TYPE_TO_FIELDS = new Map([
   [ComponentType.NationalGridFieldNumberField, locationFields],
   [ComponentType.LatLongField, locationFields],
   [ComponentType.HiddenField, hiddenFields],
+  [ComponentType.TrackingField, trackingFields],
   [ComponentType.PaymentField, paymentFields]
 ])
 
