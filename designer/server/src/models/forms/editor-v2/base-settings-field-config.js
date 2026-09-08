@@ -147,8 +147,11 @@ export const allBaseSettingsFields = {
       text: '£'
     },
     label: {
-      text: 'Payment amount',
+      text: 'Default payment amount',
       classes: GOVUK_LABEL__M
+    },
+    hint: {
+      text: 'This is the amount users will pay if no conditional payment applies. Enter £0 to skip the payment page.'
     },
     classes: 'govuk-input--width-5'
   },
