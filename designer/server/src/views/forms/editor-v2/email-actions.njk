@@ -46,12 +46,6 @@
 
     <p class="govuk-body">To send submissions based on answers, create and manage conditions in the <a class="govuk-link govuk-link--no-visited-state" href="{{ conditionsManagerHref }}">conditions manager</a>.</p>
 
-    {% call govukDetails({
-      summaryText: "How additional email addresses work"
-    }) %}
-      Additional email addresses receive submissions that meet their conditions. If a submission matches multiple conditions, we'll send it to each matching email address. If it doesn't match any conditions, we'll send it to the default email address.
-    {% endcall %}
-
     {% if outputsTable.rows | length %}
       {{ govukTable(outputsTable) }}
     {% else %}
