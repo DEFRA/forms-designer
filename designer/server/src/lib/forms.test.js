@@ -1,3 +1,4 @@
+import { FormAdapterSubmissionSchemaVersion } from '@defra/forms-engine-plugin/types'
 import { FormStatus, SchemaVersion } from '@defra/forms-model'
 import { buildDefinition } from '@defra/forms-model/stubs'
 
@@ -750,7 +751,7 @@ describe('Forms library routes', () => {
       const formId = '69cbf817dfb03f22b7e03242'
       const referenceNumber = 'PDT-UC2-M3A'
       const formSubmissionMeta = {
-        schemaVersion: 1,
+        schemaVersion: FormAdapterSubmissionSchemaVersion.V1,
         timestamp: new Date('2026-05-18T11:24:20.592Z'),
         referenceNumber,
         formName: 'File upload',
