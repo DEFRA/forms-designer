@@ -52,11 +52,11 @@ export function getFormOutputChanges(
   })
 
   const removed: PositionedOutput[] = previousOutputs
-    .map(position)
+    .map((o, i) => position(o, i))
     .filter(({ output }) => !nextKeys.has(getComparisonKey(output)))
 
   const added: PositionedOutput[] = nextOutputs
-    .map(position)
+    .map((o, i) => position(o, i))
     .filter(({ output }) => !previousKeys.has(getComparisonKey(output)))
 
   const updated = removed.flatMap((before) => {
