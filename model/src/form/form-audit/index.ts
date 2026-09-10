@@ -28,6 +28,7 @@ import {
   type FormOfflineUpdatedMessageData,
   type FormOrganisationChanges,
   type FormOrganisationUpdatedMessageData,
+  type FormOutputChanges,
   type FormPrivacyNoticeChanges,
   type FormPrivacyNoticeUpdatedMessageData,
   type FormSecretBaseMessageData,
@@ -134,12 +135,31 @@ export const formOutputMessageData = Joi.object<Output>()
   })
   .description('A submission email target as recorded on an audit event')
 
+export const formOutputChangesMessageData = Joi.object<FormOutputChanges>()
+  .keys({
+    added: Joi.array().items(formOutputMessageData).optional(),
+    updated: Joi.array()
+      .items(
+        Joi.object<ChangesMessageData<Output>>().keys({
+          previous: formOutputMessageData.required(),
+          new: formOutputMessageData.required()
+        })
+      )
+      .optional(),
+    removed: Joi.array().items(formOutputMessageData).optional()
+  })
+  .or('added', 'updated', 'removed')
+  .description(
+    "Changes an update made to the form's submission email targets (outputs)"
+  )
+
 export const formUpdatedMessageData = formMessageDataBase
   .append<FormUpdatedMessageData>({
     requestType: Joi.string()
       .valid(...Object.values(FormDefinitionRequestType))
       .required(),
-    s3Meta: formDefinitionS3Meta.optional()
+    s3Meta: formDefinitionS3Meta.optional(),
+    outputChanges: formOutputChangesMessageData.optional()
   })
   .required()
 
