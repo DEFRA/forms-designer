@@ -58,6 +58,7 @@ import { RadioQuestion } from '~/src/form/form-editor/preview/radio.js'
 import { SelectQuestion } from '~/src/form/form-editor/preview/select.js'
 import { ShortAnswerQuestion } from '~/src/form/form-editor/preview/short-answer.js'
 import { SupportingEvidenceQuestion } from '~/src/form/form-editor/preview/supporting-evidence.js'
+import { TrackingQuestion } from '~/src/form/form-editor/preview/tracking.js'
 import {
   UkAddressComponentPreviewElements,
   UkAddressQuestion
@@ -100,6 +101,7 @@ const InputFieldComponentDictionary = {
   [ComponentType.NationalGridFieldNumberField]: NationalGridQuestion,
   [ComponentType.LatLongField]: LatLongQuestion,
   [ComponentType.HiddenField]: HiddenQuestion,
+  [ComponentType.TrackingField]: TrackingQuestion,
   [ComponentType.PaymentField]: PaymentQuestion,
   [ComponentType.GeospatialField]: GeospatialQuestion
 }

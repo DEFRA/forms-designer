@@ -25,6 +25,7 @@ export enum ComponentType {
   NationalGridFieldNumberField = 'NationalGridFieldNumberField',
   LatLongField = 'LatLongField',
   HiddenField = 'HiddenField',
+  TrackingField = 'TrackingField',
   PaymentField = 'PaymentField',
   GeospatialField = 'GeospatialField'
 }
