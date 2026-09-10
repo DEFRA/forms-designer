@@ -178,6 +178,8 @@ jobs:
           append_container_logs "forms-sharepoint-listener" "forms-sharepoint-listener"
           append_container_logs "forms-audit-api" "forms-audit-api"
           append_container_logs "forms-runner" "forms-runner"
+          append_container_logs "forms-identity-ui" "forms-identity-ui"
+          append_container_logs "forms-identity-api" "forms-identity-api"
           append_container_logs "cdp-uploader" "cdp-uploader"
           append_container_logs "proxy" "proxy"
           append_container_logs "localstack" "localstack"

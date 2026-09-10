@@ -265,6 +265,9 @@ export interface HiddenFieldComponent extends FormFieldBase {
 
 export interface TrackingFieldComponent extends FormFieldBase {
   type: ComponentType.TrackingField
+  options: FormFieldBase['options'] & {
+    condition?: string
+  }
 }
 
 // Date Fields

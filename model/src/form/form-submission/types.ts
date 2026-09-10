@@ -174,19 +174,48 @@ export interface SaveAndExitMessageData {
   state: object
 }
 
+export interface SaveAndExitV2MessageData {
+  magicLinkGroupId?: string
+  form: {
+    id: string
+    title: string
+    status: FormStatus
+    isPreview: boolean
+    baseUrl: string
+  }
+  email: string
+  auth: {
+    sub: string
+    issuer: string
+  }
+  state: object
+}
+
 export interface SaveAndExitMessage {
   schemaVersion: SubmissionEventMessageSchemaVersion
   source: SubmissionEventMessageSource
   createdAt: Date
   messageCreatedAt: Date
   category: SubmissionEventMessageCategory.RUNNER
-  type: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT
+  type:
+    | SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT
+    | SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT_V2
   data: SaveAndExitMessageData
+}
+
+export interface SaveAndExitV2Message {
+  schemaVersion: SubmissionEventMessageSchemaVersion
+  source: SubmissionEventMessageSource
+  createdAt: Date
+  messageCreatedAt: Date
+  category: SubmissionEventMessageCategory.RUNNER
+  type: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT_V2
+  data: SaveAndExitV2MessageData
 }
 
 export interface SaveAndExitRecord {
   magicLinkId: string
-  magicLinkGroupId: string
+  magicLinkGroupId?: string
   form: {
     id: string
     status: FormStatus
@@ -200,6 +229,24 @@ export interface SaveAndExitRecord {
   }
   state: object
   invalidPasswordAttempts: number
+  createdAt: Date
+}
+
+export interface SaveAndExitV2Record {
+  magicLinkId: string
+  magicLinkGroupId?: string
+  form: {
+    id: string
+    status: FormStatus
+    isPreview: boolean
+    baseUrl: string
+  }
+  email: string
+  auth: {
+    sub: string
+    issuer: string
+  }
+  state: object
   createdAt: Date
 }
 
