@@ -99,6 +99,7 @@ export const advancedSettingsPerComponentType =
       QuestionAdvancedSettings.Classes
     ],
     HiddenField: [],
+    TrackingField: [],
     GeospatialField: [
       QuestionAdvancedSettings.GeometryTypes,
       QuestionAdvancedSettings.Countries,

@@ -65,7 +65,8 @@ const fieldMappings = /** @type { Partial<AdvancedFieldMappingsType> } */ ({
     longitudeMin: 'longitudeMin',
     longitudeMax: 'longitudeMax'
   },
-  HiddenField: {}
+  HiddenField: {},
+  TrackingField: {}
 })
 
 /**

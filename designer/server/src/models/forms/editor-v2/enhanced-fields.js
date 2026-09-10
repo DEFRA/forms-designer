@@ -42,7 +42,8 @@ export const enhancedFieldsPerComponentType =
     OsGridRefField: [],
     NationalGridFieldNumberField: [],
     LatLongField: [],
-    HiddenField: []
+    HiddenField: [],
+    TrackingField: []
   })
 
 /**
