@@ -200,7 +200,7 @@ exports[`Submission routes GET / should not show payment section when missing 1`
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
-      <p class="govuk-body">Submitted on 24 July 2026 at 12:55</p>
+      <p class="govuk-body">Submitted on 24 July 2026 at 12:55pm</p>
         <h2 class="govuk-heading-m">Section 1</h2>
 
       
@@ -789,7 +789,7 @@ exports[`Submission routes GET / should show view submission page 1`] = `
   <div class="govuk-width-container app-width-container--wide">
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-two-thirds">
-      <p class="govuk-body">Submitted on 24 July 2026 at 12:55</p>
+      <p class="govuk-body">Submitted on 24 July 2026 at 12:55pm</p>
         <h2 class="govuk-heading-m">Section 1</h2>
 
       

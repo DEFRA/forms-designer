@@ -229,7 +229,7 @@ export function submissionViewModel(submission, definition) {
     processSection(section, context)
   )
 
-  const formattedTimestamp = `Submitted on ${format(meta.timestamp, "dd MMMM yyyy 'at' h:mm")}`
+  const formattedTimestamp = `Submitted on ${format(meta.timestamp, "dd MMMM yyyy 'at' h:mmaaa")}`
 
   return {
     pageTitle,
