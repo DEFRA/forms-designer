@@ -206,8 +206,16 @@ function mapFormRowsToViewModel(rows) {
     const repeatTitle = getRowOfType(pageRows, TranslationRowTypes.RepeatTitle)
 
     const pageHeadingRow = addTitle(pageHeading, 'Page heading')
-    const formDeclarationRow = addTitle(formDeclaration, 'Declaration body')
-    const pageGuidanceRow = addTitle(pageGuidance, 'Page guidance')
+    const formDeclarationRow = addTitle(
+      formDeclaration,
+      'Declaration body',
+      TEXTAREA_12_ROWS_WITH_MARKDOWN
+    )
+    const pageGuidanceRow = addTitle(
+      pageGuidance,
+      'Page guidance',
+      TEXTAREA_12_ROWS_WITH_MARKDOWN
+    )
     const repeatTitleRow = addTitle(repeatTitle, 'Repeat name')
 
     if (

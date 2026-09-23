@@ -1,4 +1,9 @@
-import { testFormDefinitionWithRadioQuestionAndList } from '~/src/__stubs__/form-definition.js'
+import { TEXTAREA_12_ROWS_WITH_MARKDOWN } from '@defra/forms-model'
+
+import {
+  buildMarkdownComponent,
+  testFormDefinitionWithRadioQuestionAndList
+} from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { translationsViewModel } from '~/src/models/forms/editor-v2/translations.js'
 
@@ -71,6 +76,48 @@ describe('Translations', () => {
           }
         ]
       })
+    })
+
+    it('should use markdown textarea for page guidance and end-of-form declaration', () => {
+      const [questionPage, summaryPage] =
+        testFormDefinitionWithRadioQuestionAndList.pages
+      const definition = {
+        ...testFormDefinitionWithRadioQuestionAndList,
+        pages: [
+          {
+            ...questionPage,
+            components: [
+              buildMarkdownComponent({
+                id: 'm1',
+                content: 'Line one\n\nLine two'
+              }),
+              ...questionPage.components
+            ]
+          },
+          {
+            ...summaryPage,
+            components: [
+              buildMarkdownComponent({
+                id: 'm2',
+                content: 'I declare\n\n* this'
+              })
+            ]
+          }
+        ]
+      }
+
+      const res = translationsViewModel(testFormMetadata, definition)
+
+      const rowData = res.rowViewModel.formRows.flatMap(
+        (formRow) => formRow.rowData ?? []
+      )
+      const guidance = rowData.find((data) => data.title === 'Page guidance')
+      const declaration = rowData.find(
+        (data) => data.title === 'Declaration body'
+      )
+
+      expect(guidance?.type).toBe(TEXTAREA_12_ROWS_WITH_MARKDOWN)
+      expect(declaration?.type).toBe(TEXTAREA_12_ROWS_WITH_MARKDOWN)
     })
   })
 })
