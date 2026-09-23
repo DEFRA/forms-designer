@@ -91,7 +91,7 @@ describe('Translations', () => {
                 id: 'm1',
                 content: 'Line one\n\nLine two'
               }),
-              ...questionPage.components
+              .../** @type {PageQuestion} */ (questionPage).components
             ]
           },
           {
@@ -121,3 +121,7 @@ describe('Translations', () => {
     })
   })
 })
+
+/**
+ * @import { PageQuestion } from '@defra/forms-model'
+ */
