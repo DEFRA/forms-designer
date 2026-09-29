@@ -419,6 +419,9 @@ export default [
           count
         }
       })
+    },
+    options: {
+      auth: false
     }
   })
 ]
