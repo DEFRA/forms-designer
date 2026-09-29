@@ -402,7 +402,6 @@ export default [
     method: 'GET',
     path: '/public/metrics',
     async handler(request, h) {
-      // Get from cache
       const metrics = await getCachedMetrics()
       const liveForms = metrics.overview.filter(
         (row) => row.formStatus === FormStatus.Live
