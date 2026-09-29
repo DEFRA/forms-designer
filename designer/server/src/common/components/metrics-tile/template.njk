@@ -1,11 +1,9 @@
-{% if params.changeValue %}
-  {% if params.changeSymbol === '+' %}
-    {% set directionSymbolClasses = "govuk-tag--green app-tag-with-icon app-tag-arrow-up" %}
-    {% set changeSymbolPercent = '+' %}
-  {% elif params.changeSymbol === '-' %}
-    {% set directionSymbolClasses = "govuk-tag--red app-tag-with-icon app-tag-arrow-down" %}
-    {% set changeSymbolPercent = '' %}
-  {% endif %}
+{% if params.changeSymbol === '+' %}
+  {% set directionSymbolClasses = "govuk-tag--green app-tag-with-icon app-tag-arrow-up" %}
+  {% set changeSymbolPercent = '+' %}
+{% elif params.changeSymbol === '-' %}
+  {% set directionSymbolClasses = "govuk-tag--red app-tag-with-icon app-tag-arrow-down" %}
+  {% set changeSymbolPercent = '' %}
 {% endif %}
 {% set metricTestId = params.testId or ('headline-column-' + (params.title | lower | replace(' ', '-'))) %}
 {% set tileClasses = params.classes if params.classes else "govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" %}
@@ -22,7 +20,7 @@
       {% endif %}
       </span>
     </div>
-    {% if params.changeValue %}
+    {% if "changeValue" in params %}
       <div class="govuk-!-margin-top-2 govuk-!-margin-bottom-2">
         <strong class="govuk-tag {{ directionSymbolClasses }}" aria-label="{{ params.ariaLabel }}">
           {{ params.changeValue | formatNumber }} ({{ changeSymbolPercent }}{{ params.changePercentage }}%)
