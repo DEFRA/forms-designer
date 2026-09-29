@@ -182,7 +182,7 @@ const schema = joi.object<Config>({
   featureFlagAllowGeospatial: joi.boolean().required(),
   ordnanceSurveyApiKey: joi.string().required(),
   ordnanceSurveyApiSecret: joi.string().required(),
-  frameAncestors: joi.string().required()
+  frameAncestors: joi.string().optional()
 })
 
 // Validate config
