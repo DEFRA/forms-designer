@@ -400,34 +400,24 @@ export default [
    */
   ({
     method: 'GET',
-    path: '/public/metrics/forms-tile',
+    path: '/public/metrics',
     async handler(request, h) {
       // Get from cache
       const metrics = await getCachedMetrics()
-      const count = metrics.overview.filter(
+      const liveForms = metrics.overview.filter(
         (row) => row.formStatus === FormStatus.Live
       ).length
+      const count = metrics.totals.allTime?.FormsFirstPublished ?? 0
 
-      return h.view('website/metrics-tile', {
-        title: 'Number of live forms',
-        count
-      })
-    }
-  }),
-  /**
-   * @satisfies {ServerRoute}
-   */
-  ({
-    method: 'GET',
-    path: '/public/metrics/submissions-tile',
-    async handler(request, h) {
-      // Get from cache
-      const metrics = await getCachedMetrics()
-      const count = metrics.totals.allTime?.Submissions.count
-
-      return h.view('website/metrics-tile', {
-        title: 'Number of live submissions',
-        count
+      return h.view('metrics-tile', {
+        liveFormsTile: {
+          title: 'Number of live forms',
+          count: liveForms
+        },
+        liveSubmissionsTile: {
+          title: 'Number of live submissions',
+          count
+        }
       })
     }
   })
