@@ -64,6 +64,7 @@ export interface Config {
   featureFlagAllowGeospatial: boolean
   ordnanceSurveyApiKey: string
   ordnanceSurveyApiSecret: string
+  frameAncestors: string
 }
 
 // Define config schema
@@ -180,7 +181,8 @@ const schema = joi.object<Config>({
   featureFlagAllowPayments: joi.boolean().required(),
   featureFlagAllowGeospatial: joi.boolean().required(),
   ordnanceSurveyApiKey: joi.string().required(),
-  ordnanceSurveyApiSecret: joi.string().required()
+  ordnanceSurveyApiSecret: joi.string().required(),
+  frameAncestors: joi.string().required()
 })
 
 // Validate config
@@ -237,7 +239,8 @@ const result = schema.validate(
     featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS,
     featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL,
     ordnanceSurveyApiKey: process.env.ORDNANCE_SURVEY_API_KEY,
-    ordnanceSurveyApiSecret: process.env.ORDNANCE_SURVEY_API_SECRET
+    ordnanceSurveyApiSecret: process.env.ORDNANCE_SURVEY_API_SECRET,
+    frameAncestors: process.env.FRAME_ANCESTORS
   },
   { abortEarly: false }
 )

@@ -72,7 +72,10 @@ const serverOptions = (): ServerOptions => {
         },
         xss: 'enabled',
         noSniff: true,
-        xframe: true
+        xframe: {
+          rule: 'allow-from',
+          source: config.frameAncestors
+        }
       }
     },
     cache: [

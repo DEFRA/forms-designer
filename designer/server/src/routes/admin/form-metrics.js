@@ -12,6 +12,7 @@ import { LRUCache } from 'lru-cache'
 import { mapUserForAudit } from '~/src/common/helpers/auth/user-helper.js'
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import config from '~/src/config.js'
 import {
   MetricsFilterFields,
   getDrilldownMetrics,
@@ -408,16 +409,21 @@ export default [
       ).length
       const count = metrics.totals.allTime?.FormsFirstPublished ?? 0
 
-      return h.view('metrics-tile', {
-        liveFormsTile: {
-          title: 'Number of live forms',
-          count: liveForms
-        },
-        liveSubmissionsTile: {
-          title: 'Number of live submissions',
-          count
-        }
-      })
+      return h
+        .view('metrics-tile', {
+          liveFormsTile: {
+            title: 'Number of live forms',
+            count: liveForms
+          },
+          liveSubmissionsTile: {
+            title: 'Number of live submissions',
+            count
+          }
+        })
+        .header(
+          'Content-Security-Policy',
+          `frame-ancestors ${config.frameAncestors}`
+        )
     },
     options: {
       auth: false
