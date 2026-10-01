@@ -6,7 +6,10 @@ import { createServer } from '~/src/createServer.js'
 import { getDrilldownMetrics, getMetrics } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
-import { buildQueryFromPayload } from '~/src/routes/admin/form-metrics.js'
+import {
+  buildQueryFromPayload,
+  getCachedMetrics
+} from '~/src/routes/admin/form-metrics.js'
 import { authSuperAdmin as auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -385,6 +388,39 @@ describe('Form metrics routes', () => {
         const { response } = await renderResponse(server, options)
 
         expect(response.statusCode).toEqual(StatusCodes.INTERNAL_SERVER_ERROR)
+      })
+    })
+
+    describe('public metrics endpoint (for embedding in sharepoint)', () => {
+      const mockMetrics = {
+        overview: [
+          {
+            formStatus: FormStatus.Live
+          }
+        ],
+        totals: {
+          allTime: {
+            FormsFirstPublished: 10
+          }
+        }
+      }
+
+      test('endpoint returns HTML tiles', async () => {
+        // @ts-expect-error - partial mock of data
+        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+
+        const options = {
+          method: 'get',
+          url: '/public/metrics'
+        }
+
+        const { response } = await renderResponse(server, options)
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(response.result).toMatchSnapshot()
+
+        expect(await getCachedMetrics()).toEqual(mockMetrics)
+        expect(getMetrics).toHaveBeenCalledTimes(1)
       })
     })
   })

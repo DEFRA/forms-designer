@@ -1,0 +1,25 @@
+{% extends "govuk/template.njk" %}
+
+{% from "metrics-tile/macro.njk" import appMetricsTile %}
+
+{% block head %}
+  <link href="{{ getAssetPath("stylesheets/application.scss") }}" rel="stylesheet">
+  <style type="text/css">
+  * { font-family: GDS Transport, arial, sans-serif; }
+  </style>
+{% endblock %}
+
+{% block header %}{% endblock %}
+
+{% block main %}
+  <div class="govuk-grid-row app-prose-scope">
+    <div class="govuk-column-one-half">
+      {{ appMetricsTile(liveFormsTile) }}
+    </div>
+    <div class="govuk-column-one-half">
+      {{ appMetricsTile(liveSubmissionsTile) }}
+    </div>
+  </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
