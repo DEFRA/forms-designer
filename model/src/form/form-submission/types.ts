@@ -174,6 +174,11 @@ export interface SaveAndExitMessageData {
   state: object
 }
 
+export interface SavedState {
+  $$__referenceNumber: string
+  [key: string]: any
+}
+
 export interface SaveAndExitV2MessageData {
   magicLinkGroupId?: string
   form: {
@@ -188,7 +193,7 @@ export interface SaveAndExitV2MessageData {
     sub: string
     issuer: string
   }
-  state: object
+  state: SavedState
 }
 
 export interface SaveAndExitMessage {
@@ -211,11 +216,6 @@ export interface SaveAndExitV2Message {
   category: SubmissionEventMessageCategory.RUNNER
   type: SubmissionEventMessageType.RUNNER_SAVE_AND_EXIT_V2
   data: SaveAndExitV2MessageData
-}
-
-export interface SavedState {
-  $$__referenceNumber: string
-  [key: string]: any
 }
 
 export interface SaveAndExitRecord {
