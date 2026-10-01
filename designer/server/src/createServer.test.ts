@@ -134,9 +134,7 @@ describe('Server tests', () => {
     const { headers, statusCode } = await server.inject(options)
 
     expect(statusCode).toBe(200)
-    expect(headers['x-frame-options']).toBe(
-      'ALLOW-FROM https://defra.sharepoint.com'
-    )
+    expect(headers['x-frame-options']).toBe('DENY')
     expect(headers['x-content-type-options']).toBe('nosniff')
     expect(headers['x-robots-tag']).toBe('noindex, nofollow')
     expect(headers['x-xss-protection']).toBe('1; mode=block')
