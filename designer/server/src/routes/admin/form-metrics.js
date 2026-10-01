@@ -426,13 +426,7 @@ export default [
         )
     },
     options: {
-      auth: false,
-      security: {
-        xframe: {
-          rule: 'allow-from',
-          source: config.frameAncestors
-        }
-      }
+      auth: false
     }
   })
 ]
