@@ -213,6 +213,11 @@ export interface SaveAndExitV2Message {
   data: SaveAndExitV2MessageData
 }
 
+export interface SavedState {
+  $$__referenceNumber: string
+  [key: string]: any
+}
+
 export interface SaveAndExitRecord {
   magicLinkId: string
   magicLinkGroupId?: string
@@ -246,7 +251,7 @@ export interface SaveAndExitV2Record {
     sub: string
     issuer: string
   }
-  state: object
+  state: SavedState
   createdAt: Date
 }
 
