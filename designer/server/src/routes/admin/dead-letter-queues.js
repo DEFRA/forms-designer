@@ -9,6 +9,7 @@ import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-naviga
 import {
   deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessage,
+  getDeadLetterQueueMessageCount,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
@@ -104,14 +105,11 @@ export async function getMessageCounts(token) {
   return Promise.all(
     Object.values(DeadLetterQueues).map(async (dlq) => {
       try {
-        const messages = await getDeadLetterQueueMessages(dlq, token, {
-          visibilityTimeout: 0,
-          waitTimeSeconds: 0
-        })
-        const countSuffix = messages.length === 1 ? 'message' : 'messages'
+        const count = await getDeadLetterQueueMessageCount(dlq, token)
+        const countSuffix = count === 1 ? 'message' : 'messages'
         return {
           value: dlq,
-          text: `${dlq} - ${messages.length} ${countSuffix}`
+          text: `${dlq} - ${count} ${countSuffix}`
         }
       } catch {
         return {

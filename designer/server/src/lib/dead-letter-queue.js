@@ -1,4 +1,5 @@
 import { DeadLetterQueues } from '@defra/forms-model'
+import { StatusCodes } from 'http-status-codes'
 
 import config from '~/src/config.js'
 import { delJson, getJson, postJson } from '~/src/lib/fetch.js'
@@ -88,6 +89,41 @@ export async function getDeadLetterQueueMessages(dlq, token, options) {
     uniqueMessages.set(message.MessageId, message)
   }
   return uniqueMessages.values().toArray()
+}
+
+/**
+ * Get the true depth of a dead-letter queue.
+ * Prefers the queue's own count endpoint (not all backends have it yet), falling
+ * back to counting a single received batch, which is capped at 10 and can
+ * undercount due to SQS short-poll sampling.
+ * @param {DeadLetterQueues} dlq
+ * @param {string} token
+ * @returns {Promise<number>}
+ */
+export async function getDeadLetterQueueMessageCount(dlq, token) {
+  const getJsonByType = /** @type {typeof getJson<{ count: number }>} */ (
+    getJson
+  )
+
+  const { endpoint, qualifier } = getEndpoint(dlq)
+
+  const requestUrl = new URL(`./admin/deadletter${qualifier}/count`, endpoint)
+
+  try {
+    const { body } = await getJsonByType(requestUrl, getHeaders(token))
+    return body.count
+  } catch (err) {
+    const boomErr = /** @type {{ output?: { statusCode?: number } }} */ (err)
+    if (boomErr.output?.statusCode !== StatusCodes.NOT_FOUND) {
+      throw err
+    }
+
+    const messages = await getDeadLetterQueueMessages(dlq, token, {
+      visibilityTimeout: 0,
+      waitTimeSeconds: 0
+    })
+    return messages.length
+  }
 }
 
 /**

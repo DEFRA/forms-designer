@@ -3,6 +3,7 @@ import { DeadLetterQueues } from '@defra/forms-model'
 import {
   deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessage,
+  getDeadLetterQueueMessageCount,
   getDeadLetterQueueMessages,
   getEndpoint,
   redriveDeadLetterQueueMessages,
@@ -87,6 +88,63 @@ describe('dead-letter queue lib functions', () => {
         expect.anything()
       )
       expect(res).toEqual(['message1'])
+    })
+  })
+
+  describe('getDeadLetterQueueMessageCount', () => {
+    it('should call the count endpoint', async () => {
+      jest
+        .mocked(getJson)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({ body: { count: 5 } })
+      const dlq = DeadLetterQueues.NotifyEmailListener
+      const res = await getDeadLetterQueueMessageCount(dlq, 'token')
+      expect(getJson).toHaveBeenCalledWith(
+        new URL('http://localhost:3004/admin/deadletter/emails/count'),
+        expect.anything()
+      )
+      expect(res).toBe(5)
+    })
+
+    it('should fall back to message length when count endpoint is missing', async () => {
+      const notFound = Object.assign(new Error('Not Found'), {
+        output: { statusCode: 404 }
+      })
+      jest
+        .mocked(getJson)
+        .mockRejectedValueOnce(notFound)
+        // @ts-expect-error - partial mock of response
+        .mockResolvedValueOnce({
+          body: {
+            messages: [{ MessageId: 'message1' }, { MessageId: 'message2' }]
+          }
+        })
+      const dlq = DeadLetterQueues.AuditApi
+      const res = await getDeadLetterQueueMessageCount(dlq, 'token')
+      expect(getJson).toHaveBeenNthCalledWith(
+        1,
+        new URL('http://localhost:3003/admin/deadletter/count'),
+        expect.anything()
+      )
+      expect(getJson).toHaveBeenNthCalledWith(
+        2,
+        new URL(
+          'http://localhost:3003/admin/deadletter/view?visibilityTimeout=0&waitTimeSeconds=0'
+        ),
+        expect.anything()
+      )
+      expect(res).toBe(2)
+    })
+
+    it('should rethrow errors other than 404', async () => {
+      const serverError = Object.assign(new Error('Boom'), {
+        output: { statusCode: 500 }
+      })
+      jest.mocked(getJson).mockRejectedValueOnce(serverError)
+      const dlq = DeadLetterQueues.AuditApi
+      await expect(
+        getDeadLetterQueueMessageCount(dlq, 'token')
+      ).rejects.toThrow('Boom')
     })
   })
 
