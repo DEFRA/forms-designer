@@ -92,6 +92,7 @@
     "joi": "^17.13.4",
     "jsondiffpatch": "^0.7.3",
     "lodash": "^4.17.21",
+    "lru-cache": "^11.5.1",
     "luxon": "^3.6.1",
     "nanoid": "^5.0.7",
     "nunjucks": "^3.2.4",
