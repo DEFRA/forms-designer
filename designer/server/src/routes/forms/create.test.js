@@ -29,6 +29,21 @@ describe('Form create routes', () => {
     expect(response.headers['content-type']).toContain('text/html')
     expect(response.result).toMatchSnapshot()
   })
+
+  test('POST /create/title returns the interstitial "Before you continue" page', async () => {
+    const response = await server.inject({
+      method: 'post',
+      url: '/create/title',
+      auth,
+      payload: {
+        title: 'Test form title'
+      }
+    })
+
+    expect(response.statusCode).toEqual(StatusCodes.OK)
+    expect(response.headers['content-type']).toContain('text/html')
+    expect(response.result).toMatchSnapshot()
+  })
 })
 
 /**

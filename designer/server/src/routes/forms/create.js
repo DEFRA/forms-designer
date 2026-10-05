@@ -145,10 +145,14 @@ export default [
         title: payload.title
       })
 
-      // Redirect POST to GET without resubmit on back button
-      return h
-        .redirect(ROUTE_PATH_CREATE_ORGANISATION)
-        .code(StatusCodes.SEE_OTHER)
+      return h.view('forms/create/before-you-continue', {
+        pageTitle: 'Before you continue creating your form',
+        continue: ROUTE_PATH_CREATE_ORGANISATION,
+        backLink: {
+          href: ROUTE_PATH_CREATE_TITLE,
+          text: 'Back'
+        }
+      })
     },
     options: {
       validate: {

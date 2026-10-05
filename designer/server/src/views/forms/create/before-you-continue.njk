@@ -1,0 +1,30 @@
+{% extends "layouts/page.njk" %}
+
+{% from "govuk/components/back-link/macro.njk" import govukBackLink %}
+{% from "moj/components/interruption-card/macro.njk" import interruptionCard %}
+
+{% block beforeContent %}
+  <div class="govuk-width-container app-width-container--wide">
+    {{ govukBackLink(backLink) }}
+  </div>
+{% endblock %}
+
+{% block content %}
+  <div class="govuk-width-container app-width-container--wide">
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        {% call interruptionCard({
+            heading: "Before you continue",
+            primaryAction: {
+              text: "Continue",
+              href: continue
+            }
+          })
+        %}
+          <p>You’ll need to add organisation and team details for this form, including a shared team email address.</p>
+          <p>We’ll use this information to contact the team responsible for managing the form when needed.</p>
+        {% endcall %}
+      </div>
+    </div>
+  </div>
+{% endblock %}
