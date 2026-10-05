@@ -410,7 +410,7 @@ export default [
       const count = metrics.totals.allTime?.FormsFirstPublished ?? 0
 
       return h
-        .view('metrics-tile', {
+        .view('public-metrics-overview', {
           liveFormsTile: {
             title: 'Number of live forms',
             count: liveForms
