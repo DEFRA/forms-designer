@@ -347,7 +347,7 @@ describe('Forms library routes', () => {
 
       await renderResponse(server, options)
 
-      const $card = document.querySelector('.app-form-card')
+      const $card = document.querySelector('aside.app-form-card')
       const $buttons = $card?.querySelectorAll('.govuk-button')
 
       expect($buttons).toHaveLength(2)
@@ -369,7 +369,7 @@ describe('Forms library routes', () => {
 
       await renderResponse(server, options)
 
-      const $card = document.querySelector('.app-form-card')
+      const $card = document.querySelector('aside.app-form-card')
       const $buttons = $card?.querySelectorAll('.govuk-button')
 
       expect($buttons).toHaveLength(2)

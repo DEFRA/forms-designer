@@ -24,6 +24,81 @@
     {% include "forms/partials/overview-live.njk" %}
   {% endif %}
 
+  <div class="app-form-card govuk-!-padding-bottom-1">
+    {{ appHeading({
+      text: "Organisation details",
+      size: "medium",
+      level: "2"
+    }) }}
+
+    {{ govukSummaryList({
+      rows: [
+        {
+          key: {
+            text: "Form name"
+          },
+          value: {
+            html: form.title | escape
+          },
+          actions: {
+            items: titleActionItems
+          }
+        },
+        {
+          key: {
+            text: "Lead organisation"
+          },
+          value: {
+            html: form.organisation | escape
+          },
+          actions: {
+            items: [
+              {
+                href: "/library/" + form.slug + "/edit/lead-organisation",
+                text: "Change",
+                visuallyHiddenText: "lead organisation"
+              }
+            ]
+          }
+        },
+        {
+          key: {
+            text: "Team name"
+          },
+          value: {
+            html: form.teamName | escape
+          },
+          actions: {
+            items: [
+              {
+                href: "/library/" + form.slug + "/edit/team#teamName",
+                text: "Change",
+                visuallyHiddenText: "team name"
+              }
+            ]
+          }
+        },
+        {
+          key: {
+            text: "Shared team email address"
+          },
+          value: {
+            html: '<a href="mailto:' + form.teamEmail + '" class="govuk-link govuk-link--no-visited-state">' + form.teamEmail + '</a>'
+          },
+          actions: {
+            items: [
+              {
+                href: "/library/" + form.slug + "/edit/team#teamEmail",
+                text: "Change",
+                visuallyHiddenText: "team email address"
+              }
+            ]
+          }
+        }
+      ]
+    }) }}
+  </div>
+
   {{ appHeading({
     text: "Where submitted forms are sent",
     size: "medium",
@@ -274,88 +349,13 @@
       }
     ]
   }) }}
-
-  {{ appHeading({
-    text: "Organisation details",
-    size: "medium",
-    level: "2",
-    classes: "govuk-!-margin-top-8"
-  }) }}
-
-  {{ govukSummaryList({
-    classes: "govuk-!-margin-bottom-8",
-    rows: [
-      {
-        key: {
-          text: "Form name"
-        },
-        value: {
-          html: form.title | escape
-        },
-        actions: {
-          items: titleActionItems
-        }
-      },
-      {
-        key: {
-          text: "Lead organisation"
-        },
-        value: {
-          html: form.organisation | escape
-        },
-        actions: {
-          items: [
-            {
-              href: "/library/" + form.slug + "/edit/lead-organisation",
-              text: "Change",
-              visuallyHiddenText: "lead organisation"
-            }
-          ]
-        }
-      },
-      {
-        key: {
-          text: "Team name"
-        },
-        value: {
-          html: form.teamName | escape
-        },
-        actions: {
-          items: [
-            {
-              href: "/library/" + form.slug + "/edit/team#teamName",
-              text: "Change",
-              visuallyHiddenText: "team name"
-            }
-          ]
-        }
-      },
-      {
-        key: {
-          text: "Shared team email address"
-        },
-        value: {
-          html: '<a href="mailto:' + form.teamEmail + '" class="govuk-link govuk-link--no-visited-state">' + form.teamEmail + '</a>'
-        },
-        actions: {
-          items: [
-            {
-              href: "/library/" + form.slug + "/edit/team#teamEmail",
-              text: "Change",
-              visuallyHiddenText: "team email address"
-            }
-          ]
-        }
-      }
-    ]
-  }) }}
 {% endset %}
 
 {% set globalBanner %}
-    {{ govukNotificationBanner({
-      text: globalBannerText,
-      classes: "full-width-banner"
-    }) }}
+  {{ govukNotificationBanner({
+    text: globalBannerText,
+    classes: "full-width-banner"
+  }) }}
 {% endset %}
 
 {% set formHeading %}
