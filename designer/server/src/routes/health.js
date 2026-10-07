@@ -7,9 +7,7 @@ export default /** @type {ServerRoute} */ ({
     return h.response({ message: 'success' }).code(StatusCodes.OK)
   },
   options: {
-    auth: {
-      mode: 'try'
-    }
+    auth: false
   }
 })
 

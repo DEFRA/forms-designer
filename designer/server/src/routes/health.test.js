@@ -1,5 +1,4 @@
 import { createServer } from '~/src/createServer.js'
-import { auth } from '~/test/fixtures/auth.js'
 
 describe('Health check route', () => {
   /** @type {Server} */
@@ -17,8 +16,7 @@ describe('Health check route', () => {
   test('/health route response is correct', async () => {
     const options = {
       method: 'GET',
-      url: '/health',
-      auth
+      url: '/health'
     }
 
     const { result } = await server.inject(options)
