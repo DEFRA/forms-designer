@@ -33,20 +33,8 @@ const sessionCookie = {
             clearInvalid: true
           },
           keepAlive: true,
-
-          /**
-           * Redirect invalid session to callback route
-           */
-          redirectTo(request) {
-            if (request && request.route.settings.auth?.mode === 'required') {
-              const { url, yar } = request
-
-              // Remember current location for later
-              yar.flash(sessionNames.redirectTo, url.pathname)
-            }
-
-            return '/auth/callback'
-          },
+          appendNext: true,
+          redirectTo: '/auth/callback',
 
           /**
            * Validate session using auth credentials

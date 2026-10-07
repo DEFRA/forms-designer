@@ -6,8 +6,6 @@ import { DateTime } from 'luxon'
 import config from '~/src/config.js'
 import * as oidc from '~/src/lib/oidc.js'
 
-const authCallbackUrl = new URL(`/auth/callback`, config.appBaseUrl)
-
 export const scope = [
   `api://${config.azureClientId}/forms.user`,
   'openid',
@@ -50,9 +48,6 @@ export const azureOidc = {
 
               return Promise.resolve()
             }
-          },
-          location() {
-            return authCallbackUrl.href
           },
           clientId: config.azureClientId,
           clientSecret: config.azureClientSecret,
