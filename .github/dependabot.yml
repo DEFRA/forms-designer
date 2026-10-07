@@ -71,6 +71,7 @@ updates:
 
       forms:
         patterns:
+          - '@defra/forms-common'
           - '@defra/forms-model'
           - '@defra/forms-engine-plugin'
 
