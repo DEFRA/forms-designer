@@ -6,6 +6,7 @@ import { createServer } from '~/src/createServer.js'
 import {
   deleteDeadLetterQueueMessage,
   getDeadLetterQueueMessage,
+  getDeadLetterQueueMessageCount,
   getDeadLetterQueueMessages,
   redriveDeadLetterQueueMessages,
   resubmitDeadLetterQueueMessage
@@ -76,15 +77,14 @@ describe('Dead-letter queues routes', () => {
   describe('Journey', () => {
     test('should render form with radio options with counts', async () => {
       jest
-        .mocked(getDeadLetterQueueMessages)
-        .mockResolvedValueOnce([])
-        .mockResolvedValueOnce([{}])
-        // @ts-expect-error - invalid response to throw error
-        .mockResolvedValueOnce(undefined)
-        .mockResolvedValueOnce([{}])
-        .mockResolvedValueOnce([{}, {}])
-        .mockResolvedValueOnce([{}, {}, {}])
-        .mockResolvedValueOnce([{}, {}, {}, {}])
+        .mocked(getDeadLetterQueueMessageCount)
+        .mockResolvedValueOnce(0)
+        .mockResolvedValueOnce(1)
+        .mockRejectedValueOnce(new Error('boom'))
+        .mockResolvedValueOnce(1)
+        .mockResolvedValueOnce(2)
+        .mockResolvedValueOnce(3)
+        .mockResolvedValueOnce(4)
       const options = {
         method: 'get',
         url: '/admin/dead-letter-queues',
