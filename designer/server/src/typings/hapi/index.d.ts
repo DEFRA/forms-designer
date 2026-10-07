@@ -137,7 +137,6 @@ declare module '@hapi/yar' {
 
   interface YarFlashes {
     // String flash types using actual constants
-    [sessionNames.redirectTo]: string
     [sessionNames.successNotification]: string
     [sessionNames.questionType]: string
     [sessionNames.logoutHint]: string
