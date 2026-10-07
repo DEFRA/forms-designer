@@ -1,5 +1,6 @@
 import { randomUUID } from 'node:crypto'
 
+import { setUserId } from '@defra/forms-common'
 import { getErrorMessage } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
@@ -66,6 +67,9 @@ export async function createUserSession(request, artifacts, flowIdOverride) {
   const user = createUser(credentials, claims)
 
   credentials.user = user
+
+  // The user is not known when the sign in request starts
+  setUserId(user.id)
 
   try {
     const entitlementUser = await getUser(credentials.token, user.id)
