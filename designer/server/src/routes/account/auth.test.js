@@ -100,7 +100,9 @@ describe('Authentiation', () => {
     // this is invalid - session should not be accepted
     const libraryResponse2S1 = await doCallLibrary(server, cookiesS1)
     expect(libraryResponse2S1.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
-    expect(libraryResponse2S1.headers.location).toBe('/auth/callback') // invalid sesssion, bump user back to the AAD sign in flow
+    expect(libraryResponse2S1.headers.location).toBe(
+      '/auth/callback?next=%2Flibrary'
+    ) // invalid sesssion, bump user back to the AAD sign in flow
 
     const callbackResponseS1b = await doAuthCallback(server, auth, cookiesS1) // follow the callback with session 1 (stale)
     expect(callbackResponseS1b.headers.location).toBe(

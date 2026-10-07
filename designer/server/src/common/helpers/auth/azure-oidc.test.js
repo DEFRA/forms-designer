@@ -98,7 +98,7 @@ describe('azure-oidc', () => {
     })
 
     describe('location', () => {
-      it('should return the auth callback URL', async () => {
+      it('should not configure location', async () => {
         const server = createMockServer()
         jest
           .mocked(oidc.getWellKnownConfiguration)
@@ -107,7 +107,7 @@ describe('azure-oidc', () => {
         await azureOidcAny.plugin.register(server)
 
         const [, , options] = server.auth.strategy.mock.calls[0]
-        expect(options.location()).toContain('/auth/callback')
+        expect(options.location).toBeUndefined()
       })
     })
 
