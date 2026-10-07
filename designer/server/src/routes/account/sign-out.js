@@ -68,9 +68,6 @@ export default /** @satisfies {ServerRoute<{ Query: { logoutHint?: string }}>} *
       access: {
         scope: false
       }
-    },
-    plugins: {
-      cookie: { redirectTo: false }
     }
   }
 })

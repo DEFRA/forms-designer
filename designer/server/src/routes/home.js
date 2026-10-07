@@ -27,9 +27,6 @@ export default /** @satisfies {ServerRoute} */ ({
         entity: 'user',
         scope: [`+${Scopes.FormRead}`]
       }
-    },
-    plugins: {
-      cookie: { redirectTo: false }
     }
   }
 })

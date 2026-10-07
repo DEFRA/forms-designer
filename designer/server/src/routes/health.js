@@ -7,10 +7,7 @@ export default /** @type {ServerRoute} */ ({
     return h.response({ message: 'success' }).code(StatusCodes.OK)
   },
   options: {
-    auth: false,
-    plugins: {
-      cookie: { redirectTo: false }
-    }
+    auth: false
   }
 })
 

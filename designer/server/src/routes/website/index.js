@@ -54,9 +54,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
     options: {
       auth: {
         mode: 'try'
-      },
-      plugins: {
-        cookie: { redirectTo: false }
       }
     }
   },
@@ -88,9 +85,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
       auth: {
         mode: 'try'
       },
-      plugins: {
-        cookie: { redirectTo: false }
-      },
       validate: {
         params: Joi.object().keys({
           subMenu: Joi.string().valid(...Object.values(Level2MakingAFormMenu))
@@ -105,14 +99,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
       const isGuest = !hasAuthenticated(request.auth.credentials)
       const resourceModel = websiteResourcesModel(isGuest)
       return h.view('website/resources/index', resourceModel)
-    },
-    options: {
-      auth: {
-        mode: 'try'
-      },
-      plugins: {
-        cookie: { redirectTo: false }
-      }
     }
   },
   {
@@ -126,9 +112,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
     options: {
       auth: {
         mode: 'try'
-      },
-      plugins: {
-        cookie: { redirectTo: false }
       }
     }
   },
@@ -143,9 +126,6 @@ export default /** @satisfies {ServerRoute[]} */ ([
     options: {
       auth: {
         mode: 'try'
-      },
-      plugins: {
-        cookie: { redirectTo: false }
       }
     }
   }

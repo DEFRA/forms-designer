@@ -14,9 +14,6 @@ export default [
     options: {
       auth: {
         mode: 'try'
-      },
-      plugins: {
-        cookie: { redirectTo: false }
       }
     }
   }),
@@ -34,9 +31,6 @@ export default [
     options: {
       auth: {
         mode: 'try'
-      },
-      plugins: {
-        cookie: { redirectTo: false }
       }
     }
   })
