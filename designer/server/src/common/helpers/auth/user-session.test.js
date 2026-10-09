@@ -1,3 +1,8 @@
+import {
+  createLogContext,
+  getUserId,
+  runWithLogContext
+} from '@defra/forms-common'
 import { RoleScopes, Roles, Scopes } from '@defra/forms-model'
 import Boom from '@hapi/boom'
 
@@ -95,6 +100,20 @@ describe('user-session', () => {
           }
         }
       )
+    })
+
+    test('should add the user ID to the log context', async () => {
+      jest.mocked(hasAuthenticated).mockReturnValueOnce(true)
+      jest.mocked(getUserClaims).mockReturnValue(mockUserClaims)
+      jest.mocked(getUser).mockResolvedValueOnce(mockEntitlementUser)
+
+      const userId = await runWithLogContext(createLogContext(), async () => {
+        await createUserSession(mockRequest)
+
+        return getUserId()
+      })
+
+      expect(userId).toBe('123-123')
     })
 
     test('should rethrow if entitlement api fails with a non-404 error', async () => {

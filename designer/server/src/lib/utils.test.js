@@ -1,5 +1,4 @@
 import { ComponentType, yesNoListId } from '@defra/forms-model'
-import { getTraceId } from '@defra/hapi-tracing'
 
 import {
   buildAutoCompleteComponent,
@@ -12,7 +11,6 @@ import {
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
-import config from '~/src/config.js'
 import {
   findPageUniquelyMappedLists,
   findUniquelyMappedList,
@@ -27,27 +25,11 @@ import {
   noListToSave
 } from '~/src/lib/utils.js'
 
-jest.mock('@defra/hapi-tracing')
-
 const listStubs = uniquelyMappedListsStubs()
 
 describe('utils', () => {
   describe('Header helper functions', () => {
-    it('should include the trace id in the headers if available', () => {
-      jest.mocked(getTraceId).mockReturnValue('my-trace-id')
-
-      const result = getHeaders('token')
-      expect(result).toEqual({
-        headers: {
-          Authorization: 'Bearer token',
-          [config.tracing.header]: 'my-trace-id'
-        }
-      })
-    })
-
-    it('should exclude the trace id in the headers if missing', () => {
-      jest.mocked(getTraceId).mockReturnValue(null)
-
+    it('should return the authorisation header', () => {
       const result = getHeaders('token')
       expect(result).toEqual({
         headers: {
