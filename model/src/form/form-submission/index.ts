@@ -124,14 +124,10 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
       .required()
       .description('User session identifier for tracking and security'),
     referenceNumber: Joi.string()
-      // TODO - make this required in later releases - optional for now to avoid release glitches
-      .optional()
-      .allow('')
+      .required()
       .description('Reference number for the form submission'),
     language: Joi.string()
-      // TODO - make this required in later releases - optional for now to avoid release glitches
-      .optional()
-      .allow('')
+      .required()
       .description(
         'The currently-selected language at point of form submission'
       ),
@@ -155,7 +151,8 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>()
       title: Joi.string().required(),
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
-      baseUrl: Joi.string().required()
+      baseUrl: Joi.string().required(),
+      language: Joi.string().default('en-GB').required()
     }).label('SaveAndExitForm'),
     email: Joi.string().required(),
     security: Joi.object({
@@ -176,7 +173,8 @@ export const saveAndExitV2MessageData = Joi.object<SaveAndExitV2MessageData>()
       title: Joi.string().required(),
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
-      baseUrl: Joi.string().required()
+      baseUrl: Joi.string().required(),
+      language: Joi.string().default('en-GB').required()
     }).label('SaveAndExitForm'),
     email: Joi.string().required(),
     auth: Joi.object({
