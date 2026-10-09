@@ -400,7 +400,9 @@ describe('Form metrics routes', () => {
         ],
         totals: {
           allTime: {
-            FormsFirstPublished: 10
+            Submissions: {
+              count: 10
+            }
           }
         }
       }

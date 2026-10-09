@@ -404,20 +404,21 @@ export default [
     path: '/public/metrics',
     async handler(_request, h) {
       const metrics = await getCachedMetrics()
-      const liveForms = metrics.overview.filter(
+      const liveFormsCount = metrics.overview.filter(
         (row) => row.formStatus === FormStatus.Live
       ).length
-      const count = metrics.totals.allTime?.FormsFirstPublished ?? 0
+      const submissions = metrics.totals.allTime?.Submissions
+      const submissionsCount = submissions ? submissions.count : 0
 
       return h
         .view('public-metrics-overview', {
           liveFormsTile: {
             title: 'Number of live forms',
-            count: liveForms
+            count: liveFormsCount
           },
           liveSubmissionsTile: {
             title: 'Number of live submissions',
-            count
+            count: submissionsCount
           }
         })
         .header(
