@@ -56,7 +56,16 @@ export default {
                 .code(statusCode)
             }
 
-            request.logger.error(response, 'Unhandled error found')
+            // Client errors (4xx) are expected outcomes - e.g. a user with
+            // insufficient scope, or a resource that no longer exists - not
+            // application faults, so only 5xx responses are logged as errors
+            if (statusCode >= StatusCodes.INTERNAL_SERVER_ERROR.valueOf()) {
+              request.logger.error(response, 'Unhandled error found')
+            } else {
+              request.logger.info(
+                `[clientError] ${request.method.toUpperCase()} ${request.url.pathname} - ${statusCode} ${response.message}`
+              )
+            }
 
             if (errorMessage) {
               return h

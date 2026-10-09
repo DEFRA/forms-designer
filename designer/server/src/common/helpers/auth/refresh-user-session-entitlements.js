@@ -1,3 +1,6 @@
+import Boom from '@hapi/boom'
+import { StatusCodes } from 'http-status-codes'
+
 import { logger } from '~/src/common/helpers/logging/logger.js'
 import { getUser } from '~/src/lib/manage.js'
 
@@ -40,10 +43,19 @@ export async function refreshUserSessionEntitlements(request, userId, token) {
 
       return existingSession.scope
     } catch (err) {
-      logger.error(
-        err,
-        `Failed to fetch entitlements for user ${userId}, dropping session`
-      )
+      if (
+        Boom.isBoom(err) &&
+        err.output.statusCode === StatusCodes.NOT_FOUND.valueOf()
+      ) {
+        logger.info(
+          `User ${userId} not found in entitlement service, dropping session`
+        )
+      } else {
+        logger.error(
+          err,
+          `Failed to fetch entitlements for user ${userId}, dropping session`
+        )
+      }
       await server.methods.session.drop(userId)
       throw err
     }
