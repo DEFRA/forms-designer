@@ -12,7 +12,9 @@ const basePayload: SubmitPayload = {
   retrievalKey: 'enrique.chase@defra.gov.uk',
   sessionId: '1ba0b7e9-5b93-4b0c-8b8b-6d6a3b1e2a53',
   main: [{ name: 'yBpZQO', title: 'Your name', value: 'Enrique Chase' }],
-  repeaters: []
+  repeaters: [],
+  language: 'en-GB',
+  referenceNumber: 'XXX-XXX-XXX'
 }
 
 describe('formSubmitConditionEvaluationSchema', () => {

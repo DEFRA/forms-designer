@@ -165,6 +165,7 @@ export interface SaveAndExitMessageData {
     status: FormStatus
     isPreview: boolean
     baseUrl: string
+    language: string
   }
   email: string
   security: {
@@ -187,6 +188,7 @@ export interface SaveAndExitV2MessageData {
     status: FormStatus
     isPreview: boolean
     baseUrl: string
+    language: string
   }
   email: string
   auth: {
