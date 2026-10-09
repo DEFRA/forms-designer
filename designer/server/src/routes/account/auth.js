@@ -42,9 +42,7 @@ export default [
       })
 
       const redirect =
-        'next' in request.auth.credentials.query
-          ? request.auth.credentials.query.next.toString()
-          : formsLibraryPath
+        yar.flash(sessionNames.redirectTo).at(0) ?? formsLibraryPath
 
       const auditUser = mapUserForAudit(credentials.user)
       await publishAuthenticationLoginEvent(auditUser)
