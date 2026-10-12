@@ -38,7 +38,7 @@ const sessionCookie = {
            * Redirect invalid session to callback route
            */
           redirectTo(request) {
-            if (request) {
+            if (request && request.route.settings.auth?.mode === 'required') {
               const { url, yar } = request
 
               // Remember current location for later
