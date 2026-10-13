@@ -127,7 +127,7 @@ export const formSubmitPayloadSchema = Joi.object<SubmitPayload>()
       .required()
       .description('Reference number for the form submission'),
     language: Joi.string()
-      .required()
+      .default('en-GB')
       .description(
         'The currently-selected language at point of form submission'
       ),
@@ -152,7 +152,7 @@ export const saveAndExitMessageData = Joi.object<SaveAndExitMessageData>()
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
       baseUrl: Joi.string().required(),
-      language: Joi.string().default('en-GB').required()
+      language: Joi.string().default('en-GB')
     }).label('SaveAndExitForm'),
     email: Joi.string().required(),
     security: Joi.object({
@@ -174,7 +174,7 @@ export const saveAndExitV2MessageData = Joi.object<SaveAndExitV2MessageData>()
       status: Joi.string().valid(FormStatus.Draft, FormStatus.Live).required(),
       isPreview: Joi.boolean().required(),
       baseUrl: Joi.string().required(),
-      language: Joi.string().default('en-GB').required()
+      language: Joi.string().default('en-GB')
     }).label('SaveAndExitForm'),
     email: Joi.string().required(),
     auth: Joi.object({
