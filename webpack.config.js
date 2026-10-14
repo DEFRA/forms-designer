@@ -134,7 +134,12 @@ export default /** @type {Configuration} */ ({
             loader: 'sass-loader',
             options: {
               sassOptions: {
-                loadPaths: [join(import.meta.dirname, 'node_modules')],
+                // Project root allows `@forward "server/src/..."` in client
+                // stylesheets, which `quietDeps` treats as a dependency
+                loadPaths: [
+                  join(import.meta.dirname, 'node_modules'),
+                  import.meta.dirname
+                ],
                 quietDeps: true,
                 sourceMapIncludeSources: true,
                 style: 'expanded'
