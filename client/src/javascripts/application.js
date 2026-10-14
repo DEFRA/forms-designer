@@ -1,6 +1,4 @@
 /* istanbul ignore file */
-import { LinkMenu } from '@defra/forms-designer/server/src/common/components/link-menu/link-menu.js'
-import { ServiceHeader } from '@defra/forms-designer/server/src/common/components/service-header/service-header.js'
 import * as MOJ from '@ministryofjustice/frontend'
 import {
   Accordion,
@@ -15,6 +13,12 @@ import {
   Tabs,
   createAll
 } from 'govuk-frontend'
+
+// Server components are outside the client `~` alias
+// eslint-disable-next-line no-restricted-imports
+import { LinkMenu } from '../../../server/src/common/components/link-menu/link-menu.js'
+// eslint-disable-next-line no-restricted-imports
+import { ServiceHeader } from '../../../server/src/common/components/service-header/service-header.js'
 
 import { initConditionOptionsFilters } from '~/src/javascripts/condition-options-filter.js'
 

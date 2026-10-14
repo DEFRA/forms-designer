@@ -15,10 +15,10 @@ export default [
       '**/coverage/**',
       '**/dist/**',
       '**/public/**',
-      'designer/client/src/assets/nunjucks/govuk-components.js',
-      'designer/precompile-govuk-components.js',
-      'designer/precompile.js',
-      'designer/bin/precompile.js',
+      'client/src/assets/nunjucks/govuk-components.js',
+      'precompile-govuk-components.js',
+      'precompile.js',
+      'bin/precompile.js',
       'node_modules',
       'node_modules/.*'
     ]
@@ -284,7 +284,7 @@ export default [
 
   // Designer JSX/React/a11y/hooks
   {
-    files: ['designer/**/*.{jsx,tsx}'],
+    files: ['**/*.{jsx,tsx}'],
     ...jsxA11yPlugin.flatConfigs.recommended,
     plugins: {
       ...jsxA11yPlugin.flatConfigs.recommended.plugins,

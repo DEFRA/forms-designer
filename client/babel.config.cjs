@@ -13,12 +13,12 @@ module.exports = {
       'module-resolver',
       NODE_ENV === 'test'
         ? {
-            // Relative to project
-            root: ['../../'],
-            alias: { '~': './designer/client' }
+            // Relative to Jest project
+            root: ['../'],
+            alias: { '~': './client' }
           }
         : {
-            // Relative to workspace
+            // Relative to repository root
             root: ['./client'],
             alias: { '~': './client' }
           }
