@@ -10,14 +10,13 @@ const { EnvironmentPlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
 const appDir = import.meta.dirname
-const rootDir = resolve(import.meta.dirname, '../')
 
 const govukFrontendPath = dirname(
   resolvePkg.sync('govuk-frontend/package.json', { basedir: appDir })
 )
 
 const govukFrontendLegacyPath = dirname(
-  resolvePkg.sync('govuk-frontend/package.json', { basedir: rootDir })
+  resolvePkg.sync('govuk-frontend-legacy/package.json', { basedir: appDir })
 )
 
 const mojFrontendPath = dirname(
@@ -135,10 +134,7 @@ export default /** @type {Configuration} */ ({
             loader: 'sass-loader',
             options: {
               sassOptions: {
-                loadPaths: [
-                  join(import.meta.dirname, 'node_modules'),
-                  join(import.meta.dirname, '../node_modules')
-                ],
+                loadPaths: [join(import.meta.dirname, 'node_modules')],
                 quietDeps: true,
                 sourceMapIncludeSources: true,
                 style: 'expanded'

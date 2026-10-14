@@ -8,7 +8,7 @@ Clone this repo
 
 `$ git clone https://github.com/DEFRA/forms-designer`
 
-`$ cd designer/`
+`$ cd forms-designer/`
 
 Launch the developer environment: `$ docker compose up`
 
@@ -173,7 +173,7 @@ ComponentType.UnicornField
 . . .
 ```
 
-designer/server/src/models/forms/editor-v2/question-type.js:
+server/src/models/forms/editor-v2/question-type.js:
 
 ```
 const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
@@ -188,7 +188,7 @@ const questionTypeRadioItems = /** @type {FormEditorCheckbox[]} */ ([
 . . .
 ```
 
-designer/server/src/common/constants/editor.js:
+server/src/common/constants/editor.js:
 
 ```
 export const QuestionTypeDescriptions =
@@ -238,4 +238,4 @@ Run `npm run build` in forms-model after each model change. In VS Code, you may 
 
 To return to the published version, run `npm unlink @defra/forms-model && npm install` in forms-designer.
 
-Once the model changes are published, update the `@defra/forms-model` version in `designer/package.json`.
+Once the model changes are published, update the `@defra/forms-model` version in `package.json`.

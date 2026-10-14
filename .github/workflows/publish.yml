@@ -8,9 +8,9 @@ on:
       - '**/babel.config.*'
       - '**/postcss.config.*'
       - '**/webpack.config.*'
-      - 'designer/.browserslistrc'
-      - 'designer/client/src/**'
-      - 'designer/server/src/**'
+      - '.browserslistrc'
+      - 'client/src/**'
+      - 'server/src/**'
       - 'Dockerfile'
       - '!**/*.test.*'
 

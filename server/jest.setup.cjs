@@ -1,6 +1,11 @@
 import { hostname } from 'node:os'
+import { join } from 'node:path'
 
 const { Duration } = require('luxon')
+
+// Stop dependencies that import `dotenv/config` (such as the forms engine
+// plugin) loading the developer's local `.env` file into tests
+process.env.DOTENV_CONFIG_PATH = join(__dirname, '.env.not-used-in-tests')
 
 process.env.APP_BASE_URL = `http://${hostname()}:3000`
 process.env.AUDIT_URL = 'http://localhost:3003'
