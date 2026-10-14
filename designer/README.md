@@ -114,15 +114,15 @@ npm run test:uncommitted
 
 ## Adding a new question type (component type)
 
-To add a new question type, you will need to add the new type to a series of files. As an example, if we were to add a new `UnicornField` question type and wanted it to be selectable as a new question from the 'question ype' radio list, (assuming we are happy to use a default 'preview' implementation for the time being), you have to add:
+To add a new question type, you will need to add the new type to a series of files. As an example, if we were to add a new `UnicornField` question type and wanted it to be selectable as a new question from the 'question ype' radio list, (assuming we are happy to use a default 'preview' implementation for the time being), you have to add the following. The `forms-model` files are in the [forms-model](https://github.com/DEFRA/forms-model) repository and must be published (or linked locally) before the designer can use them.
 
-model/src/components/enums.ts:
+forms-model: src/components/enums.ts:
 
 ```
   UnicornField = 'UnicornField'
 ```
 
-model/src/components/types.ts:
+forms-model: src/components/types.ts:
 
 ```
   export interface UnicornFieldComponent extends FormFieldBase {
@@ -140,7 +140,7 @@ model/src/components/types.ts:
     | UnicornFieldComponent
 ```
 
-model/src/components/component-types.ts:
+forms-model: src/components/component-types.ts:
 
 ```
 {
@@ -163,7 +163,7 @@ client/src/i18n/translations/en.translation.json:
     "UnicornField_info": "For internal processing"
 ```
 
-model/src/form/form-editor/index.ts:
+forms-model: src/form/form-editor/index.ts:
 
 ```
 export const questionTypeSchema = Joi.string()
@@ -221,14 +221,21 @@ It is designed to encourage use and re-use of information freely and flexibly, w
 
 # Forms Model Changes
 
-If you make changes to the `@defra/forms-model` package (in the `model/` dir), or pull in model changes after rebasing with main, you'll need to:
+The `@defra/forms-model` package is maintained in the [forms-model](https://github.com/DEFRA/forms-model) repository and installed from npm.
+
+To test unpublished model changes in the designer, build and link your local copy of forms-model:
 
 ```sh
-npm run build --workspace=model
+# In forms-model
+npm run build
+npm link
+
+# In forms-designer
+npm link @defra/forms-model
 ```
 
-2. Restart your terminal/command prompt
+Run `npm run build` in forms-model after each model change. In VS Code, you may then need to press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) and search for "Developer: Reload Window" so that the new type definitions are picked up.
 
-3. In VS Code, press `Cmd + Shift + P` (Mac) or `Ctrl + Shift + P` (Windows/Linux) and search for "Developer: Reload Window"
+To return to the published version, run `npm unlink @defra/forms-model && npm install` in forms-designer.
 
-This might be needed as the model package needs to be rebuilt to generate new TypeScript type definitions and compiled JavaScript files. Without these steps, you may see TS errors about missing types, especially after rebasing with main.
+Once the model changes are published, update the `@defra/forms-model` version in `designer/package.json`.

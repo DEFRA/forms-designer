@@ -7,9 +7,6 @@
     },
     {
       "path": "./designer/tsconfig.json"
-    },
-    {
-      "path": "./model/tsconfig.json"
     }
   ]
 }

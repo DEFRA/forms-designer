@@ -1,5 +1,0 @@
-*.log
-.env
-.idea
-.vscode
-schemas/

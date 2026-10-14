@@ -23,7 +23,7 @@
     "test": "jest --color --coverage --verbose",
     "test:watch": "jest --color --watch",
     "client:watch": "NODE_ENV=development npm run build:client -- --watch",
-    "server:watch": "NODE_ENV=development tsx watch --clear-screen=false --enable-source-maps --env-file=.env --exclude \"**/*.test.*\" --include \"../model/dist/**/!(*.test).js\"",
+    "server:watch": "NODE_ENV=development tsx watch --clear-screen=false --enable-source-maps --env-file=.env --exclude \"**/*.test.*\"",
     "server:watch:dev": "npm run server:watch -- ./server/src/index.ts",
     "server:watch:debug": "npm run server:watch -- --inspect-wait ./server/src/index.ts",
     "precompile": "node precompile-govuk-components.js",
