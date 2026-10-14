@@ -312,39 +312,6 @@ export default [
     }
   },
 
-  // Model scripts: not in tsconfig, disable type-checked rules
-  {
-    files: ['model/scripts/**'],
-    ...tseslint.configs.disableTypeChecked,
-    languageOptions: {
-      globals: globals.node,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        projectService: false
-      }
-    },
-    rules: {
-      ...tseslint.configs.disableTypeChecked.rules,
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      'import-x/consistent-type-specifier-style': 'off',
-      'import-x/order': 'off',
-      'jest/no-conditional-expect': 'off',
-      'jest/unbound-method': 'off',
-      'jsdoc/check-line-alignment': 'off',
-      'jsdoc/require-hyphen-before-param-description': 'off',
-      'jsdoc/require-jsdoc': 'off',
-      'no-console': 'off',
-      'no-empty': 'off',
-      'no-eval': 'off',
-      'no-extend-native': 'off',
-      'no-restricted-imports': 'off',
-      'symbol-description': 'off'
-    }
-  },
-
   // Prettier (disables conflicting style rules)
   prettierConfig
 ]

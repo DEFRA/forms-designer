@@ -33,7 +33,6 @@ jobs:
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
             designer/node_modules
-            model/node_modules
             node_modules
 
       - name: Cache build
@@ -44,7 +43,6 @@ jobs:
           path: |
             designer/client/dist
             designer/server/dist
-            model/dist
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -110,7 +108,6 @@ jobs:
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
             designer/node_modules
-            model/node_modules
             node_modules
 
       - name: Restore build
@@ -122,7 +119,6 @@ jobs:
           path: |
             designer/client/dist
             designer/server/dist
-            model/dist
 
       - name: Cache task
         if: ${{ matrix.task.cache }}
@@ -167,7 +163,6 @@ jobs:
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
             designer/node_modules
-            model/node_modules
             node_modules
 
       - name: Restore build
@@ -179,7 +174,6 @@ jobs:
           path: |
             designer/client/dist
             designer/server/dist
-            model/dist
 
       - name: Setup Node.js
         uses: actions/setup-node@v5

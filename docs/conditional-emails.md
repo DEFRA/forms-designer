@@ -104,7 +104,7 @@ flowchart TB
     MOD -.-> AUD
 ```
 
-`@defra/forms-model` is published to npm from the `model` workspace of the `forms-designer` repository; `@defra/forms-engine-plugin` is published to npm from its own repository. All other services consume them. Deployment sequencing is therefore significant — see `deployment-order.html`.
+`@defra/forms-model` is published to npm from the `forms-model` repository (previously the `model` workspace of `forms-designer`); `@defra/forms-engine-plugin` is published to npm from its own repository. All other services consume them. Deployment sequencing is therefore significant — see `deployment-order.html`.
 
 ### Repository responsibilities
 

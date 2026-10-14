@@ -1,7 +1,0 @@
-export * from '~/src/__stubs__/form-definition.js'
-export * from '~/src/__stubs__/components.js'
-export * from '~/src/__stubs__/pages.js'
-export { QuestionRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
-export { PageRendererStub } from '~/src/form/form-editor/__stubs__/preview.js'
-export { QuestionPreviewElements } from '~/src/form/form-editor/__stubs__/preview.js'
-export * from '~/src/form/form-audit/__stubs__/events.js'

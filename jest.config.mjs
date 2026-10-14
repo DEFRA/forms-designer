@@ -66,14 +66,12 @@ export default {
   projects: [
     '<rootDir>/designer/client',
     '<rootDir>/designer/server',
-    '<rootDir>/model',
     '<rootDir>' // Allow tests at project root
   ],
   // But ignore tests handled by `projects` option
   testPathIgnorePatterns: [
     '<rootDir>/designer/client',
-    '<rootDir>/designer/server',
-    '<rootDir>/model'
+    '<rootDir>/designer/server'
   ]
 }
 
