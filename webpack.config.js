@@ -96,6 +96,18 @@ export default /** @type {Configuration} */ ({
   module: {
     rules: [
       {
+        // Resolve dependencies of a linked forms-model (npm link) from this
+        // project's node_modules first, as a registry install would
+        include: join(import.meta.dirname, 'node_modules/@defra/forms-model'),
+        exclude: join(
+          import.meta.dirname,
+          'node_modules/@defra/forms-model/node_modules'
+        ),
+        resolve: {
+          modules: [join(import.meta.dirname, 'node_modules'), 'node_modules']
+        }
+      },
+      {
         test: /\.(js|mjs|scss)$/,
         loader: 'source-map-loader',
         enforce: 'pre'
@@ -325,7 +337,10 @@ export default /** @type {Configuration} */ ({
       '.js': ['.ts', '.js'],
       '.jsx': ['.tsx', '.jsx'],
       '.mjs': ['.mts', '.mjs']
-    }
+    },
+
+    // Keep linked packages (npm link) at their node_modules path
+    symlinks: false
   },
   stats: {
     errorDetails: true,

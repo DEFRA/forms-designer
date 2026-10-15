@@ -5,6 +5,7 @@
     "${configDir}/.eslintrc.*",
     "${configDir}/.prettierrc.*",
     "${configDir}/.lintstagedrc.*",
+    "${configDir}/bin/linked-packages.js",
     "package-lock.json.test.js"
   ]
 }
