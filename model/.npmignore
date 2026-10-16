@@ -1,8 +1,0 @@
-/*.config.*
-*.{jest,test}?(.d).{js,ts}?(.map)
-.*
-tsconfig.*
-scripts/
-
-# schemas directory intended to be published
-!schemas/

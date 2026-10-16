@@ -15,10 +15,10 @@ export default [
       '**/coverage/**',
       '**/dist/**',
       '**/public/**',
-      'designer/client/src/assets/nunjucks/govuk-components.js',
-      'designer/precompile-govuk-components.js',
-      'designer/precompile.js',
-      'designer/bin/precompile.js',
+      'client/src/assets/nunjucks/govuk-components.js',
+      'precompile-govuk-components.js',
+      'precompile.js',
+      'bin/precompile.js',
       'node_modules',
       'node_modules/.*'
     ]
@@ -284,7 +284,7 @@ export default [
 
   // Designer JSX/React/a11y/hooks
   {
-    files: ['designer/**/*.{jsx,tsx}'],
+    files: ['**/*.{jsx,tsx}'],
     ...jsxA11yPlugin.flatConfigs.recommended,
     plugins: {
       ...jsxA11yPlugin.flatConfigs.recommended.plugins,
@@ -309,39 +309,6 @@ export default [
       react: {
         version: 'detect'
       }
-    }
-  },
-
-  // Model scripts: not in tsconfig, disable type-checked rules
-  {
-    files: ['model/scripts/**'],
-    ...tseslint.configs.disableTypeChecked,
-    languageOptions: {
-      globals: globals.node,
-      parserOptions: {
-        ecmaVersion: 'latest',
-        sourceType: 'module',
-        projectService: false
-      }
-    },
-    rules: {
-      ...tseslint.configs.disableTypeChecked.rules,
-      '@typescript-eslint/ban-ts-comment': 'off',
-      '@typescript-eslint/no-empty-function': 'off',
-      '@typescript-eslint/no-unused-vars': 'off',
-      'import-x/consistent-type-specifier-style': 'off',
-      'import-x/order': 'off',
-      'jest/no-conditional-expect': 'off',
-      'jest/unbound-method': 'off',
-      'jsdoc/check-line-alignment': 'off',
-      'jsdoc/require-hyphen-before-param-description': 'off',
-      'jsdoc/require-jsdoc': 'off',
-      'no-console': 'off',
-      'no-empty': 'off',
-      'no-eval': 'off',
-      'no-extend-native': 'off',
-      'no-restricted-imports': 'off',
-      'symbol-description': 'off'
     }
   },
 

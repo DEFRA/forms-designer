@@ -1,0 +1,10 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "paths": {
+      "~/*": ["./*"]
+    },
+    "types": ["@testing-library/jest-dom", "global-jsdom"]
+  },
+  "include": ["**/*.cjs", "**/*.js", "**/*.mjs", "**/*.ts"]
+}

@@ -15,6 +15,6 @@
     "${configDir}/dist",
     "${configDir}/node_modules",
     "node_modules",
-    "designer/client/src/assets/nunjucks/govuk-components.js"
+    "client/src/assets/nunjucks/govuk-components.js"
   ]
 }

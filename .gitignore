@@ -17,3 +17,4 @@ coverage
 */.pnp.*
 *.tsbuildinfo
 .gstack/
+unit-test.html

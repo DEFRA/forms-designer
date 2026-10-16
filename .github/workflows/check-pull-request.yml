@@ -32,8 +32,6 @@ jobs:
           enableCrossOsArchive: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
-            designer/node_modules
-            model/node_modules
             node_modules
 
       - name: Cache build
@@ -42,9 +40,8 @@ jobs:
           enableCrossOsArchive: true
           key: npm-build-${{ runner.os }}-${{ github.sha }}
           path: |
-            designer/client/dist
-            designer/server/dist
-            model/dist
+            client/dist
+            server/dist
 
       - name: Setup Node.js
         uses: actions/setup-node@v5
@@ -109,8 +106,6 @@ jobs:
           fail-on-cache-miss: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
-            designer/node_modules
-            model/node_modules
             node_modules
 
       - name: Restore build
@@ -120,9 +115,8 @@ jobs:
           fail-on-cache-miss: true
           key: npm-build-${{ runner.os }}-${{ github.sha }}
           path: |
-            designer/client/dist
-            designer/server/dist
-            model/dist
+            client/dist
+            server/dist
 
       - name: Cache task
         if: ${{ matrix.task.cache }}
@@ -166,8 +160,6 @@ jobs:
           fail-on-cache-miss: true
           key: npm-install-${{ runner.os }}-${{ hashFiles('package-lock.json') }}
           path: |
-            designer/node_modules
-            model/node_modules
             node_modules
 
       - name: Restore build
@@ -177,9 +169,8 @@ jobs:
           fail-on-cache-miss: true
           key: npm-build-${{ runner.os }}-${{ github.sha }}
           path: |
-            designer/client/dist
-            designer/server/dist
-            model/dist
+            client/dist
+            server/dist
 
       - name: Setup Node.js
         uses: actions/setup-node@v5

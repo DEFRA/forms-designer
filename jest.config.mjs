@@ -65,17 +65,12 @@ export default {
   ...defaults,
   displayName: '@defra/forms-designer (project)',
   projects: [
-    '<rootDir>/designer/client',
-    '<rootDir>/designer/server',
-    '<rootDir>/model',
+    '<rootDir>/client',
+    '<rootDir>/server',
     '<rootDir>' // Allow tests at project root
   ],
   // But ignore tests handled by `projects` option
-  testPathIgnorePatterns: [
-    '<rootDir>/designer/client',
-    '<rootDir>/designer/server',
-    '<rootDir>/model'
-  ]
+  testPathIgnorePatterns: ['<rootDir>/client', '<rootDir>/server']
 }
 
 /**
