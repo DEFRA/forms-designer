@@ -40,7 +40,8 @@ export default {
       'slug', // Supports ESM only
       '@defra/forms-engine-plugin',
       '@defra/forms-model',
-      'geodesy' // Supports ESM only
+      'geodesy', // Supports ESM only
+      '@joi/date' // Supports ESM only
     ].join('|')}/)`
   ]
 }

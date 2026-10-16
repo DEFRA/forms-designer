@@ -51,7 +51,8 @@ export const projectDefaults = {
       '@defra/forms-engine-plugin',
       '@defra/forms-model',
       'jsondiffpatch', // Supports ESM only
-      'geodesy' // Supports ESM only
+      'geodesy', // Supports ESM only
+      '@joi/date' // Supports ESM only
     ].join('|')}/)`
   ]
 }
