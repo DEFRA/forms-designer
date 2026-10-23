@@ -5,21 +5,18 @@ import {
   hasListField,
   isFormType
 } from '@defra/forms-model'
-import { getTraceId } from '@defra/hapi-tracing'
 import slug from 'slug'
 
-import config from '~/src/config.js'
-
 /**
- * Returns a set of headers to use in a http request`
+ * Returns a set of headers to use in a http request. The tracing header is
+ * added to every request in `~/src/lib/fetch.js`.
  * @param {string} token
  * @returns {Parameters<typeof Wreck.request>[2]}
  */
 export function getHeaders(token) {
   return {
     headers: {
-      Authorization: `Bearer ${token}`,
-      ...(getTraceId() ? { [config.tracing.header]: getTraceId() } : {})
+      Authorization: `Bearer ${token}`
     }
   }
 }
