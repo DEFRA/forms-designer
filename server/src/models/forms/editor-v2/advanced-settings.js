@@ -4,9 +4,14 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 /**
  * The advanced settings available on a form, one per row.
  * @param {string} slug
+ * @param {FormDefinition} definition
  */
-export function buildSettingsTable(slug) {
+export function buildSettingsTable(slug, definition) {
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
+  const reusePreviousAnswersDescription = definition.metadata?.options
+    ?.allowCopy
+    ? 'Reuse answers from a previous submission'
+    : 'Start each new form with blank answers'
 
   return {
     firstCellIsHeader: false,
@@ -24,7 +29,7 @@ export function buildSettingsTable(slug) {
         {
           html: '<span class="govuk-!-font-weight-bold">Reuse previous answers</span>'
         },
-        { text: 'Start each new form with blank answers' },
+        { text: reusePreviousAnswersDescription },
         {
           html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'reuse-previous-answers')}">Change<span class="govuk-visually-hidden"> reuse previous answers</span></a>`
         }
@@ -64,7 +69,7 @@ export function advancedSettingsViewModel(metadata, definition) {
     pageCaption: {
       text: pageCaption
     },
-    settingsTable: buildSettingsTable(metadata.slug)
+    settingsTable: buildSettingsTable(metadata.slug, definition)
   }
 }
 

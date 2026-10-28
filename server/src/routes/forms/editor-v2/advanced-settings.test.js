@@ -89,6 +89,27 @@ describe('Editor v2 advanced settings routes', () => {
         '/library/my-form-slug/editor-v2/reuse-previous-answers'
       )
     })
+
+    test('should describe reuse previous answers as enabled when allowCopy is on', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce({
+        ...testFormDefinitionWithSummaryOnly,
+        metadata: { options: { allowCopy: true } }
+      })
+
+      const { document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/advanced-settings',
+        auth
+      })
+
+      expect(document.body).toHaveTextContent(
+        'Reuse answers from a previous submission'
+      )
+      expect(document.body).not.toHaveTextContent(
+        'Start each new form with blank answers'
+      )
+    })
   })
 })
 

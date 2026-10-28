@@ -68,4 +68,21 @@ describe('advanced settings view model', () => {
     )
     expect(actions.html).toContain('>Change<')
   })
+
+  test.each([
+    { allowCopy: true, expected: 'Reuse answers from a previous submission' },
+    { allowCopy: false, expected: 'Start each new form with blank answers' }
+  ])(
+    'should describe reuse previous answers as "$expected" when allowCopy is $allowCopy',
+    ({ allowCopy, expected }) => {
+      const { settingsTable } = advancedSettingsViewModel(testFormMetadata, {
+        ...testFormDefinitionWithSummaryOnly,
+        metadata: { options: { allowCopy } }
+      })
+
+      const [, description] = settingsTable.rows[1]
+
+      expect(description.text).toBe(expected)
+    }
+  )
 })
