@@ -32,6 +32,7 @@ import editorQuestionDelete from '~/src/routes/forms/editor-v2/question-or-page-
 import editorQuestion from '~/src/routes/forms/editor-v2/question-type.js'
 import editorQuestions from '~/src/routes/forms/editor-v2/questions.js'
 import editorResponses from '~/src/routes/forms/editor-v2/responses.js'
+import editorReusePreviousAnswers from '~/src/routes/forms/editor-v2/reuse-previous-answers.js'
 import editorSectionsReorder from '~/src/routes/forms/editor-v2/sections-reorder.js'
 import editorState from '~/src/routes/forms/editor-v2/state.js'
 import editorTranslations from '~/src/routes/forms/editor-v2/translations.js'
@@ -76,6 +77,7 @@ export default [
   editorDownload,
   editorEditListResolve,
   editorEmailActions,
+  editorReusePreviousAnswers,
   editorTranslations,
   history,
   library,
