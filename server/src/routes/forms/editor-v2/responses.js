@@ -8,6 +8,7 @@ import {
   getUserScopes,
   mapUserForAudit
 } from '~/src/common/helpers/auth/user-helper.js'
+import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 import { getMetricsForForm } from '~/src/lib/metrics.js'
 import {
@@ -122,6 +123,9 @@ export default [
         errorList,
         navigation,
         notification,
+        feedbackRetentionPeriodInMonths: config.feedbackRetentionPeriodInMonths,
+        submissionsRetentionPeriodInMonths:
+          config.submissionsRetentionPeriodInMonths,
         isFeedbackForm: isFeedbackForm(definition),
         canRequestFeedback: scopes.includes(Scopes.FormsFeedback),
         metricsModel
