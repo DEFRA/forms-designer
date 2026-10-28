@@ -99,7 +99,7 @@
     "hapi-pino": "^13.0.0",
     "http-status-codes": "^2.3.0",
     "i18next": "^24.2.3",
-    "i18next-http-backend": "^3.0.2",
+    "i18next-http-backend": "^4.0.2",
     "ioredis": "^5.6.1",
     "joi": "^18.2.9",
     "jsondiffpatch": "^0.7.3",
