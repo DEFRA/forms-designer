@@ -26,13 +26,20 @@ describe('advanced settings view model', () => {
     })
   })
 
-  test('should show a single email actions row linking to the email actions page', () => {
+  test('should show a row for each advanced setting', () => {
     const { settingsTable } = advancedSettingsViewModel(
       testFormMetadata,
       testFormDefinitionWithSummaryOnly
     )
 
-    expect(settingsTable.rows).toHaveLength(1)
+    expect(settingsTable.rows).toHaveLength(2)
+  })
+
+  test('should show an email actions row linking to the email actions page', () => {
+    const { settingsTable } = advancedSettingsViewModel(
+      testFormMetadata,
+      testFormDefinitionWithSummaryOnly
+    )
 
     const [setting, description, actions] = settingsTable.rows[0]
 
@@ -42,6 +49,22 @@ describe('advanced settings view model', () => {
     )
     expect(actions.html).toContain(
       'href="/library/my-form-slug/editor-v2/email-actions"'
+    )
+    expect(actions.html).toContain('>Change<')
+  })
+
+  test('should show a reuse previous answers row linking to the reuse previous answers page', () => {
+    const { settingsTable } = advancedSettingsViewModel(
+      testFormMetadata,
+      testFormDefinitionWithSummaryOnly
+    )
+
+    const [setting, description, actions] = settingsTable.rows[1]
+
+    expect(setting.html).toContain('Reuse previous answers')
+    expect(description.text).toBe('Start each new form with blank answers')
+    expect(actions.html).toContain(
+      'href="/library/my-form-slug/editor-v2/reuse-previous-answers"'
     )
     expect(actions.html).toContain('>Change<')
   })

@@ -19,6 +19,15 @@ export function buildSettingsTable(slug) {
         {
           html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'email-actions')}">Change<span class="govuk-visually-hidden"> email actions</span></a>`
         }
+      ],
+      [
+        {
+          html: '<span class="govuk-!-font-weight-bold">Reuse previous answers</span>'
+        },
+        { text: 'Start each new form with blank answers' },
+        {
+          html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'reuse-previous-answers')}">Change<span class="govuk-visually-hidden"> reuse previous answers</span></a>`
+        }
       ]
     ]
   }

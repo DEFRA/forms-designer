@@ -65,6 +65,30 @@ describe('Editor v2 advanced settings routes', () => {
         container.getByRole('link', { name: /Change.*email actions/ })
       ).toHaveAttribute('href', '/library/my-form-slug/editor-v2/email-actions')
     })
+
+    test('should show the reuse previous answers row linking to the reuse previous answers page', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
+
+      const { container, document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/advanced-settings',
+        auth
+      })
+
+      expect(document.body).toHaveTextContent('Reuse previous answers')
+      expect(document.body).toHaveTextContent(
+        'Start each new form with blank answers'
+      )
+      expect(
+        container.getByRole('link', { name: /Change.*reuse previous answers/ })
+      ).toHaveAttribute(
+        'href',
+        '/library/my-form-slug/editor-v2/reuse-previous-answers'
+      )
+    })
   })
 })
 
