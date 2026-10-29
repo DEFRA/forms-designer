@@ -1,5 +1,5 @@
 import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
-import { insertValidationErrors } from '~/src/lib/utils.js'
+import { insertValidationErrors, isAllowCopyEnabled } from '~/src/lib/utils.js'
 import {
   SAVE_AND_CONTINUE,
   getFormSpecificNavigation
@@ -64,7 +64,7 @@ export function reusePreviousAnswersViewModel(
   const pageCaption = metadata.title
   const pageTitle = `${pageHeading} - ${pageCaption}`
 
-  const reusePreviousAnswers = definition.metadata?.options?.allowCopy ?? false
+  const reusePreviousAnswers = isAllowCopyEnabled(definition)
 
   return {
     backLink: {

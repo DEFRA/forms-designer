@@ -7,6 +7,7 @@ import { setFormOption } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
 import { redirectWithErrors } from '~/src/lib/redirect-helper.js'
+import { isAllowCopyEnabled } from '~/src/lib/utils.js'
 import * as viewModel from '~/src/models/forms/editor-v2/reuse-previous-answers.js'
 import { editorv2Path } from '~/src/models/links.js'
 
@@ -86,7 +87,7 @@ export default [
       const metadata = await forms.get(slug, token)
       const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      const currentValue = definition.metadata?.options?.allowCopy ?? false
+      const currentValue = isAllowCopyEnabled(definition)
 
       // Only save when the setting changes, so an unchanged save does not
       // update the draft or add an audit record

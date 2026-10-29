@@ -10,6 +10,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   getPageFromDefinition,
   insertValidationErrors,
+  isAllowCopyEnabled,
   stringHasValue
 } from '~/src/lib/utils.js'
 import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
@@ -99,7 +100,7 @@ export function referenceNumberSettingsViewModel(
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const formHasPayment = definition.pages.some((pg) => isPaymentPage(pg))
-  const allowCopy = definition.metadata?.options?.allowCopy ?? false
+  const allowCopy = isAllowCopyEnabled(definition)
   const fields = settingsFields(
     showReferenceNumber,
     formHasPayment,

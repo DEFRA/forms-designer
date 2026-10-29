@@ -9,6 +9,7 @@ import { buildErrorList } from '~/src/common/helpers/build-error-details.js'
 import {
   getPageFromDefinition,
   insertValidationErrors,
+  isAllowCopyEnabled,
   stringHasValue
 } from '~/src/lib/utils.js'
 import { getPreviewModel } from '~/src/models/forms/editor-v2/check-answers-overview.js'
@@ -97,7 +98,7 @@ export function confirmationEmailSettingsViewModel(
     page?.controller === ControllerType.Summary ? 'true' : 'false'
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
-  const allowCopy = definition.metadata?.options?.allowCopy ?? false
+  const allowCopy = isAllowCopyEnabled(definition)
   const fields = settingsFields(
     disableConfirmationEmailVal,
     validation,

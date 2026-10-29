@@ -1,3 +1,4 @@
+import { isAllowCopyEnabled } from '~/src/lib/utils.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
@@ -8,8 +9,7 @@ import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
  */
 export function buildSettingsTable(slug, definition) {
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
-  const reusePreviousAnswersDescription = definition.metadata?.options
-    ?.allowCopy
+  const reusePreviousAnswersDescription = isAllowCopyEnabled(definition)
     ? 'Reuse answers from a previous submission'
     : 'Start each new form with blank answers'
 
