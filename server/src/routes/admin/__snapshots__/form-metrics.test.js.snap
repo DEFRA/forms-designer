@@ -1612,8 +1612,7 @@ exports[`Form metrics routes form-metrics public metrics endpoint (for embedding
 
 
   <div class="govuk-grid-row app-prose-scope">
-    <div class="govuk-column-one-half">
-      <!-- Metrics tile -->
+    <!-- Metrics tile -->
 <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-number-of-live-forms">
   <div class="app-metric-tile">
     <div class="app-c-big-number">
@@ -1625,9 +1624,7 @@ exports[`Form metrics routes form-metrics public metrics endpoint (for embedding
   </div>
 </div>
 
-    </div>
-    <div class="govuk-column-one-half">
-      <!-- Metrics tile -->
+    <!-- Metrics tile -->
 <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-number-of-live-submissions">
   <div class="app-metric-tile">
     <div class="app-c-big-number">
@@ -1639,7 +1636,6 @@ exports[`Form metrics routes form-metrics public metrics endpoint (for embedding
   </div>
 </div>
 
-    </div>
   </div>
 
 
