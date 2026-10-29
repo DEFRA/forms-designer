@@ -5,11 +5,38 @@ import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
 import { createServer } from '~/src/createServer.js'
 import { setFormOption } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
+import {
+  REUSE_PREVIOUS_ANSWERS_DISABLED,
+  REUSE_PREVIOUS_ANSWERS_ENABLED
+} from '~/src/routes/forms/editor-v2/reuse-previous-answers.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
 jest.mock('~/src/lib/editor.js')
 jest.mock('~/src/lib/forms.js')
+
+/**
+ * The session cookie set by the response, so a follow-up request picks up the
+ * same session and with it anything flashed to the banner
+ * @param {ServerInjectResponse} response
+ */
+function getCookie(response) {
+  const cookies = /** @type {string[]} */ (response.headers['set-cookie'] ?? [])
+
+  return cookies.map((cookie) => cookie.split(';')[0]).join('; ')
+}
+
+/**
+ * @param {boolean} [allowCopy] - leave out for a form that has never set it
+ */
+function definitionWithAllowCopy(allowCopy) {
+  return allowCopy === undefined
+    ? testFormDefinitionWithSummaryOnly
+    : {
+        ...testFormDefinitionWithSummaryOnly,
+        metadata: { options: { allowCopy } }
+      }
+}
 
 describe('Editor v2 reuse previous answers routes', () => {
   /** @type {Server} */
@@ -77,22 +104,45 @@ describe('Editor v2 reuse previous answers routes', () => {
   })
 
   describe('POST /library/{slug}/editor-v2/reuse-previous-answers', () => {
-    test.each(['true', 'false'])(
-      'should save allowCopy and redirect to advanced settings when %s is selected',
-      async (reusePreviousAnswers) => {
-        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    test.each([
+      {
+        saved: undefined,
+        reusePreviousAnswers: 'true',
+        message: REUSE_PREVIOUS_ANSWERS_ENABLED
+      },
+      {
+        saved: false,
+        reusePreviousAnswers: 'true',
+        message: REUSE_PREVIOUS_ANSWERS_ENABLED
+      },
+      {
+        saved: true,
+        reusePreviousAnswers: 'false',
+        message: REUSE_PREVIOUS_ANSWERS_DISABLED
+      }
+    ])(
+      'should save allowCopy $reusePreviousAnswers when the saved value is $saved and show "$message" on advanced settings',
+      async ({ saved, reusePreviousAnswers, message }) => {
+        jest
+          .mocked(forms.get)
+          .mockResolvedValueOnce(testFormMetadata)
+          .mockResolvedValueOnce(testFormMetadata)
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(definitionWithAllowCopy(saved))
+          .mockResolvedValueOnce(
+            definitionWithAllowCopy(reusePreviousAnswers === 'true')
+          )
 
-        const {
-          response: { headers, statusCode }
-        } = await renderResponse(server, {
+        const response = await server.inject({
           method: 'post',
           url: '/library/my-form-slug/editor-v2/reuse-previous-answers',
           auth,
           payload: { reusePreviousAnswers }
         })
 
-        expect(statusCode).toBe(StatusCodes.SEE_OTHER)
-        expect(headers.location).toBe(
+        expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+        expect(response.headers.location).toBe(
           '/library/my-form-slug/editor-v2/advanced-settings'
         )
         expect(setFormOption).toHaveBeenCalledWith(
@@ -101,6 +151,65 @@ describe('Editor v2 reuse previous answers routes', () => {
           'allowCopy',
           reusePreviousAnswers
         )
+
+        const { document } = await renderResponse(server, {
+          method: 'get',
+          url: /** @type {string} */ (response.headers.location),
+          auth,
+          headers: { cookie: getCookie(response) }
+        })
+
+        const $banner = document.querySelector('.govuk-notification-banner')
+
+        expect($banner).toHaveClass('govuk-notification-banner--success')
+        expect(
+          $banner?.querySelector('.govuk-notification-banner__title')
+        ).toHaveTextContent('Success')
+        expect(
+          $banner?.querySelector('.govuk-notification-banner__heading')
+        ).toHaveTextContent(message)
+      }
+    )
+
+    test.each([
+      { saved: undefined, reusePreviousAnswers: 'false' },
+      { saved: false, reusePreviousAnswers: 'false' },
+      { saved: true, reusePreviousAnswers: 'true' }
+    ])(
+      'should not save or show a banner when $reusePreviousAnswers matches the saved value $saved',
+      async ({ saved, reusePreviousAnswers }) => {
+        jest
+          .mocked(forms.get)
+          .mockResolvedValueOnce(testFormMetadata)
+          .mockResolvedValueOnce(testFormMetadata)
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(definitionWithAllowCopy(saved))
+          .mockResolvedValueOnce(definitionWithAllowCopy(saved))
+
+        const response = await server.inject({
+          method: 'post',
+          url: '/library/my-form-slug/editor-v2/reuse-previous-answers',
+          auth,
+          payload: { reusePreviousAnswers }
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.SEE_OTHER)
+        expect(response.headers.location).toBe(
+          '/library/my-form-slug/editor-v2/advanced-settings'
+        )
+        expect(setFormOption).not.toHaveBeenCalled()
+
+        const { document } = await renderResponse(server, {
+          method: 'get',
+          url: /** @type {string} */ (response.headers.location),
+          auth,
+          headers: { cookie: getCookie(response) }
+        })
+
+        expect(
+          document.querySelector('.govuk-notification-banner')
+        ).not.toBeInTheDocument()
       }
     )
 
@@ -124,5 +233,5 @@ describe('Editor v2 reuse previous answers routes', () => {
 })
 
 /**
- * @import { Server } from '@hapi/hapi'
+ * @import { Server, ServerInjectResponse } from '@hapi/hapi'
  */

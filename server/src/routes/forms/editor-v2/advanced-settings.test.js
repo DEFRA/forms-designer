@@ -33,7 +33,7 @@ describe('Editor v2 advanced settings routes', () => {
         auth
       }
 
-      const { container } = await renderResponse(server, options)
+      const { container, document } = await renderResponse(server, options)
 
       const $mainHeading = container.getByRole('heading', { level: 1 })
       const $backLink = container.getByRole('link', { name: 'Back to pages' })
@@ -43,6 +43,9 @@ describe('Editor v2 advanced settings routes', () => {
         'href',
         '/library/my-form-slug/editor-v2/pages'
       )
+      expect(
+        document.querySelector('.govuk-notification-banner')
+      ).not.toBeInTheDocument()
     })
 
     test('should show the email actions row linking to the email actions page', async () => {

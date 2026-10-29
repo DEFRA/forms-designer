@@ -27,18 +27,20 @@ import {
   CHECK_ANSWERS_TAB_REFERENCE_NUMBER,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * Constructs the settings fields for the reference number settings page.
  * @param {boolean} enableReferenceNumber
  * @param {boolean} formHasPayment
  * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {boolean} [allowCopy] - reusing previous answers needs the reference number, so it cannot be turned off
  */
 export function settingsFields(
   enableReferenceNumber,
   formHasPayment,
-  validation
+  validation,
+  allowCopy = false
 ) {
   return {
     enableReferenceNumber: {
@@ -49,7 +51,7 @@ export function settingsFields(
           value: 'true',
           text: 'Turn on the reference number',
           checked: enableReferenceNumber,
-          disabled: formHasPayment
+          disabled: formHasPayment || allowCopy
         }
       ],
       ...insertValidationErrors(validation?.formErrors.enableReferenceNumber)
@@ -97,7 +99,13 @@ export function referenceNumberSettingsViewModel(
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
   const formHasPayment = definition.pages.some((pg) => isPaymentPage(pg))
-  const fields = settingsFields(showReferenceNumber, formHasPayment, validation)
+  const allowCopy = definition.metadata?.options?.allowCopy ?? false
+  const fields = settingsFields(
+    showReferenceNumber,
+    formHasPayment,
+    validation,
+    allowCopy
+  )
   const pageHeading = 'Reference number'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
@@ -136,7 +144,9 @@ export function referenceNumberSettingsViewModel(
       pageTemplate: SUMMARY_CONTROLLER_TEMPLATE
     },
     buttonText: SAVE_AND_CONTINUE,
-    notification
+    notification,
+    allowCopy,
+    advancedSettingsUrl: editorv2Path(metadata.slug, 'advanced-settings')
   }
 }
 

@@ -26,14 +26,19 @@ import {
   CHECK_ANSWERS_TAB_CONFIRMATION_EMAILS,
   getCheckAnswersTabConfig
 } from '~/src/models/forms/editor-v2/tab-config.js'
-import { formOverviewPath } from '~/src/models/links.js'
+import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * Constructs the settings fields for the confirmation email settings page, specifically the radio button options.
  * @param {string | undefined} disableConfirmationEmailVal
  * @param {ValidationFailure<FormEditor>} [validation]
+ * @param {boolean} [allowCopy] - reusing previous answers needs the confirmation email, so it cannot be turned off
  */
-export function settingsFields(disableConfirmationEmailVal, validation) {
+export function settingsFields(
+  disableConfirmationEmailVal,
+  validation,
+  allowCopy = false
+) {
   return {
     disableConfirmationEmail: {
       name: 'disableConfirmationEmail',
@@ -42,7 +47,8 @@ export function settingsFields(disableConfirmationEmailVal, validation) {
         {
           value: 'true',
           text: 'Turn off the confirmation email',
-          checked: disableConfirmationEmailVal === 'true'
+          checked: disableConfirmationEmailVal === 'true',
+          ...(allowCopy && { disabled: true })
         }
       ],
       ...insertValidationErrors(validation?.formErrors.disableConfirmationEmail)
@@ -91,7 +97,12 @@ export function confirmationEmailSettingsViewModel(
     page?.controller === ControllerType.Summary ? 'true' : 'false'
   const showConfirmationEmail = page?.controller !== ControllerType.Summary
   const showReferenceNumber = definition.options?.showReferenceNumber ?? false
-  const fields = settingsFields(disableConfirmationEmailVal, validation)
+  const allowCopy = definition.metadata?.options?.allowCopy ?? false
+  const fields = settingsFields(
+    disableConfirmationEmailVal,
+    validation,
+    allowCopy
+  )
   const pageHeading = 'Confirmation email'
   const previewPageUrl = `${buildPreviewUrl(metadata.slug, FormStatus.Draft)}${page?.path}?force`
 
@@ -130,7 +141,9 @@ export function confirmationEmailSettingsViewModel(
       pageTemplate: SUMMARY_CONTROLLER_TEMPLATE
     },
     buttonText: SAVE_AND_CONTINUE,
-    notification
+    notification,
+    allowCopy,
+    advancedSettingsUrl: editorv2Path(metadata.slug, 'advanced-settings')
   }
 }
 

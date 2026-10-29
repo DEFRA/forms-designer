@@ -16,7 +16,14 @@ export const ROUTE_FULL_PATH_REUSE_PREVIOUS_ANSWERS =
 export const SELECT_OPTION_MESSAGE =
   'Select whether people can reuse answers from a previous submission'
 
+export const REUSE_PREVIOUS_ANSWERS_ENABLED =
+  'Reuse previous answers has been enabled'
+
+export const REUSE_PREVIOUS_ANSWERS_DISABLED =
+  'Reuse previous answers has been disabled'
+
 const errorKey = sessionNames.validationFailure.editorReusePreviousAnswers
+const notificationKey = sessionNames.successNotification
 
 // Saved to the form definition as `metadata.options.allowCopy`. Turning it on
 // also turns on the reference number and confirmation email (in forms-manager)
@@ -71,18 +78,33 @@ export default [
     method: 'POST',
     path: ROUTE_FULL_PATH_REUSE_PREVIOUS_ANSWERS,
     async handler(request, h) {
-      const { params, auth, payload } = request
+      const { params, auth, payload, yar } = request
       const { token } = auth.credentials
       const { slug } = params
+      const { reusePreviousAnswers } = payload
 
       const metadata = await forms.get(slug, token)
+      const definition = await forms.getDraftFormDefinition(metadata.id, token)
 
-      await setFormOption(
-        metadata.id,
-        token,
-        ALLOW_COPY_OPTION_KEY,
-        payload.reusePreviousAnswers ? 'true' : 'false'
-      )
+      const currentValue = definition.metadata?.options?.allowCopy ?? false
+
+      // Only save when the setting changes, so an unchanged save does not
+      // update the draft or add an audit record
+      if (reusePreviousAnswers !== currentValue) {
+        await setFormOption(
+          metadata.id,
+          token,
+          ALLOW_COPY_OPTION_KEY,
+          reusePreviousAnswers ? 'true' : 'false'
+        )
+
+        yar.flash(
+          notificationKey,
+          reusePreviousAnswers
+            ? REUSE_PREVIOUS_ANSWERS_ENABLED
+            : REUSE_PREVIOUS_ANSWERS_DISABLED
+        )
+      }
 
       return h
         .redirect(editorv2Path(slug, 'advanced-settings'))

@@ -42,8 +42,9 @@ export function buildSettingsTable(slug, definition) {
  * View model for the form-level advanced settings page
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {string} [notification] - message shown after a setting is changed
  */
-export function advancedSettingsViewModel(metadata, definition) {
+export function advancedSettingsViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -69,6 +70,7 @@ export function advancedSettingsViewModel(metadata, definition) {
     pageCaption: {
       text: pageCaption
     },
+    notification,
     settingsTable: buildSettingsTable(metadata.slug, definition)
   }
 }

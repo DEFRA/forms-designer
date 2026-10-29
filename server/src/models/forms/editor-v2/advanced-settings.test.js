@@ -22,8 +22,19 @@ describe('advanced settings view model', () => {
       pageCaption: {
         text: 'Test form'
       },
+      notification: undefined,
       settingsTable: expect.any(Object)
     })
+  })
+
+  test('should include the notification when a setting has been changed', () => {
+    const { notification } = advancedSettingsViewModel(
+      testFormMetadata,
+      testFormDefinitionWithSummaryOnly,
+      'Reuse previous answers has been enabled'
+    )
+
+    expect(notification).toBe('Reuse previous answers has been enabled')
   })
 
   test('should show a row for each advanced setting', () => {

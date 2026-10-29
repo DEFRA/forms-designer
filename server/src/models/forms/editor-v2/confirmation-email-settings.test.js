@@ -58,6 +58,19 @@ describe('confirmation email settings', () => {
       })
     })
 
+    it('should disable the checkbox when reuse previous answers is enabled', () => {
+      const fields = settingsFields('false', undefined, true)
+
+      expect(fields.disableConfirmationEmail.items).toEqual([
+        {
+          value: 'true',
+          text: 'Turn off the confirmation email',
+          checked: false,
+          disabled: true
+        }
+      ])
+    })
+
     it('should include validation errors when provided', () => {
       const validation = {
         formErrors: {
