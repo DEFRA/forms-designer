@@ -1,4 +1,4 @@
-import { getTraceId } from '@defra/hapi-tracing'
+import { addLogContextToMessage, logContextMixin } from '@defra/forms-common'
 import { ecsFormat } from '@elastic/ecs-pino-format'
 
 import config from '~/src/config.js'
@@ -33,13 +33,9 @@ export const loggerOptions = {
   },
   level: logConfig.level,
   ...formatters[logConfig.format],
-  mixin() {
-    const mixinValues = {}
-    const traceId = getTraceId()
-    if (traceId) {
-      mixinValues.trace = { id: traceId }
-    }
-    return mixinValues
+  mixin: logContextMixin,
+  hooks: {
+    logMethod: addLogContextToMessage
   }
 }
 
