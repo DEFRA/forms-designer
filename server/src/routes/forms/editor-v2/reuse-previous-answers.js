@@ -14,7 +14,7 @@ import { editorv2Path } from '~/src/models/links.js'
 export const ROUTE_FULL_PATH_REUSE_PREVIOUS_ANSWERS =
   '/library/{slug}/editor-v2/reuse-previous-answers'
 
-export const SELECT_OPTION_MESSAGE =
+const SELECT_OPTION_MESSAGE =
   'Select whether people can reuse answers from a previous submission'
 
 export const REUSE_PREVIOUS_ANSWERS_ENABLED =
@@ -30,7 +30,7 @@ const notificationKey = sessionNames.successNotification
 // also turns on the reference number and confirmation email (in forms-manager)
 const ALLOW_COPY_OPTION_KEY = 'allowCopy'
 
-export const schema = Joi.object().keys({
+const schema = Joi.object().keys({
   reusePreviousAnswers: Joi.boolean().required().messages({
     '*': SELECT_OPTION_MESSAGE
   })
