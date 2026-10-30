@@ -2,7 +2,10 @@ import Boom from '@hapi/boom'
 import Wreck from '@hapi/wreck'
 import { StatusCodes } from 'http-status-codes'
 
-import { applyTraceHeaders } from '~/src/common/helpers/request-tracing.js'
+import {
+  applyLogContextHeaders,
+  applyTraceHeaders
+} from '~/src/common/helpers/request-tracing.js'
 
 /**
  * @template {object} [BodyType=Buffer]
@@ -11,7 +14,10 @@ import { applyTraceHeaders } from '~/src/common/helpers/request-tracing.js'
  * @param {Parameters<typeof Wreck.request>[2]} options
  */
 export async function request(method, url, options) {
-  const headers = applyTraceHeaders(options?.headers)
+  const headers = applyLogContextHeaders(
+    url,
+    applyTraceHeaders(options?.headers)
+  )
 
   if (headers) {
     options = { ...options, headers }
