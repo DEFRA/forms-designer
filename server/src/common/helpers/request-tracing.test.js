@@ -1,14 +1,18 @@
 import {
   createLogContext,
   getCorrelationId,
+  getSessionId,
   getUserId,
   runWithLogContext
 } from '@defra/forms-common'
 import { getTraceId } from '@defra/hapi-tracing'
 import hapi from '@hapi/hapi'
+import yar from '@hapi/yar'
 
 import {
+  applyLogContextHeaders,
   applyTraceHeaders,
+  getRequestSessionId,
   getRequestUserId,
   requestTracing
 } from '~/src/common/helpers/request-tracing.js'
@@ -17,12 +21,13 @@ describe('request-tracing', () => {
   const tracingHeader = 'x-cdp-request-id'
   const correlationId = '1066e8cc-8e1e-4671-8ad7-b4cd9c95bb94'
   const userId = '86758ba9-92e7-4287-9751-7705e449f0a5'
+  const sessionId = 'c3a2e5f4-2b8e-4e1f-9a8d-3f6b7c1d2e9a'
 
   describe('plugin', () => {
     /** @type {Server} */
     let server
 
-    /** @type {{ correlationId?: string, userId?: string }} */
+    /** @type {{ correlationId?: string, userId?: string, sessionId?: string }} */
     let responseContext
 
     beforeEach(async () => {
@@ -42,10 +47,21 @@ describe('request-tracing', () => {
 
       await server.register(requestTracing)
 
+      // Registered after the request tracing plugin, which must still read
+      // the session ID once yar has loaded the session
+      await server.register({
+        plugin: yar,
+        options: {
+          cookieOptions: { password: 'a'.repeat(32), isSecure: false },
+          customSessionIDGenerator: () => sessionId
+        }
+      })
+
       const handler = () => ({
         correlationId: getCorrelationId(),
         traceId: getTraceId(),
-        userId: getUserId()
+        userId: getUserId(),
+        sessionId: getSessionId()
       })
 
       server.route([
@@ -62,7 +78,8 @@ describe('request-tracing', () => {
       server.events.on('response', () => {
         responseContext = {
           correlationId: getCorrelationId(),
-          userId: getUserId()
+          userId: getUserId(),
+          sessionId: getSessionId()
         }
       })
     })
@@ -81,9 +98,14 @@ describe('request-tracing', () => {
       expect(result).toEqual({
         correlationId,
         traceId: correlationId,
-        userId: undefined
+        userId: undefined,
+        sessionId
       })
-      expect(responseContext).toEqual({ correlationId, userId: undefined })
+      expect(responseContext).toEqual({
+        correlationId,
+        userId: undefined,
+        sessionId
+      })
     })
 
     it('should add the ID of the authenticated user', async () => {
@@ -96,9 +118,26 @@ describe('request-tracing', () => {
       expect(result).toEqual({
         correlationId,
         traceId: correlationId,
-        userId
+        userId,
+        sessionId
       })
-      expect(responseContext).toEqual({ correlationId, userId })
+      expect(responseContext).toEqual({ correlationId, userId, sessionId })
+    })
+  })
+
+  describe('getRequestSessionId', () => {
+    it('should return the ID of the yar session', () => {
+      const request = /** @type {Request} */ (
+        /** @type {unknown} */ ({ yar: { id: sessionId } })
+      )
+
+      expect(getRequestSessionId(request)).toBe(sessionId)
+    })
+
+    it('should return undefined when yar is not registered', () => {
+      const request = /** @type {Request} */ (/** @type {unknown} */ ({}))
+
+      expect(getRequestSessionId(request)).toBeUndefined()
     })
   })
 
@@ -155,6 +194,40 @@ describe('request-tracing', () => {
         expect(applyTraceHeaders(undefined)).toEqual({
           [tracingHeader]: correlationId
         })
+      })
+    })
+  })
+
+  describe('applyLogContextHeaders', () => {
+    const referenceNumber = 'ABC-123-DEF'
+    const context = createLogContext({
+      correlationId,
+      sessionId,
+      referenceNumber
+    })
+    const headers = { accept: 'application/json' }
+
+    it('should add the session ID and reference number for a forms service', () => {
+      runWithLogContext(context, () => {
+        expect(
+          applyLogContextHeaders(
+            new URL('http://localhost:3001/forms'),
+            headers
+          )
+        ).toEqual({
+          accept: 'application/json',
+          'x-forms-session-id': sessionId,
+          'x-forms-reference-number': referenceNumber
+        })
+      })
+    })
+
+    it.each([
+      'http://example.com/api',
+      'http://localhost:5556/.well-known/openid-configuration'
+    ])('should return the headers unchanged for %s', (url) => {
+      runWithLogContext(context, () => {
+        expect(applyLogContextHeaders(new URL(url), headers)).toBe(headers)
       })
     })
   })
