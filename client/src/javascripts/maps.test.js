@@ -8,7 +8,7 @@ describe('Maps Client JS', () => {
   let addMarkerMock
 
   /** @type {jest.Mock} */
-  let drawMLPlugin
+  let drawPluginFactory
 
   /** @type {jest.Mock} */
   let drawPluginAddFeature
@@ -29,7 +29,7 @@ describe('Maps Client JS', () => {
       fitBounds: fitBoundsMock
     }
     drawPluginAddFeature = jest.fn()
-    drawMLPlugin = jest.fn(() => ({
+    drawPluginFactory = jest.fn(() => ({
       addFeature: drawPluginAddFeature
     }))
 
@@ -39,12 +39,12 @@ describe('Maps Client JS', () => {
     }
 
     // Test doubles injected into the shared interactive-map mocks: the
-    // `InteractiveMap` constructor and the draw-ml plugin factory are routed
+    // `InteractiveMap` constructor and the draw plugin factory are routed
     // here by test/mocks/interactive-map*.cjs
     const globalWithMocks = /** @type {any} */ (globalThis)
     globalWithMocks.interactiveMapMocks = {
       InteractiveMap: MockInteractiveMap,
-      drawMLPlugin
+      drawPluginFactory
     }
   })
 
@@ -70,7 +70,7 @@ describe('Maps Client JS', () => {
      */
     function initialiseGeospatialMapsPreview() {
       expect(() => processMapPreview()).not.toThrow()
-      expect(drawMLPlugin).toHaveBeenCalledTimes(1)
+      expect(drawPluginFactory).toHaveBeenCalledTimes(1)
       expect(onMock).toHaveBeenCalledTimes(1)
       expect(onMock).toHaveBeenNthCalledWith(
         1,
