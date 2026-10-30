@@ -6,7 +6,7 @@ import TerserPlugin from 'terser-webpack-plugin'
 import webpack from 'webpack'
 import { WebpackAssetsManifest } from 'webpack-assets-manifest'
 
-const { EnvironmentPlugin } = webpack
+const { EnvironmentPlugin, IgnorePlugin } = webpack
 const { NODE_ENV = 'development', REACT_LOG_LEVEL } = process.env
 
 const appDir = import.meta.dirname
@@ -38,6 +38,12 @@ const interactiveMapPath = dirname(
 const pluginPath = dirname(
   resolvePkg.sync('@defra/forms-engine-plugin/package.json', {
     basedir: appDir
+  })
+)
+
+const maplibrePath = dirname(
+  resolvePkg.sync('maplibre-gl/package.json', {
+    basedir: interactiveMapPath
   })
 )
 
@@ -106,6 +112,12 @@ export default /** @type {Configuration} */ ({
         resolve: {
           modules: [join(import.meta.dirname, 'node_modules'), 'node_modules']
         }
+      },
+      {
+        // maplibre-gl builds its worker URL at runtime, so leave `new URL()`
+        // unparsed rather than bundling everything in its dist directory
+        test: /maplibre-gl\/dist\/.+\.mjs$/,
+        parser: { url: false }
       },
       {
         test: /\.(js|mjs|scss)$/,
@@ -269,6 +281,12 @@ export default /** @type {Configuration} */ ({
   plugins: [
     new WebpackAssetsManifest(),
 
+    // Optional interactive-map peers, used only by its OpenLayers and Esri
+    // adapters. Maps here use the MapLibre provider, so those never load
+    new IgnorePlugin({
+      resourceRegExp: /^(ol|proj4|@arcgis\/core)(\/|$)/
+    }),
+
     new EnvironmentPlugin({
       REACT_LOG_LEVEL:
         REACT_LOG_LEVEL ?? (NODE_ENV === 'production' ? 'warn' : 'debug')
@@ -305,6 +323,10 @@ export default /** @type {Configuration} */ ({
         {
           from: join(interactiveMapPath, 'assets'),
           to: 'assets/interactive-map/assets'
+        },
+        {
+          from: join(maplibrePath, 'dist/maplibre-gl-worker.mjs'),
+          to: 'assets/interactive-map'
         },
         {
           from: join(pluginPath, './.server/client/images/esri-logo.png'),
