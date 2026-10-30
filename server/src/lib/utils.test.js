@@ -11,6 +11,7 @@ import {
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
+import config from '~/src/config.js'
 import {
   findPageUniquelyMappedLists,
   findUniquelyMappedList,
@@ -84,6 +85,20 @@ describe('utils', () => {
       })
 
       expect(isAllowCopyEnabled(definition)).toBe(true)
+    })
+
+    it('should return false when the feature flag is off', () => {
+      const definition = buildDefinition({
+        metadata: { options: { allowCopy: true } }
+      })
+
+      config.featureFlagAllowCopyAnswers = false
+
+      try {
+        expect(isAllowCopyEnabled(definition)).toBe(false)
+      } finally {
+        config.featureFlagAllowCopyAnswers = true
+      }
     })
 
     it.each([

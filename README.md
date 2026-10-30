@@ -56,6 +56,7 @@ Base URLs should should include protocol, hostname, port number, e.g. `http://lo
 | HTTPS_PROXY                       | HTTPS proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                                                 | no       |         |                             |
 | NO_PROXY                          | HTTP proxy to use, e.g. the one from CDP. Currently used for Hapi Wreck.                                                  | no       |         |                             |
 | FEATURE_FLAG_ALLOW_PAYMENTS       | Feature flag to allow creation of payment questions                                                                       | no       | false   | true,false                  |
+| FEATURE_FLAG_ALLOW_COPY_ANSWERS   | Feature flag to allow editors to turn on reuse of answers from a previous submission                                      | no       | false   | true,false                  |
 
 For proxy options, see https://www.npmjs.com/package/proxy-from-env which is used by https://github.com/TooTallNate/proxy-agents/tree/main/packages/proxy-agent.
 

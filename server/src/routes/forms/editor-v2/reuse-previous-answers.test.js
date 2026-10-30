@@ -2,6 +2,7 @@ import { StatusCodes } from 'http-status-codes'
 
 import { testFormDefinitionWithSummaryOnly } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { setFormOption } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
@@ -229,6 +230,34 @@ describe('Editor v2 reuse previous answers routes', () => {
       )
       expect(setFormOption).not.toHaveBeenCalled()
     })
+  })
+
+  describe('when the copy answers feature flag is off', () => {
+    beforeEach(() => {
+      config.featureFlagAllowCopyAnswers = false
+    })
+
+    afterEach(() => {
+      config.featureFlagAllowCopyAnswers = true
+    })
+
+    test.each(['get', 'post'])(
+      'should respond with not found to %s',
+      async (method) => {
+        const {
+          response: { statusCode }
+        } = await renderResponse(server, {
+          method,
+          url: '/library/my-form-slug/editor-v2/reuse-previous-answers',
+          auth,
+          payload:
+            method === 'post' ? { reusePreviousAnswers: 'true' } : undefined
+        })
+
+        expect(statusCode).toBe(StatusCodes.NOT_FOUND)
+        expect(setFormOption).not.toHaveBeenCalled()
+      }
+    )
   })
 })
 

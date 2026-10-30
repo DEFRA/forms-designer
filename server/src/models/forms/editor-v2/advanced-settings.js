@@ -1,3 +1,4 @@
+import config from '~/src/config.js'
 import { isAllowCopyEnabled } from '~/src/lib/utils.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
@@ -25,15 +26,19 @@ export function buildSettingsTable(slug, definition) {
           html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'email-actions')}">Change<span class="govuk-visually-hidden"> email actions</span></a>`
         }
       ],
-      [
-        {
-          html: '<span class="govuk-!-font-weight-bold">Reuse previous answers</span>'
-        },
-        { text: reusePreviousAnswersDescription },
-        {
-          html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'reuse-previous-answers')}">Change<span class="govuk-visually-hidden"> reuse previous answers</span></a>`
-        }
-      ]
+      ...(config.featureFlagAllowCopyAnswers
+        ? [
+            [
+              {
+                html: '<span class="govuk-!-font-weight-bold">Reuse previous answers</span>'
+              },
+              { text: reusePreviousAnswersDescription },
+              {
+                html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'reuse-previous-answers')}">Change<span class="govuk-visually-hidden"> reuse previous answers</span></a>`
+              }
+            ]
+          ]
+        : [])
     ]
   }
 }

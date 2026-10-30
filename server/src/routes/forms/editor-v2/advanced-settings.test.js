@@ -1,5 +1,6 @@
 import { testFormDefinitionWithSummaryOnly } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import * as forms from '~/src/lib/forms.js'
 import { auth } from '~/test/fixtures/auth.js'
@@ -112,6 +113,34 @@ describe('Editor v2 advanced settings routes', () => {
       expect(document.body).not.toHaveTextContent(
         'Start each new form with blank answers'
       )
+    })
+
+    describe('when the copy answers feature flag is off', () => {
+      beforeEach(() => {
+        config.featureFlagAllowCopyAnswers = false
+      })
+
+      afterEach(() => {
+        config.featureFlagAllowCopyAnswers = true
+      })
+
+      test('should hide the reuse previous answers row', async () => {
+        jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+        jest
+          .mocked(forms.getDraftFormDefinition)
+          .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
+
+        const { container, document } = await renderResponse(server, {
+          method: 'get',
+          url: '/library/my-form-slug/editor-v2/advanced-settings',
+          auth
+        })
+
+        expect(document.body).not.toHaveTextContent('Reuse previous answers')
+        expect(
+          container.getByRole('link', { name: /Change.*email actions/ })
+        ).toBeInTheDocument()
+      })
     })
   })
 })
