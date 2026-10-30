@@ -102,6 +102,24 @@ export function getPageFromDefinition(definition, pageId) {
 }
 
 /**
+ * Checks whether the form allows answers to be reused from a previous
+ * submission, as set by the metadata.options.allowCopy flag. forms-model does
+ * not define metadata.options, so its type is checked here
+ * @param {FormDefinition} definition
+ * @returns {boolean}
+ */
+export function isAllowCopyEnabled(definition) {
+  const options = definition.metadata?.options
+
+  return (
+    typeof options === 'object' &&
+    options !== null &&
+    'allowCopy' in options &&
+    options.allowCopy === true
+  )
+}
+
+/**
  *
  * @param {FormDefinition} definition
  * @param {string} pageId

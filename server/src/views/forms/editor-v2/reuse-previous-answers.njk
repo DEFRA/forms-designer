@@ -1,0 +1,49 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "govuk/components/button/macro.njk" import govukButton %}
+{% from "govuk/components/details/macro.njk" import govukDetails %}
+{% from "govuk/components/radios/macro.njk" import govukRadios %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: pageCaption,
+    classes: "govuk-grid-column-full govuk-grid-column-two-thirds-from-desktop",
+    backLink: backLink,
+    useNewMasthead: useNewMasthead,
+    errorList: errorList
+  }) %}
+
+    <form method="post" action="#" novalidate>
+
+      {{ govukRadios(fields.reusePreviousAnswers) }}
+
+      {{ govukWarningText({
+        text: "If people can reuse answers from a previous submission, the confirmation email and reference number will be switched on automatically.",
+        iconFallbackText: "Warning"
+      }) }}
+
+      {% set choiceExplanationHtml %}
+        <h2 class="govuk-heading-s">Yes</h2>
+        <p class="govuk-body">After submitting, they can start again with answers from their last submission already filled in. They can change anything before sending the new form.</p>
+        <h2 class="govuk-heading-s">No</h2>
+        <p class="govuk-body">Each time they use the form, they enter all answers from scratch.</p>
+      {% endset %}
+
+      {{ govukDetails({
+        summaryText: "What your choice means",
+        html: choiceExplanationHtml
+      }) }}
+
+      {{ govukButton({
+        text: buttonText
+      }) }}
+
+    </form>
+
+  {% endcall %}
+{% endblock %}

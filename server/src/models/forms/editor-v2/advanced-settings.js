@@ -1,12 +1,17 @@
+import { isAllowCopyEnabled } from '~/src/lib/utils.js'
 import { getFormSpecificNavigation } from '~/src/models/forms/editor-v2/common.js'
 import { editorv2Path, formOverviewPath } from '~/src/models/links.js'
 
 /**
  * The advanced settings available on a form, one per row.
  * @param {string} slug
+ * @param {FormDefinition} definition
  */
-export function buildSettingsTable(slug) {
+export function buildSettingsTable(slug, definition) {
   const linkClasses = 'govuk-link govuk-link--no-visited-state'
+  const reusePreviousAnswersDescription = isAllowCopyEnabled(definition)
+    ? 'Reuse answers from a previous submission'
+    : 'Start each new form with blank answers'
 
   return {
     firstCellIsHeader: false,
@@ -19,6 +24,15 @@ export function buildSettingsTable(slug) {
         {
           html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'email-actions')}">Change<span class="govuk-visually-hidden"> email actions</span></a>`
         }
+      ],
+      [
+        {
+          html: '<span class="govuk-!-font-weight-bold">Reuse previous answers</span>'
+        },
+        { text: reusePreviousAnswersDescription },
+        {
+          html: `<a class="${linkClasses}" href="${editorv2Path(slug, 'reuse-previous-answers')}">Change<span class="govuk-visually-hidden"> reuse previous answers</span></a>`
+        }
       ]
     ]
   }
@@ -28,8 +42,9 @@ export function buildSettingsTable(slug) {
  * View model for the form-level advanced settings page
  * @param {FormMetadata} metadata
  * @param {FormDefinition} definition
+ * @param {string} [notification] - message shown after a setting is changed
  */
-export function advancedSettingsViewModel(metadata, definition) {
+export function advancedSettingsViewModel(metadata, definition, notification) {
   const formPath = formOverviewPath(metadata.slug)
   const navigation = getFormSpecificNavigation(
     formPath,
@@ -55,7 +70,8 @@ export function advancedSettingsViewModel(metadata, definition) {
     pageCaption: {
       text: pageCaption
     },
-    settingsTable: buildSettingsTable(metadata.slug)
+    notification,
+    settingsTable: buildSettingsTable(metadata.slug, definition)
   }
 }
 

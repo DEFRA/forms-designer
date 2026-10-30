@@ -33,7 +33,7 @@ describe('Editor v2 advanced settings routes', () => {
         auth
       }
 
-      const { container } = await renderResponse(server, options)
+      const { container, document } = await renderResponse(server, options)
 
       const $mainHeading = container.getByRole('heading', { level: 1 })
       const $backLink = container.getByRole('link', { name: 'Back to pages' })
@@ -43,6 +43,9 @@ describe('Editor v2 advanced settings routes', () => {
         'href',
         '/library/my-form-slug/editor-v2/pages'
       )
+      expect(
+        document.querySelector('.govuk-notification-banner')
+      ).not.toBeInTheDocument()
     })
 
     test('should show the email actions row linking to the email actions page', async () => {
@@ -64,6 +67,51 @@ describe('Editor v2 advanced settings routes', () => {
       expect(
         container.getByRole('link', { name: /Change.*email actions/ })
       ).toHaveAttribute('href', '/library/my-form-slug/editor-v2/email-actions')
+    })
+
+    test('should show the reuse previous answers row linking to the reuse previous answers page', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest
+        .mocked(forms.getDraftFormDefinition)
+        .mockResolvedValueOnce(testFormDefinitionWithSummaryOnly)
+
+      const { container, document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/advanced-settings',
+        auth
+      })
+
+      expect(document.body).toHaveTextContent('Reuse previous answers')
+      expect(document.body).toHaveTextContent(
+        'Start each new form with blank answers'
+      )
+      expect(
+        container.getByRole('link', { name: /Change.*reuse previous answers/ })
+      ).toHaveAttribute(
+        'href',
+        '/library/my-form-slug/editor-v2/reuse-previous-answers'
+      )
+    })
+
+    test('should describe reuse previous answers as enabled when allowCopy is on', async () => {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce({
+        ...testFormDefinitionWithSummaryOnly,
+        metadata: { options: { allowCopy: true } }
+      })
+
+      const { document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/advanced-settings',
+        auth
+      })
+
+      expect(document.body).toHaveTextContent(
+        'Reuse answers from a previous submission'
+      )
+      expect(document.body).not.toHaveTextContent(
+        'Start each new form with blank answers'
+      )
     })
   })
 })
