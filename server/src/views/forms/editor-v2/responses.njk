@@ -55,9 +55,9 @@
 
     <form class="form" method="post" action="#">
 
-      {% set optionRows = [[{ text: "Form submissions" }, { text: "9 months after submission" }, { html: submissionsButtonHtml }]] %}
+      {% set optionRows = [[{ text: "Form submissions" }, { text: submissionsRetentionPeriodInMonths + " months after submission" }, { html: submissionsButtonHtml }]] %}
       {% if canRequestFeedback %}
-        {% set optionRows = (optionRows.push([{ text: "User feedback" }, { text: "9 months after submission" }, { html: feedbackButtonHtml }]), optionRows) %}
+        {% set optionRows = (optionRows.push([{ text: "User feedback" }, { text: feedbackRetentionPeriodInMonths + " months after submission" }, { html: feedbackButtonHtml }]), optionRows) %}
       {% endif %}
 
       {% if isFeedbackForm %}

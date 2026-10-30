@@ -65,6 +65,8 @@ export interface Config {
   ordnanceSurveyApiKey: string
   ordnanceSurveyApiSecret: string
   frameAncestors: string
+  feedbackRetentionPeriodInMonths: number
+  submissionsRetentionPeriodInMonths: number
 }
 
 // Define config schema
@@ -182,7 +184,9 @@ const schema = joi.object<Config>({
   featureFlagAllowGeospatial: joi.boolean().required(),
   ordnanceSurveyApiKey: joi.string().required(),
   ordnanceSurveyApiSecret: joi.string().required(),
-  frameAncestors: joi.string().optional()
+  frameAncestors: joi.string().optional(),
+  feedbackRetentionPeriodInMonths: joi.number().required(),
+  submissionsRetentionPeriodInMonths: joi.number().required()
 })
 
 // Validate config
@@ -240,7 +244,11 @@ const result = schema.validate(
     featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL,
     ordnanceSurveyApiKey: process.env.ORDNANCE_SURVEY_API_KEY,
     ordnanceSurveyApiSecret: process.env.ORDNANCE_SURVEY_API_SECRET,
-    frameAncestors: process.env.FRAME_ANCESTORS
+    frameAncestors: process.env.FRAME_ANCESTORS,
+    feedbackRetentionPeriodInMonths:
+      process.env.FEEDBACK_RETENTION_PERIOD_IN_MONTHS,
+    submissionsRetentionPeriodInMonths:
+      process.env.SUBMISSIONS_RETENTION_PERIOD_IN_MONTHS
   },
   { abortEarly: false }
 )
