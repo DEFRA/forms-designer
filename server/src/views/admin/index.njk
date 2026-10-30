@@ -33,7 +33,7 @@
 {% if supports.feedback %}
   {% set rows = (rows.push([
     { text: "User feedback across all forms" },
-    { text: "9 months after submission" },
+    { text: feedbackRetentionPeriodInMonths + " months after submission" },
     { html: feedbackButtonHtml }
   ]), rows) %}
 {% endif %}

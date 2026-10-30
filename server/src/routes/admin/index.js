@@ -13,6 +13,7 @@ import {
   mapUserForAudit
 } from '~/src/common/helpers/auth/user-helper.js'
 import { buildAdminNavigation } from '~/src/common/nunjucks/context/build-navigation.js'
+import config from '~/src/config.js'
 import * as forms from '~/src/lib/forms.js'
 import { getUser } from '~/src/lib/manage.js'
 import {
@@ -81,6 +82,7 @@ export default [
         ...generateTitling(),
         navigation,
         notification,
+        feedbackRetentionPeriodInMonths: config.feedbackRetentionPeriodInMonths,
         supports: {
           feedback: scopes.includes(Scopes.FormsFeedbackAllForms),
           download: scopes.includes(Scopes.FormsBackup),
