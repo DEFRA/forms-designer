@@ -5,6 +5,7 @@ import {
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import {
   setConfirmationEmailSettings,
@@ -114,6 +115,35 @@ describe('Editor v2 reference-number-settings routes', () => {
     expect($checkboxes[0]).toBeChecked()
     expect($checkboxes[0]).toBeDisabled()
     expect($saveButton).toBeDisabled()
+  })
+
+  test('GET - should leave the checkbox enabled when the copy answers feature flag is off', async () => {
+    config.featureFlagAllowCopyAnswers = false
+
+    try {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce({
+        ...testFormDefinitionWithTwoQuestions,
+        options: { showReferenceNumber: true },
+        metadata: { options: { allowCopy: true } }
+      })
+
+      const { container, document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/reference-number',
+        auth
+      })
+
+      expect(
+        document.querySelector('.govuk-notification-banner')
+      ).not.toBeInTheDocument()
+      expect(container.getAllByRole('checkbox')[0]).toBeEnabled()
+      expect(
+        container.getByRole('button', { name: 'Save changes' })
+      ).toBeEnabled()
+    } finally {
+      config.featureFlagAllowCopyAnswers = true
+    }
   })
 
   test('GET - should render checkbox in the view when confirmation email is disabled', async () => {

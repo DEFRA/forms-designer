@@ -1,8 +1,10 @@
 import { Scopes } from '@defra/forms-model'
+import Boom from '@hapi/boom'
 import { StatusCodes } from 'http-status-codes'
 import Joi from 'joi'
 
 import { sessionNames } from '~/src/common/constants/session-names.js'
+import config from '~/src/config.js'
 import { setFormOption } from '~/src/lib/editor.js'
 import { getValidationErrorsFromSession } from '~/src/lib/error-helper.js'
 import * as forms from '~/src/lib/forms.js'
@@ -36,6 +38,15 @@ const schema = Joi.object().keys({
   })
 })
 
+/**
+ * Responds as if the page does not exist while the feature flag is off
+ */
+function assertCopyAnswersAllowed() {
+  if (!config.featureFlagAllowCopyAnswers) {
+    throw Boom.notFound()
+  }
+}
+
 export default [
   /**
    * @satisfies {ServerRoute<{ Params: { slug: string } }>}
@@ -44,6 +55,8 @@ export default [
     method: 'GET',
     path: ROUTE_FULL_PATH_REUSE_PREVIOUS_ANSWERS,
     async handler(request, h) {
+      assertCopyAnswersAllowed()
+
       const { params, auth, yar } = request
       const { token } = auth.credentials
       const { slug } = params
@@ -79,6 +92,8 @@ export default [
     method: 'POST',
     path: ROUTE_FULL_PATH_REUSE_PREVIOUS_ANSWERS,
     async handler(request, h) {
+      assertCopyAnswersAllowed()
+
       const { params, auth, payload, yar } = request
       const { token } = auth.credentials
       const { slug } = params
