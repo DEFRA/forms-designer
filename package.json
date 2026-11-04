@@ -190,7 +190,7 @@
     "webpack-cli": "^6.0.1"
   },
   "optionalDependencies": {
-    "sass-embedded-linux-x64": "^1.86.0"
+    "sass-embedded-linux-x64": "^1.107.1"
   },
   "overrides": {
     "@xgovformbuilder/govuk-react-jsx": {
