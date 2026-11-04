@@ -1,6 +1,7 @@
 import {
   applyLogContextHeaders as applyLogContextHeader,
   applyTraceHeaders as applyTraceHeader,
+  getRequestSessionId,
   requestTracing as requestTracingPlugin
 } from '@defra/forms-common'
 import { tracing } from '@defra/hapi-tracing'
@@ -67,18 +68,6 @@ export function getRequestUserId(request) {
   }
 
   return credentials.user?.id
-}
-
-/**
- * Gets the ID of the yar session, which the session plugin loads in `onPreAuth`
- * @param {Request} request
- * @returns {string | null | undefined}
- */
-export function getRequestSessionId(request) {
-  // `request.yar` is only set when the yar plugin is registered
-  const { yar } = /** @type {Partial<Pick<Request, 'yar'>>} */ (request)
-
-  return yar?.id
 }
 
 /**
