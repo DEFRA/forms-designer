@@ -11,6 +11,7 @@ import {
   testFormDefinitionWithTwoPagesAndQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { uniquelyMappedListsStubs } from '~/src/__stubs__/list.js'
+import config from '~/src/config.js'
 import {
   findPageUniquelyMappedLists,
   findUniquelyMappedList,
@@ -20,6 +21,7 @@ import {
   getListFromComponent,
   handlePrecision,
   hasCheckedValue,
+  isAllowCopyEnabled,
   leftPadDateIfSupplied,
   mapListToTextareaStr,
   noListToSave
@@ -73,6 +75,49 @@ describe('utils', () => {
         'q1'
       )
       expect(comp).toBeUndefined()
+    })
+  })
+
+  describe('isAllowCopyEnabled', () => {
+    it('should return true when metadata.options.allowCopy is true', () => {
+      const definition = buildDefinition({
+        metadata: { options: { allowCopy: true } }
+      })
+
+      expect(isAllowCopyEnabled(definition)).toBe(true)
+    })
+
+    it('should return false when the feature flag is off', () => {
+      const definition = buildDefinition({
+        metadata: { options: { allowCopy: true } }
+      })
+
+      config.featureFlagAllowCopyAnswers = false
+
+      try {
+        expect(isAllowCopyEnabled(definition)).toBe(false)
+      } finally {
+        config.featureFlagAllowCopyAnswers = true
+      }
+    })
+
+    it.each([
+      { desc: 'there is no metadata', metadata: undefined },
+      { desc: 'there are no metadata options', metadata: {} },
+      { desc: 'metadata options is not an object', metadata: { options: 'x' } },
+      { desc: 'allowCopy is not set', metadata: { options: {} } },
+      {
+        desc: 'allowCopy is false',
+        metadata: { options: { allowCopy: false } }
+      },
+      {
+        desc: 'allowCopy is not a boolean',
+        metadata: { options: { allowCopy: 'true' } }
+      }
+    ])('should return false when $desc', ({ metadata }) => {
+      const definition = buildDefinition({ metadata })
+
+      expect(isAllowCopyEnabled(definition)).toBe(false)
     })
   })
 

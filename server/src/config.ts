@@ -62,6 +62,7 @@ export interface Config {
   featureFlagAllowConditionalEmails: boolean
   featureFlagAllowPayments: boolean
   featureFlagAllowGeospatial: boolean
+  featureFlagAllowCopyAnswers: boolean
   ordnanceSurveyApiKey: string
   ordnanceSurveyApiSecret: string
   frameAncestors: string
@@ -182,6 +183,7 @@ const schema = joi.object<Config>({
   featureFlagAllowConditionalEmails: joi.boolean().required(),
   featureFlagAllowPayments: joi.boolean().required(),
   featureFlagAllowGeospatial: joi.boolean().required(),
+  featureFlagAllowCopyAnswers: joi.boolean().default(false),
   ordnanceSurveyApiKey: joi.string().required(),
   ordnanceSurveyApiSecret: joi.string().required(),
   frameAncestors: joi.string().optional(),
@@ -242,6 +244,7 @@ const result = schema.validate(
       process.env.FEATURE_FLAG_ALLOW_CONDITIONAL_EMAILS,
     featureFlagAllowPayments: process.env.FEATURE_FLAG_ALLOW_PAYMENTS,
     featureFlagAllowGeospatial: process.env.FEATURE_FLAG_ALLOW_GEOSPATIAL,
+    featureFlagAllowCopyAnswers: process.env.FEATURE_FLAG_ALLOW_COPY_ANSWERS,
     ordnanceSurveyApiKey: process.env.ORDNANCE_SURVEY_API_KEY,
     ordnanceSurveyApiSecret: process.env.ORDNANCE_SURVEY_API_SECRET,
     frameAncestors: process.env.FRAME_ANCESTORS,

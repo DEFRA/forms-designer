@@ -7,14 +7,10 @@ import {
 // @ts-expect-error - no types
 import createDatasetsPlugin from '@defra/interactive-map/plugins/datasets'
 // @ts-expect-error - no types
-import createDrawMLPlugin from '@defra/interactive-map/plugins/draw-ml'
+import createDrawPlugin from '@defra/interactive-map/plugins/draw'
 
-const {
-  createMap,
-  defaultConfig: defaultMapConfig,
-  getMapLayers,
-  getMapCountryLayers
-} = mapImports
+const { createMap, getDefaultConfig, getMapLayers, getMapCountryLayers } =
+  mapImports
 const {
   addFeatureToMap,
   createFeaturesHTML,
@@ -27,6 +23,7 @@ const { getInitMapConfig } = locationMap
 const mapsEnvConfig = {
   assetPath: '/assets',
   apiPath: '/maps/api',
+  workerPath: '/assets/interactive-map/maplibre-gl-worker.mjs',
   data: {
     VTS_OUTDOOR_URL: '/maps/api/maps/vts/OS_VTS_3857_Outdoor.json',
     VTS_DARK_URL: '/maps/api/maps/vts/OS_VTS_3857_Dark.json',
@@ -112,7 +109,7 @@ function processGeospatialPreview(preview, index) {
    */
   const geojson = getGeoJSON(geospatialInput)
   const bounds = geojson.features.length ? getBoundingBox(geojson) : undefined
-  const drawPlugin = createDrawMLPlugin()
+  const drawPlugin = createDrawPlugin()
   const plugins = [drawPlugin]
   const mapLayers = getMapLayers(geospatialInput.dataset.maplayers)
   const datasets = []
@@ -126,7 +123,7 @@ function processGeospatialPreview(preview, index) {
   }
 
   const initConfig = {
-    ...defaultMapConfig,
+    ...getDefaultConfig(),
     bounds,
     plugins
   }
@@ -159,7 +156,7 @@ function processGeospatialPreview(preview, index) {
  */
 function processLocationPreview(preview, index) {
   const mapId = `map_${index}`
-  const initConfig = getInitMapConfig(preview) ?? defaultMapConfig
+  const initConfig = getInitMapConfig(preview) ?? getDefaultConfig()
   const country = preview.dataset.country
   const mapLayers = getMapLayers(preview.dataset.maplayers)
   const datasets = getMapCountryLayers('/maps/api', country)

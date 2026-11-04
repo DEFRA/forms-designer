@@ -7,6 +7,8 @@ import {
 } from '@defra/forms-model'
 import slug from 'slug'
 
+import config from '~/src/config.js'
+
 /**
  * Returns a set of headers to use in a http request. The tracing header is
  * added to every request in `~/src/lib/fetch.js`.
@@ -99,6 +101,27 @@ export function insertValidationErrors(formField) {
  */
 export function getPageFromDefinition(definition, pageId) {
   return definition.pages.find((x) => x.id === pageId)
+}
+
+/**
+ * Checks whether the form allows answers to be reused from a previous
+ * submission, as set by the metadata.options.allowCopy flag. forms-model does
+ * not define metadata.options, so its type is checked here. The option takes
+ * effect only while the feature flag is on, so that editors can always reach
+ * the page that controls the settings it locks
+ * @param {FormDefinition} definition
+ * @returns {boolean}
+ */
+export function isAllowCopyEnabled(definition) {
+  const options = definition.metadata?.options
+
+  return (
+    config.featureFlagAllowCopyAnswers &&
+    typeof options === 'object' &&
+    options !== null &&
+    'allowCopy' in options &&
+    options.allowCopy === true
+  )
 }
 
 /**

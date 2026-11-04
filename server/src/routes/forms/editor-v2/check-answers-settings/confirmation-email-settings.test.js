@@ -5,6 +5,7 @@ import {
   testFormDefinitionWithTwoQuestions
 } from '~/src/__stubs__/form-definition.js'
 import { testFormMetadata } from '~/src/__stubs__/form-metadata.js'
+import config from '~/src/config.js'
 import { createServer } from '~/src/createServer.js'
 import { setConfirmationEmailSettings } from '~/src/lib/editor.js'
 import * as forms from '~/src/lib/forms.js'
@@ -70,6 +71,73 @@ describe('Editor v2 confirmation-email-settings routes', () => {
     expect($previewPanel?.innerHTML).toContain('showConfirmationEmail:')
     expect($previewPanel?.innerHTML).toContain('declarationText:')
     expect($previewPanel?.innerHTML).toContain('needDeclaration:')
+    expect($checkboxes[0]).toBeEnabled()
+    expect($actions[2]).toBeEnabled()
+    expect(
+      document.querySelector('.govuk-notification-banner')
+    ).not.toBeInTheDocument()
+  })
+
+  test('GET - should disable the checkbox and show why when reuse previous answers is enabled', async () => {
+    jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+    jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce({
+      ...testFormDefinitionWithTwoQuestions,
+      metadata: { options: { allowCopy: true } }
+    })
+
+    const options = {
+      method: 'get',
+      url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/confirmation-email',
+      auth
+    }
+
+    const { container, document } = await renderResponse(server, options)
+
+    const $banner = document.querySelector('.govuk-notification-banner')
+    const $link = container.getByRole('link', {
+      name: 'advanced settings (opens in a new tab)'
+    })
+    const $checkboxes = container.getAllByRole('checkbox')
+    const $saveButton = container.getByRole('button', { name: 'Save changes' })
+
+    expect($banner).toHaveTextContent(
+      "Confirmation emails are enabled because you've turned on Reuse previous answers. To turn them off, first disable this feature in advanced settings (opens in a new tab)."
+    )
+    expect($link).toHaveAttribute(
+      'href',
+      '/library/my-form-slug/editor-v2/advanced-settings'
+    )
+    expect($link).toHaveAttribute('target', '_blank')
+    expect($checkboxes[0]).toBeDisabled()
+    expect($saveButton).toBeDisabled()
+  })
+
+  test('GET - should leave the checkbox enabled when the copy answers feature flag is off', async () => {
+    config.featureFlagAllowCopyAnswers = false
+
+    try {
+      jest.mocked(forms.get).mockResolvedValueOnce(testFormMetadata)
+      jest.mocked(forms.getDraftFormDefinition).mockResolvedValueOnce({
+        ...testFormDefinitionWithTwoQuestions,
+        metadata: { options: { allowCopy: true } }
+      })
+
+      const { container, document } = await renderResponse(server, {
+        method: 'get',
+        url: '/library/my-form-slug/editor-v2/page/p1/check-answers-settings/confirmation-email',
+        auth
+      })
+
+      expect(
+        document.querySelector('.govuk-notification-banner')
+      ).not.toBeInTheDocument()
+      expect(container.getAllByRole('checkbox')[0]).toBeEnabled()
+      expect(
+        container.getByRole('button', { name: 'Save changes' })
+      ).toBeEnabled()
+    } finally {
+      config.featureFlagAllowCopyAnswers = true
+    }
   })
 
   test('GET - should render checkbox in the view when confirmation email is disabled', async () => {

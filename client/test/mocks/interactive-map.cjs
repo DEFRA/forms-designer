@@ -7,7 +7,7 @@
  * modules import:
  *  - the default `InteractiveMap` constructor (routed through
  *    `globalThis.interactiveMapMocks` so tests can supply their own instance)
- *  - the default plugin/provider factories (interact, map-styles, draw-ml,
+ *  - the default plugin/provider factories (interact, map-styles, draw,
  *    datasets, maplibre provider) as harmless stubs
  *  - the named `maplibreLayerAdapter` adapter export
  * @this {unknown}

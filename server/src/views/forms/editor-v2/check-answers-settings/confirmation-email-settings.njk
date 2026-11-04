@@ -8,6 +8,7 @@
 {% from "govuk/components/checkboxes/macro.njk" import govukCheckboxes %}
 {% from "govuk/components/textarea/macro.njk" import govukTextarea %}
 {% from "govuk/components/fieldset/macro.njk" import govukFieldset %}
+{% from "govuk/components/notification-banner/macro.njk" import govukNotificationBanner %}
 {% from "govuk/components/skip-link/macro.njk" import govukSkipLink %}
 {% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
 
@@ -37,6 +38,12 @@
     }) %}
 
       <form id="confirmationEmailForm" class="form" method="post" action="#">
+        {% if allowCopy %}
+          {% call govukNotificationBanner({}) %}
+            <p class="govuk-body">Confirmation emails are enabled because you've turned on Reuse previous answers. To turn them off, first disable this feature in <a href="{{ advancedSettingsUrl }}" class="govuk-link" target="_blank" rel="noopener noreferrer">advanced settings (opens in a new tab)</a>.</p>
+          {% endcall %}
+        {% endif %}
+
         {{ govukWarningText({
           text: "If you turn off confirmation emails, users will not receive a copy of their answers",
           iconFallbackText: "Warning"
@@ -62,7 +69,8 @@
             }) }}
 
             {{ govukButton({
-              text: 'Save changes'
+              text: 'Save changes',
+              disabled: allowCopy
             }) }}
           </div>
 
