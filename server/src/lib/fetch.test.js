@@ -66,6 +66,53 @@ describe('fetch', () => {
       )
     })
 
+    it('should send the session ID and reference number to a forms service', async () => {
+      const context = createLogContext({
+        correlationId: 'correlation-id',
+        sessionId: 'session-id',
+        referenceNumber: 'ABC-123-DEF'
+      })
+
+      jest.mocked(Wreck.request).mockResolvedValue(okResponse)
+      jest.mocked(Wreck.read).mockResolvedValue({})
+
+      await runWithLogContext(context, () =>
+        getJson(new URL('http://localhost:3001/forms'))
+      )
+
+      expect(Wreck.request).toHaveBeenCalledWith(
+        'get',
+        'http://localhost:3001/forms',
+        {
+          json: true,
+          headers: {
+            'x-cdp-request-id': 'correlation-id',
+            'x-forms-session-id': 'session-id',
+            'x-forms-reference-number': 'ABC-123-DEF'
+          }
+        }
+      )
+    })
+
+    it('should not send the session ID or reference number outside forms', async () => {
+      const context = createLogContext({
+        correlationId: 'correlation-id',
+        sessionId: 'session-id',
+        referenceNumber: 'ABC-123-DEF'
+      })
+
+      jest.mocked(Wreck.request).mockResolvedValue(okResponse)
+      jest.mocked(Wreck.read).mockResolvedValue({})
+
+      await runWithLogContext(context, () => getJson(url))
+
+      expect(Wreck.request).toHaveBeenCalledWith(
+        'get',
+        'http://example.com/api',
+        { json: true, headers: { 'x-cdp-request-id': 'correlation-id' } }
+      )
+    })
+
     it('should throw a Boom error with the message of the response', async () => {
       /** @type {any} */
       const response = { statusCode: 404 }
