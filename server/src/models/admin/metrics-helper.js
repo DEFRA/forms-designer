@@ -1,7 +1,12 @@
-import { FormMetricName, FormStatus } from '@defra/forms-model'
+import {
+  FormMetricName,
+  FormStatus,
+  SigninMetricName
+} from '@defra/forms-model'
 import { format, startOfDay, subDays } from 'date-fns'
 
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
+import { MetricsTileConfig } from '~/src/models/admin/metrics-tile-config.js'
 
 const FULL_DATE_MASK = 'd MMMM yyyy'
 const NEW_FORMS_CREATED_TITLE = 'New forms created'
@@ -10,6 +15,17 @@ const FORMS_REPUBLISHED_TITLE = 'Form re-published'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
 const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
 const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
+
+const REGISTRATIONS_TITLE = 'Total registrations'
+const SUCCESSFUL_AUTHENTICATIONS_TITLE = 'Successful authentications'
+const INCORRECT_CODE_ENTERED_TITLE = 'Incorrect codes entered'
+const TOO_MANY_CODE_REQUESTS_TITLE = 'Too many code requests'
+const ACCOUNT_DELETIONS_TITLE = 'Account deletions'
+const EMAIL_ADDRESS_UPDATES_TITLE = 'Email address updates'
+const PHONE_NUMBER_UPDATES_TITLE = 'Phone number updates'
+
+const SEVEN_DAYS = 7
+const THIRTY_DAYS = 30
 
 /**
  * @typedef {object} FilterCriteria
@@ -53,7 +69,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @property { string | undefined } fromDate - name of the form
  * @property { string | undefined } toDate - list of features
  * @property {string} title - title for section
- * @property {Record<FormMetricName, MetricsTile>} tiles - tiles to be displayed
+ * @property {Record<FormMetricName | FunctionalAreaMetricName, MetricsTile>} tiles - tiles to be displayed
  */
 
 /**
@@ -89,95 +105,10 @@ const formStructureMetricNames =
   })
 
 /**
- * @typedef {object} TileDrillDownConfig
- * @property {boolean} enabled - true if drill down is allowed
- * @property {boolean} grouped - true if drill down results are to be grouped per form
- * @property {string} displayName - display name for metric
- * @property {{ text: string, attributes?: Record<string, string> }} [headers] - custom headers for drill down
- * @property {(detail: FormDrilldownMetric) => { text: string, attributes?: Record<string, string | number> }} [valueFunc] - function to return custom value
- */
-
-/**
  * @typedef {object} TileDrillDown
  * @property {boolean} enabled - true if drill down is allowed
  * @property {string} url - the path for the drilldown operation
  */
-
-/**
- * @typedef {object} MetricTileConfigRecordType
- * @property {string} noun - noun used in tile phrase structure
- * @property {string} verb - verb used in tile phrase structure
- * @property {TileDrillDownConfig} drillDown - config for drill down operations
- */
-
-export const MetricsTileConfig =
-  /** @type {Record<FormMetricName, MetricTileConfigRecordType>} */ ({
-    [FormMetricName.NewFormsCreated]: {
-      noun: 'form',
-      verb: 'created',
-      drillDown: {
-        displayName: 'new forms created',
-        enabled: true,
-        grouped: false,
-        headers: { text: 'Created date', attributes: { 'aria-sort': 'none' } },
-        valueFunc: (detail) => dateCell(detail.createdAt)
-      }
-    },
-    [FormMetricName.FormsFirstPublished]: {
-      noun: 'form',
-      verb: 'first published',
-      drillDown: {
-        displayName: 'forms first published',
-        enabled: true,
-        grouped: false,
-        headers: {
-          text: 'First published date',
-          attributes: { 'aria-sort': 'none' }
-        },
-        valueFunc: (detail) => dateCell(detail.createdAt)
-      }
-    },
-    [FormMetricName.FormsRePublished]: {
-      noun: '',
-      verb: 're-published',
-      drillDown: {
-        displayName: 're-published',
-        enabled: true,
-        grouped: true,
-        headers: { text: 'Re-published', attributes: { 'aria-sort': 'none' } },
-        valueFunc: (detail) => numberCell(detail.metricValue)
-      }
-    },
-    [FormMetricName.Submissions]: {
-      noun: 'submission',
-      verb: '',
-      drillDown: {
-        displayName: 'submissions',
-        enabled: true,
-        grouped: true,
-        headers: { text: 'Submissions', attributes: { 'aria-sort': 'none' } },
-        valueFunc: (detail) => numberCell(detail.metricValue)
-      }
-    },
-    [FormMetricName.FormsInDraft]: {
-      noun: 'form',
-      verb: '',
-      drillDown: {
-        displayName: '',
-        enabled: false,
-        grouped: false
-      }
-    },
-    [FormMetricName.TimeToPublish]: {
-      noun: 'day',
-      verb: '',
-      drillDown: {
-        displayName: '',
-        enabled: false,
-        grouped: false
-      }
-    }
-  })
 
 /**
  * @typedef PeriodName
@@ -397,9 +328,9 @@ export function oneDecimalPlace(num) {
 }
 
 /**
- * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
- * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
- * @param {FormMetricName} metricName
+ * @param { Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined } currPeriod
+ * @param { Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined } prevPeriod
+ * @param { FormMetricName | FunctionalAreaMetricName } metricName
  * @param {PeriodName} periodNames
  * @param { string | undefined } language
  * @param { string | undefined } [units]
@@ -414,11 +345,11 @@ export function collateSpecificTileCounts(
 ) {
   const currPeriodCount =
     currPeriod && metricName in currPeriod
-      ? (currPeriod[metricName].count ?? 0)
+      ? (currPeriod[metricName]?.count ?? 0)
       : 0
   const prevPeriodCount =
     prevPeriod && metricName in prevPeriod
-      ? (prevPeriod[metricName].count ?? 0)
+      ? (prevPeriod[metricName]?.count ?? 0)
       : 0
 
   const notEqualSymbol = currPeriodCount > prevPeriodCount ? '+' : '-'
@@ -464,8 +395,8 @@ export function collateSpecificTileCounts(
 
 /**
  * @param {string} title
- * @param {FormMetricName} metricName
- * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: PeriodName, language: string | undefined }} commonParams
+ * @param { FormMetricName | FunctionalAreaMetricName } metricName
+ * @param {{ currPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, prevPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, periodNames: PeriodName, language: string | undefined, classes?: string }} commonParams
  * @param {string} [units]
  */
 function createTile(title, metricName, commonParams, units) {
@@ -478,7 +409,8 @@ function createTile(title, metricName, commonParams, units) {
       commonParams.periodNames,
       commonParams.language,
       units
-    )
+    ),
+    ...(commonParams.classes ? { classes: commonParams.classes } : {})
   })
 }
 
@@ -555,8 +487,8 @@ export function mapOverviewTiles(
  */
 export function mapTotalMetrics(totals, tilePeriodNames, language) {
   const reportMorning = startOfDay(totals.updatedAt)
-  const sevenDaysAgo = subDays(reportMorning, 7)
-  const thirtyDaysAgo = subDays(reportMorning, 30)
+  const sevenDaysAgo = subDays(reportMorning, SEVEN_DAYS)
+  const thirtyDaysAgo = subDays(reportMorning, THIRTY_DAYS)
 
   const last7Days = mapOverviewTiles(
     { fromDate: sevenDaysAgo, toDate: reportMorning },
@@ -593,30 +525,114 @@ export function mapTotalMetrics(totals, tilePeriodNames, language) {
 }
 
 /**
- * @param { string | Date } dateString
+ * @param {FunctionalAreaTotalsMetric} totals
+ * @param {{ last7Days: PeriodName, last30Days: PeriodName, allTime: PeriodName }} tilePeriodNames
  */
-export function dateCell(dateString) {
-  const date = new Date(dateString)
-  return {
-    text: format(date, 'dd MMM yyyy h:mm aaa'),
-    attributes: {
-      'data-sort-value': format(date, 'yyyy-MM-dd HH:mm:ss')
-    }
-  }
+export function mapSigninMetrics(totals, tilePeriodNames) {
+  const reportMorning = startOfDay(totals.updatedAt)
+  const sevenDaysAgo = subDays(reportMorning, SEVEN_DAYS)
+  const thirtyDaysAgo = subDays(reportMorning, THIRTY_DAYS)
+
+  const last7Days = mapSigninTiles(
+    { fromDate: sevenDaysAgo, toDate: reportMorning },
+    'Last 7 days',
+    totals.last7Days,
+    totals.prev7Days,
+    tilePeriodNames.last7Days
+  )
+
+  const last30Days = mapSigninTiles(
+    { fromDate: thirtyDaysAgo, toDate: reportMorning },
+    'Last 30 days',
+    totals.last30Days,
+    totals.prev30Days,
+    tilePeriodNames.last30Days
+  )
+
+  const allTime = mapSigninTiles(
+    { fromDate: totals.earliestDate, toDate: reportMorning },
+    'All time',
+    totals.allTime,
+    totals.prevYear,
+    tilePeriodNames.allTime
+  )
+
+  return /** @type {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView }} */ ({
+    last7Days,
+    last30Days,
+    allTime
+  })
 }
 
 /**
- * @param {number} num
+ * @param {{ fromDate: Date | undefined, toDate: Date | undefined }} dateRange
+ * @param {string} title
+ * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } prevPeriod
+ * @param {PeriodName} periodNames
  */
-export function numberCell(num) {
-  return {
-    text: formatNumber(num),
-    attributes: {
-      'data-sort-value': num
-    }
+export function mapSigninTiles(
+  dateRange,
+  title,
+  currPeriod,
+  prevPeriod,
+  periodNames
+) {
+  const commonParams = {
+    currPeriod,
+    prevPeriod,
+    periodNames,
+    classes: 'govuk-grid-column-one-half',
+    language: undefined
   }
+  return /** @type {FormTilesView} */ ({
+    fromDate: dateRange.fromDate
+      ? format(dateRange.fromDate, FULL_DATE_MASK)
+      : undefined,
+    toDate: dateRange.toDate
+      ? format(dateRange.toDate, FULL_DATE_MASK)
+      : undefined,
+    title,
+    tiles: {
+      [SigninMetricName.Registration]: createTile(
+        REGISTRATIONS_TITLE,
+        SigninMetricName.Registration,
+        commonParams
+      ),
+      [SigninMetricName.SuccessfulAuthentication]: createTile(
+        SUCCESSFUL_AUTHENTICATIONS_TITLE,
+        SigninMetricName.SuccessfulAuthentication,
+        commonParams
+      ),
+      [SigninMetricName.TooManyCodeRequests]: createTile(
+        TOO_MANY_CODE_REQUESTS_TITLE,
+        SigninMetricName.TooManyCodeRequests,
+        commonParams
+      ),
+      [SigninMetricName.IncorrectCodeEntered]: createTile(
+        INCORRECT_CODE_ENTERED_TITLE,
+        SigninMetricName.IncorrectCodeEntered,
+        commonParams
+      ),
+      [SigninMetricName.AccountDeletion]: createTile(
+        ACCOUNT_DELETIONS_TITLE,
+        SigninMetricName.AccountDeletion,
+        commonParams
+      ),
+      [SigninMetricName.EmailAddressUpdate]: createTile(
+        EMAIL_ADDRESS_UPDATES_TITLE,
+        SigninMetricName.EmailAddressUpdate,
+        commonParams
+      ),
+      [SigninMetricName.PhoneNumberUpdate]: createTile(
+        PHONE_NUMBER_UPDATES_TITLE,
+        SigninMetricName.PhoneNumberUpdate,
+        commonParams
+      )
+    }
+  })
 }
 
 /**
- * @import { FormDrilldownMetric, FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormTotalsMetric, FunctionalAreaMetricName, FunctionalAreaTotalsMetric} from '@defra/forms-model'
  */

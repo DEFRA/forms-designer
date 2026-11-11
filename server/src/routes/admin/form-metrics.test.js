@@ -1,9 +1,14 @@
-import { FormStatus } from '@defra/forms-model'
+import { FormStatus, FunctionalAreaType } from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
-import { getDrilldownMetrics, getMetrics } from '~/src/lib/metrics.js'
+import {
+  getDrilldownMetrics,
+  getFormMetrics,
+  getFunctionalAreaMetrics,
+  regenerateMetrics
+} from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
@@ -102,7 +107,7 @@ describe('Form metrics routes', () => {
             updatedAt: new Date('2026-01-01T00:00:00.000Z')
           })
         }
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         const options = {
           method: 'get',
@@ -148,7 +153,7 @@ describe('Form metrics routes', () => {
             updatedAt: new Date('2026-01-01T00:00:00.000Z')
           })
         }
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         const options = {
           method: 'get',
@@ -178,6 +183,75 @@ describe('Form metrics routes', () => {
         expect(response.result).toMatchSnapshot()
       })
 
+      test('should request Welsh form metrics for the Welsh activity view', async () => {
+        const mockMetrics = {
+          overview: [],
+          totals: /** @type {FormTotalsMetric} */ ({
+            last7Days: {},
+            prev7Days: {},
+            last30Days: {},
+            prev30Days: {},
+            lastYear: {},
+            prevYear: {},
+            allTime: {},
+            draftSubmissions: {},
+            liveSubmissions: {},
+            updatedAt: new Date('2026-01-01T00:00:00.000Z')
+          })
+        }
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
+
+        const { response } = await renderResponse(server, {
+          method: 'get',
+          url: '/admin/form-metrics/form-activity/cy?searchText=water',
+          auth
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(getFormMetrics).toHaveBeenCalledWith({
+          searchText: 'water',
+          language: 'cy'
+        })
+      })
+
+      test('should request and render sign-in metrics', async () => {
+        const totals = /** @type {FunctionalAreaTotalsMetric} */ ({
+          updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+          last7Days: {},
+          prev7Days: {},
+          last30Days: {},
+          prev30Days: {},
+          allTime: {},
+          prevYear: {}
+        })
+        jest.mocked(getFunctionalAreaMetrics).mockResolvedValueOnce({ totals })
+
+        const { response } = await renderResponse(server, {
+          method: 'get',
+          url: '/admin/form-metrics/sign-in/all',
+          auth
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(getFunctionalAreaMetrics).toHaveBeenCalledWith(
+          FunctionalAreaType.Signin
+        )
+        expect(response.result).toContain('Total registrations')
+      })
+
+      test('should redirect unknown metrics tabs to form activity', async () => {
+        const { response } = await renderResponse(server, {
+          method: 'get',
+          url: '/admin/form-metrics/unknown/all',
+          auth
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(response.headers.location).toBe(
+          '/admin/form-metrics/form-activity/all'
+        )
+      })
+
       test('should render report for drilldown', async () => {
         const mockMetrics = {
           overview: [],
@@ -200,7 +274,7 @@ describe('Form metrics routes', () => {
           }
         }
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         jest.mocked(getDrilldownMetrics).mockResolvedValueOnce([])
 
@@ -273,6 +347,24 @@ describe('Form metrics routes', () => {
           '/admin/form-metrics/form-activity/cy?searchText=test2&showFilter=Y'
         )
       })
+
+      test('should retain the selected activity type and tab anchor', async () => {
+        const { response } = await renderResponse(server, {
+          method: 'post',
+          url: '/admin/form-metrics/form-activity/all',
+          auth,
+          payload: {
+            activityType: 'cy',
+            currentTab: 'tab_last7Days',
+            status: ['draft']
+          }
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(response.headers.location).toBe(
+          '/admin/form-metrics/form-activity/cy#last7Days?status=draft&showFilter=Y'
+        )
+      })
     })
 
     describe('regenerate', () => {
@@ -315,6 +407,7 @@ describe('Form metrics routes', () => {
 
         expect(statusCode).toBe(StatusCodes.SEE_OTHER)
         expect(headers.location).toBe('/admin/index')
+        expect(regenerateMetrics).toHaveBeenCalledWith(auth.credentials.token)
       })
     })
 
@@ -331,7 +424,7 @@ describe('Form metrics routes', () => {
           totals: {}
         }
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
         jest
           .mocked(getMetricsAsExcel)
           .mockReturnValueOnce(Buffer.from('Dummy xlsx content'))
@@ -371,7 +464,7 @@ describe('Form metrics routes', () => {
           totals: {}
         }
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         jest
           .mocked(publishPlatformMetricsDownloadRequestedEvent)
@@ -409,7 +502,7 @@ describe('Form metrics routes', () => {
 
       test('endpoint returns HTML tiles', async () => {
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         const options = {
           method: 'get',
@@ -422,7 +515,7 @@ describe('Form metrics routes', () => {
         expect(response.result).toMatchSnapshot()
 
         expect(await getCachedMetrics()).toEqual(mockMetrics)
-        expect(getMetrics).toHaveBeenCalledTimes(1)
+        expect(getFormMetrics).toHaveBeenCalledTimes(1)
       })
     })
   })
@@ -457,5 +550,5 @@ describe('Form metrics routes', () => {
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormTotalsMetric, FunctionalAreaTotalsMetric } from '@defra/forms-model'
  */

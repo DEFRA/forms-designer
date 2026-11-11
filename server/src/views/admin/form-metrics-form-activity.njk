@@ -7,6 +7,7 @@
 {%- from "govuk/components/checkboxes/macro.njk" import govukCheckboxes -%}
 {%- from "govuk/components/radios/macro.njk" import govukRadios -%}
 {%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "page-navigation/macro.njk" import appPageNavigation %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -33,18 +34,24 @@
 
   <a href="/admin/form-metrics-download" class="govuk-link govuk-link--no-visited-state pull-right">Download</a>
 
-  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
-    <div class="editor-card-title">Form activity</div>
-    <nav class="app-page-navigation" aria-label="Component usage">
-      <div class="app-page-navigation__list">
-        <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
-            Component usage
-          </a>
-        </div>
-      </div>
-    </nav>
-  </div>
+  {{ appPageNavigation({
+    extraClasses: "govuk-!-margin-bottom-8",
+    navItems: [
+      {
+        title: "Form activity",
+        href: "/admin/form-metrics/form-activity/all?restoreFilter=Y",
+        active: true
+      },
+      {
+        title: "Component usage",
+        href: "/admin/form-metrics/component-usage"
+      },
+      {
+        title: "Sign-in",
+        href: "/admin/form-metrics/sign-in"
+      }
+    ]
+  }) }}
 
   <form action="#" method="post">
     {{ govukRadios(model.formActivityToggle) }}
