@@ -489,18 +489,30 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full">
   
-  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
-    <nav class="app-page-navigation" aria-label="Form activity">
-      <div class="app-page-navigation__list">
-        <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics/form-activity/all?restoreFilter=Y">
-            Form activity
-          </a>
+
+  
+<div class="app-tab-container app-tab-container--title-only govuk-summary-list govuk-!-margin-bottom-8">
+      <nav class="app-page-navigation" aria-label="Form activity">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/form-activity/all?restoreFilter=Y">
+              Form activity
+            </a>
+          </div>
         </div>
-      </div>
-    </nav>
-    <div class="editor-card-title">Component usage</div>
-  </div>
+      </nav>
+      <div class="editor-card-title">Component usage</div>
+      <nav class="app-page-navigation" aria-label="Sign-in">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/sign-in">
+              Sign-in
+            </a>
+          </div>
+        </div>
+      </nav>
+</div>
+
 
   <p class="govuk-body govuk-!-margin-bottom-6">Breakdown of how different components are being used across all forms.</p>
 
@@ -863,18 +875,29 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
   
   <a href="/admin/form-metrics-download" class="govuk-link govuk-link--no-visited-state pull-right">Download</a>
 
-  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
-    <div class="editor-card-title">Form activity</div>
-    <nav class="app-page-navigation" aria-label="Component usage">
-      <div class="app-page-navigation__list">
-        <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
-            Component usage
-          </a>
+  
+<div class="app-tab-container app-tab-container--title-only govuk-summary-list govuk-!-margin-bottom-8">
+      <div class="editor-card-title">Form activity</div>
+      <nav class="app-page-navigation" aria-label="Component usage">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
+              Component usage
+            </a>
+          </div>
         </div>
-      </div>
-    </nav>
-  </div>
+      </nav>
+      <nav class="app-page-navigation" aria-label="Sign-in">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/sign-in">
+              Sign-in
+            </a>
+          </div>
+        </div>
+      </nav>
+</div>
+
 
   <form action="#" method="post">
     <div class="govuk-form-group">
