@@ -1,4 +1,8 @@
-import { FormMetricName, FormStatus } from '@defra/forms-model'
+import {
+  FormMetricName,
+  FormStatus,
+  SigninMetricName
+} from '@defra/forms-model'
 import { format, startOfDay, subDays } from 'date-fns'
 
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
@@ -10,6 +14,14 @@ const FORMS_REPUBLISHED_TITLE = 'Form re-published'
 const FORM_SUBMISSIONS_TITLE = 'Form submissions'
 const FORMS_IN_DRAFT_TITLE = 'Forms in draft'
 const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
+
+const REGISTRATIONS_TITLE = 'Total registrations'
+const SUCCESSFUL_AUTHENTICATIONS_TITLE = 'Successful authentications'
+const INCORRECT_CODE_ENTERED_TITLE = 'Incorrect codes entered'
+const TOO_MANY_CODE_REQUESTS_TITLE = 'Too many code requests'
+const ACCOUNT_DELETIONS_TITLE = 'Account deletions'
+const EMAIL_ADDRESS_UPDATES_TITLE = 'Email address updates'
+const PHONE_NUMBER_UPDATES_TITLE = 'Phone number updates'
 
 /**
  * @typedef {object} FilterCriteria
@@ -53,7 +65,7 @@ const TIME_TO_PUBLISH_TITLE = 'Average time to publish'
  * @property { string | undefined } fromDate - name of the form
  * @property { string | undefined } toDate - list of features
  * @property {string} title - title for section
- * @property {Record<FormMetricName, MetricsTile>} tiles - tiles to be displayed
+ * @property {Record<FormMetricName | FunctionalAreaMetricName, MetricsTile>} tiles - tiles to be displayed
  */
 
 /**
@@ -111,7 +123,8 @@ const formStructureMetricNames =
  */
 
 export const MetricsTileConfig =
-  /** @type {Record<FormMetricName, MetricTileConfigRecordType>} */ ({
+  /** @type {Record<FormMetricName | FunctionalAreaMetricName, MetricTileConfigRecordType>} */ ({
+    // Form tiles
     [FormMetricName.NewFormsCreated]: {
       noun: 'form',
       verb: 'created',
@@ -170,6 +183,71 @@ export const MetricsTileConfig =
     },
     [FormMetricName.TimeToPublish]: {
       noun: 'day',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+
+    // Sign-in tiles
+    [SigninMetricName.Registration]: {
+      noun: 'registration',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [SigninMetricName.SuccessfulAuthentication]: {
+      noun: 'authentication',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [SigninMetricName.TooManyCodeRequests]: {
+      noun: 'request',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [SigninMetricName.IncorrectCodeEntered]: {
+      noun: 'incorrect code',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [SigninMetricName.AccountDeletion]: {
+      noun: 'deletion',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [SigninMetricName.EmailAddressUpdate]: {
+      noun: 'update',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [SigninMetricName.PhoneNumberUpdate]: {
+      noun: 'update',
       verb: '',
       drillDown: {
         displayName: '',
@@ -397,9 +475,9 @@ export function oneDecimalPlace(num) {
 }
 
 /**
- * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
- * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
- * @param {FormMetricName} metricName
+ * @param { Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined } prevPeriod
+ * @param { FormMetricName | FunctionalAreaMetricName } metricName
  * @param {PeriodName} periodNames
  * @param { string | undefined } language
  * @param { string | undefined } [units]
@@ -464,8 +542,8 @@ export function collateSpecificTileCounts(
 
 /**
  * @param {string} title
- * @param {FormMetricName} metricName
- * @param {{ currPeriod: Record<FormMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName, { count?: number }> | undefined, periodNames: PeriodName, language: string | undefined }} commonParams
+ * @param { FormMetricName | FunctionalAreaMetricName } metricName
+ * @param {{ currPeriod: Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined, periodNames: PeriodName, language: string | undefined, classes?: string }} commonParams
  * @param {string} [units]
  */
 function createTile(title, metricName, commonParams, units) {
@@ -478,7 +556,8 @@ function createTile(title, metricName, commonParams, units) {
       commonParams.periodNames,
       commonParams.language,
       units
-    )
+    ),
+    ...(commonParams.classes ? { classes: commonParams.classes } : {})
   })
 }
 
@@ -549,7 +628,7 @@ export function mapOverviewTiles(
 }
 
 /**
- * @param {FormTotalsMetric} totals
+ * @param { FormTotalsMetric | FunctionalAreaTotalsMetric } totals
  * @param {{ last7Days: PeriodName, last30Days: PeriodName, allTime: PeriodName }} tilePeriodNames
  * @param { string | undefined } language
  */
@@ -618,5 +697,114 @@ export function numberCell(num) {
 }
 
 /**
- * @import { FormDrilldownMetric, FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @param {FunctionalAreaTotalsMetric} totals
+ * @param {{ last7Days: PeriodName, last30Days: PeriodName, allTime: PeriodName }} tilePeriodNames
+ */
+export function mapSigninMetrics(totals, tilePeriodNames) {
+  const reportMorning = startOfDay(totals.updatedAt)
+  const sevenDaysAgo = subDays(reportMorning, 7)
+  const thirtyDaysAgo = subDays(reportMorning, 30)
+
+  const last7Days = mapSigninTiles(
+    { fromDate: sevenDaysAgo, toDate: reportMorning },
+    'Last 7 days',
+    totals.last7Days,
+    totals.prev7Days,
+    tilePeriodNames.last7Days
+  )
+
+  const last30Days = mapSigninTiles(
+    { fromDate: thirtyDaysAgo, toDate: reportMorning },
+    'Last 30 days',
+    totals.last30Days,
+    totals.prev30Days,
+    tilePeriodNames.last30Days
+  )
+
+  const allTime = mapSigninTiles(
+    { fromDate: totals.earliestDate, toDate: reportMorning },
+    'All time',
+    totals.allTime,
+    totals.prevYear,
+    tilePeriodNames.allTime
+  )
+
+  return /** @type {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView }} */ ({
+    last7Days,
+    last30Days,
+    allTime
+  })
+}
+
+/**
+ * @param {{ fromDate: Date | undefined, toDate: Date | undefined }} dateRange
+ * @param {string} title
+ * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
+ * @param {PeriodName} periodNames
+ */
+export function mapSigninTiles(
+  dateRange,
+  title,
+  currPeriod,
+  prevPeriod,
+  periodNames
+) {
+  const commonParams = {
+    currPeriod,
+    prevPeriod,
+    periodNames,
+    classes: 'govuk-grid-column-one-half',
+    language: undefined
+  }
+  return /** @type {FormTilesView} */ ({
+    fromDate: dateRange.fromDate
+      ? format(dateRange.fromDate, FULL_DATE_MASK)
+      : undefined,
+    toDate: dateRange.toDate
+      ? format(dateRange.toDate, FULL_DATE_MASK)
+      : undefined,
+    title,
+    tiles: {
+      [SigninMetricName.Registration]: createTile(
+        REGISTRATIONS_TITLE,
+        SigninMetricName.Registration,
+        commonParams
+      ),
+      [SigninMetricName.SuccessfulAuthentication]: createTile(
+        SUCCESSFUL_AUTHENTICATIONS_TITLE,
+        SigninMetricName.SuccessfulAuthentication,
+        commonParams
+      ),
+      [SigninMetricName.TooManyCodeRequests]: createTile(
+        TOO_MANY_CODE_REQUESTS_TITLE,
+        SigninMetricName.TooManyCodeRequests,
+        commonParams
+      ),
+      [SigninMetricName.IncorrectCodeEntered]: createTile(
+        INCORRECT_CODE_ENTERED_TITLE,
+        SigninMetricName.IncorrectCodeEntered,
+        commonParams
+      ),
+      [SigninMetricName.AccountDeletion]: createTile(
+        ACCOUNT_DELETIONS_TITLE,
+        SigninMetricName.AccountDeletion,
+        commonParams
+      ),
+      [SigninMetricName.EmailAddressUpdate]: createTile(
+        EMAIL_ADDRESS_UPDATES_TITLE,
+        SigninMetricName.EmailAddressUpdate,
+        commonParams
+      ),
+      [SigninMetricName.PhoneNumberUpdate]: createTile(
+        PHONE_NUMBER_UPDATES_TITLE,
+        SigninMetricName.PhoneNumberUpdate,
+        commonParams
+      )
+    }
+  })
+}
+
+/**
+ * @import { FormDrilldownMetric, FormOverviewMetric, FormTotalsMetric, FunctionalAreaMetricName, FunctionalAreaTotalsMetric} from '@defra/forms-model'
  */

@@ -207,8 +207,10 @@
   "allowScripts": {
     "@defra/forms-engine-plugin": true,
     "@defra/hapi-tracing": true,
+    "@parcel/watcher": true,
     "core-js": true,
     "esbuild": true,
+    "fsevents": true,
     "unrs-resolver": true
   }
 }

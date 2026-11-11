@@ -6,6 +6,7 @@ import {
   componentUsageFormStructures,
   componentUsageQuestionTypes,
   mapOverviewMetrics,
+  mapSigninMetrics,
   mapTotalMetrics,
   numberCell
 } from '~/src/models/admin/metrics-helper.js'
@@ -386,6 +387,15 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @param {FunctionalAreaTotalsMetric} metrics
+ */
+export function metricsSignInViewModel(metrics) {
+  return {
+    overviewMetrics: mapSigninMetrics(metrics, tilePeriodNames)
+  }
+}
+
+/**
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric } from '@defra/forms-model'
  * @import { ComponentUsageQuestionType, ComponentUsageFeature, ComponentUsageFormStructure, FilterAndSortCriteria , FilterCriteria, FormTilesView, SortCriteria, TableRowMetric} from '~/src/models/admin/metrics-helper.js'
  */

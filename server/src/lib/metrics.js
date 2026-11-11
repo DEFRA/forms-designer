@@ -2,7 +2,11 @@ import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 import { getHeaders } from '~/src/lib/utils.js'
 
-const metricsEndpoint = new URL('/report/', config.auditUrl)
+const formMetricsEndpoint = new URL('/report/', config.auditUrl)
+const functionalAreaMetricsEndpoint = new URL(
+  '/report-functional-area/',
+  config.auditUrl
+)
 
 export const MetricsFilterFields = {
   SearchText: 'searchText',
@@ -11,16 +15,16 @@ export const MetricsFilterFields = {
 }
 
 /**
- * Get metrics
+ * Get form metrics
  * @param {FilterCriteria} [filter]
  */
-export async function getMetrics(filter = {}) {
+export async function getFormMetrics(filter = {}) {
   const getJsonByType =
     /** @type {typeof getJson<{ overview: FormOverviewMetric[], totals: FormTotalsMetric }>} */ (
       getJson
     )
 
-  const requestUrl = new URL(metricsEndpoint)
+  const requestUrl = new URL(formMetricsEndpoint)
 
   if (filter.searchText) {
     requestUrl.searchParams.set(
@@ -51,6 +55,22 @@ export async function getMetrics(filter = {}) {
 }
 
 /**
+ * Get functional area metrics
+ * @param {FunctionalAreaSubType} subType
+ */
+export async function getFunctionalAreaMetrics(subType) {
+  const getJsonByType =
+    /** @type {typeof getJson<{ totals: FunctionalAreaTotalsMetric }>} */ (
+      getJson
+    )
+
+  const requestUrl = new URL(subType, functionalAreaMetricsEndpoint)
+  const { body } = await getJsonByType(requestUrl)
+
+  return body
+}
+
+/**
  * Get drilldown metrics (details within a tile)
  * @param {string} period
  * @param {FormMetricName} metricName
@@ -66,7 +86,7 @@ export async function getDrilldownMetrics(period, metricName, language) {
 
   const requestUrl = new URL(
     `${period}/${metricName}${languageParam}`,
-    metricsEndpoint
+    formMetricsEndpoint
   )
 
   const { body } = await getJsonByType(requestUrl)
@@ -82,7 +102,7 @@ export async function getMetricsForForm(formId) {
   const getJsonByType =
     /** @type {typeof getJson<{ totals: FormTotalsMetric }>} */ (getJson)
 
-  const requestUrl = new URL(formId, metricsEndpoint)
+  const requestUrl = new URL(formId, formMetricsEndpoint)
 
   const { body } = await getJsonByType(requestUrl)
 
@@ -112,13 +132,13 @@ export async function getSubmissionsPerMonth(earliestDate) {
  * @param {string} token
  */
 export async function regenerateMetrics(token) {
-  const requestUrl = new URL('regenerate', metricsEndpoint)
+  const requestUrl = new URL('regenerate', formMetricsEndpoint)
   await postJson(requestUrl, {
     ...getHeaders(token)
   })
 }
 
 /**
- * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric, FunctionalAreaSubType } from '@defra/forms-model'
  * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
  */
