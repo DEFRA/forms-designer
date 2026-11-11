@@ -1,7 +1,7 @@
 import {
   FormMetricName,
   FormStatus,
-  FunctionalAreaSubType,
+  FunctionalAreaType,
   Scopes,
   getErrorMessage
 } from '@defra/forms-model'
@@ -173,7 +173,7 @@ export default [
         viewName = 'admin/form-metrics-form-activity'
       } else if (tab === SIGN_IN_TAB) {
         const signinMetrics = await getFunctionalAreaMetrics(
-          FunctionalAreaSubType.Signin
+          FunctionalAreaType.Signin
         )
         model = metricsSignInViewModel(signinMetrics.totals)
 

@@ -475,8 +475,8 @@ export function oneDecimalPlace(num) {
 }
 
 /**
- * @param { Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined } currPeriod
- * @param { Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined } prevPeriod
+ * @param { Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined } currPeriod
+ * @param { Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined } prevPeriod
  * @param { FormMetricName | FunctionalAreaMetricName } metricName
  * @param {PeriodName} periodNames
  * @param { string | undefined } language
@@ -492,11 +492,11 @@ export function collateSpecificTileCounts(
 ) {
   const currPeriodCount =
     currPeriod && metricName in currPeriod
-      ? (currPeriod[metricName].count ?? 0)
+      ? (currPeriod[metricName]?.count ?? 0)
       : 0
   const prevPeriodCount =
     prevPeriod && metricName in prevPeriod
-      ? (prevPeriod[metricName].count ?? 0)
+      ? (prevPeriod[metricName]?.count ?? 0)
       : 0
 
   const notEqualSymbol = currPeriodCount > prevPeriodCount ? '+' : '-'
@@ -543,7 +543,7 @@ export function collateSpecificTileCounts(
 /**
  * @param {string} title
  * @param { FormMetricName | FunctionalAreaMetricName } metricName
- * @param {{ currPeriod: Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined, prevPeriod: Record<FormMetricName | FunctionalAreaMetricName, { count?: number }> | undefined, periodNames: PeriodName, language: string | undefined, classes?: string }} commonParams
+ * @param {{ currPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, prevPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, periodNames: PeriodName, language: string | undefined, classes?: string }} commonParams
  * @param {string} [units]
  */
 function createTile(title, metricName, commonParams, units) {
@@ -628,7 +628,7 @@ export function mapOverviewTiles(
 }
 
 /**
- * @param { FormTotalsMetric | FunctionalAreaTotalsMetric } totals
+ * @param {FormTotalsMetric} totals
  * @param {{ last7Days: PeriodName, last30Days: PeriodName, allTime: PeriodName }} tilePeriodNames
  * @param { string | undefined } language
  */
@@ -739,8 +739,8 @@ export function mapSigninMetrics(totals, tilePeriodNames) {
 /**
  * @param {{ fromDate: Date | undefined, toDate: Date | undefined }} dateRange
  * @param {string} title
- * @param { Record<FormMetricName, { count?: number }> | undefined } currPeriod
- * @param { Record<FormMetricName, { count?: number }> | undefined } prevPeriod
+ * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } prevPeriod
  * @param {PeriodName} periodNames
  */
 export function mapSigninTiles(

@@ -56,15 +56,15 @@ export async function getFormMetrics(filter = {}) {
 
 /**
  * Get functional area metrics
- * @param {FunctionalAreaSubType} subType
+ * @param {FunctionalAreaType} area
  */
-export async function getFunctionalAreaMetrics(subType) {
+export async function getFunctionalAreaMetrics(area) {
   const getJsonByType =
     /** @type {typeof getJson<{ totals: FunctionalAreaTotalsMetric }>} */ (
       getJson
     )
 
-  const requestUrl = new URL(subType, functionalAreaMetricsEndpoint)
+  const requestUrl = new URL(area, functionalAreaMetricsEndpoint)
   const { body } = await getJsonByType(requestUrl)
 
   return body
@@ -139,6 +139,6 @@ export async function regenerateMetrics(token) {
 }
 
 /**
- * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric, FunctionalAreaSubType } from '@defra/forms-model'
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric, FunctionalAreaType } from '@defra/forms-model'
  * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
  */

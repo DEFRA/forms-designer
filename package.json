@@ -49,7 +49,7 @@
     "@dagrejs/dagre": "^1.1.5",
     "@defra/forms-common": "^0.1.7",
     "@defra/forms-engine-plugin": "5.0.0-alpha.33",
-    "@defra/forms-model": "^4.0.0",
+    "@defra/forms-model": "^4.0.4",
     "@defra/hapi-tracing": "^1.28.0",
     "@defra/interactive-map": "0.0.56-alpha",
     "@elastic/ecs-pino-format": "^1.5.0",

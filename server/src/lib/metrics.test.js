@@ -8,7 +8,7 @@ import {
 } from '~/src/lib/__stubs__/editor.js'
 import {
   getDrilldownMetrics,
-  getMetrics,
+  getFormMetrics,
   getMetricsForForm,
   getSubmissionsPerMonth,
   regenerateMetrics
@@ -23,14 +23,14 @@ describe('metrics.js', () => {
     jest.clearAllMocks()
   })
 
-  describe('getMetrics', () => {
+  describe('getFormMetrics', () => {
     it('should call endpoint', async () => {
       mockedGetJson.mockResolvedValueOnce({
         response: createMockResponse(),
         body: { overview: [] }
       })
       const expectedUrl = new URL('/report/', auditEndpoint)
-      const result = await getMetrics()
+      const result = await getFormMetrics()
       expect(result.overview).toEqual([])
 
       const calledUrl = mockedGetJson.mock.calls[0][0]
@@ -46,7 +46,7 @@ describe('metrics.js', () => {
         '/report/?searchText=some+search+text&status=draft&status=live&org=Org1&org=Org2&language=cy',
         auditEndpoint
       )
-      const result = await getMetrics({
+      const result = await getFormMetrics({
         searchText: 'some search text',
         status: ['draft', 'live'],
         org: ['Org1', 'Org2'],

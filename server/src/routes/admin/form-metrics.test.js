@@ -3,7 +3,7 @@ import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
 import { createServer } from '~/src/createServer.js'
-import { getDrilldownMetrics, getMetrics } from '~/src/lib/metrics.js'
+import { getDrilldownMetrics, getFormMetrics } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
@@ -102,7 +102,7 @@ describe('Form metrics routes', () => {
             updatedAt: new Date('2026-01-01T00:00:00.000Z')
           })
         }
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         const options = {
           method: 'get',
@@ -148,7 +148,7 @@ describe('Form metrics routes', () => {
             updatedAt: new Date('2026-01-01T00:00:00.000Z')
           })
         }
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         const options = {
           method: 'get',
@@ -200,7 +200,7 @@ describe('Form metrics routes', () => {
           }
         }
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         jest.mocked(getDrilldownMetrics).mockResolvedValueOnce([])
 
@@ -331,7 +331,7 @@ describe('Form metrics routes', () => {
           totals: {}
         }
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
         jest
           .mocked(getMetricsAsExcel)
           .mockReturnValueOnce(Buffer.from('Dummy xlsx content'))
@@ -371,7 +371,7 @@ describe('Form metrics routes', () => {
           totals: {}
         }
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         jest
           .mocked(publishPlatformMetricsDownloadRequestedEvent)
@@ -409,7 +409,7 @@ describe('Form metrics routes', () => {
 
       test('endpoint returns HTML tiles', async () => {
         // @ts-expect-error - partial mock of data
-        jest.mocked(getMetrics).mockResolvedValueOnce(mockMetrics)
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
 
         const options = {
           method: 'get',
@@ -422,7 +422,7 @@ describe('Form metrics routes', () => {
         expect(response.result).toMatchSnapshot()
 
         expect(await getCachedMetrics()).toEqual(mockMetrics)
-        expect(getMetrics).toHaveBeenCalledTimes(1)
+        expect(getFormMetrics).toHaveBeenCalledTimes(1)
       })
     })
   })
