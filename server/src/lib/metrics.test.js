@@ -1,4 +1,4 @@
-import { FormMetricName } from '@defra/forms-model'
+import { FormMetricName, FunctionalAreaType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import {
@@ -9,6 +9,7 @@ import {
 import {
   getDrilldownMetrics,
   getFormMetrics,
+  getFunctionalAreaMetrics,
   getMetricsForForm,
   getSubmissionsPerMonth,
   regenerateMetrics
@@ -76,6 +77,45 @@ describe('metrics.js', () => {
       )
       expect(result).toEqual([])
 
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+
+    it('should include the language in the endpoint path', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { drilldownRows: [] }
+      })
+      const expectedUrl = new URL(
+        '/report/last7Days/NewFormsCreated/cy',
+        auditEndpoint
+      )
+
+      await getDrilldownMetrics(
+        'last7Days',
+        FormMetricName.NewFormsCreated,
+        'cy'
+      )
+
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+  })
+
+  describe('getFunctionalAreaMetrics', () => {
+    it('should request metrics for the selected functional area', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { totals: {} }
+      })
+      const expectedUrl = new URL(
+        `/report-functional-area/${FunctionalAreaType.Signin}`,
+        auditEndpoint
+      )
+
+      const result = await getFunctionalAreaMetrics(FunctionalAreaType.Signin)
+
+      expect(result.totals).toEqual({})
       const calledUrl = mockedGetJson.mock.calls[0][0]
       expect(calledUrl.href).toBe(expectedUrl.href)
     })

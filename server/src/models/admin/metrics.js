@@ -1,15 +1,17 @@
 import { FormStatus, organisations } from '@defra/forms-model'
 
 import {
-  MetricsTileConfig,
   componentUsageFeatures,
   componentUsageFormStructures,
   componentUsageQuestionTypes,
   mapOverviewMetrics,
   mapSigninMetrics,
-  mapTotalMetrics,
-  numberCell
+  mapTotalMetrics
 } from '~/src/models/admin/metrics-helper.js'
+import {
+  MetricsTileConfig,
+  numberCell
+} from '~/src/models/admin/metrics-tile-config.js'
 
 /**
  * @typedef {object} ComponentUsageModel

@@ -23,7 +23,7 @@ describe('Page navigation component', () => {
   }
 
   /**
-   * @param {typeof params} [overrides]
+   * @param {Partial<typeof params>} [overrides]
    */
   function render(overrides = {}) {
     const { document } = renderMacro(
