@@ -3,6 +3,7 @@
 {% from "page-body/macro.njk" import appPageBody %}
 {% from "metrics-overview/macro.njk" import appMetricsOverview %}
 {% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{% from "page-navigation/macro.njk" import appPageNavigation %}
 
 {% set mainClasses = "govuk-main-wrapper--masthead" %}
 
@@ -43,18 +44,29 @@
     backLink: backLink
   }) %}
 
-  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
-    <nav class="app-page-navigation" aria-label="Form activity">
-      <div class="app-page-navigation__list">
-        <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics/form-activity/all?restoreFilter=Y">
-            Form activity
-          </a>
-        </div>
-      </div>
-    </nav>
-    <div class="editor-card-title">Component usage</div>
-  </div>
+
+  {{ appPageNavigation({
+    extraClasses: "govuk-!-margin-bottom-8",
+    navItems: [
+      {
+        title: "Form activity",
+        href: "/admin/form-metrics/form-activity/all?restoreFilter=Y"
+      },
+      {
+        title: "Component usage",
+        href: "/admin/form-metrics/component-usage",
+        active: true
+      },
+      {
+        title: "Sign-in",
+        href: "/admin/form-metrics/sign-in"
+      },
+      {
+        title: "Copy answers",
+        href: "/admin/form-metrics/copy-answers"
+      }
+    ]
+  }) }}
 
   <p class="govuk-body govuk-!-margin-bottom-6">Breakdown of how different components are being used across all forms.</p>
 

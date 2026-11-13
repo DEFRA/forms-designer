@@ -16,21 +16,21 @@ import config from '~/src/config.js'
 import {
   MetricsFilterFields,
   getDrilldownMetrics,
-  getMetrics,
+  getFormMetrics,
   getSubmissionsPerMonth,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
+  FORM_ACTIVITY_TAB,
+  buildMetricsViewModel,
   getPeriodNameFromSlug,
-  metricsComponentUsageViewModel,
-  metricsDrilldownViewModel,
-  metricsFormActivityViewModel
+  metricsDrilldownViewModel
 } from '~/src/models/admin/metrics.js'
 
 const ROUTE_FULL_PATH = '/admin/form-metrics/{tab}/{activityType?}'
-const ROUTE_BASE_PATH = '/admin/form-metrics'
+export const ROUTE_BASE_PATH = '/admin/form-metrics'
 const ROUTE_ADMIN_INDEX = '/admin/index'
 const ROUTE_DRILLDOWN_PATH =
   '/admin/form-metrics/drilldown/{period}/{metricName}/{language?}'
@@ -39,9 +39,6 @@ const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
 
 const SHOW_FILTER = 'showFilter'
-
-const COMPONENT_USAGE_TAB = 'component-usage'
-const FORM_ACTIVITY_TAB = 'form-activity'
 
 export const FORM_ACTIVITY_OPTION_ALL = 'all'
 export const FORM_ACTIVITY_OPTION_WELSH = 'cy'
@@ -157,16 +154,13 @@ export default [
             }
           : query
 
-      const metrics = await getMetrics(filter)
-
-      let model
-      let viewName
-      if (tab === COMPONENT_USAGE_TAB) {
-        model = metricsComponentUsageViewModel(metrics)
-        viewName = 'admin/form-metrics-component-usage'
-      } else {
-        model = metricsFormActivityViewModel(metrics, filter, activityType)
-        viewName = 'admin/form-metrics-form-activity'
+      const { model, viewName, redirectUrl } = await buildMetricsViewModel(
+        tab,
+        filter,
+        activityType
+      )
+      if (redirectUrl) {
+        return h.redirect(redirectUrl)
       }
 
       return h.view(viewName, {
@@ -301,9 +295,9 @@ export default [
 
       try {
         // Live metrics only - for all forms
-        const metrics = await getMetrics()
+        const metrics = await getFormMetrics()
         // Live metrics only - for Welsh forms
-        const metricsWelsh = await getMetrics({ language: 'cy' })
+        const metricsWelsh = await getFormMetrics({ language: 'cy' })
 
         const submissionsPerMonth = await getSubmissionsPerMonth(
           new Date(metrics.totals.earliestDate)
@@ -358,7 +352,7 @@ export default [
       const periodName = getPeriodNameFromSlug(period)
 
       // Get tile metrics, for period ranges and form details lookups
-      const tileMetrics = await getMetrics(language ? { language } : {})
+      const tileMetrics = await getFormMetrics(language ? { language } : {})
 
       const drilldownMetrics = await getDrilldownMetrics(
         periodName,
@@ -446,7 +440,7 @@ export async function getCachedMetrics() {
     )
   }
 
-  const metrics = await getMetrics()
+  const metrics = await getFormMetrics()
 
   cache.set(key, metrics)
 
@@ -456,5 +450,5 @@ export async function getCachedMetrics() {
 /**
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
+ * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-types.js'
  */

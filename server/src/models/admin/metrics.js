@@ -1,14 +1,27 @@
-import { FormStatus, organisations } from '@defra/forms-model'
-
 import {
-  MetricsTileConfig,
+  FormStatus,
+  FunctionalAreaType,
+  organisations
+} from '@defra/forms-model'
+
+import { getFormMetrics, getFunctionalAreaMetrics } from '~/src/lib/metrics.js'
+import {
+  mapCopyAnswersFormRows,
+  mapCopyAnswersMetrics
+} from '~/src/models/admin/metrics-copy-answers.js'
+import {
   componentUsageFeatures,
   componentUsageFormStructures,
   componentUsageQuestionTypes,
   mapOverviewMetrics,
-  mapTotalMetrics,
-  numberCell
+  mapTotalMetrics
 } from '~/src/models/admin/metrics-helper.js'
+import { mapSigninMetrics } from '~/src/models/admin/metrics-signin.js'
+import {
+  MetricsTileConfig,
+  numberCell
+} from '~/src/models/admin/metrics-tile-config.js'
+import { ROUTE_BASE_PATH } from '~/src/routes/admin/form-metrics.js'
 
 /**
  * @typedef {object} ComponentUsageModel
@@ -54,6 +67,11 @@ const FORM_NOT_FOUND = {
   slug: 'not-found',
   organisation: 'Unknown'
 }
+
+const COMPONENT_USAGE_TAB = 'component-usage'
+export const FORM_ACTIVITY_TAB = 'form-activity'
+const SIGN_IN_TAB = 'sign-in'
+const COPY_ANSWERS_TAB = 'copy-answers'
 
 /**
  * @param { string | undefined } activityType
@@ -386,6 +404,70 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { ComponentUsageQuestionType, ComponentUsageFeature, ComponentUsageFormStructure, FilterAndSortCriteria , FilterCriteria, FormTilesView, SortCriteria, TableRowMetric} from '~/src/models/admin/metrics-helper.js'
+ * @param {FunctionalAreaTotalsMetric} metrics
+ */
+export function metricsSignInViewModel(metrics) {
+  return {
+    overviewMetrics: mapSigninMetrics(metrics, tilePeriodNames)
+  }
+}
+
+/**
+ * @param {{ overview?: FormOverviewMetric[], totals: FunctionalAreaTotalsMetric }} metrics
+ */
+export function metricsCopyAnswersViewModel(metrics) {
+  const rows = mapCopyAnswersFormRows(metrics)
+
+  return {
+    overviewMetrics: mapCopyAnswersMetrics(metrics.totals, tilePeriodNames),
+    formMetricRows: sortMetricRows(rows, {})
+  }
+}
+
+/**
+ * @param {string} tab
+ * @param {*} filter
+ * @param {*} activityType
+ * @returns {Promise<{ model?: any, viewName: string, redirectUrl?: string }>}
+ */
+export async function buildMetricsViewModel(tab, filter, activityType) {
+  if (tab === COMPONENT_USAGE_TAB) {
+    const metrics = await getFormMetrics(filter)
+    return {
+      model: metricsComponentUsageViewModel(metrics),
+      viewName: 'admin/form-metrics-component-usage'
+    }
+  } else if (tab === FORM_ACTIVITY_TAB) {
+    const metrics = await getFormMetrics(filter)
+    return {
+      model: metricsFormActivityViewModel(metrics, filter, activityType),
+      viewName: 'admin/form-metrics-form-activity'
+    }
+  } else if (tab === SIGN_IN_TAB) {
+    const signinMetrics = await getFunctionalAreaMetrics(
+      FunctionalAreaType.Signin
+    )
+    return {
+      model: metricsSignInViewModel(signinMetrics.totals),
+      viewName: 'admin/form-metrics-sign-in'
+    }
+  } else if (tab === COPY_ANSWERS_TAB) {
+    const copyAnswersMetrics = await getFunctionalAreaMetrics(
+      FunctionalAreaType.CopyAnswers
+    )
+    return {
+      model: metricsCopyAnswersViewModel(copyAnswersMetrics),
+      viewName: 'admin/form-metrics-copy-answers'
+    }
+  } else {
+    return {
+      redirectUrl: `${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`,
+      viewName: 'n/a'
+    }
+  }
+}
+
+/**
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric } from '@defra/forms-model'
+ * @import { ComponentUsageFeature, ComponentUsageFormStructure, ComponentUsageQuestionType, FilterAndSortCriteria, FilterCriteria, FormTilesView, SortCriteria, TableRowMetric } from '~/src/models/admin/metrics-types.js'
  */
