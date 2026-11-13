@@ -511,6 +511,15 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
           </div>
         </div>
       </nav>
+      <nav class="app-page-navigation" aria-label="Copy answers">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/copy-answers">
+              Copy answers
+            </a>
+          </div>
+        </div>
+      </nav>
 </div>
 
 
@@ -892,6 +901,15 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
           <div class="app-page-navigation__item">
             <a class="app-page-navigation__link" href="/admin/form-metrics/sign-in">
               Sign-in
+            </a>
+          </div>
+        </div>
+      </nav>
+      <nav class="app-page-navigation" aria-label="Copy answers">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/copy-answers">
+              Copy answers
             </a>
           </div>
         </div>
