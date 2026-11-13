@@ -259,5 +259,5 @@ function overrideTileStyling(tile, title, classes) {
 /**
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { FormMetadata } from '@defra/forms-model'
- * @import { MetricsTile } from '~/src/models/admin/metrics-helper.js'
+ * @import { MetricsTile } from '~/src/models/admin/metrics-types.js'
  */

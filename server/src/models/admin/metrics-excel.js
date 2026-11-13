@@ -395,5 +395,5 @@ export function formatYearMonthInWords(monthYear) {
 }
 /**
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { TableRowMetric } from '~/src/models/admin/metrics-helper.js'
+ * @import { TableRowMetric } from '~/src/models/admin/metrics-types.js'
  */

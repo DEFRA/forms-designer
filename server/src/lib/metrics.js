@@ -140,5 +140,5 @@ export async function regenerateMetrics(token) {
 
 /**
  * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric, FunctionalAreaType } from '@defra/forms-model'
- * @import { FilterCriteria } from '~/src/models/admin/metrics-helper.js'
+ * @import { FilterCriteria } from '~/src/models/admin/metrics-types.js'
  */
