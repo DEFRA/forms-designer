@@ -1,4 +1,8 @@
-import { FormMetricName, SigninMetricName } from '@defra/forms-model'
+import {
+  CopyAnswersMetricName,
+  FormMetricName,
+  SigninMetricName
+} from '@defra/forms-model'
 import { format } from 'date-fns'
 
 import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
@@ -170,6 +174,26 @@ export const MetricsTileConfig =
     },
     [SigninMetricName.PhoneNumberUpdate]: {
       noun: 'update',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+
+    // Copy answers tiles
+    [CopyAnswersMetricName.CopyAnswersForm]: {
+      noun: 'form',
+      verb: '',
+      drillDown: {
+        displayName: '',
+        enabled: false,
+        grouped: false
+      }
+    },
+    [CopyAnswersMetricName.CopyAnswersSubmission]: {
+      noun: 'submission',
       verb: '',
       drillDown: {
         displayName: '',

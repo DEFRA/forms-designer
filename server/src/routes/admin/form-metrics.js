@@ -27,6 +27,7 @@ import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
   getPeriodNameFromSlug,
   metricsComponentUsageViewModel,
+  metricsCopyAnswersViewModel,
   metricsDrilldownViewModel,
   metricsFormActivityViewModel,
   metricsSignInViewModel
@@ -46,6 +47,7 @@ const SHOW_FILTER = 'showFilter'
 const COMPONENT_USAGE_TAB = 'component-usage'
 const FORM_ACTIVITY_TAB = 'form-activity'
 const SIGN_IN_TAB = 'sign-in'
+const COPY_ANSWERS_TAB = 'copy-answers'
 
 export const FORM_ACTIVITY_OPTION_ALL = 'all'
 export const FORM_ACTIVITY_OPTION_WELSH = 'cy'
@@ -176,8 +178,14 @@ export default [
           FunctionalAreaType.Signin
         )
         model = metricsSignInViewModel(signinMetrics.totals)
-
         viewName = 'admin/form-metrics-sign-in'
+      } else if (tab === COPY_ANSWERS_TAB) {
+        const copyAnswersMetrics = await getFunctionalAreaMetrics(
+          FunctionalAreaType.CopyAnswers
+        )
+        model = metricsCopyAnswersViewModel(copyAnswersMetrics)
+
+        viewName = 'admin/form-metrics-copy-answers'
       } else {
         return h.redirect(`${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`)
       }

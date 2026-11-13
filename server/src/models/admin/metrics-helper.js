@@ -1,4 +1,5 @@
 import {
+  CopyAnswersMetricName,
   FormMetricName,
   FormStatus,
   SigninMetricName
@@ -23,6 +24,9 @@ const TOO_MANY_CODE_REQUESTS_TITLE = 'Too many code requests'
 const ACCOUNT_DELETIONS_TITLE = 'Account deletions'
 const EMAIL_ADDRESS_UPDATES_TITLE = 'Email address updates'
 const PHONE_NUMBER_UPDATES_TITLE = 'Phone number updates'
+
+const COPY_ANSWERS_FORMS_TITLE = 'Forms with copy answers enabled'
+const COPY_ANSWERS_SUBMISSIONS_TITLE = 'Submissions using copy answers'
 
 const SEVEN_DAYS = 7
 const THIRTY_DAYS = 30
@@ -565,6 +569,61 @@ export function mapSigninMetrics(totals, tilePeriodNames) {
 }
 
 /**
+ * @param {FunctionalAreaTotalsMetric} totals
+ * @param {{ last7Days: PeriodName, last30Days: PeriodName, allTime: PeriodName }} tilePeriodNames
+ */
+export function mapCopyAnswersMetrics(totals, tilePeriodNames) {
+  const reportMorning = startOfDay(totals.updatedAt)
+  const sevenDaysAgo = subDays(reportMorning, SEVEN_DAYS)
+  const thirtyDaysAgo = subDays(reportMorning, THIRTY_DAYS)
+
+  const last7Days = mapCopyAnswersTiles(
+    { fromDate: sevenDaysAgo, toDate: reportMorning },
+    'Last 7 days',
+    totals.last7Days,
+    totals.prev7Days,
+    tilePeriodNames.last7Days
+  )
+
+  const last30Days = mapCopyAnswersTiles(
+    { fromDate: thirtyDaysAgo, toDate: reportMorning },
+    'Last 30 days',
+    totals.last30Days,
+    totals.prev30Days,
+    tilePeriodNames.last30Days
+  )
+
+  const allTime = mapCopyAnswersTiles(
+    { fromDate: totals.earliestDate, toDate: reportMorning },
+    'All time',
+    totals.allTime,
+    totals.prevYear,
+    tilePeriodNames.allTime
+  )
+
+  return /** @type {{ last7Days: FormTilesView, last30Days: FormTilesView, allTime: FormTilesView }} */ ({
+    last7Days,
+    last30Days,
+    allTime
+  })
+}
+
+/**
+ * @param {{ overview?: FormOverviewMetric[], totals: FunctionalAreaTotalsMetric }} metrics
+ * @returns {TableRowMetric[]}
+ */
+export function mapCopyAnswersFormRows(metrics) {
+  return (metrics.overview ?? []).map(
+    (metric) =>
+      /** @type {TableRowMetric} */ ({
+        ...metric.summaryMetrics,
+        formName: /** @type {string} */ (metric.summaryMetrics.name),
+        submissions: metric.submissionsCount
+      })
+  )
+}
+
+/**
  * @param {{ fromDate: Date | undefined, toDate: Date | undefined }} dateRange
  * @param {string} title
  * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } currPeriod
@@ -627,6 +686,50 @@ export function mapSigninTiles(
       [SigninMetricName.PhoneNumberUpdate]: createTile(
         PHONE_NUMBER_UPDATES_TITLE,
         SigninMetricName.PhoneNumberUpdate,
+        commonParams
+      )
+    }
+  })
+}
+
+/**
+ * @param {{ fromDate: Date | undefined, toDate: Date | undefined }} dateRange
+ * @param {string} title
+ * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } currPeriod
+ * @param { Record<FunctionalAreaMetricName, { count?: number }> | undefined } prevPeriod
+ * @param {PeriodName} periodNames
+ */
+export function mapCopyAnswersTiles(
+  dateRange,
+  title,
+  currPeriod,
+  prevPeriod,
+  periodNames
+) {
+  const commonParams = {
+    currPeriod,
+    prevPeriod,
+    periodNames,
+    classes: 'govuk-grid-column-one-half',
+    language: undefined
+  }
+  return /** @type {FormTilesView} */ ({
+    fromDate: dateRange.fromDate
+      ? format(dateRange.fromDate, FULL_DATE_MASK)
+      : undefined,
+    toDate: dateRange.toDate
+      ? format(dateRange.toDate, FULL_DATE_MASK)
+      : undefined,
+    title,
+    tiles: {
+      [CopyAnswersMetricName.CopyAnswersForm]: createTile(
+        COPY_ANSWERS_FORMS_TITLE,
+        CopyAnswersMetricName.CopyAnswersForm,
+        commonParams
+      ),
+      [CopyAnswersMetricName.CopyAnswersSubmission]: createTile(
+        COPY_ANSWERS_SUBMISSIONS_TITLE,
+        CopyAnswersMetricName.CopyAnswersSubmission,
         commonParams
       )
     }

@@ -4,6 +4,8 @@ import {
   componentUsageFeatures,
   componentUsageFormStructures,
   componentUsageQuestionTypes,
+  mapCopyAnswersFormRows,
+  mapCopyAnswersMetrics,
   mapOverviewMetrics,
   mapSigninMetrics,
   mapTotalMetrics
@@ -394,6 +396,18 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 export function metricsSignInViewModel(metrics) {
   return {
     overviewMetrics: mapSigninMetrics(metrics, tilePeriodNames)
+  }
+}
+
+/**
+ * @param {{ overview?: FormOverviewMetric[], totals: FunctionalAreaTotalsMetric }} metrics
+ */
+export function metricsCopyAnswersViewModel(metrics) {
+  const rows = mapCopyAnswersFormRows(metrics)
+
+  return {
+    overviewMetrics: mapCopyAnswersMetrics(metrics.totals, tilePeriodNames),
+    formMetricRows: sortMetricRows(rows, {})
   }
 }
 
