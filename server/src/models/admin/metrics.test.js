@@ -1,14 +1,24 @@
-import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
-
 import {
+  CopyAnswersMetricName,
+  FormMetricName,
+  FormMetricType,
+  FormStatus,
+  FunctionalAreaType
+} from '@defra/forms-model'
+
+import { getFunctionalAreaMetrics } from '~/src/lib/metrics.js'
+import {
+  buildMetricsViewModel,
   combineModel,
   createDrilldownHeaderAndRows,
   metricsComponentUsageViewModel,
+  metricsCopyAnswersViewModel,
   metricsFormActivityViewModel,
   sortMetricRows
 } from '~/src/models/admin/metrics.js'
 
 jest.mock('~/src/config.ts')
+jest.mock('~/src/lib/metrics.js')
 
 /**
  * @param {string} title
@@ -29,6 +39,81 @@ function getExpectedTile(title, ariaPeriod, strapline) {
 }
 
 describe('metrics models', () => {
+  describe('metricsCopyAnswersViewModel', () => {
+    it('should map overview rows and functional-area totals', () => {
+      const metrics = {
+        overview: [
+          {
+            formId: 'form-1',
+            summaryMetrics: { name: 'Form 1' },
+            submissionsCount: 4
+          }
+        ],
+        totals: /** @type {FunctionalAreaTotalsMetric} */ ({
+          updatedAt: new Date('2026-01-15T12:00:00.000Z'),
+          earliestDate: new Date('2025-12-01T00:00:00.000Z'),
+          last7Days: {
+            [CopyAnswersMetricName.CopyAnswersForm]: { count: 2 }
+          },
+          prev7Days: {},
+          last30Days: {},
+          prev30Days: {},
+          allTime: {},
+          prevYear: {}
+        })
+      }
+
+      // @ts-expect-error - partial mock of data
+      const model = metricsCopyAnswersViewModel(metrics)
+
+      expect(model.formMetricRows).toEqual([
+        {
+          formName: 'Form 1',
+          name: 'Form 1',
+          submissions: 4
+        }
+      ])
+      expect(model.overviewMetrics.last7Days).toMatchObject({
+        title: 'Last 7 days',
+        tiles: {
+          CopyAnswersForm: {
+            count: 2,
+            drillDown: { enabled: false, url: '' },
+            classes: 'govuk-grid-column-one-half'
+          }
+        }
+      })
+    })
+  })
+
+  describe('buildMetricsViewModel', () => {
+    it('should build the copy-answers view from functional-area metrics', async () => {
+      const totals = /** @type {FunctionalAreaTotalsMetric} */ ({
+        updatedAt: new Date('2026-01-15T12:00:00.000Z'),
+        last7Days: {},
+        prev7Days: {},
+        last30Days: {},
+        prev30Days: {},
+        allTime: {},
+        prevYear: {}
+      })
+      jest.mocked(getFunctionalAreaMetrics).mockResolvedValueOnce({ totals })
+
+      const result = await buildMetricsViewModel('copy-answers', {}, undefined)
+
+      expect(getFunctionalAreaMetrics).toHaveBeenCalledWith(
+        FunctionalAreaType.CopyAnswers
+      )
+      expect(result.viewName).toBe('admin/form-metrics-copy-answers')
+      expect(result.model).toMatchObject({
+        overviewMetrics: {
+          last7Days: { title: 'Last 7 days' }
+        },
+        formMetricRows: []
+      })
+    })
+  })
+
   describe('metricsFormActivityViewModel', () => {
     it('should populate form activity model', () => {
       const mockMetrics = {
@@ -835,6 +920,27 @@ describe('metrics models', () => {
           ]
         })
       })
+
+      it('should omit optional drilldown headers and values for disabled metrics', () => {
+        const result = createDrilldownHeaderAndRows(
+          // @ts-expect-error - no form details are needed for a disabled metric
+          { overview: [] },
+          FormMetricName.FormsInDraft,
+          [{ formId: 'form-id-unknown', metricValue: 1 }]
+        )
+
+        expect(result).toEqual({
+          head: [
+            {
+              text: 'Form name',
+              attributes: { 'aria-sort': 'ascending' },
+              classes: 'govuk-!-width-one-half'
+            },
+            { text: 'Organisation', attributes: { 'aria-sort': 'none' } }
+          ],
+          rows: []
+        })
+      })
     })
   })
 
@@ -890,4 +996,5 @@ describe('metrics models', () => {
 
 /**
  * @import { FormTimelineMetric } from '@defra/forms-model'
+ * @import { FunctionalAreaTotalsMetric } from '@defra/forms-model'
  */

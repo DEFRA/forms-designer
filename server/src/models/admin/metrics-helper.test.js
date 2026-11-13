@@ -8,6 +8,8 @@ import {
   componentUsageFormStructures,
   componentUsageQuestionTypes,
   mapOverviewMetrics,
+  mapOverviewTiles,
+  mapQuestionTypes,
   mapTotalMetrics,
   oneDecimalPlace
 } from '~/src/models/admin/metrics-helper.js'
@@ -275,6 +277,19 @@ describe('metrics model', () => {
     })
   })
 
+  describe('mapQuestionTypes', () => {
+    it('should report zero forms when no usage count is provided', () => {
+      expect(mapQuestionTypes([['TextField', 2]], new Map(), 4)).toEqual([
+        {
+          questionTypeName: 'TextField',
+          totalUsage: 2,
+          formsUsing: 0,
+          percentage: '0.0%'
+        }
+      ])
+    })
+  })
+
   describe('componentUsageFeatures', () => {
     it('should count each feature once per matching form', () => {
       const metrics = {
@@ -308,6 +323,57 @@ describe('metrics model', () => {
           percentage: '50.0%'
         }
       ])
+    })
+  })
+
+  describe('componentUsageFormStructures unknown metrics', () => {
+    it('should label unknown form structure metrics', () => {
+      const metrics = {
+        overview: [
+          {
+            formStatus: FormStatus.Draft,
+            featureMetrics: {
+              formStructure: { customMetric: 2 }
+            }
+          }
+        ],
+        totals: {}
+      }
+
+      // @ts-expect-error - partial mock of data
+      expect(componentUsageFormStructures(metrics, FormStatus.Draft)).toEqual([
+        {
+          metricName: 'Unknown',
+          average: '2.0',
+          minimum: 2,
+          maximum: 2
+        }
+      ])
+    })
+  })
+
+  describe('mapOverviewTiles', () => {
+    it('should leave missing date range values undefined', () => {
+      const periodNames = {
+        ariaPeriodName: 'previous 7 days',
+        straplinePeriodName: 'last week',
+        slug: 'last-7-days'
+      }
+
+      const result = mapOverviewTiles(
+        { fromDate: undefined, toDate: undefined },
+        'Custom period',
+        undefined,
+        undefined,
+        periodNames,
+        undefined
+      )
+
+      expect(result).toMatchObject({
+        fromDate: undefined,
+        toDate: undefined,
+        title: 'Custom period'
+      })
     })
   })
 

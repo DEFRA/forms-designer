@@ -91,6 +91,21 @@ describe('Form metrics routes', () => {
         )
       })
 
+      test('should restore an empty filter when no saved filter exists', async () => {
+        yarGetMock = jest.fn().mockReturnValue(undefined)
+
+        const { response } = await renderResponse(server, {
+          method: 'get',
+          url: '/admin/form-metrics/form-activity/cy?restoreFilter=Y',
+          auth
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(response.headers.location).toBe(
+          '/admin/form-metrics/form-activity/cy'
+        )
+      })
+
       test('should render report form with form activity', async () => {
         const mockMetrics = {
           overview: [],
@@ -135,6 +150,39 @@ describe('Form metrics routes', () => {
         expect(response.statusCode).toEqual(StatusCodes.OK)
         expect(response.headers['content-type']).toContain('text/html')
         expect(response.result).toMatchSnapshot()
+      })
+
+      test('should request Welsh metrics for a Welsh drilldown', async () => {
+        const metrics = {
+          overview: [],
+          totals: {
+            last7Days: {},
+            prev7Days: {},
+            last30Days: {},
+            prev30Days: {},
+            allTime: {},
+            prevYear: {},
+            updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+            earliestDate: new Date('2025-12-01T00:00:00.000Z')
+          }
+        }
+        // @ts-expect-error - partial mock of data
+        jest.mocked(getFormMetrics).mockResolvedValueOnce(metrics)
+        jest.mocked(getDrilldownMetrics).mockResolvedValueOnce([])
+
+        const { response } = await renderResponse(server, {
+          method: 'get',
+          url: '/admin/form-metrics/drilldown/last-7-days/Submissions/cy',
+          auth
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(getFormMetrics).toHaveBeenCalledWith({ language: 'cy' })
+        expect(getDrilldownMetrics).toHaveBeenCalledWith(
+          'last7Days',
+          'Submissions',
+          'cy'
+        )
       })
 
       test('should render report form with component usage', async () => {
@@ -237,6 +285,33 @@ describe('Form metrics routes', () => {
           FunctionalAreaType.Signin
         )
         expect(response.result).toContain('Total registrations')
+      })
+
+      test('should request and render copy-answers metrics', async () => {
+        const totals = /** @type {FunctionalAreaTotalsMetric} */ ({
+          updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+          last7Days: {},
+          prev7Days: {},
+          last30Days: {},
+          prev30Days: {},
+          allTime: {},
+          prevYear: {}
+        })
+        jest.mocked(getFunctionalAreaMetrics).mockResolvedValueOnce({ totals })
+
+        const { response } = await renderResponse(server, {
+          method: 'get',
+          url: '/admin/form-metrics/copy-answers/all',
+          auth
+        })
+
+        expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(getFunctionalAreaMetrics).toHaveBeenCalledWith(
+          FunctionalAreaType.CopyAnswers
+        )
+        expect(response.result).toContain(
+          'Monitor copy answers adoption and submission activity across Defra Forms.'
+        )
       })
 
       test('should redirect unknown metrics tabs to form activity', async () => {
@@ -345,6 +420,26 @@ describe('Form metrics routes', () => {
         expect(statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
         expect(headers.location).toBe(
           '/admin/form-metrics/form-activity/cy?searchText=test2&showFilter=Y'
+        )
+      })
+
+      test('should switch from Welsh activity to all forms when restoring filters', async () => {
+        yarGetMock = jest.fn().mockReturnValue(undefined)
+
+        const { response } = await renderResponse(server, {
+          method: 'post',
+          url: '/admin/form-metrics/form-activity/cy',
+          auth,
+          payload: {
+            restoreFilter: 'Y',
+            currentTab: 'tab_last30Days'
+          }
+        })
+
+        expect(yarGetMock).toHaveBeenCalledWith('metrics-filter-all')
+        expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
+        expect(response.headers.location).toBe(
+          '/admin/form-metrics/form-activity/all#last30Days'
         )
       })
 
