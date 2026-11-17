@@ -427,9 +427,14 @@ export function metricsSignInViewModel(metrics) {
 }
 
 /**
- * @param {{ overview?: FormOverviewMetric[], totals: FunctionalAreaTotalsMetric }} metrics
+ * @param {{ overview?: FormOverviewMetric[], totals?: FunctionalAreaTotalsMetric }} metrics
  */
 export function metricsCopyAnswersViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (!metrics.totals) {
+    return undefined
+  }
+
   const rows = mapCopyAnswersFormRows(metrics)
 
   return {

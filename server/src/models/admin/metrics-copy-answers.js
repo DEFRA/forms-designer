@@ -54,7 +54,7 @@ export function mapCopyAnswersMetrics(totals, tilePeriodNames) {
 }
 
 /**
- * @param {{ overview?: FormOverviewMetric[], totals: FunctionalAreaTotalsMetric }} metrics
+ * @param {{ overview?: FormOverviewMetric[], totals?: FunctionalAreaTotalsMetric }} metrics
  * @returns {TableRowMetric[]}
  */
 export function mapCopyAnswersFormRows(metrics) {

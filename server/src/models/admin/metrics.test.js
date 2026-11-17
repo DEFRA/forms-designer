@@ -67,14 +67,14 @@ describe('metrics models', () => {
       // @ts-expect-error - partial mock of data
       const model = metricsCopyAnswersViewModel(metrics)
 
-      expect(model.formMetricRows).toEqual([
+      expect(model?.formMetricRows).toEqual([
         {
           formName: 'Form 1',
           name: 'Form 1',
           submissions: 4
         }
       ])
-      expect(model.overviewMetrics.last7Days).toMatchObject({
+      expect(model?.overviewMetrics.last7Days).toMatchObject({
         title: 'Last 7 days',
         tiles: {
           CopyAnswersForm: {
