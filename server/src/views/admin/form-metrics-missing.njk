@@ -1,0 +1,48 @@
+{% extends "layouts/page.njk" %}
+
+{% from "page-body/macro.njk" import appPageBody %}
+{% from "metrics-overview/macro.njk" import appMetricsOverview %}
+{% from "govuk/components/tabs/macro.njk" import govukTabs %}
+{%- from "moj/components/filter/macro.njk" import mojFilter -%}
+{%- from "govuk/components/checkboxes/macro.njk" import govukCheckboxes -%}
+{%- from "govuk/components/radios/macro.njk" import govukRadios -%}
+{%- from "govuk/components/input/macro.njk" import govukInput -%}
+{% from "page-navigation/macro.njk" import appPageNavigation %}
+{% from "govuk/components/warning-text/macro.njk" import govukWarningText %}
+
+{% set mainClasses = "govuk-main-wrapper--masthead" %}
+
+{% block content %}
+  {% call appPageBody({
+    heading: pageHeading,
+    caption: caption,
+    useNewMasthead: true,
+    classes: "govuk-grid-column-full",
+    backLink: backLink
+  }) %}
+
+    {{ appPageNavigation({
+      extraClasses: "govuk-!-margin-bottom-8 govuk-!-margin-top-4",
+      navItems: [
+        {
+          title: "Form activity",
+          href: "/admin/form-metrics/form-activity/all?restoreFilter=Y",
+          active: true
+        },
+        {
+          title: "Component usage",
+          href: "/admin/form-metrics/component-usage"
+        },
+        {
+          title: "Sign-in",
+          href: "/admin/form-metrics/sign-in"
+        }
+      ]
+    }) }}
+
+    {{ govukWarningText({
+      text: "Metrics are missing. Please regenerate them using the admin tools, or wait for the overnight job to complete."
+    }) }}
+
+  {% endcall %}
+{% endblock %}

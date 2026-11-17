@@ -1,4 +1,4 @@
-import { FormMetricName } from '@defra/forms-model'
+import { FormMetricName, FunctionalAreaType } from '@defra/forms-model'
 
 import config from '~/src/config.js'
 import {
@@ -8,7 +8,8 @@ import {
 } from '~/src/lib/__stubs__/editor.js'
 import {
   getDrilldownMetrics,
-  getMetrics,
+  getFormMetrics,
+  getFunctionalAreaMetrics,
   getMetricsForForm,
   getSubmissionsPerMonth,
   regenerateMetrics
@@ -23,14 +24,14 @@ describe('metrics.js', () => {
     jest.clearAllMocks()
   })
 
-  describe('getMetrics', () => {
+  describe('getFormMetrics', () => {
     it('should call endpoint', async () => {
       mockedGetJson.mockResolvedValueOnce({
         response: createMockResponse(),
         body: { overview: [] }
       })
       const expectedUrl = new URL('/report/', auditEndpoint)
-      const result = await getMetrics()
+      const result = await getFormMetrics()
       expect(result.overview).toEqual([])
 
       const calledUrl = mockedGetJson.mock.calls[0][0]
@@ -46,7 +47,7 @@ describe('metrics.js', () => {
         '/report/?searchText=some+search+text&status=draft&status=live&org=Org1&org=Org2&language=cy',
         auditEndpoint
       )
-      const result = await getMetrics({
+      const result = await getFormMetrics({
         searchText: 'some search text',
         status: ['draft', 'live'],
         org: ['Org1', 'Org2'],
@@ -76,6 +77,45 @@ describe('metrics.js', () => {
       )
       expect(result).toEqual([])
 
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+
+    it('should include the language in the endpoint path', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { drilldownRows: [] }
+      })
+      const expectedUrl = new URL(
+        '/report/last7Days/NewFormsCreated/cy',
+        auditEndpoint
+      )
+
+      await getDrilldownMetrics(
+        'last7Days',
+        FormMetricName.NewFormsCreated,
+        'cy'
+      )
+
+      const calledUrl = mockedGetJson.mock.calls[0][0]
+      expect(calledUrl.href).toBe(expectedUrl.href)
+    })
+  })
+
+  describe('getFunctionalAreaMetrics', () => {
+    it('should request metrics for the selected functional area', async () => {
+      mockedGetJson.mockResolvedValueOnce({
+        response: createMockResponse(),
+        body: { totals: {} }
+      })
+      const expectedUrl = new URL(
+        `/report-functional-area/${FunctionalAreaType.Signin}`,
+        auditEndpoint
+      )
+
+      const result = await getFunctionalAreaMetrics(FunctionalAreaType.Signin)
+
+      expect(result.totals).toEqual({})
       const calledUrl = mockedGetJson.mock.calls[0][0]
       expect(calledUrl.href).toBe(expectedUrl.href)
     })

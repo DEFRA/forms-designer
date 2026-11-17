@@ -1,0 +1,19 @@
+{% set extraClasses = " " + params.extraClasses if params.extraClasses else "" %}
+
+<div class="app-tab-container app-tab-container--title-only govuk-summary-list{{ extraClasses }}">
+  {% for navItem in params.navItems %}
+    {% if navItem.active %}
+      <div class="editor-card-title">{{ navItem.title }}</div>
+    {% else %}
+      <nav class="app-page-navigation" aria-label="{{ navItem.title }}">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="{{ navItem.href }}">
+              {{ navItem.title }}
+            </a>
+          </div>
+        </div>
+      </nav>
+    {% endif %}
+  {% endfor %}
+</div>

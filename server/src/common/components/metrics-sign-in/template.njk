@@ -1,0 +1,43 @@
+{% from "metrics-tile/macro.njk" import appMetricsTile %}
+
+<div class="govuk-!-margin-bottom-6">
+  <span class="govuk-caption-m">{{ params.fromDate }} to {{ params.toDate }}</span>
+
+  <h2 class="govuk-heading-l">{{ params.title }}</h2>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Registration</h2>
+  <div class="govuk-grid-row">
+    <!-- Total Registrations -->
+    {{ appMetricsTile(params.tiles.Registration) }}
+  </div>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Sign-in</h2>
+  <div class="govuk-grid-row">
+    <!-- Successful authentications -->
+    {{ appMetricsTile(params.tiles.SuccessfulAuthentication) }}
+  </div>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Security code problems</h2>
+  <div class="govuk-grid-row">
+    <!-- Too many code requests -->
+    {{ appMetricsTile(params.tiles.TooManyCodeRequests) }}
+
+    <!-- Incorrect code requests -->
+    {{ appMetricsTile(params.tiles.IncorrectCodeEntered) }}
+  </div>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Account deletion</h2>
+  <div class="govuk-grid-row">
+    <!-- Account deletions -->
+    {{ appMetricsTile(params.tiles.AccountDeletion) }}
+  </div>
+
+  <h2 class="govuk-heading-m govuk-!-margin-bottom-4">Updating details</h2>
+  <div class="govuk-grid-row">
+    <!-- Email address updates -->
+    {{ appMetricsTile(params.tiles.EmailAddressUpdate) }}
+
+    <!-- Phone number updates -->
+    {{ appMetricsTile(params.tiles.PhoneNumberUpdate) }}
+  </div>
+</div>

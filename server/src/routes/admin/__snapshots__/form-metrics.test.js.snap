@@ -489,18 +489,30 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-row">
 <div class="govuk-grid-column-full">
   
-  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
-    <nav class="app-page-navigation" aria-label="Form activity">
-      <div class="app-page-navigation__list">
-        <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics/form-activity/all?restoreFilter=Y">
-            Form activity
-          </a>
+
+  
+<div class="app-tab-container app-tab-container--title-only govuk-summary-list govuk-!-margin-bottom-8">
+      <nav class="app-page-navigation" aria-label="Form activity">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/form-activity/all?restoreFilter=Y">
+              Form activity
+            </a>
+          </div>
         </div>
-      </div>
-    </nav>
-    <div class="editor-card-title">Component usage</div>
-  </div>
+      </nav>
+      <div class="editor-card-title">Component usage</div>
+      <nav class="app-page-navigation" aria-label="Sign-in">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/sign-in">
+              Sign-in
+            </a>
+          </div>
+        </div>
+      </nav>
+</div>
+
 
   <p class="govuk-body govuk-!-margin-bottom-6">Breakdown of how different components are being used across all forms.</p>
 
@@ -863,18 +875,29 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
   
   <a href="/admin/form-metrics-download" class="govuk-link govuk-link--no-visited-state pull-right">Download</a>
 
-  <div class="app-tab-container app-tab-container--title-only govuk-summary-list">
-    <div class="editor-card-title">Form activity</div>
-    <nav class="app-page-navigation" aria-label="Component usage">
-      <div class="app-page-navigation__list">
-        <div class="app-page-navigation__item">
-          <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
-            Component usage
-          </a>
+  
+<div class="app-tab-container app-tab-container--title-only govuk-summary-list govuk-!-margin-bottom-8">
+      <div class="editor-card-title">Form activity</div>
+      <nav class="app-page-navigation" aria-label="Component usage">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/component-usage">
+              Component usage
+            </a>
+          </div>
         </div>
-      </div>
-    </nav>
-  </div>
+      </nav>
+      <nav class="app-page-navigation" aria-label="Sign-in">
+        <div class="app-page-navigation__list">
+          <div class="app-page-navigation__item">
+            <a class="app-page-navigation__link" href="/admin/form-metrics/sign-in">
+              Sign-in
+            </a>
+          </div>
+        </div>
+      </nav>
+</div>
+
 
   <form action="#" method="post">
     <div class="govuk-form-group">
@@ -1192,7 +1215,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
   <div class="govuk-tabs__panel govuk-tabs__panel--hidden" id="all-time">
     <!-- Form Activity Section -->
     <div class="govuk-!-margin-bottom-6">
-      <span class="govuk-caption-m"> to 1 January 2026</span>
+      <span class="govuk-caption-m">1 January 2025 to 1 January 2026</span>
     
       <h2 class="govuk-heading-l">All time</h2>
     
@@ -1444,6 +1467,12 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
         Veterinary Medicines Directorate – VMD (0)
       </label>
     </div>
+    <div class="govuk-checkboxes__item">
+      <input class="govuk-checkboxes__input" id="org-10" name="org" type="checkbox" value="Test organisation">
+      <label class="govuk-label govuk-checkboxes__label" for="org-10">
+        Test organisation (1)
+      </label>
+    </div>
   </div>
 </fieldset>
 </div>
@@ -1465,7 +1494,7 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
           <div class="moj-action-bar__filter">
             <button type="submit" name="showFilter" value="Y" class="govuk-button govuk-button--secondary moj-button--filter" data-module="govuk-button" aria-controls="moj-filter" aria-expanded="false" data-govuk-button-init="">Show filter</button>
           </div>
-          <span class="govuk-heading-s pull-right">0 rows</span>
+          <span class="govuk-heading-s pull-right">1 row</span>
         </div>
 
         <table class="govuk-table moj-scrollable-pane" data-module="moj-sortable-table">
@@ -1485,6 +1514,23 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
             </tr>
           </thead>
           <tbody class="govuk-table__body">
+            <tr class="govuk-table__row" style="display: table-row;">
+              <th scope="row" class="govuk-table__header">
+                <a href="/library/test-form" class="govuk-link govuk-link--no-visited-state">Test Form</a>
+              </th>
+              <td class="govuk-table__cell">Test organisation</td>
+              <td class="govuk-table__cell">
+                  <strong class="govuk-tag govuk-tag--yellow">Draft</strong>
+              </td>
+              <td class="govuk-table__cell"></td>
+              <td class="govuk-table__cell"></td>
+              <td class="govuk-table__cell"></td>
+              <td class="govuk-table__cell"></td>
+              <td class="govuk-table__cell">-</td>
+              <td class="govuk-table__cell">-</td>
+              <td class="govuk-table__cell"></td>
+              <td class="govuk-table__cell">3</td>
+            </tr>
           </tbody>
         </table>
       </div>

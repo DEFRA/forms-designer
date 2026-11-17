@@ -1,14 +1,17 @@
 import { FormMetricName, FormMetricType, FormStatus } from '@defra/forms-model'
 
 import {
-  MetricsTileConfig,
   buildAriaLabel,
   buildChangePhrase,
   calcChangePercentage,
+  componentUsageFeatures,
   componentUsageFormStructures,
+  componentUsageQuestionTypes,
   mapOverviewMetrics,
+  mapTotalMetrics,
   oneDecimalPlace
 } from '~/src/models/admin/metrics-helper.js'
+import { MetricsTileConfig } from '~/src/models/admin/metrics-tile-config.js'
 
 describe('metrics model', () => {
   describe('buildAriaLabel', () => {
@@ -225,6 +228,147 @@ describe('metrics model', () => {
           average: '10.5'
         }
       ])
+    })
+  })
+
+  describe('componentUsageQuestionTypes', () => {
+    it('should aggregate question usage for the requested form status', () => {
+      const metrics = {
+        overview: [
+          {
+            formStatus: FormStatus.Draft,
+            featureMetrics: {
+              questionTypes: { TextField: 2, DateField: 1 }
+            }
+          },
+          {
+            formStatus: FormStatus.Draft,
+            featureMetrics: {
+              questionTypes: { TextField: 3 }
+            }
+          },
+          {
+            formStatus: FormStatus.Live,
+            featureMetrics: {
+              questionTypes: { DateField: 4 }
+            }
+          }
+        ],
+        totals: {}
+      }
+
+      // @ts-expect-error - partial mock of data
+      expect(componentUsageQuestionTypes(metrics, FormStatus.Draft)).toEqual([
+        {
+          questionTypeName: 'TextField',
+          totalUsage: 5,
+          formsUsing: 2,
+          percentage: '100.0%'
+        },
+        {
+          questionTypeName: 'DateField',
+          totalUsage: 1,
+          formsUsing: 1,
+          percentage: '50.0%'
+        }
+      ])
+    })
+  })
+
+  describe('componentUsageFeatures', () => {
+    it('should count each feature once per matching form', () => {
+      const metrics = {
+        overview: [
+          {
+            formStatus: FormStatus.Draft,
+            featureMetrics: { features: { Conditions: 3, Repeaters: 1 } }
+          },
+          {
+            formStatus: FormStatus.Draft,
+            featureMetrics: { features: { Conditions: 1 } }
+          },
+          {
+            formStatus: FormStatus.Live,
+            featureMetrics: { features: { Repeaters: 1 } }
+          }
+        ],
+        totals: {}
+      }
+
+      // @ts-expect-error - partial mock of data
+      expect(componentUsageFeatures(metrics, FormStatus.Draft)).toEqual([
+        {
+          featureName: 'Conditions',
+          formsUsing: 2,
+          percentage: '100.0%'
+        },
+        {
+          featureName: 'Repeaters',
+          formsUsing: 1,
+          percentage: '50.0%'
+        }
+      ])
+    })
+  })
+
+  describe('mapTotalMetrics', () => {
+    it('should map date ranges, count changes, and drilldown links', () => {
+      const totals = {
+        updatedAt: new Date('2026-01-15T12:30:00.000Z'),
+        earliestDate: new Date('2025-12-01T12:30:00.000Z'),
+        last7Days: { [FormMetricName.NewFormsCreated]: { count: 3 } },
+        prev7Days: { [FormMetricName.NewFormsCreated]: { count: 2 } },
+        last30Days: {},
+        prev30Days: {},
+        allTime: {},
+        prevYear: {}
+      }
+      const periods = {
+        last7Days: {
+          ariaPeriodName: 'previous 7 days',
+          straplinePeriodName: 'last week',
+          slug: 'last-7-days'
+        },
+        last30Days: {
+          ariaPeriodName: 'previous 30 days',
+          straplinePeriodName: 'last month',
+          slug: 'last-30-days'
+        },
+        allTime: {
+          ariaPeriodName: 'previous year',
+          straplinePeriodName: 'last year',
+          slug: 'all-time'
+        }
+      }
+
+      // @ts-expect-error - partial mock of data
+      const result = mapTotalMetrics(totals, periods, 'cy')
+
+      expect(result.last7Days).toMatchObject({
+        fromDate: '8 January 2026',
+        toDate: '15 January 2026',
+        title: 'Last 7 days',
+        tiles: {
+          [FormMetricName.NewFormsCreated]: {
+            count: 3,
+            changeSymbol: '+',
+            changeValue: 1,
+            changePercentage: 50,
+            strapline: '1 more form created than last week',
+            drillDown: {
+              enabled: true,
+              url: '/admin/form-metrics/drilldown/last-7-days/NewFormsCreated/cy'
+            }
+          },
+          [FormMetricName.FormsInDraft]: {
+            drillDown: { enabled: false, url: '' }
+          },
+          [FormMetricName.TimeToPublish]: {
+            units: 'days'
+          }
+        }
+      })
+      expect(result.allTime.fromDate).toBe('1 December 2025')
     })
   })
 

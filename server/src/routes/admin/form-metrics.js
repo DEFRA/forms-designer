@@ -1,6 +1,7 @@
 import {
   FormMetricName,
   FormStatus,
+  FunctionalAreaType,
   Scopes,
   getErrorMessage
 } from '@defra/forms-model'
@@ -16,7 +17,8 @@ import config from '~/src/config.js'
 import {
   MetricsFilterFields,
   getDrilldownMetrics,
-  getMetrics,
+  getFormMetrics,
+  getFunctionalAreaMetrics,
   getSubmissionsPerMonth,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
@@ -26,7 +28,8 @@ import {
   getPeriodNameFromSlug,
   metricsComponentUsageViewModel,
   metricsDrilldownViewModel,
-  metricsFormActivityViewModel
+  metricsFormActivityViewModel,
+  metricsSignInViewModel
 } from '~/src/models/admin/metrics.js'
 
 const ROUTE_FULL_PATH = '/admin/form-metrics/{tab}/{activityType?}'
@@ -42,6 +45,7 @@ const SHOW_FILTER = 'showFilter'
 
 const COMPONENT_USAGE_TAB = 'component-usage'
 const FORM_ACTIVITY_TAB = 'form-activity'
+const SIGN_IN_TAB = 'sign-in'
 
 export const FORM_ACTIVITY_OPTION_ALL = 'all'
 export const FORM_ACTIVITY_OPTION_WELSH = 'cy'
@@ -157,16 +161,29 @@ export default [
             }
           : query
 
-      const metrics = await getMetrics(filter)
-
       let model
       let viewName
       if (tab === COMPONENT_USAGE_TAB) {
+        const metrics = await getFormMetrics(filter)
         model = metricsComponentUsageViewModel(metrics)
         viewName = 'admin/form-metrics-component-usage'
-      } else {
+      } else if (tab === FORM_ACTIVITY_TAB) {
+        const metrics = await getFormMetrics(filter)
         model = metricsFormActivityViewModel(metrics, filter, activityType)
         viewName = 'admin/form-metrics-form-activity'
+      } else if (tab === SIGN_IN_TAB) {
+        const signinMetrics = await getFunctionalAreaMetrics(
+          FunctionalAreaType.Signin
+        )
+        model = metricsSignInViewModel(signinMetrics.totals)
+
+        viewName = 'admin/form-metrics-sign-in'
+      } else {
+        return h.redirect(`${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`)
+      }
+
+      if (!model) {
+        return h.view('admin/form-metrics-missing')
       }
 
       return h.view(viewName, {
@@ -301,9 +318,9 @@ export default [
 
       try {
         // Live metrics only - for all forms
-        const metrics = await getMetrics()
+        const metrics = await getFormMetrics()
         // Live metrics only - for Welsh forms
-        const metricsWelsh = await getMetrics({ language: 'cy' })
+        const metricsWelsh = await getFormMetrics({ language: 'cy' })
 
         const submissionsPerMonth = await getSubmissionsPerMonth(
           new Date(metrics.totals.earliestDate)
@@ -358,7 +375,7 @@ export default [
       const periodName = getPeriodNameFromSlug(period)
 
       // Get tile metrics, for period ranges and form details lookups
-      const tileMetrics = await getMetrics(language ? { language } : {})
+      const tileMetrics = await getFormMetrics(language ? { language } : {})
 
       const drilldownMetrics = await getDrilldownMetrics(
         periodName,
@@ -446,7 +463,7 @@ export async function getCachedMetrics() {
     )
   }
 
-  const metrics = await getMetrics()
+  const metrics = await getFormMetrics()
 
   cache.set(key, metrics)
 

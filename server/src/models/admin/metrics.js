@@ -1,14 +1,17 @@
 import { FormStatus, organisations } from '@defra/forms-model'
 
 import {
-  MetricsTileConfig,
   componentUsageFeatures,
   componentUsageFormStructures,
   componentUsageQuestionTypes,
   mapOverviewMetrics,
-  mapTotalMetrics,
-  numberCell
+  mapSigninMetrics,
+  mapTotalMetrics
 } from '~/src/models/admin/metrics-helper.js'
+import {
+  MetricsTileConfig,
+  numberCell
+} from '~/src/models/admin/metrics-tile-config.js'
 
 /**
  * @typedef {object} ComponentUsageModel
@@ -105,6 +108,11 @@ export function metricsFormActivityViewModel(
   filterAndSort,
   activityType
 ) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (metrics.overview.length === 0) {
+    return undefined
+  }
+
   const organisationMap = /** @type {Map<string, number>} */ (new Map())
   organisations.forEach((org) => {
     organisationMap.set(org, 0)
@@ -300,6 +308,11 @@ export function createDrilldownHeaderAndRows(metrics, metricName, details) {
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
 export function metricsComponentUsageViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (metrics.overview.length === 0) {
+    return undefined
+  }
+
   const draftModel = {
     formUsageQuestionTypes: componentUsageQuestionTypes(
       metrics,
@@ -386,6 +399,20 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTimelineMetric, FormTotalsMetric } from '@defra/forms-model'
+ * @param { FunctionalAreaTotalsMetric | undefined } metrics
+ */
+export function metricsSignInViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (!metrics) {
+    return undefined
+  }
+
+  return {
+    overviewMetrics: mapSigninMetrics(metrics, tilePeriodNames)
+  }
+}
+
+/**
+ * @import { FormDrilldownMetric, FormMetricName, FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric } from '@defra/forms-model'
  * @import { ComponentUsageQuestionType, ComponentUsageFeature, ComponentUsageFormStructure, FilterAndSortCriteria , FilterCriteria, FormTilesView, SortCriteria, TableRowMetric} from '~/src/models/admin/metrics-helper.js'
  */
