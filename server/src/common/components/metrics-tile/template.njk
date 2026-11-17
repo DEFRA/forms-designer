@@ -1,8 +1,8 @@
 {% if params.changeSymbol === '+' %}
-  {% set directionSymbolClasses = "govuk-tag--green app-tag-with-icon app-tag-arrow-up" %}
+  {% set directionSymbolClasses = "govuk-tag--red app-tag-with-icon app-tag-arrow-up" if params.invertDirectionColours else "govuk-tag--green app-tag-with-icon app-tag-arrow-up" %}
   {% set changeSymbolPercent = '+' %}
 {% elif params.changeSymbol === '-' %}
-  {% set directionSymbolClasses = "govuk-tag--red app-tag-with-icon app-tag-arrow-down" %}
+  {% set directionSymbolClasses = "govuk-tag--green app-tag-with-icon app-tag-arrow-down" if params.invertDirectionColours else "govuk-tag--red app-tag-with-icon app-tag-arrow-down" %}
   {% set changeSymbolPercent = '' %}
 {% endif %}
 {% set metricTestId = params.testId or ('headline-column-' + (params.title | lower | replace(' ', '-'))) %}

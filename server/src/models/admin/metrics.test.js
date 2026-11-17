@@ -34,7 +34,8 @@ function getExpectedTile(title, ariaPeriod, strapline) {
     count: 0,
     strapline,
     title,
-    classes: ''
+    classes: '',
+    invertDirectionColours: false
   }
 }
 
@@ -167,7 +168,7 @@ describe('metrics models', () => {
       // @ts-expect-error - partial data mocked
       const model = metricsFormActivityViewModel(mockMetrics, {})
 
-      expect(model.formMetricRows).toEqual([
+      expect(model?.formMetricRows).toEqual([
         {
           daysToPublish: '-',
           features: '',
@@ -185,7 +186,7 @@ describe('metrics models', () => {
           republished: '-'
         }
       ])
-      expect(model.overviewMetrics.last7Days).toEqual({
+      expect(model?.overviewMetrics.last7Days).toEqual({
         fromDate: '25 December 2025',
         toDate: '1 January 2026',
         title: 'Last 7 days',
@@ -259,7 +260,7 @@ describe('metrics models', () => {
           }
         }
       })
-      expect(model.overviewMetrics.last30Days).toEqual({
+      expect(model?.overviewMetrics.last30Days).toEqual({
         fromDate: '2 December 2025',
         toDate: '1 January 2026',
         title: 'Last 30 days',
@@ -333,7 +334,7 @@ describe('metrics models', () => {
           }
         }
       })
-      expect(model.overviewMetrics.allTime).toEqual({
+      expect(model?.overviewMetrics.allTime).toEqual({
         fromDate: undefined,
         toDate: '1 January 2026',
         title: 'All time',

@@ -21,7 +21,6 @@ import {
   MetricsTileConfig,
   numberCell
 } from '~/src/models/admin/metrics-tile-config.js'
-import { ROUTE_BASE_PATH } from '~/src/routes/admin/form-metrics.js'
 
 /**
  * @typedef {object} ComponentUsageModel
@@ -123,6 +122,11 @@ export function metricsFormActivityViewModel(
   filterAndSort,
   activityType
 ) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (metrics.overview.length === 0) {
+    return undefined
+  }
+
   const organisationMap = /** @type {Map<string, number>} */ (new Map())
   organisations.forEach((org) => {
     organisationMap.set(org, 0)
@@ -318,6 +322,11 @@ export function createDrilldownHeaderAndRows(metrics, metricName, details) {
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
 export function metricsComponentUsageViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (metrics.overview.length === 0) {
+    return undefined
+  }
+
   const draftModel = {
     formUsageQuestionTypes: componentUsageQuestionTypes(
       metrics,
@@ -404,9 +413,14 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @param {FunctionalAreaTotalsMetric} metrics
+ * @param { FunctionalAreaTotalsMetric | undefined } metrics
  */
 export function metricsSignInViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (!metrics) {
+    return undefined
+  }
+
   return {
     overviewMetrics: mapSigninMetrics(metrics, tilePeriodNames)
   }
@@ -428,42 +442,42 @@ export function metricsCopyAnswersViewModel(metrics) {
  * @param {string} tab
  * @param {*} filter
  * @param {*} activityType
- * @returns {Promise<{ model?: any, viewName: string, redirectUrl?: string }>}
+ * @returns {Promise<{ model?: any, viewName: string, validTab: boolean }>}
  */
 export async function buildMetricsViewModel(tab, filter, activityType) {
+  let model
+  let viewName = 'admin/form-metrics-missing'
+  let validTab = false
   if (tab === COMPONENT_USAGE_TAB) {
+    validTab = true
     const metrics = await getFormMetrics(filter)
-    return {
-      model: metricsComponentUsageViewModel(metrics),
-      viewName: 'admin/form-metrics-component-usage'
-    }
+    model = metricsComponentUsageViewModel(metrics)
+    viewName = 'admin/form-metrics-component-usage'
   } else if (tab === FORM_ACTIVITY_TAB) {
+    validTab = true
     const metrics = await getFormMetrics(filter)
-    return {
-      model: metricsFormActivityViewModel(metrics, filter, activityType),
-      viewName: 'admin/form-metrics-form-activity'
-    }
+    model = metricsFormActivityViewModel(metrics, filter, activityType)
+    viewName = 'admin/form-metrics-form-activity'
   } else if (tab === SIGN_IN_TAB) {
+    validTab = true
     const signinMetrics = await getFunctionalAreaMetrics(
       FunctionalAreaType.Signin
     )
-    return {
-      model: metricsSignInViewModel(signinMetrics.totals),
-      viewName: 'admin/form-metrics-sign-in'
-    }
+    model = metricsSignInViewModel(signinMetrics.totals)
+    viewName = 'admin/form-metrics-sign-in'
   } else if (tab === COPY_ANSWERS_TAB) {
+    validTab = true
     const copyAnswersMetrics = await getFunctionalAreaMetrics(
       FunctionalAreaType.CopyAnswers
     )
-    return {
-      model: metricsCopyAnswersViewModel(copyAnswersMetrics),
-      viewName: 'admin/form-metrics-copy-answers'
-    }
-  } else {
-    return {
-      redirectUrl: `${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`,
-      viewName: 'n/a'
-    }
+    model = metricsCopyAnswersViewModel(copyAnswersMetrics)
+    viewName = 'admin/form-metrics-copy-answers'
+  }
+
+  return {
+    model,
+    viewName,
+    validTab
   }
 }
 

@@ -101,12 +101,14 @@ export function mapSigninTiles(
       [SigninMetricName.TooManyCodeRequests]: createTile(
         TOO_MANY_CODE_REQUESTS_TITLE,
         SigninMetricName.TooManyCodeRequests,
-        commonParams
+        commonParams,
+        { invertColours: true }
       ),
       [SigninMetricName.IncorrectCodeEntered]: createTile(
         INCORRECT_CODE_ENTERED_TITLE,
         SigninMetricName.IncorrectCodeEntered,
-        commonParams
+        commonParams,
+        { invertColours: true }
       ),
       [SigninMetricName.AccountDeletion]: createTile(
         ACCOUNT_DELETIONS_TITLE,

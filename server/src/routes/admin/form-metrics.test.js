@@ -1,4 +1,8 @@
-import { FormStatus, FunctionalAreaType } from '@defra/forms-model'
+import {
+  FormMetricType,
+  FormStatus,
+  FunctionalAreaType
+} from '@defra/forms-model'
 import { format } from 'date-fns'
 import { StatusCodes } from 'http-status-codes'
 
@@ -108,8 +112,28 @@ describe('Form metrics routes', () => {
 
       test('should render report form with form activity', async () => {
         const mockMetrics = {
-          overview: [],
+          overview: /** @type {FormOverviewMetric[]} */ ([
+            {
+              type: FormMetricType.OverviewMetric,
+              formId: 'test-form-id',
+              formStatus: FormStatus.Draft,
+              summaryMetrics: {
+                name: 'Test Form',
+                slug: 'test-form',
+                organisation: 'Test organisation',
+                features: []
+              },
+              featureMetrics: {
+                features: new Map(),
+                formStructure: new Map(),
+                questionTypes: new Map()
+              },
+              submissionsCount: 3,
+              updatedAt: new Date('2026-01-01T00:00:00.000Z')
+            }
+          ]),
           totals: /** @type {FormTotalsMetric} */ ({
+            type: FormMetricType.TotalsMetric,
             last7Days: {},
             prev7Days: {},
             last30Days: {},
@@ -119,7 +143,8 @@ describe('Form metrics routes', () => {
             allTime: {},
             draftSubmissions: {},
             liveSubmissions: {},
-            updatedAt: new Date('2026-01-01T00:00:00.000Z')
+            updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+            earliestDate: new Date('2025-01-01T00:00:00.000Z')
           })
         }
         jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
@@ -187,8 +212,28 @@ describe('Form metrics routes', () => {
 
       test('should render report form with component usage', async () => {
         const mockMetrics = {
-          overview: [],
+          overview: /** @type {FormOverviewMetric[]} */ ([
+            {
+              type: FormMetricType.OverviewMetric,
+              formId: 'test-form-id',
+              formStatus: FormStatus.Draft,
+              summaryMetrics: {
+                name: 'Test Form',
+                slug: 'test-form',
+                organisation: 'Test organisation',
+                features: []
+              },
+              featureMetrics: {
+                features: new Map(),
+                formStructure: new Map(),
+                questionTypes: new Map()
+              },
+              submissionsCount: 3,
+              updatedAt: new Date('2026-01-01T00:00:00.000Z')
+            }
+          ]),
           totals: /** @type {FormTotalsMetric} */ ({
+            type: FormMetricType.TotalsMetric,
             last7Days: {},
             prev7Days: {},
             last30Days: {},
@@ -198,7 +243,8 @@ describe('Form metrics routes', () => {
             allTime: {},
             draftSubmissions: {},
             liveSubmissions: {},
-            updatedAt: new Date('2026-01-01T00:00:00.000Z')
+            updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+            earliestDate: new Date('2025-01-01T00:00:00.000Z')
           })
         }
         jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
@@ -235,6 +281,7 @@ describe('Form metrics routes', () => {
         const mockMetrics = {
           overview: [],
           totals: /** @type {FormTotalsMetric} */ ({
+            type: FormMetricType.TotalsMetric,
             last7Days: {},
             prev7Days: {},
             last30Days: {},
@@ -244,7 +291,8 @@ describe('Form metrics routes', () => {
             allTime: {},
             draftSubmissions: {},
             liveSubmissions: {},
-            updatedAt: new Date('2026-01-01T00:00:00.000Z')
+            updatedAt: new Date('2026-01-01T00:00:00.000Z'),
+            earliestDate: new Date('2025-01-01T00:00:00.000Z')
           })
         }
         jest.mocked(getFormMetrics).mockResolvedValueOnce(mockMetrics)
@@ -256,6 +304,7 @@ describe('Form metrics routes', () => {
         })
 
         expect(response.statusCode).toBe(StatusCodes.OK)
+        expect(response.result).toContain('Metrics are missing.')
         expect(getFormMetrics).toHaveBeenCalledWith({
           searchText: 'water',
           language: 'cy'
@@ -645,5 +694,5 @@ describe('Form metrics routes', () => {
 
 /**
  * @import { Server } from '@hapi/hapi'
- * @import { FormTotalsMetric, FunctionalAreaTotalsMetric } from '@defra/forms-model'
+ * @import { FormOverviewMetric, FormTotalsMetric, FunctionalAreaTotalsMetric } from '@defra/forms-model'
  */

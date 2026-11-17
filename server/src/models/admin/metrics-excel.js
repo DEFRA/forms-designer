@@ -181,7 +181,7 @@ export function getMetricsAsExcel(metrics, metricsWelsh, submissionsPerMonth) {
   const workbook = xlsx.utils.book_new()
 
   // Form Activity - all
-  const { formMetricRows } = metricsFormActivityViewModel(
+  const result = metricsFormActivityViewModel(
     metrics,
     {
       sortCol: 'formName',
@@ -189,10 +189,18 @@ export function getMetricsAsExcel(metrics, metricsWelsh, submissionsPerMonth) {
     },
     FORM_ACTIVITY_OPTION_ALL
   )
-  addWorksheet(workbook, activityColumns, formMetricRows, 'All form activity')
+  if (!result) {
+    throw new Error('Missing metrics')
+  }
+  addWorksheet(
+    workbook,
+    activityColumns,
+    result.formMetricRows,
+    'All form activity'
+  )
 
   // Form Activity - Welsh forms only
-  const { formMetricRows: formMetricRowsWelsh } = metricsFormActivityViewModel(
+  const resultWelsh = metricsFormActivityViewModel(
     metricsWelsh,
     {
       sortCol: 'formName',
@@ -203,12 +211,15 @@ export function getMetricsAsExcel(metrics, metricsWelsh, submissionsPerMonth) {
   addWorksheet(
     workbook,
     activityColumns,
-    formMetricRowsWelsh,
+    resultWelsh?.formMetricRows ?? [],
     'Welsh form activity'
   )
 
   // Component usage - question types
   const componentUsage = metricsComponentUsageViewModel(metrics)
+  if (!componentUsage) {
+    throw new Error('Missing metrics')
+  }
   addWorksheet(
     workbook,
     questionTypesColumns,

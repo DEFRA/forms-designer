@@ -154,23 +154,32 @@ export default [
             }
           : query
 
-      const { model, viewName, redirectUrl } = await buildMetricsViewModel(
+      const { model, viewName, validTab } = await buildMetricsViewModel(
         tab,
         filter,
         activityType
       )
-      if (redirectUrl) {
-        return h.redirect(redirectUrl)
+
+      if (!validTab) {
+        return h.redirect(`${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`)
       }
 
-      return h.view(viewName, {
+      const viewContext = {
         pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
         pageHeading: { text: METRICS_TITLE },
         backLink: {
           text: 'Back to admin tools',
           href: ROUTE_ADMIN_INDEX
         },
-        navigation,
+        navigation
+      }
+
+      if (!model) {
+        return h.view('admin/form-metrics-missing', viewContext)
+      }
+
+      return h.view(viewName, {
+        ...viewContext,
         model
       })
     },

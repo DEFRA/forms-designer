@@ -243,7 +243,7 @@ export function oneDecimalPlace(num) {
  * @param { FormMetricName | FunctionalAreaMetricName } metricName
  * @param {PeriodName} periodNames
  * @param { string | undefined } language
- * @param { string | undefined } [units]
+ * @param { { units?: string, invertColours?: boolean } | undefined } options
  */
 export function collateSpecificTileCounts(
   currPeriod,
@@ -251,7 +251,7 @@ export function collateSpecificTileCounts(
   metricName,
   periodNames,
   language,
-  units
+  options
 ) {
   const currPeriodCount =
     currPeriod && metricName in currPeriod
@@ -268,10 +268,11 @@ export function collateSpecificTileCounts(
       count: oneDecimalPlace(currPeriodCount),
       changeSymbol: currPeriodCount === prevPeriodCount ? '' : notEqualSymbol,
       changeValue: oneDecimalPlace(currPeriodCount - prevPeriodCount),
-      changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount)
+      changePercentage: calcChangePercentage(currPeriodCount, prevPeriodCount),
+      invertDirectionColours: options?.invertColours ?? false
     })
-  if (units) {
-    counts.units = units
+  if (options?.units) {
+    counts.units = options.units
   }
 
   const changePhrase = buildChangePhrase(counts)
@@ -307,9 +308,9 @@ export function collateSpecificTileCounts(
  * @param {string} title
  * @param { FormMetricName | FunctionalAreaMetricName } metricName
  * @param {{ currPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, prevPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, periodNames: PeriodName, language: string | undefined, classes?: string }} commonParams
- * @param {string} [units]
+ * @param {{ units?: string, invertColours?: boolean }} [options]
  */
-export function createTile(title, metricName, commonParams, units) {
+export function createTile(title, metricName, commonParams, options) {
   return /** @type {MetricsTile} */ ({
     title,
     ...collateSpecificTileCounts(
@@ -318,7 +319,7 @@ export function createTile(title, metricName, commonParams, units) {
       metricName,
       commonParams.periodNames,
       commonParams.language,
-      units
+      options
     ),
     ...(commonParams.classes ? { classes: commonParams.classes } : {})
   })
@@ -384,7 +385,7 @@ export function mapOverviewTiles(
         TIME_TO_PUBLISH_TITLE,
         FormMetricName.TimeToPublish,
         commonParams,
-        'days'
+        { units: 'days' }
       )
     }
   })
