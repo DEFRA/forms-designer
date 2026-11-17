@@ -175,7 +175,7 @@ describe('metrics models', () => {
           }
         }
       })
-      expect(model.overviewMetrics.last30Days).toEqual({
+      expect(model?.overviewMetrics.last30Days).toEqual({
         fromDate: '2 December 2025',
         toDate: '1 January 2026',
         title: 'Last 30 days',
@@ -249,7 +249,7 @@ describe('metrics models', () => {
           }
         }
       })
-      expect(model.overviewMetrics.allTime).toEqual({
+      expect(model?.overviewMetrics.allTime).toEqual({
         fromDate: undefined,
         toDate: '1 January 2026',
         title: 'All time',
