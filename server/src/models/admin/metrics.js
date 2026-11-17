@@ -108,6 +108,11 @@ export function metricsFormActivityViewModel(
   filterAndSort,
   activityType
 ) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (metrics.overview.length === 0) {
+    return undefined
+  }
+
   const organisationMap = /** @type {Map<string, number>} */ (new Map())
   organisations.forEach((org) => {
     organisationMap.set(org, 0)
@@ -303,6 +308,11 @@ export function createDrilldownHeaderAndRows(metrics, metricName, details) {
  * @param {{ overview: FormOverviewMetric[], totals: FormTotalsMetric }} metrics
  */
 export function metricsComponentUsageViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (metrics.overview.length === 0) {
+    return undefined
+  }
+
   const draftModel = {
     formUsageQuestionTypes: componentUsageQuestionTypes(
       metrics,
@@ -389,9 +399,14 @@ export function combineModel(combinedElement, liveElement, typeKeyName) {
 }
 
 /**
- * @param {FunctionalAreaTotalsMetric} metrics
+ * @param { FunctionalAreaTotalsMetric | undefined } metrics
  */
 export function metricsSignInViewModel(metrics) {
+  // This check ensures that if there are no overview metrics, the function returns undefined early.
+  if (!metrics) {
+    return undefined
+  }
+
   return {
     overviewMetrics: mapSigninMetrics(metrics, tilePeriodNames)
   }

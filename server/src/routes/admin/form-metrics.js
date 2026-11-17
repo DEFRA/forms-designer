@@ -182,6 +182,10 @@ export default [
         return h.redirect(`${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`)
       }
 
+      if (!model) {
+        return h.view('admin/form-metrics-missing')
+      }
+
       return h.view(viewName, {
         pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
         pageHeading: { text: METRICS_TITLE },
