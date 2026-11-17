@@ -447,37 +447,37 @@ export function metricsCopyAnswersViewModel(metrics) {
 export async function buildMetricsViewModel(tab, filter, activityType) {
   let model
   let viewName = 'admin/form-metrics-missing'
-  let validTab = false
   if (tab === COMPONENT_USAGE_TAB) {
-    validTab = true
     const metrics = await getFormMetrics(filter)
     model = metricsComponentUsageViewModel(metrics)
     viewName = 'admin/form-metrics-component-usage'
   } else if (tab === FORM_ACTIVITY_TAB) {
-    validTab = true
     const metrics = await getFormMetrics(filter)
     model = metricsFormActivityViewModel(metrics, filter, activityType)
     viewName = 'admin/form-metrics-form-activity'
   } else if (tab === SIGN_IN_TAB) {
-    validTab = true
     const signinMetrics = await getFunctionalAreaMetrics(
       FunctionalAreaType.Signin
     )
     model = metricsSignInViewModel(signinMetrics.totals)
     viewName = 'admin/form-metrics-sign-in'
   } else if (tab === COPY_ANSWERS_TAB) {
-    validTab = true
     const copyAnswersMetrics = await getFunctionalAreaMetrics(
       FunctionalAreaType.CopyAnswers
     )
     model = metricsCopyAnswersViewModel(copyAnswersMetrics)
     viewName = 'admin/form-metrics-copy-answers'
+  } else {
+    return {
+      validTab: false,
+      viewName
+    }
   }
 
   return {
     model,
     viewName,
-    validTab
+    validTab: true
   }
 }
 
