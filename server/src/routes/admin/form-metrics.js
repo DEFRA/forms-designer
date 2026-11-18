@@ -1,7 +1,6 @@
 import {
   FormMetricName,
   FormStatus,
-  FunctionalAreaType,
   Scopes,
   getErrorMessage
 } from '@defra/forms-model'
@@ -18,22 +17,20 @@ import {
   MetricsFilterFields,
   getDrilldownMetrics,
   getFormMetrics,
-  getFunctionalAreaMetrics,
   getSubmissionsPerMonth,
   regenerateMetrics
 } from '~/src/lib/metrics.js'
 import { publishPlatformMetricsDownloadRequestedEvent } from '~/src/messaging/publish.js'
 import { getMetricsAsExcel } from '~/src/models/admin/metrics-excel.js'
 import {
+  FORM_ACTIVITY_TAB,
+  buildMetricsViewModel,
   getPeriodNameFromSlug,
-  metricsComponentUsageViewModel,
-  metricsDrilldownViewModel,
-  metricsFormActivityViewModel,
-  metricsSignInViewModel
+  metricsDrilldownViewModel
 } from '~/src/models/admin/metrics.js'
 
 const ROUTE_FULL_PATH = '/admin/form-metrics/{tab}/{activityType?}'
-const ROUTE_BASE_PATH = '/admin/form-metrics'
+export const ROUTE_BASE_PATH = '/admin/form-metrics'
 const ROUTE_ADMIN_INDEX = '/admin/index'
 const ROUTE_DRILLDOWN_PATH =
   '/admin/form-metrics/drilldown/{period}/{metricName}/{language?}'
@@ -42,10 +39,6 @@ const ADMIN_TOOLS = 'Admin tools'
 const METRICS_TITLE = 'Defra Form Designer metrics'
 
 const SHOW_FILTER = 'showFilter'
-
-const COMPONENT_USAGE_TAB = 'component-usage'
-const FORM_ACTIVITY_TAB = 'form-activity'
-const SIGN_IN_TAB = 'sign-in'
 
 export const FORM_ACTIVITY_OPTION_ALL = 'all'
 export const FORM_ACTIVITY_OPTION_WELSH = 'cy'
@@ -161,39 +154,32 @@ export default [
             }
           : query
 
-      let model
-      let viewName
-      if (tab === COMPONENT_USAGE_TAB) {
-        const metrics = await getFormMetrics(filter)
-        model = metricsComponentUsageViewModel(metrics)
-        viewName = 'admin/form-metrics-component-usage'
-      } else if (tab === FORM_ACTIVITY_TAB) {
-        const metrics = await getFormMetrics(filter)
-        model = metricsFormActivityViewModel(metrics, filter, activityType)
-        viewName = 'admin/form-metrics-form-activity'
-      } else if (tab === SIGN_IN_TAB) {
-        const signinMetrics = await getFunctionalAreaMetrics(
-          FunctionalAreaType.Signin
-        )
-        model = metricsSignInViewModel(signinMetrics.totals)
+      const { model, viewName, validTab } = await buildMetricsViewModel(
+        tab,
+        filter,
+        activityType
+      )
 
-        viewName = 'admin/form-metrics-sign-in'
-      } else {
+      if (!validTab) {
         return h.redirect(`${ROUTE_BASE_PATH}/${FORM_ACTIVITY_TAB}/all`)
       }
 
-      if (!model) {
-        return h.view('admin/form-metrics-missing')
-      }
-
-      return h.view(viewName, {
+      const viewContext = {
         pageTitle: `${ADMIN_TOOLS} - ${METRICS_TITLE}`,
         pageHeading: { text: METRICS_TITLE },
         backLink: {
           text: 'Back to admin tools',
           href: ROUTE_ADMIN_INDEX
         },
-        navigation,
+        navigation
+      }
+
+      if (!model) {
+        return h.view('admin/form-metrics-missing', viewContext)
+      }
+
+      return h.view(viewName, {
+        ...viewContext,
         model
       })
     },
@@ -473,5 +459,5 @@ export async function getCachedMetrics() {
 /**
  * @import { ServerRoute } from '@hapi/hapi'
  * @import { FormOverviewMetric, FormTotalsMetric } from '@defra/forms-model'
- * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-helper.js'
+ * @import { FilterAndSortCriteria } from '~/src/models/admin/metrics-types.js'
  */

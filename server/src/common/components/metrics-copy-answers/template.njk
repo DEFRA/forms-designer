@@ -1,0 +1,13 @@
+{% from "metrics-tile/macro.njk" import appMetricsTile %}
+
+<div class="govuk-!-margin-bottom-6">
+  <span class="govuk-caption-m">{{ params.fromDate }} to {{ params.toDate }}</span>
+
+  <h2 class="govuk-heading-l">{{ params.title }}</h2>
+
+  <div class="govuk-grid-row">
+    {{ appMetricsTile(params.tiles.CopyAnswersForm) }}
+
+    {{ appMetricsTile(params.tiles.CopyAnswersSubmission) }}
+  </div>
+</div>
