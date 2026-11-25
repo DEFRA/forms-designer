@@ -17,9 +17,16 @@ import { formatNumber } from '~/src/common/nunjucks/filters/format-number.js'
  */
 
 /**
+ * @typedef {object} TileTooltipConfig
+ * @property {string} id - element id for the tooltip
+ * @property {string} text - tooltip text
+ */
+
+/**
  * @typedef {object} MetricTileConfigRecordType
  * @property {string} noun - noun used in tile phrase structure
  * @property {string} verb - verb used in tile phrase structure
+ * @property {TileTooltipConfig} tooltip - id and text for the tile's tooltip
  * @property {TileDrillDownConfig} drillDown - config for drill down operations
  */
 
@@ -54,6 +61,10 @@ export const MetricsTileConfig =
     [FormMetricName.NewFormsCreated]: {
       noun: 'form',
       verb: 'created',
+      tooltip: {
+        id: 'new-forms-created-tooltip',
+        text: 'How many new forms people started in Form Designer.'
+      },
       drillDown: {
         displayName: 'new forms created',
         enabled: true,
@@ -65,6 +76,10 @@ export const MetricsTileConfig =
     [FormMetricName.FormsFirstPublished]: {
       noun: 'form',
       verb: 'first published',
+      tooltip: {
+        id: 'forms-first-published-tooltip',
+        text: 'How many forms were made available for people to fill in.'
+      },
       drillDown: {
         displayName: 'forms first published',
         enabled: true,
@@ -79,6 +94,10 @@ export const MetricsTileConfig =
     [FormMetricName.FormsRePublished]: {
       noun: '',
       verb: 're-published',
+      tooltip: {
+        id: 'forms-republished-tooltip',
+        text: 'How many existing live forms had changes made, and those changes were subsequently made live.'
+      },
       drillDown: {
         displayName: 're-published',
         enabled: true,
@@ -90,6 +109,10 @@ export const MetricsTileConfig =
     [FormMetricName.Submissions]: {
       noun: 'submission',
       verb: '',
+      tooltip: {
+        id: 'form-submissions-tooltip',
+        text: 'How many times someone completed and submitted a form.'
+      },
       drillDown: {
         displayName: 'submissions',
         enabled: true,
@@ -101,6 +124,10 @@ export const MetricsTileConfig =
     [FormMetricName.FormsInDraft]: {
       noun: 'form',
       verb: '',
+      tooltip: {
+        id: 'forms-in-draft-tooltip',
+        text: 'How many forms are being worked on and have not been published yet.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -110,6 +137,10 @@ export const MetricsTileConfig =
     [FormMetricName.TimeToPublish]: {
       noun: 'day',
       verb: '',
+      tooltip: {
+        id: 'time-to-publish-tooltip',
+        text: 'The average number of days from creating a form to publishing it for the first time.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -121,6 +152,10 @@ export const MetricsTileConfig =
     [SigninMetricName.Registration]: {
       noun: 'registration',
       verb: '',
+      tooltip: {
+        id: 'registrations-tooltip',
+        text: 'Total number of registrations.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -130,6 +165,10 @@ export const MetricsTileConfig =
     [SigninMetricName.SuccessfulAuthentication]: {
       noun: 'authentication',
       verb: '',
+      tooltip: {
+        id: 'successful-authentications-tooltip',
+        text: 'Total number of successful authentications (sign-ins).'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -139,6 +178,10 @@ export const MetricsTileConfig =
     [SigninMetricName.TooManyCodeRequests]: {
       noun: 'request',
       verb: '',
+      tooltip: {
+        id: 'too-many-code-requests-tooltip',
+        text: 'Number of times a user was locked out for 2 hours after requesting a security code too many times.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -148,6 +191,10 @@ export const MetricsTileConfig =
     [SigninMetricName.IncorrectCodeEntered]: {
       noun: 'incorrect code',
       verb: '',
+      tooltip: {
+        id: 'incorrect-code-entered-tooltip',
+        text: 'Number of times a user entered a security code incorrectly.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -157,6 +204,10 @@ export const MetricsTileConfig =
     [SigninMetricName.AccountDeletion]: {
       noun: 'deletion',
       verb: '',
+      tooltip: {
+        id: 'account-deletions-tooltip',
+        text: 'Total number of account deletions.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -166,6 +217,10 @@ export const MetricsTileConfig =
     [SigninMetricName.EmailAddressUpdate]: {
       noun: 'update',
       verb: '',
+      tooltip: {
+        id: 'email-address-updates-tooltip',
+        text: 'Total number of email address updates.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -175,6 +230,10 @@ export const MetricsTileConfig =
     [SigninMetricName.PhoneNumberUpdate]: {
       noun: 'update',
       verb: '',
+      tooltip: {
+        id: 'phone-number-updates-tooltip',
+        text: 'Total number of phone number updates.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -186,6 +245,10 @@ export const MetricsTileConfig =
     [CopyAnswersMetricName.CopyAnswersForm]: {
       noun: 'form',
       verb: '',
+      tooltip: {
+        id: 'copy-answers-forms-tooltip',
+        text: 'Total number of forms that have copy answers enabled.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
@@ -195,6 +258,10 @@ export const MetricsTileConfig =
     [CopyAnswersMetricName.CopyAnswersSubmission]: {
       noun: 'submission',
       verb: '',
+      tooltip: {
+        id: 'copy-answers-submissions-tooltip',
+        text: 'Total number of live submissions based on copy answers.'
+      },
       drillDown: {
         displayName: '',
         enabled: false,
