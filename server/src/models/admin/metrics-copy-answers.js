@@ -101,12 +101,24 @@ export function mapCopyAnswersTiles(
       [CopyAnswersMetricName.CopyAnswersForm]: createTile(
         COPY_ANSWERS_FORMS_TITLE,
         CopyAnswersMetricName.CopyAnswersForm,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'copy-answers-forms-tooltip',
+            text: 'Total number of forms that have copy answers enabled.'
+          }
+        }
       ),
       [CopyAnswersMetricName.CopyAnswersSubmission]: createTile(
         COPY_ANSWERS_SUBMISSIONS_TITLE,
         CopyAnswersMetricName.CopyAnswersSubmission,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'copy-answers-submissions-tooltip',
+            text: 'Total number of live submissions based on copy answers.'
+          }
+        }
       )
     }
   })

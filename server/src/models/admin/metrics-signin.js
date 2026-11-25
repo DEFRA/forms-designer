@@ -91,39 +91,81 @@ export function mapSigninTiles(
       [SigninMetricName.Registration]: createTile(
         REGISTRATIONS_TITLE,
         SigninMetricName.Registration,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'registrations-tooltip',
+            text: 'Total number of registrations.'
+          }
+        }
       ),
       [SigninMetricName.SuccessfulAuthentication]: createTile(
         SUCCESSFUL_AUTHENTICATIONS_TITLE,
         SigninMetricName.SuccessfulAuthentication,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'successful-authentications-tooltip',
+            text: 'Total number of successful authentications (sign-ins).'
+          }
+        }
       ),
       [SigninMetricName.TooManyCodeRequests]: createTile(
         TOO_MANY_CODE_REQUESTS_TITLE,
         SigninMetricName.TooManyCodeRequests,
         commonParams,
-        { invertColours: true }
+        {
+          invertColours: true,
+          tooltip: {
+            id: 'too-many-code-requests-tooltip',
+            text: 'Number of times a user was locked out for 2 hours after requesting a security code too many times.'
+          }
+        }
       ),
       [SigninMetricName.IncorrectCodeEntered]: createTile(
         INCORRECT_CODE_ENTERED_TITLE,
         SigninMetricName.IncorrectCodeEntered,
         commonParams,
-        { invertColours: true }
+        {
+          invertColours: true,
+          tooltip: {
+            id: 'incorrect-code-entered-tooltip',
+            text: 'Number of times a user entered a security code incorrectly.'
+          }
+        }
       ),
       [SigninMetricName.AccountDeletion]: createTile(
         ACCOUNT_DELETIONS_TITLE,
         SigninMetricName.AccountDeletion,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'account-deletions-tooltip',
+            text: 'Total number of account deletions.'
+          }
+        }
       ),
       [SigninMetricName.EmailAddressUpdate]: createTile(
         EMAIL_ADDRESS_UPDATES_TITLE,
         SigninMetricName.EmailAddressUpdate,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'email-address-updates-tooltip',
+            text: 'Total number of email address updates.'
+          }
+        }
       ),
       [SigninMetricName.PhoneNumberUpdate]: createTile(
         PHONE_NUMBER_UPDATES_TITLE,
         SigninMetricName.PhoneNumberUpdate,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'phone-number-updates-tooltip',
+            text: 'Total number of phone number updates.'
+          }
+        }
       )
     }
   })

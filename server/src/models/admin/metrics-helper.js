@@ -308,7 +308,7 @@ export function collateSpecificTileCounts(
  * @param {string} title
  * @param { FormMetricName | FunctionalAreaMetricName } metricName
  * @param {{ currPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, prevPeriod: Partial<Record<FormMetricName | FunctionalAreaMetricName, { count?: number }>> | undefined, periodNames: PeriodName, language: string | undefined, classes?: string }} commonParams
- * @param {{ units?: string, invertColours?: boolean }} [options]
+ * @param {{ units?: string, invertColours?: boolean, tooltip?: { id: string, text: string } }} [options]
  */
 export function createTile(title, metricName, commonParams, options) {
   return /** @type {MetricsTile} */ ({
@@ -321,7 +321,10 @@ export function createTile(title, metricName, commonParams, options) {
       commonParams.language,
       options
     ),
-    ...(commonParams.classes ? { classes: commonParams.classes } : {})
+    ...(commonParams.classes ? { classes: commonParams.classes } : {}),
+    ...(options?.tooltip
+      ? { tooltip: { id: options.tooltip.id, text: options.tooltip.text } }
+      : {})
   })
 }
 
@@ -359,33 +362,69 @@ export function mapOverviewTiles(
       [FormMetricName.NewFormsCreated]: createTile(
         NEW_FORMS_CREATED_TITLE,
         FormMetricName.NewFormsCreated,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'new-forms-created-tooltip',
+            text: 'How many new forms people started in Form Designer.'
+          }
+        }
       ),
       [FormMetricName.FormsFirstPublished]: createTile(
         FORMS_FIRST_PUBLISHED_TITLE,
         FormMetricName.FormsFirstPublished,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'forms-first-published-tooltip',
+            text: 'How many forms were made available for people to fill in.'
+          }
+        }
       ),
       [FormMetricName.FormsRePublished]: createTile(
         FORMS_REPUBLISHED_TITLE,
         FormMetricName.FormsRePublished,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'forms-republished-tooltip',
+            text: 'How many existing live forms had changes made, and those changes were subsequently made live.'
+          }
+        }
       ),
       [FormMetricName.Submissions]: createTile(
         FORM_SUBMISSIONS_TITLE,
         FormMetricName.Submissions,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'form-submissions-tooltip',
+            text: 'How many times someone completed and submitted a form.'
+          }
+        }
       ),
       [FormMetricName.FormsInDraft]: createTile(
         FORMS_IN_DRAFT_TITLE,
         FormMetricName.FormsInDraft,
-        commonParams
+        commonParams,
+        {
+          tooltip: {
+            id: 'forms-in-draft-tooltip',
+            text: 'How many forms are being worked on and have not been published yet.'
+          }
+        }
       ),
       [FormMetricName.TimeToPublish]: createTile(
         TIME_TO_PUBLISH_TITLE,
         FormMetricName.TimeToPublish,
         commonParams,
-        { units: 'days' }
+        {
+          tooltip: {
+            id: 'time-to-publish-tooltip',
+            text: 'The average number of days from creating a form to publishing it for the first time.'
+          },
+          units: 'days'
+        }
       )
     }
   })

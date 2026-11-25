@@ -121,3 +121,28 @@
   line-height: 1;
   color: inherit;
 }
+
+/* Accessible metric tooltips */
+.app-metric-tooltip {
+  max-width: 100%;
+}
+
+.app-metric-tooltip .tooltiptext {
+  font-weight: 400;
+  user-select: text;
+  pointer-events: auto;
+}
+
+.app-metric-tooltip:focus-visible {
+  outline: 3px solid transparent;
+  background-color: #ffdd00;
+  box-shadow:
+    0 -2px #ffdd00,
+    0 4px #0b0c0c;
+  border-bottom-color: transparent;
+}
+
+.app-metric-tooltip .tooltiptext.app-metric-tooltip__tip--visible {
+  visibility: visible;
+  opacity: 1;
+}
