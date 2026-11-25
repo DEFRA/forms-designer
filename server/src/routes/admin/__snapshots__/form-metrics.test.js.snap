@@ -980,7 +980,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">New forms created</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="new-forms-created-tooltip">
+                New forms created
+                <span class="tooltiptext" id="new-forms-created-tooltip" role="tooltip">
+                  How many new forms people started in Form Designer.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -999,7 +1005,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Forms first published</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-first-published-tooltip">
+                Forms first published
+                <span class="tooltiptext" id="forms-first-published-tooltip" role="tooltip">
+                  How many forms were made available for people to fill in.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1018,7 +1030,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-published">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Form re-published</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-republished-tooltip">
+                Form re-published
+                <span class="tooltiptext" id="forms-republished-tooltip" role="tooltip">
+                  How many existing live forms had changes made, and those changes were subsequently made live.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1037,7 +1055,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Form submissions</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="form-submissions-tooltip">
+                Form submissions
+                <span class="tooltiptext" id="form-submissions-tooltip" role="tooltip">
+                  How many times someone completed and submitted a form.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1063,7 +1087,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Forms in draft</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-in-draft-tooltip">
+                Forms in draft
+                <span class="tooltiptext" id="forms-in-draft-tooltip" role="tooltip">
+                  How many forms are being worked on and have not been published yet.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1082,7 +1112,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Average time to publish</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="time-to-publish-tooltip">
+                Average time to publish
+                <span class="tooltiptext" id="time-to-publish-tooltip" role="tooltip">
+                  The average number of days from creating a form to publishing it for the first time.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
           </span>
         </div>
@@ -1112,7 +1148,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">New forms created</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="new-forms-created-tooltip">
+                New forms created
+                <span class="tooltiptext" id="new-forms-created-tooltip" role="tooltip">
+                  How many new forms people started in Form Designer.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1131,7 +1173,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Forms first published</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-first-published-tooltip">
+                Forms first published
+                <span class="tooltiptext" id="forms-first-published-tooltip" role="tooltip">
+                  How many forms were made available for people to fill in.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1150,7 +1198,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-published">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Form re-published</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-republished-tooltip">
+                Form re-published
+                <span class="tooltiptext" id="forms-republished-tooltip" role="tooltip">
+                  How many existing live forms had changes made, and those changes were subsequently made live.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1169,7 +1223,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Form submissions</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="form-submissions-tooltip">
+                Form submissions
+                <span class="tooltiptext" id="form-submissions-tooltip" role="tooltip">
+                  How many times someone completed and submitted a form.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1195,7 +1255,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Forms in draft</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-in-draft-tooltip">
+                Forms in draft
+                <span class="tooltiptext" id="forms-in-draft-tooltip" role="tooltip">
+                  How many forms are being worked on and have not been published yet.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1214,7 +1280,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Average time to publish</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="time-to-publish-tooltip">
+                Average time to publish
+                <span class="tooltiptext" id="time-to-publish-tooltip" role="tooltip">
+                  The average number of days from creating a form to publishing it for the first time.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
           </span>
         </div>
@@ -1244,7 +1316,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-new-forms-created">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">New forms created</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="new-forms-created-tooltip">
+                New forms created
+                <span class="tooltiptext" id="new-forms-created-tooltip" role="tooltip">
+                  How many new forms people started in Form Designer.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1263,7 +1341,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-first-published">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Forms first published</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-first-published-tooltip">
+                Forms first published
+                <span class="tooltiptext" id="forms-first-published-tooltip" role="tooltip">
+                  How many forms were made available for people to fill in.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1282,7 +1366,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-re-published">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Form re-published</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-republished-tooltip">
+                Form re-published
+                <span class="tooltiptext" id="forms-republished-tooltip" role="tooltip">
+                  How many existing live forms had changes made, and those changes were subsequently made live.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1301,7 +1391,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-form-submissions">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Form submissions</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="form-submissions-tooltip">
+                Form submissions
+                <span class="tooltiptext" id="form-submissions-tooltip" role="tooltip">
+                  How many times someone completed and submitted a form.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1327,7 +1423,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-forms-in-draft">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Forms in draft</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="forms-in-draft-tooltip">
+                Forms in draft
+                <span class="tooltiptext" id="forms-in-draft-tooltip" role="tooltip">
+                  How many forms are being worked on and have not been published yet.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0</span>
           </span>
         </div>
@@ -1346,7 +1448,13 @@ exports[`Form metrics routes form-metrics display and filter form metrics should
     <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-average-time-to-publish">
       <div class="app-metric-tile">
         <div class="app-c-big-number">
-          <span class="app-c-big-number__label">Average time to publish</span>
+            <span class="app-c-big-number__label">
+              <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="time-to-publish-tooltip">
+                Average time to publish
+                <span class="tooltiptext" id="time-to-publish-tooltip" role="tooltip">
+                  The average number of days from creating a form to publishing it for the first time.</span>
+              </span>
+            </span>
             <span class="app-c-big-number__value">0<span class="app-big-number-unit"> days</span></span>
           </span>
         </div>
@@ -1680,7 +1788,7 @@ exports[`Form metrics routes form-metrics public metrics endpoint (for embedding
 <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-number-of-live-forms">
   <div class="app-metric-tile">
     <div class="app-c-big-number">
-      <span class="app-c-big-number__label">Number of live forms</span>
+        <span class="app-c-big-number__label">Number of live forms</span>
         <span class="app-c-big-number__value">1</span>
       </span>
     </div>
@@ -1692,7 +1800,7 @@ exports[`Form metrics routes form-metrics public metrics endpoint (for embedding
 <div class="govuk-grid-column-one-half govuk-grid-column-one-quarter-from-tablet govuk-grid-column-one-quarter-from-desktop" data-testid="headline-column-number-of-live-submissions">
   <div class="app-metric-tile">
     <div class="app-c-big-number">
-      <span class="app-c-big-number__label">Number of live submissions</span>
+        <span class="app-c-big-number__label">Number of live submissions</span>
         <span class="app-c-big-number__value">10</span>
       </span>
     </div>

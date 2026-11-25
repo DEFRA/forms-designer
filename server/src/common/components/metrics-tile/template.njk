@@ -12,7 +12,17 @@
 <div class="{{ tileClasses }}" data-testid="{{ metricTestId }}">
   <div class="app-metric-tile">
     <div class="app-c-big-number">
-      <span class="app-c-big-number__label">{{ params.title }}</span>
+      {% if params.tooltip %}
+        <span class="app-c-big-number__label">
+          <span class="app-metric-tooltip tooltip" tabindex="0" aria-describedby="{{ params.tooltip.id }}">
+            {{ params.title }}
+            <span class="tooltiptext" id="{{ params.tooltip.id }}" role="tooltip">
+              {{ params.tooltip.text }}</span>
+          </span>
+        </span>
+      {% else%}
+        <span class="app-c-big-number__label">{{ params.title }}</span>
+      {% endif%}
       {% if params.count > 0 and params.drillDown.enabled %}
         <span class="app-c-big-number__value"><a href="{{ params.drillDown.url }}" class="govuk-link govuk-link--no-visited-state">{{ params.count | formatNumber }}{{ units | safe }}</a></span>
       {% else %}

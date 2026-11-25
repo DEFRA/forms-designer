@@ -321,7 +321,8 @@ export function createTile(title, metricName, commonParams, options) {
       commonParams.language,
       options
     ),
-    ...(commonParams.classes ? { classes: commonParams.classes } : {})
+    ...(commonParams.classes ? { classes: commonParams.classes } : {}),
+    tooltip: { ...MetricsTileConfig[metricName].tooltip }
   })
 }
 
@@ -385,7 +386,9 @@ export function mapOverviewTiles(
         TIME_TO_PUBLISH_TITLE,
         FormMetricName.TimeToPublish,
         commonParams,
-        { units: 'days' }
+        {
+          units: 'days'
+        }
       )
     }
   })

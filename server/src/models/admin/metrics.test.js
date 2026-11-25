@@ -39,6 +39,33 @@ function getExpectedTile(title, ariaPeriod, strapline) {
   }
 }
 
+const overviewTooltips = {
+  NewFormsCreated: {
+    id: 'new-forms-created-tooltip',
+    text: 'How many new forms people started in Form Designer.'
+  },
+  FormsFirstPublished: {
+    id: 'forms-first-published-tooltip',
+    text: 'How many forms were made available for people to fill in.'
+  },
+  FormsRePublished: {
+    id: 'forms-republished-tooltip',
+    text: 'How many existing live forms had changes made, and those changes were subsequently made live.'
+  },
+  Submissions: {
+    id: 'form-submissions-tooltip',
+    text: 'How many times someone completed and submitted a form.'
+  },
+  FormsInDraft: {
+    id: 'forms-in-draft-tooltip',
+    text: 'How many forms are being worked on and have not been published yet.'
+  },
+  TimeToPublish: {
+    id: 'time-to-publish-tooltip',
+    text: 'The average number of days from creating a form to publishing it for the first time.'
+  }
+}
+
 describe('metrics models', () => {
   describe('metricsCopyAnswersViewModel', () => {
     it('should map overview rows and functional-area totals', () => {
@@ -197,6 +224,7 @@ describe('metrics models', () => {
               'previous 7 days',
               'No difference in forms created than last week'
             ),
+            tooltip: overviewTooltips.NewFormsCreated,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-7-days/NewFormsCreated'
@@ -208,6 +236,7 @@ describe('metrics models', () => {
               'previous 7 days',
               'No difference in forms first published than last week'
             ),
+            tooltip: overviewTooltips.FormsFirstPublished,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-7-days/FormsFirstPublished'
@@ -219,6 +248,7 @@ describe('metrics models', () => {
               'previous 7 days',
               'No difference in  re-published than last week'
             ),
+            tooltip: overviewTooltips.FormsRePublished,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-7-days/FormsRePublished'
@@ -230,6 +260,7 @@ describe('metrics models', () => {
               'previous 7 days',
               'No difference in submissions  than last week'
             ),
+            tooltip: overviewTooltips.Submissions,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-7-days/Submissions'
@@ -241,6 +272,7 @@ describe('metrics models', () => {
               'previous 7 days',
               'No difference in forms  than last week'
             ),
+            tooltip: overviewTooltips.FormsInDraft,
             drillDown: {
               enabled: false,
               url: ''
@@ -253,6 +285,7 @@ describe('metrics models', () => {
               'No difference in days  than last week'
             ),
             units: 'days',
+            tooltip: overviewTooltips.TimeToPublish,
             drillDown: {
               enabled: false,
               url: ''
@@ -271,6 +304,7 @@ describe('metrics models', () => {
               'previous 30 days',
               'No difference in forms created than last month'
             ),
+            tooltip: overviewTooltips.NewFormsCreated,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-30-days/NewFormsCreated'
@@ -282,6 +316,7 @@ describe('metrics models', () => {
               'previous 30 days',
               'No difference in forms first published than last month'
             ),
+            tooltip: overviewTooltips.FormsFirstPublished,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-30-days/FormsFirstPublished'
@@ -293,6 +328,7 @@ describe('metrics models', () => {
               'previous 30 days',
               'No difference in  re-published than last month'
             ),
+            tooltip: overviewTooltips.FormsRePublished,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-30-days/FormsRePublished'
@@ -304,6 +340,7 @@ describe('metrics models', () => {
               'previous 30 days',
               'No difference in submissions  than last month'
             ),
+            tooltip: overviewTooltips.Submissions,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/last-30-days/Submissions'
@@ -315,6 +352,7 @@ describe('metrics models', () => {
               'previous 30 days',
               'No difference in forms  than last month'
             ),
+            tooltip: overviewTooltips.FormsInDraft,
             drillDown: {
               enabled: false,
               url: ''
@@ -327,6 +365,7 @@ describe('metrics models', () => {
               'No difference in days  than last month'
             ),
             units: 'days',
+            tooltip: overviewTooltips.TimeToPublish,
             drillDown: {
               enabled: false,
               url: ''
@@ -345,6 +384,7 @@ describe('metrics models', () => {
               'previous year',
               'No difference in forms created than last year'
             ),
+            tooltip: overviewTooltips.NewFormsCreated,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/all-time/NewFormsCreated'
@@ -356,6 +396,7 @@ describe('metrics models', () => {
               'previous year',
               'No difference in forms first published than last year'
             ),
+            tooltip: overviewTooltips.FormsFirstPublished,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/all-time/FormsFirstPublished'
@@ -367,6 +408,7 @@ describe('metrics models', () => {
               'previous year',
               'No difference in  re-published than last year'
             ),
+            tooltip: overviewTooltips.FormsRePublished,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/all-time/FormsRePublished'
@@ -378,6 +420,7 @@ describe('metrics models', () => {
               'previous year',
               'No difference in submissions  than last year'
             ),
+            tooltip: overviewTooltips.Submissions,
             drillDown: {
               enabled: true,
               url: '/admin/form-metrics/drilldown/all-time/Submissions'
@@ -389,6 +432,7 @@ describe('metrics models', () => {
               'previous year',
               'No difference in forms  than last year'
             ),
+            tooltip: overviewTooltips.FormsInDraft,
             drillDown: {
               enabled: false,
               url: ''
@@ -401,6 +445,7 @@ describe('metrics models', () => {
               'No difference in days  than last year'
             ),
             units: 'days',
+            tooltip: overviewTooltips.TimeToPublish,
             drillDown: {
               enabled: false,
               url: ''

@@ -1,0 +1,59 @@
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 2px dotted #1d70b8;
+  cursor: help;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 280px;
+  background-color: #ffffff;
+  color: #000000;
+  text-align: left;
+  padding: 12px 16px;
+  border-radius: 0;
+  font-family: "GDS Transport", Arial, sans-serif;
+  font-size: 19px;
+  line-height: 1.5;
+  font-weight: 400;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  border: 2px solid #1d70b8;
+  position: absolute;
+  z-index: 1000;
+  bottom: 140%;
+  left: 50%;
+  margin-left: -140px;
+  opacity: 0;
+  max-width: 280px;
+  word-wrap: break-word;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  margin-left: -8px; /* Increased from -6px to center the larger arrow */
+  border-width: 8px; /* Increased from 6px to make arrow bigger */
+  border-style: solid;
+  border-color: #1d70b8 transparent transparent;
+}
+
+.tooltip:focus {
+  background-color: #ffdd00;
+  color: #0b0c0c;
+  border-bottom: 3px solid #0b0c0c;
+  outline: none;
+  box-shadow: none;
+}
+
+.tooltip:focus .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
