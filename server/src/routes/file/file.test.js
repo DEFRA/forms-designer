@@ -11,7 +11,7 @@ import * as userSession from '~/src/common/helpers/auth/get-user-session.js'
 import { createServer } from '~/src/createServer.js'
 import * as file from '~/src/lib/file.js'
 import { getFormDefinitionForSubmission } from '~/src/lib/forms.js'
-import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
+import { getSubmissionRecordByReferenceNumber } from '~/src/services/formSubmissionService.js'
 import { auth } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -63,7 +63,8 @@ describe('File routes', () => {
       }
     },
     recordCreatedAt: new Date('2026-05-18T11:24:54.128Z'),
-    expireAt: new Date('2027-02-18T11:24:54.128Z')
+    expireAt: new Date('2027-02-18T11:24:54.128Z'),
+    publicRetrievalId: 'b10cca91-1206-48a7-a066-d3c404349287'
   }
   /** @type {import('@defra/forms-model').FormDefinition} */
   const formDefinition = {
@@ -255,7 +256,9 @@ describe('File routes', () => {
     })
 
     test('should show files download page', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionForSubmission)
         .mockResolvedValueOnce(formDefinition)
@@ -283,7 +286,9 @@ describe('File routes', () => {
     })
 
     test('should redirect to the email entry page when not stored in state', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionForSubmission)
         .mockResolvedValueOnce(formDefinition)
@@ -299,7 +304,7 @@ describe('File routes', () => {
 
       expect(response.statusCode).toBe(StatusCodes.MOVED_TEMPORARILY)
       expect(response.headers.location).toBe(
-        `/file-download/${firstFileId}?referenceNumber=${referenceNumber}`
+        `/file-download/${firstFileId}?referenceNumberOrRetrievalId=${referenceNumber}`
       )
     })
 
@@ -530,7 +535,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: `${fileDownloadUrl}?referenceNumber=${referenceNumber}`,
+        url: `${fileDownloadUrl}?referenceNumberOrRetrievalId=${referenceNumber}`,
         auth,
         payload: { email }
       }
@@ -556,7 +561,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: `${fileDownloadUrl}?referenceNumber=${referenceNumber}`,
+        url: `${fileDownloadUrl}?referenceNumberOrRetrievalId=${referenceNumber}`,
         auth,
         payload: { email },
         headers: {
@@ -584,7 +589,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: `${fileDownloadUrl}?referenceNumber=${referenceNumber}`,
+        url: `${fileDownloadUrl}?referenceNumberOrRetrievalId=${referenceNumber}`,
         auth,
         payload: { email },
         headers: {
@@ -611,7 +616,7 @@ describe('File routes', () => {
 
       const options = {
         method: 'post',
-        url: `${fileDownloadUrl}?referenceNumber=${referenceNumber}`,
+        url: `${fileDownloadUrl}?referenceNumberOrRetrievalId=${referenceNumber}`,
         auth,
         payload: { email },
         headers: {

@@ -8,7 +8,7 @@ import {
 } from '~/src/lib/forms.js'
 import { getComponentFromDefinition } from '~/src/lib/utils.js'
 import { submissionViewModel } from '~/src/models/submission/index.js'
-import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
+import { getSubmissionRecordByReferenceNumber } from '~/src/services/formSubmissionService.js'
 
 export default [
   /**
@@ -22,7 +22,10 @@ export default [
       const { referenceNumber } = params
       const { token } = auth.credentials
 
-      const record = await getSubmissionRecord(referenceNumber, token)
+      const record = await getSubmissionRecordByReferenceNumber(
+        referenceNumber,
+        token
+      )
       const { formId, versionMetadata } = record.meta
       const definition = versionMetadata
         ? await getFormDefinitionVersion(
@@ -63,7 +66,10 @@ export default [
       const { referenceNumber, pageId, componentId } = params
       const { token } = auth.credentials
 
-      const record = await getSubmissionRecord(referenceNumber, token)
+      const record = await getSubmissionRecordByReferenceNumber(
+        referenceNumber,
+        token
+      )
       const { formId, versionMetadata } = record.meta
       const definition = versionMetadata
         ? await getFormDefinitionVersion(

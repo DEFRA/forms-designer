@@ -1,7 +1,7 @@
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 import {
-  getSubmissionRecord,
+  getSubmissionRecordByReferenceNumber,
   resetSaveAndExitRecord,
   sendFeedbackSubmissionsFile,
   sendFormSubmissionsFile
@@ -77,7 +77,7 @@ describe('formSubmissionService', () => {
     expect(result).toEqual({ recordFound: true, recordUpdated: true })
   })
 
-  it('should make a call to the submission service - get submission record', async () => {
+  it('should make a call to the submission service - get submission record by reference number', async () => {
     const referenceNumber = '3WL-3Y6-HHV'
     const token = 'my-token'
     const response = /** @type {IncomingMessage} */ ({})
@@ -87,7 +87,10 @@ describe('formSubmissionService', () => {
       body: { meta: {}, data: {} }
     })
 
-    const result = await getSubmissionRecord(referenceNumber, token)
+    const result = await getSubmissionRecordByReferenceNumber(
+      referenceNumber,
+      token
+    )
 
     expect(jest.mocked(getJson)).toHaveBeenCalledWith(
       new URL(`/submission/${referenceNumber}`, submissionUrl),

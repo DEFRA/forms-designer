@@ -20,11 +20,31 @@ import {
 } from '~/src/models/file/download-complete.js'
 import * as file from '~/src/models/file/file.js'
 import { redirectWithErrors } from '~/src/routes/forms/create.js'
-import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
+import {
+  getSubmissionRecordByReferenceNumber,
+  getSubmissionRecordByRetrievalId
+} from '~/src/services/formSubmissionService.js'
 
 export const emailSchema = Joi.string().trim().required().messages({
   'string.empty': 'Enter an email address'
 })
+
+/**
+ * Returns true if the value is a UUID or Mongo.ObjectId
+ * @param {string} value
+ * @returns {boolean}
+ */
+export function isUuidOrObjectId(value) {
+  const UUID_REGEX =
+    /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
+
+  const OBJECT_ID_REGEX = /^[0-9a-f]{24}$/i
+
+  return (
+    typeof value === 'string' &&
+    (UUID_REGEX.test(value) || OBJECT_ID_REGEX.test(value))
+  )
+}
 
 export default [
   /**
@@ -85,7 +105,7 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { fileId: string }, Payload: { email: string } }>}
+   * @satisfies {ServerRoute<{ Params: { fileId: string }, Payload: { email: string }, Query: { referenceNumberOrRetrievalId?: string } }>}
    */
   ({
     method: 'POST',
@@ -95,7 +115,7 @@ export default [
       const { credentials } = auth
       const { token } = credentials
       const { fileId } = params
-      const { referenceNumber } = query
+      const { referenceNumberOrRetrievalId } = query
       let { email } = payload
       const isAsyncFetch = request.headers.accept === 'application/json'
 
@@ -124,8 +144,8 @@ export default [
           config.fileDownloadPasswordTtl
         )
 
-        if (!isAsyncFetch && referenceNumber) {
-          return h.redirect(`/files-download/${referenceNumber}`)
+        if (!isAsyncFetch && referenceNumberOrRetrievalId) {
+          return h.redirect(`/files-download/${referenceNumberOrRetrievalId}`)
         }
 
         const auditUser = mapUserForAudit(auth.credentials.user)
@@ -203,7 +223,7 @@ export default [
       },
       validate: {
         query: Joi.object({
-          referenceNumber: Joi.string().optional()
+          referenceNumberOrRetrievalId: Joi.string().optional()
         }),
         payload: Joi.object({
           email: emailSchema
@@ -221,14 +241,14 @@ export default [
     }
   }),
   /**
-   * @satisfies {ServerRoute<{ Params: { referenceNumber: string } }>}
+   * @satisfies {ServerRoute<{ Params: { referenceNumberOrRetrievalId: string } }>}
    */
   ({
     method: 'GET',
-    path: '/files-download/{referenceNumber}',
+    path: '/files-download/{referenceNumberOrRetrievalId}',
     async handler(request, h) {
       const { params, server, auth } = request
-      const { referenceNumber } = params
+      const { referenceNumberOrRetrievalId } = params
       const { credentials } = auth
       const { token } = credentials
 
@@ -236,7 +256,18 @@ export default [
         return Boom.unauthorized()
       }
 
-      const record = await getSubmissionRecord(referenceNumber, token)
+      const isRetrievalId = isUuidOrObjectId(referenceNumberOrRetrievalId)
+      const record = isRetrievalId
+        ? await getSubmissionRecordByRetrievalId(
+            referenceNumberOrRetrievalId,
+            token
+          )
+        : await getSubmissionRecordByReferenceNumber(
+            referenceNumberOrRetrievalId,
+            token
+          )
+
+      const referenceNumber = record.meta.referenceNumber
       const files = record.data.files
       const fileKeys = Object.keys(files)
       const allFiles = fileKeys.flatMap((key) => files[key])
@@ -263,18 +294,24 @@ export default [
           await createFileLink(firstFile.fileId, email, token)
         } catch {
           return h.redirect(
-            `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
+            `/file-download/${firstFile.fileId}?referenceNumberOrRetrievalId=${referenceNumberOrRetrievalId}`
           )
         }
       } else {
         return h.redirect(
-          `/file-download/${firstFile.fileId}?referenceNumber=${referenceNumber}`
+          `/file-download/${firstFile.fileId}?referenceNumberOrRetrievalId=${referenceNumberOrRetrievalId}`
         )
       }
 
       return h.view(
         'file/download-all',
-        file.downloadAllViewModel(email, referenceNumber, files, definition)
+        file.downloadAllViewModel(
+          email,
+          referenceNumber,
+          referenceNumberOrRetrievalId,
+          files,
+          definition
+        )
       )
     },
     options: {
