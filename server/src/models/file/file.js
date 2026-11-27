@@ -35,12 +35,14 @@ export function fileViewModel(email, validation) {
 /**
  * @param {string} email
  * @param {string} referenceNumber
+ * @param {string} referenceNumberOrRetrievalId
  * @param {Record<string, FormAdapterFile[]>} files
  * @param {FormDefinition} definition
  */
 export function downloadAllViewModel(
   email,
   referenceNumber,
+  referenceNumberOrRetrievalId,
   files,
   definition
 ) {
@@ -83,7 +85,7 @@ export function downloadAllViewModel(
       caption: referenceNumber
     },
     email,
-    referenceNumber,
+    referenceNumberOrRetrievalId,
     list,
     buttonText: 'Download all files'
   }

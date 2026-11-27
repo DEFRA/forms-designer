@@ -57,11 +57,14 @@ export async function resetSaveAndExitRecord(magicLinkId, token) {
 }
 
 /**
- * Gets a submission record
+ * Gets a submission record by reference number
  * @param { string } referenceNumber - the submission reference number
  * @param {string} token - the user token
  */
-export async function getSubmissionRecord(referenceNumber, token) {
+export async function getSubmissionRecordByReferenceNumber(
+  referenceNumber,
+  token
+) {
   const getJsonByType = /** @type {typeof getJson<FormSubmissionDocument>} */ (
     getJson
   )
@@ -74,9 +77,26 @@ export async function getSubmissionRecord(referenceNumber, token) {
 }
 
 /**
+ * Gets a submission record by retrieval id
+ * @param { string } retrievalId - the submission public retrieval id
+ * @param {string} token - the user token
+ */
+export async function getSubmissionRecordByRetrievalId(retrievalId, token) {
+  const getJsonByType = /** @type {typeof getJson<FormSubmissionDocument>} */ (
+    getJson
+  )
+  const result = await getJsonByType(
+    new URL(`/submission/retrieve/${retrievalId}`, submissionUrl),
+    getHeaders(token)
+  )
+
+  return result.body
+}
+
+/**
  * @import { FormAdapterSubmissionMessagePayload } from '@defra/forms-engine-plugin/engine/types.js'
  */
 
 /**
- * @typedef {FormAdapterSubmissionMessagePayload & { recordCreatedAt: Date, expireAt: Date }} FormSubmissionDocument
+ * @typedef {FormAdapterSubmissionMessagePayload & { publicRetrievalId: string, recordCreatedAt: Date, expireAt: Date }} FormSubmissionDocument
  */

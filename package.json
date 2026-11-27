@@ -48,7 +48,7 @@
     "@babel/preset-react": "^7.26.3",
     "@dagrejs/dagre": "^1.1.5",
     "@defra/forms-common": "^0.1.7",
-    "@defra/forms-engine-plugin": "5.0.0-alpha.33",
+    "@defra/forms-engine-plugin": "^5.0.2",
     "@defra/forms-model": "^4.0.6",
     "@defra/hapi-tracing": "^1.28.0",
     "@defra/interactive-map": "0.0.56-alpha",

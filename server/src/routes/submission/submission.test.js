@@ -12,7 +12,7 @@ import {
   getFormDefinitionVersion,
   getLiveFormDefinition
 } from '~/src/lib/forms.js'
-import { getSubmissionRecord } from '~/src/services/formSubmissionService.js'
+import { getSubmissionRecordByReferenceNumber } from '~/src/services/formSubmissionService.js'
 import { auth, authSuperAdmin } from '~/test/fixtures/auth.js'
 import { renderResponse } from '~/test/helpers/component-helpers.js'
 
@@ -921,7 +921,7 @@ describe('Submission routes', () => {
 
     test('should show view submission page', async () => {
       jest
-        .mocked(getSubmissionRecord)
+        .mocked(getSubmissionRecordByReferenceNumber)
         .mockResolvedValueOnce(/** @type {any} */ (submissionRecord))
       jest
         .mocked(getFormDefinitionVersion)
@@ -956,7 +956,7 @@ describe('Submission routes', () => {
       }
 
       jest
-        .mocked(getSubmissionRecord)
+        .mocked(getSubmissionRecordByReferenceNumber)
         .mockResolvedValueOnce(/** @type {any} */ (record))
       jest
         .mocked(getFormDefinitionVersion)
@@ -983,7 +983,7 @@ describe('Submission routes', () => {
 
     test('should not show view submission page without the correct scope', async () => {
       jest
-        .mocked(getSubmissionRecord)
+        .mocked(getSubmissionRecordByReferenceNumber)
         .mockResolvedValueOnce(/** @type {any} */ (submissionRecord))
       jest
         .mocked(getFormDefinitionVersion)
@@ -1154,6 +1154,7 @@ describe('Submission routes', () => {
           }
         }
       },
+      publicRetrievalId: 'dbaedb9d-ef35-4634-bfb1-fcebab19a1aa',
       recordCreatedAt: new Date('2026-03-17T13:35:34.303Z'),
       expireAt: new Date('2026-12-17T13:35:34.303Z')
     }
@@ -1251,7 +1252,9 @@ describe('Submission routes', () => {
       '/submission/88J-TKL-AU8/map-review/6963d67f-9f15-497d-ac3b-385542ca3dff/0109c4d4-bbcc-4aae-a1ee-86418ed33395'
 
     test('should show view map page for geospatial features', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionVersion)
         .mockResolvedValueOnce(formDefinition)
@@ -1277,7 +1280,7 @@ describe('Submission routes', () => {
     })
 
     test('should show view map page (no version)', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce({
+      jest.mocked(getSubmissionRecordByReferenceNumber).mockResolvedValueOnce({
         ...submissionRecord,
         meta: {
           ...submissionRecord.meta,
@@ -1306,7 +1309,9 @@ describe('Submission routes', () => {
     })
 
     test('should show view map repeater page', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionVersion)
         .mockResolvedValueOnce(formDefinition)
@@ -1331,7 +1336,9 @@ describe('Submission routes', () => {
     })
 
     test('should fail to show view map page for an invalid component id', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionVersion)
         .mockResolvedValueOnce(formDefinition)
@@ -1348,7 +1355,9 @@ describe('Submission routes', () => {
     })
 
     test('should show view map page with SSSI layer enabled', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
 
       jest.mocked(getFormDefinitionVersion).mockResolvedValueOnce({
         ...formDefinition,
@@ -1390,7 +1399,9 @@ describe('Submission routes', () => {
     })
 
     test('should show view map page with SSSI layer disabled', async () => {
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
 
       jest.mocked(getFormDefinitionVersion).mockResolvedValueOnce({
         ...formDefinition,
@@ -1435,7 +1446,9 @@ describe('Submission routes', () => {
       const url =
         '/submission/88J-TKL-AU8/map-review/0b608f84-d2e2-4158-9737-37bd49305fd3/0ace95f0-b7bf-4c65-8cc7-74a890a2670b'
 
-      jest.mocked(getSubmissionRecord).mockResolvedValueOnce(submissionRecord)
+      jest
+        .mocked(getSubmissionRecordByReferenceNumber)
+        .mockResolvedValueOnce(submissionRecord)
       jest
         .mocked(getFormDefinitionVersion)
         .mockResolvedValueOnce(formDefinition)

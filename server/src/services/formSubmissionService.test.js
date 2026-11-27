@@ -1,7 +1,8 @@
 import config from '~/src/config.js'
 import { getJson, postJson } from '~/src/lib/fetch.js'
 import {
-  getSubmissionRecord,
+  getSubmissionRecordByReferenceNumber,
+  getSubmissionRecordByRetrievalId,
   resetSaveAndExitRecord,
   sendFeedbackSubmissionsFile,
   sendFormSubmissionsFile
@@ -77,7 +78,7 @@ describe('formSubmissionService', () => {
     expect(result).toEqual({ recordFound: true, recordUpdated: true })
   })
 
-  it('should make a call to the submission service - get submission record', async () => {
+  it('should make a call to the submission service - get submission record by reference number', async () => {
     const referenceNumber = '3WL-3Y6-HHV'
     const token = 'my-token'
     const response = /** @type {IncomingMessage} */ ({})
@@ -87,10 +88,32 @@ describe('formSubmissionService', () => {
       body: { meta: {}, data: {} }
     })
 
-    const result = await getSubmissionRecord(referenceNumber, token)
+    const result = await getSubmissionRecordByReferenceNumber(
+      referenceNumber,
+      token
+    )
 
     expect(jest.mocked(getJson)).toHaveBeenCalledWith(
       new URL(`/submission/${referenceNumber}`, submissionUrl),
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    expect(result).toEqual({ meta: {}, data: {} })
+  })
+
+  it('should make a call to the submission service - get submission record by retrieval id', async () => {
+    const retrievalId = '303f24b1-d486-4fa0-8bd3-ece8839c45b3'
+    const token = 'my-token'
+    const response = /** @type {IncomingMessage} */ ({})
+
+    jest.mocked(getJson).mockResolvedValue({
+      response,
+      body: { meta: {}, data: {} }
+    })
+
+    const result = await getSubmissionRecordByRetrievalId(retrievalId, token)
+
+    expect(jest.mocked(getJson)).toHaveBeenCalledWith(
+      new URL(`/submission/retrieve/${retrievalId}`, submissionUrl),
       { headers: { Authorization: `Bearer ${token}` } }
     )
     expect(result).toEqual({ meta: {}, data: {} })

@@ -53,7 +53,8 @@ const validJsonMessage = {
         main: '9c1c2458-3143-49c9-89fe-86c18d934c15',
         repeaters: {}
       }
-    }
+    },
+    publicRetrievalId: 'b0038880-a8c0-4c18-8cb6-c8e52c7a167f'
   }
 }
 

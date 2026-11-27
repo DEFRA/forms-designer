@@ -47,9 +47,9 @@ function resetStatusTags() {
  * Downloads a single file from the given URL, with a delay between each download to prevent browser freezing
  * @param {{href: string, fileId: string}} file - an array of URLs and file IDs for the files to download
  * @param {string} email - the email address of the user
- * @param {string} referenceNumber - the submission reference number
+ * @param {string} referenceNumberOrRetrievalId - the submission reference number or retrieval id
  */
-async function downloadFile(file, email, referenceNumber) {
+async function downloadFile(file, email, referenceNumberOrRetrievalId) {
   const { href, fileId } = file
 
   onDownloadStarted(fileId)
@@ -77,7 +77,7 @@ async function downloadFile(file, email, referenceNumber) {
     window.location.replace(
       response.status === forbiddenCode
         ? next
-        : `${next}?referenceNumber=${referenceNumber}`
+        : `${next}?referenceNumberOrRetrievalId=${referenceNumberOrRetrievalId}`
     )
   }
 
@@ -113,9 +113,9 @@ function onDownloadFinished(fileId) {
 /**
  * Downloads all files associated with the given reference number
  * @param {string} email - the email address of the user
- * @param {string} referenceNumber - the submission reference number
+ * @param {string} referenceNumberOrRetrievalId - the submission reference number or retrieval id
  */
-async function downloadAll(email, referenceNumber) {
+async function downloadAll(email, referenceNumberOrRetrievalId) {
   const links = /** @type {NodeListOf<HTMLAnchorElement>} */ (
     document.querySelectorAll('.govuk-summary-list__actions a')
   )
@@ -124,29 +124,33 @@ async function downloadAll(email, referenceNumber) {
     fileId: /** @type {string} */ (link.dataset.fileid)
   }))
 
-  await downloadAllFiles(files, email, referenceNumber)
+  await downloadAllFiles(files, email, referenceNumberOrRetrievalId)
 }
 
 /**
  * Downloads all files from the given array of file objects, with a delay between each download to prevent browser freezing
  * @param {{href: string, fileId: string}[]} files - an array of URLs and file IDs for the files to download
  * @param {string} email - the email address of the user
- * @param {string} referenceNumber - the submission reference number
+ * @param {string} referenceNumberOrRetrievalId - the submission reference number or retrieval id
  */
-export async function downloadAllFiles(files, email, referenceNumber) {
+export async function downloadAllFiles(
+  files,
+  email,
+  referenceNumberOrRetrievalId
+) {
   resetStatusTags()
 
   for (const file of files) {
-    await downloadFile(file, email, referenceNumber)
+    await downloadFile(file, email, referenceNumberOrRetrievalId)
   }
 }
 
 /**
  * Initialises the download functionality for the given reference number
  * @param {string} email - the email address of the user
- * @param {string} referenceNumber - the submission reference number
+ * @param {string} referenceNumberOrRetrievalId - the submission reference number or retrieval id
  */
-export function init(email, referenceNumber) {
+export function init(email, referenceNumberOrRetrievalId) {
   const downloadAllBtn = document.getElementById('download-all')
 
   /**
@@ -159,7 +163,7 @@ export function init(email, referenceNumber) {
     this.disabled = true
 
     try {
-      await downloadAll(email, referenceNumber)
+      await downloadAll(email, referenceNumberOrRetrievalId)
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Error downloading files:', err)
@@ -194,7 +198,7 @@ export function init(email, referenceNumber) {
         const file = { href, fileId }
 
         try {
-          await downloadFile(file, email, referenceNumber)
+          await downloadFile(file, email, referenceNumberOrRetrievalId)
         } catch (err) {
           // eslint-disable-next-line no-console
           console.error('Error downloading files:', err)
