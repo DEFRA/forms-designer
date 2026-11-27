@@ -1154,6 +1154,7 @@ describe('Submission routes', () => {
           }
         }
       },
+      publicRetrievalId: 'dbaedb9d-ef35-4634-bfb1-fcebab19a1aa',
       recordCreatedAt: new Date('2026-03-17T13:35:34.303Z'),
       expireAt: new Date('2026-12-17T13:35:34.303Z')
     }
